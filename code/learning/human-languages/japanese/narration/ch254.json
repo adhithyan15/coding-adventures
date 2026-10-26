@@ -1,0 +1,913 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 254,
+  "title": "What I Think, and Why",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:26388b9053f8489b",
+  "lessons": [
+    {
+      "id": "JA-C254-to-omoimasu",
+      "sequence": 15200,
+      "title": "と おもいます (to omoimasu) — I think that …",
+      "headword": "と おもいます",
+      "romanization": "to omoimasu",
+      "gloss": "I think that — a plain clause, then to omoimasu",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7aa5ce770bcabf64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"to think\", and \"I think\", politely. (omou, omoimasu.) Then say, plainly, \"it will rain\" and \"he won't come\". (ame ga furu, konai.) Those plain forms are about to get their second job."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a plain clause, then と",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いいと おもいます。 ii to omoimasu. — \"I think it is good.\""
+            },
+            {
+              "kind": "speech",
+              "text": "What you think goes first, in the plain form; と (to) closes it, and おもいます (omoimasu) keeps the whole sentence polite."
+            },
+            {
+              "kind": "speech",
+              "text": "あした あめが ふると おもいます。 ashita ame ga furu to omoimasu. — \"I think it will rain tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The plain \"not\" and the plain past go before と the same way:"
+            },
+            {
+              "kind": "speech",
+              "text": "ともだちは こないと おもいます。 tomodachi wa konai to omoimasu. — \"I don't think my friend will come.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは もう かえったと おもいます。 chichi wa mō kaetta to omoimasu. — \"I think my father has gone home already.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: どう おもいますか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To ask what someone thinks, どう (dō), \"how\", goes where the opinion would be:"
+            },
+            {
+              "kind": "speech",
+              "text": "どう おもいますか。 dō omoimasu ka. — \"What do you think?\""
+            },
+            {
+              "kind": "speech",
+              "text": "この えいがを どう おもいますか。 kono eiga o dō omoimasu ka. — \"What do you think of this film?\""
+            },
+            {
+              "kind": "speech",
+              "text": "おもしろいと おもいます。 omoshiroi to omoimasu. — \"I think it is interesting.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think it is interesting\" — omoshiroi to omoimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think it is interesting\" — *omoshiroi to omoimasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think it is good\" — ii to omoimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think it is good\" — *ii to omoimasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think it is dangerous\" — abunai to omoimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think it is dangerous\" — *abunai to omoimasu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C254-to-omoimasu-say",
+              "prompt": "Say that you think it will rain tomorrow.",
+              "assesses": [
+                "JA-GRAMMAR-C254-OPINION-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "ashita ame ga furu to omoimasu",
+                "あした あめが ふると おもいます。",
+                "ame ga furu to omoimasu"
+              ],
+              "feedback": {
+                "correct": "furu to omoimasu: the plain clause, then to omoimasu.",
+                "incorrect": "Plain furu, then to omoimasu: ashita ame ga furu to omoimasu."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I think he will come\"? (くると おもいます.) \"I don't think he will come\"? (こないと おもいます.) \"What do you think?\" (どう おもいますか.) Which form goes before と? (The plain one.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C254-kara-node",
+      "sequence": 15210,
+      "title": "から / ので (kara / node) — because",
+      "headword": "から / ので",
+      "romanization": "kara / node",
+      "gloss": "because — kara and node after a clause, and riyū wa … kara desu",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e909b75fa64004e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I don't think my friend will come\". (tomodachi wa konai to omoimasu.) Then say \"cold\" and \"a reason\". (samui, riyū.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: から after a clause",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さむいから、いきません。 samui kara, ikimasen. — \"It is cold, so I won't go.\""
+            },
+            {
+              "kind": "speech",
+              "text": "から (kara) after a clause gives the reason, and the result follows it. The clause before it takes a plain form:"
+            },
+            {
+              "kind": "speech",
+              "text": "じかんが ないから、いそぎます。 jikan ga nai kara, isogimasu. — \"I have no time, so I will hurry.\""
+            },
+            {
+              "kind": "speech",
+              "text": "あめが ふったから、いきませんでした。 ame ga futta kara, ikimasen deshita. — \"It rained, so I did not go.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: ので, and りゆうは …からです",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ので (node) gives a reason too, more softly; it is the one to use when asking for something or excusing yourself:"
+            },
+            {
+              "kind": "speech",
+              "text": "あたまが いたいので、やすみます。 atama ga itai node, yasumimasu. — \"My head hurts, so I will rest.\""
+            },
+            {
+              "kind": "speech",
+              "text": "When someone asks why, りゆうは (riyū wa), \"the reason is\", opens the answer, and からです closes it:"
+            },
+            {
+              "kind": "speech",
+              "text": "りゆうは じかんが ないからです。 riyū wa jikan ga nai kara desu. — \"The reason is that I have no time.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My head hurts, so I will rest\" — atama ga itai node, yasumimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My head hurts, so I will rest\" — *atama ga itai node, yasumimasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My stomach hurts, so I will rest\" — onaka ga itai node, yasumimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My stomach hurts, so I will rest\" — *onaka ga itai node, yasumimasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My foot hurts, so I will rest\" — ashi ga itai node, yasumimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My foot hurts, so I will rest\" — *ashi ga itai node, yasumimasu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C254-kara-node-say",
+              "prompt": "Say that it is cold, so you won't go.",
+              "assesses": [
+                "JA-GRAMMAR-C254-REASON-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "samui kara, ikimasen",
+                "さむいから、いきません。",
+                "samui kara ikimasen"
+              ],
+              "feedback": {
+                "correct": "samui kara: the reason first, then the result.",
+                "incorrect": "The reason goes first with kara: samui kara, ikimasen."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which comes first, the reason or the result? (The reason, with から or ので.) \"The reason is that I have no time\"? (りゆうは じかんが ないからです.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C254-iidasu",
+      "sequence": 15220,
+      "title": "言い出す (iidasu) — to suggest; to be the first to say",
+      "headword": "言い出す",
+      "romanization": "iidasu",
+      "gloss": "to suggest; to be the first to say",
+      "script": "japanese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:e532c024d9d9a1af",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "You'll want to know: 言い出す"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: You'll want to know: 言い出す."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say \"to say\" and \"to take out\". (iu, dasu.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 言い出す",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "言い出す — iidasu — \"to suggest\", \"to be the first to say\". Polite 言い出します, iidashimasu; a godan verb. Past (polite): ちちが りょこうを 言い出しました, chichi ga ryokō o iidashimashita."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちが りょこうを 言い出しました。 chichi ga ryokō o iidashimashita. — \"My father suggested a trip.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It is 言う with だす, \"to put out\", after it: to put an idea out first. The first kanji is the 言 you write. The second is new, read だ (da) here; the next lesson writes it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "言い出す (iidasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese: the stem of 言う (iu), \"to say\", and だす (dasu), \"to put out\", each written with its kanji and read the native way. JMdict gives \"to begin to say\" and \"to suggest (doing)\" among its senses, and KANJIDIC2 gives い.う and だ.す as the two kanji's native readings (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iidasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iidasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My father suggested a trip\" — chichi ga ryokō o iidashimashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My father suggested a trip\" — *chichi ga ryokō o iidashimashita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My mother suggested a trip\" — haha ga ryokō o iidashimashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My mother suggested a trip\" — *haha ga ryokō o iidashimashita*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C254-iidasu-say",
+              "prompt": "Say the Japanese for 'to suggest'.",
+              "assesses": [
+                "JA-LEX-C254-IIDASU-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "iidasu",
+                "言い出す",
+                "いいだす"
+              ],
+              "feedback": {
+                "correct": "Right: iidasu, to put an idea out first.",
+                "incorrect": "'To suggest' is iidasu."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"To suggest\"? (言い出す, iidasu.) Its polite past? (言い出しました.) How is the new kanji read here? (だ, da.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W254-da-kanji",
+      "sequence": 15230,
+      "title": "出 (da) — out, five strokes",
+      "headword": "出",
+      "romanization": "da",
+      "gloss": "the five-stroke kanji for going or putting out, read da in 言い出す",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:2a95c8ef8f3332fb",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say iidasu, to suggest. Its first kanji is 言, which you write. Then call up 年: six strokes, the long stem last."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "出 — da."
+            },
+            {
+              "kind": "speech",
+              "text": "Its parts:"
+            },
+            {
+              "kind": "speech",
+              "text": "two open boxes, one stacked on the other."
+            },
+            {
+              "kind": "speech",
+              "text": "one long centre stem through both."
+            },
+            {
+              "kind": "speech",
+              "text": "Five strokes, four lifts:"
+            },
+            {
+              "kind": "speech",
+              "text": "draw the long centre stem from the top down."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, draw the upper left side down, then without lifting turn right along the base of the upper part."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, draw the upper right side down."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, draw the lower left side down, then without lifting turn right along the bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, draw the lower right side down."
+            },
+            {
+              "kind": "speech",
+              "text": "Unlike 年, the long stem comes first here, and the four sides hang from it. Here it is read だ (da), as in 言い出す (iidasu); this lesson asks only for that reading."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Find 出 (da) in 言い出す and say iidasu."
+            },
+            {
+              "kind": "speech",
+              "text": "Copy 出 three times, saying da at each one."
+            },
+            {
+              "kind": "speech",
+              "text": "Find it once more, in 言い出しました (iidashimashita), and say the word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How many strokes in all? (Five.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: KanjiVG stroke-order data: KanjiVG, kanji/051fa.svg, kanji 出 (da) (U+51FA), 5 stroke paths kvg:051fa-s1 to s5 (Ulrich Apel and contributors, CC BY-SA 3.0). Only the order and direction are taken from it."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-W254-da-kanji-strokes",
+              "prompt": "Which stroke of the kanji read da in iidasu comes first?",
+              "assesses": [
+                "JA-SCRIPT-KANJI-DASU-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the long centre stem",
+                "the centre stem",
+                "the long stem",
+                "the vertical"
+              ],
+              "feedback": {
+                "correct": "First the long centre stem, then the sides.",
+                "incorrect": "The long centre stem comes first; the four sides follow."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C254-iken",
+      "sequence": 15240,
+      "title": "いけん (iken) — an opinion",
+      "headword": "いけん",
+      "romanization": "iken",
+      "gloss": "an opinion",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d210107510df3230",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say \"What do you think?\" (dō omoimasu ka.) Then \"my father suggested a trip\". (chichi ga ryokō o iidashimashita.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いけん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いけん — iken — \"an opinion\", what someone thinks."
+            },
+            {
+              "kind": "speech",
+              "text": "いけんは ありますか。 iken wa arimasu ka. — \"Do you have an opinion?\""
+            },
+            {
+              "kind": "speech",
+              "text": "ちちの いけんを ききました。 chichi no iken o kikimashita. — \"I asked my father's opinion.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いけん (iken) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are i, \"idea\" (Middle Chinese 'iH) and ken, \"see\" (kenH), which KANJIDIC2 also glosses \"opinion\" (KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict glosses the word \"opinion; view; comment\" (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iken",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iken*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I asked my father's opinion\" — chichi no iken o kikimashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I asked my father's opinion\" — *chichi no iken o kikimashita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I asked my teacher's opinion\" — sensei no iken o kikimashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I asked my teacher's opinion\" — *sensei no iken o kikimashita*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C254-iken-say",
+              "prompt": "Say the Japanese for 'an opinion'.",
+              "assesses": [
+                "JA-LEX-C254-IKEN-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "iken",
+                "いけん"
+              ],
+              "feedback": {
+                "correct": "Right: iken is 'an opinion'.",
+                "incorrect": "'An opinion' is iken."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"An opinion\"? (いけん, iken.) \"Do you have an opinion?\" (いけんは ありますか.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R254-what-i-think-and-why",
+      "sequence": 15250,
+      "title": "Review — what I think, and why",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what you think and why, and someone else's opinion",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b2afef00a751a78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I think it is good\". (ii to omoimasu.) Then \"it is cold, so I won't go\". (samui kara, ikimasen.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I think it will snow tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I think it will snow tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I don't think my friend will come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I don't think my friend will come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My head hurts, so I will rest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My head hurts, so I will rest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My father suggested a trip.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My father suggested a trip.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Do you have an opinion?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Do you have an opinion?]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R254-what-i-think-and-why-say",
+              "prompt": "Ask what someone thinks of this film, then say the reason you did not go was that you had no time.",
+              "assesses": [
+                "JA-GRAMMAR-C254-OPINION-02",
+                "JA-GRAMMAR-C254-REASON-02"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "kono eiga o dō omoimasu ka; riyū wa jikan ga nakatta kara desu",
+                "この えいがを どう おもいますか。りゆうは じかんが なかったからです。",
+                "dō omoimasu ka; riyū wa jikan ga nakatta kara desu"
+              ],
+              "feedback": {
+                "correct": "dō omoimasu ka asks; riyū wa … kara desu gives the reason.",
+                "incorrect": "Ask with dō omoimasu ka; answer why with riyū wa … kara desu."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which form goes before と おもいます (to omoimasu)? (The plain one.) Before から? (The plain one too.) Which \"because\" is softer? (ので.) \"An opinion\"? (いけん (iken).) \"To suggest\"? (言い出す (iidasu).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,1057 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 252,
+  "title": "One Thing, Then the Next",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:1f0255e478d8756a",
+  "lessons": [
+    {
+      "id": "JA-C252-okite",
+      "sequence": 15070,
+      "title": "おきて / いって (okite / itte) — one action, then the next",
+      "headword": "おきて / いって",
+      "romanization": "okite / itte",
+      "gloss": "got up and, went and — the -te form, joining actions in order",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ef3190b0300023e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say, to a friend, \"I got up\" and \"I went\". (okita, itta.) Then say \"I washed my face\", politely. (kao o araimashita.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: た becomes て",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おきて、かおを あらいました。 okite, kao o araimashita. — \"I got up and washed my face.\""
+            },
+            {
+              "kind": "speech",
+              "text": "おきて (okite) is おきた (okita) with え in place of あ: た becomes て. A sentence can hold several actions this way, in the order they happened, and the last verb says when: ました puts all of them in the past."
+            },
+            {
+              "kind": "speech",
+              "text": "あさ おきて、かおを あらいました。 asa okite, kao o araimashita. — \"In the morning I got up and washed my face.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The other verbs that drop る do the same, and so do する and くる: たべた gives たべて (tabete), した gives して (shite), きた gives きて (kite)."
+            },
+            {
+              "kind": "speech",
+              "text": "ばんごはんを たべて、ねました。 bangohan o tabete, nemashita. — \"I ate dinner and went to bed.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You know this form already from a request: いって ください (itte kudasai), \"please say it\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: って, んで, いて, して",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The past by the last kana gives the -て form by the last kana, with the same swap: だ becomes で."
+            },
+            {
+              "kind": "speech",
+              "text": "いった becomes いって (itte), かった becomes かって (katte), あらった becomes あらって (aratte)."
+            },
+            {
+              "kind": "speech",
+              "text": "のんだ becomes のんで (nonde), あそんだ becomes あそんで (asonde)."
+            },
+            {
+              "kind": "speech",
+              "text": "かいた becomes かいて (kaite), およいだ becomes およいで (oyoide), はなした becomes はなして (hanashite)."
+            },
+            {
+              "kind": "speech",
+              "text": "かおを あらって、でかけました。 kao o aratte, dekakemashita. — \"I washed my face and went out.\""
+            },
+            {
+              "kind": "speech",
+              "text": "えきに いって、きっぷを かいました。 eki ni itte, kippu o kaimashita. — \"I went to the station and bought a ticket.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I drank tea and went out\" — ocha o nonde, dekakemashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I drank tea and went out\" — *ocha o nonde, dekakemashita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I drank coffee and went out\" — kōhī o nonde, dekakemashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I drank coffee and went out\" — *kōhī o nonde, dekakemashita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I drank water and went out\" — mizu o nonde, dekakemashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I drank water and went out\" — *mizu o nonde, dekakemashita*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C252-okite-say",
+              "prompt": "Say, politely, that you got up and washed your face.",
+              "assesses": [
+                "JA-GRAMMAR-C252-TE-01",
+                "JA-GRAMMAR-C252-TE-02"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "okite, kao o araimashita",
+                "おきて、かおを あらいました。",
+                "okite kao o araimashita",
+                "おきて、かおを あらいました"
+              ],
+              "feedback": {
+                "correct": "okite: okita with e in place of a, then the polite past at the end.",
+                "incorrect": "Turn okita into okite, and let araimashita say when: okite, kao o araimashita."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The -て form of おきる? (おきて.) Of する? (して.) Of いく? (いって.) Of のむ? (のんで.) Which verb says when it happened? (The last one.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C252-tabete-kara",
+      "sequence": 15080,
+      "title": "たべてから (tabete kara) — after doing",
+      "headword": "たべてから",
+      "romanization": "tabete kara",
+      "gloss": "after eating — -te kara, one action finished before the next begins",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31b3d0bec1ddb52a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I ate breakfast and went out\". (asagohan o tabete, dekakemashita.) Now make the order matter: first breakfast, and only then out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -てから",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あさごはんを たべてから、でかけました。 asagohan o tabete kara, dekakemashita. — \"After eating breakfast, I went out.\""
+            },
+            {
+              "kind": "speech",
+              "text": "から (kara) after the -て form makes \"after\": the first action was over before the second began. -て alone lines actions up; -てから says one waited for the other."
+            },
+            {
+              "kind": "speech",
+              "text": "てがみを かいてから、ねました。 tegami o kaite kara, nemashita. — \"After writing a letter, I went to bed.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: plans and habits",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With the non-past, -てから gives the order of a plan or a habit:"
+            },
+            {
+              "kind": "speech",
+              "text": "はを みがいてから、ねます。 ha o migaite kara, nemasu. — \"I brush my teeth before I go to bed.\""
+            },
+            {
+              "kind": "speech",
+              "text": "しゅくだいを してから、あそびます。 shukudai o shite kara, asobimasu. — \"I will play after doing my homework.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two more words for \"and then\", which start a new sentence, come next."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"After eating dinner, I went to bed\" — bangohan o tabete kara, nemashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"After eating dinner, I went to bed\" — *bangohan o tabete kara, nemashita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"After eating lunch, I went to bed\" — hirugohan o tabete kara, nemashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"After eating lunch, I went to bed\" — *hirugohan o tabete kara, nemashita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"After eating breakfast, I went to bed\" — asagohan o tabete kara, nemashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"After eating breakfast, I went to bed\" — *asagohan o tabete kara, nemashita*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C252-tabete-kara-say",
+              "prompt": "Say that you will play after doing your homework.",
+              "assesses": [
+                "JA-GRAMMAR-C252-TE-KARA-01",
+                "JA-GRAMMAR-C252-TE-KARA-02"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "shukudai o shite kara, asobimasu",
+                "しゅくだいを してから、あそびます。",
+                "shukudai o shite kara asobimasu"
+              ],
+              "feedback": {
+                "correct": "shite kara: the homework comes first, and only then the play.",
+                "incorrect": "Homework first: shukudai o shite kara, then asobimasu."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"After eating\"? (たべてから (tabete kara).) \"After writing\"? (かいてから.) What does から add to -て? (The first action is over before the next begins.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C252-sorekara",
+      "sequence": 15090,
+      "title": "それから (sorekara) — and then; after that",
+      "headword": "それから",
+      "romanization": "sorekara",
+      "gloss": "and then; after that",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:116fc990b8b93041",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say \"after eating breakfast, I went out\". (asagohan o tabete kara, dekakemashita.) Then say \"that\", a thing near the listener. (sore.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: それから",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "それから — sorekara — \"and then\", \"after that\". It opens the next sentence, and 、 follows it."
+            },
+            {
+              "kind": "speech",
+              "text": "あさごはんを たべました。 asagohan o tabemashita. — \"I ate breakfast.\""
+            },
+            {
+              "kind": "speech",
+              "text": "それから、でかけました。 sorekara, dekakemashita. — \"After that, I went out.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "それから (sorekara) is a native Japanese word (wago), inherited rather than borrowed from Chinese: それ (sore), \"that\", and から (kara), \"from\", so \"from that point on\". JMdict lists it as an expression, \"and then; after that\" (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sorekara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sorekara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"After that, I went out\" — sorekara, dekakemashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"After that, I went out\" — *sorekara, dekakemashita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"After that, I went home\" — sorekara, kaerimashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"After that, I went home\" — *sorekara, kaerimashita*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C252-sorekara-say",
+              "prompt": "Say the Japanese for 'and then, after that'.",
+              "assesses": [
+                "JA-LEX-C252-SOREKARA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "sorekara",
+                "それから",
+                "sore kara"
+              ],
+              "feedback": {
+                "correct": "Right: sorekara is 'and then; after that'.",
+                "incorrect": "'And then' is sorekara."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"And then\", at the start of a sentence? (それから, sorekara.) Which mark follows it? (、.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C252-soshite",
+      "sequence": 15100,
+      "title": "そして (soshite) — and; joining two sentences",
+      "headword": "そして",
+      "romanization": "soshite",
+      "gloss": "and; joining two sentences",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:893f6d4aef09038c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say \"after that, I went out\". (sorekara, dekakemashita.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: そして",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "そして — soshite — \"and\", at the start of a sentence. それから (sorekara) says what came next in time; そして adds the next thing."
+            },
+            {
+              "kind": "speech",
+              "text": "うみに いきました。 umi ni ikimashita. — \"I went to the sea.\""
+            },
+            {
+              "kind": "speech",
+              "text": "そして、およぎました。 soshite, oyogimashita. — \"And I swam.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "そして (soshite) is a native Japanese word (wago), inherited rather than borrowed from Chinese. It is usually explained as そ (so), \"that way\", the same so- as in それ, with して (shite), the -て form of する. JMdict marks it as usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soshite",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *soshite*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"And I swam\" — soshite, oyogimashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"And I swam\" — *soshite, oyogimashita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"And I played\" — soshite, asobimashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"And I played\" — *soshite, asobimashita*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C252-soshite-say",
+              "prompt": "Say the Japanese for 'and', at the start of a sentence.",
+              "assesses": [
+                "JA-LEX-C252-SOSHITE-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "soshite",
+                "そして"
+              ],
+              "feedback": {
+                "correct": "Right: soshite is 'and', opening the next sentence.",
+                "incorrect": "'And', opening a sentence, is soshite."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"And\", opening a sentence? (そして, soshite.) \"And then\", in time? (それから, sorekara.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C252-tsukihi",
+      "sequence": 15110,
+      "title": "月日 (tsukihi) — the passing of time",
+      "headword": "月日",
+      "romanization": "tsukihi",
+      "gloss": "the passing of time; time gone by",
+      "script": "japanese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:520268e564a5ad19",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "You'll want to know: 月日"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: You'll want to know: 月日."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say \"the moon\". (tsuki.) Then say \"fast\". (hayai.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 月日",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "月日 — tsukihi — \"the passing of time\": months and days, gone by."
+            },
+            {
+              "kind": "speech",
+              "text": "月日は はやいです。 tsukihi wa hayai desu. — \"Time flies.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two beats, then two more: tsu–ki–hi. The second sign is 日, the kanji you write. The first is new: 月, read つき (tsuki) here, \"the moon\", the word you know. The next lesson writes it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "月日 (tsukihi) is a native Japanese word (wago), inherited rather than borrowed from Chinese: つき (tsuki), \"the moon, a month\", and ひ (hi), \"a day\", each written with its kanji and read the native way, as a kun'yomi. JMdict glosses the whole as \"time; years; days\", and KANJIDIC2 gives つき for the first kanji and ひ for the second (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukihi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukihi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Time flies\" — tsukihi wa hayai desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Time flies\" — *tsukihi wa hayai desu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the moon, then a day, then the two together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the moon, then a day, then the two together]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C252-tsukihi-say",
+              "prompt": "Say the Japanese for 'the passing of time'.",
+              "assesses": [
+                "JA-LEX-C252-TSUKIHI-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "tsukihi",
+                "月日",
+                "つきひ"
+              ],
+              "feedback": {
+                "correct": "Right: tsukihi, months and days gone by.",
+                "incorrect": "'The passing of time' is tsukihi."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"The passing of time\"? (月日, tsukihi.) Which sign do you already write? (日.) How is the new one read here? (つき, tsuki.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W252-tsuki-kanji",
+      "sequence": 15120,
+      "title": "月 (tsuki) — the moon, four strokes",
+      "headword": "月",
+      "romanization": "tsuki",
+      "gloss": "the four-stroke kanji for the moon or a month, read tsuki in 月日",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:756bf4ca67ac3a9d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say tsukihi, the passing of time. Its second sign is 日, which you write. Today the first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "月 — tsuki."
+            },
+            {
+              "kind": "speech",
+              "text": "Its parts:"
+            },
+            {
+              "kind": "speech",
+              "text": "a tall frame, open at the bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "two short bars inside."
+            },
+            {
+              "kind": "speech",
+              "text": "Four strokes, three lifts:"
+            },
+            {
+              "kind": "speech",
+              "text": "draw the left side from the top down, sweeping a little to the left at the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, draw the top from left to right, then without lifting turn down the right side and hook left at its foot."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, draw the upper inside bar from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, draw the lower inside bar from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "Like 日 it is taller than it is wide and has bars inside, but it is open at the bottom, and its first stroke sweeps away to the left. Here it is read つき (tsuki), as in 月日 (tsukihi). Kanji have more than one reading; this lesson asks only for the one in the word you know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Find 月 (tsuki) in 月日 and say tsukihi."
+            },
+            {
+              "kind": "speech",
+              "text": "Copy 月 three times, saying tsuki at each one."
+            },
+            {
+              "kind": "speech",
+              "text": "Find it once more, in 月日は はやいです (tsukihi wa hayai desu), and say the line."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which way does the first stroke sweep at its foot? (A little to the left.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: KanjiVG stroke-order data: KanjiVG, kanji/06708.svg, kanji 月 (tsuki) (U+6708), 4 stroke paths kvg:06708-s1 to s4 (Ulrich Apel and contributors, CC BY-SA 3.0). Only the order and direction are taken from it."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-W252-tsuki-kanji-strokes",
+              "prompt": "How many strokes does the kanji read tsuki in tsukihi have?",
+              "assesses": [
+                "JA-SCRIPT-KANJI-TSUKI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "four",
+                "4",
+                "four strokes"
+              ],
+              "feedback": {
+                "correct": "Four: the left side, the top turning down the right, and two bars inside.",
+                "incorrect": "Four strokes: left side, top and right side, then the two inside bars."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R252-one-thing-then-the-next",
+      "sequence": 15130,
+      "title": "Review — one thing, then the next",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "a morning told in order, one action after another",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8aaca5f4bcd65b95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I got up and washed my face\", then \"after that, I went out\". (okite, kao o araimashita; sorekara, dekakemashita.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In the morning I got up, and washed my face.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: In the morning I got up, and washed my face.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "After eating breakfast, I went out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: After eating breakfast, I went out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I went to the sea. And I swam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I went to the sea. And I swam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I wrote a letter. After that, I went to bed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I wrote a letter. After that, I went to bed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Time flies.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Time flies.]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R252-one-thing-then-the-next-say",
+              "prompt": "Say that you went to the station and bought a ticket, then that after eating lunch you went home.",
+              "assesses": [
+                "JA-GRAMMAR-C252-TE-02",
+                "JA-GRAMMAR-C252-TE-KARA-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "eki ni itte, kippu o kaimashita; hirugohan o tabete kara, kaerimashita",
+                "えきに いって、きっぷを かいました。ひるごはんを たべてから、かえりました。",
+                "eki ni itte kippu o kaimashita, hirugohan o tabete kara kaerimashita"
+              ],
+              "feedback": {
+                "correct": "itte joins the actions; tabete kara puts lunch first.",
+                "incorrect": "Join with itte, and say 'after' with tabete kara."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The -て form of かう? (かって.) Of よむ? (よんで.) \"After writing\"? (かいてから.) \"After that\", opening a sentence? (それから (sorekara).) \"And\", opening a sentence? (そして (soshite).) \"Time flies\"? (月日は はやいです.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

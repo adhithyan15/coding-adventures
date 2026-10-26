@@ -1,0 +1,18 @@
+{
+  "language": "japanese",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:99e8043e319ef94a",
+  "lessonIds": [
+    "JA-C251-ashita-iku",
+    "JA-C251-ikanai",
+    "JA-C251-naru",
+    "JA-R251-tomorrow-and-not"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "japanese/narration/ch251.txt",
+  "json": "japanese/narration/ch251.json",
+  "textHash": "fnv1a64:36113f2fd793d8d2",
+  "jsonHash": "fnv1a64:3f76e254a0708e99",
+  "findings": []
+}

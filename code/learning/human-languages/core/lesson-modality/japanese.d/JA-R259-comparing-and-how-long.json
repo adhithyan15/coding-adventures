@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R259-comparing-and-how-long",
+    "language": "japanese",
+    "chapter": 259,
+    "sequence": 15520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9231c918205a4ae5"
+  },
+  "findings": []
+}

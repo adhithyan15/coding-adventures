@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C254-iidasu",
+    "language": "japanese",
+    "chapter": 254,
+    "sequence": 15220,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e532c024d9d9a1af"
+  },
+  "findings": []
+}

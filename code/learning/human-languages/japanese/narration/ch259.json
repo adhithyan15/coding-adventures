@@ -1,0 +1,739 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 259,
+  "title": "Comparing, and How Long",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e64257e4c05f6343",
+  "lessons": [
+    {
+      "id": "JA-C259-yori",
+      "sequence": 15480,
+      "title": "より (yori) — than",
+      "headword": "より",
+      "romanization": "yori",
+      "gloss": "than — A wa B yori …, and B yori A no hō ga …",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de148ab1757ae3e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"fast\" and \"a plane\". (hayai, hikōki.) Then \"you had better rest\". (yasunda hō ga ii desu.) Its ほう is back today."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: A は B より",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひこうきは でんしゃより はやいです。 hikōki wa densha yori hayai desu. — \"A plane is faster than a train.\""
+            },
+            {
+              "kind": "speech",
+              "text": "より (yori), \"than\", follows the thing you measure against. The adjective does not change: はやい is \"faster\" here."
+            },
+            {
+              "kind": "speech",
+              "text": "なつは ふゆより あついです。 natsu wa fuyu yori atsui desu. — \"Summer is hotter than winter.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: B より A の ほうが",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To put the winner last, の ほうが (no hō ga), \"the side of\", marks it:"
+            },
+            {
+              "kind": "speech",
+              "text": "ふゆより なつの ほうが すきです。 fuyu yori natsu no hō ga suki desu. — \"I like summer more than winter.\""
+            },
+            {
+              "kind": "speech",
+              "text": "やまより うみの ほうが すきです。 yama yori umi no hō ga suki desu. — \"I like the sea more than the mountains.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I like the sea more than the mountains\" — yama yori umi no hō ga suki desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I like the sea more than the mountains\" — *yama yori umi no hō ga suki desu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I like the river more than the mountains\" — yama yori kawa no hō ga suki desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I like the river more than the mountains\" — *yama yori kawa no hō ga suki desu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I like the town more than the mountains\" — yama yori machi no hō ga suki desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I like the town more than the mountains\" — *yama yori machi no hō ga suki desu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C259-yori-say",
+              "prompt": "Say that a plane is faster than a train.",
+              "assesses": [
+                "JA-GRAMMAR-C259-COMPARE-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "hikōki wa densha yori hayai desu",
+                "ひこうきは でんしゃより はやいです。",
+                "hikouki wa densha yori hayai desu"
+              ],
+              "feedback": {
+                "correct": "densha yori: than the train; hayai stays as it is.",
+                "incorrect": "Hikōki wa, densha yori, hayai desu."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Than\"? (より (yori).) Does はやい change for \"faster\"? (No.) \"I like summer more than winter\"? (ふゆより なつの ほうが すきです.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C259-dochira",
+      "sequence": 15490,
+      "title": "どちら (dochira) — which (of two)",
+      "headword": "どちら",
+      "romanization": "dochira",
+      "gloss": "which (of two)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:409a306ad79afa5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say \"I like the sea more than the mountains\". (yama yori umi no hō ga suki desu.) Then \"where\" and \"which\". (doko, dono.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: どちら",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どちら — dochira — \"which\" of two. Name the two with と, then ask:"
+            },
+            {
+              "kind": "speech",
+              "text": "なつと ふゆと どちらが すきですか。 natsu to fuyu to dochira ga suki desu ka. — \"Which do you like better, summer or winter?\""
+            },
+            {
+              "kind": "speech",
+              "text": "なつの ほうが すきです。 natsu no hō ga suki desu. — \"I like summer better.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どちら (dochira) is a native Japanese word (wago), inherited rather than borrowed from Chinese: the do- of どこ and どの, \"which\", with -chira, a direction ending. JMdict marks it as usually written in kana and glosses it \"which one (esp. of two alternatives)\" and \"which way\" (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dochira",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dochira*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Which do you like better, the sea or the mountains?\" — umi to yama to dochira ga suki desu ka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Which do you like better, the sea or the mountains?\" — *umi to yama to dochira ga suki desu ka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Which do you like better, tea or coffee?\" — ocha to kōhī to dochira ga suki desu ka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Which do you like better, tea or coffee?\" — *ocha to kōhī to dochira ga suki desu ka*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C259-dochira-say",
+              "prompt": "Ask which someone likes better, summer or winter.",
+              "assesses": [
+                "JA-LEX-C259-DOCHIRA-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "natsu to fuyu to dochira ga suki desu ka",
+                "なつと ふゆと どちらが すきですか。",
+                "dochira ga suki desu ka"
+              ],
+              "feedback": {
+                "correct": "Right: the two with to, then dochira ga.",
+                "incorrect": "Name the two with to, then dochira ga suki desu ka."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Which\", of two? (どちら, dochira.) And the answer starts? (With the winner and の ほうが.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C259-ichiban",
+      "sequence": 15500,
+      "title": "いちばん (ichiban) — the most; number one",
+      "headword": "いちばん",
+      "romanization": "ichiban",
+      "gloss": "the most; number one",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2531fdcb536fb6bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: ask \"which do you like better, summer or winter?\" (natsu to fuyu to dochira ga suki desu ka.) Then say \"summer is hotter than winter\". (natsu wa fuyu yori atsui desu.) And \"one\". (ichi.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いちばん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いちばん — ichiban — \"the most\", \"number one\". It goes before the adjective, and with more than two things to choose from:"
+            },
+            {
+              "kind": "speech",
+              "text": "なつが いちばん すきです。 natsu ga ichiban suki desu. — \"I like summer best.\""
+            },
+            {
+              "kind": "speech",
+              "text": "かぞくの なかで ちちが いちばん たかいです。 kazoku no naka de chichi ga ichiban takai desu. — \"In my family my father is the tallest.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いちばん (ichiban) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, \"one\" (Middle Chinese 'jit) and ban, \"number in a series\" (phjon), so \"number one\" (KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict gives \"number one; first\" and \"best; most\" (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ichiban",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ichiban*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I like spring best\" — haru ga ichiban suki desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I like spring best\" — *haru ga ichiban suki desu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I like autumn best\" — aki ga ichiban suki desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I like autumn best\" — *aki ga ichiban suki desu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C259-ichiban-say",
+              "prompt": "Say that you like summer best.",
+              "assesses": [
+                "JA-LEX-C259-ICHIBAN-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "natsu ga ichiban suki desu",
+                "なつが いちばん すきです。",
+                "なつが いちばん すきです"
+              ],
+              "feedback": {
+                "correct": "Right: ichiban before suki.",
+                "incorrect": "Ichiban goes before the adjective: natsu ga ichiban suki desu."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"The most\"? (いちばん, ichiban.) Two things to compare: どちら (dochira) or いちばん? (どちら (dochira); いちばん is for more than two.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C259-nijikan-gurai",
+      "sequence": 15510,
+      "title": "にじかんぐらい / くじから ごじまで (nijikan gurai / kuji kara goji made) — how long",
+      "headword": "にじかんぐらい / くじから ごじまで",
+      "romanization": "nijikan gurai / kuji kara goji made",
+      "gloss": "about two hours, from nine to five — how long, and from when to when",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a657b10e583c4c4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"time, an hour\" and \"a minute\". (jikan, fun.) Then \"to take\", of time. (kakaru.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 〜じかんぐらい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くうこうまで にじかん かかります。 kūkō made nijikan kakarimasu. — \"It takes two hours to the airport.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A number before じかん counts hours: にじかん (nijikan), two hours. Before ふん it counts minutes: ごふん (gofun), five minutes. ぐらい (gurai), \"about\", follows the time:"
+            },
+            {
+              "kind": "speech",
+              "text": "くうこうまで にじかんぐらい かかります。 kūkō made nijikan gurai kakarimasu. — \"It takes about two hours to the airport.\""
+            },
+            {
+              "kind": "speech",
+              "text": "えきまで ごふんぐらい あるきます。 eki made gofun gurai arukimasu. — \"I walk about five minutes to the station.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: 〜から 〜まで",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "から (kara) after a time or a place is \"from\", and まで is \"until\", \"as far as\":"
+            },
+            {
+              "kind": "speech",
+              "text": "くじから ごじまで はたらきます。 kuji kara goji made hatarakimasu. — \"I work from nine to five.\""
+            },
+            {
+              "kind": "speech",
+              "text": "げつようびから きんようびまで はたらきます。 getsuyōbi kara kin'yōbi made hatarakimasu. — \"I work from Monday to Friday.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I work from nine to five\" — kuji kara goji made hatarakimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I work from nine to five\" — *kuji kara goji made hatarakimasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I work from eight to five\" — hachiji kara goji made hatarakimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I work from eight to five\" — *hachiji kara goji made hatarakimasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I work from ten to five\" — jūji kara goji made hatarakimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I work from ten to five\" — *jūji kara goji made hatarakimasu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C259-nijikan-gurai-say",
+              "prompt": "Say that it takes about two hours to the airport.",
+              "assesses": [
+                "JA-GRAMMAR-C259-DURATION-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "kūkō made nijikan gurai kakarimasu",
+                "くうこうまで にじかんぐらい かかります。",
+                "kuukou made nijikan gurai kakarimasu"
+              ],
+              "feedback": {
+                "correct": "nijikan gurai: two hours, then about.",
+                "incorrect": "Kūkō made, nijikan gurai, kakarimasu."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"About two hours\"? (にじかんぐらい.) \"Five minutes\"? (ごふん.) \"From Monday to Friday\"? (げつようびから きんようびまで.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R259-comparing-and-how-long",
+      "sequence": 15520,
+      "title": "Review — comparing, and how long",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "comparing two places, the one you like best, and how long the trip takes",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9231c918205a4ae5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a plane is faster than a train\". (hikōki wa densha yori hayai desu.) Then \"about two hours\". (nijikan gurai.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Summer is hotter than winter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Summer is hotter than winter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I like the sea more than the mountains.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I like the sea more than the mountains.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In my family my father is the tallest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: In my family my father is the tallest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I walk about five minutes to the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I walk about five minutes to the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I work from Monday to Friday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I work from Monday to Friday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I have been to the sea, and in the future I want to become a doctor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I have been to the sea, and in the future I want to become a doctor.]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R259-comparing-and-how-long-say",
+              "prompt": "Ask which someone likes better, the sea or the mountains, then say you work from nine to five.",
+              "assesses": [
+                "JA-LEX-C259-DOCHIRA-01",
+                "JA-GRAMMAR-C259-DURATION-02"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "umi to yama to dochira ga suki desu ka; kuji kara goji made hatarakimasu",
+                "うみと やまと どちらが すきですか。くじから ごじまで はたらきます。",
+                "umi to yama to dochira ga suki desu ka, kuji kara goji made hatarakimasu"
+              ],
+              "feedback": {
+                "correct": "dochira ga for two; kara … made for from … to.",
+                "incorrect": "The two with to, dochira ga suki desu ka; then kuji kara goji made."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Than\"? (より (yori).) \"Which, of two\"? (どちら (dochira).) \"The most\"? (いちばん (ichiban).) \"About\"? (ぐらい.) \"From … until …\"? (から … まで.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

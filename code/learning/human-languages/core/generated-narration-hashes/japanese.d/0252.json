@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:1f0255e478d8756a",
+  "lessonIds": [
+    "JA-C252-okite",
+    "JA-C252-tabete-kara",
+    "JA-C252-sorekara",
+    "JA-C252-soshite",
+    "JA-C252-tsukihi",
+    "JA-W252-tsuki-kanji",
+    "JA-R252-one-thing-then-the-next"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 4,
+  "text": "japanese/narration/ch252.txt",
+  "json": "japanese/narration/ch252.json",
+  "textHash": "fnv1a64:ed9f42a7f2ba461e",
+  "jsonHash": "fnv1a64:9fcefab94d1af090",
+  "findings": []
+}
