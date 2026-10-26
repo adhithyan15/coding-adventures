@@ -51,6 +51,8 @@ public static class MosaicRuntimeHost
         private int disposed;
         private readonly object? component;
         private readonly PropertyInfo? projectionProperty;
+        private readonly PropertyInfo? realizationProperty;
+        private readonly (long, long)? realizationStart;
         private readonly (long, long, long, long)? projectionStart;
         internal ProfileScope(string phase, object? component)
         {
@@ -66,11 +68,25 @@ public static class MosaicRuntimeHost
                     projectionProperty = property;
             }
             catch { /* Diagnostics must not affect application success. */ }
+            try
+            {
+                var property = component?.GetType().GetProperty("MosaicRealizationCounts");
+                if (property?.PropertyType == typeof(ValueTuple<long, long>)
+                    && property.GetIndexParameters().Length == 0)
+                    realizationProperty = property;
+            }
+            catch { /* Diagnostics must not affect application success. */ }
+            realizationStart = ReadRealization();
             projectionStart = ReadProjection();
         }
         private (long, long, long, long)? ReadProjection()
         {
             try { return projectionProperty?.GetValue(component) as ValueTuple<long, long, long, long>?; }
+            catch { return null; }
+        }
+        private (long, long)? ReadRealization()
+        {
+            try { return realizationProperty?.GetValue(component) as ValueTuple<long, long>?; }
             catch { return null; }
         }
         public void Dispose()
@@ -80,6 +96,9 @@ public static class MosaicRuntimeHost
             var bytes = GC.GetAllocatedBytesForCurrentThread() - allocated;
             // Intervals may overlap: these deltas describe work during this scope,
             // not exclusive attribution to an event or native element realization.
+            var realizedEnd = ReadRealization();
+            object? realization = realizationStart is { } rs && realizedEnd is { } re
+                ? new { prepared = re.Item1 - rs.Item1, cleared = re.Item2 - rs.Item2 } : null;
             var end = ReadProjection();
             if (projectionStart is { } start && end is { } finish)
             {
@@ -89,9 +108,13 @@ public static class MosaicRuntimeHost
                     reused = finish.Item3 - start.Item3,
                     removed = finish.Item4 - start.Item4
                 };
-                ProfileSamples.Enqueue(JsonSerializer.Serialize(new { phase, milliseconds, bytes, projection }));
+                ProfileSamples.Enqueue(realization is null
+                    ? JsonSerializer.Serialize(new { phase, milliseconds, bytes, projection })
+                    : JsonSerializer.Serialize(new { phase, milliseconds, bytes, projection, realization }));
             }
-            else ProfileSamples.Enqueue(JsonSerializer.Serialize(new { phase, milliseconds, bytes }));
+            else ProfileSamples.Enqueue(realization is null
+                ? JsonSerializer.Serialize(new { phase, milliseconds, bytes })
+                : JsonSerializer.Serialize(new { phase, milliseconds, bytes, realization }));
         }
     }
 
