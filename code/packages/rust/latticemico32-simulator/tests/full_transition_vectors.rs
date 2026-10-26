@@ -237,7 +237,7 @@ fn run_vector(vector: &TransitionVector) {
 
 #[test]
 fn independent_manual_vectors_match_exact_full_state_and_transactions() {
-    assert_eq!(MANUAL_TRANSITIONS.len(), 265);
+    assert_eq!(MANUAL_TRANSITIONS.len(), 308);
     for vector in MANUAL_TRANSITIONS {
         run_vector(vector);
     }
@@ -245,7 +245,7 @@ fn independent_manual_vectors_match_exact_full_state_and_transactions() {
 
 #[test]
 fn pinned_rtl_vectors_match_exact_full_state_and_transactions() {
-    assert_eq!(RTL_TRANSITIONS.len(), 265);
+    assert_eq!(RTL_TRANSITIONS.len(), 183);
     for vector in RTL_TRANSITIONS {
         run_vector(vector);
     }
@@ -259,7 +259,8 @@ fn pinned_rtl_source_facts_are_complete_and_immutably_hashed() {
     let rows = evidence.lines().skip(1).collect::<Vec<_>>();
     assert_eq!(rows.len(), 8);
     for required in [
-        "all_instruction_families",
+        "decoder_opcode_wires",
+        "immediate_operand_mux",
         "narrow_store_bus_replication",
         "store_lane_select",
         "interrupt_csr_surface",

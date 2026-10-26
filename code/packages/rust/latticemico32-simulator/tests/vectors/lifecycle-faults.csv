@@ -15,6 +15,8 @@ restore_bad_base_re0,restore_bad_base,0,InvalidState,true
 restore_bad_base_re1,restore_bad_base,1,InvalidState,true
 step_no_program_re0,step_no_program,0,NoProgramLoaded,true
 step_no_program_re1,step_no_program,1,NoProgramLoaded,true
+step_misaligned_fetch_re0,step_misaligned_fetch,0,MisalignedFetch,true
+step_misaligned_fetch_re1,step_misaligned_fetch,1,MisalignedFetch,true
 step_outside_re0,step_outside,0,FetchOutsideProgram,true
 step_outside_re1,step_outside,1,FetchOutsideProgram,true
 step_unknown_re0,step_unknown,0,UnknownInstruction,true
@@ -31,6 +33,8 @@ step_control_misaligned_re0,step_control_misaligned,0,MisalignedControlFlow,true
 step_control_misaligned_re1,step_control_misaligned,1,MisalignedControlFlow,true
 helper_out_of_range_re0,helper_out_of_range,0,MemoryOutOfRange,true
 helper_out_of_range_re1,helper_out_of_range,1,MemoryOutOfRange,true
+invalid_register_re0,invalid_register,0,InvalidRegister,true
+invalid_register_re1,invalid_register,1,InvalidRegister,true
 run_zero_re0,run_zero,0,ZeroStepBudget,true
 run_zero_re1,run_zero,1,ZeroStepBudget,true
 run_retention_re0,run_retention,0,RetentionLimitExceeded,true

@@ -1,10 +1,10 @@
 # Layer 07bd — LatticeMico32 Functional Simulator
 
 **Status:** `RCPU-083` is complete locally from the independently accepted
-specification: 32 release integration tests, 747 checked-in evidence rows,
-530 generated exact full-state/full-transaction transitions, 52 generated
-lifecycle/fault rollback rows, strict checks, and 94.18% measured release line
-coverage (874/928) pass. A different reviewer must still accept
+specification: 34 release integration tests, 712 checked-in evidence rows,
+491 generated exact full-state/full-transaction transitions, 56 generated
+lifecycle/fault rollback rows, strict checks, and 94.33% measured release line
+coverage (882/935) pass. A different reviewer must still accept
 the exact clean implementation head before publication. `RCPU-084`, the
 dependent gate-level cell, begins only after the functional cell merges.
 
@@ -316,6 +316,13 @@ must be checked in as bounded vectors and must never become a build-time,
 runtime, or network dependency. Differences between manual semantics and the
 pinned RTL must be classified explicitly; the manual controls architectural
 behavior, while the commit controls only the later educational topology.
+
+The completed evidence path is intentionally asymmetric rather than a renamed
+copy of the manual matrix: it re-parses the hash-pinned RTL decoder-wire roster
+and validates concrete operand-mux, narrow-store, lane-select, interrupt,
+exception, and DC.RE constructs. Those constructs select 183 topology cases;
+the separate manual oracle supplies expected architectural results. The 308-row
+manual corpus independently owns semantic boundary selection.
 
 ## 9. Documentation and completion gate
 

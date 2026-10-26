@@ -80,6 +80,11 @@ fn generated_lifecycle_and_fault_matrix_is_typed_and_exactly_atomic() {
                 call_entry = cpu.snapshot().unwrap();
                 cpu.step().unwrap_err()
             }
+            "step_misaligned_fetch" => {
+                cpu.set_fetch_address(0x102);
+                call_entry = cpu.snapshot().unwrap();
+                cpu.step().unwrap_err()
+            }
             "step_outside" => {
                 let mut candidate = before.clone();
                 candidate.pc = 0x108;
@@ -129,6 +134,7 @@ fn generated_lifecycle_and_fault_matrix_is_typed_and_exactly_atomic() {
                 cpu.step().unwrap_err()
             }
             "helper_out_of_range" => cpu.read_memory(0x1_0000, 1).unwrap_err(),
+            "invalid_register" => cpu.write_register(32, 0).unwrap_err(),
             "run_zero" => cpu.run(0).unwrap_err(),
             "run_retention" => cpu.run(MAX_RETAINED_STEPS + 1).unwrap_err(),
             "run_exhausted" => cpu.run(1).unwrap_err(),
@@ -167,5 +173,5 @@ fn generated_lifecycle_and_fault_matrix_is_typed_and_exactly_atomic() {
         assert_eq!(cpu.snapshot().unwrap(), call_entry, "{id} rollback");
         rows += 1;
     }
-    assert_eq!(rows, 52);
+    assert_eq!(rows, 56);
 }

@@ -67,20 +67,31 @@ python3 latticemico32-simulator/tools/generate_vectors.py --check \
   --rtl-root /path/to/lm32-84b3e3ca
 ```
 
-`tools/generate_vectors.py` is an independent manual oracle plus an offline
-RTL evidence generator and immutable-source hash checker; it never imports the
-Rust implementation. It
-reproduces 265 manual and 265 separately named pinned-RTL transitions. Both
-corpora compare all 32 GPRs, every scalar state field, the complete 64-KiB
-memory, image metadata, and every trace/transaction/interrupt/exception field.
-They span every implemented family, narrow-store lane, every CSR, both
-exception-remap states, every interrupt line, ignored-field classes, and the
-declared integer/control boundaries. A separate 52-row generated corpus drives
-typed lifecycle/fault rollback. The legacy 64-row opcode, 61-row canonical
-decode, and 32-row operand corpora remain as small classification checks; the
-operand rows drive 672 additional complete-state ALU transitions. In total,
-747 bounded evidence rows and all 32 release integration tests pass. Measured
-release line coverage is 94.18% (874/928).
+`tools/generate_vectors.py` is an independent manual oracle plus a distinct
+RTL-topology evidence path; it never imports the Rust implementation. The
+manual path reproduces 308 exact architectural boundary transitions. The RTL
+path separately parses the decoder-wire roster and validates concrete decode,
+immediate-mux, narrow-store, lane-select, interrupt, exception, and DC.RE
+constructs from an offline checkout after checking all five immutable source
+hashes. Those source-derived constructs select 183 bounded topology cases;
+the independent manual oracle supplies their expected architectural states
+because the Verilog is evidence for the later gate cell, not an alternate
+functional authority. The normal offline-free check uses the checked-in wire
+manifest, while `--rtl-root` re-extracts and verifies it from source.
+
+Both transition corpora compare all 32 GPRs, every scalar state field, the
+complete 64-KiB memory, image metadata, and every trace/transaction/interrupt/
+exception field. They span every implemented family, both outcomes and maximal
+offsets for every branch predicate, top-of-memory accesses, pseudo-instruction
+equivalences, narrow-store lanes, every CSR, both exception-remap states, every
+interrupt line, ignored-field classes, and declared integer/control boundaries.
+A separate 56-row generated corpus drives every typed lifecycle/fault rollback
+under both DC.RE states, including externally supplied misaligned fetch and
+invalid-register errors. The legacy 64-row opcode, 61-row canonical decode, and
+32-row operand corpora remain as small classification checks; the operand rows
+drive 672 additional complete-state ALU transitions. In total, 712 bounded
+checked-in evidence rows and all 34 release integration tests pass. Measured
+release line coverage is 94.33% (882/935).
 
 The source-evidence table pins these SHA-256 values for commit
 `84b3e3ca0ad9535acaef201c1482342871358b08`:

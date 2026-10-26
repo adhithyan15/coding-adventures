@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import copy
 import hashlib
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -488,7 +489,8 @@ def canonical_word(opcode: int) -> int:
     return imm(opcode)
 
 
-def corpus(kind: str) -> list[Case]:
+def manual_corpus() -> list[Case]:
+    kind = "manual"
     cases: list[Case] = []
     for opcode in OPS:
         word = canonical_word(opcode)
@@ -632,6 +634,309 @@ def corpus(kind: str) -> list[Case]:
                     interrupt_setup,
                 )
             )
+
+    # The accepted manual matrix requires both outcomes for every predicate
+    # at the positive and negative 16-bit displacement endpoints.
+    branch_operands = {
+        0x11: ((7, 7), (7, 8)),
+        0x17: ((7, 8), (7, 7)),
+        0x12: ((1, 0), (0, 1)),
+        0x13: ((1, 1), (0, 1)),
+        0x15: ((2, 1), (1, 2)),
+        0x14: ((1, 1), (1, 2)),
+    }
+    for opcode, (taken_operands, untaken_operands) in branch_operands.items():
+        for taken, operands in ((True, taken_operands), (False, untaken_operands)):
+            for offset in (0x7FFF, 0x8000):
+                word = imm(opcode, 1, 2, offset)
+
+                def branch_setup(state: State, pair=operands):
+                    state.gpr[1], state.gpr[2] = pair
+
+                cases.append(
+                    make_case(
+                        f"manual_branch_{opcode:02x}_{'taken' if taken else 'not_taken'}_{offset:04x}",
+                        word,
+                        branch_setup,
+                    )
+                )
+
+    # The I-format control operations have a distinct signed 26-bit range.
+    for opcode in (0x38, 0x3E):
+        for offset in (0x01FF_FFFF, 0x0200_0000):
+            cases.append(
+                make_case(
+                    f"manual_control_{opcode:02x}_{offset:07x}",
+                    (opcode << 26) | offset,
+                )
+            )
+
+    # Legal data accesses at the last byte, half-word, and word complement
+    # the low-address and out-of-range vectors above.
+    for opcode, width, address in (
+        (0x04, 1, 0xFFFF),
+        (0x10, 1, 0xFFFF),
+        (0x07, 2, 0xFFFE),
+        (0x0B, 2, 0xFFFE),
+        (0x0A, 4, 0xFFFC),
+    ):
+
+        def top_load_setup(state: State, base=address):
+            state.gpr[1] = base
+            state.memory[0xFFFC:0x10000] = bytes.fromhex("80ff7f01")
+
+        cases.append(
+            make_case(
+                f"manual_top_load_{width}_{opcode:02x}",
+                imm(opcode, 1, 3, 0),
+                top_load_setup,
+            )
+        )
+    for opcode, width, address in (
+        (0x0C, 1, 0xFFFF),
+        (0x03, 2, 0xFFFE),
+        (0x16, 4, 0xFFFC),
+    ):
+
+        def top_store_setup(state: State, base=address):
+            state.gpr[1] = base
+            state.gpr[2] = 0x1234_ABCD
+
+        cases.append(
+            make_case(
+                f"manual_top_store_{width}", imm(opcode, 1, 2, 0), top_store_setup
+            )
+        )
+
+    # Source capture must precede the architectural ra link write.
+    cases.append(
+        make_case(
+            "manual_call_ra_overlap",
+            reg(0x36, 29, 0, 0),
+            lambda state: state.gpr.__setitem__(29, 0x200),
+        )
+    )
+    for name, word, mutate in (
+        ("ret", reg(0x30, 29, 0, 0), lambda state: state.gpr.__setitem__(29, 0x200)),
+        ("mv", reg(0x2E, 1, 0, 3), lambda state: state.gpr.__setitem__(1, 0x55AA_00FF)),
+        ("mvhi", imm(0x1E, 0, 3, 0xA55A), None),
+        (
+            "not",
+            imm(0x09, 1, 3, 0),
+            lambda state: state.gpr.__setitem__(1, 0x55AA_00FF),
+        ),
+        ("mvi", imm(0x0D, 0, 3, 0x8001), None),
+        ("nop", imm(0x0D, 0, 0, 0), None),
+    ):
+        cases.append(make_case(f"manual_alias_{name}", word, mutate))
+    return cases
+
+
+# Unlike the manual matrix above, this corpus is organized around concrete
+# constructs parsed and hash-locked in the pinned RTL: decoder opcode wires,
+# decoder groups, store-data/lane muxes, CSR storage, exception routing, and
+# interrupt latch/acceptance logic. Expected architectural results still come
+# from the independent manual oracle because the RTL is topology evidence, not
+# production semantics.
+RTL_OPCODE_WIRES = {
+    "add": 0x2D,
+    "and": 0x28,
+    "andhi": 0x18,
+    "b": 0x30,
+    "bi": 0x38,
+    "be": 0x11,
+    "bg": 0x12,
+    "bge": 0x13,
+    "bgeu": 0x14,
+    "bgu": 0x15,
+    "bne": 0x17,
+    "call": 0x36,
+    "calli": 0x3E,
+    "cmpe": 0x39,
+    "cmpg": 0x3A,
+    "cmpge": 0x3B,
+    "cmpgeu": 0x3C,
+    "cmpgu": 0x3D,
+    "cmpne": 0x3F,
+    "divu": 0x23,
+    "lb": 0x04,
+    "lbu": 0x10,
+    "lh": 0x07,
+    "lhu": 0x0B,
+    "lw": 0x0A,
+    "modu": 0x31,
+    "mul": 0x22,
+    "nor": 0x21,
+    "or": 0x2E,
+    "orhi": 0x1E,
+    "rcsr": 0x24,
+    "sb": 0x0C,
+    "sextb": 0x2C,
+    "sexth": 0x37,
+    "sh": 0x03,
+    "sl": 0x2F,
+    "sr": 0x25,
+    "sru": 0x20,
+    "sub": 0x32,
+    "sw": 0x16,
+    "wcsr": 0x34,
+    "xnor": 0x29,
+    "xor": 0x26,
+}
+
+
+def rtl_corpus(opcode_wires: dict[str, int]) -> list[Case]:
+    cases: list[Case] = []
+    for wire, opcode in sorted(opcode_wires.items()):
+        word = canonical_word(opcode)
+
+        def decode_setup(state: State, op=opcode):
+            if op in (0x03, 0x04, 0x07, 0x0A, 0x0B, 0x0C, 0x10, 0x16):
+                state.gpr[1] = 0x200
+            if op in (0x30, 0x36):
+                state.gpr[1] = 0x100
+            if op == 0x34:
+                state.gpr[2] = 7
+
+        cases.append(make_case(f"rtl_decoder_wire_{wire}", word, decode_setup))
+
+    # The RTL selects register versus immediate operands from instruction bit
+    # 31 around shared operation wires. Exercise every legal immediate primary
+    # opcode as its own source-derived mux case rather than duplicating the
+    # manual corpus's semantic matrix.
+    for opcode in range(0x20):
+        if opcode not in OPS:
+            continue
+        word = canonical_word(opcode)
+
+        def immediate_setup(state: State, op=opcode):
+            if op in (0x03, 0x04, 0x07, 0x0A, 0x0B, 0x0C, 0x10, 0x16):
+                state.gpr[1] = 0x200
+
+        cases.append(
+            make_case(f"rtl_immediate_mux_{OPS[opcode][0]}", word, immediate_setup)
+        )
+
+    # RAISE is selected by a shared RTL wire and then split into the two
+    # profile-visible canonical encodings.
+    cases.extend(
+        (
+            make_case("rtl_raise_break", 0xAC00_0002),
+            make_case("rtl_raise_scall", 0xAC00_0007),
+        )
+    )
+
+    # Concrete load/store mux topology: every byte lane, both half lanes, the
+    # word lane, legal top-of-memory addresses, and failed external requests.
+    for opcode, width, offsets in (
+        (0x0C, 1, range(4)),
+        (0x03, 2, (0, 2)),
+        (0x16, 4, (0,)),
+    ):
+        for offset in offsets:
+            for label, base in (("lane", 0x200), ("bus_error", 0x1_0000)):
+
+                def rtl_store_setup(state: State, value=base):
+                    state.gpr[1] = value
+                    state.gpr[2] = 0x1234_ABCD
+
+                cases.append(
+                    make_case(
+                        f"rtl_store_mux_{width}_{offset}_{label}",
+                        imm(opcode, 1, 2, offset),
+                        rtl_store_setup,
+                    )
+                )
+    for opcode, width, address in (
+        (0x04, 1, 0xFFFF),
+        (0x10, 1, 0xFFFF),
+        (0x07, 2, 0xFFFE),
+        (0x0B, 2, 0xFFFE),
+        (0x0A, 4, 0xFFFC),
+    ):
+
+        def rtl_top_load_setup(state: State, base=address):
+            state.gpr[1] = base
+            state.memory[0xFFFC:0x10000] = bytes.fromhex("80ff7f01")
+
+        cases.append(
+            make_case(
+                f"rtl_load_mux_top_{width}_{opcode:02x}",
+                imm(opcode, 1, 3, 0),
+                rtl_top_load_setup,
+            )
+        )
+
+    # CSR mux/storage and debug-remap storage are separate RTL blocks.
+    for csr in (0, 1, 2, 6, 7, 9, 10):
+
+        def rtl_read_setup(state: State):
+            state.ie, state.eie, state.bie = True, True, False
+            state.im, state.ip, state.eba, state.deba = 0x55, 0xAA, 0x1200, 0x3400
+
+        cases.append(
+            make_case(f"rtl_csr_read_{csr}", reg(0x24, csr, 0, 3), rtl_read_setup)
+        )
+    for csr, value in (
+        (0, 7),
+        (1, 0x55AA),
+        (2, 0xF0),
+        (7, 0x1200),
+        (8, 2),
+        (9, 0x3400),
+    ):
+
+        def rtl_write_setup(state: State, data=value):
+            state.gpr[2] = data
+            state.ip = 0xFFFF
+
+        cases.append(
+            make_case(f"rtl_csr_write_{csr}", reg(0x34, csr, 2, 0), rtl_write_setup)
+        )
+
+    # Each modeled RTL exception source is checked with both normal and
+    # remapped bases, while breakpoint remains on its dedicated debug path.
+    for name, word, mutate in (
+        ("scall", 0xAC00_0007, None),
+        ("break", 0xAC00_0002, None),
+        ("divide_zero", reg(0x23), lambda state: state.gpr.__setitem__(2, 0)),
+        (
+            "data_bus",
+            imm(0x0A, 1, 3, 0),
+            lambda state: state.gpr.__setitem__(1, 0x1_0000),
+        ),
+        ("instruction_bus", 0, lambda state: setattr(state, "pc", 0xFFFF_FFFC)),
+    ):
+        for remap in (False, True):
+
+            def rtl_exception_setup(state: State, inner=mutate, re=remap):
+                state.ie, state.dc_re, state.eba, state.deba = True, re, 0x1000, 0x2000
+                if inner:
+                    inner(state)
+
+            cases.append(
+                make_case(
+                    f"rtl_exception_{name}_re{int(remap)}", word, rtl_exception_setup
+                )
+            )
+
+    # The pinned interrupt block is parameterized over every line and combines
+    # asserted, pending, mask, global enable, and exception routing.
+    for line in range(32):
+        bit = 1 << line
+        for remap in (False, True):
+
+            def rtl_interrupt_setup(state: State, mask=bit, re=remap):
+                state.ie, state.im, state.lines = True, mask, mask
+                state.dc_re, state.eba, state.deba = re, 0x1000, 0x2000
+
+            cases.append(
+                make_case(
+                    f"rtl_interrupt_latch_{line}_re{int(remap)}",
+                    imm(0x0D),
+                    rtl_interrupt_setup,
+                )
+            )
     return cases
 
 
@@ -720,17 +1025,37 @@ def emit_cases(name: str, cases: list[Case]) -> str:
 def rtl_evidence() -> str:
     rows = ["surface,source,sha256,lines,case_prefix\n"]
     facts = [
-        ("all_instruction_families", "lm32_decoder.v", "340-426", "rtl_opcode_"),
-        ("decode_mux_and_csr", "lm32_decoder.v", "428-583", "rtl_rcsr_"),
+        (
+            "decoder_opcode_wires",
+            "lm32_decoder.v",
+            "340-395",
+            "rtl_decoder_wire_",
+        ),
+        (
+            "immediate_operand_mux",
+            "lm32_decoder.v",
+            "428-583",
+            "rtl_immediate_mux_",
+        ),
         (
             "narrow_store_bus_replication",
             "lm32_load_store_unit.v",
             "506-515",
-            "rtl_store_",
+            "rtl_store_mux_",
         ),
-        ("store_lane_select", "lm32_load_store_unit.v", "517-547", "rtl_store_"),
-        ("interrupt_csr_surface", "lm32_interrupt.v", "180-220", "rtl_wcsr_"),
-        ("interrupt_latch_and_enable", "lm32_interrupt.v", "228-317", "rtl_interrupt_"),
+        (
+            "store_lane_select",
+            "lm32_load_store_unit.v",
+            "517-547",
+            "rtl_store_mux_",
+        ),
+        ("interrupt_csr_surface", "lm32_interrupt.v", "180-220", "rtl_csr_"),
+        (
+            "interrupt_latch_and_enable",
+            "lm32_interrupt.v",
+            "228-317",
+            "rtl_interrupt_latch_",
+        ),
         ("exception_control", "lm32_cpu.v", "1680-1815", "rtl_exception_"),
         ("debug_exception_remap", "lm32_debug.v", "288-297", "rtl_exception_"),
     ]
@@ -749,6 +1074,7 @@ def lifecycle_evidence() -> str:
         ("restore_bad_metadata", "InvalidState"),
         ("restore_bad_base", "InvalidState"),
         ("step_no_program", "NoProgramLoaded"),
+        ("step_misaligned_fetch", "MisalignedFetch"),
         ("step_outside", "FetchOutsideProgram"),
         ("step_unknown", "UnknownInstruction"),
         ("step_unsupported", "UnsupportedInstruction"),
@@ -757,6 +1083,7 @@ def lifecycle_evidence() -> str:
         ("step_data_misaligned", "MisalignedData"),
         ("step_control_misaligned", "MisalignedControlFlow"),
         ("helper_out_of_range", "MemoryOutOfRange"),
+        ("invalid_register", "InvalidRegister"),
         ("run_zero", "ZeroStepBudget"),
         ("run_retention", "RetentionLimitExceeded"),
         ("run_exhausted", "StepLimitExceeded"),
@@ -775,12 +1102,63 @@ def lifecycle_evidence() -> str:
     return "".join(rows)
 
 
-def verify_rtl(root: Path) -> None:
+def verify_rtl(root: Path) -> dict[str, int]:
     rtl = root / "rtl"
+    source: dict[str, str] = {}
     for name, expected in RTL_HASHES.items():
-        digest = hashlib.sha256((rtl / name).read_bytes()).hexdigest()
+        raw = (rtl / name).read_bytes()
+        digest = hashlib.sha256(raw).hexdigest()
         if digest != expected:
             raise SystemExit(f"{name}: expected {expected}, got {digest}")
+        source[name] = raw.decode()
+
+    decoder_pairs = {
+        (signal, macro.lower())
+        for signal, macro in re.findall(
+            r"assign\s+op_(\w+)\s*=.*?`LM32_OPCODE_([A-Z0-9_]+)\s*;",
+            source["lm32_decoder.v"],
+        )
+    }
+    expected_pairs = {(name, name) for name in RTL_OPCODE_WIRES}
+    if not expected_pairs.issubset(decoder_pairs):
+        missing = sorted(expected_pairs - decoder_pairs)
+        raise SystemExit(f"lm32_decoder.v: missing opcode-wire evidence: {missing}")
+
+    required_patterns = {
+        "lm32_decoder.v": (
+            r"assign\s+arith\s*=\s*op_add\s*\|\s*op_sub\s*;",
+            r"assign\s+bi_conditional\s*=.*op_be.*op_bg.*op_bge.*op_bgeu.*op_bgu.*op_bne\s*;",
+            r"instruction\[31\]\s*==\s*1'b0",
+        ),
+        "lm32_load_store_unit.v": (
+            r"LM32_SIZE_BYTE:\s*store_data_x\s*=\s*\{4\{store_operand_x\[7:0\]\}\}\s*;",
+            r"LM32_SIZE_HWORD:\s*store_data_x\s*=\s*\{2\{store_operand_x\[15:0\]\}\}\s*;",
+            r"\{`LM32_SIZE_BYTE,\s*2'b11\}:\s*byte_enable_x\s*=\s*4'b0001\s*;",
+            r"\{`LM32_SIZE_HWORD,\s*2'b0\?\}:\s*byte_enable_x\s*=\s*4'b1100\s*;",
+            r"\{`LM32_SIZE_WORD,\s*2'b\?\?\}:\s*byte_enable_x\s*=\s*4'b1111\s*;",
+        ),
+        "lm32_interrupt.v": (
+            r"assign\s+asserted\s*=\s*ip\s*\|\s*interrupt\s*;",
+            r"ip\s*<=\s*asserted\s*&\s*~csr_write_data\[interrupts-1:0\]\s*;",
+            r"assign\s+interrupt_exception\s*=\s*\(\|interrupt_n_exception\)\s*&\s*ie\s*;",
+        ),
+        "lm32_cpu.v": (
+            r"assign\s+instruction_bus_error_exception\s*=",
+            r"assign\s+data_bus_error_exception\s*=",
+            r"assign\s+divide_by_zero_exception\s*=",
+            r"assign\s+system_call_exception\s*=",
+        ),
+        "lm32_debug.v": (r"dc_re\s*<=\s*debug_csr_write_data\[1\]\s*;",),
+    }
+    for name, patterns in required_patterns.items():
+        for pattern in patterns:
+            if re.search(pattern, source[name], re.DOTALL) is None:
+                raise SystemExit(f"{name}: missing structural evidence /{pattern}/")
+    return {
+        signal: RTL_OPCODE_WIRES[signal]
+        for signal, macro in sorted(decoder_pairs)
+        if signal in RTL_OPCODE_WIRES and macro == signal
+    }
 
 
 def write_or_check(path: Path, content: str, check: bool) -> None:
@@ -796,10 +1174,9 @@ def main() -> None:
     parser.add_argument("--check", action="store_true")
     parser.add_argument("--rtl-root", type=Path)
     args = parser.parse_args()
-    if args.rtl_root:
-        verify_rtl(args.rtl_root)
-    manual = corpus("manual")
-    rtl = corpus("rtl")
+    opcode_wires = verify_rtl(args.rtl_root) if args.rtl_root else RTL_OPCODE_WIRES
+    manual = manual_corpus()
+    rtl = rtl_corpus(opcode_wires)
     write_or_check(
         VECTORS / "manual-transitions.rs",
         emit_cases("MANUAL_TRANSITIONS", manual),
@@ -814,7 +1191,7 @@ def main() -> None:
     write_or_check(VECTORS / "lifecycle-faults.csv", lifecycle_evidence(), args.check)
     print(
         f"manual transitions: {len(manual)}; RTL transitions: {len(rtl)}; "
-        "source facts: 8; lifecycle/fault rows: 52"
+        f"source facts: 8; lifecycle/fault rows: {len(lifecycle_evidence().splitlines()) - 1}"
     )
 
 

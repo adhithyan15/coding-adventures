@@ -726,6 +726,63 @@ fn negative_immediate_control_flow_and_pc_wrap_are_exact() {
 }
 
 #[test]
+fn documented_aliases_are_exact_underlying_encodings() {
+    let cases = [
+        ("ret", reg(0x30, 29, 0, 0), 29, 0x200, "b", None),
+        (
+            "mv",
+            reg(0x2e, 1, 0, 3),
+            1,
+            0x55aa_00ff,
+            "or",
+            Some((3, 0x55aa_00ff)),
+        ),
+        (
+            "mvhi",
+            imm(0x1e, 0, 3, 0xa55a),
+            0,
+            0,
+            "orhi",
+            Some((3, 0xa55a_0000)),
+        ),
+        (
+            "not",
+            imm(0x09, 1, 3, 0),
+            1,
+            0x55aa_00ff,
+            "xnori",
+            Some((3, !0x55aa_00ff)),
+        ),
+        (
+            "mvi",
+            imm(0x0d, 0, 3, 0x8001),
+            0,
+            0,
+            "addi",
+            Some((3, 0xffff_8001)),
+        ),
+        ("nop", imm(0x0d, 0, 0, 0), 0, 0, "addi", Some((0, 0))),
+    ];
+    for (name, word, source, value, mnemonic, destination) in cases {
+        let mut cpu = loaded(&[word]);
+        cpu.write_register(source, value).unwrap();
+        let trace = cpu.step().unwrap();
+        assert_eq!(trace.mnemonic, mnemonic, "{name}");
+        if name == "ret" {
+            assert_eq!(trace.branch, Some((true, 0x200)));
+        } else {
+            assert_eq!(trace.destination, destination, "{name}");
+        }
+    }
+
+    let mut overlap = loaded(&[reg(0x36, 29, 0, 0)]);
+    overlap.write_register(29, 0x200).unwrap();
+    let trace = overlap.step().unwrap();
+    assert_eq!(trace.branch, Some((true, 0x200)));
+    assert_eq!(snapshot(&overlap).gpr[29], 0x104);
+}
+
+#[test]
 fn allocation_preflights_cover_snapshot_load_and_late_step_trace() {
     let mut cpu = loaded(&[imm(0x0d, 0, 1, 1)]);
     let before = snapshot(&cpu);
@@ -767,4 +824,37 @@ fn invalid_snapshot_metadata_and_bases_are_rejected() {
         ));
         assert_eq!(snapshot(&cpu), before);
     }
+}
+
+#[test]
+fn external_misaligned_fetch_has_specific_atomic_precedence() {
+    let mut cpu = loaded(&[0]);
+    let mut invalid = snapshot(&cpu);
+    invalid.pc = 0x102;
+    let before_restore = snapshot(&cpu);
+    assert!(matches!(
+        cpu.restore(invalid),
+        Err(Lm32Error::InvalidState { .. })
+    ));
+    assert_eq!(snapshot(&cpu), before_restore);
+
+    cpu.set_fetch_address(0x102);
+    let before_step = snapshot(&cpu);
+    assert_eq!(cpu.step(), Err(Lm32Error::MisalignedFetch { pc: 0x102 }));
+    assert_eq!(snapshot(&cpu), before_step);
+
+    let mut unloaded = Lm32Simulator::new();
+    unloaded.set_fetch_address(2);
+    assert_eq!(unloaded.step(), Err(Lm32Error::NoProgramLoaded));
+
+    let mut interrupted = loaded(&[0]);
+    let mut configured = snapshot(&interrupted);
+    configured.ie = true;
+    configured.im = 1;
+    interrupted.restore(configured).unwrap();
+    interrupted.set_interrupt_lines(1);
+    interrupted.set_fetch_address(0x102);
+    let trace = interrupted.step().unwrap();
+    assert_eq!(trace.mnemonic, "interrupt");
+    assert_eq!(trace.exception.unwrap().id, EXCEPTION_INTERRUPT);
 }

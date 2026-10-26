@@ -347,9 +347,20 @@ impl Lm32Simulator {
         self.state.interrupt_lines = asserted_mask;
     }
 
+    /// Set the next instruction-fetch address without validating it.
+    ///
+    /// This diagnostic/control seam models an externally supplied fetch
+    /// address.  It deliberately permits a misaligned value so the next
+    /// checked execution boundary can report [`Lm32Error::MisalignedFetch`].
+    /// Complete-state restore remains strict and rejects the same value as an
+    /// invalid snapshot.
+    pub fn set_fetch_address(&mut self, pc: u32) {
+        self.state.pc = pc;
+    }
+
     /// Execute one atomic boundary transition.
     pub fn step(&mut self) -> Result<Lm32StepTrace, Lm32Error> {
-        validate_state(&self.state)?;
+        validate_execution_state(&self.state)?;
         let mut candidate = self.try_clone_state(&self.state)?;
         let mut transactions = Vec::new();
         self.allocation_checkpoint()?;
@@ -959,14 +970,19 @@ fn validate_program(program: &[u8], origin: u32) -> Result<(), Lm32Error> {
 }
 
 fn validate_state(state: &Lm32State) -> Result<(), Lm32Error> {
-    if state.memory.len() != MEMORY_SIZE {
-        return Err(Lm32Error::InvalidState {
-            reason: "memory must contain exactly 65536 bytes",
-        });
-    }
+    validate_execution_state(state)?;
     if state.pc & 3 != 0 {
         return Err(Lm32Error::InvalidState {
             reason: "PC must be word aligned",
+        });
+    }
+    Ok(())
+}
+
+fn validate_execution_state(state: &Lm32State) -> Result<(), Lm32Error> {
+    if state.memory.len() != MEMORY_SIZE {
+        return Err(Lm32Error::InvalidState {
+            reason: "memory must contain exactly 65536 bytes",
         });
     }
     if state.eba & 0xff != 0 || state.deba & 0xff != 0 {
