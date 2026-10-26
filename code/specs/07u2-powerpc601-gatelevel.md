@@ -208,3 +208,12 @@ Completion requires:
 The completed conditional-branch repair passes three gate/topology suites,
 three lifecycle suites, the aggregate 239-vector differential, strict checks,
 and 94.58% package line coverage (838/886).
+
+## Independent specification review
+
+An independent exact-head review passed at
+`a315f67feb795253f4074419fb6998077336fca5`. The reviewer reproduced both NXP
+document byte counts and SHA-256 locks, verified the existing-profile OE/Rc
+rejection and six-bit `sraw` CA boundary against those sources, confirmed the
+gate/mux authority and XER preservation contracts, and found the conformance
+matrix complete and bounded away from the separate shift/count/divide cell.
