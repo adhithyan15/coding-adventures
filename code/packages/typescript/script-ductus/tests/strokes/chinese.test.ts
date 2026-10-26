@@ -11,6 +11,7 @@ import {
   penTip,
   type LetterDuctus,
   type Point,
+  type Stroke,
 } from "../../src/strokes";
 import { registerStrokeHonestyTests } from "../support/stroke-honesty";
 
@@ -67,6 +68,13 @@ const NEW_PARTICLE_AND_JOINING_DUCTUS = [
   ],
   [DUCTUS[ductusKey("chinese", "欢")], "%E6%AC%A2", [11, 5, 3, 4, 5, 4]],
 ] as const;
+
+// The fifty-four characters stage 2 teaches to write, in the order its
+// writing lessons write them: tranche a (chapters 31-55), then tranche b
+// (chapters 58-82).
+const STAGE_TWO =
+  "他们妈男叫来这那吃饭喝水买多少去车天今星期年明点午晚手说话想" +
+  "机白长快电打起门问气雨马山做火开下进客乐会课里前";
 
 const OWNER_SCRIPTS = new Set(["chinese"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -1182,5 +1190,851 @@ describe("handwriting ductus", () => {
       );
       expect(penLifts(ductus)).toBe(ductus.strokes.length - 1);
     }
+  });
+});
+
+// Stage 2 (chapters 31-82) teaches fifty-four more characters to write. Each
+// case below pins what its chinese.json row promises about the ductus: the
+// pinned Hanzi Writer Data file for stroke ORDER, one pen path per source
+// median (point counts pinned, so a refit is a visible change), a lift before
+// every stroke but the first, and the way every stroke heads (its first point
+// to its last, to the nearest of eight compass points). Where a character holds a piece the
+// reader has already written (亻 口 日 女 讠 人 大 小 门 马 辶 ...), that slice
+// must head stroke for stroke as the piece does alone, which is what the
+// lesson's "count pieces, not strokes" relies on; where its pieces sit side by
+// side or one over the other, they must not overlap.
+describe("stage 2 handwriting ductus", () => {
+  const zh = (glyph: string) => DUCTUS[ductusKey("chinese", glyph)];
+  // The way a stroke heads, its first point to its last, to the nearest of
+  // the eight compass points: [1, 0] is rightward, [0, -1] straight down,
+  // [-1, -1] down to the left. (+ 0 turns a rounded -0 into 0.)
+  const heading = (stroke: Stroke) => {
+    const path = penPath(stroke);
+    const [a, b] = [path[0], path[path.length - 1]];
+    const octant = Math.round(Math.atan2(b.y - a.y, b.x - a.x) / (Math.PI / 4));
+    return [
+      Math.round(Math.cos((octant * Math.PI) / 4)) + 0,
+      Math.round(Math.sin((octant * Math.PI) / 4)) + 0,
+    ];
+  };
+  const points = (strokes: readonly Stroke[]) =>
+    strokes.flatMap((stroke) => penPath(stroke));
+  const expectStageTwoSource = (
+    letter: LetterDuctus,
+    encodedGlyph: string,
+    pathLengths: number[],
+  ) => {
+    expect(letter.source.url).toBe(
+      `https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/${encodedGlyph}.json`,
+    );
+    expect(letter.source.citation).toMatch(
+      new RegExp(
+        `Hanzi Writer Data ${letter.glyph}\\.json.*medians 1–${letter.strokes.length}.*snapshot 68d10a4`,
+        "i",
+      ),
+    );
+    expect(verifiedLetterFont(letter.glyph, letter.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
+    expect(letter.strokes.map((stroke) => penPath(stroke).length)).toEqual(
+      pathLengths,
+    );
+    expect(letter.strokes.every((stroke) => stroke.segments.length === 1)).toBe(
+      true,
+    );
+    expect(penLifts(letter)).toBe(letter.strokes.length - 1);
+  };
+  const expectSameHeadings = (
+    letter: LetterDuctus,
+    from: number,
+    to: number,
+    piece: LetterDuctus,
+    pieceFrom: number,
+  ) => {
+    expect(letter.strokes.slice(from, to).map(heading)).toEqual(
+      piece.strokes.slice(pieceFrom, pieceFrom + to - from).map(heading),
+    );
+  };
+  const expectLeftOf = (left: readonly Stroke[], right: readonly Stroke[]) => {
+    expect(Math.max(...points(left).map((point) => point.x))).toBeLessThan(
+      Math.min(...points(right).map((point) => point.x)),
+    );
+  };
+  const expectAbove = (top: readonly Stroke[], bottom: readonly Stroke[]) => {
+    expect(Math.min(...points(top).map((point) => point.y))).toBeGreaterThan(
+      Math.max(...points(bottom).map((point) => point.y)),
+    );
+  };
+
+  it("covers every character stage 2 writes, each once", () => {
+    const stageTwo = [...STAGE_TWO];
+    expect(stageTwo).toHaveLength(54);
+    expect(new Set(stageTwo).size).toBe(54);
+    expect(stageTwo.every((glyph) => zh(glyph) !== undefined)).toBe(true);
+  });
+
+  it("Chinese 他 writes 亻 before 也, keeping all five source medians", () => {
+    const letter = zh("他");
+    expectStageTwoSource(letter, "%E4%BB%96", [4, 4, 6, 3, 9]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [-1, -1],
+      [0, -1],
+      [1, 0],
+      [0, -1],
+      [1, -1],
+    ]);
+    expectSameHeadings(letter, 0, 2, zh("亻"), 0);
+    expectLeftOf(letter.strokes.slice(0, 2), letter.strokes.slice(2));
+  });
+
+  it("Chinese 们 writes 亻 before 门, keeping all five source medians", () => {
+    const letter = zh("们");
+    expectStageTwoSource(letter, "%E4%BB%AC", [5, 4, 3, 3, 10]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [-1, -1],
+      [0, -1],
+      [1, -1],
+      [0, -1],
+      [0, -1],
+    ]);
+    expectSameHeadings(letter, 0, 2, zh("亻"), 0);
+    expectSameHeadings(letter, 2, 5, zh("门"), 0);
+    expectLeftOf(letter.strokes.slice(0, 2), letter.strokes.slice(2));
+  });
+
+  it("Chinese 妈 writes 女 before 马, keeping all six source medians", () => {
+    const letter = zh("妈");
+    expectStageTwoSource(letter, "%E5%A6%88", [7, 6, 2, 7, 12, 3]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [0, -1],
+      [0, -1],
+      [1, 0],
+      [1, -1],
+      [0, -1],
+      [1, 0],
+    ]);
+    expectLeftOf(letter.strokes.slice(0, 3), letter.strokes.slice(3));
+  });
+
+  it("Chinese 男 closes 田 before 力, keeping all seven source medians", () => {
+    const letter = zh("男");
+    expectStageTwoSource(letter, "%E7%94%B7", [2, 8, 3, 4, 4, 11, 6]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [0, -1],
+      [1, 0],
+      [1, -1],
+      [-1, -1],
+    ]);
+  });
+
+  it("Chinese 叫 closes 口 before its right side, keeping all five source medians", () => {
+    const letter = zh("叫");
+    expectStageTwoSource(letter, "%E5%8F%AB", [2, 3, 2, 4, 3]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [1, -1],
+      [0, -1],
+    ]);
+    expectSameHeadings(letter, 0, 3, zh("口"), 0);
+    expectLeftOf(letter.strokes.slice(0, 3), letter.strokes.slice(3));
+  });
+
+  it("Chinese 来 writes both horizontals before the vertical and the spreading pair, keeping all seven source medians", () => {
+    const letter = zh("来");
+    expectStageTwoSource(letter, "%E6%9D%A5", [6, 3, 2, 6, 3, 4, 4]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, 0],
+      [1, -1],
+      [-1, -1],
+      [1, 0],
+      [0, -1],
+      [-1, -1],
+      [1, -1],
+    ]);
+    expectSameHeadings(letter, 5, 7, zh("大"), 1);
+  });
+
+  it("Chinese 这 writes 文 before the walking piece 辶, keeping all seven source medians", () => {
+    const letter = zh("这");
+    expectStageTwoSource(letter, "%E8%BF%99", [2, 4, 5, 4, 2, 7, 5]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, -1],
+      [1, 0],
+      [-1, -1],
+      [1, -1],
+      [1, -1],
+      [0, -1],
+      [1, 0],
+    ]);
+    expectSameHeadings(letter, 4, 7, zh("进"), 4);
+  });
+
+  it("Chinese 那 writes the left piece before 阝, keeping all six source medians", () => {
+    const letter = zh("那");
+    expectStageTwoSource(letter, "%E9%82%A3", [5, 2, 2, 4, 8, 3]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [0, -1],
+      [1, 0],
+      [1, 0],
+      [0, -1],
+      [0, -1],
+      [0, -1],
+    ]);
+    expectLeftOf(letter.strokes.slice(0, 4), letter.strokes.slice(4));
+  });
+
+  it("Chinese 吃 closes 口 before 乞, keeping all six source medians", () => {
+    const letter = zh("吃");
+    expectStageTwoSource(letter, "%E5%90%83", [2, 3, 2, 5, 3, 12]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [-1, -1],
+      [1, 0],
+      [1, -1],
+    ]);
+    expectSameHeadings(letter, 0, 3, zh("口"), 0);
+    expectLeftOf(letter.strokes.slice(0, 3), letter.strokes.slice(3));
+  });
+
+  it("Chinese 饭 writes 饣 before 反, whose 又 heads as 对's does, keeping all seven source medians", () => {
+    const letter = zh("饭");
+    expectStageTwoSource(letter, "%E9%A5%AD", [4, 5, 5, 3, 7, 9, 5]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [0, -1],
+      [1, -1],
+      [1, -1],
+      [-1, 0],
+      [0, -1],
+      [0, -1],
+      [1, -1],
+    ]);
+    expectSameHeadings(letter, 5, 7, zh("对"), 0);
+  });
+
+  it("Chinese 喝 closes 口, then 日, before the hooked frame, keeping all twelve source medians", () => {
+    const letter = zh("喝");
+    expectStageTwoSource(letter, "%E5%96%9D", [2, 3, 2, 2, 3, 4, 2, 3, 6, 4, 3, 3]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [0, -1],
+      [0, -1],
+      [1, 0],
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [1, 0],
+      [-1, -1],
+      [1, -1],
+      [-1, -1],
+      [1, -1],
+      [1, -1],
+    ]);
+    expectSameHeadings(letter, 3, 7, zh("日"), 0);
+    expectLeftOf(letter.strokes.slice(0, 3), letter.strokes.slice(3));
+  });
+
+  it("Chinese 水 draws the middle vertical before the left and right sides, keeping all four source medians", () => {
+    const letter = zh("水");
+    expectStageTwoSource(letter, "%E6%B0%B4", [5, 8, 3, 7]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [0, -1],
+      [0, -1],
+      [-1, -1],
+      [1, -1],
+    ]);
+  });
+
+  it("Chinese 买 draws the hooked top before 头, keeping all six source medians", () => {
+    const letter = zh("买");
+    expectStageTwoSource(letter, "%E4%B9%B0", [7, 2, 3, 6, 8, 4]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, 0],
+      [1, -1],
+      [1, -1],
+      [1, 0],
+      [-1, -1],
+      [1, -1],
+    ]);
+  });
+
+  it("Chinese 多 writes the upper 夕 before the lower one, in the same three strokes, keeping all six source medians", () => {
+    const letter = zh("多");
+    expectStageTwoSource(letter, "%E5%A4%9A", [5, 7, 3, 3, 10, 3]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [-1, -1],
+      [-1, -1],
+      [1, -1],
+      [-1, -1],
+      [-1, -1],
+      [1, -1],
+    ]);
+    expectSameHeadings(letter, 3, 6, zh("多"), 0);
+  });
+
+  it("Chinese 少 writes 小 before the long left-falling stroke, keeping all four source medians", () => {
+    const letter = zh("少");
+    expectStageTwoSource(letter, "%E5%B0%91", [4, 3, 3, 5]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [0, -1],
+      [-1, -1],
+      [1, -1],
+      [-1, -1],
+    ]);
+  });
+
+  it("Chinese 去 writes 土 before 厶, keeping all five source medians", () => {
+    const letter = zh("去");
+    expectStageTwoSource(letter, "%E5%8E%BB", [4, 4, 6, 6, 3]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, 0],
+      [0, -1],
+      [1, 0],
+      [1, -1],
+      [1, -1],
+    ]);
+  });
+
+  it("Chinese 车 draws the vertical last, keeping all four source medians", () => {
+    const letter = zh("车");
+    expectStageTwoSource(letter, "%E8%BD%A6", [6, 4, 9, 4]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, 0],
+      [1, -1],
+      [1, 0],
+      [0, -1],
+    ]);
+  });
+
+  it("Chinese 天 writes the upper horizontal before 大, keeping all four source medians", () => {
+    const letter = zh("天");
+    expectStageTwoSource(letter, "%E5%A4%A9", [6, 5, 6, 5]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, 0],
+      [1, 0],
+      [-1, -1],
+      [1, -1],
+    ]);
+    expectSameHeadings(letter, 1, 4, zh("大"), 0);
+  });
+
+  it("Chinese 今 writes the roof as 人 before the dot and the turning stroke, keeping all four source medians", () => {
+    const letter = zh("今");
+    expectStageTwoSource(letter, "%E4%BB%8A", [5, 4, 3, 3]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [-1, -1],
+      [1, -1],
+      [1, -1],
+      [1, -1],
+    ]);
+    expectSameHeadings(letter, 0, 2, zh("人"), 0);
+  });
+
+  it("Chinese 星 closes 日 before 生, keeping all nine source medians", () => {
+    const letter = zh("星");
+    expectStageTwoSource(letter, "%E6%98%9F", [2, 3, 2, 2, 5, 3, 4, 5, 6]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [1, 0],
+      [-1, -1],
+      [1, 0],
+      [1, 0],
+      [0, -1],
+      [1, 0],
+    ]);
+    expectSameHeadings(letter, 0, 4, zh("日"), 0);
+    expectSameHeadings(letter, 4, 9, zh("生"), 0);
+    expectAbove(letter.strokes.slice(0, 4), letter.strokes.slice(4));
+  });
+
+  it("Chinese 期 writes 其 before 月, keeping all twelve source medians", () => {
+    const letter = zh("期");
+    expectStageTwoSource(letter, "%E6%9C%9F", [2, 2, 2, 2, 2, 2, 2, 2, 4, 6, 2, 2]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, 0],
+      [0, -1],
+      [0, -1],
+      [1, 0],
+      [1, 0],
+      [1, 0],
+      [-1, -1],
+      [1, -1],
+      [0, -1],
+      [0, -1],
+      [1, 0],
+      [1, 0],
+    ]);
+    expectSameHeadings(letter, 8, 12, zh("明"), 4);
+    expectLeftOf(letter.strokes.slice(0, 8), letter.strokes.slice(8));
+  });
+
+  it("Chinese 年 draws the long vertical last, keeping all six source medians", () => {
+    const letter = zh("年");
+    expectStageTwoSource(letter, "%E5%B9%B4", [5, 4, 2, 2, 2, 5]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [-1, -1],
+      [1, 0],
+      [1, 0],
+      [0, -1],
+      [1, 0],
+      [0, -1],
+    ]);
+    expectSameHeadings(letter, 0, 3, zh("午"), 0);
+  });
+
+  it("Chinese 明 closes 日 before 月, keeping all eight source medians", () => {
+    const letter = zh("明");
+    expectStageTwoSource(letter, "%E6%98%8E", [5, 5, 2, 2, 8, 10, 2, 2]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [1, 0],
+      [0, -1],
+      [0, -1],
+      [1, 0],
+      [1, 0],
+    ]);
+    expectSameHeadings(letter, 0, 4, zh("日"), 0);
+  });
+
+  it("Chinese 点 writes 占 before the four dots, keeping all nine source medians", () => {
+    const letter = zh("点");
+    expectStageTwoSource(letter, "%E7%82%B9", [2, 2, 2, 3, 2, 2, 3, 2, 3]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [0, -1],
+      [1, 0],
+      [0, -1],
+      [1, 0],
+      [1, 0],
+      [-1, -1],
+      [0, -1],
+      [1, -1],
+      [1, -1],
+    ]);
+    expectAbove(letter.strokes.slice(0, 5), letter.strokes.slice(5));
+  });
+
+  it("Chinese 午 draws the vertical last, after 年's first three strokes, keeping all four source medians", () => {
+    const letter = zh("午");
+    expectStageTwoSource(letter, "%E5%8D%88", [5, 5, 6, 3]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [-1, -1],
+      [1, 0],
+      [1, 0],
+      [0, -1],
+    ]);
+    expectSameHeadings(letter, 0, 3, zh("年"), 0);
+  });
+
+  it("Chinese 晚 closes 日 before 免, which ends with 儿, keeping all eleven source medians", () => {
+    const letter = zh("晚");
+    expectStageTwoSource(letter, "%E6%99%9A", [5, 5, 2, 2, 5, 4, 2, 3, 2, 6, 9]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [0, -1],
+      [0, -1],
+      [1, 0],
+      [1, 0],
+      [-1, -1],
+      [1, -1],
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [-1, -1],
+      [1, -1],
+    ]);
+  });
+
+  it("Chinese 手 draws the hooked vertical last, keeping all four source medians", () => {
+    const letter = zh("手");
+    expectStageTwoSource(letter, "%E6%89%8B", [3, 5, 7, 7]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [-1, 0],
+      [1, 0],
+      [1, 0],
+      [0, -1],
+    ]);
+  });
+
+  it("Chinese 说 writes 讠 before 兑, whose 口 and 儿 head as they do alone, keeping all nine source medians", () => {
+    const letter = zh("说");
+    expectStageTwoSource(letter, "%E8%AF%B4", [3, 6, 2, 3, 2, 3, 2, 6, 8]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, -1],
+      [1, -1],
+      [1, -1],
+      [-1, -1],
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [-1, -1],
+      [1, -1],
+    ]);
+    expectSameHeadings(letter, 0, 2, zh("讠"), 0);
+    expectSameHeadings(letter, 4, 7, zh("口"), 0);
+  });
+
+  it("Chinese 话 writes 讠 before 舌, closing its 口 last, keeping all eight source medians", () => {
+    const letter = zh("话");
+    expectStageTwoSource(letter, "%E8%AF%9D", [2, 5, 2, 2, 2, 2, 3, 2]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, -1],
+      [1, -1],
+      [-1, 0],
+      [1, 0],
+      [0, -1],
+      [0, -1],
+      [1, -1],
+      [1, 0],
+    ]);
+    expectSameHeadings(letter, 0, 2, zh("讠"), 0);
+    expectSameHeadings(letter, 5, 8, zh("口"), 0);
+    expectLeftOf(letter.strokes.slice(0, 2), letter.strokes.slice(2));
+  });
+
+  it("Chinese 想 writes 木 and 目 before 心, keeping all thirteen source medians", () => {
+    const letter = zh("想");
+    expectStageTwoSource(letter, "%E6%83%B3", [3, 4, 4, 3, 3, 6, 4, 3, 2, 3, 7, 3, 3]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, 0],
+      [0, -1],
+      [-1, -1],
+      [1, -1],
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [1, 0],
+      [1, 0],
+      [0, -1],
+      [1, 0],
+      [1, -1],
+      [1, -1],
+    ]);
+    expectSameHeadings(letter, 0, 4, zh("机"), 0);
+    expectAbove(letter.strokes.slice(0, 9), letter.strokes.slice(9));
+  });
+
+  it("Chinese 机 writes 木 before 几, keeping all six source medians", () => {
+    const letter = zh("机");
+    expectStageTwoSource(letter, "%E6%9C%BA", [3, 3, 4, 2, 4, 8]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, 0],
+      [0, -1],
+      [-1, -1],
+      [1, -1],
+      [0, -1],
+      [1, -1],
+    ]);
+    expectSameHeadings(letter, 0, 4, zh("想"), 0);
+  });
+
+  it("Chinese 白 draws the short top stroke before 日, keeping all five source medians", () => {
+    const letter = zh("白");
+    expectStageTwoSource(letter, "%E7%99%BD", [3, 2, 3, 2, 2]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [0, -1],
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [1, 0],
+    ]);
+    expectSameHeadings(letter, 1, 5, zh("日"), 0);
+  });
+
+  it("Chinese 长 draws the vertical after the horizontal it crosses, keeping all four source medians", () => {
+    const letter = zh("长");
+    expectStageTwoSource(letter, "%E9%95%BF", [4, 8, 5, 6]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [-1, -1],
+      [1, 0],
+      [0, -1],
+      [1, -1],
+    ]);
+  });
+
+  it("Chinese 快 writes 忄 before 夬, keeping all seven source medians", () => {
+    const letter = zh("快");
+    expectStageTwoSource(letter, "%E5%BF%AB", [3, 2, 3, 3, 6, 6, 6]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [0, -1],
+      [1, -1],
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [0, -1],
+      [1, -1],
+    ]);
+  });
+
+  it("Chinese 电 closes 日 before the stroke through its middle, keeping all five source medians", () => {
+    const letter = zh("电");
+    expectStageTwoSource(letter, "%E7%94%B5", [2, 3, 2, 2, 11]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [1, 0],
+      [1, -1],
+    ]);
+    expectSameHeadings(letter, 0, 4, zh("日"), 0);
+  });
+
+  it("Chinese 打 writes 扌 before 丁, keeping all five source medians", () => {
+    const letter = zh("打");
+    expectStageTwoSource(letter, "%E6%89%93", [2, 4, 3, 2, 5]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, 0],
+      [0, -1],
+      [1, 0],
+      [1, 0],
+      [0, -1],
+    ]);
+    expectLeftOf(letter.strokes.slice(0, 3), letter.strokes.slice(3));
+  });
+
+  it("Chinese 起 writes 走, its long sweep included, before 己, keeping all ten source medians", () => {
+    const letter = zh("起");
+    expectStageTwoSource(letter, "%E8%B5%B7", [2, 2, 2, 2, 2, 3, 5, 3, 2, 6]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, 0],
+      [0, -1],
+      [1, 0],
+      [0, -1],
+      [1, 0],
+      [0, -1],
+      [1, 0],
+      [1, -1],
+      [1, 0],
+      [1, -1],
+    ]);
+  });
+
+  it("Chinese 门 draws the three strokes that close 们, keeping all three source medians", () => {
+    const letter = zh("门");
+    expectStageTwoSource(letter, "%E9%97%A8", [3, 3, 9]);
+    expect(letter.strokes.map(heading)).toEqual([[1, -1], [0, -1], [0, -1]]);
+    expectSameHeadings(letter, 0, 3, zh("们"), 2);
+  });
+
+  it("Chinese 问 writes 门 before the 口 inside it, keeping all six source medians", () => {
+    const letter = zh("问");
+    expectStageTwoSource(letter, "%E9%97%AE", [2, 3, 8, 4, 6, 4]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, -1],
+      [0, -1],
+      [1, -1],
+      [0, -1],
+      [1, -1],
+      [1, 0],
+    ]);
+    expectSameHeadings(letter, 3, 6, zh("口"), 0);
+  });
+
+  it("Chinese 气 draws the turning last stroke after the three short ones, keeping all four source medians", () => {
+    const letter = zh("气");
+    expectStageTwoSource(letter, "%E6%B0%94", [5, 2, 2, 8]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [-1, -1],
+      [1, 0],
+      [1, 0],
+      [1, -1],
+    ]);
+  });
+
+  it("Chinese 雨 draws the frame and the middle vertical before the four dots, keeping all eight source medians", () => {
+    const letter = zh("雨");
+    expectStageTwoSource(letter, "%E9%9B%A8", [6, 5, 11, 4, 3, 3, 2, 2]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, 0],
+      [0, -1],
+      [1, -1],
+      [0, -1],
+      [1, -1],
+      [1, -1],
+      [1, -1],
+      [1, -1],
+    ]);
+  });
+
+  it("Chinese 马 draws the three strokes that close 吗 and 妈, keeping all three source medians", () => {
+    const letter = zh("马");
+    expectStageTwoSource(letter, "%E9%A9%AC", [6, 12, 5]);
+    expect(letter.strokes.map(heading)).toEqual([[1, -1], [1, -1], [1, 0]]);
+  });
+
+  it("Chinese 山 draws the middle peak first, keeping all three source medians", () => {
+    const letter = zh("山");
+    expectStageTwoSource(letter, "%E5%B1%B1", [2, 3, 2]);
+    expect(letter.strokes.map(heading)).toEqual([[0, -1], [1, -1], [0, -1]]);
+  });
+
+  it("Chinese 做 writes 亻, then 古, then 攵, keeping all eleven source medians", () => {
+    const letter = zh("做");
+    expectStageTwoSource(letter, "%E5%81%9A", [5, 3, 5, 4, 2, 3, 2, 6, 3, 4, 4]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [-1, -1],
+      [0, -1],
+      [1, 0],
+      [0, -1],
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [0, -1],
+      [1, 0],
+      [-1, -1],
+      [1, -1],
+    ]);
+    expectSameHeadings(letter, 0, 2, zh("亻"), 0);
+    expectSameHeadings(letter, 4, 7, zh("口"), 0);
+    expectLeftOf(letter.strokes.slice(0, 2), letter.strokes.slice(2));
+  });
+
+  it("Chinese 火 draws the two short side strokes before 人, keeping all four source medians", () => {
+    const letter = zh("火");
+    expectStageTwoSource(letter, "%E7%81%AB", [3, 3, 9, 6]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [-1, -1],
+      [-1, -1],
+      [-1, -1],
+      [1, -1],
+    ]);
+    expectSameHeadings(letter, 2, 4, zh("人"), 0);
+  });
+
+  it("Chinese 开 draws both horizontals before both legs, keeping all four source medians", () => {
+    const letter = zh("开");
+    expectStageTwoSource(letter, "%E5%BC%80", [3, 8, 8, 4]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, 0],
+      [1, 0],
+      [0, -1],
+      [0, -1],
+    ]);
+  });
+
+  it("Chinese 下 draws the horizontal, then the vertical, then the dot, keeping all three source medians", () => {
+    const letter = zh("下");
+    expectStageTwoSource(letter, "%E4%B8%8B", [6, 3, 2]);
+    expect(letter.strokes.map(heading)).toEqual([[1, 0], [0, -1], [1, -1]]);
+  });
+
+  it("Chinese 进 writes 井 before the walking piece 辶, keeping all seven source medians", () => {
+    const letter = zh("进");
+    expectStageTwoSource(letter, "%E8%BF%9B", [2, 2, 5, 3, 3, 5, 8]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, 0],
+      [1, 0],
+      [0, -1],
+      [0, -1],
+      [1, -1],
+      [0, -1],
+      [1, 0],
+    ]);
+    expectSameHeadings(letter, 4, 7, zh("这"), 4);
+  });
+
+  it("Chinese 客 writes 宀 before 各, closing its 口 last, keeping all nine source medians", () => {
+    const letter = zh("客");
+    expectStageTwoSource(letter, "%E5%AE%A2", [3, 3, 3, 4, 7, 6, 2, 3, 2]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, -1],
+      [0, -1],
+      [1, 0],
+      [-1, -1],
+      [-1, -1],
+      [1, 0],
+      [0, -1],
+      [1, -1],
+      [1, 0],
+    ]);
+    expectSameHeadings(letter, 0, 3, zh("宀"), 0);
+    expectSameHeadings(letter, 6, 9, zh("口"), 0);
+  });
+
+  it("Chinese 乐 writes the top two strokes before 小, keeping all five source medians", () => {
+    const letter = zh("乐");
+    expectStageTwoSource(letter, "%E4%B9%90", [6, 7, 6, 3, 3]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [-1, 0],
+      [1, -1],
+      [0, -1],
+      [-1, -1],
+      [1, -1],
+    ]);
+    expectSameHeadings(letter, 2, 5, zh("小"), 0);
+  });
+
+  it("Chinese 会 writes the roof as 今 does and 厶 as 去 does, keeping all six source medians", () => {
+    const letter = zh("会");
+    expectStageTwoSource(letter, "%E4%BC%9A", [5, 5, 2, 2, 4, 3]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [-1, -1],
+      [1, -1],
+      [1, 0],
+      [1, 0],
+      [1, -1],
+      [1, -1],
+    ]);
+    expectSameHeadings(letter, 0, 2, zh("今"), 0);
+    expectSameHeadings(letter, 4, 6, zh("去"), 3);
+  });
+
+  it("Chinese 课 writes 讠 before 果, closing 田 before 木's vertical, keeping all ten source medians", () => {
+    const letter = zh("课");
+    expectStageTwoSource(letter, "%E8%AF%BE", [3, 5, 2, 3, 2, 2, 2, 2, 3, 3]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, -1],
+      [1, -1],
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [1, 0],
+      [1, 0],
+      [0, -1],
+      [-1, -1],
+      [1, -1],
+    ]);
+    expectSameHeadings(letter, 0, 2, zh("讠"), 0);
+    expectSameHeadings(letter, 2, 6, zh("日"), 0);
+    expectLeftOf(letter.strokes.slice(0, 2), letter.strokes.slice(2));
+  });
+
+  it("Chinese 里 closes 田 before the long vertical and 土, keeping all seven source medians", () => {
+    const letter = zh("里");
+    expectStageTwoSource(letter, "%E9%87%8C", [2, 3, 2, 2, 2, 2, 2]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [1, 0],
+      [0, -1],
+      [1, 0],
+      [1, 0],
+    ]);
+    expectSameHeadings(letter, 0, 4, zh("日"), 0);
+  });
+
+  it("Chinese 前 writes the top, then 月, then 刂, keeping all nine source medians", () => {
+    const letter = zh("前");
+    expectStageTwoSource(letter, "%E5%89%8D", [4, 5, 2, 2, 5, 2, 2, 2, 4]);
+    expect(letter.strokes.map(heading)).toEqual([
+      [1, -1],
+      [-1, -1],
+      [1, 0],
+      [0, -1],
+      [0, -1],
+      [1, 0],
+      [1, 0],
+      [0, -1],
+      [0, -1],
+    ]);
+    expectSameHeadings(letter, 4, 7, zh("明"), 5);
   });
 });
