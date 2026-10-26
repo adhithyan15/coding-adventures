@@ -12,3 +12,9 @@
   239-vector Python full-state differential coverage.
 - Normative Spec 07u2 and strict formatting, Clippy, rustdoc, and line-coverage
   verification.
+- Replace the host-language conditional-branch predicate with BO-controlled
+  CTR-decrement, CR-selection, bypass-mux, polarity, and final-AND gate
+  networks, exhaustively checked against an independent architectural table.
+- Pass three gate/topology suites, three lifecycle suites, all 239 differential
+  vectors, strict formatting/Clippy/rustdoc, and 94.58% line coverage
+  (838/886).
