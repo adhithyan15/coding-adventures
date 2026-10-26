@@ -1335,10 +1335,17 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
     // whose trap fires at the i64 bounds. Rather than extend a hand-kept list
     // (which is how a new i64 op gets forgotten), the op side is *derived*:
     // every registry Op with an `i64` operand type is wide-model evidence.
+    //
+    // LANG83 PR7b: an Op that reads an `f64` (`f64_digits`, whose integer
+    // result reaches 10^17) is evidence too. Such a module computes with
+    // reals, and real modules keep their declared widths (see
+    // `module_uses_real_values` below) — but that check reads type hints,
+    // and an `f64` literal propagated straight into the op leaves none.
     const WIDE_I64_BUILTINS: &[&str] = &["print_i64", "write_i64", "input_i64", "input_more"];
     let is_wide_i64_op = |op: &str| {
         interpreter_ir::op_registry::lookup(op).is_some_and(|spec| {
-            spec.kind == interpreter_ir::op_registry::OpKind::Op && spec.operand_types.contains(&"i64")
+            spec.kind == interpreter_ir::op_registry::OpKind::Op
+                && (spec.operand_types.contains(&"i64") || spec.operand_types.contains(&"f64"))
         })
     };
     let module_prints = module.functions.iter().any(|f| {
@@ -3856,6 +3863,22 @@ mod tests {
         let mut m = module_with("add");
         concretize_scalar_any_for_jvm(&mut m);
         assert_eq!(m.get_function("main").unwrap().return_type, "i32", "plain add still narrows");
+        // LANG83 PR7b: `f64_digits` of a float LITERAL leaves no `f64` type
+        // hint behind, yet its result (up to 10^17) needs the wide model.
+        let mut m = IIRModule::new("m", "test");
+        m.add_or_replace(IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("f64_digits", Some("d".into()), vec![Operand::Float(0.1 + 0.2)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("d".into())], "i64"),
+            ],
+        ));
+        concretize_scalar_any_for_jvm(&mut m);
+        let main = m.get_function("main").unwrap();
+        assert_eq!(main.return_type, "i64", "f64_digits keeps the module wide");
+        assert!(main.instructions.iter().all(|i| i.type_hint == "i64"), "{:?}", main.instructions);
     }
 
     #[test]

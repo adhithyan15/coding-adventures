@@ -868,6 +868,14 @@ Erlang float has no infinities or NaN. The conformance suite runs the IEEE
 edge table, the sign bit and an aliased-destination case on every executable
 column.
 
+Since LANG83 PR7b all nine backends lower the language-neutral float
+primitives `f64_class`, `f64_digits` and `f64_exp10`: a float's class and its
+shortest round-trip digits as integers, from the same per-backend core as the
+PR6a writers. The conformance suite prints all three for the 90-value table
+(host `python3`'s `repr` split at the digits) on every executable column; BEAM
+runs the finite rows. A registry Op with an `f64` operand also keeps a JVM
+module on the wide model.
+
 ## Limitations
 
 - **Host-targets-host only.** Same V1 policy as `twig-aot`.  Use the
