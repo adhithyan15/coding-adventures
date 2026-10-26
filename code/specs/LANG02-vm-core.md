@@ -110,9 +110,9 @@ The call stack is a bounded deque.  The maximum frame depth is configurable
 
 A frame holds at most **65,536 (2¹⁶) distinct named registers**
 (`VMFrame::MAX_FRAME_REGISTERS` in the Rust implementation). This is a
-resource bound — it caps one frame's register file, and therefore the memory a
-deep call stack can pin — and the same 2¹⁶ bounds the `load_reg`/`store_reg`
-index range (`0..=65_535`).
+resource bound — it caps one frame's register file — and the same 2¹⁶ bounds
+the `load_reg`/`store_reg` index range (`0..=65_535`). What the whole call
+stack may hold is bounded separately, by the register-slot budget below.
 
 A function's registers are its **parameters, by position** — parameter `i`
 owns slot `i` even when two parameters share a name — plus the distinct
@@ -133,14 +133,51 @@ never a silent drop or a panic:
 bounded by what the function can ever name (`params + instructions`) and by
 the limit, and never below `params.len()`.
 
-**Memory bound.** The limit caps the memory one frame can pin, not one
-program: a deep call stack holds up to `max_frames` frames (default 512 in
-the Rust vm-core), each up to 65,536 slots of roughly 24 bytes plus its
-name map, i.e. about 768 MiB of register files in the worst case. A
-`register_count` hint can no longer reach that on its own, but a function
-can still grow a frame to the limit with one `store_reg 65535` (by-index
-writes resize the file); hosts that need a tighter bound should lower
-`max_frames` or the instruction budget.
+**Register-slot budget (memory bound).** The per-frame limit caps one
+frame, not one program: `max_frames` (default 512 in the Rust vm-core) ×
+65,536 slots × ~24 bytes is ~768 MiB, and a three-instruction recursive
+function reaches it — `store_reg 65535, 1; call r = f; ret r` grows every
+frame to the limit with one by-index write (measured peak RSS ≈ 792 MB before
+`FrameOverflow`). So all live frames of one call stack also share a
+**VM-wide budget of register slots**, `max_register_slots` (default
+2²⁰ = 1,048,576):
+
+- **What is counted:** each frame's register-file *capacity* (allocated
+  slots, not just used ones), summed over every live frame.
+- **When it is checked:** whenever a register file grows — a new named
+  register (including `call`'s return slot), a `store_reg` past the end of
+  the file, or a `call` pre-allocating a callee frame (at least
+  `params.len()` slots). Growth over the budget is the typed error
+  `RegisterBudgetExceeded { function, slots, budget }`; the frame is left
+  unchanged.
+- **How it is counted (O(1), no pop bookkeeping):** each frame records,
+  when it is pushed, the slots held by the frames beneath it
+  (`slots_below`). Only the top frame ever grows — a caller cannot run while
+  its callee does, and `call` allocates the caller's return slot *before*
+  pushing the callee — so that number stays exact, and a frame may grow
+  while `slots_below + capacity ≤ budget`. Popping a frame takes its share
+  with it. Growth doubles capacity (amortised O(1)) but is clamped to what
+  the budget leaves, so capacity never overshoots.
+- **The bound:** the register files of one `execute` occupy at most
+  `max_register_slots × size_of::<Value>()` bytes — **24 MiB** at the
+  default. The budget leaves 2,048 slots a frame at the full 512-frame depth,
+  and a single frame can still reach the whole 65,536-slot limit.
+- **What it does not change:** the `load_reg`/`store_reg` index range stays
+  `0..=65_535` (a negative or larger index is still an
+  `invalid register index` error). No frontend in the repository emits
+  numeric-index `load_reg`/`store_reg` for vm-core — `twig-to-beam` emits
+  `load_reg` as a BEAM register copy, and the BEAM/CIL/JVM backends lower
+  both to moves — so tying the index range to the function's static
+  register count was rejected as a semantic change with no caller to
+  justify it; the budget bounds memory without it.
+
+Not counted: the name map's key strings (one copy per frame of each `dest`
+name the frame assigns — at most one entry per slot, so their *number* is
+bounded by the budget, but a pathologically long `dest` name is copied into
+every frame that uses it) and the contents of `Value::Str` registers.
+Host opcode extensions that grow `registers` directly (it is a `pub` field)
+are trusted and outside the accounting; they should grow it through
+`VMFrame::store_index` / `assign`.
 
 > History: the Rust vm-core originally dropped the 65,537th register
 > silently, so the program failed later with a misleading
@@ -332,6 +369,8 @@ vm.resume_frame(frame: VMFrame, at_ip: int) # restart interpreter from deopt poi
 class VMConfig:
     register_count: int = 8          # registers per frame
     max_frames: int = 64             # maximum call depth
+    max_register_slots: int = 2**20  # register slots all live frames share
+                                     # (Rust vm-core; see "Frame register limit")
     opcodes: dict = field(default_factory=dict)   # language-specific handlers
     builtins: dict = field(default_factory=dict)  # host-provided callables
     profiler_enabled: bool = True    # always-on observation
