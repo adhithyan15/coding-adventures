@@ -1,5 +1,11 @@
 use quote::ToTokens;
+use std::fs;
+use std::path::{Path, PathBuf};
+use std::process::Command;
+use std::sync::atomic::{AtomicU64, Ordering};
 use syn::{ImplItem, Item};
+
+static FIXTURE_ID: AtomicU64 = AtomicU64::new(0);
 
 const METHOD_HASHES: &[(&str, u64)] = &[
     ("reset", 0x4844_e86b_9a11_be2c),
@@ -106,6 +112,61 @@ fn replace_once(source: &str, old: &str, new: &str) -> String {
     source.replacen(old, new, 1)
 }
 
+fn fixture_manifest(package_root: &Path) -> String {
+    let packages_root = package_root
+        .parent()
+        .expect("arm1-gatelevel has a package parent");
+    let dependency = |name: &str| packages_root.join(name).display().to_string();
+    format!(
+        r#"[package]
+name = "arm1-halt-integrity-fixture"
+version = "0.0.0"
+edition = "2021"
+
+[workspace]
+
+[dependencies]
+logic-gates = {{ path = {:?} }}
+arithmetic = {{ path = {:?} }}
+arm1-simulator = {{ path = {:?} }}
+"#,
+        dependency("logic-gates"),
+        dependency("arithmetic"),
+        dependency("arm1-simulator"),
+    )
+}
+
+fn assert_fixture_compiles(lib_source: &str, state_source: &str, label: &str) {
+    let package_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let fixture_id = FIXTURE_ID.fetch_add(1, Ordering::Relaxed);
+    let fixture_root = std::env::temp_dir().join(format!(
+        "arm1-halt-integrity-{}-{fixture_id}",
+        std::process::id()
+    ));
+    let source_root = fixture_root.join("src");
+    fs::create_dir_all(&source_root).expect("create hostile fixture source directory");
+    fs::write(
+        fixture_root.join("Cargo.toml"),
+        fixture_manifest(&package_root),
+    )
+    .expect("write hostile fixture manifest");
+    fs::write(source_root.join("lib.rs"), lib_source).expect("write hostile fixture lib.rs");
+    fs::write(source_root.join("state.rs"), state_source).expect("write hostile fixture state.rs");
+
+    let output = Command::new(env!("CARGO"))
+        .args(["check", "--quiet", "--lib", "--manifest-path"])
+        .arg(fixture_root.join("Cargo.toml"))
+        .output()
+        .expect("run cargo check for hostile fixture");
+    let _ = fs::remove_dir_all(&fixture_root);
+    assert!(
+        output.status.success(),
+        "hostile fixture {label} must type-check before validator rejection\nstdout:\n{}\nstderr:\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr),
+    );
+}
+
 #[test]
 fn production_halt_transition_chain_matches_the_reviewed_contract() {
     validate_halt_authority(
@@ -125,7 +186,7 @@ fn hostile_observer_helper_and_post_clock_bypasses_are_rejected() {
         "let flags_before = self.flags();\n\n        if self.halted() {",
         "let flags_before = self.flags();\n\n        if self.halted {",
     );
-    syn::parse_file(&observer).expect("direct-observer fixture is valid Rust syntax");
+    assert_fixture_compiles(&observer, state, "direct observer");
     assert!(validate_halt_authority(&observer, state).is_err());
 
     let helper = replace_once(
@@ -133,7 +194,7 @@ fn hostile_observer_helper_and_post_clock_bypasses_are_rejected() {
         "pub fn halted(&self) -> bool {\n        self.halt_q[0] != 0\n    }",
         "pub fn halted(&self) -> bool { self.host_halted() }\n\n    fn host_halted(&self) -> bool { self.halted }",
     );
-    syn::parse_file(&helper).expect("helper-indirection fixture is valid Rust syntax");
+    assert_fixture_compiles(&helper, state, "helper indirection");
     assert!(validate_halt_authority(&helper, state).is_err());
 
     let post_clock = replace_once(
@@ -141,7 +202,7 @@ fn hostile_observer_helper_and_post_clock_bypasses_are_rejected() {
         "self.clock_halted(true);\n            return;",
         "self.clock_halted(true);\n            self.halt_q[0] = 0;\n            return;",
     );
-    syn::parse_file(&post_clock).expect("post-clock fixture is valid Rust syntax");
+    assert_fixture_compiles(&post_clock, state, "post-clock overwrite");
     assert!(validate_halt_authority(&post_clock, state).is_err());
 }
 
@@ -155,7 +216,7 @@ fn hostile_direct_q_and_dead_anchor_clock_bypasses_are_rejected() {
         "clock_bit(&mut self.halt_q[0], value);",
         "self.halt_q[0] = u8::from(value);",
     );
-    syn::parse_file(&direct_q).expect("direct-Q fixture is valid Rust syntax");
+    assert_fixture_compiles(&direct_q, state, "direct Q write");
     assert!(validate_halt_authority(&direct_q, state).is_err());
 
     let dead_anchor = replace_once(
@@ -163,7 +224,7 @@ fn hostile_direct_q_and_dead_anchor_clock_bypasses_are_rejected() {
         "clock_bit(&mut self.halt_q[0], value);",
         "if false { clock_bit(&mut self.halt_q[0], value); }\n        self.halt_q[0] = u8::from(value);",
     );
-    syn::parse_file(&dead_anchor).expect("dead-anchor fixture is valid Rust syntax");
+    assert_fixture_compiles(&dead_anchor, state, "dead clock anchor");
     assert!(validate_halt_authority(&dead_anchor, state).is_err());
 
     let state_bypass = replace_once(
@@ -171,6 +232,6 @@ fn hostile_direct_q_and_dead_anchor_clock_bypasses_are_rejected() {
         "*q = register(&input, 1, &mut state)[0];",
         "let _clocked = register(&input, 1, &mut state)[0];\n    *q = u8::from(value);",
     );
-    syn::parse_file(&state_bypass).expect("clock-bit bypass fixture is valid Rust syntax");
+    assert_fixture_compiles(source, &state_bypass, "clock-bit register bypass");
     assert!(validate_halt_authority(source, &state_bypass).is_err());
 }

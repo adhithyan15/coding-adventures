@@ -13,7 +13,9 @@ All notable changes to this package will be documented in this file.
   and added deliberate divergence regressions in both directions.
 - Added a concrete physical-storage inventory plus exact transition-chain and
   hostile source-mutation tests that reject direct-Q writes, host-observer
-  authority, helper indirection, dead anchors, and post-clock overwrites.
+  authority, helper indirection, dead anchors, and post-clock overwrites. Every
+  hostile full-source rewrite is independently type-checked as a crate before
+  the structural validator is required to reject it.
 - Preserved the 599-case full-state differential and raised measured package
   line coverage to 93.27% (1,189/1,269).
 

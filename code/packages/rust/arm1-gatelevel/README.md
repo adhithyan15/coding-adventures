@@ -49,7 +49,9 @@ Twenty-three unit/program tests, eight lifecycle tests, three structural
 integrity tests, and the aggregate 599-vector differential are green. They
 cover the concrete topology, both deliberate mirror divergences, every HALT
 lifecycle transition, typed rollback, and hostile source mutations as well as
-all prior conditions, instructions, and addressing families. Strict
+all prior conditions, instructions, and addressing families. Each hostile
+full-source mutation is independently type-checked before structural rejection.
+Strict
 formatting, Clippy, and rustdoc pass; total Rust line coverage is 93.27%
 (1,189/1,269).
 
