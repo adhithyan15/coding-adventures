@@ -182,8 +182,9 @@ These were checked on 2026-10-26.
   protection rules today.
 - **One ruleset exists, `BlockMainPush`, and it targets branches.** It
   requires a pull request, but `required_approving_review_count` is 0 and
-  `require_code_owner_review` is false. There is no `CODEOWNERS` file. So a
-  change reaches `main` without a second person's approval (§8.8).
+  `require_code_owner_review` is false, and its bypass list is empty. There
+  is no `CODEOWNERS` file. So a change reaches `main` without a second
+  person's approval (§8.8).
 - **No tag ruleset exists.** A published release protects its own tag. But
   anyone with write access can create a tag with a future package's name, or
   a whole release with hand-made assets, which GitHub then attests
@@ -622,7 +623,15 @@ those lanes trigger on a tag *push*, so a new prefix must never be a prefix
 of theirs, nor theirs of it.
 
 Validation (`code/scripts/mosaic_package_release/release.py validate`,
-modelled on `taskapp_release.py`):
+modelled on `taskapp_release.py`). Every pattern in this spec is a
+**whole-string** match:
+
+- Python validators call `re.fullmatch` (or end the pattern with `\Z`). In
+  Python, `$` also matches just before a trailing newline, so `re.match` with
+  `...$` accepts `"mosaic-pkg-toolkit\n"`.
+- Rust validators anchor the whole input.
+
+The patterns below keep `^…$` for readability only.
 
 1. `package` input matches `^mosaic-(pkg|std)-[a-z0-9]+(-[a-z0-9]+)*$`, and
    `code/packages/mosaic/<package>/mosaic-package.toml` exists and is a
@@ -859,9 +868,15 @@ $MOSAIC_PACKAGE_CACHE         default: ~/.cache/mosaic/packages (Linux),
                               ~/Library/Caches/mosaic/packages (macOS),
                               %LOCALAPPDATA%\mosaic\packages (Windows)
 ├── archives/sha256/<all 64 hex>.mospkg
-├── archives/sha256/<all 64 hex>.sigstore.jsonl   the archive's provenance bundle(s)
-└── trusted-root/trusted_root.jsonl               pinned Sigstore trusted root (§8.4)
+└── archives/sha256/<all 64 hex>.sigstore.jsonl   the archive's provenance bundle(s)
 ```
+
+**The cache holds no trusted root.** A trusted root names the Fulcio
+certificate authorities and Rekor keys that verification accepts. Anyone who
+could write it could substitute their own CA and log keys, then sign
+anything. So the only root ever used is the consumer's committed
+`mosaic-trusted-root.jsonl` (§8.4). A file named like a trusted root inside
+the cache is ignored, and Phase 3 tests that.
 
 Every archive in the cache has its Sigstore bundle beside it. The bundle is
 the file `gh attestation download` writes (JSON Lines, one bundle per line),
@@ -1064,19 +1079,38 @@ gh attestation verify <archive> \
 
 **Offline verification of every import.** The same check runs without a
 network by adding `--bundle <archive>.sigstore.jsonl --custom-trusted-root
-<trusted_root.jsonl>`. `gh` 2.92.0 documents both flags, and documents
-`gh attestation trusted-root` as the way to obtain that file for offline use.
+<project>/mosaic-trusted-root.jsonl`. `gh` 2.92.0 documents both flags, and
+documents `gh attestation trusted-root` as the way to obtain that file for
+offline use.
 
-- **The trusted root is pinned.** The trusted root covers the Sigstore
-  public-good instance and GitHub's own Sigstore instance.
-  - In a consumer project it is committed as `mosaic-trusted-root.jsonl`
-    beside the lockfile, so changing it is a reviewed change. In the cache it
-    sits under `trusted-root/`.
-  - It is refreshed deliberately, with `gh attestation trusted-root`, which
-    verifies it through Sigstore's TUF repository. It is never refreshed
-    implicitly during a build.
-  - Sigstore rotates keys, so a stale root eventually fails *closed*:
-    verification stops passing. It never fails open.
+- **Exactly one trusted root is used: the committed one.** The root covers
+  the Sigstore public-good instance and GitHub's own Sigstore instance.
+  - It is the file `mosaic-trusted-root.jsonl` in the same directory as
+    `mosaic-package.lock`, found relative to the lockfile. It is opened with
+    the same `lstat`/no-symlink rules as package files (§8.3 rule 5).
+  - Every `--custom-trusted-root` argument the tools pass is that path. No
+    flag, environment variable or cache file can substitute another root.
+    If the file is missing, verification fails (`MissingTrustedRoot`); it
+    never falls back to `gh`'s online default.
+  - The cache holds no trusted root (§8.2).
+- **The trusted root is as sensitive as the lockfile.** Changing it decides
+  which signing authorities a consumer accepts. Consumers should treat a
+  change to `mosaic-trusted-root.jsonl` like a change to
+  `mosaic-package.lock`: reviewed, and covered by `CODEOWNERS` where the
+  consumer uses it.
+- **Refresh it deliberately, and watch for drift.**
+  - It is refreshed only by a reviewed PR that runs `gh attestation
+    trusted-root`, which verifies the root through Sigstore's TUF
+    repository. It is never refreshed implicitly during a build.
+  - A stale root does not fail safely in every case. When a key *rotates*
+    normally, a stale root rejects bundles signed under the new key, so it
+    fails closed. But a stale root also **keeps trusting keys that were
+    revoked or retired**, possibly after a compromise, until someone
+    refreshes it. That direction fails open.
+  - So the proposal is a **scheduled CI job**, weekly for example, in this
+    repository and recommended to consumers. It compares the committed root
+    with a fresh `gh attestation trusted-root` and opens a PR or an alert
+    when they differ. It never commits the new root itself.
 - **Every way bytes enter the cache runs the full check against the bundle,
   and refuses to import if it fails:**
   - a network `pkg fetch` or `pkg add`;
@@ -1084,10 +1118,22 @@ network by adding `--bundle <archive>.sigstore.jsonl --custom-trusted-root
   - importing a vendored directory;
   - `pkg fetch --offline`, which re-verifies everything already cached.
 - **`pkg add` also binds the archive to its release.** Online, `pkg add`
-  (including `--from-file`) also runs `gh release verify-asset <tag> <file>`,
-  where `<tag>` is constructed as `{name}-v{version}`. That rejects an
-  archive that was attested but never published, such as the orphan of a
-  failed run (§9.1), even when a correctly signed bundle exists for it.
+  (including `--from-file`) also runs `gh release verify-asset -R
+  <owner>/<repo> <tag> <file>`. `<owner>/<repo>` comes from the
+  manifest-declared source (§8.1), never from the archive or the current
+  directory's git remote. `<tag>` is constructed as `{name}-v{version}`.
+  That rejects an archive that was attested but never published, such as the
+  orphan of a failed run (§9.1), even when a correctly signed bundle exists
+  for it.
+- **The orphan path that remains.** Offline imports (`pkg fetch
+  --from-file`, `pkg fetch --offline`, vendored directories) do not call
+  `verify-asset`, because it needs the network. They accept any archive that
+  matches a lock entry and has a valid bundle. So an orphan can enter a build
+  only through a lock entry that `pkg add` never wrote, which means a
+  hand-edited lockfile. Review of the lockfile is the control there. The
+  lane's burned-version check (§7.2 rule 8) cannot replace it: anyone with
+  `actions: write` can delete workflow runs and erase the history that check
+  reads. **`verify-asset` in `pkg add` is the real control against orphans.**
 - **`--insecure-skip-attestation` is the only way around these checks.**
   It exists for development and air-gapped experiments. It prints a warning,
   imports without verification, and records `attested = false`. `--locked`
@@ -1101,8 +1147,8 @@ publish (CI, §9)                  pkg add (once, online)                  every
 ────────────────                  ──────────────────────                  ────────────────────────────────────
 pack from git blobs               §6.5 reader rules on the download       sha256(bytes) == lock.sha256
 attest-build-provenance           gh attestation verify (above)           §6.5 reader rules on those bytes
-G7a: verify provenance            gh release verify-asset <tag> <file>    gh attestation verify --bundle
-SHA256SUMS from verified bytes    §8.1 identity, source and ID checks       --custom-trusted-root (above)
+G7a: verify provenance            gh release verify-asset -R … <tag> …    gh attestation verify --bundle
+SHA256SUMS from verified bytes    §8.1 identity, source and ID checks       --custom-trusted-root <committed root>
 bundle attached to the release    store archive + bundle                  §8.1 identity, source and ID checks
 G8: verify as consumers do        write lock: sha256, commit, IDs,        store archive + bundle
                                     attested = true
@@ -1138,9 +1184,9 @@ there.
 | Flag | Effect |
 |---|---|
 | `--locked` | Fails in any of these cases: the lockfile is missing; it does not satisfy a requirement; it would change; an entry has `attested = false`; an archive has no bundle beside it; the lockfile's source or IDs differ from the manifest's; a dependency would resolve from an ambient path. Overrides are refused |
-| `--offline` | No network. `pkg fetch --offline` re-verifies every locked archive already in the cache: hash, §6.5 rules, and the bundle checked against the pinned trusted root. This is B03's `vendor --offline`, plus provenance |
+| `--offline` | No network. `pkg fetch --offline` re-verifies every locked archive already in the cache: hash, §6.5 rules, and the bundle, checked against the committed `mosaic-trusted-root.jsonl` beside the lockfile and never against anything in the cache. This is B03's `vendor --offline`, plus provenance |
 | `pkg fetch --from-file <archive> --bundle <file>` | Imports a local archive and its bundle into the cache if they match an existing lock entry and pass the offline provenance check. It never creates a lock entry |
-| `pkg add --from-file <archive>` | Creates a lock entry from a local archive, running the online checks (`gh attestation verify` and `gh release verify-asset`). Under `--insecure-skip-attestation` it records `attested = false` |
+| `pkg add --from-file <archive>` | Creates a lock entry from a local archive, running the online checks (`gh attestation verify`, and `gh release verify-asset -R <declared owner/repo>`). Under `--insecure-skip-attestation` it records `attested = false` |
 | `pkg vendor <dir>` (later) | Copies each locked archive **and its bundle** into a directory the consumer commits. Importing from that directory runs the offline check like any other import |
 
 A consumer's CI should run `pkg fetch` first (online), or `pkg fetch
@@ -1153,7 +1199,8 @@ the fetch step, never as a confusing build error.
 `VersionMismatch`, `ConflictingRequirements`, `AmbiguousPackage`,
 `UndeclaredPackageReference`, `AmbientResolutionRefused`,
 `LockfileOutOfDate`, `LockSourceMismatch`, `LockEntryMalformed`,
-`UnattestedLockEntry`, `MissingProvenanceBundle`, `ProvenanceRejected`,
+`UnattestedLockEntry`, `MissingProvenanceBundle`, `MissingTrustedRoot`,
+`ProvenanceRejected`,
 `RepositoryIdentityMismatch`, `ReleaseBindingRejected`, `NoSourceForDependency`,
 `ArchiveDigestMismatch`, `ArchiveIdentityMismatch`,
 `ArchiveRejected { rule }` (one variant per §6.5 rule, in the manifest
@@ -1217,7 +1264,15 @@ The proposal (§11 Q10):
   - the pack toolchain: `mosaic-compile`'s `pkg pack` and `pkg verify`
     commands, `mosaic-package-archive`, `mosaic-package-manifest`, and the
     `zip`, `deflate`, `sha256` and `bounded-json` crates;
-  - the packer's lockfile (next bullet).
+  - the packer's lockfile (next bullet);
+  - `.github/CODEOWNERS` itself, because whoever can edit it can remove
+    every other entry in this list.
+- **Protect the protection.** The `main` ruleset's bypass list, its
+  required-review settings, and the `mosaic-package-release` environment's
+  reviewers are repository settings, not files, so `CODEOWNERS` cannot cover
+  them. The proposal is that they change only by a maintainer action recorded
+  in an issue. Any bypass actor on `main` is, in effect, a signer of every
+  package. Today the bypass list is empty (§2.4).
 - **Pin the packer's dependency graph.** Phase 2 builds the packer as a
   standalone Cargo project with a **tracked** `Cargo.lock`. Some
   `mosaic-pkg-*` harnesses already track their own lockfile, so there is a
@@ -1268,8 +1323,9 @@ workflow_dispatch (inputs: package, version, tag)
  digest output
         │  G4 the two digests are equal
         ▼
- consume-from-archive  G5 download pack-linux's artifact; sha256 == pack-linux's digest;
-                          pkg verify --identity-out identity.json (Rust reader, all §6.5 rules);
+ consume-from-archive  G5 build the standalone packer with cargo build --locked at the validated
+                          commit (no cache); download pack-linux's artifact; sha256 == its digest;
+                          pkg verify --identity-out identity.json with that packer (all §6.5 rules);
                           a fixture outside the repo builds every backend from it (--offline);
                           upload identity.json
         │
@@ -1460,8 +1516,10 @@ parts:
    in shell.
 2. **Validate strictly before writing anything.** The tag reaches the
    script only as `env: TAG: ${{ github.event.release.tag_name }}`. The
-   script's first statement matches it against a strict pattern and exits
-   non-zero **before writing any `$GITHUB_OUTPUT` line**:
+   script's first statement matches it against a strict pattern, using
+   `re.fullmatch` (or `[[ $TAG =~ ... ]]` in bash, where `$` anchors at the
+   true end of the string), and exits non-zero **before writing any
+   `$GITHUB_OUTPUT` line**:
 
    ```
    ^(python|ruby)/[a-z0-9]+(?:[-_][a-z0-9]+)*/v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$
@@ -1569,8 +1627,10 @@ publishing.
   json` output for a real attestation. If Phase 5 has not happened yet, use a
   test attestation made on a scratch branch.
 - **Cache:**
-  - `$MOSAIC_PACKAGE_CACHE` with the §8.2 rules, bundles beside archives,
-    and a pinned trusted root;
+  - `$MOSAIC_PACKAGE_CACHE` with the §8.2 rules and bundles beside
+    archives, and **no** trusted root in the cache;
+  - verification that uses only the committed `mosaic-trusted-root.jsonl`
+    found beside the lockfile (§8.4);
   - archives read and parsed from one in-memory buffer;
   - the Windows reparse-point and ACL rules as specified in §8.2.
 - **Locator:** the single `PackageGraph` with verified file lists (§8.3),
@@ -1588,6 +1648,11 @@ publishing.
     and a `GIT_DIR` or `GIT_WORK_TREE` pointing elsewhere;
   - a symlinked, junctioned, world-writable or foreign-owned cache is
     refused;
+  - **a swapped trusted root fails.** A cache that also carries a
+    `trusted_root.jsonl` naming a test Fulcio CA and Rekor key, together
+    with an archive and bundle signed under that test CA, fails `pkg fetch
+    --offline`, because the committed root is the only one consulted. A
+    missing committed root fails with `MissingTrustedRoot`;
   - each §8.1 mismatch produces its own error, including a changed
     `repository-id`.
 - Needs `/security-review`.
@@ -1630,7 +1695,8 @@ network fetch.
   2. run `pkg add --from-file`, which performs the real provenance check and
      `gh release verify-asset`, stores the bundle, and writes
      `attested = true`;
-  3. run `pkg fetch --offline` against the pinned trusted root;
+  3. run `pkg fetch --offline`, which uses the committed
+     `mosaic-trusted-root.jsonl` beside the fixture's lockfile;
   4. build the Phase 3 fixture with `--locked --offline`.
 
   This meets #14014's last acceptance criterion without adding network code
@@ -1696,9 +1762,10 @@ Each of these gets its own item in `MOSAIC-BACKLOG.md`.
      needs `gh`.)
    - Should `--insecure-skip-attestation` exist at all, given that
      `--locked` refuses its entries?
-   - Where is the pinned trusted root kept, and how often is it refreshed?
-     The proposal is a committed `mosaic-trusted-root.jsonl` per consumer,
-     refreshed by a reviewed PR.
+   - The trusted root: the proposal is a committed
+     `mosaic-trusted-root.jsonl` per consumer, the only root ever used,
+     refreshed by a reviewed PR, with a scheduled drift-check job (§8.4).
+     Weekly enough?
    - Is it acceptable that a pre-filled or restored cache, used by `compile`
      without a `pkg fetch --offline` first, is trusted only as far as the
      reviewed lockfile (§8.4)?
@@ -1739,6 +1806,10 @@ Each of these gets its own item in `MOSAIC-BACKLOG.md`.
       `deflate`, `sha256`, `bounded-json`) and the packer's tracked
       `Cargo.lock`.
     - Accept a standalone packer project with its own tracked lockfile?
+    - Cover `.github/CODEOWNERS` itself, and agree that the `main` ruleset's
+      bypass list, its review settings and the environment's reviewers change
+      only by a recorded maintainer action, since any bypass actor is in
+      effect a signer?
     - Create the `mosaic-package-release` environment with you as the
       required reviewer, restricted to `main`?
     - Add a tag ruleset for `mosaic-pkg-*` and `mosaic-std-*` anyway? It can
