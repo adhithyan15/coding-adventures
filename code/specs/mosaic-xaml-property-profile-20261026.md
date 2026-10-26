@@ -59,7 +59,7 @@ not a rebuilt full current-main runtime or release artifact.
 - Managed DLL SHA256: 69AE11817148996858FA74AA377ECBB7E36F3983142333C4E5674B6446D8BF1B.
 - Retained Rust DLL SHA256: A18198012F2985EC5CEA6E10A2151388D2E9093F567A59F46A72E45C28BC2124.
 - Raw log: adjacent `mosaic-xaml-property-profile-20261026.jsonl` (353 records),
-  SHA256 02BEA3590FA7958F983EB235BF5ABC2603612C03D7936E2FE7C73BE5E149E17F.
+  SHA256 D8AB7A627D93C65D60BE4A054EDA51246D7F5E5E2DCA72D0F7F2FB8B23603EE4.
 - Isolated state/profile paths; detailed profiling enabled, interactions-only off.
 - Through native computer input at 1908x1019, focused the formula field, replaced
   A1 with `=20+22`, pressed Enter, observed A1=42 and dependent totals 65/66/196.
