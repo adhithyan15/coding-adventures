@@ -1,0 +1,23 @@
+{
+  "chapter": 252,
+  "title": "One Thing, Then the Next",
+  "label": "ch:ja-one-thing-then-the-next",
+  "canDo": "I can tell what I did in order, joining actions with the -te form (okite, kao o aratte, dekakemashita), say what came after what (tabete kara; sore kara; soshite), and recognise 月 in 月日.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-R252-one-thing-then-the-next",
+    "kind": "production",
+    "summary": "Complete JA-R252-one-thing-then-the-next: tell a morning in order, one action after another.",
+    "assesses": [
+      "JA-GRAMMAR-C252-TE-01",
+      "JA-LEX-C252-SOREKARA-01",
+      "JA-GRAMMAR-C252-TE-02",
+      "JA-GRAMMAR-C252-TE-KARA-01",
+      "JA-GRAMMAR-C252-TE-KARA-02",
+      "JA-LEX-C252-SOSHITE-01",
+      "JA-LEX-C252-TSUKIHI-01"
+    ]
+  }
+}
