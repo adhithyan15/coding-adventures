@@ -275,7 +275,11 @@ Error categories (one `FrontendError` enum per frontend, mapped into
 4. Trap kinds come only from `interpreter_ir::exception_kind`, and they are
    neutral: a language's error class is mapped onto the kind that names
    its condition (`NameError` and `ReferenceError` both become
-   `Trap.Unbound`). LANG83 PR7d retires the `LANGUAGE_TRAP_KINDS` table.
+   `Trap.Unbound`). There is no language-namespaced kind: LANG83 PR7d
+   retired the `LANGUAGE_TRAP_KINDS` table, and `exception_kind::is_trap_kind`
+   (the seven built-in `Trap.*` leaves) is the whole closed set. A
+   catchable language exception will be a value the frontend builds once
+   AOT00 T2 exceptions land, never a trap kind.
 5. Rule 2's "new operation" must be language-neutral (C2 "Language-specific
    IIR"). A frontend that needs a language's formatting, coercion or
    equality asks LANG83 for the neutral primitives underneath it, such as
@@ -1531,7 +1535,8 @@ Divergences from this spec in 5b/7b slice 2:
      each argument through `f64_signbit` and `write_f64_js`, `putchar 32`
      between arguments, and `putchar 10` at the end. Arithmetic uses the
      `f64_*` ops. The ReferenceError builtins become
-     `trap "Trap.ReferenceError"`, a new closed kind, so rows use
+     `trap "Trap.ReferenceError"` (renamed `Trap.Unbound` by LANG83 PR7d),
+     a new closed kind, so rows use
      `StdoutThenTrap` for the TDZ and not-defined cases.
    - **`run_module`** keeps its captured sink by registering `write_f64_js`
      and `putchar` into the same buffer.
@@ -1577,14 +1582,16 @@ Divergences from this spec in 5b/7b slice 2:
      such as `-0`, `inf` and `NaN`. Those could only arrive in a tree forged
      through `compile_ast`.
    - **`Trap.ReferenceError` is a built-in `Trap.*` leaf, id 7**, not a
-     `LANGUAGE_TRAP_KINDS` entry: an unbound name is not JavaScript's alone
+     `LANGUAGE_TRAP_KINDS` entry (LANG83 PR7d later renamed it
+     `Trap.Unbound` and retired that table): an unbound name is not JavaScript's alone
      (Python's `NameError`, a Lisp's unbound variable). `twig_runtime.c`'s
      kind table gains it. A trap ends straight-line code, so the compiler
      drops every instruction after it (the function still ends with its
      exit status, `const 0` and an `i64` `ret`; a `ret_void` `main` read
      back as `[]` on BEAM, which CI caught), and records V8's message (`ReferenceError: z is not
      defined`) for `run_source`, since the IIR does not name the binding;
-     `run_module` alone reports `trap: Trap.ReferenceError`.
+     `run_module` alone reports `trap: Trap.ReferenceError` (since PR7d,
+     `trap: Trap.Unbound`).
    - **No `StdoutThenTrap` rows in `PROGRAMS`.** The `es-number-log` corpus
      has no failing case, and the rows are exactly the sweep's boundary
      set, so the two ReferenceError programs (undeclared, TDZ) are checked

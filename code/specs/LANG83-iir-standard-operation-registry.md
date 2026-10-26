@@ -214,15 +214,18 @@ tell a LANG83 trap from another error checks the atom against the closed table.
 | `Trap.ConvRange` | 4 | `real_to_int_*` of a non-finite / out-of-range value |
 | `Trap.Overflow` | 5 | `i64_div_floor` `MIN / -1`; the PR4 `i64_*_ovf` family |
 | `Trap.User` | 6 | a frontend's explicit abort (`die`, `raise` without a class, …) |
-| `Trap.ReferenceError` | 7 | reading a name that is not bound yet or at all (JavaScript's `ReferenceError`; LANG84 phase 6e). **Renamed `Trap.Unbound` by PR7d**, same id. |
+| `Trap.Unbound` | 7 | reading a name that is not bound yet or at all (JavaScript's `ReferenceError`, Python's `NameError`; LANG84 phase 6e). Named `Trap.ReferenceError` until **PR7d renamed it**, same id. |
 
 The ids are what native backends pass to the runtime (`mov edi, id; call
 __twig_trap`); they are append-only and never renumbered. Language-specific
-kinds (for example `Ruby.ZeroDivisionError`) were to be added to
-`LANGUAGE_TRAP_KINDS` in the same file, with append-only ids starting at
-1000. **PR7d retires that table** (it is still empty): a compiler maps its
-language's error onto a neutral kind, and a catchable language exception is
-a frontend-built value, never a trap kind (see "PR7 — language neutrality").
+kinds (for example `Ruby.ZeroDivisionError`) were once to be added to a
+`LANGUAGE_TRAP_KINDS` table in the same file, with append-only ids starting
+at 1000. **PR7d retired that table** before anything used it: a compiler
+maps its language's error onto the neutral kind for its condition (Python's
+`ZeroDivisionError` is `Trap.DivZero`; JavaScript's `ReferenceError` and
+Python's `NameError` are `Trap.Unbound`), and a catchable language exception
+is a frontend-built value, never a trap kind (see "PR7 — language
+neutrality"). `exception_kind::is_trap_kind` is the whole closed table.
 Nothing else may be emitted as a trap kind.
 
 ### Analysis predicates
@@ -438,7 +441,7 @@ fail. This was checked by mutation.
 - **PR7 — language neutrality** (PR7a–PR7h): `write_f64_py`/`write_f64_js`
   give way to the neutral `f64_class`/`f64_digits`/`f64_exp10` plus
   compiler-emitted layout helpers; `Trap.ReferenceError` becomes
-  `Trap.Unbound`; Lisp-family semantics leave the `dyn_*` runtime; a
+  `Trap.Unbound` (landed, PR7d); Lisp-family semantics leave the `dyn_*` runtime; a
   registry test forbids language names. See "PR7 — language neutrality".
 
 ## PR1b — what landed
@@ -1032,8 +1035,8 @@ With helpers, a new language's float output changes no backend at all.
 | `write_f64_py` | `op_registry.rs` (PR6a, Builtin); lowered by all nine backends: `vm_core::float_format::python_repr`, jit-core `CALL_BUILTIN_F64`, `twig_runtime.c` `__twig_write_f64_py`, iir-to-llvm / iir-to-wasm `lang83_f64.rs` / iir-to-jvm-class-file / iir-to-cil-bytecode / iir-to-beam `__iir_write_f64(x, layout)` | python-iir-compiler (release path) | **Language-specific** (Python `repr` layout). Replaced by `f64_class` + `f64_digits` + `f64_exp10` and a compiler-emitted helper (below). Removed in PR7e. |
 | `write_f64_js` | same, layout 1 | javascript-iir-compiler 0.6 | **Language-specific** (`Number::toString` layout). Same replacement. |
 | `write_f64_rb`, `f64_to_str_py` `_js` `_rb` `_pl` | vocabulary table, `Later` | none | **Language-specific by design.** Never registered. Ruby `Float#to_s` uses the same three ops. Perl `%.15g` and Python 2 / 3.0a1 `%.12g` use `f64_digits_prec` (below, `Later`). String-producing formatting becomes a helper that appends to a runtime string once a neutral byte-append string op exists (PR5 family). |
-| `Trap.ReferenceError` (id 7) | `exception_kind.rs`, `twig_runtime.c` kind table, this spec | javascript-iir-compiler | **Language-named.** The condition, reading an unbound name, is neutral (Python `NameError`, a Lisp unbound variable). Renamed `Trap.Unbound`, keeping **id 7**, in PR7d. |
-| `LANGUAGE_TRAP_KINDS` (empty) | `exception_kind.rs`, "Trap semantics" above, LANG84 C7.4 | none | **A language-specific mechanism** (`Ruby.ZeroDivisionError`). Retired in PR7d. A compiler maps a language's error onto a neutral kind. A catchable language exception is a value the frontend builds once AOT00 T2 exceptions land; it is never an IIR trap kind. |
+| `Trap.ReferenceError` (id 7) | `exception_kind.rs`, `twig_runtime.c` kind table, this spec | javascript-iir-compiler | **Language-named.** The condition, reading an unbound name, is neutral (Python `NameError`, a Lisp unbound variable). Renamed `Trap.Unbound`, keeping **id 7**, in PR7d. *Landed.* |
+| `LANGUAGE_TRAP_KINDS` (empty) | `exception_kind.rs`, "Trap semantics" above, LANG84 C7.4 | none | **A language-specific mechanism** (`Ruby.ZeroDivisionError`). Retired in PR7d. A compiler maps a language's error onto a neutral kind. A catchable language exception is a value the frontend builds once AOT00 T2 exceptions land; it is never an IIR trap kind. *Landed:* the table, `LANGUAGE_TRAP_KIND_ID_BASE` and `is_registered_trap_kind` are gone. |
 | `py_float_div`, `py_name_error`, `py_print_float`, `py_print_empty`, `py_print_two_floats`, `py_print_three_floats` | `python-iir-compiler/src/lib.rs`, registered on the VM only by the LANG79 pilot's `compile_source` | the LANG79 pilot path | **Language-specific**, unregistered, VM only. Retired in PR7g: the pilot entry points move onto the release path (`f64_div` with a `b == 0` check that traps `Trap.DivZero`; `trap Trap.Unbound`; the PR7b print helper). |
 | `dyn_truthy`, `dyn_equal`, `dyn_not`, `dyn_to_exit_code` | `iir-builtin-lowering/src/dyn_repr.rs`, lispy-runtime | Twig, McCarthy Lisp (through the `+`/`cons`/`null?` lowering) | **Language-specific semantics in a runtime op.** Lisp truthiness (only nil and `#f` are false), `equal?`'s structural equality and Lisp's exit-code coercion are each one language family's rules. Replaced in PR7f by neutral representation primitives plus compiler-emitted helpers (below). |
 | `dyn_cons`, `dyn_car`, `dyn_cdr`, `dyn_pair_p`, `dyn_null_p`, `make_nil`, `make_symbol` | `dyn_repr.rs`, `heap.rs`, lispy-runtime | Twig, McCarthy Lisp | **Neutral semantics, Lisp vocabulary.** A two-field heap cell and a nil sentinel are a representation, not a language rule. Renamed in PR7f to `dyn_pair_new`, `dyn_pair_first`, `dyn_pair_rest`, `dyn_is_pair`, `dyn_is_nil`, `dyn_nil` and `dyn_symbol`, then registered. |
@@ -1344,7 +1347,7 @@ column.
   `trap: Trap.ReferenceError` change in the same PR. The JavaScript
   frontend's `run_source` keeps recording V8's message
   (`ReferenceError: z is not defined`). That message is the compiler's
-  knowledge, and the IIR never carries it.
+  knowledge, and the IIR never carries it. *Landed in PR7d* (below).
 - **Lisp-family dynamic values (PR7f).** The registry gains the
   representation primitives only:
   - `dyn_box_int`, `dyn_unbox_int`, `dyn_tag x → i64` (the NaN-box tag
@@ -1364,6 +1367,46 @@ column.
   call it before they return the module, so `check_module_for` sees
   registry ops only. The LANG84 C7.1 clause "a pre-registry instruction
   that the registry does not gate" shrinks accordingly.
+
+**What PR7d landed, and where it diverged from the plan above.**
+
+- `interpreter_ir::exception_kind::TRAP_REFERENCE_ERROR` is now
+  `TRAP_UNBOUND` (`"Trap.Unbound"`), still the seventh entry of
+  `ALL_TRAP_KINDS` and so still id 7. `"Trap.ReferenceError"` is no longer
+  a kind: `is_trap_kind` and `trap_kind_id` refuse it.
+- `LANGUAGE_TRAP_KINDS` and `LANGUAGE_TRAP_KIND_ID_BASE` are removed, and
+  with them `is_registered_trap_kind`, which had become `is_trap_kind`
+  under another name. *Divergence:* the plan named only the table. The
+  function went too, so that no API is left that reads as if a second,
+  language-owned set of kinds could exist. Its six callers (vm-core's
+  `trap` handler, the CLR, BEAM, JVM and WASM `trap` lowerings, and the
+  registry's `trap_kinds_are_registered` test) call `is_trap_kind`, which
+  accepts the same set; their error messages are unchanged.
+  `trap_kind_name` returns `None` for every id outside 1–7, including the
+  retired 1000+ range.
+- Each backend prints the kind through the shared table, so no backend
+  source changed for the rename itself: the LLVM `@__iir_trap_msg.7`
+  string, the JIT error slot, the JVM and CLR exception messages, the
+  BEAM reason atom and the VM's `VMError::Trap { kind }` all read
+  `Trap.Unbound`. Native and WASM code pass id 7, unchanged;
+  `twig_runtime.c`'s `TWIG_TRAP_KINDS[6]` changes its string, and
+  `runtime_trap_kind_table_matches_exception_kind` pins it (it no longer
+  checks the language table, which is gone).
+- javascript-iir-compiler's `REFERENCE_ERROR_TRAP` is `UNBOUND_TRAP`.
+  `run_source` still reports V8's sentences
+  (`ReferenceError: z is not defined`,
+  `ReferenceError: Cannot access 'a' before initialization`), mapping
+  `trap: Trap.Unbound` back to the message it recorded; `run_module`
+  alone reports `trap: Trap.Unbound`. The two `lang_matrix` trap programs
+  expect `StdoutThenTrap("1", "Trap.Unbound")` on every column.
+- Kept as `ReferenceError`, because they are JavaScript-language text,
+  not trap kinds: V8's messages and the compiler's comments about
+  JavaScript semantics, `ReferenceError` in the JavaScript compiler's list
+  of runner globals, python-iir-compiler's list of Python builtin names,
+  and the Closure-compiler passes, Mosaic emitters, test262 expectations
+  and `lattice-ast-to-css` text, none of which reach the IIR.
+- The `es-number-log` corpus has no failing case, so no release-sweep
+  module changed and `release_classes.csv` is unchanged.
 
 ### Migration, as a PR sequence
 
@@ -1391,7 +1434,8 @@ anything still emits it.
    PR7c-py landed" under "The layouts, as compiler-emitted helpers".
 5. **PR7d — `Trap.ReferenceError` → `Trap.Unbound`, and retire
    `LANGUAGE_TRAP_KINDS`.** The kind keeps id 7. It lands before PR7e,
-   because PR7e's test rejects the old name.
+   because PR7e's test rejects the old name. *Landed;* see "What PR7d
+   landed" under "Other replacements".
 6. **PR7e — remove `write_f64_py` and `write_f64_js`** from the registry,
    all nine backends, `twig_runtime.c`, vm-core's default builtins, the
    lang-aot and `lang_matrix` harness sinks, and jit-core's
