@@ -31,11 +31,16 @@ Every architectural bit is backed by D flip-flops:
 | Output ports | 256 × 8 | 2,048 |
 | **Total** | | **8,392,922** |
 
-Host integers may exist only as combinational input/output wires and trace
-bookkeeping. At instruction boundaries, register, flag, halt, and port wires
-are clocked into the listed DFFs. Memory writes clock exactly eight selected
-cells. A byte cache mirrors the memory Q bus for efficient observation but is
-not an additional architectural store.
+Host integers may exist only as combinational input/output wires, compatibility
+observers, and trace bookkeeping. At the start of an instruction, register,
+flag, halt, and port input wires are driven from the listed DFF Q outputs. At a
+successful instruction boundary, changed register, flag, halt, and output-port
+wires are clocked back into their DFFs. Snapshots read Q, restore clocks D and
+then refreshes observers from Q, and transactional rollback restores Q-backed
+state. Caller mutation of a public compatibility field cannot clock or
+otherwise alter architectural state. Memory writes clock exactly eight
+selected cells. A byte cache mirrors the memory Q bus for efficient observation
+but is not an additional architectural store.
 
 The HALT register's latched Q output is the sole architectural halt authority.
 Snapshots, checked and legacy execution control, result construction, restore,
@@ -49,6 +54,10 @@ machine. New callers must use `halted()` to observe the authoritative value.
 port-latch DFF counts by inspecting the concrete storage containers owned by
 the machine. Its independently summed total must equal `FLIP_FLOP_COUNT`; the
 topology constant cannot serve as its own implementation evidence.
+
+The checked port API clocks input-port DFFs and reads output-port Q directly.
+IN instructions sample input-port Q; OUT instructions clock output-port DFFs.
+The historical public port arrays remain synchronized observation wires only.
 
 ## Gate networks
 
@@ -88,8 +97,9 @@ compatibility; new code should use their checked counterparts.
 Acceptance requires:
 
 - independently inventoried exact-topology tests for all 8,392,922 DFFs;
-- deliberate compatibility-mirror divergence, restore, halt-source, result,
-  and fault-rollback tests that prove HALT Q remains authoritative;
+- deliberate register, FLAGS, HALT, and port compatibility-mirror divergence,
+  restore, halt-source, step/result, and fault-rollback tests that prove every
+  counted storage bank's Q outputs remain authoritative;
 - the functional package's 461 deterministic full-state vectors, including all
   256 first bytes, every dense group extension, every effective-address mode,
   and focused prefix/string/control/stack/I/O cases;

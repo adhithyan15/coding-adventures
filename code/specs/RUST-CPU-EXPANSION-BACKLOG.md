@@ -75,7 +75,7 @@ architecture/core introduction era, not a claim about a particular chip.
 
 | Priority | Target | Finding / next action |
 |---:|---|---|
-| P0 complete locally | Intel 8086 gate HALT storage | HALT DFF Q is now the execution/snapshot/restore/result/fault authority; the public boolean remains a synchronized compatibility observer. HLT and all eleven protocol/error halt paths share one clock helper. The independent physical inventory reports 8,388,608 memory, 208 register, 9 FLAGS, 1 HALT, and 4,096 port DFFs (8,392,922 total). Release tests cover 61 unit cases, all 461 differential vectors, 8 lifecycle cases, and 14 doctests; line coverage is 95.49% (2,732/2,861). |
+| P0 in repair | Intel 8086 counted DFF authority | Independent review confirmed HALT Q authority but found the counted register, FLAGS, and port banks still accepted public host fields as architectural input at instruction boundaries. Make every counted bank Q-authoritative across execution, snapshot, restore, rollback, and port I/O; retain public fields and arrays only as synchronized compatibility observers; add deliberate divergence tests for each bank. |
 | P1 audit | Remaining completed gate packages with public halt fields | Audit each package before changing it. A public observation field is acceptable only when execution, snapshots, restore, and faults are driven by DFF Q; otherwise add one bounded repair cell and a non-tautological storage inventory. |
 
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,
