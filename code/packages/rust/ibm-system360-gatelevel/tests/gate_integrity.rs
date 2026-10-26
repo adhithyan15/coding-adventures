@@ -546,6 +546,54 @@ fn verify_branch_structure(networks: &str, executor: &str, validator: &str) -> R
         }
         Ok(())"#,
     )?;
+    require_exact_body(
+        validator,
+        "step",
+        r#"let before=self.get_state();
+        let mut transition=System360Simulator::new();
+        transition.restore(before.clone())?;
+        let trace=transition.step()?;
+        let oracle_next=transition.get_state();
+        let gate_next=executor::execute(&before,&trace)?;
+        validate_gate_transition(&before,&gate_next,&trace)?;
+        if gate_next!=oracle_next{
+            return Err(System360Error::Specification{reason:"reason"});
+        }
+        self.commit_transition(&gate_next);
+        Ok(trace)"#,
+    )?;
+    require_exact_body(
+        validator,
+        "run",
+        r#"let before=self.get_state();
+        let mut traces=Vec::new();
+        for _ in 0..max_steps{
+            match self.step(){
+                Ok(trace)=>{
+                    traces.push(trace);
+                    if self.halted!=0{
+                        return Ok(ExecutionResult{
+                            halted:true,
+                            steps:traces.len(),
+                            final_state:self.get_state(),
+                            traces,
+                        });
+                    }
+                }
+                Err(error)=>{
+                    self.restore_validated(&before);
+                    return Err(error);
+                }
+            }
+        }
+        self.restore_validated(&before);
+        Err(System360Error::MaxStepsExceeded{max_steps})"#,
+    )?;
+    require_exact_body(
+        validator,
+        "execute",
+        "self.load(program,origin)?;self.run(max_steps)",
+    )?;
 
     require_exact_arm(
         executor,
@@ -811,4 +859,32 @@ fn structural_verifier_rejects_adversarial_host_shortcuts_and_dead_anchors() {
         1,
     );
     assert!(verify_branch_structure(networks, executor, &dead_validator_dispatch).is_err());
+
+    let oracle_as_gate_result = validator.replacen(
+        "let gate_next = executor::execute(&before, &trace)?;",
+        "let gate_next = oracle_next.clone();",
+        1,
+    );
+    assert!(verify_branch_structure(networks, executor, &oracle_as_gate_result).is_err());
+
+    let oracle_commit = validator.replacen(
+        "self.commit_transition(&gate_next);",
+        "self.commit_transition(&oracle_next);",
+        1,
+    );
+    assert!(verify_branch_structure(networks, executor, &oracle_commit).is_err());
+
+    let bypassed_run_step = validator.replacen(
+        "match self.step() {",
+        "match System360Simulator::new().step() {",
+        1,
+    );
+    assert!(verify_branch_structure(networks, executor, &bypassed_run_step).is_err());
+
+    let bypassed_execute = validator.replacen(
+        "self.run(max_steps)",
+        "System360Simulator::new().execute(program, origin, max_steps)",
+        1,
+    );
+    assert!(verify_branch_structure(networks, executor, &bypassed_execute).is_err());
 }

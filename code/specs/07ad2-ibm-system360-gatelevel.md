@@ -101,7 +101,9 @@ atomic faults, and token-normalized exact-body structural checks over the full
 branch-select, fixed-width-adder, signed-comparator, and top-level dispatch
 dependency chain, including the exact four-byte router, RR/RX/RS dispatcher
 shells, complete validation router, and branch-validator shell, with hostile
-helper-rewrite, dead-dispatch, expectation-shadowing, and
-post-dispatch-overwrite fixtures.
+helper-rewrite, dead-dispatch, expectation-shadowing, oracle-substitution, and
+post-dispatch-overwrite fixtures. The complete public `step`, `run`, and
+`execute` bridge is exact-locked so only the independently computed,
+validated, oracle-compared gate result reaches the DFF commit path.
 Rustfmt, strict Clippy, rustdoc, lesson validation, and the
 package BUILD are green. Package line coverage is 93.01% (1,662/1,787).
