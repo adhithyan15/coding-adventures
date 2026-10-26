@@ -91,6 +91,7 @@ merged, while Cortex-M33 is already in review.
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
 | 15 | RCA CDP1802 | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: all documented encodings except unassigned 0x68, complete COSMAC state, and explicit I/O/DMA/interrupt transaction seams; independent implementation review is next. |
+| 18 | Zylin ZPU4 Small (`RCPU-087` / `RCPU-088`) | stable Zylin architecture document plus vendor VHDL at `e29aef5f7aa741557d0eb16ecf13e974d55789ff` | `RCPU-087` / Spec 07bf is ready for independent review: exact 32-bit/15-bit-address small-core profile, all 256 byte classifications, stack/IDIM/interrupt/break state, big-endian transport, explicit external-word-bus adapter, typed atomic lifecycle, and mandatory GHDL differentials. `RCPU-088` gate work must wait for the functional merge. Orders 16–17 and `RCPU-083`–`RCPU-086` remain owned by the active LatticeMico32 and ZipCPU cells and are not duplicated here. |
 
 CDP1802 is complete locally from its independently reviewed specification.
 The functional cell covers the complete register matrix, instruction table,
@@ -105,6 +106,13 @@ relations, strict Clippy/rustdoc, lessons validation, affected BUILD, and
 87.76% line coverage (832/948).
 
 ## Discovered follow-up work
+
+### Open-RTL CPU companions
+
+| Priority | Target | Evidence / dependency |
+|---:|---|---|
+| P1 after ZPU functional | ZPU4 Small source-backed educational gate model (`RCPU-088`) | Dependent Spec 07bf2 follows only after the independently reviewed `RCPU-087` functional oracle merges. Pin Zylin commit `e29aef5f7aa741557d0eb16ecf13e974d55789ff`; derive the RTL state inventory; use repository gates/DFFs plus cycle/instruction GHDL differentials; exclude SoC peripherals, FPGA timing, physical-netlist, transistor, and SPICE claims. |
+| P2 discovery | J1 Forth CPU | Distinct 16-bit stack ISA with a public paper and BSD Verilog exists, but its exact immutable profile, programmer-visible lifecycle, and repository priority remain to be audited. Do not conflate it with the 32-bit GCC-backed ZPU cell. |
 
 ### Gate-integrity audit queue
 
