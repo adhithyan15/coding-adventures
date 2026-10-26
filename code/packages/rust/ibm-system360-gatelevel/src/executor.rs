@@ -109,12 +109,20 @@ fn execute_rr(
         }
         0x05 => {
             next.gprs[r1] = next.pc;
-            next.pc = gates::select_u32(next.pc, b & ADDRESS_MASK, u8::from(r2 != 0));
+            next.pc = gates::select_u32(
+                next.pc,
+                b & ADDRESS_MASK,
+                gates::register_field_nonzero(r2 as u8),
+            );
         }
         0x06 => {
             let value = gates::add_32(a, u32::MAX, 0).0;
             next.gprs[r1] = value;
-            next.pc = gates::select_u32(next.pc, b & ADDRESS_MASK, u8::from(value != 0 && r2 != 0));
+            next.pc = gates::select_u32(
+                next.pc,
+                b & ADDRESS_MASK,
+                gates::count_branch_selected(value, r2 as u8),
+            );
         }
         0x07 => {
             next.pc = gates::select_u32(
@@ -223,7 +231,7 @@ fn execute_rx(
         0x46 => {
             let decremented = gates::add_32(a, u32::MAX, 0).0;
             next.gprs[register] = decremented;
-            next.pc = gates::select_u32(next.pc, address as u32, u8::from(decremented != 0));
+            next.pc = gates::select_u32(next.pc, address as u32, gates::nonzero_32(decremented));
         }
         0x47 => {
             next.pc = gates::select_u32(
@@ -297,9 +305,13 @@ fn execute_rs(
             let compare = if r3.is_multiple_of(2) { r3 + 1 } else { r3 };
             let incremented = gates::add_32(source, before.gprs[r3], 0).0;
             next.gprs[r1] = incremented;
-            let high = gates::signed_compare_condition_code(incremented, before.gprs[compare]) == 2;
-            let selected = (opcode == 0x86 && high) || (opcode == 0x87 && !high);
-            next.pc = gates::select_u32(next.pc, address as u32, u8::from(selected));
+            let comparison =
+                gates::signed_compare_condition_code(incremented, before.gprs[compare]);
+            next.pc = gates::select_u32(
+                next.pc,
+                address as u32,
+                gates::index_branch_selected(opcode, comparison),
+            );
         }
         _ => return gate_error("gate RS decoder accepted an unsupported opcode"),
     }

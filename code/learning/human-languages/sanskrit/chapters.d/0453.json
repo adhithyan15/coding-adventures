@@ -1,0 +1,19 @@
+{
+  "chapter": 453,
+  "title": "Missing Someone",
+  "label": "ch:sa-missing-someone",
+  "canDo": "I can say that I miss someone far away.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C453-sandisati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can say that I miss someone far away.",
+    "assesses": [
+      "SA-LEX-C453-VIRAHA453-03",
+      "SA-LEX-C453-VIRAHA453-04",
+      "SA-LEX-C453-VIRAHA453-05"
+    ]
+  }
+}

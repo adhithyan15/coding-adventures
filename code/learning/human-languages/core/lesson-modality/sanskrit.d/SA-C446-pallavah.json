@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C446-pallavah",
+    "language": "sanskrit",
+    "chapter": 446,
+    "sequence": 25700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7455e5aa8b5fb4b5"
+  },
+  "findings": []
+}

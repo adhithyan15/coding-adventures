@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-476-SAKTI476",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe how strong or well-built someone is.",
+  "prerequisites": []
+}

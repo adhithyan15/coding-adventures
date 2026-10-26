@@ -1,0 +1,19 @@
+{
+  "chapter": 315,
+  "title": "A Blast",
+  "label": "ch:sa-a-blast",
+  "canDo": "I can describe a sudden loud event.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C315-tvarate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: I can describe a sudden loud event.",
+    "assesses": [
+      "SA-LEX-C315-VISPHOTA315-03",
+      "SA-LEX-C315-VISPHOTA315-04",
+      "SA-LEX-C315-VISPHOTA315-05"
+    ]
+  }
+}

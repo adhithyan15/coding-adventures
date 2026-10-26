@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "The Moon's Fortnights",
+  "label": "ch:sa-the-moon-s-fortnights",
+  "canDo": "I can say what the moon is doing this fortnight.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C444-rajate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can say what the moon is doing this fortnight.",
+    "assesses": [
+      "SA-LEX-C444-CANDRA444-03",
+      "SA-LEX-C444-CANDRA444-04",
+      "SA-LEX-C444-CANDRA444-05"
+    ]
+  }
+}

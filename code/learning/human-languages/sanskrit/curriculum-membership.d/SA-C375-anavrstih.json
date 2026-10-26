@@ -1,0 +1,11 @@
+{
+  "id": "SA-C375-anavrstih",
+  "pathSegment": "SA-PATH-375-VIPATTI375",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-375-VIPATTI375",
+      "order": 3
+    }
+  ]
+}

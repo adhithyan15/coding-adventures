@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-280-TRAVEL280",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask the way (sthānakaṃ kutra asti? kathaṃ gacchāmi? kiyat dūram?) and follow the answer: left, right, straight on (vāmataḥ, dakṣiṇataḥ, ṛju gacchatu).",
+  "prerequisites": [
+    "SA-EXT-279-REASONS279"
+  ]
+}

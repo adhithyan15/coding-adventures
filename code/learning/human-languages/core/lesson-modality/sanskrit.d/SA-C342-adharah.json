@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C342-adharah",
+    "language": "sanskrit",
+    "chapter": 342,
+    "sequence": 20100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6921b42c398fb493"
+  },
+  "findings": []
+}

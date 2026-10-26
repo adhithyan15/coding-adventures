@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:8f534454b84ba05a",
+  "lessonIds": [
+    "SA-C430-hattah",
+    "SA-C430-vikreta",
+    "SA-C430-kreta",
+    "SA-C430-grahakah",
+    "SA-C430-panate"
+  ],
+  "tex": "sanskrit/book/chapters/ch430-at-the-bazaar.tex"
+}

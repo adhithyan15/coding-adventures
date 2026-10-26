@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:6ae368961239a8e7",
+  "lessonIds": [
+    "SA-C525-mallah",
+    "SA-C525-bahuyuddham",
+    "SA-C525-patayati",
+    "SA-C525-uttolayati",
+    "SA-C525-ahvanam",
+    "SA-R525-review-518-525"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch525.txt",
+  "json": "sanskrit/narration/ch525.json",
+  "textHash": "fnv1a64:44ff49c52c822b32",
+  "jsonHash": "fnv1a64:75633df8414bc4fb",
+  "findings": []
+}

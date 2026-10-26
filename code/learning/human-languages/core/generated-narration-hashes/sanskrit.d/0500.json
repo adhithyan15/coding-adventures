@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:d909e562741af975",
+  "lessonIds": [
+    "SA-C500-devarah",
+    "SA-C500-nananda",
+    "SA-C500-syalah",
+    "SA-C500-prapitamahah",
+    "SA-C500-santatih"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch500.txt",
+  "json": "sanskrit/narration/ch500.json",
+  "textHash": "fnv1a64:f1c79d7c6cbf4a88",
+  "jsonHash": "fnv1a64:f7ccf0430af2ed7a",
+  "findings": []
+}

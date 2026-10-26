@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:508deb123d919ae4",
+  "lessonIds": [
+    "SA-C472-talu",
+    "SA-C472-lala",
+    "SA-C472-carvayati",
+    "SA-C472-nisthivati",
+    "SA-C472-rasah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch472.txt",
+  "json": "sanskrit/narration/ch472.json",
+  "textHash": "fnv1a64:fad0da78addfb815",
+  "jsonHash": "fnv1a64:9c2424a675a14d5a",
+  "findings": []
+}

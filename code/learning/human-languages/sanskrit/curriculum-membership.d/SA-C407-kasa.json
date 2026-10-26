@@ -1,0 +1,11 @@
+{
+  "id": "SA-C407-kasa",
+  "pathSegment": "SA-PATH-407-YANTA407",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-407-YANTA407",
+      "order": 2
+    }
+  ]
+}

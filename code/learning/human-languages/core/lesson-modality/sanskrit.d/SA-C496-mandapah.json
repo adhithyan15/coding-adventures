@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C496-mandapah",
+    "language": "sanskrit",
+    "chapter": 496,
+    "sequence": 28490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9734ed996fb0b45"
+  },
+  "findings": []
+}

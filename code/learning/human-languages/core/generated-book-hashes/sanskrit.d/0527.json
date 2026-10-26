@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:3892075670a3206c",
+  "lessonIds": [
+    "SA-C527-dhanurdharah",
+    "SA-C527-ekagrah",
+    "SA-C527-prahinoti",
+    "SA-C527-utsahayati",
+    "SA-C527-jya"
+  ],
+  "tex": "sanskrit/book/chapters/ch527-aim-and-shoot.tex"
+}

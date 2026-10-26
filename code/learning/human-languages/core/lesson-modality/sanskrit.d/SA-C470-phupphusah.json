@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C470-phupphusah",
+    "language": "sanskrit",
+    "chapter": 470,
+    "sequence": 27120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f6f39e0e16fbb0e"
+  },
+  "findings": []
+}

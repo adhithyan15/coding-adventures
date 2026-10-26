@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:8b628e8df9a51fdf",
+  "lessonIds": [
+    "SA-C476-saktih",
+    "SA-C476-pramsuh",
+    "SA-C476-pustah",
+    "SA-C476-akrtih",
+    "SA-C476-posayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch476.txt",
+  "json": "sanskrit/narration/ch476.json",
+  "textHash": "fnv1a64:346a02ffaecab4c9",
+  "jsonHash": "fnv1a64:dabdbecd510dc531",
+  "findings": []
+}

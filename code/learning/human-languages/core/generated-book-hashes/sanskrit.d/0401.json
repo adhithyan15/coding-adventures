@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:24b4cbe9db322204",
+  "lessonIds": [
+    "SA-C401-bhiksuh",
+    "SA-C401-viharah",
+    "SA-C401-bhiksa",
+    "SA-C401-upasakah",
+    "SA-C401-caityam",
+    "SA-R401-review-394-401"
+  ],
+  "tex": "sanskrit/book/chapters/ch401-monks-and-monasteries.tex"
+}

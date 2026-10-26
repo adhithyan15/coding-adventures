@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:2f89dfe6a38b54ad",
+  "lessonIds": [
+    "SA-C535-pratipalayati",
+    "SA-C535-satyasandhah",
+    "SA-C535-visvastah",
+    "SA-C535-bhangah",
+    "SA-C535-vacanam"
+  ],
+  "tex": "sanskrit/book/chapters/ch535-keeping-one-s-word.tex"
+}

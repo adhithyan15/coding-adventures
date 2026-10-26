@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C512-samyojayati",
+    "language": "sanskrit",
+    "chapter": 512,
+    "sequence": 29550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:651c0f4e0f1ac46b"
+  },
+  "findings": []
+}

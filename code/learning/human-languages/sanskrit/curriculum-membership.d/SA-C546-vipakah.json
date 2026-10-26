@@ -1,0 +1,11 @@
+{
+  "id": "SA-C546-vipakah",
+  "pathSegment": "SA-PATH-546-VIPAKA546",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-546-VIPAKA546",
+      "order": 4
+    }
+  ]
+}

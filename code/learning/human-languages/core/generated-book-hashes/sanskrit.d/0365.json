@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:ca4bb0152467b996",
+  "lessonIds": [
+    "SA-C365-siddhantah",
+    "SA-C365-tattvam",
+    "SA-C365-prajna",
+    "SA-C365-jijnasa",
+    "SA-C365-upalaksayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch365-theory-and-practice.tex"
+}

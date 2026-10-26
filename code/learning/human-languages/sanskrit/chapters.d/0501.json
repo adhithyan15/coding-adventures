@@ -1,0 +1,21 @@
+{
+  "chapter": 501,
+  "title": "Getting Along",
+  "label": "ch:sa-getting-along",
+  "canDo": "I can say how family members get on.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-R501-review-final-501",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can say how family members get on.",
+    "assesses": [
+      "SA-LEX-C501-SAMBANDHA501-01",
+      "SA-LEX-C501-SAMBANDHA501-02",
+      "SA-LEX-C501-SAMBANDHA501-03",
+      "SA-LEX-C501-SAMBANDHA501-04",
+      "SA-LEX-C501-SAMBANDHA501-05"
+    ]
+  }
+}

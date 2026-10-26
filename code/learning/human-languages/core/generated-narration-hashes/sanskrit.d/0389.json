@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:da9ab5f76375e364",
+  "lessonIds": [
+    "SA-C389-sakyah",
+    "SA-C389-sadhyah",
+    "SA-C389-kalpayati",
+    "SA-C389-kalpana",
+    "SA-C389-yatharthah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch389.txt",
+  "json": "sanskrit/narration/ch389.json",
+  "textHash": "fnv1a64:acff442de29b3f70",
+  "jsonHash": "fnv1a64:351d64394b36f8d1",
+  "findings": []
+}

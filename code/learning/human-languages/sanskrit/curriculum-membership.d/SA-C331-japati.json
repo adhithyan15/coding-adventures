@@ -1,0 +1,11 @@
+{
+  "id": "SA-C331-japati",
+  "pathSegment": "SA-PATH-331-NADITIRA331",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-331-NADITIRA331",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 331,
+  "title": "Down to the River",
+  "label": "ch:sa-down-to-the-river",
+  "canDo": "I can say what people did at the river on a festival.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C331-pavitrah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can say what people did at the river on a festival.",
+    "assesses": [
+      "SA-LEX-C331-NADITIRA331-03",
+      "SA-LEX-C331-NADITIRA331-04",
+      "SA-LEX-C331-NADITIRA331-05"
+    ]
+  }
+}

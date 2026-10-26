@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:e0f8de9864bede7d",
+  "lessonIds": [
+    "SA-C276-sah-gatavan",
+    "SA-C276-sah-pathati-sma",
+    "SA-C276-ghatate",
+    "SA-S226-letter-gha",
+    "SA-R276-what-happened"
+  ],
+  "tex": "sanskrit/book/chapters/ch276-what-happened-and-what-was-going-on.tex"
+}

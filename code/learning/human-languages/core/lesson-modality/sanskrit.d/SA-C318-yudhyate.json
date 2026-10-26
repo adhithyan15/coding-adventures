@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C318-yudhyate",
+    "language": "sanskrit",
+    "chapter": 318,
+    "sequence": 18680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f25ea33c7364ee2d"
+  },
+  "findings": []
+}

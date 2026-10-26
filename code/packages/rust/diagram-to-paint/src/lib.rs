@@ -7230,6 +7230,10 @@ where
             "er.useMaxWidth".into(),
             diagram.render_config.use_max_width.to_string(),
         );
+        scene_metadata.insert(
+            "flowchart.htmlLabels".into(),
+            diagram.render_config.html_labels.to_string(),
+        );
     }
     let lf = options.label_font.clone();
     let ls = lf.size;
@@ -10314,7 +10318,7 @@ mod tests {
     }
 
     #[test]
-    fn er_use_max_width_lowers_to_scene_metadata() {
+    fn er_render_policy_lowers_to_scene_metadata() {
         let shaper = FakeShaper;
         let metrics = FakeMetrics;
         let resolver = FakeResolver;
@@ -10327,7 +10331,10 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             architecture_config: None,
-            render_config: diagram_ir::StructuralRenderConfig { use_max_width: false },
+            render_config: diagram_ir::StructuralRenderConfig {
+                use_max_width: false,
+                html_labels: false,
+            },
             groups: vec![],
             nodes: vec![],
             relationships: vec![],
@@ -10336,6 +10343,10 @@ mod tests {
         let scene = diagram_to_paint_structural(&layout, &opts);
         assert_eq!(
             scene.metadata.as_ref().and_then(|metadata| metadata.get("er.useMaxWidth")),
+            Some(&"false".to_string())
+        );
+        assert_eq!(
+            scene.metadata.as_ref().and_then(|metadata| metadata.get("flowchart.htmlLabels")),
             Some(&"false".to_string())
         );
     }

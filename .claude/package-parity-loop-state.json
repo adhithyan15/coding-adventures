@@ -3,7 +3,7 @@
   "automation_id": "package-parity-pr-loop",
   "started": "2026-07-29",
   "policy": {
-    "maximum_active_parity_prs": 1,
+    "maximum_active_parity_prs": 3,
     "merge_authority": "auto-merge-after-required-checks",
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass",
@@ -16,11 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": 18183,
+  "active_pr": 18293,
+  "active_prs": [
+    18293,
+    18312
+  ],
   "last_ci_action": {
     "pr_number": 18183,
-    "head": "e04acc841ef2de4f61a56b5ae671a3927c81a38f",
-    "action": "Exact macOS job121277004429 failed during dependency linking on runner-image20261013.0424.1: SDK27 arm64e.x1 unsupported by default linker. Same-PR command-local Darwin CLT selection at52471c9a02f passes shell routing/exit/isolation tests and actual GHC9.4.8/Cabal3.10.3.0 Windows BUILD. Independent exact-final-source review and fresh hosted native CI required; no auto-merge enrollment."
+    "head": "17c40bca2a27f31ee1366bf123ab01978618c6fd",
+    "action": "Every required exact-head check completed acceptably and guarded squash auto-merge merged PR #18183 as ab25faef874fdc7788b37eabc19b87b7c1c79835 at 2026-10-26T08:35:36Z. The receipt is present on current origin/main 263e05f201003afd0395e82e6b810fe25a1260b4."
   },
   "last_inventory": {
     "revision": "83f1871e3d61e8151b0e9313337f5dc2c842a3e6",
@@ -14199,12 +14203,21 @@
     {
       "id": "swift-hash-functions-lane-parity",
       "title": "Implement the portable hash-functions package in Swift",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "hash-functions-dt17-vector-and-documentation-correction"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-swift-hash-functions-20261025",
+      "pr_number": 18312,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18312",
+      "pr_opened_at": "2026-10-26T06:59:52Z",
+      "publication_head": "a6bb4b12daff8b350758ec62bf551bfb1caae4e0",
+      "publication_notes": "PR #18312 is open and non-draft. Its independently reviewed receipt head e60a15a73ed7ed2d090b996b0b184454e811b947 became conflicting after origin/main advanced through merged PR #18183. The branch is rebased locally onto exact main 263e05f201003afd0395e82e6b810fe25a1260b4 while preserving the merged Haskell recovery record; refreshed exact-head validation, independent review, an exact old-head lease, and fresh hosted checks are required before guarded auto-merge.",
+      "selection_revision": "20ba82cbe644174616d85b05a314c8395772ad8f",
+      "selection_notes": "Selected from exact origin/main 20ba82cbe644174616d85b05a314c8395772ad8f after the refreshed ready-owner prioritization placed it ahead of the independent Python gradient-descent build-front and Swift paint-vm capability-manifest leaves. Its sole prerequisite is merged, and one bounded pure Swift package unlocks the explicit Swift hash-map, Bloom-filter, and HyperLogLog children before the hash-set/store chain. Preparation remains local-only while the operator-authorized three-PR ceiling is full. The implementation owns the four DT17 families, the established polynomial-rolling compatibility extension, all 64 upstream SipHash-2-4 vectors, caller-supplied deterministic avalanche samples, empty capabilities, native SwiftPM tests and coverage, and truthful Unix and Windows fronts. It claims no ambient entropy, filesystem, network, process, environment, clock, credential, or downstream execution authority.",
+      "reconciled_main_revision": "263e05f201003afd0395e82e6b810fe25a1260b4",
+      "reprioritization_notes": "Reprioritized immediately after guarded auto-merge of PR #18260 opened one publication slot. This dependency-ready Swift package remains ahead of the independently reviewed Python gradient-descent front because it unlocks four explicit Swift data-structure descendants; every prepared Bezier successor remains blocked on active PR #18293. After PR #18183 merged, this branch was rebased onto exact main 263e05f201003afd0395e82e6b810fe25a1260b4 with the Haskell recovery and merge receipts preserved. Publication requires refreshed native validation and independent review of the exact rebased head.",
+      "validation_notes": "On exact rebased main, the native Swift 6.3.1 front passes eight tests, all 64 upstream SipHash-2-4 vectors, release compilation, and package-manifest evaluation. Production HashFunctions.swift measures 98.46% line, 100% function, and 98.06% region coverage. The empty required-capabilities declaration validates against the repository schema. The real Go diff planner evaluates twelve Starlark BUILD files, discovers exactly one package, and selects only swift/hash-functions. The package has no external dependencies, lessons validate at 1,576 shards, strict JSON and diff hygiene pass, and generated Swift build output is removed after validation. Hosted Windows execution remains a publication check.",
       "notes": "First exact Swift high-consensus child materialized by the post-#14615 lane audit. Implement the existing deterministic hash-functions contract with package-native tests, empty capabilities, and no host authority. This dependency-shaped root unlocks the explicit Swift bloom-filter, hash-map, hash-set, and HyperLogLog children. The store engine remains separately gated on hash-map, hash-set, HyperLogLog, skip-list, protocol IR, and the neutral injected-clock contract. The remaining non-CT Swift high-consensus gaps stay owned by the selection-blocked classifier until decomposed into exact children.",
       "validation_plan": "swift-hash-foundation-native-validation-preparation.md: fourDT17 core families, explicit polynomial compatibility decision, upstream64 SipHash vectors, deterministic caller samples instead of OS randomness, native RED/full SwiftPM/Sources coverage/truthful fronts; actual SDK/link/native execution still unqualified despite resolved tool paths. Three direct pure leaves; no absent downstream execution claim.",
       "postmerge_preparation_evidence": [
@@ -20696,13 +20709,17 @@
     {
       "id": "geometry-bezier2d-flattening-csharp-fsharp",
       "title": "Consume safe Bezier flattening contract in C# and F#",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "geometry-bezier2d-flattening-termination-contract"
       ],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Read-only twelve-lane audit found both .NET lanes use midpoint flatness and unbounded recursion; their tolerance guard rejects negatives but permits zero. Consume nine neutral cases dynamically, reject nonfinite controls/tolerance, enforce finite-segment bound and shared budgets, then run Bezier2D and dependent Arc2D suites. Raise both Bezier BUILD coverage floors from 80% to G2D02's >=95% line requirement within this owner."
+      "branch": "codex/parity-bezier-dotnet-flattening-20261025",
+      "pr_number": 18293,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18293",
+      "pr_opened_at": "2026-10-26T04:49:54Z",
+      "publication_head": "a62b31f3543f6a09bbf5b9daf1363c10b5862bf4",
+      "notes": "Read-only twelve-lane audit found both .NET lanes use midpoint flatness and unbounded recursion; their tolerance guard rejects negatives but permits zero. Consume nine neutral cases dynamically, reject nonfinite controls/tolerance, enforce finite-segment bound and shared budgets, then run Bezier2D and dependent Arc2D suites. Raise both Bezier BUILD coverage floors from 80% to G2D02's >=95% line requirement within this owner.",
+      "publication_notes": "PR #18293 remains open and non-draft at exact independently reviewed head a62b31f3543f6a09bbf5b9daf1363c10b5862bf4, but GitHub now reports it conflicting after origin/main advanced through merged PR #18183. Its separate owner must rebase and refresh exact-head validation; guarded auto-merge remains disabled."
     },
     {
       "id": "geometry-bezier2d-flattening-python-ruby-perl",
@@ -22957,7 +22974,7 @@
     {
       "id": "starlark-compiler-haskell-opcode-provider-parity",
       "title": "Implement the pure Starlark opcode provider in haskell",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],
@@ -22967,6 +22984,11 @@
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
       "notes": "One missing actual starlark-compiler provider package with complete public enum/byte/operator/map APIs and dynamic shared-corpus reader. Independent pure tables need no generic AST compiler/VM/frontend package. Match qualified provider profile, unknown/domain errors and fresh map ownership with actual native test/build/coverage receipts. Empty authority metadata must be valid, not guessed from presence. Existing AST compiler or VM root does not provide this distinct package; no runtime or host activation.",
+      "publication_notes": "PR #18183 passed every required exact-head check at 17c40bca2a27f31ee1366bf123ab01978618c6fd and merged through guarded squash auto-merge as ab25faef874fdc7788b37eabc19b87b7c1c79835 at 2026-10-26T08:35:36Z. The merge receipt is verified on current origin/main.",
+      "merged_head_revision": "17c40bca2a27f31ee1366bf123ab01978618c6fd",
+      "merged_at": "2026-10-26T08:35:36Z",
+      "merge_revision": "ab25faef874fdc7788b37eabc19b87b7c1c79835",
+      "merge_notes": "Guarded squash auto-merge completed after terminal acceptable exact-head checks; the receipt was verified on origin/main and no manual merge was used.",
       "classification_notes": "starlark-compiler-provider-classification-audit.md: exact/canonical/full-scope review against1361 pre-registration owners found no duplicate. Actual provider is inert opcode/operator data, distinct from AST emission, generic compiler framework and VM/runtime activation. Structural roots are not native qualification.",
       "validation_plan": "starlark-compiler-provider-classification-audit.md: versioned reviewed profile first; independent literal61opcode/34operator table, all256decode classifications, unknown/type/domain failures, byte/name/category constraints and fresh-map ownership; schema/data corruption tests without importing provider as oracle. Native lane production API corpus readers, package/downstream/actual BUILD fronts, measured production coverage/lint/build/capability/parity/security/diff on final source. Nothing executed by this audit.",
       "postmerge_preparation_evidence": [
@@ -25830,15 +25852,21 @@
     {
       "id": "dotnet-wasm-opcodes-build-coverage-enforcement",
       "title": "Wire and prove C# and F# WasmOpcodes BUILD coverage gates",
-      "status": "in_progress",
+      "status": "merged",
       "depends_on": [],
       "delivery_class": "portable",
       "selection_blocked": false,
       "scope": "Repair only repository-declared coverage instrumentation/report/threshold enforcement for the existing C# and F# wasm-opcodes packages and their Unix/Windows BUILD fronts. Wire a real reviewed MSBuild coverage provider or an explicitly selected collector plus independent fail-closed threshold evaluator; retain production-only reports and a negative threshold-enforcement witness. Preserve at least the declared80%line floor and enforce the governing library-quality target (currently95%) where applicable; do not lower thresholds or waive the governing target. No Wasm opcode/VM semantic expansion or all-.NET sweep.",
       "notes": "Both WasmOpcodes fronts pass CollectCoverage/Threshold/ThresholdType but no project/shared configuration wires the MSBuild coverage consumer. C# has no Coverlet package; F# has collector6.0.4 only and no --collect or runsettings selection/threshold evaluator. CtCompare already references CoverletMSBuild6.0.2; preserve its existing CT01 adoption owner. Static evidence only; no native failure or coverage percentage measured. Fresh main includes PR17830 artifact-output isolation via --artifacts-path; provider/report/threshold enforcement remains pending. Historical source pins in preparation are not a fresh native result.",
       "branch": "codex/parity-dotnet-wasm-coverage-20261025",
+      "pr_number": 18260,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18260",
       "selection_notes": "Selected as dependency-safe local preparation while three reviewed parity PRs consume the publication ceiling. The C# and F# WasmOpcodes packages already claim line thresholds in both platform fronts, but a clean C# baseline produces no coverage table because no MSBuild provider is wired. This bounded repair has no implementation overlap with the active TypeScript GFM, CommonMark fixture, or Haskell Starlark-provider tranches. Acceptance requires isolated clean artifacts, a production-assembly include filter, an actual coverage report, the governing 95% library threshold, and a deliberate incomplete-test failure witness on both languages and both platform command shapes; opcode behavior stays unchanged.",
       "validation_notes": "A clean first run and warm repeat of each Unix BUILD front pass all seven native tests. Coverlet reports C# at 100% line, 75% branch and 100% method coverage and F# at 100% line, branch and method coverage, filtered to only the corresponding production assembly. Running only the version test under the same 95% line threshold returns exit 1 in both lanes with Coverlet's below-threshold error, proving fail-closed enforcement. Both test graphs report zero vulnerable direct or transitive NuGet packages. The complete Go build-tool suite passes with only its documented unavailable-pwsh generator round-trip excluded; vet and trimpath build pass. A real diff planner evaluates 86 Starlark BUILD files, discovers 5,367 packages, selects only the dotnet toolchain, propagates exactly 14 affected C#/F# WebAssembly packages from the two changed roots, and keeps both orphan gates clean with 38 reviewed exemptions. The 1,547-owner/2,616-edge state graph is unique, dependency-complete and acyclic with no merged-edge violations; 1,568 canonical lesson shards validate. The Windows fronts carry the same two-phase build/no-build instrumentation, isolated artifacts, production filter and 95% line threshold; hosted Windows execution remains a publication check. No opcode source or behavior changed.",
+      "merged_head_revision": "ae365a1cdcc7c98b7d575a07e91b04a577281924",
+      "merged_at": "2026-10-26T06:44:57Z",
+      "merge_revision": "fd5ee771aa2ae14e9bd639eba25e7b41baf8a4dc",
+      "merge_notes": "All exact-head checks reached terminal acceptable conclusions with zero failures. GitHub reported the reviewed head conflict-free; guarded squash auto-merge was enabled and PR #18260 merged without a manual merge command. The merge receipt is present on origin/main and the completed worktree was removed.",
       "report": "bf03-pending-dotnet-coverage-ownership-review.md",
       "registered_at": "2026-10-21T05:55:30.688172+00:00",
       "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c",
@@ -26095,6 +26123,10 @@
       "pr_opened_at": "2026-10-24T22:11:58Z",
       "publication_head": "c7ab39b38a363b1b5de267ee82a7e73317f6b96f",
       "publication_notes": "Draft PR #18174 was opened only to obtain the durable PR number after exact-head correctness, security, state-integrity, and CI-selection review passed. This lifecycle commit advances the owner from in-progress to pr-open; the PR remains draft until the receipt itself is pushed and independently reviewed.",
+      "merged_head_revision": "c7ab39b38a363b1b5de267ee82a7e73317f6b96f",
+      "merged_at": "2026-10-25T19:23:19Z",
+      "merge_revision": "bd533925647b7fbac74eba35e611a8ba3930757f",
+      "merge_notes": "GitHub reports PR #18174 merged from its exact final head as bd533925647b7fbac74eba35e611a8ba3930757f. The canonical fixture, validator, and CI-selection foundation are therefore closed; reader migrations and native adoption remain separate pending owners.",
       "validation_notes": "Merged current origin/main after PR #18143 freed a hosted slot, preserving the decomposed neutral-fixture owners, the C# merge receipt, and all post-#18118 audit owners. Independent review then found that the specs-and-scripts-only foundation selected no native package and was absent from the always-run hosted metadata checks. A RED workflow regression proved both commands were missing; the repair wires the direct validator and its dedicated falsification suite into the always-run Repo-wide metadata contracts step. Follow-up review rejected the initial substring-only self-test because commented commands or a conditional step could evade it; the commands now live in the existing external CI-registry guard, which scopes the unconditional contracts job and step, rejects shell control flow, and counts exact executable lines. Publication-time reader inventory then corrected the original identity-filtered count: all sixteen live CommonMark and GFM package readers across seven languages own byte-identical copies, and the normative TE01 profile and blocked migration aggregate name every one. After main advanced through merged F# renderer PR #18154 and unrelated Rust work, reconciliation at 67476ff501439127374c1c913438acecc7ebb6ed preserved that verified F# merge receipt, this CommonMark pr-open lifecycle, and the exact sixteen-reader census over main ed9fc44eaddd6f87d763073989a572702a78af4a. The dependency-free validator accepts all 652 official CommonMark 0.31.2 examples and 16 independently authored renderer vectors; 14 dedicated falsification tests and all 19 CI-registry tests pass. Ruff lint and focused format checks, compileall, strict changed-JSON validation, diff hygiene, and all 1,496 lesson shards pass. The complete Go build-tool suite passes except the explicitly isolated registry-generator round trip that requires unavailable PowerShell Core; with only that host-dependent test skipped, tests, vet, a temporary-output build, all 86 Starlark BUILD files, 5,364 discovered packages, orphan gates, and a real no-native-package dry plan pass. The 1,547-owner state graph is unique, dependency-complete, acyclic, and has no merged-to-unmerged edge. Fresh independent exact-head review remains the final publication gate.",
       "package_paths": [
         "code/specs/fixtures/commonmark-0.31.2"
@@ -26428,17 +26460,22 @@
     {
       "id": "csharp-document-ast-windows-build-repeatability",
       "title": "Make the existing C# document AST Windows build execute on repeated runs",
-      "status": "in_progress",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-csharp-document-ast-windows-20261025",
-      "pr_number": null,
+      "pr_number": 18259,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18259",
       "delivery_class": "portable-build-front",
       "package_paths": [
         "code/packages/csharp/document-ast"
       ],
       "notes": "Native validation of rendererPR18143 reproduced the existing document-ast BUILD_windows returning success with no output when .dotnet/.artifacts already exist, using a verified short PATH with dotnet9available. Its ungrouped if-not-exist setup captures the following command chain. Repair this existing package front separately and require real native tests/coverage on consecutive invocations. Four dependency tests passed directly; no repeat-front or measured dependency-coverage credit. New renderer BUILD_windows is repaired in18143; do not absorb unrelated package source here.",
       "selection_notes": "Selected after the independent dotnet WasmOpcodes coverage tranche completed local validation but remained behind the three-PR publication ceiling. This package is a C# Markdown prerequisite and has no implementation overlap with the active TypeScript GFM, CommonMark fixture, Haskell Starlark-provider, or prepared WasmOpcodes coverage branches. Fresh inspection also confirms that the test project has no Coverlet provider, so both existing CollectCoverage/Threshold properties are inert. The same bounded owner must group the Windows setup conditionals, wire production-only MSBuild coverage, enforce the 95% library line target, and prove clean plus warm execution without changing AST behavior.",
-      "validation_notes": "Activating the real provider first produced the expected RED: four passing tests covered only 56.25% of production lines and the 95% gate returned nonzero. Two focused public-API tests now exercise every remaining block and inline node family without changing production code. A clean run and immediate warm repeat each execute six tests and report 100% line, branch and method coverage for only CodingAdventures.DocumentAst. A one-test selection measures 14.58% line coverage and exits 1 with the below-threshold error, proving fail-closed enforcement. dotnet format reports no changes and the direct/transitive NuGet audit reports zero vulnerabilities. The grouped Windows command mirrors the same build/no-build instrumentation, filter and threshold; real hosted Windows execution remains the publication gate."
+      "validation_notes": "Activating the real provider first produced the expected RED: four passing tests covered only 56.25% of production lines and the 95% gate returned nonzero. Two focused public-API tests now exercise every remaining block and inline node family without changing production code. A clean run and immediate warm repeat each execute six tests and report 100% line, branch and method coverage for only CodingAdventures.DocumentAst. A one-test selection measures 14.58% line coverage and exits 1 with the below-threshold error, proving fail-closed enforcement. dotnet format reports no changes and the direct/transitive NuGet audit reports zero vulnerabilities. The grouped Windows command mirrors the same build/no-build instrumentation, filter and threshold; real hosted Windows execution remains the publication gate.",
+      "merged_head_revision": "9fe978f402d6ee29915d212fb9f33aec35045b24",
+      "merged_at": "2026-10-26T04:30:17Z",
+      "merge_revision": "bfc66cbaac24fea43af893c4a4a9cac5553ef115",
+      "merge_notes": "PR #18259 completed guarded squash auto-merge after its exact reviewed head passed the required checks and GitHub reported no merge conflict. This receipt closes the stale in-progress lifecycle entry during the post-#18260 reprioritization."
     }
   ],
   "postmerge_refresh": {

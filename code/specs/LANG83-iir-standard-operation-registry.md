@@ -194,6 +194,7 @@ tell a LANG83 trap from another error checks the atom against the closed table.
 | `Trap.ConvRange` | 4 | `real_to_int_*` of a non-finite / out-of-range value |
 | `Trap.Overflow` | 5 | `i64_div_floor` `MIN / -1`; the PR4 `i64_*_ovf` family |
 | `Trap.User` | 6 | a frontend's explicit abort (`die`, `raise` without a class, …) |
+| `Trap.ReferenceError` | 7 | reading a name that is not bound yet or at all (JavaScript's `ReferenceError`; LANG84 phase 6e) |
 
 The ids are what native backends pass to the runtime (`mov edi, id; call
 __twig_trap`); they are append-only and never renumbered. Language-specific
@@ -843,6 +844,16 @@ sign of `0/0` to the implementation (x86 SSE produces the "default NaN" with
 the sign bit *set*; AArch64 and WASM produce it clear), so `f64_signbit` of a
 NaN is unspecified, and every writer prints any NaN as `NaN`. A frontend that
 must print a NaN's sign (no current language does) has to test for NaN first.
+
+One frontend leans on NaN signs today. JavaScript's `console.log` writes the
+`-` of `-0` when `f64_signbit x > f64_signbit (f64_add x, 0)` (LANG84 6e).
+For a NaN `x` that is correct only if `f64_add` keeps the NaN operand's sign.
+Every backend's hardware and runtime does that today: x86 SSE, AArch64 with
+default-NaN mode off, LLVM, the JVM, the CLR, wasmtime without NaN
+canonicalisation, and the VM's Rust `f64`. The `infinities_and_nan` matrix
+rows check it on every column that runs `f64_*`. A backend that canonicalises
+NaN results could print `-NaN` for `0/0`. Such a backend needs a dedicated
+negative-zero test op before it can claim JavaScript.
 
 ### Per-backend lowering
 

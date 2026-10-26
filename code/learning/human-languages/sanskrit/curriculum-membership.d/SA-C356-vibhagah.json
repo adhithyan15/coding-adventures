@@ -1,0 +1,11 @@
+{
+  "id": "SA-C356-vibhagah",
+  "pathSegment": "SA-PATH-356-VIJNAPANA356",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-356-VIJNAPANA356",
+      "order": 3
+    }
+  ]
+}

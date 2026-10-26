@@ -1,0 +1,11 @@
+{
+  "id": "SA-C491-mrtyuh",
+  "pathSegment": "SA-PATH-491-JARA491",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-491-JARA491",
+      "order": 2
+    }
+  ]
+}

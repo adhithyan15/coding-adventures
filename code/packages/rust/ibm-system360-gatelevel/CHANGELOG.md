@@ -2,6 +2,29 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.1] - 2026-10-26
+
+### Fixed
+
+- Route every modeled branch predicate through gate reductions, muxes,
+  comparator condition-code wires, and one-hot opcode lines.
+- Add exhaustive mask, condition-code, register-field, count-wire, and
+  index-branch truth tables plus token-normalized exact-body structural
+  coverage with adversarial host-predicate, indirection, dead-anchor, and
+  primitive/helper-shadowing fixtures. Exact locks cover the complete branch
+  select, fixed-width adder, signed-comparator, and top-level dispatch data
+  flow, including the four-byte router, RR/RX/RS dispatcher shells, and
+  complete validation router, branch-validator shell, and public
+  `step`/`run`/`execute` bridge; adversarial helper rewrites, dead dispatch,
+  oracle substitution, expectation shadowing, and post-dispatch overwrites are
+  rejected.
+- Lock the crate's file-backed `executor` module binding and reject attributed,
+  aliased, duplicate, or inline oracle-backed routing modules that leave the
+  reviewed executor source dead. Top-level delimiter-aware module discovery
+  also rejects macro-discarded declarations paired with macro-generated live
+  `executor` or `gates` modules. Routing identity is parsed from the Rust AST,
+  so character literals containing delimiters cannot confuse module scope.
+
 ## [0.1.0] - 2026-10-24
 
 ### Added

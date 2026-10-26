@@ -37,6 +37,14 @@ ripple-carry adders implement:
 - a fixed 32-round partial-product multiplier; and
 - fixed-round restoring signed and unsigned division.
 
+The conditional-branch predicate is itself a combinational network. Its BO
+control bits drive a muxed gate-ALU CTR decrement, a gate-derived nonzero
+signal, a selected CR bit/polarity XNOR, independent CTR/condition bypass
+muxes, and a final AND wire. Host-language comparisons, equality, XOR, or
+short-circuit Boolean operators must not decide whether a branch is taken or
+whether CTR is decremented. Conversion of the final one-bit wire to the public
+Boolean execution boundary is permitted.
+
 Native integers are limited to package-boundary field extraction, memory
 addresses, big-endian byte assembly, stable bit-vector conversion, and trace
 bookkeeping. They are not substitutes for the listed datapaths.
@@ -55,8 +63,14 @@ state through DFFs.
 
 Completion requires:
 
-1. exact-topology and gate-network tests;
+1. exact-topology and gate-network tests, including every BO value, every CR
+   selector, CTR zero/nonzero boundaries, and both CR polarities against an
+   independently derived architectural truth table;
 2. lifecycle, direct-I/O, trace, workload, and atomic-failure suites;
 3. differential equality for all 239 reproducible Python full-state vectors;
 4. strict Rust formatting, Clippy, and rustdoc checks; and
 5. at least 80% package line coverage.
+
+The completed conditional-branch repair passes three gate/topology suites,
+three lifecycle suites, the aggregate 239-vector differential, strict checks,
+and 94.58% package line coverage (838/886).

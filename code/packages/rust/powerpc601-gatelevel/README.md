@@ -15,6 +15,12 @@ updates, 32-round multiplication, and fixed-round signed/unsigned division use
 repository gate and ripple-carry networks. Successful transitions clock the
 DFF state; typed instruction faults leave every DFF unchanged.
 
+Conditional branches use an explicit BO-controlled gate network: a muxed
+gate-ALU CTR decrement/nonzero path and a selected CR-bit/polarity path feed
+independent bypass muxes and a final AND wire. An exhaustive truth-table test
+covers all 32 BO values, all 32 CR selectors, both selected-bit polarities, and
+CTR zero/nonzero boundaries.
+
 The checked API shares `PowerPcState`, `PowerPcError`, `StepTrace`, and
 `ExecutionResult` with `powerpc601-simulator`, including exact snapshots,
 validated restore, origin-aware loading, checked direct access, atomic steps,
@@ -28,4 +34,6 @@ RUSTDOCFLAGS="-D warnings" cargo doc -p coding-adventures-powerpc601-gatelevel -
 
 The aggregate differential replays all 239 reproducible Python full-state
 vectors from the functional package. The normative completion contract is
-Spec 07u2.
+Spec 07u2. The completed branch repair passes three gate/topology suites, three
+lifecycle suites, the aggregate differential, strict Rustfmt/Clippy/rustdoc,
+and 94.58% package line coverage (838/886).

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C481-badhirah",
+  "pathSegment": "SA-PATH-481-ANDHA481",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-481-ANDHA481",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:7355416f19be2921",
+  "lessonIds": [
+    "SA-C321-abhisekah",
+    "SA-C321-purohitah",
+    "SA-C321-mantrah",
+    "SA-C321-abhisincati",
+    "SA-C321-uccarayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch321-a-coronation.tex"
+}

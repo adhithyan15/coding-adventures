@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:451980357ea4db64",
+  "lessonIds": [
+    "SA-C506-vayati",
+    "SA-C506-tantuh",
+    "SA-C506-ranjakah",
+    "SA-C506-ranjayati",
+    "SA-C506-saucikah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch506.txt",
+  "json": "sanskrit/narration/ch506.json",
+  "textHash": "fnv1a64:61ea8e972a601a9a",
+  "jsonHash": "fnv1a64:8dc28d01bb18ee85",
+  "findings": []
+}

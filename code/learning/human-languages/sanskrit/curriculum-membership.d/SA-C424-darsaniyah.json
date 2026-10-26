@@ -1,0 +1,11 @@
+{
+  "id": "SA-C424-darsaniyah",
+  "pathSegment": "SA-PATH-424-PARYATANA424",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-424-PARYATANA424",
+      "order": 1
+    }
+  ]
+}

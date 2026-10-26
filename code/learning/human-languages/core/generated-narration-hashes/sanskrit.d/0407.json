@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:36a9d72f5a411bde",
+  "lessonIds": [
+    "SA-C407-yanta",
+    "SA-C407-valga",
+    "SA-C407-kasa",
+    "SA-C407-pratodah",
+    "SA-C407-yunakti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch407.txt",
+  "json": "sanskrit/narration/ch407.json",
+  "textHash": "fnv1a64:f5a34e6c295cb493",
+  "jsonHash": "fnv1a64:1ed36e9876c55aee",
+  "findings": []
+}

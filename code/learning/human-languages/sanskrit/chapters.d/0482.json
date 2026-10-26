@@ -1,0 +1,19 @@
+{
+  "chapter": 482,
+  "title": "At the Physician's",
+  "label": "ch:sa-at-the-physician-s",
+  "canDo": "I can talk about a visit to the physician.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C482-salyam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can talk about a visit to the physician.",
+    "assesses": [
+      "SA-LEX-C482-CIKITSA482-03",
+      "SA-LEX-C482-CIKITSA482-04",
+      "SA-LEX-C482-CIKITSA482-05"
+    ]
+  }
+}

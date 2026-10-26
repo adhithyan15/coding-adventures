@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:0ce2595a7d5c5aca",
+  "lessonIds": [
+    "SA-C384-udyamah",
+    "SA-C384-dhrtih",
+    "SA-C384-yathasakti",
+    "SA-C384-anutisthati",
+    "SA-C384-protsahayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch384.txt",
+  "json": "sanskrit/narration/ch384.json",
+  "textHash": "fnv1a64:002d8540ff6d71ef",
+  "jsonHash": "fnv1a64:1fb8c9fe1bb0da61",
+  "findings": []
+}

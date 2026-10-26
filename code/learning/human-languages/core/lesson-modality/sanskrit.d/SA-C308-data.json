@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C308-data",
+    "language": "sanskrit",
+    "chapter": 308,
+    "sequence": 18150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a07d70b6e8bf9a2b"
+  },
+  "findings": []
+}

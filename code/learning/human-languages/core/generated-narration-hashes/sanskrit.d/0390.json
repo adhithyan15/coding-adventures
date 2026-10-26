@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:92f01e78af849097",
+  "lessonIds": [
+    "SA-C390-laksanam",
+    "SA-C390-pratyasa",
+    "SA-C390-vyarthah",
+    "SA-C390-sarthakah",
+    "SA-C390-anubhavati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch390.txt",
+  "json": "sanskrit/narration/ch390.json",
+  "textHash": "fnv1a64:b258b4ffc3ff0638",
+  "jsonHash": "fnv1a64:78610640efb2ef73",
+  "findings": []
+}

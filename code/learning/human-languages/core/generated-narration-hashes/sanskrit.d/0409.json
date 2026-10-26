@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:60304d4ee7cee200",
+  "lessonIds": [
+    "SA-C409-aksah",
+    "SA-C409-nemih",
+    "SA-C409-arah",
+    "SA-C409-bhramayati",
+    "SA-C409-vartma",
+    "SA-R409-review-402-409"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch409.txt",
+  "json": "sanskrit/narration/ch409.json",
+  "textHash": "fnv1a64:6e422045384cc284",
+  "jsonHash": "fnv1a64:111547af78f36db6",
+  "findings": []
+}

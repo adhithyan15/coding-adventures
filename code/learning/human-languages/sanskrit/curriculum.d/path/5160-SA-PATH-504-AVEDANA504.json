@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-504-AVEDANA504",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "SA-EXT-504-AVEDANA504"
+  ],
+  "after": []
+}

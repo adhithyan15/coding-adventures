@@ -1,0 +1,11 @@
+{
+  "id": "SA-C320-dasah",
+  "pathSegment": "SA-PATH-320-VIPLAVA320",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-320-VIPLAVA320",
+      "order": 1
+    }
+  ]
+}

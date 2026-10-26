@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C348-sosanam",
+    "language": "sanskrit",
+    "chapter": 348,
+    "sequence": 20410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:337814df97f9f1f1"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C490-rupam",
+  "pathSegment": "SA-PATH-490-RUPA490",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-490-RUPA490",
+      "order": 4
+    }
+  ]
+}

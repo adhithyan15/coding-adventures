@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C543-hathah",
+    "language": "sanskrit",
+    "chapter": 543,
+    "sequence": 31120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f12ac92cab9a8fb1"
+  },
+  "findings": []
+}

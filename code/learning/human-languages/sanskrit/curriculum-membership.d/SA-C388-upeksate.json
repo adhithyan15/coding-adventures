@@ -1,0 +1,11 @@
+{
+  "id": "SA-C388-upeksate",
+  "pathSegment": "SA-PATH-388-VYAVAHARA388",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-388-VYAVAHARA388",
+      "order": 1
+    }
+  ]
+}

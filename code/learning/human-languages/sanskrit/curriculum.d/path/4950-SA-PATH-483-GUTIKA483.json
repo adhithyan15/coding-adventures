@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-483-GUTIKA483",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "SA-EXT-483-GUTIKA483"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C484-pittam",
+    "language": "sanskrit",
+    "chapter": 484,
+    "sequence": 27860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d18bac3e2137be9d"
+  },
+  "findings": []
+}

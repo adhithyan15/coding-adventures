@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:35ce784667a9a0d8",
+  "lessonIds": [
+    "SA-C379-adhikah",
+    "SA-C379-paryaptah",
+    "SA-C379-pracurah",
+    "SA-C379-vipulah",
+    "SA-C379-vardhayati",
+    "SA-R379-review-372-379"
+  ],
+  "tex": "sanskrit/book/chapters/ch379-more-than-enough.tex"
+}

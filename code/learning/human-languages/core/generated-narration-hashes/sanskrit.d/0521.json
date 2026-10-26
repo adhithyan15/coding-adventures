@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:fc5b4d357e2fb04e",
+  "lessonIds": [
+    "SA-C521-vadakah",
+    "SA-C521-tantri",
+    "SA-C521-damaruh",
+    "SA-C521-murajah",
+    "SA-C521-nadah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch521.txt",
+  "json": "sanskrit/narration/ch521.json",
+  "textHash": "fnv1a64:5315b11bee0170da",
+  "jsonHash": "fnv1a64:f07cb70e52c11850",
+  "findings": []
+}

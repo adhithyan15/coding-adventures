@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:908f157c7baeeb3f",
+  "lessonIds": [
+    "SA-C351-satkarma",
+    "SA-C351-vivekah",
+    "SA-C351-anuvartate",
+    "SA-C351-anusarati",
+    "SA-C351-maryada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch351.txt",
+  "json": "sanskrit/narration/ch351.json",
+  "textHash": "fnv1a64:036c51304a354ac3",
+  "jsonHash": "fnv1a64:39592c343ebe328d",
+  "findings": []
+}

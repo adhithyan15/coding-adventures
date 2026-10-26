@@ -1,0 +1,11 @@
+{
+  "id": "SA-C293-dandayati",
+  "pathSegment": "SA-PATH-293-NYAYALAYA293",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-293-NYAYALAYA293",
+      "order": 1
+    }
+  ]
+}

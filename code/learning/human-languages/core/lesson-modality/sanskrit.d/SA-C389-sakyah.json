@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C389-sakyah",
+    "language": "sanskrit",
+    "chapter": 389,
+    "sequence": 22510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2168be37cb4275a"
+  },
+  "findings": []
+}
