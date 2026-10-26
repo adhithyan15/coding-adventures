@@ -20727,7 +20727,14 @@
       "notes": "Explicit error-return API slice for bounded flattening failure. Both use midpoint flatness and unbounded recursion. Consume nine neutral cases, validate finite controls/tolerance, finite-segment bound, depth/work limit, and Bezier2D plus Arc2D tests; document any API compatibility adjustment.",
       "selection_notes": "Selected as the final bounded existing-lane G2D02 implementation child after the C#/F#, Python/Ruby/Perl, TypeScript/Elixir/Lua, and Haskell/Swift tranches were implemented or prepared. Its neutral termination-contract dependency is merged, its Go and Rust package paths do not overlap the three active PRs or prepared branches, and it closes the last two stale midpoint-recursive implementations before the aggregate owner can be evaluated. Change the public flattening methods to explicit error returns, preserve evaluation/split/bounds behavior, consume all nine fixture rows dynamically, carry the subnormal-underflow regression, and run native Bezier2D plus same-language Arc2D suites. Shared selector integration remains sequenced behind PR #18293; no fourth PR opens while the publication ceiling is full.",
       "started_at": "2026-10-25T22:12:00-07:00",
-      "base_revision": "20ba82cbe644174616d85b05a314c8395772ad8f"
+      "base_revision": "20ba82cbe644174616d85b05a314c8395772ad8f",
+      "implementation_revision": "5e6b319b086d4ad3a87ec9287ca6e4a15186d433",
+      "validation_revision": "3cd2f21414c118f3868dfc0c018fda57f1a130b2",
+      "package_paths": [
+        "code/packages/go/bezier2d",
+        "code/packages/rust/bezier2d"
+      ],
+      "validation_notes": "Local implementation is complete but remains unpublished while the three-PR ceiling is full and shared fixture-selector integration in PR #18293 is pending. Both public APIs now return explicit errors, consume all nine neutral rows dynamically, use the finite-segment control bound and a left-first iterative stack, and fail atomically for invalid tolerance, non-finite control or derived geometry, depth 32, or 65,535 subdivisions. Go passes 20 top-level Bezier2D tests and subtests under race detection at 97.4% statement coverage; gofmt, vet, and build pass. Its downstream Arc2D suite passes at 96.8% statement coverage. Rust passes 22 Bezier2D tests and doc tests at 96.55% source-line, 96.24% region, and 97.92% function coverage; rustfmt, strict all-target clippy, and release build pass in a standalone sparse-worktree mirror. Its downstream Arc2D suite passes 20 tests and doc tests. Full-repository API search finds no external Go or Rust flattening callers requiring migration. The 1,547-item state graph remains unique, dependency-complete, and acyclic, and 1,568 lesson shards validate with zero problems. Publication still requires current-main reconciliation after the selector dependency lands, refreshed native/selector validation, and independent exact-head correctness/security review."
     },
     {
       "id": "geometry-bezier2d-flattening-haskell-swift",
