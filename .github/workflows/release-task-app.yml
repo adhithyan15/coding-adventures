@@ -8,6 +8,12 @@ on:
     paths:
       - .github/workflows/release-task-app.yml
       - code/scripts/taskapp_release.py
+      - code/scripts/tests/test_taskapp_release.py
+      # The generic half of the upgrade/corrupt-recovery gate lives here and
+      # taskapp_release.py delegates to it, so a change to it must run this
+      # lane's real-bundle upgrade checks (mosaic-release-state-gate-v1.md).
+      - code/scripts/mosaic_release_state_gate.py
+      - code/scripts/tests/test_mosaic_release_state_gate.py
       - code/scripts/taskapp-xaml-smoke.ps1
       - code/scripts/taskapp-xaml-startup-smoke.ps1
       - code/programs/mosaic/task-app/**
@@ -53,6 +59,24 @@ jobs:
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      # The helpers' own tests, before anything is built with them. Nothing else
+      # in CI runs test_taskapp_release.py, so without this step it guarded
+      # nothing. It is a pytest suite (the shared gate's is unittest); pytest is
+      # pinned to an exact release rather than taken at whatever is newest.
+      - name: Test the release helpers themselves
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pytest==9.0.3
+          python -m pytest code/scripts/tests/test_taskapp_release.py
+          python -m unittest discover -s code/scripts/tests \
+            -p 'test_mosaic_release_state_gate.py'
 
       - name: Validate version, tag, ref, and publication availability
         id: release

@@ -503,6 +503,15 @@ pub enum BuildError {
     /// A `pkg::P::C` reference in a component layout could not be resolved or
     /// inlined before backend emission.
     PackageReferenceError { component: String, error: String },
+    /// The package's own `[dependencies]` declare a version requirement that
+    /// the package found on the search path does not satisfy
+    /// (mosaic-package-publishing-v1 §7.4). The string is the rendered
+    /// resolver error, which names both packages, the requirement as a
+    /// range, the version found, and the manifest to fix.
+    ///
+    /// A requirement inside a dependency fails while that dependency is
+    /// inlined, so it arrives as [`BuildError::PackageReferenceError`].
+    DependencyVersion(String),
     /// A manifest-declared token palette could not be read, parsed, or safely
     /// layered with higher-precedence package/application values.
     TokenPalette { path: PathBuf, error: String },
@@ -551,6 +560,7 @@ impl std::fmt::Display for BuildError {
                     "package reference error for component '{component}': {error}"
                 )
             }
+            BuildError::DependencyVersion(error) => write!(f, "dependency error: {error}"),
             BuildError::TokenPalette { path, error } => {
                 write!(f, "token palette '{}': {error}", path.display())
             }
@@ -2611,6 +2621,7 @@ fn analyze_package_degradations_with_runtime_and_tokens(
     }
     let src_dir = opts.package_root.join("src");
     let package_search_paths = default_package_search_paths(&opts.package_root);
+    check_dependency_requirements(&manifest_path, &manifest, &package_search_paths)?;
     let mut degradations = Vec::new();
     let mut style_degradations = Vec::new();
     let mut behavior_degradations = Vec::new();
@@ -3482,6 +3493,14 @@ fn build_package_inner(
     if let Some(theme) = &opts.theme {
         validate_theme_name(theme)?;
     }
+
+    // ----- 2a'. Check the declared dependency versions (§7.4) --------------
+    check_dependency_requirements(
+        &manifest_path,
+        &manifest,
+        &default_package_search_paths(&opts.package_root),
+    )?;
+
     let package_tokens =
         load_package_tokens(&opts.package_root, &manifest, Some(opts.backend), tokens)?;
 
@@ -10453,6 +10472,30 @@ fn resolve_style_path(
     Ok(themed.into_iter().next())
 }
 
+/// Check the package's own `[dependencies]` requirements against the
+/// packages the search path holds (mosaic-package-publishing-v1 §7.4).
+///
+/// The layout inliner checks the requirements of every package it inlines
+/// *from*. The package being built is the one it never sees, so its
+/// requirements are checked here, once, before any component compiles:
+///
+/// ```text
+///   engram-app ──requires──▶ mosaic-pkg-card-browser ──requires──▶ mosaic-pkg-toolkit
+///   └─ checked here ───────┘ └─ checked by LayoutPackageResolver while inlining ──┘
+/// ```
+///
+/// Same locator as the inliner (by manifest name), so the version checked
+/// is the version that gets compiled.
+fn check_dependency_requirements(
+    manifest_path: &Path,
+    manifest: &MosaicPackage,
+    package_search_paths: &[PathBuf],
+) -> Result<(), BuildError> {
+    mosaic_package_resolver::LayoutPackageResolver::new(package_search_paths.to_vec())
+        .check_dependencies(manifest, manifest_path)
+        .map_err(|e| BuildError::DependencyVersion(e.to_string()))
+}
+
 fn default_package_search_paths(package_root: &Path) -> Vec<PathBuf> {
     let mut roots = Vec::new();
     if let Some(parent) = package_root.parent() {
@@ -11771,6 +11814,68 @@ version = "1"
             .expect("dependency state should be merged");
         assert_eq!(dependency_state.state, "danger");
         assert_eq!(dependency_state.slot.as_deref(), Some("variant"));
+    }
+
+    /// The package being built has its own `[dependencies]` checked against
+    /// what the search path holds (mosaic-package-publishing-v1 §7.4); the
+    /// layout inliner only ever sees the packages it inlines from.
+    #[test]
+    fn a_package_build_checks_its_own_dependency_requirements() {
+        let build_shell_requiring = |requirement: &str| {
+            let workspace = TempDir::new().unwrap();
+            let child = workspace.path().join("mosaic-pkg-accent");
+            let parent = workspace.path().join("mosaic-pkg-shell");
+            // `write_package_manifest` writes `version = "0.1.0"`.
+            write_package_manifest(&child, "mosaic-pkg-accent", &["Accent"], &[]);
+            write_component_sources(
+                &child,
+                "Accent",
+                "component Accent { }",
+                "layout Accent { Box [ accent-root ] { } }",
+                "style Accent { }",
+            );
+            write_package_manifest(
+                &parent,
+                "mosaic-pkg-shell",
+                &["Shell"],
+                &[("mosaic-pkg-accent", requirement)],
+            );
+            write_component_sources(
+                &parent,
+                "Shell",
+                "component Shell { }",
+                "layout Shell { Column [ shell-root ] { pkg::mosaic-pkg-accent::Accent } }",
+                "style Shell { }",
+            );
+            let out = TempDir::new().unwrap();
+            build_package(&BuildOptions {
+                package_root: parent,
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Html,
+                emit_project: false,
+                theme: None,
+            })
+        };
+
+        for satisfied in ["0.1.0", "=0.1.0"] {
+            build_shell_requiring(satisfied)
+                .unwrap_or_else(|e| panic!("{satisfied:?} should accept 0.1.0: {e}"));
+        }
+        for (unsatisfied, range) in [("0.2.0", ">=0.2.0, <0.3.0"), ("=0.1.1", "=0.1.1")] {
+            match build_shell_requiring(unsatisfied) {
+                Err(BuildError::DependencyVersion(message)) => {
+                    assert!(
+                        message.contains(&format!(
+                            "mosaic-pkg-shell requires mosaic-pkg-accent \"{unsatisfied}\" ({range})"
+                        )) && message.contains("found mosaic-pkg-accent 0.1.0"),
+                        "{message}"
+                    );
+                }
+                other => {
+                    panic!("{unsatisfied:?} should fail with DependencyVersion, got {other:?}")
+                }
+            }
+        }
     }
 
     // -----------------------------------------------------------------------
