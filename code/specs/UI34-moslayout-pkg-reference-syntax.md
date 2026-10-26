@@ -458,8 +458,22 @@ How it behaves:
     `true`/`false`. Names after `.` and string contents are not free.
     Anything else is `UndeclaredExpressionIdentifier { package, component,
     identifier, expression }`.
+  - A bare NAME prop value (`content: title`) is a `Keyword` in the IR, but
+    the emitters lower it to a variable in most positions: React writes
+    `{title}`, HTML writes `{{title}}`. It is treated like a bare name in an
+    expression, except when it is a literal:
+    - `true` or `false`, anywhere;
+    - a position in `moslayout_compiler::KEYWORD_LITERAL_PROPS`, the
+      kernel's enum props (`a11y-role`, `axis`, `collapse`, `kind`, `dir`,
+      `target`, `table-cell-role`);
+    - a `For`'s `as:`/`index:`;
+    - at a call site, a value bound to a `one-of` slot of the component it
+      mounts.
+    A bare NAME that names one of the component's own slots is rewritten to
+    `slot: <name>`, so it takes the call site's binding or the default.
+    Before, it showed the consumer's slot of the same name.
   - The mount slot may be read only by the mount. A read anywhere else,
-    whether as a prop or inside an expression, is
+    whether as a prop, as a bare NAME, or inside an expression, is
     `ChildMountSlotReferenced { package, component, slot }`.
 - **Bindings.** Only call-site props that name a declared slot or emit
   become bindings. Inside a `For`, a bare name that matches the loop's
@@ -467,9 +481,15 @@ How it behaves:
   wins"). Reporting a call-site prop that names nothing is F2
   (`UnknownSlotBinding`).
 - **Every error.** Every missing slot at every call site is reported in one
-  `Multiple` error, up to 100 of them, followed by "… and N more". One
-  missing slot is reported bare. A package that fails to load is reported
-  once, however many call sites name it.
+  `Multiple` error, up to 100 of them, followed by "… and N more". The
+  callee-scope errors of one component have the same cap, and an error
+  quotes at most 200 characters of an expression. One missing slot is
+  reported bare. A package that fails to load is compiled once, and is
+  reported once however many call sites name it.
+- **Known follow-up.** A callee's `For` binding can still capture names
+  that come from outside the callee, both consumer values bound into the
+  callee and caller-authored children spliced under the loop. This is not
+  yet addressed.
 - **The message.** It names the package and component, and gives the fix.
   The "give it a default" half is offered only for `text`, `number` and
   `bool`, the types that can have one today.
