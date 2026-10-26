@@ -26059,7 +26059,10 @@
         "code/packages/swift/document-ast-to-html"
       ],
       "notes": "Swift currently lowers fences to code_block and has no fenced_block AST/renderer case. Adopt TE04 source-preserving name/info/value semantics and inert HTML fallback before adding the missing GFM parser root. Keep the sixteen-case GFM parser adoption itself downstream.",
-      "selection_notes": "Selected as the smallest dependency-ready Swift GFM prerequisite after a 2026-10-26 reprioritization. The older codex/parity-gfm-swift-20261024 preparation predates the three-owner decomposition and combines this contract with downstream parser work, so it is retained only as implementation evidence and is not publishable as one PR."
+      "selection_notes": "Selected as the smallest dependency-ready Swift GFM prerequisite after a 2026-10-26 reprioritization. The older codex/parity-gfm-swift-20261024 preparation predates the three-owner decomposition and combines this contract with downstream parser work, so it is retained only as implementation evidence and is not publishable as one PR.",
+      "base_revision": "20ba82cbe644174616d85b05a314c8395772ad8f",
+      "validation_revision": "e8a9f98c80a90c74150864d407ac3048b047334c",
+      "validation_notes": "RED compilation proved the missing FencedBlockNode and BlockNode.fencedBlock surface. GREEN validation passes 96 document-AST tests, 62 CommonMark-parser tests, and 63 renderer tests; the complete affected Swift closure also passes 30 commonmark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade tests plus release builds for all six packages. Production coverage is 100% lines/functions for document-ast, 92.38% aggregate lines and 90.77% functions for document-ast-to-html with its AST dependency, and 81.91% aggregate lines for commonmark-parser including its pre-existing 77.66% InlineParser baseline; the changed BlockParser and Parser files measure 86.99% and 97.78% lines respectively. Current-source diff discovery identifies exactly three directly changed packages and the six-package manifest-confirmed closure before the expected sparse-only repository orphan check rejects hidden package roots. The sixteen-case GFM reader, tasks, tables, strikethrough, 652-example reconciliation, missing parser root, and facade remain downstream."
     },
     {
       "id": "commonmark-parser-swift-652-reconciliation",

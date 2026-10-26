@@ -18044,6 +18044,19 @@ CommonMark-parser projection, inert HTML fallback, focused native tests, and
 package documentation. It does not claim all sixteen GFM cases or any of the
 downstream owners.
 
+The focused RED phase failed on the missing AST type and enum case. The GREEN
+phase passes 96 document-AST, 62 parser, and 63 renderer tests. The complete
+manifest-confirmed dependent closure also passes 30 CommonMark facade, 45
+AsciiDoc parser, and 28 AsciiDoc facade tests, and all six packages build in
+release mode. Production line coverage is 100% for the AST, 92.38% for the
+renderer plus AST, and 81.91% for the parser plus AST; the parser total includes
+the pre-existing 77.66% `InlineParser` baseline, while the changed block and
+projection files measure 86.99% and 97.78%. Current-source diff discovery finds
+three direct packages and the same six-package closure. Its repository-wide
+orphan census is intentionally not credited from the sparse worktree because
+hidden package roots appear absent; hosted complete-checkout CI remains the
+publication gate.
+
 ## October 25, 2026: C# document-AST Windows-front preparation
 
 After locally completing the independent .NET WasmOpcodes coverage repair,
