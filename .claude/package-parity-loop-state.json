@@ -293,7 +293,7 @@
     {
       "id": "build-tool-extra-ci-toolchain-declaration-remaining-engines",
       "title": "Implement extra CI toolchain declarations in every supported build-tool engine",
-      "status": "in-progress",
+      "status": "in_progress",
       "depends_on": [
         "build-tool-csharp-extra-ci-toolchain-declaration-conformance",
         "build-tool-fsharp-extra-ci-toolchain-declaration-conformance",
