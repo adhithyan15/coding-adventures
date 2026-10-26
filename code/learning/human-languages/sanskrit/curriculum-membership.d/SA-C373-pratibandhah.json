@@ -1,0 +1,11 @@
+{
+  "id": "SA-C373-pratibandhah",
+  "pathSegment": "SA-PATH-373-ANUMATI373",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-373-ANUMATI373",
+      "order": 2
+    }
+  ]
+}

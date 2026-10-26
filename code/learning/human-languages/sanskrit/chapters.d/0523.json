@@ -1,0 +1,19 @@
+{
+  "chapter": 523,
+  "title": "A Play in the Village",
+  "label": "ch:sa-a-play-in-the-village",
+  "canDo": "I can talk about a play and the people in it.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C523-abhinayah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can talk about a play and the people in it.",
+    "assesses": [
+      "SA-LEX-C523-NATA523-03",
+      "SA-LEX-C523-NATA523-04",
+      "SA-LEX-C523-NATA523-05"
+    ]
+  }
+}

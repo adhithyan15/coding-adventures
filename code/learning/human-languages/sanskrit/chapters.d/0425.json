@@ -1,0 +1,21 @@
+{
+  "chapter": 425,
+  "title": "Monuments and Onlookers",
+  "label": "ch:sa-monuments-and-onlookers",
+  "canDo": "I can talk about a monument, the crowd and what is memorable.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-R425-review-418-425",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can talk about a monument, the crowd and what is memorable.",
+    "assesses": [
+      "SA-LEX-C425-SMARAKA425-01",
+      "SA-LEX-C425-SMARAKA425-02",
+      "SA-LEX-C425-SMARAKA425-03",
+      "SA-LEX-C425-SMARAKA425-04",
+      "SA-LEX-C425-SMARAKA425-05"
+    ]
+  }
+}

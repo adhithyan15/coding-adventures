@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:78a3d63193fcedfc",
+  "lessonIds": [
+    "SA-C473-angam",
+    "SA-C473-jangha",
+    "SA-C473-parsnih",
+    "SA-C473-mustih",
+    "SA-C473-akuncayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch473-arms-and-legs.tex"
+}

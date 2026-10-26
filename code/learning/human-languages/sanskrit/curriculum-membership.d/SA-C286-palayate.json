@@ -1,0 +1,11 @@
+{
+  "id": "SA-C286-palayate",
+  "pathSegment": "SA-PATH-286-CAURYA286",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-286-CAURYA286",
+      "order": 4
+    }
+  ]
+}

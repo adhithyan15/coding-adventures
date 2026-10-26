@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:4412bc07567d3cec",
+  "lessonIds": [
+    "SA-C417-pulinam",
+    "SA-C417-phenah",
+    "SA-C417-budbudah",
+    "SA-C417-sthalam",
+    "SA-C417-vela",
+    "SA-R417-review-410-417"
+  ],
+  "tex": "sanskrit/book/chapters/ch417-sandbanks-and-shores.tex"
+}

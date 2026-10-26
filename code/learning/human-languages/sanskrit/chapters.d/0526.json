@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "Training Hard",
+  "label": "ch:sa-training-hard",
+  "canDo": "I can talk about practice, speed and leaping.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C526-dalam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can talk about practice, speed and leaping.",
+    "assesses": [
+      "SA-LEX-C526-ABHYASYATI526-03",
+      "SA-LEX-C526-ABHYASYATI526-04",
+      "SA-LEX-C526-ABHYASYATI526-05"
+    ]
+  }
+}

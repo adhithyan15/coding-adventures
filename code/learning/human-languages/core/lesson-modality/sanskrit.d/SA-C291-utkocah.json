@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C291-utkocah",
+    "language": "sanskrit",
+    "chapter": 291,
+    "sequence": 17270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b8471912b3e9e70"
+  },
+  "findings": []
+}

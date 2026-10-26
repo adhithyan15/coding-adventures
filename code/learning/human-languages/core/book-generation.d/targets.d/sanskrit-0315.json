@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 315,
+  "output": "sanskrit/book/chapters/ch315-a-blast.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

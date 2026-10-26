@@ -1,0 +1,11 @@
+{
+  "id": "SA-C529-tvara",
+  "pathSegment": "SA-PATH-529-PARIVARTANA529",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-529-PARIVARTANA529",
+      "order": 4
+    }
+  ]
+}

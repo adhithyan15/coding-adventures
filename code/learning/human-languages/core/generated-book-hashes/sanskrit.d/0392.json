@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:d883cd20d9aee91b",
+  "lessonIds": [
+    "SA-C392-abhyarthayate",
+    "SA-C392-sahayakah",
+    "SA-C392-asvasayati",
+    "SA-C392-sahakarah",
+    "SA-C392-anugrahah"
+  ],
+  "tex": "sanskrit/book/chapters/ch392-asking-for-help.tex"
+}

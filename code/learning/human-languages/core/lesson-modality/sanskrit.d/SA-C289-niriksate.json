@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C289-niriksate",
+    "language": "sanskrit",
+    "chapter": 289,
+    "sequence": 17170,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4940956ec25d0f0b"
+  },
+  "findings": []
+}

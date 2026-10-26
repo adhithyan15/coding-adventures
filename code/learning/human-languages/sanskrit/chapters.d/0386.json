@@ -1,0 +1,21 @@
+{
+  "chapter": 386,
+  "title": "Success",
+  "label": "ch:sa-success",
+  "canDo": "I can say what will come if a plan succeeds.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-R386-review-380-386",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can say what will come if a plan succeeds.",
+    "assesses": [
+      "SA-LEX-C386-SIDDHI386-01",
+      "SA-LEX-C386-SIDDHI386-02",
+      "SA-LEX-C386-SIDDHI386-03",
+      "SA-LEX-C386-SIDDHI386-04",
+      "SA-LEX-C386-SIDDHI386-05"
+    ]
+  }
+}

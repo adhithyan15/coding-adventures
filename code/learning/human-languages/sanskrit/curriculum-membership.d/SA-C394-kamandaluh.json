@@ -1,0 +1,11 @@
+{
+  "id": "SA-C394-kamandaluh",
+  "pathSegment": "SA-PATH-394-TIRTHA394",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-394-TIRTHA394",
+      "order": 4
+    }
+  ]
+}

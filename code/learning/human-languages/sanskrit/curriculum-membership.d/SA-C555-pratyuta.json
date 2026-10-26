@@ -1,0 +1,11 @@
+{
+  "id": "SA-C555-pratyuta",
+  "pathSegment": "SA-PATH-555-PRERANA555",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-555-PRERANA555",
+      "order": 2
+    }
+  ]
+}

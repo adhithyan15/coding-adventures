@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-440-HIMA440",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "SA-EXT-440-HIMA440"
+  ],
+  "after": []
+}

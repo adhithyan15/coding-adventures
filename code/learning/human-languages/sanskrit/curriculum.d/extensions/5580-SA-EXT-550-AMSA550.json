@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-550-AMSA550",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how things will be shared if everyone agrees.",
+  "prerequisites": []
+}

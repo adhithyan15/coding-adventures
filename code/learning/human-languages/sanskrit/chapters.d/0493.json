@@ -1,0 +1,19 @@
+{
+  "chapter": 493,
+  "title": "Rites of Childhood",
+  "label": "ch:sa-rites-of-childhood",
+  "canDo": "I can name the rites of a child's early years.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C493-upanayanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can name the rites of a child's early years.",
+    "assesses": [
+      "SA-LEX-C493-SAMSKARA493-03",
+      "SA-LEX-C493-SAMSKARA493-04",
+      "SA-LEX-C493-SAMSKARA493-05"
+    ]
+  }
+}

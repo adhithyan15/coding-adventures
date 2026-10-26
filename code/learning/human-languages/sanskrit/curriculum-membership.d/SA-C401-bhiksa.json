@@ -1,0 +1,11 @@
+{
+  "id": "SA-C401-bhiksa",
+  "pathSegment": "SA-PATH-401-BHIKSHU401",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-401-BHIKSHU401",
+      "order": 2
+    }
+  ]
+}

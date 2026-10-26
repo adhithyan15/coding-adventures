@@ -1,0 +1,11 @@
+{
+  "id": "SA-C547-ucchalati",
+  "pathSegment": "SA-PATH-547-UTTHANA547",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-547-UTTHANA547",
+      "order": 4
+    }
+  ]
+}

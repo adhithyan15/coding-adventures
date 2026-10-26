@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C345-tathyam",
+    "language": "sanskrit",
+    "chapter": 345,
+    "sequence": 20270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3af4a53dbcd2cb29"
+  },
+  "findings": []
+}

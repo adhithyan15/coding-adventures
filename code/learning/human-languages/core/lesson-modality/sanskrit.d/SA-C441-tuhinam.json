@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C441-tuhinam",
+    "language": "sanskrit",
+    "chapter": 441,
+    "sequence": 25440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72865b312cb20e3f"
+  },
+  "findings": []
+}

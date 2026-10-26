@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Colours on the Wall",
+  "label": "ch:sa-colours-on-the-wall",
+  "canDo": "I can talk about brushes, lines and paint.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C518-pratikrtih",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can talk about brushes, lines and paint.",
+    "assesses": [
+      "SA-LEX-C518-TULIKA518-03",
+      "SA-LEX-C518-TULIKA518-04",
+      "SA-LEX-C518-TULIKA518-05"
+    ]
+  }
+}

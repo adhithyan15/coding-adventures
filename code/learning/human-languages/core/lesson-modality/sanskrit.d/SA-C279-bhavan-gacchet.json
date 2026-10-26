@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C279-bhavan-gacchet",
+    "language": "sanskrit",
+    "chapter": 279,
+    "sequence": 16390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c786f2fdbe5dee74"
+  },
+  "findings": []
+}

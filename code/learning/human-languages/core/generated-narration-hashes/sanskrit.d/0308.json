@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:05ef025335953ad8",
+  "lessonIds": [
+    "SA-C308-samuhah",
+    "SA-C308-upakaroti",
+    "SA-C308-vibhajati",
+    "SA-C308-data",
+    "SA-C308-sahayah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch308.txt",
+  "json": "sanskrit/narration/ch308.json",
+  "textHash": "fnv1a64:28ff6a6eafdf667c",
+  "jsonHash": "fnv1a64:07a944c41d5ac16a",
+  "findings": []
+}

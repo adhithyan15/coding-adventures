@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C445-diva",
+    "language": "sanskrit",
+    "chapter": 445,
+    "sequence": 25640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11ce44de3d01eec3"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C428-pratyudgacchati",
+  "pathSegment": "SA-PATH-428-GRHAPATI428",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-428-GRHAPATI428",
+      "order": 3
+    }
+  ]
+}

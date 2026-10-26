@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:667f0f9c16788e54",
+  "lessonIds": [
+    "SA-C442-suryodayah",
+    "SA-C442-udeti",
+    "SA-C442-prakasate",
+    "SA-C442-ksitijam",
+    "SA-C442-vibhati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch442.txt",
+  "json": "sanskrit/narration/ch442.json",
+  "textHash": "fnv1a64:cf531e2d8144e4e4",
+  "jsonHash": "fnv1a64:38e3432d31c24b8e",
+  "findings": []
+}

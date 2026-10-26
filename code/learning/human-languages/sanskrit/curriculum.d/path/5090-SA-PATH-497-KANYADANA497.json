@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-497-KANYADANA497",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "SA-EXT-497-KANYADANA497"
+  ],
+  "after": []
+}

@@ -148,33 +148,47 @@ async function initializeHost(options: BootOptions): Promise<TaskAppWebComponent
   let warning = storageSession.warning;
   let saved: Awaited<ReturnType<typeof loadWorkspace>>;
 
+  // Switched on when the saved record could not be read, or was rejected and
+  // could not be preserved: it is still at the live key, and the first save
+  // would write over it. An unsaved session is recoverable; that is not.
+  let savingDisabled = false;
   try {
     saved = await loadWorkspace(storage);
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error);
-    warning = `Saved data could not be read. Trestle started a fresh workspace: ${detail}`;
+    savingDisabled = true;
+    warning =
+      "Saved data could not be read. Trestle started a fresh workspace and will not save " +
+      `this session, so the saved data is left untouched: ${detail}`;
     saved = undefined;
   }
 
   if (saved) {
     try {
-      engine.load(saved.snapshot);
+      // `load` reports a snapshot it cannot read as `{ ok: false, error }`; it
+      // does not throw. Turn that into a throw, so a rejected record takes the
+      // recovery path below instead of being ignored (the engine would stay
+      // empty, and the first save would write over the record).
+      const loaded = engine.load(saved.snapshot);
+      if (loaded?.ok === false) throw new Error(String(loaded.error ?? "the engine rejected it"));
       if (saved.activeProject) {
         engine.setActiveProject({ id: saved.activeProject });
       }
     } catch (error) {
       const detail = error instanceof Error ? error.message : String(error);
       try {
-        await preserveRejectedWorkspace(storage, saved);
+        const recoveryKey = await preserveRejectedWorkspace(storage, saved);
         warning =
           "Saved data could not be restored. Trestle started a fresh workspace and kept " +
-          `the rejected record as workspace/web-corrupt for recovery: ${detail}`;
+          `the rejected record as workspace/${recoveryKey} for recovery: ${detail}`;
       } catch (preserveError) {
         const preserveDetail =
           preserveError instanceof Error ? preserveError.message : String(preserveError);
+        savingDisabled = true;
         warning =
           "Saved data could not be restored, and its recovery copy could not be written. " +
-          `Do not clear this site's browser data: ${detail}; ${preserveDetail}`;
+          "Trestle will not save this session. Do not clear this site's browser data: " +
+          `${detail}; ${preserveDetail}`;
       }
       saved = undefined;
     }
@@ -185,14 +199,16 @@ async function initializeHost(options: BootOptions): Promise<TaskAppWebComponent
     initialOrder: saved?.order ?? [],
     initialCounter: saved?.counter ?? 0,
     now: options.now,
-    onMutate: (snapshot, order, counter, activeProject) =>
+    onMutate: (snapshot, order, counter, activeProject) => {
+      if (savingDisabled) return;
       saveWorkspace(
         storage,
         makeWorkspaceRecord(snapshot, order, counter, (options.now ?? Date.now)(), activeProject),
         (message) => {
           warning = message;
         },
-      ),
+      );
+    },
   };
   const controller = makeController(engine, controllerOptions);
   return createTaskAppWebComponentHost({

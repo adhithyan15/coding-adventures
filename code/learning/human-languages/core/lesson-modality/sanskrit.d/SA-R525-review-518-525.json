@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R525-review-518-525",
+    "language": "sanskrit",
+    "chapter": 525,
+    "sequence": 30220,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3013f73ba6462e23"
+  },
+  "findings": []
+}

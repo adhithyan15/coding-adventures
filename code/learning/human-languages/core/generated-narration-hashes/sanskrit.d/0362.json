@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:fdf10125439fa1d8",
+  "lessonIds": [
+    "SA-C362-anusandhanam",
+    "SA-C362-prayogah",
+    "SA-C362-anvesanam",
+    "SA-C362-aveksate",
+    "SA-C362-udbhavayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch362.txt",
+  "json": "sanskrit/narration/ch362.json",
+  "textHash": "fnv1a64:910aa3efc3f358ab",
+  "jsonHash": "fnv1a64:7f75cc1cedfeaeab",
+  "findings": []
+}

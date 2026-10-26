@@ -1,0 +1,11 @@
+{
+  "id": "SA-C332-munih",
+  "pathSegment": "SA-PATH-332-AKHYANA332",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-332-AKHYANA332",
+      "order": 2
+    }
+  ]
+}

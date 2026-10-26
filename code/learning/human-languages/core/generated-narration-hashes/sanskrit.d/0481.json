@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:89d89757fe84ebec",
+  "lessonIds": [
+    "SA-C481-andhah",
+    "SA-C481-badhirah",
+    "SA-C481-mukah",
+    "SA-C481-panguh",
+    "SA-C481-kubjah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch481.txt",
+  "json": "sanskrit/narration/ch481.json",
+  "textHash": "fnv1a64:0bafdeac4ca5bcf4",
+  "jsonHash": "fnv1a64:6ff00dcf1c7f6b54",
+  "findings": []
+}

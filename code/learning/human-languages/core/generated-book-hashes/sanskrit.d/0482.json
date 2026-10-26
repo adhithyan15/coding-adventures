@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:147b8efeeda6f56c",
+  "lessonIds": [
+    "SA-C482-cikitsati",
+    "SA-C482-aturah",
+    "SA-C482-nidanam",
+    "SA-C482-upacarah",
+    "SA-C482-salyam"
+  ],
+  "tex": "sanskrit/book/chapters/ch482-at-the-physician-s.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C550-dayah",
+  "pathSegment": "SA-PATH-550-AMSA550",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-550-AMSA550",
+      "order": 2
+    }
+  ]
+}

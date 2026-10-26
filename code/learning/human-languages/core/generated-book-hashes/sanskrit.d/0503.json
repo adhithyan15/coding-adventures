@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:97973b04e8acd30d",
+  "lessonIds": [
+    "SA-C503-sahakari",
+    "SA-C503-daksah",
+    "SA-C503-parisramah",
+    "SA-C503-niyokta",
+    "SA-C503-niyunkte"
+  ],
+  "tex": "sanskrit/book/chapters/ch503-people-at-work.tex"
+}

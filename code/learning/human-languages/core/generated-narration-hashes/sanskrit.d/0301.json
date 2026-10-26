@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:3c9b194e7763485c",
+  "lessonIds": [
+    "SA-C301-meghah",
+    "SA-C301-cakravatah",
+    "SA-C301-ghurnate",
+    "SA-C301-sphurati",
+    "SA-C301-unmulayati",
+    "SA-R301-review-294-301"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch301.txt",
+  "json": "sanskrit/narration/ch301.json",
+  "textHash": "fnv1a64:8b3f365497a97f3d",
+  "jsonHash": "fnv1a64:54339abef78a593e",
+  "findings": []
+}

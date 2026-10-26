@@ -1,0 +1,11 @@
+{
+  "id": "SA-C369-upalabhate",
+  "pathSegment": "SA-PATH-369-BHAGYA369",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-369-BHAGYA369",
+      "order": 3
+    }
+  ]
+}

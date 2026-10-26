@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "The Relief Camp",
+  "label": "ch:sa-the-relief-camp",
+  "canDo": "I can describe life in a relief camp.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C306-santvayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can describe life in a relief camp.",
+    "assesses": [
+      "SA-LEX-C306-SHIBIRA306-03",
+      "SA-LEX-C306-SHIBIRA306-04",
+      "SA-LEX-C306-SHIBIRA306-05"
+    ]
+  }
+}

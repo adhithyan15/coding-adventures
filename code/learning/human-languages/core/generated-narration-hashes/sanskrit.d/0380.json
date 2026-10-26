@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:60d2fec23e80dc29",
+  "lessonIds": [
+    "SA-C380-matra",
+    "SA-C380-parimanam",
+    "SA-C380-madhyamah",
+    "SA-C380-yathestam",
+    "SA-C380-vistarayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch380.txt",
+  "json": "sanskrit/narration/ch380.json",
+  "textHash": "fnv1a64:1cf7e3832dcfe4c9",
+  "jsonHash": "fnv1a64:279ddc08f98cdd1a",
+  "findings": []
+}

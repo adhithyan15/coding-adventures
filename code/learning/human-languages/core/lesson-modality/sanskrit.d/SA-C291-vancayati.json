@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C291-vancayati",
+    "language": "sanskrit",
+    "chapter": 291,
+    "sequence": 17260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:841e1ee8047d6a67"
+  },
+  "findings": []
+}

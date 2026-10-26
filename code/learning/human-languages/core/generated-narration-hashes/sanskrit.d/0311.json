@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:9beac9a7479b3d3a",
+  "lessonIds": [
+    "SA-C311-kimvadanti",
+    "SA-C311-atankah",
+    "SA-C311-uttejayati",
+    "SA-C311-sankate",
+    "SA-C311-bhrantih"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch311.txt",
+  "json": "sanskrit/narration/ch311.json",
+  "textHash": "fnv1a64:5e540de34819dbff",
+  "jsonHash": "fnv1a64:4fd1e32fe121e60f",
+  "findings": []
+}

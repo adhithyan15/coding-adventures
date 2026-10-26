@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Veins and Muscles",
+  "label": "ch:sa-veins-and-muscles",
+  "canDo": "I can talk about blood, sinews and muscles.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C474-spandate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can talk about blood, sinews and muscles.",
+    "assesses": [
+      "SA-LEX-C474-SIRA474-03",
+      "SA-LEX-C474-SIRA474-04",
+      "SA-LEX-C474-SIRA474-05"
+    ]
+  }
+}

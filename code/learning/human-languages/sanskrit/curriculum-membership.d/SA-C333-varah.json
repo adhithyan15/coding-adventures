@@ -1,0 +1,11 @@
+{
+  "id": "SA-C333-varah",
+  "pathSegment": "SA-PATH-333-SHAPA333",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-333-SHAPA333",
+      "order": 2
+    }
+  ]
+}

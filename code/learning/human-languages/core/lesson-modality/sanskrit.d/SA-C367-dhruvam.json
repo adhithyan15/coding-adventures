@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C367-dhruvam",
+    "language": "sanskrit",
+    "chapter": 367,
+    "sequence": 21400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c71da977e93b70f"
+  },
+  "findings": []
+}

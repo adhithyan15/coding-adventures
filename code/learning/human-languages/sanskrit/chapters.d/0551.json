@@ -1,0 +1,19 @@
+{
+  "chapter": 551,
+  "title": "Giving Something Up",
+  "label": "ch:sa-giving-something-up",
+  "canDo": "I can say what I would give up and what I would regret.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C551-utsrjati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 551: I can say what I would give up and what I would regret.",
+    "assesses": [
+      "SA-LEX-C551-PARITYAJATI551-03",
+      "SA-LEX-C551-PARITYAJATI551-04",
+      "SA-LEX-C551-PARITYAJATI551-05"
+    ]
+  }
+}

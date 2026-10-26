@@ -1,0 +1,11 @@
+{
+  "id": "SA-C425-gavaksah",
+  "pathSegment": "SA-PATH-425-SMARAKA425",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-425-SMARAKA425",
+      "order": 3
+    }
+  ]
+}

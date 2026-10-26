@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C542-tatasthah",
+    "language": "sanskrit",
+    "chapter": 542,
+    "sequence": 31090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:608c491cacee2dd4"
+  },
+  "findings": []
+}

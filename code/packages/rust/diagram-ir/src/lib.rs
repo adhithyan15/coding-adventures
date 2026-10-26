@@ -2464,12 +2464,14 @@ pub struct StructuralAlignment {
 #[derive(Clone, Debug, PartialEq)]
 pub struct StructuralRenderConfig {
     pub use_max_width: bool,
+    pub html_labels: bool,
 }
 
 impl Default for StructuralRenderConfig {
     fn default() -> Self {
         Self {
             use_max_width: true,
+            html_labels: true,
         }
     }
 }

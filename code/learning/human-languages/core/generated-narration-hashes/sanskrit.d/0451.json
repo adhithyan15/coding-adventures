@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:85dca52b4b15aaa1",
+  "lessonIds": [
+    "SA-C451-vyathate",
+    "SA-C451-asvasiti",
+    "SA-C451-anunayati",
+    "SA-C451-vyakulah",
+    "SA-C451-santapah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch451.txt",
+  "json": "sanskrit/narration/ch451.json",
+  "textHash": "fnv1a64:9124717c75800035",
+  "jsonHash": "fnv1a64:e89971b12c7916c8",
+  "findings": []
+}

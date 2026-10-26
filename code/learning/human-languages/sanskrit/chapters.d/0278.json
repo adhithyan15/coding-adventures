@@ -1,0 +1,23 @@
+{
+  "chapter": 278,
+  "title": "What I Think, and Why",
+  "label": "ch:sa-what-i-think-and-why",
+  "canDo": "I can give an opinion (mama matena …, ahaṃ manye yat …) and a reason for it (yataḥ …, varṣākāraṇāt …).",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-R278-opinion-and-reason",
+    "kind": "production",
+    "summary": "Complete SA-R278-opinion-and-reason: say what you think and give a reason for it.",
+    "assesses": [
+      "SA-GRAMMAR-C278-OPINION-01",
+      "SA-GRAMMAR-C278-OPINION-02",
+      "SA-GRAMMAR-C278-EXPLANATION-01",
+      "SA-GRAMMAR-C278-EXPLANATION-02",
+      "SA-LEX-C278-MANYATE-01",
+      "SA-LEX-C278-DRDHAH-01",
+      "SA-SCRIPT-RECOG-227"
+    ]
+  }
+}

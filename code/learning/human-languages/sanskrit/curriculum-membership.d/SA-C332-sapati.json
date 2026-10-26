@@ -1,0 +1,11 @@
+{
+  "id": "SA-C332-sapati",
+  "pathSegment": "SA-PATH-332-AKHYANA332",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-332-AKHYANA332",
+      "order": 4
+    }
+  ]
+}

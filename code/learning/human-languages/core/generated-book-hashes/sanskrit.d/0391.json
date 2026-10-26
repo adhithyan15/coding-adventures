@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:fce071a0c514c6d6",
+  "lessonIds": [
+    "SA-C391-paramah",
+    "SA-C391-nikrstah",
+    "SA-C391-anurupah",
+    "SA-C391-upayuktah",
+    "SA-C391-dusayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch391-better-and-worse.tex"
+}
