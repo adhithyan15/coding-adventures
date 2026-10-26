@@ -1351,20 +1351,32 @@ mod tests {
         assert_eq!(run_convert("real_to_int_floor", Operand::Float(-3.0), "f64", "i64").unwrap(), Value::Int(-3));
     }
 
+    /// `true` when `r` is LANG83's typed `Trap.ConvRange` (stable id 4) — the
+    /// one failure every backend reports for a narrowing that cannot fit.
+    fn is_conv_range(r: Result<Value, crate::errors::VMError>) -> bool {
+        matches!(r, Err(crate::errors::VMError::Trap { kind }) if kind == "Trap.ConvRange")
+    }
+
     #[test]
     fn real_to_int_traps_on_nan_and_infinity() {
         // Fail-closed (like array bounds / divide-by-zero), never a garbage int.
-        assert!(run_convert("real_to_int_trunc", Operand::Float(f64::NAN), "f64", "i64").is_err());
-        assert!(run_convert("real_to_int_floor", Operand::Float(f64::INFINITY), "f64", "i64").is_err());
-        assert!(run_convert("real_to_int_trunc", Operand::Float(f64::NEG_INFINITY), "f64", "i64").is_err());
+        assert!(is_conv_range(run_convert("real_to_int_trunc", Operand::Float(f64::NAN), "f64", "i64")));
+        assert!(is_conv_range(run_convert("real_to_int_floor", Operand::Float(f64::NAN), "f64", "i64")));
+        assert!(is_conv_range(run_convert("real_to_int_floor", Operand::Float(f64::INFINITY), "f64", "i64")));
+        assert!(is_conv_range(run_convert("real_to_int_trunc", Operand::Float(f64::NEG_INFINITY), "f64", "i64")));
     }
 
     #[test]
     fn real_to_int_traps_on_out_of_range() {
         // 2^63 and beyond does not fit i64 — trap rather than saturate/wrap.
         let two_pow_63 = 9_223_372_036_854_775_808.0_f64; // = 2^63 = -(i64::MIN as f64)
-        assert!(run_convert("real_to_int_trunc", Operand::Float(two_pow_63), "f64", "i64").is_err());
-        assert!(run_convert("real_to_int_floor", Operand::Float(-1e30), "f64", "i64").is_err());
+        assert!(is_conv_range(run_convert("real_to_int_trunc", Operand::Float(two_pow_63), "f64", "i64")));
+        assert!(is_conv_range(run_convert("real_to_int_floor", Operand::Float(-1e30), "f64", "i64")));
+        // -2^63 itself fits: the lower bound is inclusive.
+        assert_eq!(
+            run_convert("real_to_int_trunc", Operand::Float(-two_pow_63), "f64", "i64").unwrap(),
+            Value::Int(i64::MIN)
+        );
     }
 
     // ---- E5: bounds-checked arrays ----

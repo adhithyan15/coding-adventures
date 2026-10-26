@@ -5,6 +5,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Unreleased — a failed narrowing raises `Trap.ConvRange`
+
+- `F64_TO_I64_TRUNC` / `F64_TO_I64_FLOOR` write `trap: Trap.ConvRange` to the
+  error slot when vm-core's `real_to_i64_checked` rejects the value, and
+  `take_error` returns the same `VMError::Trap` the interpreter tier raises
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). The `real_to_int: ` pass-through in `error_from_message` is
+  removed: no slot text uses it any more.
+
 ## Unreleased — LANG83 conversions on the JIT
 
 - **`int_to_real`, `real_to_int_trunc` and `real_to_int_floor` are
