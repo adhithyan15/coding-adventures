@@ -156,3 +156,12 @@ step limits. Every error has stable, nonempty display text.
 - Line coverage exceeds 95% where practical and never falls below 80%.
 - Formatting, strict Clippy, rustdoc, package BUILD, release tests, lessons
   validation, and the repository workspace build are attempted before review.
+
+## Independent specification review
+
+An independent exact-head review passed at
+`d8563209467af4f26ad418d36fba3ed08b51ec81`. The reviewer checked the
+condition-code-3 completion rule against IBM GA22-7000-0: storage does not
+move, both length registers and both low 24-bit addresses remain unchanged,
+and the ignored high byte of each address register is cleared. The reviewer
+also confirmed that this P0 source correction must precede the gate partner.
