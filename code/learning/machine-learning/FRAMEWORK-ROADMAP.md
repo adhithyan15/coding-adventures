@@ -87,7 +87,13 @@ the actual open PR and its current-head CI logs, and revisit this ordering:
    Windows package BUILDs and all five selected workflows successful. Reassess
    reliability, prerequisites, portability and smallest complete delivery:
    [NN49 six-native conformance](../../specs/NN49-six-native-dense-conformance.md)
-   connects C to actual checkpoint exchange before another port. Generic C-only detection did not retain Windows until
+   merged in [PR #18301](https://github.com/adhithyan15/coding-adventures/pull/18301)
+   at exact head `8e93a7917131` (squash `d555c1091cd`): all thirty exchanges,
+   three-platform package BUILDs and all selected/required checks passed.
+   Reassessed C++ foundations: matrix/math exist, but native bounded JSON does
+   not. Select [NN50 bounded C++ JSON](../../specs/NN50-cpp-bounded-json-foundation.md)
+   before a separate C++ dense port and seven-native exchange.
+   Generic C-only detection did not retain Windows until
    NN47's scoped requirement; carry actual platform execution forward.
 5. **P2 — Optional Rust dense C ABI.** Specify ownership, shapes, errors,
    versioning, and resumable state before exposing binding consumers. Keep
@@ -198,13 +204,18 @@ SGD training, inspection, and portable save/reload/resume.
   in #18285 as `c91b44a06e7`, with actual three-platform package BUILDs, selected
   five-native conformance and all five workflows/required gates passed. CodeQL
   detection passed with no C analyzer configured; no C scanning is claimed.
-- [ ] Required six-native conformance incorporating actual C checkpoint
+- [x] Required six-native conformance incorporating actual C checkpoint
   exchanges (NN49): thirty directed pairs and return trips, 78 real children,
   complete model comparisons through 3002, six native lanes and zero bindings.
-  Local runner and gate integration implemented after NN48; actual all-thirty
-  exchanges passed with XOR loss 0.0002330712337828204. Local Rust used an
-  exact-source minimal workspace; full repository CI and exact-head merge
-  remain pending. See the [teaching trace](./six-native-dense-conformance.md).
+  Exact reviewed head `8e93a7917131` merged in #18301 as `d555c1091cd`.
+  Actual CI ran all thirty exchanges with XOR loss 0.00023307123378282047,
+  root Rust workspace, normal TypeScript npm scripts and native Ruby/C builds.
+  All three platform BUILDs, selected workflows and final required gates passed.
+  CodeQL had no configured C analyzer. See the
+  [teaching trace](./six-native-dense-conformance.md).
+- [ ] C++ bounded JSON prerequisite (NN50): native owned, strict, resource-bounded
+  parser above the shared ISO harness, before native C++ checkpoint loading.
+  Specification committed before implementation; not training or a C binding.
 - [ ] C++ native framework.
 - [ ] C# native framework.
 - [ ] F# native framework.
