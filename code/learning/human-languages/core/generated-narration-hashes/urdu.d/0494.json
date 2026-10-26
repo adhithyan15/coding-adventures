@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:2f4fb764859f8259",
+  "lessonIds": [
+    "UR-C494-intarvyu",
+    "UR-C494-rozgar",
+    "UR-C494-asami",
+    "UR-C494-bartaraf",
+    "UR-C494-bharti-karna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch494.txt",
+  "json": "urdu/narration/ch494.json",
+  "textHash": "fnv1a64:4766dd0d5676aabc",
+  "jsonHash": "fnv1a64:330896efac66a3c0",
+  "findings": []
+}

@@ -1561,6 +1561,74 @@ mod tests {
         assert!(matches!(run_i64_op("div", 1, 0), Err(crate::errors::VMError::DivisionByZero)));
     }
 
+    // ── LANG83 PR6c: IEEE f64 arithmetic and the sign bit ──────────────────
+
+    /// Run `r = op(a[, b])` on f64 constants and return `r`.
+    fn run_f64_op(op: &str, srcs: &[f64]) -> Result<Value, crate::errors::VMError> {
+        let mut body: Vec<IIRInstr> = srcs
+            .iter()
+            .enumerate()
+            .map(|(i, x)| IIRInstr::new("const", Some(format!("a{i}")), vec![Operand::Float(*x)], "f64"))
+            .collect();
+        let vars = (0..srcs.len()).map(|i| Operand::Var(format!("a{i}"))).collect();
+        let ty = if op == "f64_signbit" { "i64" } else { "f64" };
+        body.push(IIRInstr::new(op, Some("r".into()), vars, ty));
+        body.push(IIRInstr::new("ret", None, vec![Operand::Var("r".into())], ty));
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(IIRFunction::new("main", vec![], ty, body));
+        VMCore::new().execute(&mut m, "main", &[]).map(|o| o.unwrap())
+    }
+
+    fn f64_bits(v: Value) -> u64 {
+        match v {
+            Value::Float(f) => f.to_bits(),
+            other => panic!("expected a float, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn ieee_f64_ops_follow_the_edge_table_and_never_trap() {
+        let (inf, ninf, nz) = (f64::INFINITY, f64::NEG_INFINITY, -0.0f64);
+        for (op, srcs, want) in [
+            ("f64_div", &[1.0, 0.0][..], inf),
+            ("f64_div", &[-1.0, 0.0][..], ninf),
+            ("f64_div", &[1.0, nz][..], ninf),
+            ("f64_add", &[1e308, 1e308][..], inf),
+            ("f64_mul", &[-1.0, 0.0][..], nz),
+            ("f64_mul", &[-1.0, nz][..], 0.0),
+            ("f64_add", &[nz, nz][..], nz),
+            ("f64_add", &[nz, 0.0][..], 0.0),
+            ("f64_sub", &[0.0, 0.0][..], 0.0),
+            ("f64_neg", &[0.0][..], nz),
+            ("f64_neg", &[nz][..], 0.0),
+            ("f64_add", &[0.1, 0.2][..], 0.30000000000000004),
+        ] {
+            let got = f64_bits(run_f64_op(op, srcs).unwrap());
+            assert_eq!(got, want.to_bits(), "{op}{srcs:?}");
+        }
+        for (op, srcs) in [("f64_div", &[0.0, 0.0][..]), ("f64_sub", &[inf, inf][..]), ("f64_mul", &[0.0, inf][..])] {
+            assert!(f64::from_bits(f64_bits(run_f64_op(op, srcs).unwrap())).is_nan(), "{op}{srcs:?}");
+        }
+        for (x, want) in [(nz, 1), (0.0, 0), (-2.5, 1), (2.5, 0), (ninf, 1), (inf, 0), (-5e-324, 1), (5e-324, 0)] {
+            assert_eq!(run_f64_op("f64_signbit", &[x]).unwrap(), Value::Int(want), "signbit({x:e})");
+        }
+    }
+
+    #[test]
+    fn ieee_f64_ops_refuse_a_non_float_operand() {
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(IIRFunction::new(
+            "main", vec![], "f64",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(1)], "i64"),
+                IIRInstr::new("f64_add", Some("r".into()), vec![Operand::Var("a".into()), Operand::Var("a".into())], "f64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+            ],
+        ));
+        let err = VMCore::new().execute(&mut m, "main", &[]).unwrap_err();
+        assert!(err.to_string().contains("f64_add: srcs[0] is not a real"), "{err}");
+    }
+
     // ── LANG83 PR4: overflow-checked arithmetic ────────────────────────────
 
     fn run_neg_ovf(a: i64) -> Result<Value, crate::errors::VMError> {

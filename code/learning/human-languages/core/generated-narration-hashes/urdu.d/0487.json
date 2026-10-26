@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:5e1a54155a035101",
+  "lessonIds": [
+    "UR-C487-mangni",
+    "UR-C487-nikah",
+    "UR-C487-barat",
+    "UR-C487-sehra",
+    "UR-C487-rukhsat-karna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch487.txt",
+  "json": "urdu/narration/ch487.json",
+  "textHash": "fnv1a64:05acab4ad721c900",
+  "jsonHash": "fnv1a64:33c9e7f8645597ee",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 432,
+  "title": "Gold and Silver",
+  "label": "ch:gu-gold-and-silver",
+  "canDo": "I can talk about gold, silver and jewellery.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-R432-review-425-432",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can talk about gold, silver and jewellery.",
+    "assesses": [
+      "GU-LEX-C432-GOLD432-01",
+      "GU-LEX-C432-GOLD432-02",
+      "GU-LEX-C432-GOLD432-03",
+      "GU-LEX-C432-GOLD432-04",
+      "GU-LEX-C432-GOLD432-05"
+    ]
+  }
+}

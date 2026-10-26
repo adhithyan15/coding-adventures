@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C531-bandobast",
+    "language": "gujarati",
+    "chapter": 531,
+    "sequence": 29570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c23acab6c594740"
+  },
+  "findings": []
+}

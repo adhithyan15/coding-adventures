@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:6ddd08a723b9eadc",
+  "lessonIds": [
+    "GU-C344-davo",
+    "GU-C344-sabiti",
+    "GU-C344-khatri",
+    "GU-C344-sandeh",
+    "GU-C344-darsavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch344.txt",
+  "json": "gujarati/narration/ch344.json",
+  "textHash": "fnv1a64:d54da8b1549778a8",
+  "jsonHash": "fnv1a64:7fdf6c316a6eea0f",
+  "findings": []
+}

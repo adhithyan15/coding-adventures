@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:00f4c852f4b7ce6d",
+  "lessonIds": [
+    "UR-C498-chak",
+    "UR-C498-sancha",
+    "UR-C498-ava",
+    "UR-C498-matka",
+    "UR-C498-tapana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch498.txt",
+  "json": "urdu/narration/ch498.json",
+  "textHash": "fnv1a64:9e91a057739a96c6",
+  "jsonHash": "fnv1a64:53346733968bff53",
+  "findings": []
+}

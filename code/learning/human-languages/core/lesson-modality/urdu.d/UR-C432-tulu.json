@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C432-tulu",
+    "language": "urdu",
+    "chapter": 432,
+    "sequence": 25350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75a5fe718813ee36"
+  },
+  "findings": []
+}

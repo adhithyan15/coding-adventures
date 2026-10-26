@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C385-vazifa",
+    "language": "urdu",
+    "chapter": 385,
+    "sequence": 22760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5dd066a81d7a1c5"
+  },
+  "findings": []
+}

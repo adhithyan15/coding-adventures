@@ -1,0 +1,21 @@
+{
+  "chapter": 354,
+  "title": "Reasonable or Not",
+  "label": "ch:ur-reasonable-or-not",
+  "canDo": "I can say whether a demand is fair.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-R354-review-347-354",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can say whether a demand is fair.",
+    "assesses": [
+      "UR-LEX-C354-MAQUL354-01",
+      "UR-LEX-C354-MAQUL354-02",
+      "UR-LEX-C354-MAQUL354-03",
+      "UR-LEX-C354-MAQUL354-04",
+      "UR-LEX-C354-MAQUL354-05"
+    ]
+  }
+}

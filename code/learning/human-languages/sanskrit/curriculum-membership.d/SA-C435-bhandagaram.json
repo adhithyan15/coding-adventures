@@ -1,0 +1,11 @@
+{
+  "id": "SA-C435-bhandagaram",
+  "pathSegment": "SA-PATH-435-DINARA435",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-435-DINARA435",
+      "order": 4
+    }
+  ]
+}

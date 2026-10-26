@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:58bd6d55b254ca76",
+  "lessonIds": [
+    "UR-C327-khazana",
+    "UR-C327-garna",
+    "UR-C327-nag",
+    "UR-C327-dasna",
+    "UR-C327-hira"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch327.txt",
+  "json": "urdu/narration/ch327.json",
+  "textHash": "fnv1a64:9fd1fdb32c60320a",
+  "jsonHash": "fnv1a64:8adb3ca722689db4",
+  "findings": []
+}

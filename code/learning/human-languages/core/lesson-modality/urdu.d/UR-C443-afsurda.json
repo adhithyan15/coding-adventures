@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C443-afsurda",
+    "language": "urdu",
+    "chapter": 443,
+    "sequence": 26190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:522ecac1a8b71ade"
+  },
+  "findings": []
+}

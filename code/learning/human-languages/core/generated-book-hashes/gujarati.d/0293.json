@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:a0edcfae2d63140d",
+  "lessonIds": [
+    "GU-C293-akasmat",
+    "GU-C293-takkar",
+    "GU-C293-ghayal",
+    "GU-C293-gambhir",
+    "GU-C293-gabhravu"
+  ],
+  "tex": "gujarati/book/chapters/ch293-an-accident-near-the-bridge.tex"
+}

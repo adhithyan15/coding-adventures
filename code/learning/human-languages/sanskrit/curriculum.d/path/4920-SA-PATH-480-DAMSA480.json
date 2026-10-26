@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-480-DAMSA480",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "SA-EXT-480-DAMSA480"
+  ],
+  "after": []
+}

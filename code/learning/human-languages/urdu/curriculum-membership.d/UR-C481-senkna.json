@@ -1,0 +1,11 @@
+{
+  "id": "UR-C481-senkna",
+  "pathSegment": "UR-PATH-481-BETTER481",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-481-BETTER481",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Potholes and Jolts",
+  "label": "ch:ur-potholes-and-jolts",
+  "canDo": "I can describe a bumpy road: potholes, jolts and an empty stretch at night.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C394-viran",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can describe a bumpy road: potholes, jolts and an empty stretch at night.",
+    "assesses": [
+      "UR-LEX-C394-GARHA394-03",
+      "UR-LEX-C394-GARHA394-04",
+      "UR-LEX-C394-GARHA394-05"
+    ]
+  }
+}

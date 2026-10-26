@@ -1,0 +1,11 @@
+{
+  "id": "GU-C361-vagovvu",
+  "pathSegment": "GU-PATH-361-TIKA361",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-361-TIKA361",
+      "order": 3
+    }
+  ]
+}

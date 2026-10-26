@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C493-pedhi",
+    "language": "gujarati",
+    "chapter": 493,
+    "sequence": 27350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a7528e9961b21608"
+  },
+  "findings": []
+}

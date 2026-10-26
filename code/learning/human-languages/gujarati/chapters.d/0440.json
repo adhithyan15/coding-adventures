@@ -1,0 +1,19 @@
+{
+  "chapter": 440,
+  "title": "Streams and Canals",
+  "label": "ch:gu-streams-and-canals",
+  "canDo": "I can talk about running water.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C440-vahavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can talk about running water.",
+    "assesses": [
+      "GU-LEX-C440-STREAM440-03",
+      "GU-LEX-C440-STREAM440-04",
+      "GU-LEX-C440-STREAM440-05"
+    ]
+  }
+}

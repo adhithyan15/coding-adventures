@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C488-navdavvu",
+    "language": "gujarati",
+    "chapter": 488,
+    "sequence": 27100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f028182e3ed6b4fa"
+  },
+  "findings": []
+}

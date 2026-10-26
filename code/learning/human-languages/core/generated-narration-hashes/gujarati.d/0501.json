@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:f2b1745ce6527bc7",
+  "lessonIds": [
+    "GU-C501-lakdu",
+    "GU-C501-karigar",
+    "GU-C501-ojar",
+    "GU-C501-avadvu",
+    "GU-C501-vyavsay"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch501.txt",
+  "json": "gujarati/narration/ch501.json",
+  "textHash": "fnv1a64:b942afa9a5a02326",
+  "jsonHash": "fnv1a64:bf94d1be1bc7ce55",
+  "findings": []
+}

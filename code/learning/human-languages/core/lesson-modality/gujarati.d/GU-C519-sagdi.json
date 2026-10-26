@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C519-sagdi",
+    "language": "gujarati",
+    "chapter": 519,
+    "sequence": 28920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47894a057fb4d8b9"
+  },
+  "findings": []
+}

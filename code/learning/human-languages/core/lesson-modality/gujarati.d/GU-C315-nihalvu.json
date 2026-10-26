@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C315-nihalvu",
+    "language": "gujarati",
+    "chapter": 315,
+    "sequence": 17570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e099004408ba9d7"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C285-yadi-samayah-abhavisyat",
+    "language": "sanskrit",
+    "chapter": 285,
+    "sequence": 16660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2dff6f7ebcdd4b5b"
+  },
+  "findings": []
+}

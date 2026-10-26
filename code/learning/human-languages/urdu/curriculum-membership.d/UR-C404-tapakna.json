@@ -1,0 +1,11 @@
+{
+  "id": "UR-C404-tapakna",
+  "pathSegment": "UR-PATH-404-GHUSL404",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-404-GHUSL404",
+      "order": 3
+    }
+  ]
+}

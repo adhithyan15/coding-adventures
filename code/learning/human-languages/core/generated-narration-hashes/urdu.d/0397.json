@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:524c0b8c79e473f8",
+  "lessonIds": [
+    "UR-C397-fasla",
+    "UR-C397-kilomitar",
+    "UR-C397-darra",
+    "UR-C397-morna",
+    "UR-C397-ghumana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch397.txt",
+  "json": "urdu/narration/ch397.json",
+  "textHash": "fnv1a64:1f2fc9812730bbe4",
+  "jsonHash": "fnv1a64:f278b403631fe3db",
+  "findings": []
+}

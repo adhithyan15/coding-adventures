@@ -1,0 +1,11 @@
+{
+  "id": "GU-C519-varal",
+  "pathSegment": "GU-PATH-519-SAGDI519",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-519-SAGDI519",
+      "order": 3
+    }
+  ]
+}

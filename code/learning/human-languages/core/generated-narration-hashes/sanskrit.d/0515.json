@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:0ee348506ca03d03",
+  "lessonIds": [
+    "SA-C515-svadah",
+    "SA-C515-svaduh",
+    "SA-C515-amah",
+    "SA-C515-pakvah",
+    "SA-C515-cusati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch515.txt",
+  "json": "sanskrit/narration/ch515.json",
+  "textHash": "fnv1a64:13c696ae47cb778b",
+  "jsonHash": "fnv1a64:5b7268717857e38e",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C469-nazla",
+  "pathSegment": "UR-PATH-469-THROAT469",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-469-THROAT469",
+      "order": 4
+    }
+  ]
+}

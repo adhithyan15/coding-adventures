@@ -1,0 +1,11 @@
+{
+  "id": "UR-C325-jadu",
+  "pathSegment": "UR-PATH-325-DEV325",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-325-DEV325",
+      "order": 2
+    }
+  ]
+}

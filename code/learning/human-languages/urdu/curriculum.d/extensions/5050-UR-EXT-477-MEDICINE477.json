@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-477-MEDICINE477",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how to take a medicine.",
+  "prerequisites": []
+}

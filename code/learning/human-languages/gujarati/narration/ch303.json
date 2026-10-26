@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 303,
+  "title": "The Cyclone",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a52b428727c4227c",
+  "lessons": [
+    {
+      "id": "GU-C303-vavajhodu",
+      "sequence": 16920,
+      "title": "વાવાઝોડું (vāvājhoḍũ) — a cyclone",
+      "headword": "વાવાઝોડું",
+      "romanization": "vāvājhoḍũ",
+      "gloss": "a cyclone",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c507cb84035f39dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to melt, then the Gujarati for a blaze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વાવાઝોડું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વાવાઝોડું — vāvājhoḍũ — \"a cyclone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ગઈકાલે રાત્રે દરિયા કિનારે મોટું વાવાઝોડું આવ્યું. gaīkāle rātre dariyā kināre moṭũ vāvājhoḍũ āvyũ. Last night a big cyclone hit the coast."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "is probably built on vā, wind, which CDIAL lists for Gujarati under Sanskrit vāyú, \"wind\" (CDIAL 11544); no dictionary we use records the rest of the word, so its history is not settled. It is neuter, and it આવે છે, comes: વાવાઝોડું (vāvājhoḍũ) આવ્યું. તોફાન is any storm; a વાવાઝોડું (vāvājhoḍũ) is a whirling one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāvājhoḍũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāvājhoḍũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāvājhoḍũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāvājhoḍũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaīkāle rātre dariyā kināre moṭũ vāvājhoḍũ āvyũ. — Last night a big cyclone hit the coast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaīkāle rātre dariyā kināre moṭũ vāvājhoḍũ āvyũ.* — Last night a big cyclone hit the coast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to melt, then the Gujarati for a blaze, then say vāvājhoḍũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to melt, then the Gujarati for a blaze, then say *vāvājhoḍũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વાવાઝોડું (vāvājhoḍũ) mean? (\"A cyclone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C303-tratakvu",
+      "sequence": 16930,
+      "title": "ત્રાટકવું (trāṭakvũ) — to strike (of a storm or an attack)",
+      "headword": "ત્રાટકવું",
+      "romanization": "trāṭakvũ",
+      "gloss": "to strike (of a storm or an attack)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:107f3e8f4940c0c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a blaze, then the Gujarati for a cyclone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ત્રાટકવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ત્રાટકવું — trāṭakvũ — \"to strike (of a storm or an attack)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "વાવાઝોડું સવારે ગામ પર ત્રાટક્યું. vāvājhoḍũ savāre gām par trāṭakyũ. The cyclone struck the village in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે વાવાઝોડું ત્રાટક્યું, te vāvājhoḍũ trāṭakyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ત્રાટકવું (trāṭakvũ) No dictionary we use records an older form, so its history is not settled. Storms and armies ત્રાટકે છે: they fall on a place suddenly and hard."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trāṭakvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trāṭakvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trāṭakvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trāṭakvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāvājhoḍũ savāre gām par trāṭakyũ. — The cyclone struck the village in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāvājhoḍũ savāre gām par trāṭakyũ.* — The cyclone struck the village in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a blaze, then the Gujarati for a cyclone, then say trāṭakvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a blaze, then the Gujarati for a cyclone, then say *trāṭakvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ત્રાટકવું (trāṭakvũ) mean? (\"To strike (of a storm or an attack)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C303-chapru",
+      "sequence": 16940,
+      "title": "છાપરું (chāprũ) — a thatched roof",
+      "headword": "છાપરું",
+      "romanization": "chāprũ",
+      "gloss": "a thatched roof",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:afdd4c78f36a4883",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a cyclone, then the Gujarati for to strike."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: છાપરું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છાપરું — chāprũ — \"a thatched roof\"."
+            },
+            {
+              "kind": "speech",
+              "text": "વાવાઝોડામાં અમારું છાપરું ઊડી ગયું. vāvājhoḍāmā̃ amārũ chāprũ ūḍī gayũ. Our roof blew off in the cyclone."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "goes back to Sanskrit chattvará, \"a house, a bower\", and CDIAL lists the Gujarati noun, \"a thatched roof, a cottage\" (CDIAL 4976). છત is a ceiling or a flat roof; a છાપરું (chāprũ) is a sloping roof of thatch or tiles."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāprũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāprũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāprũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāprũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāvājhoḍāmā̃ amārũ chāprũ ūḍī gayũ. — Our roof blew off in the cyclone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāvājhoḍāmā̃ amārũ chāprũ ūḍī gayũ.* — Our roof blew off in the cyclone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a cyclone, then the Gujarati for to strike, then say chāprũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a cyclone, then the Gujarati for to strike, then say *chāprũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does છાપરું (chāprũ) mean? (\"A thatched roof\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C303-jhupdu",
+      "sequence": 16950,
+      "title": "ઝૂંપડું (jhū̃pḍũ) — a hut",
+      "headword": "ઝૂંપડું",
+      "romanization": "jhū̃pḍũ",
+      "gloss": "a hut",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3122709489b7b819",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to strike, then the Gujarati for a thatched roof."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઝૂંપડું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝૂંપડું — jhū̃pḍũ — \"a hut\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ગરીબ લોકોનાં ઝૂંપડાં તૂટી ગયાં. garīb lokonā̃ jhū̃pḍā̃ tūṭī gayā̃. The poor people's huts were wrecked."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "comes from jhuppa, a form CDIAL reconstructs, and CDIAL lists the Gujarati noun, \"a hut\" (CDIAL 5403). It is neuter: ઝૂંપડું (jhū̃pḍũ), plural ઝૂંપડાં."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhū̃pḍũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhū̃pḍũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhū̃pḍũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhū̃pḍũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garīb lokonā̃ jhū̃pḍā̃ tūṭī gayā̃. — The poor people's huts were wrecked.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garīb lokonā̃ jhū̃pḍā̃ tūṭī gayā̃.* — The poor people's huts were wrecked.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to strike, then the Gujarati for a thatched roof, then say jhū̃pḍũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to strike, then the Gujarati for a thatched roof, then say *jhū̃pḍũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઝૂંપડું (jhū̃pḍũ) mean? (\"A hut\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C303-ujadvu",
+      "sequence": 16960,
+      "title": "ઉજાડવું (ujāḍvũ) — to lay waste",
+      "headword": "ઉજાડવું",
+      "romanization": "ujāḍvũ",
+      "gloss": "to lay waste",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:951ec031c0623e1a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a thatched roof, then the Gujarati for a hut."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઉજાડવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉજાડવું — ujāḍvũ — \"to lay waste\"."
+            },
+            {
+              "kind": "speech",
+              "text": "વાવાઝોડાએ આખું ગામ ઉજાડ્યું. vāvājhoḍāe ākhũ gām ujāḍyũ. The cyclone laid waste to the whole village."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે ખેતર ઉજાડ્યું, teṇe khetar ujāḍyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉજાડવું (ujāḍvũ) comes from ujjaṭati, a form CDIAL reconstructs, and CDIAL lists the Gujarati verb, \"to lay waste\" (CDIAL 1661). A storm, a war or a flood ઉજાડે છે: it leaves a place empty."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ujāḍvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ujāḍvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ujāḍvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ujāḍvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāvājhoḍāe ākhũ gām ujāḍyũ. — The cyclone laid waste to the whole village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāvājhoḍāe ākhũ gām ujāḍyũ.* — The cyclone laid waste to the whole village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a thatched roof, then the Gujarati for a hut, then say ujāḍvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a thatched roof, then the Gujarati for a hut, then say *ujāḍvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઉજાડવું (ujāḍvũ) mean? (\"To lay waste\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

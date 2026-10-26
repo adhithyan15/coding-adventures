@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "Cuts and Scrapes",
+  "label": "ch:gu-cuts-and-scrapes",
+  "canDo": "I can say how I got hurt and how it healed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C481-cholavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can say how I got hurt and how it healed.",
+    "assesses": [
+      "GU-LEX-C481-KAPAVU481-03",
+      "GU-LEX-C481-KAPAVU481-04",
+      "GU-LEX-C481-KAPAVU481-05"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:927d8a780a01ce60",
+  "lessonIds": [
+    "SA-C363-adhyayanam",
+    "SA-C363-visayah",
+    "SA-C363-sastram",
+    "SA-C363-adhite",
+    "SA-C363-abhyasyati",
+    "SA-R363-review-356-363"
+  ],
+  "tex": "sanskrit/book/chapters/ch363-studying-a-subject.tex"
+}

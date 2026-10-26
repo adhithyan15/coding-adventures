@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:1b9acc8976e2951d",
+  "lessonIds": [
+    "UR-C405-rajistar",
+    "UR-C405-shanakht",
+    "UR-C405-darban",
+    "UR-C405-mangana",
+    "UR-C405-bakhshish"
+  ],
+  "tex": "urdu/book/chapters/ch405-at-the-front-desk.tex"
+}

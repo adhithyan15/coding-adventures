@@ -1,0 +1,11 @@
+{
+  "id": "UR-C402-thakana",
+  "pathSegment": "UR-PATH-402-MUSAFAT402",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-402-MUSAFAT402",
+      "order": 2
+    }
+  ]
+}

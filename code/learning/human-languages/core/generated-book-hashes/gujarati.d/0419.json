@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:879dd57c94a45709",
+  "lessonIds": [
+    "GU-C419-seri",
+    "GU-C419-phaliyu",
+    "GU-C419-mahollo",
+    "GU-C419-rahevasi",
+    "GU-C419-rajhalvu"
+  ],
+  "tex": "gujarati/book/chapters/ch419-streets-and-lanes.tex"
+}

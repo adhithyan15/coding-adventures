@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:9553c2e55833bca6",
+  "lessonIds": [
+    "UR-C532-qismat",
+    "UR-C532-taqdir",
+    "UR-C532-latri",
+    "UR-C532-qura",
+    "UR-C532-tas"
+  ],
+  "tex": "urdu/book/chapters/ch532-a-stroke-of-luck.tex"
+}

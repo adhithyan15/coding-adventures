@@ -1,0 +1,19 @@
+{
+  "chapter": 347,
+  "title": "The Law",
+  "label": "ch:gu-the-law",
+  "canDo": "I can say what the law allows and what it forbids.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C347-uthapvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 347: I can say what the law allows and what it forbids.",
+    "assesses": [
+      "GU-LEX-C347-KAYDO347-03",
+      "GU-LEX-C347-KAYDO347-04",
+      "GU-LEX-C347-KAYDO347-05"
+    ]
+  }
+}

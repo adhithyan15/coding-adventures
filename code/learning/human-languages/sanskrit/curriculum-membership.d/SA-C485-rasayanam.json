@@ -1,0 +1,11 @@
+{
+  "id": "SA-C485-rasayanam",
+  "pathSegment": "SA-PATH-485-SUSRUSA485",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-485-SUSRUSA485",
+      "order": 4
+    }
+  ]
+}

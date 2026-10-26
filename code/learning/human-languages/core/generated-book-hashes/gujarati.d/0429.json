@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:d3ce7a6d3d01ba19",
+  "lessonIds": [
+    "GU-C429-tijori",
+    "GU-C429-nana",
+    "GU-C429-calan",
+    "GU-C429-lutavu",
+    "GU-C429-parvadvu"
+  ],
+  "tex": "gujarati/book/chapters/ch429-safes-and-currency.tex"
+}

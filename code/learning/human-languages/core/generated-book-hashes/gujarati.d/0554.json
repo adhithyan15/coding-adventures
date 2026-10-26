@@ -1,0 +1,15 @@
+{
+  "language": "gujarati",
+  "chapter": 554,
+  "sourceHash": "fnv1a64:350b3c7a872696b8",
+  "lessonIds": [
+    "GU-C554-ras",
+    "GU-C554-dadiya",
+    "GU-C554-ghughro",
+    "GU-C554-jhumvu",
+    "GU-C554-nacavvu",
+    "GU-R554-review-548-554",
+    "GU-R554-review-final-554"
+  ],
+  "tex": "gujarati/book/chapters/ch554-dancing-all-night.tex"
+}

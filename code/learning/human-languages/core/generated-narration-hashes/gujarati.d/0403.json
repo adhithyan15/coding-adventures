@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:c468f379a2cfa5bc",
+  "lessonIds": [
+    "GU-C403-dhorimarg",
+    "GU-C403-mail",
+    "GU-C403-kilomitar",
+    "GU-C403-phantavu",
+    "GU-C403-takravu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch403.txt",
+  "json": "gujarati/narration/ch403.json",
+  "textHash": "fnv1a64:d41f1a0afcdd89ca",
+  "jsonHash": "fnv1a64:102a3080ebf9e1e8",
+  "findings": []
+}

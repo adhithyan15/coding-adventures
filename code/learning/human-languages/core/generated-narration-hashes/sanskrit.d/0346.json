@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:aaf2eddfbc5ddb27",
+  "lessonIds": [
+    "SA-C346-aksepah",
+    "SA-C346-khandayati",
+    "SA-C346-nirasyati",
+    "SA-C346-samsayah",
+    "SA-C346-vastutah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch346.txt",
+  "json": "sanskrit/narration/ch346.json",
+  "textHash": "fnv1a64:1a42fd2036a65bf4",
+  "jsonHash": "fnv1a64:700fb39611ea0aa5",
+  "findings": []
+}

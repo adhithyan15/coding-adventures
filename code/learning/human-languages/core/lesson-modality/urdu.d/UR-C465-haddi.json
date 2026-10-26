@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C465-haddi",
+    "language": "urdu",
+    "chapter": 465,
+    "sequence": 27280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c5e2bfc24a43728"
+  },
+  "findings": []
+}

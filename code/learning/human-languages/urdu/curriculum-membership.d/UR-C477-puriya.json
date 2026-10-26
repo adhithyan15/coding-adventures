@@ -1,0 +1,11 @@
+{
+  "id": "UR-C477-puriya",
+  "pathSegment": "UR-PATH-477-MEDICINE477",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-477-MEDICINE477",
+      "order": 3
+    }
+  ]
+}

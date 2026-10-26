@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C483-naumaulud",
+    "language": "urdu",
+    "chapter": 483,
+    "sequence": 28240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32c2265becfa6f26"
+  },
+  "findings": []
+}

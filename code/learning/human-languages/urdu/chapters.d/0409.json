@@ -1,0 +1,21 @@
+{
+  "chapter": 409,
+  "title": "Which Way?",
+  "label": "ch:ur-which-way",
+  "canDo": "I can say which way something faces and what lies close by.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-R409-review-402-409",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can say which way something faces and what lies close by.",
+    "assesses": [
+      "UR-LEX-C409-JANIB409-01",
+      "UR-LEX-C409-JANIB409-02",
+      "UR-LEX-C409-JANIB409-03",
+      "UR-LEX-C409-JANIB409-04",
+      "UR-LEX-C409-JANIB409-05"
+    ]
+  }
+}

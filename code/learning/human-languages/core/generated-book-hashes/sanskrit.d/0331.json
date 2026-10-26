@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:83ad3e2639d5aada",
+  "lessonIds": [
+    "SA-C331-bhaktih",
+    "SA-C331-candanam",
+    "SA-C331-visarjayati",
+    "SA-C331-japati",
+    "SA-C331-pavitrah"
+  ],
+  "tex": "sanskrit/book/chapters/ch331-down-to-the-river.tex"
+}

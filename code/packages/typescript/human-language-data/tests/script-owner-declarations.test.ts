@@ -76,7 +76,10 @@ const CONFIGS = [
   // gets its row once its order is cited to LipiTk's Tamil recognizer.
   { language: "tamil", script: "tamil", letters: 30, marks: 9, digits: 0 },
   // digits 0 -> 10: Urdu's ten digit rows; only ۰ ۱ ۲ ۳ carry a citation.
-  { language: "urdu", script: "urdu-nastaliq", letters: 31, marks: 2, digits: 10 },
+  // 31 -> 37: the B1 core (chapters 264-275) adds ث ڈ ذ ص ع غ, each after the
+  // word that holds it, as RECOGNITION-ONLY owners: an empty strokeOrder,
+  // because no Urdu-scoped stroke-order source has been verified for them yet.
+  { language: "urdu", script: "urdu-nastaliq", letters: 37, marks: 2, digits: 10 },
 ] as const;
 
 function fixture(script = "japanese"): string {

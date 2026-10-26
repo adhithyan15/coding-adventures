@@ -1,0 +1,9 @@
+[package]
+name = "tls13-inner-plaintext"
+version = "0.1.0"
+edition = "2021"
+description = "Allocation-free TLS 1.3 inner-plaintext codec"
+license = "MIT"
+
+[dependencies]
+tls13-record = { path = "../tls13-record" }

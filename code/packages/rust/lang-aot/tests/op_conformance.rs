@@ -15,6 +15,7 @@
 //! | `pr1b_ops_are_lowered_on_every_backend` | LANG83 PR1b landed everywhere: no backend still refuses `write_i64`, `i64_div_floor`, `i64_mod_floor` or `trap` |
 //! | `pr4_ops_are_lowered_on_every_backend` | LANG83 PR4 landed everywhere: every backend lowers `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf` and `i64_neg_ovf` |
 //! | `pr6a_ops_are_lowered_on_every_backend` | LANG83 PR6a landed everywhere: every backend lowers `write_f64_py` and `write_f64_js` |
+//! | `pr6c_ops_follow_the_ieee_contract` | LANG83 PR6c: the IEEE arithmetic is lowered everywhere but BEAM (which refuses it at compile time), `f64_signbit` on all nine, and the PR6c cases run on every executable column |
 //! | `float_table_matches_host_python3_and_node` | the PR6a expected strings are what host `python3` (`repr`) and `node` (`String(x)`) print today, whenever they are installed |
 //! | `flush_before_trap_is_proven_on_every_executable_column` | a program that writes (unflushed) output and then traps keeps that output, and the trap kind is observed, on every column that can run it |
 //!
@@ -132,9 +133,23 @@ impl Case {
         ops
     }
 
-    /// `true` if `backend` lowers every registry operation the case uses.
+    /// `true` if `backend` lowers every registry operation the case uses,
+    /// and can hold every constant the case writes.
+    ///
+    /// The second half is BEAM's alone: an Erlang float is always finite, so
+    /// `validate_for_beam` refuses a `±Infinity`/`NaN` constant even though
+    /// `const` itself is lowered. Before that check, BEAM compiled the
+    /// float-table cases into modules its loader could not read.
     fn lowered_on(&self, backend: Backend) -> bool {
         self.registry_ops().iter().all(|op| backend.op_support(op).is_lowered())
+            && !(backend == Backend::Beam && self.has_non_finite_float_const())
+    }
+
+    /// Whether any `const` in the case's module is a non-finite `f64`.
+    fn has_non_finite_float_const(&self) -> bool {
+        self.module().functions.iter().flat_map(|f| f.instructions.iter()).any(|i| {
+            i.op == "const" && matches!(i.srcs.first(), Some(Operand::Float(x)) if !x.is_finite())
+        })
     }
 }
 
@@ -391,6 +406,32 @@ fn compare(name: &str, a: i64, b: i64) -> IIRModule {
     ])
 }
 
+/// LANG83 PR6c: for each `(op, operands, print_sign)`, compute `op` on float
+/// constants, `write_f64_js` the result and — when `print_sign` — a space and
+/// its `f64_signbit` via `write_i64`; a `\n` after each row. A NaN row does
+/// not print its sign: the spec leaves a NaN's sign unspecified (x86's
+/// default NaN has it set, AArch64's does not).
+fn ieee_rows(rows: &[(&str, &[f64], bool)]) -> IIRModule {
+    let mut body = vec![int("sp", 32), int("nl", 10)];
+    for (i, (name, xs, sign)) in rows.iter().enumerate() {
+        let srcs: Vec<String> = (0..xs.len()).map(|k| format!("c{i}_{k}")).collect();
+        for (src, x) in srcs.iter().zip(xs.iter()) {
+            body.push(real(src, *x));
+        }
+        let (r, s) = (format!("r{i}"), format!("s{i}"));
+        let src_refs: Vec<&str> = srcs.iter().map(String::as_str).collect();
+        body.push(op(name, &r, &src_refs, "f64"));
+        body.push(builtin("write_f64_js", &r));
+        if *sign {
+            body.push(builtin("putchar", "sp"));
+            body.push(op("f64_signbit", &s, &[&r], "i64"));
+            body.push(builtin("write_i64", &s));
+        }
+        body.push(builtin("putchar", "nl"));
+    }
+    program(body)
+}
+
 /// Unary `f64` op `name(x)`, truncated to an integer and printed.
 fn f64_unary(name: &str, x: f64) -> IIRModule {
     program(vec![
@@ -637,6 +678,77 @@ fn cases() -> Vec<Case> {
                 ])
             },
             expect: Expect::Stdout("0.30000000000000004 0.30000000000000004 7.0 7"),
+        },
+        // ── LANG83 PR6c: IEEE f64 arithmetic that never traps ───────────────
+        //
+        // The spec's edge table: infinities from division and overflow, NaN,
+        // signed zeros, an inexact sum. Every row's value is printed with
+        // `write_f64_js` and (except NaN) its sign bit, so `-0` — which
+        // JavaScript prints as `0` — is still told apart from `+0`.
+        Case {
+            name: "IEEE edges: infinities, NaN, signed zeros (PR6c)",
+            build: || {
+                let inf = f64::INFINITY;
+                ieee_rows(&[
+                    ("f64_div", &[1.0, 0.0], true),
+                    ("f64_div", &[-1.0, 0.0], true),
+                    ("f64_div", &[1.0, -0.0], true),
+                    ("f64_div", &[0.0, 0.0], false),
+                    ("f64_sub", &[inf, inf], false),
+                    ("f64_mul", &[0.0, inf], false),
+                    ("f64_add", &[1e308, 1e308], true),
+                    ("f64_mul", &[-1.0, 0.0], true),
+                    ("f64_mul", &[-1.0, -0.0], true),
+                    ("f64_add", &[-0.0, -0.0], true),
+                    ("f64_add", &[-0.0, 0.0], true),
+                    ("f64_sub", &[0.0, 0.0], true),
+                    ("f64_neg", &[0.0], true),
+                    ("f64_neg", &[-0.0], true),
+                    ("f64_add", &[0.1, 0.2], true),
+                    ("f64_neg", &[-inf], true),
+                ])
+            },
+            expect: Expect::Stdout(
+                "Infinity 0\n-Infinity 1\n-Infinity 1\nNaN\nNaN\nNaN\nInfinity 0\n0 1\n0 0\n0 1\n0 0\n\
+                 0 0\n0 1\n0 0\n0.30000000000000004 0\nInfinity 0",
+            ),
+        },
+        // Constants only, finite values only, no arithmetic: the one PR6c case
+        // BEAM runs too (its floats have no ±Infinity or NaN to test).
+        Case {
+            name: "f64_signbit of finite constants (PR6c)",
+            build: || {
+                let mut body = Vec::new();
+                for (i, x) in [0.0, -0.0, 2.5, -2.5, 5e-324, -5e-324, f64::MAX, f64::MIN].iter().enumerate() {
+                    let (c, s) = (format!("x{i}"), format!("s{i}"));
+                    body.push(real(&c, *x));
+                    body.push(op("f64_signbit", &s, &[&c], "i64"));
+                    body.push(print_i64(&s));
+                }
+                program(body)
+            },
+            expect: Expect::Stdout("0\n1\n0\n1\n0\n1\n0\n1"),
+        },
+        // Every op with its dest also a source: each backend must read the
+        // operands before it writes the result. 1.5+1.5 = 3, -3, -3/0 = -inf.
+        Case {
+            name: "IEEE ops read their operands before writing an aliased dest (PR6c)",
+            build: || {
+                program(vec![
+                    real("x", 1.5),
+                    real("z", 0.0),
+                    int("sp", 32),
+                    op("f64_add", "x", &["x", "x"], "f64"),
+                    op("f64_mul", "x", &["x", "x"], "f64"),
+                    op("f64_sub", "x", &["x", "z"], "f64"),
+                    op("f64_neg", "x", &["x"], "f64"),
+                    builtin("write_f64_js", "x"),
+                    builtin("putchar", "sp"),
+                    op("f64_div", "x", &["x", "z"], "f64"),
+                    builtin("write_f64_js", "x"),
+                ])
+            },
+            expect: Expect::Stdout("-9 -Infinity"),
         },
         // ── LANG83 PR4: overflow-checked arithmetic ─────────────────────────
         //
@@ -1490,8 +1602,9 @@ fn refused_ops_are_rejected_at_compile_time() {
     }
     // Since PR1b no backend refuses a PR1b op; the refusals left are the
     // generic JIT's interpreter-tier-only ops (strings, `f64` math,
-    // conversions, `mod`, `print_str`), each of which has a case. Derive the
-    // bound from that rather than pinning a count.
+    // conversions, `mod`, `print_str`) and BEAM's PR6c IEEE arithmetic, each
+    // of which has a case. Derive the bound from the JIT's share rather than
+    // pinning a count.
     let jit_refused_cases =
         cases().iter().filter(|c| c.registry_ops().iter().any(|op| !Backend::Jit.op_support(op).is_lowered())).count();
     assert!(jit_refused_cases > 0, "the JIT refuses interpreter-tier ops, so some case must exercise a refusal");
@@ -1557,6 +1670,55 @@ fn pr6a_ops_are_lowered_on_every_backend() {
             assert!(ran.contains(column), "{}: did not run on {column} (ran {ran:?})", case.name);
         }
         eprintln!("LANG83 PR6a `{}` proven on {ran:?}", case.name);
+    }
+}
+
+/// LANG83 PR6c: the IEEE arithmetic is lowered on the eight IEEE backends and
+/// refused on BEAM — both at `check_module_for` and by the BEAM compile entry
+/// point — while `f64_signbit` is lowered on all nine; and every PR6c case runs
+/// (with the expected output) on every executable column that can run it.
+#[test]
+fn pr6c_ops_follow_the_ieee_contract() {
+    let pr6c: Vec<&str> = STANDARD_OPS.iter().filter(|s| s.is_pr6c()).map(|s| s.name).collect();
+    assert_eq!(pr6c, ["f64_add", "f64_sub", "f64_mul", "f64_div", "f64_neg", "f64_signbit"]);
+    for name in &pr6c {
+        for backend in Backend::ALL {
+            let support = backend.op_support(name);
+            if backend == Backend::Beam && *name != "f64_signbit" {
+                assert!(matches!(support, OpSupport::Refused(_)), "BEAM must refuse {name}: {support:?}");
+            } else {
+                assert!(support.is_lowered(), "{backend} refuses {name}: {support:?}");
+            }
+        }
+    }
+    let mut required = vec!["Wasm", "Vm", "Jit"];
+    if clang_ok() {
+        required.push("Llvm");
+    }
+    if cfg!(target_os = "linux") {
+        required.push("NativeAot");
+    }
+    if java_ok() {
+        required.push("Jvm");
+    }
+    let corpus = cases();
+    let pr6c_cases: Vec<&Case> = corpus.iter().filter(|c| c.name.ends_with("(PR6c)")).collect();
+    assert_eq!(pr6c_cases.len(), 3);
+    for case in pr6c_cases {
+        let ran = execute_everywhere(case);
+        for column in &required {
+            assert!(ran.contains(column), "{}: did not run on {column} (ran {ran:?})", case.name);
+        }
+        // BEAM: the arithmetic cases are refused before lowering; the
+        // sign-bit case compiles.
+        let arithmetic = case.registry_ops().iter().any(|op| *op != "f64_signbit" && pr6c.contains(op));
+        let on_beam = compile_on(Backend::Beam, case.module());
+        match (arithmetic, on_beam) {
+            (true, Err(LangAotError::UnsupportedOps(e))) => assert_eq!(e.backend, Backend::Beam),
+            (false, Ok(_)) => {}
+            (_, other) => panic!("{}: BEAM gave {other:?}", case.name),
+        }
+        eprintln!("LANG83 PR6c `{}` proven on {ran:?}", case.name);
     }
 }
 
@@ -1631,4 +1793,19 @@ fn print_i64_and_putchar_share_one_ordered_stream() {
         assert!(ran.contains(&column), "{column} must run the ordered-stream case");
     }
     eprintln!("LANG83 print_i64 + putchar ordering proven on {ran:?}");
+}
+
+/// BEAM refuses the float-table modules at compile time instead of building
+/// a `.beam` whose literal table holds `inf`/`nan`, which no Erlang loader
+/// reads. A table with only finite values still compiles.
+#[test]
+fn beam_refuses_non_finite_float_constants() {
+    for writer in ["write_f64_py", "write_f64_js"] {
+        match compile_on(Backend::Beam, float_table_program(writer)) {
+            Err(e) => assert!(e.to_string().contains("non-finite float"), "{writer}: {e}"),
+            Ok(()) => panic!("{writer}: BEAM compiled a module holding inf/nan constants"),
+        }
+    }
+    let finite = program(vec![int("nl", 10), real("x", 1.5), builtin("write_f64_py", "x"), builtin("putchar", "nl")]);
+    compile_on(Backend::Beam, finite).expect("finite float constants compile on BEAM");
 }

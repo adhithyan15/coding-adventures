@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C362-taravvu",
+    "language": "gujarati",
+    "chapter": 362,
+    "sequence": 20210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e1bb414b0d2ab77"
+  },
+  "findings": []
+}

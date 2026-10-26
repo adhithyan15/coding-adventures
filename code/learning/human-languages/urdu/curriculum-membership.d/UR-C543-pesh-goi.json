@@ -1,0 +1,11 @@
+{
+  "id": "UR-C543-pesh-goi",
+  "pathSegment": "UR-PATH-543-ATKAL543",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-543-ATKAL543",
+      "order": 1
+    }
+  ]
+}

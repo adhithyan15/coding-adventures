@@ -1,0 +1,11 @@
+{
+  "id": "GU-C512-vetan",
+  "pathSegment": "GU-PATH-512-NOKRI512",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-512-NOKRI512",
+      "order": 2
+    }
+  ]
+}

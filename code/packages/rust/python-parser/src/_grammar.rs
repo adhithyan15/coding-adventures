@@ -2,7 +2,7 @@
 // Source family: python (LANG84 release family; release list from code/grammars/python/releases.csv)
 // Regenerate with: grammar-tools generate-rust-compiled-grammars python
 //
-// 7 release(s) have a pair; they compile to 2 distinct ParserGrammar value(s).
+// 11 release(s) have a pair; they compile to 3 distinct ParserGrammar value(s).
 // Each distinct grammar is one module named g_<first 12 hex digits of the
 // SHA-256 of its canonical form (comments and line numbers dropped).
 
@@ -11,8 +11,12 @@ use grammar_tools::parser_grammar::ParserGrammar;
 /// Releases that have a pair, in inventory (date) order.
 pub const SUPPORTED_RELEASES: &[&str] = &[
     "2.2",
+    "2.4",
     "3.0a1",
+    "2.6",
+    "3.6.0",
     "2.7.18",
+    "3.5.10",
     "3.12.3",
     "3.13.16",
     "3.11.17",
@@ -97,7 +101,7 @@ pub const INVENTORY: &[(&str, &str)] = &[
     ("2.4b1", "none"),
     ("2.4b2", "none"),
     ("2.4c1", "none"),
-    ("2.4", "none"),
+    ("2.4", "P"),
     ("2.3.5c1", "none"),
     ("2.3.5", "none"),
     ("2.4.1c1", "none"),
@@ -145,7 +149,7 @@ pub const INVENTORY: &[(&str, &str)] = &[
     ("2.6rc1", "none"),
     ("3.0rc1", "none"),
     ("2.6rc2", "none"),
-    ("2.6", "none"),
+    ("2.6", "P"),
     ("3.0rc2", "none"),
     ("3.0rc3", "none"),
     ("3.0", "none"),
@@ -326,7 +330,7 @@ pub const INVENTORY: &[(&str, &str)] = &[
     ("3.6.0rc1", "none"),
     ("3.6.0rc2", "none"),
     ("2.7.13", "none"),
-    ("3.6.0", "none"),
+    ("3.6.0", "P"),
     ("3.4.6rc1", "none"),
     ("3.5.3rc1", "none"),
     ("3.5.3", "none"),
@@ -451,7 +455,7 @@ pub const INVENTORY: &[(&str, &str)] = &[
     ("3.7.9", "none"),
     ("3.6.12", "none"),
     ("3.5.10rc1", "none"),
-    ("3.5.10", "none"),
+    ("3.5.10", "P"),
     ("3.8.6rc1", "none"),
     ("3.9.0rc2", "none"),
     ("3.8.6", "none"),
@@ -685,8 +689,9 @@ pub const INVENTORY: &[(&str, &str)] = &[
 /// nearest-release fallback (LANG84 C4).
 pub fn parser_grammar(release: &str) -> Option<ParserGrammar> {
     match release {
-        "2.2" | "2.7.18" => Some(g_4e25ec3b5e94::parser_grammar()),
-        "3.0a1" | "3.12.3" | "3.13.16" | "3.11.17" | "3.16.0a1" => Some(g_a8aa787740a9::parser_grammar()),
+        "2.2" | "2.4" | "2.6" | "2.7.18" => Some(g_4e25ec3b5e94::parser_grammar()),
+        "3.0a1" => Some(g_a8aa787740a9::parser_grammar()),
+        "3.6.0" | "3.5.10" | "3.12.3" | "3.13.16" | "3.11.17" | "3.16.0a1" => Some(g_5bd2c0aa595b::parser_grammar()),
         _ => None,
     }
 }
@@ -694,8 +699,9 @@ pub fn parser_grammar(release: &str) -> Option<ParserGrammar> {
 /// The class (module name) of each release, for tests and tooling.
 pub fn grammar_class(release: &str) -> Option<&'static str> {
     match release {
-        "2.2" | "2.7.18" => Some("g_4e25ec3b5e94"),
-        "3.0a1" | "3.12.3" | "3.13.16" | "3.11.17" | "3.16.0a1" => Some("g_a8aa787740a9"),
+        "2.2" | "2.4" | "2.6" | "2.7.18" => Some("g_4e25ec3b5e94"),
+        "3.0a1" => Some("g_a8aa787740a9"),
+        "3.6.0" | "3.5.10" | "3.12.3" | "3.13.16" | "3.11.17" | "3.16.0a1" => Some("g_5bd2c0aa595b"),
         _ => None,
     }
 }
@@ -8697,6 +8703,163 @@ mod g_a8aa787740a9 {
                 name: r#"paren_body"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"expression"#.to_string() },
                 line_number: 53,
+            },
+        ],
+            version: 1,
+        }
+    }
+}
+
+mod g_5bd2c0aa595b {
+    // AUTO-GENERATED FILE — DO NOT EDIT
+    // Source: python3.6.0.grammar
+    // Regenerate with: grammar-tools compile-grammar python3.6.0.grammar
+    //
+    // This file embeds a ParserGrammar as native Rust data structures.
+    // Call `parser_grammar()` instead of reading and parsing the .grammar file.
+
+    use grammar_tools::parser_grammar::{GrammarElement, GrammarRule, ParserGrammar};
+
+    pub fn parser_grammar() -> ParserGrammar {
+        ParserGrammar {
+            rules: vec![
+            GrammarRule {
+                name: r#"file"#.to_string(),
+                body: GrammarElement::Repetition { element: Box::new(GrammarElement::Alternation { choices: vec![
+                        GrammarElement::TokenReference { name: r#"NEWLINE"#.to_string() },
+                        GrammarElement::RuleReference { name: r#"statement"#.to_string() },
+                    ] }) },
+                line_number: 40,
+            },
+            GrammarRule {
+                name: r#"statement"#.to_string(),
+                body: GrammarElement::RuleReference { name: r#"simple_stmt"#.to_string() },
+                line_number: 41,
+            },
+            GrammarRule {
+                name: r#"simple_stmt"#.to_string(),
+                body: GrammarElement::Sequence { elements: vec![
+                    GrammarElement::RuleReference { name: r#"small_stmt"#.to_string() },
+                    GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                            GrammarElement::TokenReference { name: r#"SEMICOLON"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"small_stmt"#.to_string() },
+                        ] }) },
+                    GrammarElement::Optional { element: Box::new(GrammarElement::TokenReference { name: r#"SEMICOLON"#.to_string() }) },
+                    GrammarElement::TokenReference { name: r#"NEWLINE"#.to_string() },
+                ] },
+                line_number: 42,
+            },
+            GrammarRule {
+                name: r#"small_stmt"#.to_string(),
+                body: GrammarElement::RuleReference { name: r#"expression"#.to_string() },
+                line_number: 43,
+            },
+            GrammarRule {
+                name: r#"expression"#.to_string(),
+                body: GrammarElement::RuleReference { name: r#"arith"#.to_string() },
+                line_number: 45,
+            },
+            GrammarRule {
+                name: r#"arith"#.to_string(),
+                body: GrammarElement::Sequence { elements: vec![
+                    GrammarElement::RuleReference { name: r#"term"#.to_string() },
+                    GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
+                                    GrammarElement::TokenReference { name: r#"PLUS"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"MINUS"#.to_string() },
+                                ] }) },
+                            GrammarElement::RuleReference { name: r#"term"#.to_string() },
+                        ] }) },
+                ] },
+                line_number: 46,
+            },
+            GrammarRule {
+                name: r#"term"#.to_string(),
+                body: GrammarElement::Sequence { elements: vec![
+                    GrammarElement::RuleReference { name: r#"factor"#.to_string() },
+                    GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
+                                    GrammarElement::TokenReference { name: r#"STAR"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"SLASH"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"FLOOR_DIV"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"PERCENT"#.to_string() },
+                                ] }) },
+                            GrammarElement::RuleReference { name: r#"factor"#.to_string() },
+                        ] }) },
+                ] },
+                line_number: 47,
+            },
+            GrammarRule {
+                name: r#"factor"#.to_string(),
+                body: GrammarElement::Alternation { choices: vec![
+                    GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
+                                GrammarElement::TokenReference { name: r#"PLUS"#.to_string() },
+                                GrammarElement::TokenReference { name: r#"MINUS"#.to_string() },
+                            ] }) },
+                        GrammarElement::RuleReference { name: r#"factor"#.to_string() },
+                    ] },
+                    GrammarElement::RuleReference { name: r#"primary"#.to_string() },
+                ] },
+                line_number: 48,
+            },
+            GrammarRule {
+                name: r#"primary"#.to_string(),
+                body: GrammarElement::Sequence { elements: vec![
+                    GrammarElement::RuleReference { name: r#"atom"#.to_string() },
+                    GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"suffix"#.to_string() }) },
+                ] },
+                line_number: 49,
+            },
+            GrammarRule {
+                name: r#"suffix"#.to_string(),
+                body: GrammarElement::Sequence { elements: vec![
+                    GrammarElement::TokenReference { name: r#"LPAREN"#.to_string() },
+                    GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"arguments"#.to_string() }) },
+                    GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
+                ] },
+                line_number: 50,
+            },
+            GrammarRule {
+                name: r#"arguments"#.to_string(),
+                body: GrammarElement::Sequence { elements: vec![
+                    GrammarElement::RuleReference { name: r#"argument"#.to_string() },
+                    GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                            GrammarElement::TokenReference { name: r#"COMMA"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"argument"#.to_string() },
+                        ] }) },
+                    GrammarElement::Optional { element: Box::new(GrammarElement::TokenReference { name: r#"COMMA"#.to_string() }) },
+                ] },
+                line_number: 51,
+            },
+            GrammarRule {
+                name: r#"argument"#.to_string(),
+                body: GrammarElement::RuleReference { name: r#"expression"#.to_string() },
+                line_number: 52,
+            },
+            GrammarRule {
+                name: r#"atom"#.to_string(),
+                body: GrammarElement::Alternation { choices: vec![
+                    GrammarElement::TokenReference { name: r#"INT"#.to_string() },
+                    GrammarElement::TokenReference { name: r#"FLOAT"#.to_string() },
+                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"paren_expr"#.to_string() },
+                ] },
+                line_number: 53,
+            },
+            GrammarRule {
+                name: r#"paren_expr"#.to_string(),
+                body: GrammarElement::Sequence { elements: vec![
+                    GrammarElement::TokenReference { name: r#"LPAREN"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"paren_body"#.to_string() },
+                    GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
+                ] },
+                line_number: 54,
+            },
+            GrammarRule {
+                name: r#"paren_body"#.to_string(),
+                body: GrammarElement::RuleReference { name: r#"expression"#.to_string() },
+                line_number: 55,
             },
         ],
             version: 1,

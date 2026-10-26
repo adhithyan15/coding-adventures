@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:96a725fb96e3bef7",
+  "lessonIds": [
+    "UR-C337-tasdiq-karna",
+    "UR-C337-taslim-karna",
+    "UR-C337-jhutlana",
+    "UR-C337-qabul-karna",
+    "UR-C337-ghalat-fahmi"
+  ],
+  "tex": "urdu/book/chapters/ch337-denial-and-confession.tex"
+}

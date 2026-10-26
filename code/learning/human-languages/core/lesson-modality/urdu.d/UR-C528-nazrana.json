@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C528-nazrana",
+    "language": "urdu",
+    "chapter": 528,
+    "sequence": 30770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bbbffd62ad04d2ff"
+  },
+  "findings": []
+}

@@ -151,9 +151,21 @@ semantic IR and layout while lowering without empty label geometry. ER remains
 compatible with integer and decimal entity identifiers as standalone entities,
 attribute owners, and relationship endpoints through semantic IR, layout, and
 paint. Recursive ER relationships preserve a single semantic entity and route
-as an exterior loop with canvas-aware backend-neutral geometry. ER remains
-partial while the rest of the pinned upstream syntax and visual corpus is
-incomplete.
+as an exterior loop with canvas-aware backend-neutral geometry. Unicode symbols
+in unquoted entity identifiers, aliases, attribute text, and relationship roles
+survive semantic IR, layout, and backend-neutral paint. Attribute types follow
+Mermaid's block lexer boundary: key-prefixed words remain valid, while exact key
+markers, numeric tokens, and quoted strings do not become types.
+Attribute comments normalize Mermaid HTML break variants to semantic newlines,
+with line-aware structural measurement and backend-neutral text lowering. ER
+entity aliases apply the same normalization with multiline header geometry. ER
+titles reserve line-aware vertical geometry after semantic normalization. ER
+`useMaxWidth` configuration is preserved as structural render policy through
+layout and lowers to PaintScene metadata without changing intrinsic geometry.
+The shared `flowchart.htmlLabels` policy follows the same pipeline for ER edge
+labels while native backends continue to receive portable shaped text.
+ER remains partial while the rest of the pinned upstream syntax and visual corpus
+is incomplete.
 
 ## Required New Semantic Families
 

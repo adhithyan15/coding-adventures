@@ -1,0 +1,14 @@
+[package]
+name = "x509-ocsp-cert-id-binding"
+version = "0.1.0"
+edition = "2021"
+description = "Data-driven OCSP CertID binding to exact target and issuer certificates"
+
+[dependencies]
+ct-compare = { package = "coding_adventures_ct_compare", path = "../ct-compare" }
+x509-algorithm-identifier = { path = "../x509-algorithm-identifier" }
+x509-certificate = { path = "../x509-certificate" }
+x509-ocsp-single-response = { path = "../x509-ocsp-single-response" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }

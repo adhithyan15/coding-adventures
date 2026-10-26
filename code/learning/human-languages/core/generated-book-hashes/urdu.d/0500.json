@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:9a003088ac31c59e",
+  "lessonIds": [
+    "UR-C500-astin",
+    "UR-C500-silvana",
+    "UR-C500-udherna",
+    "UR-C500-rafu-karna",
+    "UR-C500-udharna"
+  ],
+  "tex": "urdu/book/chapters/ch500-at-the-tailor-s.tex"
+}

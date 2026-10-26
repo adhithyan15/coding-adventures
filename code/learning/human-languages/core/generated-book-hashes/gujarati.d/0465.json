@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:f773c4319061d849",
+  "lessonIds": [
+    "GU-C465-sakhat",
+    "GU-C465-ciknu",
+    "GU-C465-uddhat",
+    "GU-C465-ahankar",
+    "GU-C465-tevavu"
+  ],
+  "tex": "gujarati/book/chapters/ch465-strict-and-proud.tex"
+}

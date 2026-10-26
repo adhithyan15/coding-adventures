@@ -1,0 +1,17 @@
+{
+  "glyph": "ع",
+  "sound": "silent; it colours the vowel",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ع",
+    "initial": "عـ",
+    "medial": "ـعـ",
+    "final": "ـع"
+  },
+  "components": [
+    "small open head",
+    "trailing bowl"
+  ],
+  "strokeOrder": [],
+  "notes": "In Urdu ain has no sound of its own: it colours or lengthens the vowel beside it (بعد bād). Inside a word it closes into a small loop on the line. Recognition only: its stroke order is deliberately left empty, because no Urdu-scoped stroke-order source has been verified for it yet (a Persian or Arabic row's order is not borrowed)."
+}

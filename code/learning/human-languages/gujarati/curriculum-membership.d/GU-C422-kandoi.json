@@ -1,0 +1,11 @@
+{
+  "id": "GU-C422-kandoi",
+  "pathSegment": "GU-PATH-422-STALL422",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-422-STALL422",
+      "order": 3
+    }
+  ]
+}

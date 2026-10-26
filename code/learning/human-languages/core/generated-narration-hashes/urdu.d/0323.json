@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:d353a975c996ad39",
+  "lessonIds": [
+    "UR-C323-rivayat",
+    "UR-C323-rivaj",
+    "UR-C323-rasm",
+    "UR-C323-manna",
+    "UR-C323-nibhana",
+    "UR-R323-review-316-323"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch323.txt",
+  "json": "urdu/narration/ch323.json",
+  "textHash": "fnv1a64:701e78528df4c693",
+  "jsonHash": "fnv1a64:4703132bd8f4bad8",
+  "findings": []
+}

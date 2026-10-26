@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C311-bhrantih",
+    "language": "sanskrit",
+    "chapter": 311,
+    "sequence": 18320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e051f4e58b28a6e0"
+  },
+  "findings": []
+}

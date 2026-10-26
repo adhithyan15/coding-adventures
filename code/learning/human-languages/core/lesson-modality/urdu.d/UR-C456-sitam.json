@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C456-sitam",
+    "language": "urdu",
+    "chapter": 456,
+    "sequence": 26860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5729a51f44e93533"
+  },
+  "findings": []
+}

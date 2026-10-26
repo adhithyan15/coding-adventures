@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:8439e860986cfa72",
+  "lessonIds": [
+    "SA-C327-holika",
+    "SA-C327-kunkumam",
+    "SA-C327-sincati",
+    "SA-C327-vikirati",
+    "SA-C327-utksipati"
+  ],
+  "tex": "sanskrit/book/chapters/ch327-a-festival-of-colours.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 316,
+  "title": "Escape from the Fort",
+  "label": "ch:ur-escape-from-the-fort",
+  "canDo": "I can tell how prisoners got away from a fort.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C316-rengna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 316: I can tell how prisoners got away from a fort.",
+    "assesses": [
+      "UR-LEX-C316-SURANG316-03",
+      "UR-LEX-C316-SURANG316-04",
+      "UR-LEX-C316-SURANG316-05"
+    ]
+  }
+}

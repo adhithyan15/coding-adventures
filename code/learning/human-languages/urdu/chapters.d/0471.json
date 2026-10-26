@@ -1,0 +1,21 @@
+{
+  "chapter": 471,
+  "title": "Health",
+  "label": "ch:ur-health",
+  "canDo": "I can talk about health and seeing a doctor.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-R471-review-464-471",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 471: I can talk about health and seeing a doctor.",
+    "assesses": [
+      "UR-LEX-C471-HEALTH471-01",
+      "UR-LEX-C471-HEALTH471-02",
+      "UR-LEX-C471-HEALTH471-03",
+      "UR-LEX-C471-HEALTH471-04",
+      "UR-LEX-C471-HEALTH471-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C357-sacivah",
+  "pathSegment": "SA-PATH-357-SAMITI357",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-357-SAMITI357",
+      "order": 3
+    }
+  ]
+}

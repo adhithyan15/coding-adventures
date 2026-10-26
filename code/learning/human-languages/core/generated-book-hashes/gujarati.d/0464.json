@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:501ed455dfa3ef20",
+  "lessonIds": [
+    "GU-C464-sanu",
+    "GU-C464-vivek",
+    "GU-C464-dahyu",
+    "GU-C464-thavku",
+    "GU-C464-gathvu"
+  ],
+  "tex": "gujarati/book/chapters/ch464-a-sensible-head.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:45446987b1560e0f",
+  "lessonIds": [
+    "GU-C345-inkar",
+    "GU-C345-khulaso",
+    "GU-C345-cokhvat",
+    "GU-C345-ganavvu",
+    "GU-C345-palatvu"
+  ],
+  "tex": "gujarati/book/chapters/ch345-explaining-yourself.tex"
+}

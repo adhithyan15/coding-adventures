@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C354-nimvu",
+    "language": "gujarati",
+    "chapter": 354,
+    "sequence": 19800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca7133406d6772c2"
+  },
+  "findings": []
+}

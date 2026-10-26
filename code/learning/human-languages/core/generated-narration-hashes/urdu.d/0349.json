@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:26f9de4be467d5ab",
+  "lessonIds": [
+    "UR-C349-tahqiq",
+    "UR-C349-tajriba",
+    "UR-C349-muhaqqiq",
+    "UR-C349-daryaft",
+    "UR-C349-khojna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch349.txt",
+  "json": "urdu/narration/ch349.json",
+  "textHash": "fnv1a64:98ee61669d827a9d",
+  "jsonHash": "fnv1a64:e1731cce2b3d6afd",
+  "findings": []
+}

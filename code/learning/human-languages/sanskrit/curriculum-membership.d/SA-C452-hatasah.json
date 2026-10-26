@@ -1,0 +1,11 @@
+{
+  "id": "SA-C452-hatasah",
+  "pathSegment": "SA-PATH-452-UDVEGA452",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-452-UDVEGA452",
+      "order": 1
+    }
+  ]
+}

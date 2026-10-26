@@ -5,13 +5,31 @@ human-language spine. Every lesson is written for a learner who knows no
 Japanese, takes no more than five minutes, and asks the learner to decode only
 writing that an earlier step has made safe.
 
-The current book is the first **pre-A1 slice**, not a claim of exam readiness.
-Its 100 lessons form a deliberately slow twelve-chapter runway: 47 writing
-lessons teach 47 distinct load-bearing glyphs; the current closure report finds
-47 glyphs shown, 47 taught, zero never taught, and zero script-closure
-violations. The vocabulary layer contains 28 word lessons and seven phrase
-lessons. Those counts come from the canonical lesson ledger and the
-`measureScriptClosure` report, not from a hand-maintained inventory.
+The book began with a deliberately slow twelve-chapter pre-A1 runway and has
+since extended beyond it. The opening lessons teach each load-bearing glyph
+before asking learners to decode a word containing it. A structural practice
+mock is not a claim of exam readiness; qualified review and learner validation
+are separate steps.
+
+## Progress
+
+The opening slice described here has since grown: chapters 13-145 take the track
+through A1 (the A1 writing stages close at chapter 145), chapters 146-249 add the
+A2 vocabulary, and the track attains A2 on the level gate.
+
+**The B1 core, chapters 250-261**, holds the track's first grammar lessons, one
+new form at a time in the polite frame: the plain past -た and its sound
+changes, the future as the non-past with a time word, the plain negative
+-ない / -なかった, -て and -てから, -ています / -ていました, と おもいます, から /
+ので, -た ほうが いい, travel with -て ください, the i-adjective past -かった, -た
+ことが ある, より / いちばん, もし … -たら, に よります, and "would" as -たら …
+でしょう. It realizes all five B1 spine nodes, and it has a reading (a day at the
+river) and a six-line writing task. It also adds six copy-only kanji, each copied
+right after the word that holds it: 月 (月日), 年 (年じゅう), 出 (言い出す), 人
+(日本人), 中 (日本中) and 今 (今まで), with one reading each. Still untaught: the
+potential, passive, causative, volitional, imperative, -ば, -ながら, -たり,
+-なくて, -なければ, -ては / -ても, keigo beyond -ます / です, and every katakana
+but コ, ヒ and ー. The B1 vocabulary comes next.
 
 ## Progress
 
@@ -127,8 +145,8 @@ load-bearing.
 
 ## Read and practise
 
-- [`session-map.md`](./session-map.md) maps one canonical lesson to each of the
-  current 131 five-minute sessions and explains the review rule.
+- [`session-map.md`](./session-map.md) records the opening five-minute sessions
+  and explains the review rule.
 - [`roadmap.md`](./roadmap.md) records the authored chapters and the
   dependency order toward the complete pre-A1-to-C2 destination.
 - [`chapters.json`](./chapters.json) is the authoritative chapter and payoff
@@ -137,6 +155,10 @@ load-bearing.
 - [`assessment-spec.md`](./assessment-spec.md) and
   [`assessment.json`](./assessment.json) define the seven four-skill assessment
   rungs and their writing requirements.
+- [`mocks/pre-a1/mock-1.md`](./mocks/pre-a1/mock-1.md) is the first project-defined
+  pre-A1 practice form. Its recording master and key are confidential examiner
+  material; the form still needs qualified Japanese review and book-only human
+  validation before learner use.
 - [`pronunciation-reference.md`](./pronunciation-reference.md) is a lookup aid,
   never a prerequisite chapter.
 - [`lessons/`](./lessons/) contains the canonical short lessons; the generated

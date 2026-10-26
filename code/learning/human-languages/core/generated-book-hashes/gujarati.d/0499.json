@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:7aa1db917b12b759",
+  "lessonIds": [
+    "GU-C499-maran",
+    "GU-C499-avsan",
+    "GU-C499-gujarvu",
+    "GU-C499-besnu",
+    "GU-C499-arpavu"
+  ],
+  "tex": "gujarati/book/chapters/ch499-saying-goodbye.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:905b831d6f0795fb",
+  "lessonIds": [
+    "GU-C472-nas",
+    "GU-C472-snayu",
+    "GU-C472-khopri",
+    "GU-C472-atardu",
+    "GU-C472-hojri"
+  ],
+  "tex": "gujarati/book/chapters/ch472-inside-the-body.tex"
+}

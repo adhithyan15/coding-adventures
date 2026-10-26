@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 549,
+  "sourceHash": "fnv1a64:1a2b2d877e3762c8",
+  "lessonIds": [
+    "SA-C549-sprhayati",
+    "SA-C549-lalasa",
+    "SA-C549-pratiksa",
+    "SA-C549-didrksa",
+    "SA-C549-samihate"
+  ],
+  "tex": "sanskrit/book/chapters/ch549-longings.tex"
+}

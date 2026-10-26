@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:613e7e7b45c01415",
+  "lessonIds": [
+    "SA-C368-sanka",
+    "SA-C368-tarkayati",
+    "SA-C368-asamsate",
+    "SA-C368-anumanam",
+    "SA-C368-kila"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch368.txt",
+  "json": "sanskrit/narration/ch368.json",
+  "textHash": "fnv1a64:97fd99f284df8934",
+  "jsonHash": "fnv1a64:70db05080ba2b5ce",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 553,
+  "title": "Drums and Pipes",
+  "label": "ch:gu-drums-and-pipes",
+  "canDo": "I can talk about loud instruments, bells and singing out.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C553-thanganvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 553: I can talk about loud instruments, bells and singing out.",
+    "assesses": [
+      "GU-LEX-C553-NAGARU553-03",
+      "GU-LEX-C553-NAGARU553-04",
+      "GU-LEX-C553-NAGARU553-05"
+    ]
+  }
+}

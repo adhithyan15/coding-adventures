@@ -1,0 +1,5 @@
+oracle: host CPython 3.11.17, 3.12.3, 3.13.16 (python3.11, python3.12, python3.13)
+command: {python3.11,python3.12,python3.13} -I reject_big_true_division.py
+host-python: accepts
+result: py-float-print refuses it with a Unsupported error naming the release
+why: CPython rounds the exact quotient of ints above 2**53 once; converting first would round twice

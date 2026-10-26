@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C289-adalat",
+    "language": "gujarati",
+    "chapter": 289,
+    "sequence": 16200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2d98b53d6d91d3d"
+  },
+  "findings": []
+}

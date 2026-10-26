@@ -1,0 +1,11 @@
+{
+  "id": "UR-C305-muamma",
+  "pathSegment": "UR-PATH-305-MUAMMA305",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-305-MUAMMA305",
+      "order": 0
+    }
+  ]
+}

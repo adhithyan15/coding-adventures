@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:d2e1d80a45e69634",
+  "lessonIds": [
+    "SA-C299-ghosayati",
+    "SA-C299-sankatam",
+    "SA-C299-savadhanah",
+    "SA-C299-nivarayati",
+    "SA-C299-apattih"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch299.txt",
+  "json": "sanskrit/narration/ch299.json",
+  "textHash": "fnv1a64:50030e44a071caf1",
+  "jsonHash": "fnv1a64:e2b8c6906abb2b33",
+  "findings": []
+}

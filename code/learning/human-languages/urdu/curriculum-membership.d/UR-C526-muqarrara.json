@@ -1,0 +1,11 @@
+{
+  "id": "UR-C526-muqarrara",
+  "pathSegment": "UR-PATH-526-MIAD526",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-526-MIAD526",
+      "order": 1
+    }
+  ]
+}

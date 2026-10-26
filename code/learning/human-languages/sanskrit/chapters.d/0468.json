@@ -1,0 +1,19 @@
+{
+  "chapter": 468,
+  "title": "Gratitude and Greed",
+  "label": "ch:sa-gratitude-and-greed",
+  "canDo": "I can say whether someone repays a kindness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C468-krtavedi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can say whether someone repays a kindness.",
+    "assesses": [
+      "SA-LEX-C468-KRTAVEDIN468-03",
+      "SA-LEX-C468-KRTAVEDIN468-04",
+      "SA-LEX-C468-KRTAVEDIN468-05"
+    ]
+  }
+}

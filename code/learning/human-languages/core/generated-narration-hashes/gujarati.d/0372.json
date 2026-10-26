@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:bacf6ab1326860cf",
+  "lessonIds": [
+    "GU-C372-vimo",
+    "GU-C372-geranti",
+    "GU-C372-kavac",
+    "GU-C372-sacet",
+    "GU-C372-avarvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch372.txt",
+  "json": "gujarati/narration/ch372.json",
+  "textHash": "fnv1a64:ecde674d44c66b74",
+  "jsonHash": "fnv1a64:5c3e80a4eda79157",
+  "findings": []
+}

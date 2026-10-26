@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Notices from an Office",
+  "label": "ch:sa-notices-from-an-office",
+  "canDo": "I can say what an office made known and whom it appointed.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C356-prastavah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can say what an office made known and whom it appointed.",
+    "assesses": [
+      "SA-LEX-C356-VIJNAPANA356-03",
+      "SA-LEX-C356-VIJNAPANA356-04",
+      "SA-LEX-C356-VIJNAPANA356-05"
+    ]
+  }
+}

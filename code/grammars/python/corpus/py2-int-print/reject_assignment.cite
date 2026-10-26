@@ -1,4 +1,4 @@
-oracle: pinned historical source, CPython v2.2 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+oracle: pinned historical source, CPython v2.2, v2.4, v2.6 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
 host-python2: accepts
 result: py2-int-print refuses it with a Parse error naming the release
 why: statements other than print are not in the subset's grammar

@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 517,
+  "title": "On the Stage",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3c11967459a25e49",
+  "lessons": [
+    {
+      "id": "UR-C517-istej",
+      "sequence": 30170,
+      "title": "اسٹیج (isṭej) — a stage (in a theatre)",
+      "headword": "اسٹیج",
+      "romanization": "isṭej",
+      "gloss": "a stage (in a theatre)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be3358d13b42ea36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to engrave, then the Urdu for an idol."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اسٹیج",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اسٹیج — isṭej — \"a stage (in a theatre)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اداکار اسٹیج پر آیا۔ adākār isṭej par āyā. The actor came onto the stage."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اسٹیج (isṭej) is borrowed from English stage."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isṭej",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *isṭej*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isṭej, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *isṭej*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adākār isṭej par āyā. — The actor came onto the stage.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adākār isṭej par āyā.* — The actor came onto the stage.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to engrave, then the Urdu for an idol, then say isṭej again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to engrave, then the Urdu for an idol, then say *isṭej* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اسٹیج (isṭej) mean? (\"A stage (in a theatre)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C517-tali",
+      "sequence": 30180,
+      "title": "تالی (tālī) — a clap (of the hands)",
+      "headword": "تالی",
+      "romanization": "tālī",
+      "gloss": "a clap (of the hands)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6582a4c2f77b1110",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for an idol, then the Urdu for a stage (in a theatre)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تالی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تالی — tālī — \"a clap (of the hands)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ناٹک کے بعد سب نے تالیاں بجائیں۔ nāṭak ke bād sab ne tāliyāṅ bajāīṅ. After the play everyone clapped."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تالی (tālī) is inherited from Sanskrit tāla, \"slapping the hands together; musical time\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tālī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tālī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tālī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tālī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭak ke bād sab ne tāliyāṅ bajāīṅ. — After the play everyone clapped.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭak ke bād sab ne tāliyāṅ bajāīṅ.* — After the play everyone clapped.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for an idol, then the Urdu for a stage (in a theatre), then say tālī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for an idol, then the Urdu for a stage (in a theatre), then say *tālī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تالی (tālī) mean? (\"A clap (of the hands)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C517-shaiqin",
+      "sequence": 30190,
+      "title": "شائقین (shāiqīn) — fans; keen spectators",
+      "headword": "شائقین",
+      "romanization": "shāiqīn",
+      "gloss": "fans; keen spectators",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18f6fdec34bf4b52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a stage (in a theatre), then the Urdu for a clap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شائقین",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شائقین — shāiqīn — \"fans; keen spectators\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شائقین اداکاروں کو دیکھ کر ہنسے۔ shāiqīn adākāroṅ ko dekh kar hãse. The audience laughed as they watched the actors."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, used in the plural."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شائقین (shāiqīn) is usually traced, through Persian, to Arabic shāʾiqīn, the plural of shāʾiq, \"eager, longing\": the people keen on a game or a show."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāiqīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāiqīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāiqīn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāiqīn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāiqīn adākāroṅ ko dekh kar hãse. — The audience laughed as they watched the actors.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāiqīn adākāroṅ ko dekh kar hãse.* — The audience laughed as they watched the actors.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a stage (in a theatre), then the Urdu for a clap, then say shāiqīn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a stage (in a theatre), then the Urdu for a clap, then say *shāiqīn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شائقین (shāiqīn) mean? (\"Fans; keen spectators\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C517-mukalama",
+      "sequence": 30200,
+      "title": "مکالمہ (mukālamā) — a line of dialogue; a dialogue",
+      "headword": "مکالمہ",
+      "romanization": "mukālamā",
+      "gloss": "a line of dialogue; a dialogue",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c67220d95d23da85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a clap, then the Urdu for fans of a game or show."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مکالمہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مکالمہ — mukālamā — \"a line of dialogue; a dialogue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اداکار اپنے مکالمے بھول گیا۔ adākār apne mukālame bhūl gayā. The actor forgot his lines."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مکالمہ (mukālamā) is usually traced, through Persian, to Arabic mukālama, \"talking together, a conversation\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukālamā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukālamā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukālamā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukālamā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adākār apne mukālame bhūl gayā. — The actor forgot his lines.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adākār apne mukālame bhūl gayā.* — The actor forgot his lines.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a clap, then the Urdu for fans of a game or show, then say mukālamā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a clap, then the Urdu for fans of a game or show, then say *mukālamā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مکالمہ (mukālamā) mean? (\"A line of dialogue; a dialogue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C517-lubhana",
+      "sequence": 30210,
+      "title": "لبھانا (lubhānā) — to charm; to entice",
+      "headword": "لبھانا",
+      "romanization": "lubhānā",
+      "gloss": "to charm; to entice",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:209948c42c83bc17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for fans of a game or show, then the Urdu for a dialogue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لبھانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لبھانا — lubhānā — \"to charm; to entice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اس کے گیت نے سب کو لبھایا۔ us ke gīt ne sab ko lubhāyā. His song charmed everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے سب کو لبھایا, us ne sab ko lubhāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لبھانا (lubhānā) is inherited: CDIAL lists the Hindi cousin lubhānā, \"to excite desire\", under Sanskrit lubhyati, \"desires\" (CDIAL 11086)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lubhānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lubhānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lubhānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lubhānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us ke gīt ne sab ko lubhāyā. — His song charmed everyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us ke gīt ne sab ko lubhāyā.* — His song charmed everyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for fans of a game or show, then the Urdu for a dialogue, then say lubhānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for fans of a game or show, then the Urdu for a dialogue, then say *lubhānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does لبھانا (lubhānā) mean? (\"To charm; to entice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R517-review-510-517",
+      "sequence": 30220,
+      "title": "Looking back: from Peel, Pound, Squeeze to On the Stage",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Peel, Pound, Squeeze to On the Stage",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:876d55f544db5c58",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for to peel and to pound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to peel, to pound, a mortar (for pounding), to have (something) ground, to squeeze out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to peel, to pound, a mortar (for pounding), to have (something) ground, to squeeze out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a recipe, a cloth spread for a meal, to have (food) cooked, to blow (on), to give (someone) a taste",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a recipe, a cloth spread for a meal, to have (food) cooked, to blow (on), to give (someone) a taste]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a garden, a flower bed, fertiliser, to water (plants), to uproot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a garden, a flower bed, fertiliser, to water (plants), to uproot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "free time, a pastime, recreation, a picnic, an album",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: free time, a pastime, recreation, a picnic, an album]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wool, to thread (a needle), to embroider, a thimble, a fringe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wool, to thread (a needle), to embroider, a thimble, a fringe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a picture, a painter (an artist), a sketch, a masterpiece, to show through",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a picture, a painter (an artist), a sketch, a masterpiece, to show through]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "calligraphy, carved or painted decoration, a figurine, to engrave, an idol",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: calligraphy, carved or painted decoration, a figurine, to engrave, an idol]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a stage (in a theatre), a clap, fans of a game or show, a dialogue, to charm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a stage (in a theatre), a clap, fans of a game or show, a dialogue, to charm]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To peel? (چھیلنا, chhīlnā.) To pound? (کوٹنا, kūṭnā.) A mortar (for pounding)? (اوکھلی, okhlī.) To have (something) ground? (پسوانا, pisvānā.) To squeeze out? (نچوڑنا, nichoṛnā.) A recipe? (ترکیب, tarkīb.) A cloth spread for a meal? (دسترخوان, dastarkhvān.) To have (food) cooked? (پکوانا, pakvānā.) To blow (on)? (پھونکنا, phūṅknā.) To give (someone) a taste? (چکھانا, chakhānā.) A garden? (باغ, bāgh.) A flower bed? (کیاری, kyārī.) Fertiliser? (کھاد, khād.) To water (plants)? (سینچنا, sīṅchnā.) To uproot? (اکھاڑنا, ukhāṛnā.) Free time? (فرصت, fursat.) A pastime? (مشغلہ, mashghalā.) Recreation? (تفریح, tafrīh.) A picnic? (پکنک, piknik.) An album? (البم, album.) Wool? (اون, ūn.) To thread (a needle)? (پرونا, pironā.) To embroider? (کاڑھنا, kāṛhnā.) A thimble? (انگشتانہ, angushtānā.) A fringe? (جھالر, jhālar.) A picture? (تصویر, tasvīr.) A painter (an artist)? (مصور, musavvir.) A sketch? (خاکہ, khākā.) A masterpiece? (شاہکار, shāhkār.) To show through? (جھلکنا, jhalaknā.) Calligraphy? (خطاطی, khattātī.) Carved or painted decoration? (نقاشی, naqqāshī.) A figurine? (مورتی, mūrtī.) To engrave? (کندہ کرنا, kandā karnā.) An idol? (بت, but.) A stage (in a theatre)? (اسٹیج, isṭej.) A clap? (تالی, tālī.) Fans of a game or show? (شائقین, shāiqīn.) A dialogue? (مکالمہ, mukālamā.) To charm? (لبھانا, lubhānā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

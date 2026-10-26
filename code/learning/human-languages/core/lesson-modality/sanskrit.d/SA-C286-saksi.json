@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C286-saksi",
+    "language": "sanskrit",
+    "chapter": 286,
+    "sequence": 17030,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a66f9f083ae0f2c4"
+  },
+  "findings": []
+}

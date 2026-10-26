@@ -1,0 +1,880 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 278,
+  "title": "What I Think, and Why",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:8a0760f4f619b2f6",
+  "lessons": [
+    {
+      "id": "SA-C278-mama-matena",
+      "sequence": 16330,
+      "title": "मम मतेन (mama matena) — in my opinion",
+      "headword": "मम मतेन",
+      "romanization": "mama matena",
+      "gloss": "in my opinion — matena, and manye yat … or … iti manye, I think",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6cc3de603818f13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"an opinion\". (matam.) And \"my\". (mama.) This chapter gives your opinion, and a reason for it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मम मतेन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मम मतेन एतत् सुन्दरम्। mama matena etat sundaram. — \"In my opinion this is beautiful.\""
+            },
+            {
+              "kind": "speech",
+              "text": "मतेन (matena) is मतम् (matam), \"an opinion\", with -ena, \"by\": \"by my opinion\", that is, \"in my opinion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मम मतेन सः सत्यं वदति। mama matena saḥ satyaṃ vadati. — \"In my opinion he is telling the truth.\""
+            },
+            {
+              "kind": "speech",
+              "text": "तव मतेन किम्? tava matena kim? — \"What is your opinion?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: अहं मन्ये",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मन्ये (manye) is \"I think\". It ends in -e, the \"I\" ending of verbs like रोचते (rocate). यत् (yat), \"that\", opens what you think:"
+            },
+            {
+              "kind": "speech",
+              "text": "अहं मन्ये यत् वर्षा भविष्यति। ahaṃ manye yat varṣā bhaviṣyati. — \"I think that it will rain.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Or say the thought first and close it with इति (iti), as you close what someone said:"
+            },
+            {
+              "kind": "speech",
+              "text": "वर्षा भविष्यति इति मन्ये। varṣā bhaviṣyati iti manye. — \"It will rain, I think.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think that he will go\" — ahaṃ manye yat saḥ gamiṣyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think that he will go\" — *ahaṃ manye yat saḥ gamiṣyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think that she will go\" — ahaṃ manye yat sā gamiṣyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think that she will go\" — *ahaṃ manye yat sā gamiṣyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think that they will go\" — ahaṃ manye yat te gamiṣyanti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think that they will go\" — *ahaṃ manye yat te gamiṣyanti*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "SA-C278-mama-matena-r1",
+              "prompt": "Say that in your opinion this is beautiful, then that you think it will rain.",
+              "assesses": [
+                "SA-GRAMMAR-C278-OPINION-01",
+                "SA-GRAMMAR-C278-OPINION-02"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "mama matena etat sundaram; ahaṃ manye yat varṣā bhaviṣyati",
+                "मम मतेन एतत् सुन्दरम्। अहं मन्ये यत् वर्षा भविष्यति।",
+                "मम मतेन एतत् सुन्दरम्। वर्षा भविष्यति इति मन्ये।"
+              ],
+              "feedback": {
+                "correct": "mama matena for an opinion; manye with yat, or after iti.",
+                "incorrect": "In my opinion: mama matena. I think: ahaṃ manye yat …."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"In my opinion\"? (मम मतेन (mama matena).) \"I think that it will rain\"? (अहं मन्ये यत् वर्षा भविष्यति.) Where does इति stand? (After the thought.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C278-yatah-karanat",
+      "sequence": 16340,
+      "title": "यतः, कारणात् (yataḥ, kāraṇāt) — because, and because of",
+      "headword": "यतः · कारणात्",
+      "romanization": "yataḥ · kāraṇāt",
+      "gloss": "because, because of — yataḥ before a reason, -kāraṇāt after a cause",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc087dd9a66ca07c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I think that it will rain\". (ahaṃ manye yat varṣā bhaviṣyati.) Now give the reason for a choice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: यतः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "यतः (yataḥ), \"because\", opens the reason, and the reason can follow what you did:"
+            },
+            {
+              "kind": "speech",
+              "text": "अहं न आगमिष्यामि, ahaṃ na āgamiṣyāmi, यतः अहं रुग्णः अस्मि। yataḥ ahaṃ rugṇaḥ asmi. — \"I will not come, because I am ill.\""
+            },
+            {
+              "kind": "speech",
+              "text": "सः न पठति, saḥ na paṭhati, यतः सः श्रान्तः अस्ति। yataḥ saḥ śrāntaḥ asti. — \"He is not reading, because he is tired.\""
+            },
+            {
+              "kind": "speech",
+              "text": "आगमिष्यामि (āgamiṣyāmi) is गमिष्यामि with the prefix आ- of आगच्छति: \"I will come\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: कारणात्, हेतुः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कारणात् (kāraṇāt) is कारणम् (kāraṇam), \"a reason\", with -āt, \"from\": \"because of\". The cause goes in front of it, joined to it as one word:"
+            },
+            {
+              "kind": "speech",
+              "text": "वर्षाकारणात् सः न आगतवान्। varṣākāraṇāt saḥ na āgatavān. — \"Because of the rain he did not come.\""
+            },
+            {
+              "kind": "speech",
+              "text": "हेतुः (hetuḥ), \"a cause\", names the reason as a thing:"
+            },
+            {
+              "kind": "speech",
+              "text": "हेतुः किम्? hetuḥ kim? — \"What is the cause?\""
+            },
+            {
+              "kind": "speech",
+              "text": "हेतुः वर्षा अस्ति। hetuḥ varṣā asti. — \"The cause is the rain.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I will not come, because I am tired\" — ahaṃ na āgamiṣyāmi, yataḥ ahaṃ śrāntaḥ asmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I will not come, because I am tired\" — *ahaṃ na āgamiṣyāmi, yataḥ ahaṃ śrāntaḥ asmi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I will not come, because I am ill\" — ahaṃ na āgamiṣyāmi, yataḥ ahaṃ rugṇaḥ asmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I will not come, because I am ill\" — *ahaṃ na āgamiṣyāmi, yataḥ ahaṃ rugṇaḥ asmi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I will not come, because I am afraid\" — ahaṃ na āgamiṣyāmi, yataḥ ahaṃ bhītaḥ asmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I will not come, because I am afraid\" — *ahaṃ na āgamiṣyāmi, yataḥ ahaṃ bhītaḥ asmi*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "SA-C278-yatah-karanat-r1",
+              "prompt": "Say that you will not come because you are ill, then that he did not come because of the rain.",
+              "assesses": [
+                "SA-GRAMMAR-C278-EXPLANATION-01",
+                "SA-GRAMMAR-C278-EXPLANATION-02"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "ahaṃ na āgamiṣyāmi, yataḥ ahaṃ rugṇaḥ asmi; varṣākāraṇāt saḥ na āgatavān",
+                "अहं न आगमिष्यामि, यतः अहं रुग्णः अस्मि। वर्षाकारणात् सः न आगतवान्।"
+              ],
+              "feedback": {
+                "correct": "yataḥ opens a whole reason; -kāraṇāt sits on one cause.",
+                "incorrect": "A reason with a verb: yataḥ …. One cause: varṣākāraṇāt."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Because\" before a reason? (यतः.) \"Because of the rain\"? (वर्षाकारणात्.) \"What is the cause?\" (हेतुः किम्?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C278-manyate",
+      "sequence": 16350,
+      "title": "मन्यते (manyate) — thinks",
+      "headword": "मन्यते",
+      "romanization": "manyate",
+      "gloss": "thinks",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2279cd9077eb3f67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"I think that it will rain\". (ahaṃ manye yat varṣā bhaviṣyati.) You have said this verb's \"I\" form."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मन्यते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मन्यते — manyate — \"thinks\". मन्ये (manye) is its \"I\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सः किं मन्यते? saḥ kiṃ manyate? — \"What does he think?\""
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा मन्यते यत् एतत् सत्यम्। mīrā manyate yat etat satyam. — \"Mira thinks that this is true.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मन्यते (manyate) is built on the root √man, \"to think\", which Monier-Williams lists in the fourth class with the middle ending -te. मतम् (matam), \"an opinion\", is its -ta form: what is thought. It lives on as Hindi mānnā, \"to respect, obey\" (CDIAL 9857)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manyate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manyate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What does Mira think?\" — mīrā kiṃ manyate?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What does Mira think?\" — *mīrā kiṃ manyate?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Arun thinks that this is true\" — aruṇaḥ manyate yat etat satyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Arun thinks that this is true\" — *aruṇaḥ manyate yat etat satyam*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मन्यते (manyate) mean? (\"Thinks\".) Its \"I\" form? (मन्ये.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C278-drdhah",
+      "sequence": 16360,
+      "title": "दृढः (dṛḍhaḥ) — firm",
+      "headword": "दृढः",
+      "romanization": "dṛḍhaḥ",
+      "gloss": "firm",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd6b9bf297ce227d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"what does he think?\" (saḥ kiṃ manyate?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दृढः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दृढः — dṛḍhaḥ — \"firm\". It agrees with its noun: दृढः for a masculine noun, दृढा (dṛḍhā) for a feminine one, दृढम् (dṛḍham) for a neuter one."
+            },
+            {
+              "kind": "speech",
+              "text": "मम दृढः विश्वासः अस्ति। mama dṛḍhaḥ viśvāsaḥ asti. — \"I have a firm belief.\""
+            },
+            {
+              "kind": "speech",
+              "text": "गृहं दृढम् अस्ति। gṛhaṃ dṛḍham asti. — \"The house is solid.\""
+            },
+            {
+              "kind": "speech",
+              "text": "मम निर्णयः दृढः। mama nirṇayaḥ dṛḍhaḥ. — \"My decision is firm.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दृढः (dṛḍhaḥ) comes from दृढ (dṛḍha), \"fixed, firm, strong\", in Monier-Williams; CDIAL 6508 sets it under the root √dṛṃh and lists Hindi diṛh, \"firm\", among its descendants."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dṛḍhaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dṛḍhaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My decision is firm\" — mama nirṇayaḥ dṛḍhaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My decision is firm\" — *mama nirṇayaḥ dṛḍhaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In my opinion the house is solid\" — mama matena gṛhaṃ dṛḍham",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In my opinion the house is solid\" — *mama matena gṛhaṃ dṛḍham*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दृढः (dṛḍhaḥ) mean? (\"Firm\".) \"A solid house\"? (दृढं गृहम्.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-S227-letter-ddha",
+      "sequence": 16370,
+      "title": "ढ (ḍha) — one character, met first in दृढः (dṛḍhaḥ)",
+      "headword": "ढ",
+      "romanization": "ḍha",
+      "gloss": "the single character ढ — met first in दृढः",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c7755f030c66edde",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ढ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ढ and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say दृढः (dṛḍhaḥ), \"firm\". Then say the sounds of ड and घ. (ḍa, gha.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time: the one in the middle of दृढः (dṛḍhaḥ)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ढ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ढ — ḍha."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant: ड (ḍa) with a breath after it, as घ is ग with a breath."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a descending stem joined to a broad outer bowl and closed inner loop."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "You have met it here:"
+            },
+            {
+              "kind": "speech",
+              "text": "दृढः dṛḍhaḥ — firm."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ढ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start at the stem's headline junction, descend, turn left through the upper shoulder, sweep counterclockwise around the broad outer bowl, and continue counterclockwise around the closed inner loop without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1. The pen comes up 1 time and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "Verified two-stroke teaching form fitted to the bundled printed outline."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ढ (ḍha)-order.gif’, strokes 1–2, Wikimedia Commons, 10 May 2009."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at this, and find ढ (ḍha) in it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at this, and find ढ in it]"
+            },
+            {
+              "kind": "speech",
+              "text": "दृढः (dṛḍhaḥ)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ढ three times, saying ḍha as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ढ three times, saying *ḍha* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at मम निर्णयः दृढः (dṛḍhaḥ) and find ढ (ḍha) once more",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **मम निर्णयः दृढः** and find ढ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ढ? What sound does it carry? (ḍha.) Which word did it come from? (दृढः (dṛḍhaḥ), \"firm\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R278-opinion-and-reason",
+      "sequence": 16380,
+      "title": "Review — what I think, and why",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "an opinion and a reason for it",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2a49faf26a5bbdd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"first Mira went to the shop\". (prathamaṃ mīrā āpaṇaṃ gatavatī.) Then \"she came in and sat down\". (sā praviśya upaviśati.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In my opinion the city is beautiful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: In my opinion the city is beautiful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I think that Mira will come tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I think that Mira will come tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I will not go, because I am tired.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I will not go, because I am tired.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Because of the rain Mira did not come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Because of the rain Mira did not come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "What does Arun think? My decision is firm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: What does Arun think? My decision is firm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "दृढः (dṛḍhaḥ) and मम दृढः (dṛḍhaḥ) विश्वासः अस्ति aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **दृढः** and **मम दृढः विश्वासः अस्ति** aloud]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "मन्ये or मन्यते (manyate), for \"I think\"? (मन्ये.) यतः or कारणात्, before a whole reason? (यतः.) Now the other way round: what does हेतुः किम्? ask? (\"What is the cause?\")"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

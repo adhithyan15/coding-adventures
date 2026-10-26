@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 435,
+  "title": "Thunder and Cyclones",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f24e1c66a43f8443",
+  "lessons": [
+    {
+      "id": "GU-C435-kadako",
+      "sequence": 24150,
+      "title": "કડાકો (kaḍāko) — a crash of thunder; a loud crack",
+      "headword": "કડાકો",
+      "romanization": "kaḍāko",
+      "gloss": "a crash of thunder; a loud crack",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b1604f5782e53fcd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to gather (of clouds), then the Gujarati for to get wet through."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કડાકો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કડાકો — kaḍāko — \"a crash of thunder; a loud crack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "રાત્રે વીજળીનો મોટો કડાકો થયો. rātre vījḷīno moṭo kaḍāko thayo. At night there was a great crash of thunder."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કડાકો (kaḍāko) goes back to Sanskrit kaṭakaṭā, an imitative word for a grating or crackling sound; CDIAL lists the Gujarati word, \"a loud crack\" (CDIAL 2632)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḍāko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḍāko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḍāko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḍāko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātre vījḷīno moṭo kaḍāko thayo. — At night there was a great crash of thunder.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātre vījḷīno moṭo kaḍāko thayo.* — At night there was a great crash of thunder.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to gather (of clouds), then the Gujarati for to get wet through, then say kaḍāko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to gather (of clouds), then the Gujarati for to get wet through, then say *kaḍāko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કડાકો (kaḍāko) mean? (\"A crash of thunder; a loud crack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C435-cakravat",
+      "sequence": 24160,
+      "title": "ચક્રવાત (cakravāt) — a whirlwind; a cyclone (in weather reports)",
+      "headword": "ચક્રવાત",
+      "romanization": "cakravāt",
+      "gloss": "a whirlwind; a cyclone (in weather reports)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:29411ef55292633c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to get wet through, then the Gujarati for a crash of thunder."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ચક્રવાત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચક્રવાત — cakravāt — \"a whirlwind; a cyclone (in weather reports)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દરિયામાં ચક્રવાત આવ્યો, એટલે હોડીઓ કિનારે રહી. dariyāmā̃ cakravāt āvyo, eṭle hoḍīo kināre rahī. A cyclone came over the sea, so the boats stayed on the shore."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચક્રવાત (cakravāt) is a tatsama, Sanskrit cakravāta, \"a whirlwind\" (Monier-Williams), made of cakra, \"a wheel\", and vāta, \"wind\": the wind that turns like a wheel."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cakravāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cakravāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cakravāt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cakravāt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dariyāmā̃ cakravāt āvyo, eṭle hoḍīo kināre rahī. — A cyclone came over the sea, so the boats stayed on the shore.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dariyāmā̃ cakravāt āvyo, eṭle hoḍīo kināre rahī.* — A cyclone came over the sea, so the boats stayed on the shore.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to get wet through, then the Gujarati for a crash of thunder, then say cakravāt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to get wet through, then the Gujarati for a crash of thunder, then say *cakravāt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ચક્રવાત (cakravāt) mean? (\"A whirlwind; a cyclone (in weather reports)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C435-susvato",
+      "sequence": 24170,
+      "title": "સુસવાટો (susvāṭo) — a howl of wind; a whistling gust",
+      "headword": "સુસવાટો",
+      "romanization": "susvāṭo",
+      "gloss": "a howl of wind; a whistling gust",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb6f90691bfd16cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a crash of thunder, then the Gujarati for a whirlwind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સુસવાટો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સુસવાટો — susvāṭo — \"a howl of wind; a whistling gust\"."
+            },
+            {
+              "kind": "speech",
+              "text": "રાત્રે પવનના સુસવાટા સંભળાતા હતા. rātre pavannā susvāṭā sambhḷātā hatā. At night you could hear the wind howling."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સુસવાટો (susvāṭo) goes back to śūṣa, \"blowing\", a form CDIAL reconstructs; CDIAL lists the Gujarati word, \"a blast of wind\" (CDIAL 12577)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "susvāṭo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *susvāṭo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "susvāṭo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *susvāṭo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātre pavannā susvāṭā sambhḷātā hatā. — At night you could hear the wind howling.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātre pavannā susvāṭā sambhḷātā hatā.* — At night you could hear the wind howling.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a crash of thunder, then the Gujarati for a whirlwind, then say susvāṭo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a crash of thunder, then the Gujarati for a whirlwind, then say *susvāṭo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સુસવાટો (susvāṭo) mean? (\"A howl of wind; a whistling gust\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C435-agahi",
+      "sequence": 24180,
+      "title": "આગાહી (āgāhī) — a forecast",
+      "headword": "આગાહી",
+      "romanization": "āgāhī",
+      "gloss": "a forecast",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37f14d6fdac6d3af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a whirlwind, then the Gujarati for a howl of wind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: આગાહી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આગાહી — āgāhī — \"a forecast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "હવામાન ખાતાએ ભારે વરસાદની આગાહી કરી. havāmān khātāe bhāre varsādnī āgāhī karī. The weather office forecast heavy rain."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આગાહી (āgāhī) is usually traced to Persian āgāhī, \"awareness, being told in advance\", built on āgāh, \"aware\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgāhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgāhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgāhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgāhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "havāmān khātāe bhāre varsādnī āgāhī karī. — The weather office forecast heavy rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *havāmān khātāe bhāre varsādnī āgāhī karī.* — The weather office forecast heavy rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a whirlwind, then the Gujarati for a howl of wind, then say āgāhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a whirlwind, then the Gujarati for a howl of wind, then say *āgāhī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does આગાહી (āgāhī) mean? (\"A forecast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C435-jhabakvu",
+      "sequence": 24190,
+      "title": "ઝબકવું (jhabakvũ) — to flash (of lightning); to flicker",
+      "headword": "ઝબકવું",
+      "romanization": "jhabakvũ",
+      "gloss": "to flash (of lightning); to flicker",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ba1aef2ef6ff5db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a howl of wind, then the Gujarati for a forecast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઝબકવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝબકવું — jhabakvũ — \"to flash (of lightning); to flicker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "રાત્રે આકાશમાં વીજળી ઝબકી. rātre ākāśmā̃ vījḷī jhabkī. At night lightning flashed in the sky."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે વીજળી ઝબકી, te vījḷī jhabkī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝબકવું (jhabakvũ) goes back to jhamm, \"a flash\", a form CDIAL reconstructs; CDIAL lists the Gujarati verb, \"to flash\" (CDIAL 5341)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhabakvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhabakvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhabakvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhabakvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātre ākāśmā̃ vījḷī jhabkī. — At night lightning flashed in the sky.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātre ākāśmā̃ vījḷī jhabkī.* — At night lightning flashed in the sky.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a howl of wind, then the Gujarati for a forecast, then say jhabakvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a howl of wind, then the Gujarati for a forecast, then say *jhabakvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઝબકવું (jhabakvũ) mean? (\"To flash (of lightning); to flicker\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

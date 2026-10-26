@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C332-nuqsan",
+    "language": "urdu",
+    "chapter": 332,
+    "sequence": 20050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc63cd6fbebaa8b7"
+  },
+  "findings": []
+}

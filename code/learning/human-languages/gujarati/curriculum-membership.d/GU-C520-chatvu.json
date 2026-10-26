@@ -1,0 +1,11 @@
+{
+  "id": "GU-C520-chatvu",
+  "pathSegment": "GU-PATH-520-VAGHAR520",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-520-VAGHAR520",
+      "order": 3
+    }
+  ]
+}

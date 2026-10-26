@@ -1,0 +1,11 @@
+{
+  "id": "PA-C205-everything-fine",
+  "pathSegment": "PA-PATH-205-A2-SABH",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-205-A2-SABH",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:242c82f51f5842ac",
+  "lessonIds": [
+    "UR-C344-barabar",
+    "UR-C344-imtiyaz",
+    "UR-C344-janibdari",
+    "UR-C344-zulm",
+    "UR-C344-uksana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch344.txt",
+  "json": "urdu/narration/ch344.json",
+  "textHash": "fnv1a64:ab12088d83c63f26",
+  "jsonHash": "fnv1a64:0ef5d345abaefa6e",
+  "findings": []
+}

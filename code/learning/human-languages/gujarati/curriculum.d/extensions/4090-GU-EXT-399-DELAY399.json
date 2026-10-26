@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-399-DELAY399",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can understand an announcement about a late train.",
+  "prerequisites": []
+}

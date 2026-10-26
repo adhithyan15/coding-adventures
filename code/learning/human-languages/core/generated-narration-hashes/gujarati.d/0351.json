@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:34a9a81182bf712f",
+  "lessonIds": [
+    "GU-C351-hakikat",
+    "GU-C351-bhram",
+    "GU-C351-gersamaj",
+    "GU-C351-yatharth",
+    "GU-C351-chetravu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch351.txt",
+  "json": "gujarati/narration/ch351.json",
+  "textHash": "fnv1a64:d4197721a599bca6",
+  "jsonHash": "fnv1a64:8c308a73869e299d",
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "chapter": 200,
+  "title": "This Is a Vegetable",
+  "label": "ch:pa-a2-sabzi",
+  "canDo": "I can recognise and use the noun for a vegetable or cooked vegetable dish in one bounded identity frame.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C200-payoff",
+    "kind": "production",
+    "summary": "Recognise and produce the vegetable noun in one bounded identity frame through listening, speaking, reading, and writing.",
+    "assesses": [
+      "PA-LEX-SABZI-200"
+    ],
+    "note": "This twenty-third Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}

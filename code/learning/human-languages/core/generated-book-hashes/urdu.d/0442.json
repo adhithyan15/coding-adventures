@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:14beef9e5f25334c",
+  "lessonIds": [
+    "UR-C442-tajjub",
+    "UR-C442-ajib",
+    "UR-C442-dang",
+    "UR-C442-ajuba",
+    "UR-C442-achambha"
+  ],
+  "tex": "urdu/book/chapters/ch442-a-surprise.tex"
+}

@@ -1,0 +1,8 @@
+[package]
+name = "tls13-cipher-suite-policy"
+version = "0.1.0"
+edition = "2021"
+description = "Data-driven TLS 1.3 cipher-suite and per-key record policy"
+license = "MIT"
+
+[dependencies]

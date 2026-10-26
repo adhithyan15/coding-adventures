@@ -79,7 +79,10 @@
 //! `Refused` until PR1b lowers them. Later slices add families that every
 //! backend lowers in the same PR: PR4's overflow-checked `i64_*_ovf` ops and
 //! PR6a's float writers `write_f64_py` / `write_f64_js` (shortest round-trip
-//! digits in Python's and JavaScript's layouts). Instructions that are not registry entries
+//! digits in Python's and JavaScript's layouts), and PR6c's non-trapping IEEE
+//! `f64_add`/`f64_sub`/`f64_mul`/`f64_div`/`f64_neg` with `f64_signbit` (lowered
+//! on the eight IEEE backends; BEAM refuses the arithmetic at compile time).
+//! Instructions that are not registry entries
 //! (control flow, calls, memory, heap, bitwise, the `dyn_*` lisp builtins, …)
 //! are simply not gated by the registry; their existing validators still apply.
 //! See `code/specs/LANG83-iir-standard-operation-registry.md` for the full
@@ -170,6 +173,13 @@ pub const LANG83_PR4: &str = "LANG83 PR4";
 /// lowered on every backend in one slice.
 pub const LANG83_PR6A: &str = "LANG83 PR6a";
 
+/// The `introduced_by` tag of the non-trapping IEEE-754 `f64` arithmetic
+/// family and its sign-bit query (LANG83 PR6c): `f64_add`, `f64_sub`,
+/// `f64_mul`, `f64_div`, `f64_neg`, `f64_signbit`. Registered in one slice and
+/// lowered by every backend whose floats are IEEE binary64; BEAM, whose floats
+/// are always finite, refuses the five arithmetic ops at compile time.
+pub const LANG83_PR6C: &str = "LANG83 PR6c";
+
 /// One registered operation.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct OpSpec {
@@ -213,6 +223,11 @@ impl OpSpec {
     pub fn is_pr6a(&self) -> bool {
         self.introduced_by == LANG83_PR6A
     }
+
+    /// `true` if this entry is one of the LANG83 PR6c IEEE `f64` ops.
+    pub fn is_pr6c(&self) -> bool {
+        self.introduced_by == LANG83_PR6C
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -248,6 +263,7 @@ const ANY_REGISTERED_KIND: &[&str] = &[CATCH_ANY];
 const BIN_NUM: &[&str] = &["num", "num"];
 const UN_NUM: &[&str] = &["num"];
 const UN_F64: &[&str] = &["f64"];
+const BIN_F64: &[&str] = &["f64", "f64"];
 const BIN_I64: &[&str] = &["i64", "i64"];
 const UN_I64: &[&str] = &["i64"];
 
@@ -317,7 +333,22 @@ pub const STANDARD_OPS: &[OpSpec] = &[
     spec("f64_exp", Op, Float, 1, true, UN_F64, NO_TRAP, "ALGOL AL8"),
     spec("f64_atan", Op, Float, 1, true, UN_F64, NO_TRAP, "ALGOL AL8"),
     spec("f64_tan", Op, Float, 1, true, UN_F64, NO_TRAP, "ALGOL AL8"),
-    spec("f64_pow", Op, Float, 2, true, &["f64", "f64"], NO_TRAP, "ALGOL AL-pow"),
+    spec("f64_pow", Op, Float, 2, true, BIN_F64, NO_TRAP, "ALGOL AL-pow"),
+    // LANG83 PR6c — IEEE-754 binary64 arithmetic with the edges IEEE defines
+    // and nothing else: `1/0` is +Infinity, `0/0` is NaN, an overflow is
+    // ±Infinity, the sign of a zero follows IEEE. They never trap, unlike the
+    // classic `div` (whose zero-divisor edge is backend-dependent). Type-first
+    // (`f64_add`, never `add_f64`): `add_f64` is what `jit_core::specialise`
+    // names the CLASSIC add on f64, and these must stay distinct ops.
+    spec("f64_add", Op, Float, 2, true, BIN_F64, NO_TRAP, LANG83_PR6C),
+    spec("f64_sub", Op, Float, 2, true, BIN_F64, NO_TRAP, LANG83_PR6C),
+    spec("f64_mul", Op, Float, 2, true, BIN_F64, NO_TRAP, LANG83_PR6C),
+    spec("f64_div", Op, Float, 2, true, BIN_F64, NO_TRAP, LANG83_PR6C),
+    // Flips the sign bit only: `f64_neg 0` is `-0` (where `0 - x` gives `0`).
+    spec("f64_neg", Op, Float, 1, true, UN_F64, NO_TRAP, LANG83_PR6C),
+    // The sign bit as an integer 0/1 — the only way to tell `-0` from `0`
+    // without dividing by it (JavaScript's `console.log(-0)` prints `-0`).
+    spec("f64_signbit", Op, Float, 1, true, UN_F64, NO_TRAP, LANG83_PR6C),
     // ── Conversions (LANG-FULL E8) ──────────────────────────────────────────
     spec("int_to_real", Op, Conversion, 1, true, &["int"], NO_TRAP, "LANG-FULL E8"),
     spec("real_to_int_trunc", Op, Conversion, 1, true, UN_F64, CONV_RANGE_ONLY, "LANG-FULL E8"),
@@ -608,6 +639,22 @@ mod tests {
     /// elimination: if it is not side-effecting, an unused result lets an
     /// optimiser delete the trap. Derived from the registry so a future
     /// trapping op cannot be added without its `has_side_effects` entry.
+    #[test]
+    fn pr6c_set_is_exactly_the_ieee_f64_family() {
+        let mut pr6c: Vec<&str> = STANDARD_OPS.iter().filter(|s| s.is_pr6c()).map(|s| s.name).collect();
+        pr6c.sort_unstable();
+        assert_eq!(pr6c, ["f64_add", "f64_div", "f64_mul", "f64_neg", "f64_signbit", "f64_sub"]);
+        for name in pr6c {
+            let spec = lookup(name).unwrap();
+            assert_eq!(spec.kind, OpKind::Op, "{name}");
+            assert!(spec.dest, "{name} writes a dest");
+            assert!(spec.may_trap.is_empty(), "{name} never traps");
+            assert!(spec.operand_types.iter().all(|t| *t == "f64"), "{name} takes f64 operands");
+            let unary = matches!(name, "f64_neg" | "f64_signbit");
+            assert_eq!(spec.arity, if unary { 1 } else { 2 }, "{name}");
+        }
+    }
+
     #[test]
     fn every_trapping_lang83_op_has_side_effects() {
         for spec in STANDARD_OPS

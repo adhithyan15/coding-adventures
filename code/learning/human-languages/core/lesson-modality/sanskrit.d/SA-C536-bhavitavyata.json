@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C536-bhavitavyata",
+    "language": "sanskrit",
+    "chapter": 536,
+    "sequence": 30750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fdd2b2c6bf668fbf"
+  },
+  "findings": []
+}

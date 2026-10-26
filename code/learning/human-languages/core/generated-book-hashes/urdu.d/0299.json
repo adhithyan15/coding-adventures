@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:78ca77e4f399acd6",
+  "lessonIds": [
+    "UR-C299-imdad",
+    "UR-C299-razakar",
+    "UR-C299-jama-karna",
+    "UR-C299-hausla",
+    "UR-C299-atiya",
+    "UR-R299-review-292-299"
+  ],
+  "tex": "urdu/book/chapters/ch299-lending-a-hand.tex"
+}

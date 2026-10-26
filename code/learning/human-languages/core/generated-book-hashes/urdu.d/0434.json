@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:3e7d7dd9cd717bd1",
+  "lessonIds": [
+    "UR-C434-mauj",
+    "UR-C434-daldal",
+    "UR-C434-ghat",
+    "UR-C434-uchhaalna",
+    "UR-C434-dubona"
+  ],
+  "tex": "urdu/book/chapters/ch434-waves-and-marshes.tex"
+}

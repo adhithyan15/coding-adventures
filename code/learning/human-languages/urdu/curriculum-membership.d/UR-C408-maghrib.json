@@ -1,0 +1,11 @@
+{
+  "id": "UR-C408-maghrib",
+  "pathSegment": "UR-PATH-408-SIMT408",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-408-SIMT408",
+      "order": 4
+    }
+  ]
+}

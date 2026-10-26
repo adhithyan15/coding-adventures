@@ -1,0 +1,19 @@
+{
+  "chapter": 370,
+  "title": "As Things Stand",
+  "label": "ch:sa-as-things-stand",
+  "canDo": "I can say what I will do if the situation changes.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C370-pratikulah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can say what I will do if the situation changes.",
+    "assesses": [
+      "SA-LEX-C370-STHITI370-03",
+      "SA-LEX-C370-STHITI370-04",
+      "SA-LEX-C370-STHITI370-05"
+    ]
+  }
+}

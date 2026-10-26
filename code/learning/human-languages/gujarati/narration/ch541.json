@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 541,
+  "title": "Promises and Trust",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:40486fdefb0ef463",
+  "lessons": [
+    {
+      "id": "GU-C541-sapath",
+      "sequence": 30050,
+      "title": "શપથ (śapath) — a solemn oath",
+      "headword": "શપથ",
+      "romanization": "śapath",
+      "gloss": "a solemn oath",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:404370770796e441",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to hold fast, then the Gujarati for an oath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: શપથ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શપથ — śapath — \"a solemn oath\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે શપથ લેશો તો તમારે સાચું બોલવું પડશે. jo tame śapath leśo to tamāre sācũ bolvũ paḍśe. If you take the oath, you will have to tell the truth."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શપથ (śapath) is a tatsama, taken from Sanskrit śapatha, \"a curse; an oath\" (Monier-Williams). One takes it formally: શપથ લેવા."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śapath",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śapath*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śapath, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śapath*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame śapath leśo to tamāre sācũ bolvũ paḍśe. — If you take the oath, you will have to tell the truth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame śapath leśo to tamāre sācũ bolvũ paḍśe.* — If you take the oath, you will have to tell the truth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to hold fast, then the Gujarati for an oath, then say śapath again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to hold fast, then the Gujarati for an oath, then say *śapath* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does શપથ (śapath) mean? (\"A solemn oath\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C541-vaydo",
+      "sequence": 30060,
+      "title": "વાયદો (vāydo) — an undertaking (to do something by a time)",
+      "headword": "વાયદો",
+      "romanization": "vāydo",
+      "gloss": "an undertaking (to do something by a time)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f67682195a5feb6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an oath, then the Gujarati for a solemn oath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વાયદો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વાયદો — vāydo — \"an undertaking (to do something by a time)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે વાયદો કરશો તો તમારે તે પાળવો પડશે. jo tame vāydo karśo to tamāre te pāḷvo paḍśe. If you make a promise, you will have to keep it."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "is usually traced to Arabic waʿda, \"a promise\", through Persian. વચન is one's word; વાયદો (vāydo) is often a promise with a date in it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāydo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāydo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāydo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāydo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame vāydo karśo to tamāre te pāḷvo paḍśe. — If you make a promise, you will have to keep it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame vāydo karśo to tamāre te pāḷvo paḍśe.* — If you make a promise, you will have to keep it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an oath, then the Gujarati for a solemn oath, then say vāydo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an oath, then the Gujarati for a solemn oath, then say *vāydo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વાયદો (vāydo) mean? (\"An undertaking (to do something by a time)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C541-bharoso",
+      "sequence": 30070,
+      "title": "ભરોસો (bharoso) — confidence (trust in someone)",
+      "headword": "ભરોસો",
+      "romanization": "bharoso",
+      "gloss": "confidence (trust in someone)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:368b8b67bf550c05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a solemn oath, then the Gujarati for an undertaking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ભરોસો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભરોસો — bharoso — \"confidence (trust in someone)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે વાયદો પાળશો તો લોકો તમારા પર ભરોસો રાખશે. jo tame vāydo pāḷśo to loko tamārā par bharoso rākhśe. If you keep your word, people will trust you."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભરોસો (bharoso) goes back to a reconstructed bharavaśya, \"dependence on support\", and CDIAL lists the Gujarati word, \"confidence\" (CDIAL 9398). One places it on someone: તમારા પર ભરોસો."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bharoso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bharoso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bharoso, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bharoso*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame vāydo pāḷśo to loko tamārā par bharoso rākhśe. — If you keep your word, people will trust you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame vāydo pāḷśo to loko tamārā par bharoso rākhśe.* — If you keep your word, people will trust you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a solemn oath, then the Gujarati for an undertaking, then say bharoso again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a solemn oath, then the Gujarati for an undertaking, then say *bharoso* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ભરોસો (bharoso) mean? (\"Confidence (trust in someone)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C541-chatakbari",
+      "sequence": 30080,
+      "title": "છટકબારી (chaṭakbārī) — a loophole",
+      "headword": "છટકબારી",
+      "romanization": "chaṭakbārī",
+      "gloss": "a loophole",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3dca3ae4467e906",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an undertaking, then the Gujarati for confidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: છટકબારી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છટકબારી — chaṭakbārī — \"a loophole\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો નિયમમાં કોઈ છટકબારી હશે તો કોઈ તે નિયમ નહીં પાળે. jo niyammā̃ koī chaṭakbārī haśe to koī te niyam nahī̃ pāḷe. If there is a loophole in the rule, nobody will keep it."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છટકબારી (chaṭakbārī) is built from છટકવું, \"to slip away\", which CDIAL files under chaṭṭ (CDIAL 4968), and બારી, \"a window\": a window to slip out through."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chaṭakbārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chaṭakbārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chaṭakbārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chaṭakbārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo niyammā̃ koī chaṭakbārī haśe to koī te niyam nahī̃ pāḷe. — If there is a loophole in the rule, nobody will keep it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo niyammā̃ koī chaṭakbārī haśe to koī te niyam nahī̃ pāḷe.* — If there is a loophole in the rule, nobody will keep it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an undertaking, then the Gujarati for confidence, then say chaṭakbārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an undertaking, then the Gujarati for confidence, then say *chaṭakbārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does છટકબારી (chaṭakbārī) mean? (\"A loophole\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C541-prastav",
+      "sequence": 30090,
+      "title": "પ્રસ્તાવ (prastāv) — a proposal",
+      "headword": "પ્રસ્તાવ",
+      "romanization": "prastāv",
+      "gloss": "a proposal",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f9caf20fa99427b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for confidence, then the Gujarati for a loophole."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પ્રસ્તાવ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પ્રસ્તાવ — prastāv — \"a proposal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમને મારો પ્રસ્તાવ ગમશે તો આપણે સાથે કામ કરીશું. jo tamne māro prastāv gamśe to āpaṇe sāthe kām karīśũ. If you like my proposal, we'll work together."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પ્રસ્તાવ (prastāv) is a tatsama, taken from Sanskrit prastāva, \"an introduction, a prelude\" (Monier-Williams); in Gujarati it is a proposal put forward."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prastāv",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prastāv*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prastāv, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prastāv*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tamne māro prastāv gamśe to āpaṇe sāthe kām karīśũ. — If you like my proposal, we'll work together.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tamne māro prastāv gamśe to āpaṇe sāthe kām karīśũ.* — If you like my proposal, we'll work together.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for confidence, then the Gujarati for a loophole, then say prastāv again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for confidence, then the Gujarati for a loophole, then say *prastāv* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પ્રસ્તાવ (prastāv) mean? (\"A proposal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

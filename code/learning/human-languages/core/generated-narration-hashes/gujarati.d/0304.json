@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:0f2b78b1db4fabb2",
+  "lessonIds": [
+    "GU-C304-tanavu",
+    "GU-C304-dubadvu",
+    "GU-C304-nuksan",
+    "GU-C304-aphat",
+    "GU-C304-sankat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch304.txt",
+  "json": "gujarati/narration/ch304.json",
+  "textHash": "fnv1a64:cae41722d4c56ad4",
+  "jsonHash": "fnv1a64:79f54432055afdc7",
+  "findings": []
+}

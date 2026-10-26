@@ -1,0 +1,11 @@
+{
+  "id": "SA-C529-upasamharati",
+  "pathSegment": "SA-PATH-529-PARIVARTANA529",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-529-PARIVARTANA529",
+      "order": 1
+    }
+  ]
+}

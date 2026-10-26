@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:a9f2ca10d7289d83",
+  "lessonIds": [
+    "SA-C372-vighnah",
+    "SA-C372-badha",
+    "SA-C372-badhate",
+    "SA-C372-vilambayati",
+    "SA-C372-apanayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch372.txt",
+  "json": "sanskrit/narration/ch372.json",
+  "textHash": "fnv1a64:441f0624900e3149",
+  "jsonHash": "fnv1a64:0c12c0e08261af23",
+  "findings": []
+}

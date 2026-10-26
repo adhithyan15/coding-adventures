@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:611abb92948eb762",
+  "lessonIds": [
+    "UR-C540-girvi",
+    "UR-C540-ikhrajat",
+    "UR-C540-muavaza",
+    "UR-C540-tavan",
+    "UR-C540-lutna",
+    "UR-R540-review-534-540"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch540.txt",
+  "json": "urdu/narration/ch540.json",
+  "textHash": "fnv1a64:ae93367a766e2510",
+  "jsonHash": "fnv1a64:94bebfd5aa104ec2",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C434-ghat",
+  "pathSegment": "UR-PATH-434-MAUJ434",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-434-MAUJ434",
+      "order": 2
+    }
+  ]
+}

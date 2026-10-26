@@ -1,0 +1,19 @@
+{
+  "chapter": 450,
+  "title": "Sadness and Tears",
+  "label": "ch:sa-sadness-and-tears",
+  "canDo": "I can say that someone was sad and why.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C450-nihsvasah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 450: I can say that someone was sad and why.",
+    "assesses": [
+      "SA-LEX-C450-VISADA450-03",
+      "SA-LEX-C450-VISADA450-04",
+      "SA-LEX-C450-VISADA450-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:2668fc5654c9c47e",
+  "lessonIds": [
+    "UR-C449-mamta",
+    "UR-C449-shafqat",
+    "UR-C449-chumna",
+    "UR-C449-chimatna",
+    "UR-C449-ishq"
+  ],
+  "tex": "urdu/book/chapters/ch449-affection.tex"
+}

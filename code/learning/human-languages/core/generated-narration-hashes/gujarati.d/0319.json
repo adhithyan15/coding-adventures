@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:159ba46074540fb0",
+  "lessonIds": [
+    "GU-C319-killo",
+    "GU-C319-khander",
+    "GU-C319-smarak",
+    "GU-C319-murti",
+    "GU-C319-vasvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch319.txt",
+  "json": "gujarati/narration/ch319.json",
+  "textHash": "fnv1a64:e9f2f867220619e9",
+  "jsonHash": "fnv1a64:e243163fbf5d0e20",
+  "findings": []
+}

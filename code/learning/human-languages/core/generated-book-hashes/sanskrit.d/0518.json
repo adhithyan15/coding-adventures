@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:4ad836ecf8536459",
+  "lessonIds": [
+    "SA-C518-tulika",
+    "SA-C518-rangah",
+    "SA-C518-rekha",
+    "SA-C518-alikhati",
+    "SA-C518-pratikrtih"
+  ],
+  "tex": "sanskrit/book/chapters/ch518-colours-on-the-wall.tex"
+}

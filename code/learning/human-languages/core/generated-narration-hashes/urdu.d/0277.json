@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:94213342bef0f13e",
+  "lessonIds": [
+    "UR-C277-jeb-katra",
+    "UR-C277-chhinna",
+    "UR-C277-jhapatna",
+    "UR-C277-farar",
+    "UR-C277-mujrim"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch277.txt",
+  "json": "urdu/narration/ch277.json",
+  "textHash": "fnv1a64:690c29f656297fde",
+  "jsonHash": "fnv1a64:fd17128a1b8929a1",
+  "findings": []
+}

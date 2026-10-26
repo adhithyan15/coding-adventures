@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C408-visamo",
+    "language": "gujarati",
+    "chapter": 408,
+    "sequence": 22790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f84f545ec3d76a0"
+  },
+  "findings": []
+}

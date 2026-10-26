@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "Inns and Lodgings",
+  "label": "ch:ur-inns-and-lodgings",
+  "canDo": "I can find a place to stay for the night and settle in.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C403-lift",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can find a place to stay for the night and settle in.",
+    "assesses": [
+      "UR-LEX-C403-SARAE403-03",
+      "UR-LEX-C403-SARAE403-04",
+      "UR-LEX-C403-SARAE403-05"
+    ]
+  }
+}

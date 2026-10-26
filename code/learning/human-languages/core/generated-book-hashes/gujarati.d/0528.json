@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:4c993c018ca4d91f",
+  "lessonIds": [
+    "GU-C528-yadi",
+    "GU-C528-bajet",
+    "GU-C528-vyavastha",
+    "GU-C528-dayri",
+    "GU-C528-yojvu"
+  ],
+  "tex": "gujarati/book/chapters/ch528-if-we-plan-ahead.tex"
+}

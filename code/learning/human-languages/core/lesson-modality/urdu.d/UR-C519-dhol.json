@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C519-dhol",
+    "language": "urdu",
+    "chapter": 519,
+    "sequence": 30280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:497e7b345f8f7bde"
+  },
+  "findings": []
+}

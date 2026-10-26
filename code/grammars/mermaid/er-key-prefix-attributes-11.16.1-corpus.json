@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER key-prefix attribute name vertical slice",
+  "fixtures": [
+    {
+      "name": "upstream-key-prefix-attribute-names",
+      "source": "erDiagram\nBOOK {\n  int fk_title FK\n  string pk_author PK\n  string uk_address UK\n  float pk_price PK \"comment\"\n}"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C429-udghatayati",
+    "language": "sanskrit",
+    "chapter": 429,
+    "sequence": 24790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66ae309dc47fae36"
+  },
+  "findings": []
+}

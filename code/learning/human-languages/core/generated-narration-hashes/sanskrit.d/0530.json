@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:cd0c1238dbde1453",
+  "lessonIds": [
+    "SA-C530-bhojyam",
+    "SA-C530-peyam",
+    "SA-C530-laddukah",
+    "SA-C530-panakam",
+    "SA-C530-paryusitah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch530.txt",
+  "json": "sanskrit/narration/ch530.json",
+  "textHash": "fnv1a64:5969f9d8b3ba707d",
+  "jsonHash": "fnv1a64:886460d76f3cd8f3",
+  "findings": []
+}

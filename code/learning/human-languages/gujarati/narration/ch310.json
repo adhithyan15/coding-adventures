@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 310,
+  "title": "The Search Team",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a27308eea3954d5b",
+  "lessons": [
+    {
+      "id": "GU-C310-tukdi",
+      "sequence": 17280,
+      "title": "ટુકડી (ṭukḍī) — a squad; a small party (of police or soldiers)",
+      "headword": "ટુકડી",
+      "romanization": "ṭukḍī",
+      "gloss": "a squad; a small party (of police or soldiers)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23e6d1a629e08f6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to applaud, then the Gujarati for pride."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ટુકડી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટુકડી — ṭukḍī — \"a squad; a small party (of police or soldiers)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પોલીસની એક ટુકડી જંગલમાં ગઈ. polīsnī ek ṭukḍī jangalmā̃ gaī. A police squad went into the forest."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટુકડી (ṭukḍī) is built on ṭukḍo, a piece, which CDIAL lists under ṭukk, \"small\", a form it reconstructs (CDIAL 5466): a small piece of a larger body of people."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭukḍī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭukḍī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭukḍī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭukḍī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polīsnī ek ṭukḍī jangalmā̃ gaī. — A police squad went into the forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polīsnī ek ṭukḍī jangalmā̃ gaī.* — A police squad went into the forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to applaud, then the Gujarati for pride, then say ṭukḍī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to applaud, then the Gujarati for pride, then say *ṭukḍī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ટુકડી (ṭukḍī) mean? (\"A squad; a small party (of police or soldiers)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C310-jivlen",
+      "sequence": 17290,
+      "title": "જીવલેણ (jīvleṇ) — deadly",
+      "headword": "જીવલેણ",
+      "romanization": "jīvleṇ",
+      "gloss": "deadly",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b63a09d11de50b3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for pride, then the Gujarati for a squad."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: જીવલેણ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જીવલેણ — jīvleṇ — \"deadly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ જંગલમાં જીવલેણ સાપ છે. ā jangalmā̃ jīvleṇ sāp che. There are deadly snakes in this forest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જીવલેણ (jīvleṇ) is built from jīv, life, from Sanskrit jīvá, \"living; life\" (CDIAL 5239), and leṇ, a taking, from લેવું: what takes a life. જીવલેણ સાપ, a deadly snake."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīvleṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīvleṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīvleṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīvleṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā jangalmā̃ jīvleṇ sāp che. — There are deadly snakes in this forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā jangalmā̃ jīvleṇ sāp che.* — There are deadly snakes in this forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for pride, then the Gujarati for a squad, then say jīvleṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for pride, then the Gujarati for a squad, then say *jīvleṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does જીવલેણ (jīvleṇ) mean? (\"Deadly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C310-sahay",
+      "sequence": 17300,
+      "title": "સહાય (sahāy) — assistance",
+      "headword": "સહાય",
+      "romanization": "sahāy",
+      "gloss": "assistance",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de51eeebd4514775",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a squad, then the Gujarati for deadly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સહાય",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સહાય — sahāy — \"assistance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ટુકડીએ ગામના લોકોની સહાય લીધી. ṭukḍīe gāmnā lokonī sahāy līdhī. The squad took the villagers' help."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સહાય (sahāy) is a tatsama, Sanskrit sahāya, \"a companion, a helper\" (Monier-Williams); in Gujarati it is the help itself, a more formal word than મદદ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahāy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahāy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahāy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahāy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭukḍīe gāmnā lokonī sahāy līdhī. — The squad took the villagers' help.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭukḍīe gāmnā lokonī sahāy līdhī.* — The squad took the villagers' help.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a squad, then the Gujarati for deadly, then say sahāy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a squad, then the Gujarati for deadly, then say *sahāy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સહાય (sahāy) mean? (\"Assistance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C310-mujhavu",
+      "sequence": 17310,
+      "title": "મૂંઝાવું (mū̃jhāvũ) — to be at a loss",
+      "headword": "મૂંઝાવું",
+      "romanization": "mū̃jhāvũ",
+      "gloss": "to be at a loss",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3180fbfe41758390",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for deadly, then the Gujarati for assistance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: મૂંઝાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મૂંઝાવું — mū̃jhāvũ — \"to be at a loss\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જંગલમાં બે રસ્તા જોઈને ટુકડી મૂંઝાઈ ગઈ. jangalmā̃ be rastā joīne ṭukḍī mū̃jhāī gaī. When the squad saw two paths in the forest, it was at a loss."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): તે મૂંઝાઈ ગયો, te mū̃jhāī gayo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મૂંઝાવું (mū̃jhāvũ) is inherited from Sanskrit múhyati, \"is bewildered\", and CDIAL lists Gujarati mujhāvũ, \"to be perplexed\" (CDIAL 10230). It is not knowing what to do next: મૂંઝાઈ ગઈ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mū̃jhāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mū̃jhāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mū̃jhāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mū̃jhāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jangalmā̃ be rastā joīne ṭukḍī mū̃jhāī gaī. — When the squad saw two paths in the forest, it was at a loss.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jangalmā̃ be rastā joīne ṭukḍī mū̃jhāī gaī.* — When the squad saw two paths in the forest, it was at a loss.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for deadly, then the Gujarati for assistance, then say mū̃jhāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for deadly, then the Gujarati for assistance, then say *mū̃jhāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does મૂંઝાવું (mū̃jhāvũ) mean? (\"To be at a loss\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C310-vikheravu",
+      "sequence": 17320,
+      "title": "વિખેરાવું (vikherāvũ) — to scatter; to disperse",
+      "headword": "વિખેરાવું",
+      "romanization": "vikherāvũ",
+      "gloss": "to scatter; to disperse",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:879c9a4b27a15769",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for assistance, then the Gujarati for to be at a loss."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વિખેરાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વિખેરાવું — vikherāvũ — \"to scatter; to disperse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પોલીસ આવી ત્યારે ટોળું વિખેરાઈ ગયું. polīs āvī tyāre ṭoḷũ vikherāī gayũ. When the police came, the crowd dispersed."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે ટોળું વિખેરાઈ ગયું, te ṭoḷũ vikherāī gayũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વિખેરાવું (vikherāvũ) is the intransitive partner of vikhervũ, to scatter, which CDIAL lists under viṣkirati, a form it reconstructs (CDIAL 11985). A crowd or a cloud વિખેરાઈ જાય છે: it breaks up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vikherāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vikherāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vikherāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vikherāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polīs āvī tyāre ṭoḷũ vikherāī gayũ. — When the police came, the crowd dispersed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polīs āvī tyāre ṭoḷũ vikherāī gayũ.* — When the police came, the crowd dispersed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for assistance, then the Gujarati for to be at a loss, then say vikherāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for assistance, then the Gujarati for to be at a loss, then say *vikherāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વિખેરાવું (vikherāvũ) mean? (\"To scatter; to disperse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

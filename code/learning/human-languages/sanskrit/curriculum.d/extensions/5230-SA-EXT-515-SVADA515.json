@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-515-SVADA515",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how food tastes and whether it is cooked.",
+  "prerequisites": []
+}

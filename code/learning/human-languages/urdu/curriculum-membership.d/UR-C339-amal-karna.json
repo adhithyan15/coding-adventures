@@ -1,0 +1,11 @@
+{
+  "id": "UR-C339-amal-karna",
+  "pathSegment": "UR-PATH-339-IKHTIYAR339",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-339-IKHTIYAR339",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 292,
+  "title": "A Swindle Uncovered",
+  "label": "ch:gu-a-swindle-uncovered",
+  "canDo": "I can tell how a swindler was caught.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-R292-review-285-292",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: I can tell how a swindler was caught.",
+    "assesses": [
+      "GU-LEX-C292-KAUBHAND292-01",
+      "GU-LEX-C292-KAUBHAND292-02",
+      "GU-LEX-C292-KAUBHAND292-03",
+      "GU-LEX-C292-KAUBHAND292-04",
+      "GU-LEX-C292-KAUBHAND292-05"
+    ]
+  }
+}

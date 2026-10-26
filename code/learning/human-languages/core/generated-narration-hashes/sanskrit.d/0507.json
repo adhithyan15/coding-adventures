@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:6797a82ef2ad2d30",
+  "lessonIds": [
+    "SA-C507-bhastra",
+    "SA-C507-sandamsah",
+    "SA-C507-vilapayati",
+    "SA-C507-dhamati",
+    "SA-C507-bhusanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch507.txt",
+  "json": "sanskrit/narration/ch507.json",
+  "textHash": "fnv1a64:e0944d9102e00505",
+  "jsonHash": "fnv1a64:a435ccad296a9318",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:96b085383fed2f1e",
+  "lessonIds": [
+    "UR-C386-injan",
+    "UR-C386-dabba",
+    "UR-C386-lain",
+    "UR-C386-siti",
+    "UR-C386-bajna"
+  ],
+  "tex": "urdu/book/chapters/ch386-engines-and-carriages.tex"
+}

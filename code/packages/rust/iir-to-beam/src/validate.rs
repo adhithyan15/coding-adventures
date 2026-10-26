@@ -139,6 +139,15 @@ const UNSUPPORTED_OPS: &[&str] = &[
     "safepoint",
     // "alloc_closure" — LANG35: accepted; lowered to put_list cons-cell
     // "call_closure"  — LANG35: accepted; lowered to get_list + call_ext apply
+    // LANG83 PR6c: the non-trapping IEEE arithmetic. An Erlang float has no
+    // ±Infinity or NaN and `1.0 / 0.0` raises badarith, so the contract
+    // cannot be met (`op_support::NO_IEEE_SPECIALS`). `f64_signbit` is
+    // lowered and is NOT listed here.
+    "f64_add",
+    "f64_sub",
+    "f64_mul",
+    "f64_div",
+    "f64_neg",
 ];
 
 // ---------------------------------------------------------------------------
@@ -543,14 +552,28 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
             // const (e.g. a stray "f32", which no current frontend emits) is
             // still rejected: this backend only implements the one float
             // width every frontend actually uses.
+            //
+            // A non-finite constant (`±Infinity`, `NaN`) is rejected too.
+            // An Erlang float is always finite, so such a literal would only
+            // fail later, when the loader reads the literal table. JavaScript's
+            // `console.log(1e999)` produces exactly that constant with no
+            // `f64_*` op beside it, so without this check BEAM would accept a
+            // module it cannot load instead of refusing it at compile time.
             if instr.op == "const" {
-                if let Some(Operand::Float(_)) = instr.srcs.first() {
+                if let Some(Operand::Float(value)) = instr.srcs.first() {
                     if instr.type_hint != "f64" {
                         errors.push(format!(
                             "UnsupportedType: function {:?}, const instruction has a Float \
                              operand with type_hint {:?}; only \"f64\" float constants are \
                              supported in this BEAM backend",
                             func.name, instr.type_hint
+                        ));
+                    } else if !value.is_finite() {
+                        errors.push(format!(
+                            "UnsupportedType: function {:?}, const instruction has the \
+                             non-finite float {value:?}; Erlang floats are always finite, \
+                             so this BEAM backend only accepts finite float constants",
+                            func.name
                         ));
                     }
                 }
@@ -763,6 +786,22 @@ mod tests {
             IIRInstr::new("const", Some("v".into()), vec![Operand::Float(3.14)], "f32"),
         ]));
         assert!(errs.iter().any(|e| e.contains("Float") && e.contains("f32")));
+    }
+
+    /// `±Infinity` and `NaN` constants are refused at compile time: an
+    /// Erlang float is always finite, so the loader could not read them.
+    #[test]
+    fn non_finite_float_const_rejected() {
+        for value in [f64::INFINITY, f64::NEG_INFINITY, f64::NAN] {
+            let errs = validate_for_beam(&single_fn_module(vec![
+                IIRInstr::new("const", Some("v".into()), vec![Operand::Float(value)], "f64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "f64"),
+            ]));
+            assert!(
+                errs.iter().any(|e| e.contains("non-finite")),
+                "{value} accepted: {errs:?}"
+            );
+        }
     }
 
     #[test]

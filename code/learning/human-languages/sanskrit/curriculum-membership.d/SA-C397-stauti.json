@@ -1,0 +1,11 @@
+{
+  "id": "SA-C397-stauti",
+  "pathSegment": "SA-PATH-397-DIPA397",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-397-DIPA397",
+      "order": 4
+    }
+  ]
+}

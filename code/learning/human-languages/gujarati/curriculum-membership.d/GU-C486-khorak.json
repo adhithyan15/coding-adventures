@@ -1,0 +1,11 @@
+{
+  "id": "GU-C486-khorak",
+  "pathSegment": "GU-PATH-486-AAROGYA486",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-486-AAROGYA486",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:75add84b0c7a99e5",
+  "lessonIds": [
+    "GU-C421-ghoghat",
+    "GU-C421-hobalo",
+    "GU-C421-dhor",
+    "GU-C421-ghurakvu",
+    "GU-C421-bhagadvu"
+  ],
+  "tex": "gujarati/book/chapters/ch421-noise-and-stray-cattle.tex"
+}

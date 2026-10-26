@@ -1,0 +1,19 @@
+{
+  "chapter": 506,
+  "title": "At the Loom",
+  "label": "ch:gu-at-the-loom",
+  "canDo": "I can talk about weaving cloth on a loom.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C506-vintvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 506: I can talk about weaving cloth on a loom.",
+    "assesses": [
+      "GU-LEX-C506-TANTANO506-03",
+      "GU-LEX-C506-TANTANO506-04",
+      "GU-LEX-C506-TANTANO506-05"
+    ]
+  }
+}

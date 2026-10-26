@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:07e9de2af6c6abce",
+  "lessonIds": [
+    "SA-C302-jalaughah",
+    "SA-C302-plavayati",
+    "SA-C302-pravahah",
+    "SA-C302-nimajjati",
+    "SA-C302-kramasah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch302.txt",
+  "json": "sanskrit/narration/ch302.json",
+  "textHash": "fnv1a64:23c23678a620c86f",
+  "jsonHash": "fnv1a64:d8ad7afaf2a3a56e",
+  "findings": []
+}

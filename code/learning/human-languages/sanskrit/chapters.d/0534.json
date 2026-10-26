@@ -1,0 +1,19 @@
+{
+  "chapter": 534,
+  "title": "Coming to Terms",
+  "label": "ch:sa-coming-to-terms",
+  "canDo": "I can talk about agreements, go-betweens and saying yes or no.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C534-sammatih",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 534: I can talk about agreements, go-betweens and saying yes or no.",
+    "assesses": [
+      "SA-LEX-C534-SAMVID534-03",
+      "SA-LEX-C534-SAMVID534-04",
+      "SA-LEX-C534-SAMVID534-05"
+    ]
+  }
+}

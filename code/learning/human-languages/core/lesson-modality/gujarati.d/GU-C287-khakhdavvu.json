@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C287-khakhdavvu",
+    "language": "gujarati",
+    "chapter": 287,
+    "sequence": 16120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff751ff2257727a2"
+  },
+  "findings": []
+}

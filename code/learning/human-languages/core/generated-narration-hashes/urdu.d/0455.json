@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:ff2803adc5ffe84b",
+  "lessonIds": [
+    "UR-C455-khami",
+    "UR-C455-aib",
+    "UR-C455-khudsar",
+    "UR-C455-kahil",
+    "UR-C455-ghafil",
+    "UR-R455-review-448-455"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch455.txt",
+  "json": "urdu/narration/ch455.json",
+  "textHash": "fnv1a64:bdd5957e8d03844d",
+  "jsonHash": "fnv1a64:419f9ce91f5ecada",
+  "findings": []
+}

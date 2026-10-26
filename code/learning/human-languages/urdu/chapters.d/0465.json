@@ -1,0 +1,19 @@
+{
+  "chapter": 465,
+  "title": "Bones",
+  "label": "ch:ur-bones",
+  "canDo": "I can name some of the bones.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C465-jabra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can name some of the bones.",
+    "assesses": [
+      "UR-LEX-C465-BONE465-03",
+      "UR-LEX-C465-BONE465-04",
+      "UR-LEX-C465-BONE465-05"
+    ]
+  }
+}

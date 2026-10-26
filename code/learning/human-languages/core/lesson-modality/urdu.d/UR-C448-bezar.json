@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C448-bezar",
+    "language": "urdu",
+    "chapter": 448,
+    "sequence": 26410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b576b3b396c74310"
+  },
+  "findings": []
+}

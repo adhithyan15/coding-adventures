@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:28306bebbbb80a65",
+  "lessonIds": [
+    "SA-C542-svikarah",
+    "SA-C542-avadharayati",
+    "SA-C542-utkrstah",
+    "SA-C542-rucirah",
+    "SA-C542-tatasthah"
+  ],
+  "tex": "sanskrit/book/chapters/ch542-making-up-one-s-mind.tex"
+}

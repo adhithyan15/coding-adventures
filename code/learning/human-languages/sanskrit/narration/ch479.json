@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 479,
+  "title": "Diseases",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:a5de630ec13c83f5",
+  "lessons": [
+    {
+      "id": "SA-C479-vyadhih",
+      "sequence": 27580,
+      "title": "व्याधिः (vyādhiḥ) — a disease",
+      "headword": "व्याधिः",
+      "romanization": "vyādhiḥ",
+      "gloss": "a disease",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43a0d53530cb743d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for suffering, then the Sanskrit for unbearable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: व्याधिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "व्याधिः — vyādhiḥ — \"a disease\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वृद्धस्य व्याधिः चिरं तिष्ठति। vṛddhasya vyādhiḥ ciraṃ tiṣṭhati. The old man's disease lingers."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "व्याधिः (vyādhiḥ) is built from vi, ā and the root √dhā, \"to put\"; MW thinks a link with √vyadh, \"to pierce\", less likely, and gives \"disorder, disease, ailment\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyādhiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyādhiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyādhiḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyādhiḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vṛddhasya vyādhiḥ ciraṃ tiṣṭhati. — The old man's disease lingers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vṛddhasya vyādhiḥ ciraṃ tiṣṭhati.* — The old man's disease lingers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for suffering, then the Sanskrit for unbearable, then say vyādhiḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for suffering, then the Sanskrit for unbearable, then say *vyādhiḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does व्याधिः (vyādhiḥ) mean? (\"A disease\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C479-madhumehah",
+      "sequence": 27590,
+      "title": "मधुमेहः (madhumehaḥ) — diabetes",
+      "headword": "मधुमेहः",
+      "romanization": "madhumehaḥ",
+      "gloss": "diabetes",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58876a70c2862b8d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for unbearable, then the Sanskrit for a disease."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मधुमेहः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मधुमेहः — madhumehaḥ — \"diabetes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मधुमेहे शर्करां न खादेत्। madhumehe śarkarāṃ na khādet. With diabetes one should not eat sugar."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मधुमेहः (madhumehaḥ) is built from मधु, \"honey\", and meha, \"urine\", from the root √mih; MW gives \"honey-like urine, diabetes\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madhumehaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madhumehaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madhumehaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madhumehaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madhumehe śarkarāṃ na khādet. — With diabetes one should not eat sugar.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madhumehe śarkarāṃ na khādet.* — With diabetes one should not eat sugar.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for unbearable, then the Sanskrit for a disease, then say madhumehaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for unbearable, then the Sanskrit for a disease, then say *madhumehaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मधुमेहः (madhumehaḥ) mean? (\"Diabetes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C479-ksayah",
+      "sequence": 27600,
+      "title": "क्षयः (kṣayaḥ) — a wasting disease",
+      "headword": "क्षयः",
+      "romanization": "kṣayaḥ",
+      "gloss": "a wasting disease",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a77de2ce13bfa3f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a disease, then the Sanskrit for diabetes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: क्षयः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्षयः — kṣayaḥ — \"a wasting disease\"."
+            },
+            {
+              "kind": "speech",
+              "text": "क्षयः फुप्फुसस्य रोगः अस्ति। kṣayaḥ phupphusasya rogaḥ asti. Consumption is a disease of the lungs."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्षयः (kṣayaḥ) comes from the root √kṣi, \"to waste away\"; among MW's senses are \"loss, waste\" and \"consumption, phthisis\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣayaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣayaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣayaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣayaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣayaḥ phupphusasya rogaḥ asti. — Consumption is a disease of the lungs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣayaḥ phupphusasya rogaḥ asti.* — Consumption is a disease of the lungs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a disease, then the Sanskrit for diabetes, then say kṣayaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a disease, then the Sanskrit for diabetes, then say *kṣayaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does क्षयः (kṣayaḥ) mean? (\"A wasting disease\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C479-sancarati",
+      "sequence": 27610,
+      "title": "सञ्चरति (sañcarati) — goes about; spreads",
+      "headword": "सञ्चरति",
+      "romanization": "sañcarati",
+      "gloss": "goes about; spreads",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38deb0f5551ed4b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for diabetes, then the Sanskrit for a wasting disease."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सञ्चरति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सञ्चरति — sañcarati — \"goes about; spreads\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ग्रीष्मे ज्वरः ग्रामे सञ्चरति। grīṣme jvaraḥ grāme sañcarati. In summer fever goes about the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ज्वरः ग्रामे सञ्चरितवान्, jvaraḥ grāme sañcaritavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सञ्चरति (sañcarati) is built from sam, \"together\", and the root √car, \"to move\", the root of चरति; MW gives \"to go or wander about\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sañcarati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sañcarati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sañcarati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sañcarati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grīṣme jvaraḥ grāme sañcarati. — In summer fever goes about the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grīṣme jvaraḥ grāme sañcarati.* — In summer fever goes about the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for diabetes, then the Sanskrit for a wasting disease, then say sañcarati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for diabetes, then the Sanskrit for a wasting disease, then say *sañcarati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सञ्चरति (sañcarati) mean? (\"Goes about; spreads\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C479-mari",
+      "sequence": 27620,
+      "title": "मारी (mārī) — a plague",
+      "headword": "मारी",
+      "romanization": "mārī",
+      "gloss": "a plague",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:773f3680b052a6a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a wasting disease, then the Sanskrit for goes about."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मारी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मारी — mārī — \"a plague\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मार्याः भयेन जनाः ग्रामं त्यजन्ति। māryāḥ bhayena janāḥ grāmaṃ tyajanti. In fear of the plague people leave the village."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मारी (mārī) is built on māra, \"killing\", from the root √mṛ, \"to die\", the root of म्रियते; MW gives \"killing\" and \"pestilence\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māryāḥ bhayena janāḥ grāmaṃ tyajanti. — In fear of the plague people leave the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māryāḥ bhayena janāḥ grāmaṃ tyajanti.* — In fear of the plague people leave the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a wasting disease, then the Sanskrit for goes about, then say mārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a wasting disease, then the Sanskrit for goes about, then say *mārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मारी (mārī) mean? (\"A plague\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R479-review-472-479",
+      "sequence": 27630,
+      "title": "Looking back: from The Mouth to Diseases",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from The Mouth to Diseases",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf35eb73cbe6f24b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for the palate and saliva."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the palate, saliva, chews, spits, a taste",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the palate, saliva, chews, spits, a taste]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a limb, the shin, the heel, a fist, bends a limb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a limb, the shin, the heel, a fist, bends a limb]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a vein, a sinew, a muscle, flesh, throbs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a vein, a sinew, a muscle, flesh, throbs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sweats, yawns, sneezes, scratches, a hiccup",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sweats, yawns, sneezes, scratches, a hiccup]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "strength, tall of stature, well-nourished, a figure, nourishes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: strength, tall of stature, well-nourished, a figure, nourishes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dizziness, vomits, grows weary, a burning feeling, runs a fever",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dizziness, vomits, grows weary, a burning feeling, runs a fever]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agony, coughs, dysentery, suffering, unbearable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: agony, coughs, dysentery, suffering, unbearable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a disease, diabetes, a wasting disease, goes about, a plague",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a disease, diabetes, a wasting disease, goes about, a plague]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The palate? (तालु, tālu.) Saliva? (लाला, lālā.) Chews? (चर्वयति, carvayati.) Spits? (निष्ठीवति, niṣṭhīvati.) A taste? (रसः, rasaḥ.) A limb? (अंगम्, aṅgam.) The shin? (जंघा, jaṅghā.) The heel? (पार्ष्णिः, pārṣṇiḥ.) A fist? (मुष्टिः, muṣṭiḥ.) Bends a limb? (आकुञ्चयति, ākuñcayati.) A vein? (सिरा, sirā.) A sinew? (स्नायुः, snāyuḥ.) A muscle? (पेशी, peśī.) Flesh? (मांसम्, māṃsam.) Throbs? (स्पन्दते, spandate.) Sweats? (स्विद्यति, svidyati.) Yawns? (जृम्भते, jṛmbhate.) Sneezes? (क्षौति, kṣauti.) Scratches? (कण्डूयति, kaṇḍūyati.) A hiccup? (हिक्का, hikkā.) Strength? (शक्तिः, śaktiḥ.) Tall of stature? (प्रांशुः, prāṃśuḥ.) Well-nourished? (पुष्टः, puṣṭaḥ.) A figure? (आकृतिः, ākṛtiḥ.) Nourishes? (पोषयति, poṣayati.) Dizziness? (भ्रमः, bhramaḥ.) Vomits? (वमति, vamati.) Grows weary? (ग्लायति, glāyati.) A burning feeling? (दाहः, dāhaḥ.) Runs a fever? (ज्वरति, jvarati.) Agony? (वेदना, vedanā.) Coughs? (कासते, kāsate.) Dysentery? (अतिसारः, atisāraḥ.) Suffering? (क्लेशः, kleśaḥ.) Unbearable? (असह्यः, asahyaḥ.) A disease? (व्याधिः, vyādhiḥ.) Diabetes? (मधुमेहः, madhumehaḥ.) A wasting disease? (क्षयः, kṣayaḥ.) Goes about? (सञ्चरति, sañcarati.) A plague? (मारी, mārī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

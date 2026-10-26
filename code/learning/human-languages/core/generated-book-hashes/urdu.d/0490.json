@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:e89ac710381db5d1",
+  "lessonIds": [
+    "UR-C490-taya",
+    "UR-C490-khalu",
+    "UR-C490-sautela",
+    "UR-C490-yatim",
+    "UR-C490-god-lena"
+  ],
+  "tex": "urdu/book/chapters/ch490-uncles-steps-and-orphans.tex"
+}

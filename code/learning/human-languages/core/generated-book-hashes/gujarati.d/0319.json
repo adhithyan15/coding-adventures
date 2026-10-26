@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:5ba8a3fbdabab32f",
+  "lessonIds": [
+    "GU-C319-killo",
+    "GU-C319-khander",
+    "GU-C319-smarak",
+    "GU-C319-murti",
+    "GU-C319-vasvu"
+  ],
+  "tex": "gujarati/book/chapters/ch319-the-old-fort.tex"
+}

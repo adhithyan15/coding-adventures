@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:36effaabdd750231",
+  "lessonIds": [
+    "UR-C495-ujrat",
+    "UR-C495-hartal",
+    "UR-C495-maharat",
+    "UR-C495-thekedar",
+    "UR-C495-khapana"
+  ],
+  "tex": "urdu/book/chapters/ch495-wages-and-skill.tex"
+}

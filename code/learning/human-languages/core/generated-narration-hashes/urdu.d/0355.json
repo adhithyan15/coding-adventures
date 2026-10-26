@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:dca081ad9247b4b3",
+  "lessonIds": [
+    "UR-C355-tarif",
+    "UR-C355-qusur",
+    "UR-C355-malamat",
+    "UR-C355-sarahna",
+    "UR-C355-jhelna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch355.txt",
+  "json": "urdu/narration/ch355.json",
+  "textHash": "fnv1a64:709c0ff8ea3cfec5",
+  "jsonHash": "fnv1a64:8c79229fb948ba74",
+  "findings": []
+}

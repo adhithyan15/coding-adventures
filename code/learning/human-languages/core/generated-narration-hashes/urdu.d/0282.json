@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:b376f7b809372b1a",
+  "lessonIds": [
+    "UR-C282-taftish",
+    "UR-C282-suragh",
+    "UR-C282-jasus",
+    "UR-C282-subut",
+    "UR-C282-dhundna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch282.txt",
+  "json": "urdu/narration/ch282.json",
+  "textHash": "fnv1a64:c498a4be76bddce8",
+  "jsonHash": "fnv1a64:53150cc2faa4a4c7",
+  "findings": []
+}

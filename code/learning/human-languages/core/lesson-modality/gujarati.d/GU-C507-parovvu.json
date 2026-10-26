@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C507-parovvu",
+    "language": "gujarati",
+    "chapter": 507,
+    "sequence": 28300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2eaa26a45d37a4d"
+  },
+  "findings": []
+}

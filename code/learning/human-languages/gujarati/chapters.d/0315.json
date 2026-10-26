@@ -1,0 +1,19 @@
+{
+  "chapter": 315,
+  "title": "Opening Day",
+  "label": "ch:gu-opening-day",
+  "canDo": "I can say what happened on a special day and who watched.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C315-nihalvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: I can say what happened on a special day and who watched.",
+    "assesses": [
+      "GU-LEX-C315-UDGHATAN315-03",
+      "GU-LEX-C315-UDGHATAN315-04",
+      "GU-LEX-C315-UDGHATAN315-05"
+    ]
+  }
+}

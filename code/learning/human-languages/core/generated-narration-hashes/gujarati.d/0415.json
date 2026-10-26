@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:e2be55f6a8908ddb",
+  "lessonIds": [
+    "GU-C415-cokdi",
+    "GU-C415-khaco",
+    "GU-C415-nisani",
+    "GU-C415-tavar",
+    "GU-C415-gotvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch415.txt",
+  "json": "gujarati/narration/ch415.json",
+  "textHash": "fnv1a64:a54e88e1405d6d67",
+  "jsonHash": "fnv1a64:7c2d66e17570e494",
+  "findings": []
+}

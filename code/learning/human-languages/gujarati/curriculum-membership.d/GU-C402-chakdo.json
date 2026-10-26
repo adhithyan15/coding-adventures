@@ -1,0 +1,11 @@
+{
+  "id": "GU-C402-chakdo",
+  "pathSegment": "GU-PATH-402-CART402",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-402-CART402",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:6dc10396f66c0168",
+  "lessonIds": [
+    "UR-C357-badunvani",
+    "UR-C357-idara",
+    "UR-C357-pabandi",
+    "UR-C357-sifarish",
+    "UR-C357-shaffaf"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch357.txt",
+  "json": "urdu/narration/ch357.json",
+  "textHash": "fnv1a64:e6bdce54cf0e517c",
+  "jsonHash": "fnv1a64:701267b24179ad92",
+  "findings": []
+}

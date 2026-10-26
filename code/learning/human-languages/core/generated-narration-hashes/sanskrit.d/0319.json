@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:9f82b64ecdcf6e72",
+  "lessonIds": [
+    "SA-C319-vijayah",
+    "SA-C319-parajayah",
+    "SA-C319-bandi",
+    "SA-C319-apasarati",
+    "SA-C319-abhibhavati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch319.txt",
+  "json": "sanskrit/narration/ch319.json",
+  "textHash": "fnv1a64:207a53c3e41f36e9",
+  "jsonHash": "fnv1a64:3886f83a55d501cd",
+  "findings": []
+}

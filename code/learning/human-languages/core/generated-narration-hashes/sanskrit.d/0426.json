@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:1ba0e6e6dc15da98",
+  "lessonIds": [
+    "SA-C426-videsah",
+    "SA-C426-janakirnah",
+    "SA-C426-sulkasthanam",
+    "SA-C426-avatisthate",
+    "SA-C426-pratisrayah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch426.txt",
+  "json": "sanskrit/narration/ch426.json",
+  "textHash": "fnv1a64:0abee9e365a99600",
+  "jsonHash": "fnv1a64:bd7707001299f0a1",
+  "findings": []
+}

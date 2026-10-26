@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:cfbcf21f1425f0cf",
+  "lessonIds": [
+    "SA-C361-sraddha",
+    "SA-C361-nistha",
+    "SA-C361-dambhah",
+    "SA-C361-krtaghnah",
+    "SA-C361-pratisrnoti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch361.txt",
+  "json": "sanskrit/narration/ch361.json",
+  "textHash": "fnv1a64:9ce8d77114aba3b9",
+  "jsonHash": "fnv1a64:31fe5755b95bfbf9",
+  "findings": []
+}

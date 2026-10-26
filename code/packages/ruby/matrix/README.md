@@ -55,13 +55,42 @@ m.close(other, tolerance = 1e-9)  # within tolerance
 
 ## Design Principles
 
-1. **Immutable by default** -- methods return new matrices, never mutate.
+1. **Non-mutating arithmetic** -- operations return new matrices. Nested input
+   arrays and the public `data` reader are not defensive copies; callers needing
+   owned/validated state must validate rectangular finite data and copy it first.
 2. **No external dependencies** -- pure Ruby math only.
 3. **Consistent error handling** -- descriptive ArgumentError/IndexError.
-4. **GPU-ready interface** -- designed for future backend swapping.
+4. **Native Ruby ownership** -- independent Ruby arithmetic, not the optional
+   Rust binding or Ruby standard-library `matrix` implementation.
 
-## Running Tests
+## Install and validate
 
 ```bash
-ruby test/test_matrix.rb -v
+bundle install
+bundle exec standardrb
+bundle exec rake
+gem build coding_adventures_matrix.gemspec
 ```
+
+The gem is `coding_adventures_matrix` 0.2.0; its entry point remains
+`require "matrix_ml"` and its existing top-level `Matrix` API is retained. Do not
+load it alongside another library defining that same constant.
+
+Rake runs all numerical/boundary tests with a 95% library line-coverage floor,
+then builds and installs the real gem into a temporary gem home. A separate Ruby
+process requires the installed copy, verifies its source is not the checkout,
+and checks a hand-sized dot product. The receipt is:
+
+```json
+{"contract":"NN44","native_library":"ruby/matrix","dot":[[19.0,22.0],[43.0,50.0]],"neural_training":false}
+```
+
+Temporary gem/install artifacts are cleaned on success or error; the smoke task
+performs no publication/network install. Runtime dependencies are empty; Bundler
+installs declared development/test tools. `BUILD_windows` excludes only Standard's
+host-native `Layout/EndOfLine` check because the repository requires LF.
+
+This [NN44 prerequisite](../../../specs/NN44-ruby-matrix-build-foundation.md)
+does not implement neural training, checkpoint exchange or a GPU backend. Those
+remain separate items in the
+[framework roadmap](../../../learning/machine-learning/FRAMEWORK-ROADMAP.md).

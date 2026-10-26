@@ -1,0 +1,11 @@
+{
+  "id": "GU-C289-nyay",
+  "pathSegment": "GU-PATH-289-ADALAT289",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-289-ADALAT289",
+      "order": 2
+    }
+  ]
+}

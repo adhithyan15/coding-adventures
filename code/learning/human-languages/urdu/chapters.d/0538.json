@@ -1,0 +1,19 @@
+{
+  "chapter": 538,
+  "title": "In Two Minds",
+  "label": "ch:ur-in-two-minds",
+  "canDo": "I can talk about doubts and firm decisions.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C538-atal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 538: I can talk about doubts and firm decisions.",
+    "assesses": [
+      "UR-LEX-C538-TAZABZUB538-03",
+      "UR-LEX-C538-TAZABZUB538-04",
+      "UR-LEX-C538-TAZABZUB538-05"
+    ]
+  }
+}

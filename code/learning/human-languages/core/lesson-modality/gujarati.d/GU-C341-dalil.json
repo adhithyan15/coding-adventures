@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C341-dalil",
+    "language": "gujarati",
+    "chapter": 341,
+    "sequence": 19100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:205d89871c8fa17e"
+  },
+  "findings": []
+}

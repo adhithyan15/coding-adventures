@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.20)
+project(installed_bounded_json_client LANGUAGES C)
+find_package(bounded_json 0.1 CONFIG REQUIRED)
+add_executable(installed_client ../install_client.c)
+set_target_properties(installed_client PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
+target_link_libraries(installed_client PRIVATE coding_adventures::bounded_json)

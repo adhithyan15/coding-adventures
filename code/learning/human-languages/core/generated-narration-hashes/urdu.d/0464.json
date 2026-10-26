@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:03401f75b40c2d0f",
+  "lessonIds": [
+    "UR-C464-dimagh",
+    "UR-C464-gurda",
+    "UR-C464-meda",
+    "UR-C464-ant",
+    "UR-C464-rag"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch464.txt",
+  "json": "urdu/narration/ch464.json",
+  "textHash": "fnv1a64:b6556e88dd26b75c",
+  "jsonHash": "fnv1a64:13f65dee5632399f",
+  "findings": []
+}

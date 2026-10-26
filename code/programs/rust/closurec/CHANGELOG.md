@@ -4,6 +4,43 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - WHITESPACE_ONLY no longer moves an argument IIFE's call outside the call (#18114)
+
+`console.log(function(){return 1}())` prints `1` in node. closurec's
+WHITESPACE_ONLY output was `console.log(function(){return 1})();`, which
+prints the function and then throws `TypeError`. The gap-051 IIFE rewrite
+(`(function(){}())` → `(function(){})()`) fired on any `} ( ) )` token
+window, including one whose outer `)` closes a call's argument list.
+
+It now fires only when the outer `(` is a grouping paren that holds exactly
+the function expression. Argument lists, `if`/`while` heads, `new(…)`,
+`a?.(…)` and wider parens keep their source form, which matches upstream.
+
+`tests/regression_ws_argument_iife.rs` pins 20 shapes to the jar's bytes. It
+checks with `node` that seven programs print what their source prints. Five
+unit tests cover the rule.
+
+### Fixed - a statement that starts with `{` or `function` is never an expression (F12 phase 0)
+
+`{ a }⏎/foo/g.exec(s)` compiled at SIMPLE to `({a})/foo/g.exec(s)`, a
+different program. `if (x) function f(){}` compiled to `x&&function f(){}`,
+which Closure refuses. The ES grammars now enforce ECMA-262's
+ExpressionStatement lookahead, so both are refused. The fix is in the
+grammars and `javascript-parser`. `tests/regression_expression_statement_lookahead.rs`
+checks 4 refusals and 7 programs that must still compile and, under `node`,
+print what the source prints.
+
+WHITESPACE_ONLY drops every newline. When the parser can't read a program,
+it used to get no ASI points at all, so `function f(){ return⏎42 }` came out
+as `return 42`, a different program. The new refusals sent more programs down
+that path: any file containing `if (x) function f(){}`, for example. It now
+falls back to `asi::restricted_insertion_points`, which needs no parse, and
+keeps the source's line break at each of those points. It keeps a line break
+rather than inserting `;`, because without a parse generator `yield⏎7` (needs
+`;`) and sloppy `var yield; yield⏎(9)` (must not get one) look the same.
+`whitespace_only_keeps_restricted_semicolons_when_the_parse_fails` covers
+`return`, `break`, `yield` (both kinds) and a method named `return`.
+
 ### Fixed - a non-directive no longer becomes `"use strict"` (#17907)
 
 `("use strict");x=1;console.log(x)` prints `1` in node. closurec compiled it

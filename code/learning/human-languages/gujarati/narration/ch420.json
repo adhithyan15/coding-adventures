@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 420,
+  "title": "Small Houses and Fences",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a6704c173b19c869",
+  "lessons": [
+    {
+      "id": "GU-C420-kamad",
+      "sequence": 23380,
+      "title": "કમાડ (kamāḍ) — a wooden door; a door leaf",
+      "headword": "કમાડ",
+      "romanization": "kamāḍ",
+      "gloss": "a wooden door; a door leaf",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3d14f379cb6ec06",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a resident, then the Gujarati for to wander aimlessly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કમાડ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કમાડ — kamāḍ — \"a wooden door; a door leaf\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પવનથી ઘરનું જૂનું કમાડ ખખડે છે. pavanthī gharnũ jūnũ kamāḍ khakhḍe che. The old wooden door of the house rattles in the wind."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કમાડ (kamāḍ) is a tadbhava of Sanskrit kavāṭa, \"the leaf of a door\"; CDIAL lists the Gujarati word, \"a door\" (CDIAL 2963)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamāḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamāḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamāḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamāḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pavanthī gharnũ jūnũ kamāḍ khakhḍe che. — The old wooden door of the house rattles in the wind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pavanthī gharnũ jūnũ kamāḍ khakhḍe che.* — The old wooden door of the house rattles in the wind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a resident, then the Gujarati for to wander aimlessly, then say kamāḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a resident, then the Gujarati for to wander aimlessly, then say *kamāḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કમાડ (kamāḍ) mean? (\"A wooden door; a door leaf\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C420-naliyu",
+      "sequence": 23390,
+      "title": "નળિયું (naḷiyũ) — a roof tile (a curved clay tile)",
+      "headword": "નળિયું",
+      "romanization": "naḷiyũ",
+      "gloss": "a roof tile (a curved clay tile)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1e509ecbf31378d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to wander aimlessly, then the Gujarati for a wooden door."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નળિયું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નળિયું — naḷiyũ — \"a roof tile (a curved clay tile)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તોફાનમાં ઘરનાં ઘણાં નળિયાં તૂટી ગયાં. tophānmā̃ gharnā̃ ghaṇā̃ naḷiyā̃ tūṭī gayā̃. Many roof tiles of the house broke in the storm."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નળિયું (naḷiyũ) seems to be built on નળ, a pipe, which goes back to Sanskrit naḍa, \"a reed\" (CDIAL 6936): a curved tile is like half a pipe."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naḷiyũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naḷiyũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naḷiyũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naḷiyũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tophānmā̃ gharnā̃ ghaṇā̃ naḷiyā̃ tūṭī gayā̃. — Many roof tiles of the house broke in the storm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tophānmā̃ gharnā̃ ghaṇā̃ naḷiyā̃ tūṭī gayā̃.* — Many roof tiles of the house broke in the storm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to wander aimlessly, then the Gujarati for a wooden door, then say naḷiyũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to wander aimlessly, then the Gujarati for a wooden door, then say *naḷiyũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નળિયું (naḷiyũ) mean? (\"A roof tile (a curved clay tile)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C420-vad",
+      "sequence": 23400,
+      "title": "વાડ (vāḍ) — a fence; a hedge",
+      "headword": "વાડ",
+      "romanization": "vāḍ",
+      "gloss": "a fence; a hedge",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4af3c7f97919734c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a wooden door, then the Gujarati for a roof tile."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વાડ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વાડ — vāḍ — \"a fence; a hedge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "બગીચાની બહાર લીલી વાડ છે. bagīcānī bahār līlī vāḍ che. There is a green hedge outside the garden."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વાડ (vāḍ) is a tadbhava of Sanskrit vāṭa, \"an enclosure\"; CDIAL lists the Gujarati word, \"a fence\" (CDIAL 11480)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bagīcānī bahār līlī vāḍ che. — There is a green hedge outside the garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bagīcānī bahār līlī vāḍ che.* — There is a green hedge outside the garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a wooden door, then the Gujarati for a roof tile, then say vāḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a wooden door, then the Gujarati for a roof tile, then say *vāḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વાડ (vāḍ) mean? (\"A fence; a hedge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C420-thabhlo",
+      "sequence": 23410,
+      "title": "થાંભલો (thā̃bhlo) — a post; a pole",
+      "headword": "થાંભલો",
+      "romanization": "thā̃bhlo",
+      "gloss": "a post; a pole",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4558ebb1ed78241f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a roof tile, then the Gujarati for a hedge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: થાંભલો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "થાંભલો — thā̃bhlo — \"a post; a pole\"."
+            },
+            {
+              "kind": "speech",
+              "text": "રસ્તા પરના થાંભલા પર બત્તી છે. rastā parnā thā̃bhlā par battī che. There is a light on the post by the road."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "થાંભલો (thā̃bhlo) is a tadbhava of Sanskrit stambha, \"a post, a pillar\"; CDIAL lists the Gujarati word (CDIAL 13682)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thā̃bhlo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thā̃bhlo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thā̃bhlo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thā̃bhlo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rastā parnā thā̃bhlā par battī che. — There is a light on the post by the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rastā parnā thā̃bhlā par battī che.* — There is a light on the post by the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a roof tile, then the Gujarati for a hedge, then say thā̃bhlo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a roof tile, then the Gujarati for a hedge, then say *thā̃bhlo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does થાંભલો (thā̃bhlo) mean? (\"A post; a pole\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C420-chavu",
+      "sequence": 23420,
+      "title": "છાવું (chāvũ) — to thatch; to roof (a house)",
+      "headword": "છાવું",
+      "romanization": "chāvũ",
+      "gloss": "to thatch; to roof (a house)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bd86e66c71c478d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a hedge, then the Gujarati for a post."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: છાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છાવું — chāvũ — \"to thatch; to roof (a house)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દાદાએ ઘાસથી ઘર છાયું. dādāe ghāsthī ghar chāyũ. Grandfather thatched the house with grass."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે ઘર છાયું, teṇe ghar chāyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છાવું (chāvũ) is a tadbhava of Sanskrit chādáyati, \"covers, veils\"; CDIAL lists the Gujarati verb, \"to thatch\" (CDIAL 5018): to cover a house with a roof."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādāe ghāsthī ghar chāyũ. — Grandfather thatched the house with grass.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādāe ghāsthī ghar chāyũ.* — Grandfather thatched the house with grass.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a hedge, then the Gujarati for a post, then say chāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a hedge, then the Gujarati for a post, then say *chāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does છાવું (chāvũ) mean? (\"To thatch; to roof (a house)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

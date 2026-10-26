@@ -1,0 +1,759 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 285,
+  "title": "It Depends, and What Would Have Been",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:7f8913a44083f3aa",
+  "lessons": [
+    {
+      "id": "SA-C285-adhinam",
+      "sequence": 16640,
+      "title": "अधीनम् (adhīnam) — depending on",
+      "headword": "अधीनम्",
+      "romanization": "adhīnam",
+      "gloss": "depending on",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f0aa12d59693b32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"if there is time, I will come\". (yadi samayaḥ bhaviṣyati, tarhi aham āgamiṣyāmi.) A shorter answer says only what it depends on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अधीनम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अधीनम् — adhīnam — \"depending on\". It comes at the end of what it depends on, joined to it as one word: samaya and adhīnam meet as समयाधीनम् (samayādhīnam)."
+            },
+            {
+              "kind": "speech",
+              "text": "तत् समयाधीनम्। tat samayādhīnam. — \"That depends on time.\""
+            },
+            {
+              "kind": "speech",
+              "text": "सर्वं वर्षाधीनम्। sarvaṃ varṣādhīnam. — \"Everything depends on the rain.\""
+            },
+            {
+              "kind": "speech",
+              "text": "एतत् धनाधीनम्। etat dhanādhīnam. — \"This depends on money.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अधीनम् (adhīnam) is built on अधि (adhi), \"over, on\": what rests on something. Monier-Williams gives adhīna as \"resting on\", and \"depending on, subject to\", always at the end of a compound, and Macdonell gives it the same way, which is why this book joins it to the word before it. Pali kept it as adhīna, \"dependent on\" (CDIAL 266)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhīnam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhīnam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"That depends on time\" — tat samayādhīnam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"That depends on time\" — *tat samayādhīnam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"That depends on the rain\" — tat varṣādhīnam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"That depends on the rain\" — *tat varṣādhīnam*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अधीनम् (adhīnam) mean? (\"Depending on\".) \"It depends on money\"? (तत् धनाधीनम्.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C285-samayadhinam",
+      "sequence": 16650,
+      "title": "तत् समयाधीनम् (tat samayādhīnam) — it depends",
+      "headword": "तत् समयाधीनम्",
+      "romanization": "tat samayādhīnam",
+      "gloss": "it depends on time — -adhīna agreeing with what depends, and the condition after it",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:660097866360ba99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"that depends on time\". (tat samayādhīnam.) Then say \"if it rains, I stay at home\". (yadi varṣā bhavati, tarhi ahaṃ gṛhe tiṣṭhāmi.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: what depends sets the ending",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-अधीन describes the thing that depends, so it takes that thing's gender: -aḥ for a masculine noun, -ā for a feminine one, -am for a neuter one."
+            },
+            {
+              "kind": "speech",
+              "text": "मम निर्णयः धनाधीनः। mama nirṇayaḥ dhanādhīnaḥ. — \"My decision depends on money.\""
+            },
+            {
+              "kind": "speech",
+              "text": "यात्रा वर्षाधीना। yātrā varṣādhīnā. — \"The trip depends on the rain.\""
+            },
+            {
+              "kind": "speech",
+              "text": "कार्यं समयाधीनम्। kāryaṃ samayādhīnam. — \"The work depends on time.\""
+            },
+            {
+              "kind": "speech",
+              "text": "निर्णयः is masculine, so -अधीनः; यात्रा is feminine, so -अधीना."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: it depends, and then the condition",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say what it depends on, then lay out the condition with यदि … तर्हि:"
+            },
+            {
+              "kind": "speech",
+              "text": "मम यात्रा वर्षाधीना। mama yātrā varṣādhīnā. — \"My trip depends on the rain.\""
+            },
+            {
+              "kind": "speech",
+              "text": "यदि वर्षा न भविष्यति, yadi varṣā na bhaviṣyati, तर्हि वयं गमिष्यामः। tarhi vayaṃ gamiṣyāmaḥ. — \"If it does not rain, we will go.\""
+            },
+            {
+              "kind": "speech",
+              "text": "तत् भवदधीनम्। tat bhavadadhīnam. — \"That is up to you.\""
+            },
+            {
+              "kind": "speech",
+              "text": "भवदधीनम् (bhavadadhīnam) is bhavat, the stem of भवान्, with adhīnam: \"depending on you\", that is, \"up to you\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My decision depends on money\" — mama nirṇayaḥ dhanādhīnaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My decision depends on money\" — *mama nirṇayaḥ dhanādhīnaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My decision depends on time\" — mama nirṇayaḥ samayādhīnaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My decision depends on time\" — *mama nirṇayaḥ samayādhīnaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My decision depends on the rain\" — mama nirṇayaḥ varṣādhīnaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My decision depends on the rain\" — *mama nirṇayaḥ varṣādhīnaḥ*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "SA-C285-samayadhinam-r1",
+              "prompt": "Say that the trip depends on the rain, then that if it does not rain, you will go.",
+              "assesses": [
+                "SA-GRAMMAR-C285-DEPENDS-01",
+                "SA-GRAMMAR-C285-DEPENDS-02"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "yātrā varṣādhīnā; yadi varṣā na bhaviṣyati, tarhi ahaṃ gamiṣyāmi",
+                "यात्रा वर्षाधीना। यदि वर्षा न भविष्यति, तर्हि अहं गमिष्यामि।"
+              ],
+              "feedback": {
+                "correct": "varṣādhīnā for yātrā, a feminine noun; then yadi … tarhi with the future.",
+                "incorrect": "Yātrā is feminine: varṣādhīnā. Then the condition: yadi varṣā na bhaviṣyati …."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"The trip depends on the rain\"? (यात्रा वर्षाधीना.) Why -अधीना? (यात्रा is feminine.) \"That is up to you\"? (तत् भवदधीनम्.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C285-yadi-samayah-abhavisyat",
+      "sequence": 16660,
+      "title": "यदि समयः अभविष्यत् (yadi samayaḥ abhaviṣyat) — what would have been",
+      "headword": "यदि समयः अभविष्यत्",
+      "romanization": "yadi samayaḥ abhaviṣyat",
+      "gloss": "if there had been time — the conditional, for what would have been and was not",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2dff6f7ebcdd4b5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if there is time, I will come\". (yadi samayaḥ bhaviṣyati, tarhi aham āgamiṣyāmi.) Then say \"he went\", the old way. (saḥ agacchat.) The next form puts those two together."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the conditional",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "यदि समयः अभविष्यत्, yadi samayaḥ abhaviṣyat, तर्हि अहम् अगमिष्यम्। tarhi aham agamiṣyam. — \"If there had been time, I would have gone.\""
+            },
+            {
+              "kind": "speech",
+              "text": "अभविष्यत् (abhaviṣyat), \"would have been\", is the future stem भविष्य- with the अ- and the -t of अगच्छत् around it. For \"I\" the ending is -am: अगमिष्यम् (agamiṣyam), \"I would have gone\". It says that the thing did not happen (Pāṇini 3.3.139; the अ-, 6.4.71)."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the future",
+                "the conditional"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "the future: भविष्यति, will be. the conditional: अभविष्यत्, would have been.",
+                "the future: गमिष्यति, will go. the conditional: अगमिष्यत्, would have gone.",
+                "the future: करिष्यति, will do. the conditional: अकरिष्यत्, would have done.",
+                "the future: गमिष्यामि, I will go. the conditional: अगमिष्यम्, I would have gone."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "After the prefix आ-, the अ- melts into its long ā: आगमिष्यम् (āgamiṣyam), \"I would have come\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि समयः अभविष्यत्, yadi samayaḥ abhaviṣyat, तर्हि अहम् आगमिष्यम्। tarhi aham āgamiṣyam. — \"If there had been time, I would have come.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: both halves, and \"if he were to\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both halves take it, for a past that did not come about:"
+            },
+            {
+              "kind": "speech",
+              "text": "यदि धनम् अभविष्यत्, yadi dhanam abhaviṣyat, तर्हि सः कार्यम् अकरिष्यत्। tarhi saḥ kāryam akariṣyat. — \"If there had been money, he would have done the work.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You may also hear यदि with the -et of advice, \"if he were to …\"; meet it, and say the conditional yourself:"
+            },
+            {
+              "kind": "speech",
+              "text": "यदि सः आगच्छेत्, yadi saḥ āgacchet, तर्हि मीरा प्रसन्ना भवेत्। tarhi mīrā prasannā bhavet. — \"If he were to come, Mira would be pleased.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If there had been time, I would have gone\" — yadi samayaḥ abhaviṣyat, tarhi aham agamiṣyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If there had been time, I would have gone\" — *yadi samayaḥ abhaviṣyat, tarhi aham agamiṣyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If there had been time, he would have gone\" — yadi samayaḥ abhaviṣyat, tarhi saḥ agamiṣyat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If there had been time, he would have gone\" — *yadi samayaḥ abhaviṣyat, tarhi saḥ agamiṣyat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If there had been time, he would have done it\" — yadi samayaḥ abhaviṣyat, tarhi saḥ akariṣyat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If there had been time, he would have done it\" — *yadi samayaḥ abhaviṣyat, tarhi saḥ akariṣyat*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "SA-C285-yadi-samayah-abhavisyat-r1",
+              "prompt": "Say that if there had been time, you would have come.",
+              "assesses": [
+                "SA-GRAMMAR-C285-WOULD-01",
+                "SA-GRAMMAR-C285-WOULD-02"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "yadi samayaḥ abhaviṣyat, tarhi aham āgamiṣyam",
+                "यदि समयः अभविष्यत्, तर्हि अहम् आगमिष्यम्।",
+                "yadi samayaḥ abhaviṣyat, tarhi aham agamiṣyam"
+              ],
+              "feedback": {
+                "correct": "abhaviṣyat and āgamiṣyam: the time was not there, and you did not come.",
+                "incorrect": "Put a- and -t on the future stem: abhaviṣyat; for I, -am: āgamiṣyam."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Would have been\"? (अभविष्यत्.) \"I would have come\"? (आगमिष्यम्.) Did the thing happen? (No: that is what the conditional says.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-W285-six-lines",
+      "sequence": 16670,
+      "title": "Six lines about a trip",
+      "headword": "(six lines)",
+      "romanization": "",
+      "gloss": "six connected lines about a trip: what happened, the scene, the order, a reason, a feeling, and what would have been",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:b42fbfed665051f0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This task asks for six lines that tell a story: a trip, real or invented."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pick one reader: Mira, or a friend you name. Say घटितम्, दृढः, औषधम् and ईदृशः aloud; one of them will go in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A told story is not a list of events. It has events in the past of -vān and -vatī, kept in order with प्रथमम्, ततः, अनन्तरम् and अन्ते, and joined with -tvā or -ya. It has a scene, with स्म, or with यदा … तदा. It has a reason, with यतः or -कारणात्, and a feeling, with अहं प्रसन्नः अस्मि or प्रसन्ना."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A good one ends by looking at what might have been: यदि … अभविष्यत्, तर्हि …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — connected composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "On paper, in Devanagari, write six lines to your reader about the trip, one line for each of these:"
+            },
+            {
+              "kind": "speech",
+              "text": "what happened, and when: ह्यः अहं … गतवान्। or गतवती।;"
+            },
+            {
+              "kind": "speech",
+              "text": "the scene as it began: यदा अहं … स्म, तदा …;"
+            },
+            {
+              "kind": "speech",
+              "text": "what happened next, in order: प्रथमम् or ततः, with a -tvā or -ya form, and one thing that went wrong: … नष्टः or धूमयानं गतम्;"
+            },
+            {
+              "kind": "speech",
+              "text": "why, with यतः … or …कारणात्;"
+            },
+            {
+              "kind": "speech",
+              "text": "how it ended and how you felt, with अन्ते and अहम् … अस्मि: प्रसन्नः, श्रान्ता, उत्सुकः;"
+            },
+            {
+              "kind": "speech",
+              "text": "what would have been, with यदि … अभविष्यत्, तर्हि …, and one word with घ, ढ, औ or ई: घटितम्, दृढः, औषधम्, ईदृशः."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "There is no model in this lesson. Use only words and forms this book has taught, written whole, with the one join you know: गृहं गच्छामि. The work is choosing the right past for each line, and joining the lines."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now read your lines as you read Mira's day. Mark every verb e for an event and s for the scene: line two s, lines one and three mostly e."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then three checks. A past in -vān or -vatī follows the one who did it: अहं गतवती, if you are a woman. A verb with a prefix takes -ya: प्रविश्य, उपविश्य. A feeling takes your gender: प्रसन्नः or प्रसन्ना."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last, read line six alone. Does its यदि half say what did not happen, with अभविष्यत्?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R285-depends-and-would",
+      "sequence": 16680,
+      "title": "Review — it depends, and what would have been",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what something depends on, and what would have happened",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7485289b92a490ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if he does not come, I go\", and \"if you are ill, please go to the doctor\". (yadi saḥ na āgacchati, tarhi ahaṃ gacchāmi; yadi bhavān rugṇaḥ asti, tarhi vaidyaṃ gacchatu.) Then \"otherwise\". (anyathā.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "That depends on time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: That depends on time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "The trip depends on the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: The trip depends on the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My decision depends on money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My decision depends on money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If there had been time, I would have come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If there had been time, I would have come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If there had been money, he would have done the work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If there had been money, he would have done the work.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "वर्षाधीना: what depends, a masculine or a feminine thing? (A feminine one, such as यात्रा.) अभविष्यत्: did it happen? (No.) Now the other way round: \"I would have gone\"? (अगमिष्यम्.) \"That is up to you\"? (तत् भवदधीनम्.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

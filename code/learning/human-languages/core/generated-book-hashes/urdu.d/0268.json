@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:f9219c67fab19bad",
+  "lessonIds": [
+    "UR-C268-lagna",
+    "UR-C268-khayal",
+    "UR-C268-ghalat",
+    "UR-W268-ghain",
+    "UR-C268-mujhe-lagta-hai",
+    "UR-C268-ki-vajah-se",
+    "UR-R268-opinion-and-reason"
+  ],
+  "tex": "urdu/book/chapters/ch268-what-i-think-and-why.tex"
+}

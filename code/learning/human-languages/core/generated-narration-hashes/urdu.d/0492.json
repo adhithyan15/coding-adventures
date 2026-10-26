@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:7cf2a54333b930a6",
+  "lessonIds": [
+    "UR-C492-burhapa",
+    "UR-C492-yaddasht",
+    "UR-C492-chhari",
+    "UR-C492-vasiyat",
+    "UR-C492-virasat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch492.txt",
+  "json": "urdu/narration/ch492.json",
+  "textHash": "fnv1a64:5e1b296c944d98e3",
+  "jsonHash": "fnv1a64:07293ce5ab8897a2",
+  "findings": []
+}

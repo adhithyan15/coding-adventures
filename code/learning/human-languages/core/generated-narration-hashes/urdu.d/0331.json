@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:051cd6af87213cb5",
+  "lessonIds": [
+    "UR-C331-sabab",
+    "UR-C331-bunyad",
+    "UR-C331-zimme-dar",
+    "UR-C331-jurna",
+    "UR-C331-vabasta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch331.txt",
+  "json": "urdu/narration/ch331.json",
+  "textHash": "fnv1a64:e3b937111d17e331",
+  "jsonHash": "fnv1a64:8f1236d7f69f16ec",
+  "findings": []
+}

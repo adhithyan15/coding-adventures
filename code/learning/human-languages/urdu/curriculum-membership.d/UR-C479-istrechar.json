@@ -1,0 +1,11 @@
+{
+  "id": "UR-C479-istrechar",
+  "pathSegment": "UR-PATH-479-WARD479",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-479-WARD479",
+      "order": 4
+    }
+  ]
+}

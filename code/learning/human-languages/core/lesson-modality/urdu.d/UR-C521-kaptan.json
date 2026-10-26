@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C521-kaptan",
+    "language": "urdu",
+    "chapter": 521,
+    "sequence": 30400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0446dc0c43bb0f1a"
+  },
+  "findings": []
+}

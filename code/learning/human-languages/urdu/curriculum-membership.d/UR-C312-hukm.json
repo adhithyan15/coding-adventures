@@ -1,0 +1,11 @@
+{
+  "id": "UR-C312-hukm",
+  "pathSegment": "UR-PATH-312-BAGHAVAT312",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-312-BAGHAVAT312",
+      "order": 1
+    }
+  ]
+}

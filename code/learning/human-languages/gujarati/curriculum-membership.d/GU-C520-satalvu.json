@@ -1,0 +1,11 @@
+{
+  "id": "GU-C520-satalvu",
+  "pathSegment": "GU-PATH-520-VAGHAR520",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-520-VAGHAR520",
+      "order": 1
+    }
+  ]
+}

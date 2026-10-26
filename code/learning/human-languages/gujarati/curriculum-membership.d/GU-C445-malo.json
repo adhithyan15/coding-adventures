@@ -1,0 +1,11 @@
+{
+  "id": "GU-C445-malo",
+  "pathSegment": "GU-PATH-445-BIRDS445",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-445-BIRDS445",
+      "order": 0
+    }
+  ]
+}

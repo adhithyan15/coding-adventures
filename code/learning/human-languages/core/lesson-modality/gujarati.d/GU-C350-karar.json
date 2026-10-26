@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C350-karar",
+    "language": "gujarati",
+    "chapter": 350,
+    "sequence": 19560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae724e6ad01c3d2a"
+  },
+  "findings": []
+}

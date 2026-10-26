@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C508-dhakkan",
+    "language": "urdu",
+    "chapter": 508,
+    "sequence": 29730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0de1edadc056a12"
+  },
+  "findings": []
+}

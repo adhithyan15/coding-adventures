@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:aabb0d68a4573eb5",
+  "lessonIds": [
+    "UR-C303-inkar-karna",
+    "UR-C303-iqrar",
+    "UR-C303-ttaalna",
+    "UR-C303-malumat",
+    "UR-C303-haqiqat"
+  ],
+  "tex": "urdu/book/chapters/ch303-claims-and-denials.tex"
+}

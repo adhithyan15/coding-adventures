@@ -1,0 +1,11 @@
+{
+  "id": "GU-C351-gersamaj",
+  "pathSegment": "GU-PATH-351-HAKIKAT351",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-351-HAKIKAT351",
+      "order": 2
+    }
+  ]
+}

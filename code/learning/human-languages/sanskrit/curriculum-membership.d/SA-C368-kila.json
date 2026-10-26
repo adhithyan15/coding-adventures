@@ -1,0 +1,11 @@
+{
+  "id": "SA-C368-kila",
+  "pathSegment": "SA-PATH-368-SHANKA368",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-368-SHANKA368",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:9cf21e533f83db0a",
+  "lessonIds": [
+    "UR-C356-islah",
+    "UR-C356-meyar",
+    "UR-C356-saliqa",
+    "UR-C356-sudharna",
+    "UR-C356-nikharna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch356.txt",
+  "json": "urdu/narration/ch356.json",
+  "textHash": "fnv1a64:3f549ac51a374b9e",
+  "jsonHash": "fnv1a64:ff8244ecb6d2a1ac",
+  "findings": []
+}

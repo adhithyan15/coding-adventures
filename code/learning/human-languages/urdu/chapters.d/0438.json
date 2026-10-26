@@ -1,0 +1,19 @@
+{
+  "chapter": 438,
+  "title": "Beaks and Nests",
+  "label": "ch:ur-beaks-and-nests",
+  "canDo": "I can describe birds: beaks, feathers, nests and pecking.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C438-shikar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can describe birds: beaks, feathers, nests and pecking.",
+    "assesses": [
+      "UR-LEX-C438-CHONCH438-03",
+      "UR-LEX-C438-CHONCH438-04",
+      "UR-LEX-C438-CHONCH438-05"
+    ]
+  }
+}

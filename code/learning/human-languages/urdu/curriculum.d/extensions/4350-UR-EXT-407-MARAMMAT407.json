@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-407-MARAMMAT407",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what is broken in a room and ask for a repair.",
+  "prerequisites": []
+}

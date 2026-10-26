@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C285-thokar",
+    "language": "urdu",
+    "chapter": 285,
+    "sequence": 17460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ef0ee66835bce90"
+  },
+  "findings": []
+}

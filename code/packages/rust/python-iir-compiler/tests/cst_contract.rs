@@ -13,7 +13,7 @@ use coding_adventures_python_lexer::releases::token_grammar;
 use coding_adventures_python_parser::release_parser_grammar;
 use grammar_tools::parser_grammar::GrammarElement;
 use python_iir_compiler::profiles::profile_for;
-use python_iir_compiler::profiles::PROFILE_RULES;
+use python_iir_compiler::profiles::{PROFILE_RULES, PROFILE_TOKENS};
 use python_iir_compiler::{supported_releases, DISPATCHED_RULES, DISPATCHED_TOKENS};
 
 /// Every token name a grammar element references.
@@ -48,7 +48,7 @@ fn referenced_tokens(element: &GrammarElement, out: &mut BTreeSet<String>) {
 #[test]
 fn every_dispatched_name_exists_in_every_claiming_release() {
     let claiming: Vec<_> = supported_releases().iter().filter(|r| profile_for(r).is_some()).collect();
-    assert_eq!(claiming.len(), 7);
+    assert_eq!(claiming.len(), 11);
     for release in claiming {
         let grammar = release_parser_grammar(release).unwrap();
         let rules: BTreeSet<_> = grammar.rules.iter().map(|r| r.name.as_str()).collect();
@@ -81,6 +81,16 @@ fn every_dispatched_name_exists_in_every_claiming_release() {
                 *token == "NEWLINE" || defined.contains(*token),
                 "{release}: the .tokens file defines no {token}"
             );
+        }
+        // A token one profile adds (`py3`'s FLOAT, phase 7c slice 3) is
+        // defined and referenced in every release of that profile and in no
+        // other: 3.0a1 (`py30`) and Python 2 never lex a float.
+        for (owner, extra) in PROFILE_TOKENS {
+            for token in *extra {
+                let mine = *owner == profile;
+                assert_eq!(referenced.contains(*token), mine, "{release} ({profile}): grammar references {token}");
+                assert_eq!(defined.contains(*token), mine, "{release} ({profile}): .tokens defines {token}");
+            }
         }
     }
 }

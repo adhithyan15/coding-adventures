@@ -1,0 +1,19 @@
+{
+  "chapter": 365,
+  "title": "As Things Stand",
+  "label": "ch:ur-as-things-stand",
+  "canDo": "I can say what we will do if the situation changes.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C365-phansana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 365: I can say what we will do if the situation changes.",
+    "assesses": [
+      "UR-LEX-C365-HALAT365-03",
+      "UR-LEX-C365-HALAT365-04",
+      "UR-LEX-C365-HALAT365-05"
+    ]
+  }
+}

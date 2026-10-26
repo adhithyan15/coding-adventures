@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C481-kapavu",
+    "language": "gujarati",
+    "chapter": 481,
+    "sequence": 26740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ce87498abf3ea8f"
+  },
+  "findings": []
+}

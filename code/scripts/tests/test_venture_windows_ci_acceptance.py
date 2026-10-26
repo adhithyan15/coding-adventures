@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import importlib.util
+import re
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
-
 
 SCRIPT = Path(__file__).resolve().parents[1] / "venture_windows_ci_acceptance.py"
 WORKFLOW = Path(__file__).resolve().parents[3] / ".github" / "workflows" / "ci.yml"
@@ -157,6 +157,51 @@ class VentureWindowsCIAcceptanceTests(unittest.TestCase):
             workflow,
         )
         self.assertNotIn("\n    name: CI gate\n", workflow)
+
+    def test_venture_only_plan_admits_node_and_pinned_npm(self) -> None:
+        # Scope executable step fields to the build job. A comment mentioning
+        # Venture, or another job's unconditional setup, cannot satisfy this.
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        job = re.search(r"(?ms)^  build:\n(.*?)(?=^  [\w-]+:|\Z)", workflow)
+        self.assertIsNotNone(job)
+        assert job is not None
+        steps = re.split(r"(?m)^      - ", job.group(1))[1:]
+        flags = ("needs_typescript", "needs_venture_windows")
+        for name in ("Set up Node.js", "Set up npm"):
+            with self.subTest(step=name):
+                matching = [s for s in steps if s.splitlines()[0] == f"name: {name}"]
+                self.assertEqual(len(matching), 1)
+                condition = re.search(r"(?m)^        if: (.+)$", matching[0])
+                self.assertIsNotNone(condition)
+                assert condition is not None
+                # These two toolchains have a flat OR admission contract. Parse
+                # only the allowed comparisons, never evaluate workflow text.
+                terms = condition.group(1).split(" || ")
+                admitted_flags = []
+                for term in terms:
+                    comparison = re.fullmatch(
+                        r"needs\.detect\.outputs\.(needs_[a-z_]+) == 'true'", term
+                    )
+                    self.assertIsNotNone(comparison)
+                    assert comparison is not None
+                    admitted_flags.append(comparison.group(1))
+                for typescript, venture, expected in (
+                    (False, False, False),
+                    (True, False, True),
+                    (False, True, True),
+                    (True, True, True),
+                ):
+                    values = dict(zip(flags, (typescript, venture)))
+                    self.assertEqual(
+                        any(values.get(flag, False) for flag in admitted_flags),
+                        expected,
+                        (name, values),
+                    )
+                if name == "Set up npm":
+                    self.assertRegex(
+                        matching[0],
+                        r"(?m)^        run: npm install --global npm@11\.13\.0$",
+                    )
 
 
 if __name__ == "__main__":

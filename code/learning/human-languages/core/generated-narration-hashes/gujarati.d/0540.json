@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:be24ef70871401ad",
+  "lessonIds": [
+    "GU-C540-baljabri",
+    "GU-C540-bandhan",
+    "GU-C540-bandhavu",
+    "GU-C540-jakadvu",
+    "GU-C540-sogand",
+    "GU-R540-review-533-540"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch540.txt",
+  "json": "gujarati/narration/ch540.json",
+  "textHash": "fnv1a64:0eacd414005ac06c",
+  "jsonHash": "fnv1a64:02b551902e0ac8be",
+  "findings": []
+}

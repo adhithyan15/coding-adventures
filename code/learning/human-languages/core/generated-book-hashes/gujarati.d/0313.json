@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:74c5914d64e810af",
+  "lessonIds": [
+    "GU-C313-aphva",
+    "GU-C313-phelavvu",
+    "GU-C313-satya",
+    "GU-C313-mahiti",
+    "GU-C313-khabar"
+  ],
+  "tex": "gujarati/book/chapters/ch313-a-rumour-spreads.tex"
+}

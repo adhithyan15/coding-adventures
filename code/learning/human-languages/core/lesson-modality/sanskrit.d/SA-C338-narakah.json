@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C338-narakah",
+    "language": "sanskrit",
+    "chapter": 338,
+    "sequence": 19690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79e19b03f978becc"
+  },
+  "findings": []
+}

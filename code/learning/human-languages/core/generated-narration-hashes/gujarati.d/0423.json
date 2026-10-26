@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:2d0d8a9b91f11dc3",
+  "lessonIds": [
+    "GU-C423-nagar",
+    "GU-C423-jillo",
+    "GU-C423-gatar",
+    "GU-C423-durgandh",
+    "GU-C423-vasavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch423.txt",
+  "json": "gujarati/narration/ch423.json",
+  "textHash": "fnv1a64:a5c15e73f183d614",
+  "jsonHash": "fnv1a64:3bd55dd88f03ea58",
+  "findings": []
+}

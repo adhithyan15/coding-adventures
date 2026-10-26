@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "Laughing Together",
+  "label": "ch:gu-laughing-together",
+  "canDo": "I can say what makes us laugh.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C448-cidavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can say what makes us laugh.",
+    "assesses": [
+      "GU-LEX-C448-HASYA448-03",
+      "GU-LEX-C448-HASYA448-04",
+      "GU-LEX-C448-HASYA448-05"
+    ]
+  }
+}

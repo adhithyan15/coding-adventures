@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C431-godam",
+    "language": "gujarati",
+    "chapter": 431,
+    "sequence": 23940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca143b77b2800575"
+  },
+  "findings": []
+}

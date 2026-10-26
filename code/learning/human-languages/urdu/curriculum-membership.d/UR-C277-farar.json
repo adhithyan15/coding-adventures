@@ -1,0 +1,11 @@
+{
+  "id": "UR-C277-farar",
+  "pathSegment": "UR-PATH-277-FARAR277",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-277-FARAR277",
+      "order": 3
+    }
+  ]
+}

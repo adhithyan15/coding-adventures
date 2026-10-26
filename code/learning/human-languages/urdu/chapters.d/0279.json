@@ -1,0 +1,19 @@
+{
+  "chapter": 279,
+  "title": "What the Witness Saw",
+  "label": "ch:ur-what-the-witness-saw",
+  "canDo": "I can say what I saw and what would have been different.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C279-nazar-ana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 279: I can say what I saw and what would have been different.",
+    "assesses": [
+      "UR-LEX-C279-GAVAHI279-03",
+      "UR-LEX-C279-GAVAHI279-04",
+      "UR-LEX-C279-GAVAHI279-05"
+    ]
+  }
+}

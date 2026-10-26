@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:7a176533f1dfc679",
+  "lessonIds": [
+    "GU-C311-samacar",
+    "GU-C311-chapu",
+    "GU-C311-mathalu",
+    "GU-C311-rediyo",
+    "GU-C311-janavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch311.txt",
+  "json": "gujarati/narration/ch311.json",
+  "textHash": "fnv1a64:5166abe53b1b1eb6",
+  "jsonHash": "fnv1a64:caf755b58e41d5dc",
+  "findings": []
+}

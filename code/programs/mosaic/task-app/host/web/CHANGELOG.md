@@ -4,6 +4,42 @@ All notable changes to the `task-app-web` host are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed — a rejected workspace is never written over
+
+When the engine rejected the saved workspace at startup, the host copied it to
+the one fixed recovery record, `workspace/web-corrupt`. A later rejection
+replaced that copy, which may have been the real workspace. Worse, if the copy
+could not be written, or the saved record could not be read at all, the host
+still started fresh and the first edit saved over `workspace/web`, which still
+held the rejected record. Either way the data was gone.
+
+The recovery path also never ran with the real engine. `engine.load` reports
+a snapshot it cannot read as `{ ok: false, error }` and does not throw, but
+both hosts only caught throws. So a rejected record was silently ignored: no
+recovery copy was made, the engine stayed empty, and the first edit saved over
+the record.
+
+Now:
+
+- `main.tsx` and `webcomponent.ts` treat `load` returning `ok: false` as a
+  rejection, so the recovery path below actually runs.
+- The rejected record goes to the first free recovery key, `workspace/web-corrupt`
+  and then `web-corrupt.1` … `web-corrupt.9`, the same sequence the native hosts
+  use for `.corrupt` files. A key that is taken is skipped, never replaced. A
+  record already kept is not copied again, so reloading before any edit does
+  not use up keys.
+- `preserveRejectedWorkspace` returns the key it used, and the warning names it.
+- If the copy fails, all ten keys are taken, or the saved record cannot be
+  read, the host saves nothing for the rest of the session. The warning says
+  so, and `workspace/web` keeps the record.
+
+`__tests__/startup-recovery.test.ts` boots the real Web Components host with
+the real engine over in-memory storage and makes one edit. With a free key,
+the rejected record lands there and the edit saves normally. With every key
+taken, `workspace/web` still holds the rejected record afterwards. The
+persistence unit tests cover the key sequence, never replacing, not copying
+twice, and refusing when full.
+
 ### Changed — the host's stylesheet colours are generated, not copied
 
 `src/theme.ts` used to spell out eight colours from `TaskApp.{light,dark}.msl`

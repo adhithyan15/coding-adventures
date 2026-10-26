@@ -1,0 +1,21 @@
+{
+  "chapter": 425,
+  "title": "Scales and Change",
+  "label": "ch:ur-scales-and-change",
+  "canDo": "I can watch my goods weighed, pay what I owe and collect my change.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-R425-review-418-425",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can watch my goods weighed, pay what I owe and collect my change.",
+    "assesses": [
+      "UR-LEX-C425-TARAZU425-01",
+      "UR-LEX-C425-TARAZU425-02",
+      "UR-LEX-C425-TARAZU425-03",
+      "UR-LEX-C425-TARAZU425-04",
+      "UR-LEX-C425-TARAZU425-05"
+    ]
+  }
+}

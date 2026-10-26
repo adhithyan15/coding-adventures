@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Theory and Practice",
+  "label": "ch:ur-theory-and-practice",
+  "canDo": "I can say whether an idea holds up in practice.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C353-manvana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can say whether an idea holds up in practice.",
+    "assesses": [
+      "UR-LEX-C353-NAZARIYA353-03",
+      "UR-LEX-C353-NAZARIYA353-04",
+      "UR-LEX-C353-NAZARIYA353-05"
+    ]
+  }
+}

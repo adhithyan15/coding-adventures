@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:cb190962b9a76860",
+  "lessonIds": [
+    "GU-C355-vero",
+    "GU-C355-phalo",
+    "GU-C355-arthik",
+    "GU-C355-grant",
+    "GU-C355-ughravvu"
+  ],
+  "tex": "gujarati/book/chapters/ch355-taxes-and-public-money.tex"
+}

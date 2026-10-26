@@ -1,0 +1,19 @@
+{
+  "chapter": 376,
+  "title": "Mistakes and Slips",
+  "label": "ch:gu-mistakes-and-slips",
+  "canDo": "I can warn what a small slip will lead to.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C376-sudharvu-improve",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can warn what a small slip will lead to.",
+    "assesses": [
+      "GU-LEX-C376-BHUL376-03",
+      "GU-LEX-C376-BHUL376-04",
+      "GU-LEX-C376-BHUL376-05"
+    ]
+  }
+}

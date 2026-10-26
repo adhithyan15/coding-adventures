@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R272-feelings-and-hopes",
+    "language": "urdu",
+    "chapter": 272,
+    "sequence": 16540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3adb15399f709fa5"
+  },
+  "findings": []
+}

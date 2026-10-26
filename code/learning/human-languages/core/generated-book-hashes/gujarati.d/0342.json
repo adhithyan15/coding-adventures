@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:2caf497065aa29fc",
+  "lessonIds": [
+    "GU-C342-vivad",
+    "GU-C342-takrar",
+    "GU-C342-matbhed",
+    "GU-C342-khandan",
+    "GU-C342-tokvu"
+  ],
+  "tex": "gujarati/book/chapters/ch342-a-dispute.tex"
+}

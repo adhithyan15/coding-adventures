@@ -1,0 +1,11 @@
+{
+  "id": "SA-C542-tatasthah",
+  "pathSegment": "SA-PATH-542-UTKRSTA542",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-542-UTKRSTA542",
+      "order": 4
+    }
+  ]
+}

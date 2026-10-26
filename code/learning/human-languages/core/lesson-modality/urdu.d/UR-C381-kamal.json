@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C381-kamal",
+    "language": "urdu",
+    "chapter": 381,
+    "sequence": 22590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6490b1dd77b87684"
+  },
+  "findings": []
+}

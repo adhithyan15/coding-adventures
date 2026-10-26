@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 509,
+  "title": "Bellows, Hammer and Rust",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:aef619dc972123be",
+  "lessons": [
+    {
+      "id": "GU-C509-dhaman",
+      "sequence": 28410,
+      "title": "ધમણ (dhamaṇ) — bellows",
+      "headword": "ધમણ",
+      "romanization": "dhamaṇ",
+      "gloss": "bellows",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c99a6ffb17b74ff0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to heat (something), then the Gujarati for an anvil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ધમણ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધમણ — dhamaṇ — \"bellows\"."
+            },
+            {
+              "kind": "speech",
+              "text": "લુહારનો દીકરો ધમણ ચલાવે છે. luhārno dīkro dhamaṇ calāve che. The blacksmith's son works the bellows."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધમણ (dhamaṇ) is inherited from Sanskrit dhamanī, \"bellows\", from a root meaning \"to blow\", and CDIAL lists the Gujarati word (CDIAL 6734)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhamaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhamaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhamaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhamaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luhārno dīkro dhamaṇ calāve che. — The blacksmith's son works the bellows.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *luhārno dīkro dhamaṇ calāve che.* — The blacksmith's son works the bellows.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to heat (something), then the Gujarati for an anvil, then say dhamaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to heat (something), then the Gujarati for an anvil, then say *dhamaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ધમણ (dhamaṇ) mean? (\"Bellows\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C509-phukvu",
+      "sequence": 28420,
+      "title": "ફૂંકવું (phū̃kvũ) — to blow out (a flame)",
+      "headword": "ફૂંકવું",
+      "romanization": "phū̃kvũ",
+      "gloss": "to blow out (a flame)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c2bbcfb173bbb64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an anvil, then the Gujarati for bellows."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ફૂંકવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ફૂંકવું — phū̃kvũ — \"to blow out (a flame)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જન્મદિવસે મીરાએ બધી મીણબત્તીઓ ફૂંકી. janmadivse Mīrāe badhī mīṇbattīo phū̃kī. On her birthday Mira blew out all the candles."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે મીણબત્તી ફૂંકી, teṇe mīṇbattī phū̃kī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ફૂંકવું (phū̃kvũ) comes from phūtka, \"blowing\", a form CDIAL reconstructs, and CDIAL lists the Gujarati verb (CDIAL 9102). The wind's own verb is ફૂંકાવું."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phū̃kvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phū̃kvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phū̃kvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phū̃kvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janmadivse Mīrāe badhī mīṇbattīo phū̃kī. — On her birthday Mira blew out all the candles.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janmadivse Mīrāe badhī mīṇbattīo phū̃kī.* — On her birthday Mira blew out all the candles.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an anvil, then the Gujarati for bellows, then say phū̃kvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an anvil, then the Gujarati for bellows, then say *phū̃kvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ફૂંકવું (phū̃kvũ) mean? (\"To blow out (a flame)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C509-tipvu",
+      "sequence": 28430,
+      "title": "ટીપવું (ṭīpvũ) — to beat (metal) flat",
+      "headword": "ટીપવું",
+      "romanization": "ṭīpvũ",
+      "gloss": "to beat (metal) flat",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:634d1b4057687637",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for bellows, then the Gujarati for to blow out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ટીપવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટીપવું — ṭīpvũ — \"to beat (metal) flat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "લુહારે ગરમ લોખંડ હથોડીથી ટીપ્યું. luhāre garam lokhanḍ hathoḍīthī ṭīpyũ. The blacksmith beat the hot iron flat with the hammer."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે લોખંડ ટીપ્યું, teṇe lokhanḍ ṭīpyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટીપવું (ṭīpvũ) is said of metal, and of dough patted flat by hand. CDIAL lists a Gujarati ṭīpvũ under a reconstructed ṭipp, \"squeeze, nip\", with another sense, and Hindi ṭīpnā, \"to press\", beside it (CDIAL 5464); beating flat is not recorded there, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭīpvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭīpvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭīpvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭīpvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luhāre garam lokhanḍ hathoḍīthī ṭīpyũ. — The blacksmith beat the hot iron flat with the hammer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *luhāre garam lokhanḍ hathoḍīthī ṭīpyũ.* — The blacksmith beat the hot iron flat with the hammer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for bellows, then the Gujarati for to blow out, then say ṭīpvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for bellows, then the Gujarati for to blow out, then say *ṭīpvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ટીપવું (ṭīpvũ) mean? (\"To beat (metal) flat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C509-kat",
+      "sequence": 28440,
+      "title": "કાટ (kāṭ) — rust",
+      "headword": "કાટ",
+      "romanization": "kāṭ",
+      "gloss": "rust",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c102b055ef80fea1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to blow out, then the Gujarati for to beat (metal) flat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કાટ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કાટ — kāṭ — \"rust\"."
+            },
+            {
+              "kind": "speech",
+              "text": "વરસાદ પછી લોખંડના દરવાજાને કાટ લાગ્યો. varsād pachī lokhanḍnā darvājāne kāṭ lāgyo. After the rain the iron gate went rusty."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કાટ (kāṭ) is filed by CDIAL under Sanskrit kiṭṭa, \"secretion, dross\", and CDIAL lists the Gujarati word as \"rust\" (CDIAL 3156). Rust strikes the metal: દરવાજાને કાટ લાગ્યો."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varsād pachī lokhanḍnā darvājāne kāṭ lāgyo. — After the rain the iron gate went rusty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varsād pachī lokhanḍnā darvājāne kāṭ lāgyo.* — After the rain the iron gate went rusty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to blow out, then the Gujarati for to beat (metal) flat, then say kāṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to blow out, then the Gujarati for to beat (metal) flat, then say *kāṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કાટ (kāṭ) mean? (\"Rust\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C509-katavu",
+      "sequence": 28450,
+      "title": "કટાવું (kaṭāvũ) — to rust",
+      "headword": "કટાવું",
+      "romanization": "kaṭāvũ",
+      "gloss": "to rust",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:843a95b466b017a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to beat (metal) flat, then the Gujarati for rust."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કટાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કટાવું — kaṭāvũ — \"to rust\"."
+            },
+            {
+              "kind": "speech",
+              "text": "વરસાદમાં બધાં ઓજારો કટાઈ ગયાં. varsādmā̃ badhā̃ ojāro kaṭāī gayā̃. All the tools rusted in the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે છરી કટાઈ ગઈ, te charī kaṭāī gaī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કટાવું (kaṭāvũ) is built on કાટ (kāṭ), \"rust\", which CDIAL files under Sanskrit kiṭṭa, \"dross\" (CDIAL 3156). It is intransitive: છરી કટાઈ ગઈ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varsādmā̃ badhā̃ ojāro kaṭāī gayā̃. — All the tools rusted in the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varsādmā̃ badhā̃ ojāro kaṭāī gayā̃.* — All the tools rusted in the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to beat (metal) flat, then the Gujarati for rust, then say kaṭāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to beat (metal) flat, then the Gujarati for rust, then say *kaṭāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કટાવું (kaṭāvũ) mean? (\"To rust\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

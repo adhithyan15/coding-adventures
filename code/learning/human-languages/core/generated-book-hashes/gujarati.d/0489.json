@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:255cd08b37b1c306",
+  "lessonIds": [
+    "GU-C489-kusal",
+    "GU-C489-sata",
+    "GU-C489-dua",
+    "GU-C489-sambharvu",
+    "GU-C489-hamdardi"
+  ],
+  "tex": "gujarati/book/chapters/ch489-asking-after-someone.tex"
+}

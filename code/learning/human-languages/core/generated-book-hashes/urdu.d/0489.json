@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:57719e1ec4f513b6",
+  "lessonIds": [
+    "UR-C489-devar",
+    "UR-C489-jeth",
+    "UR-C489-nanad",
+    "UR-C489-bhanja",
+    "UR-C489-navasa"
+  ],
+  "tex": "urdu/book/chapters/ch489-more-of-the-family.tex"
+}

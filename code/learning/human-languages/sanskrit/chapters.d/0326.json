@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "A Night of Lights",
+  "label": "ch:sa-a-night-of-lights",
+  "canDo": "I can describe a festival night of lights.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C326-sobha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can describe a festival night of lights.",
+    "assesses": [
+      "SA-LEX-C326-DIPAVALI326-03",
+      "SA-LEX-C326-DIPAVALI326-04",
+      "SA-LEX-C326-DIPAVALI326-05"
+    ]
+  }
+}

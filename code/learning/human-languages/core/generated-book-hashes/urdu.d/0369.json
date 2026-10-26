@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:ec272183408bf0b0",
+  "lessonIds": [
+    "UR-C369-kash",
+    "UR-C369-arman",
+    "UR-C369-hasrat",
+    "UR-C369-satana",
+    "UR-C369-ganvana"
+  ],
+  "tex": "urdu/book/chapters/ch369-if-only.tex"
+}

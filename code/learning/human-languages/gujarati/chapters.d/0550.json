@@ -1,0 +1,19 @@
+{
+  "chapter": 550,
+  "title": "Taking Aim",
+  "label": "ch:gu-taking-aim",
+  "canDo": "I can talk about aiming at a target and hitting it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C550-dodvir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 550: I can talk about aiming at a target and hitting it.",
+    "assesses": [
+      "GU-LEX-C550-NISHAN550-03",
+      "GU-LEX-C550-NISHAN550-04",
+      "GU-LEX-C550-NISHAN550-05"
+    ]
+  }
+}

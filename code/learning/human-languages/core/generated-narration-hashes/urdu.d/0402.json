@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:ac5397afd10fd3d5",
+  "lessonIds": [
+    "UR-C402-masafat",
+    "UR-C402-rahnuma",
+    "UR-C402-thakana",
+    "UR-C402-sulana",
+    "UR-C402-jagana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch402.txt",
+  "json": "urdu/narration/ch402.json",
+  "textHash": "fnv1a64:7933e39741b4653d",
+  "jsonHash": "fnv1a64:69248fd7e996d6c6",
+  "findings": []
+}

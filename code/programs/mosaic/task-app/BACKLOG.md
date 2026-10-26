@@ -69,6 +69,36 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
+**Next: #18334 — publish and audit v0.5.13.**
+The timeline-label floor #18305 merged in #18306 with all payload validation
+passing in run 40280477318. Prepare its compatible patch together with the
+authoritative toolkit-pin change, publish only after preparation merges, then
+audit immutable provenance, inventory, and checksums. Preparation is not publication.
+Feature composition and signing remain outside scope; artifact coverage is unchanged.
+
+**Published and audited: #18264 — v0.5.12 Qt rail checkpoint.**
+Run 40269564825 passed all payloads and publication. The immutable source is
+`d75d061afe34c7f3764636dbf879181eb4dceb33`; 13 assets, 12 checksum entries,
+and 11 manifest payloads were audited. Artifact coverage is unchanged.
+The rail repair #18250 merged in #18251 with all payload validations passing
+in run 40230057835. Its compatible patch is now published with audited immutable
+provenance, assets, and checksums; unsigned-platform limits stay unchanged.
+
+**Completed fidelity slice: #18250 — Qt fixed non-shrinking rail geometry.**
+The v0.5.11 checkpoint (#18238) is published and audited: run 40225950352,
+source `bd533925647b7fbac74eba35e611a8ba3930757f`, 13 assets / 12 checksums /
+11 manifest payloads. Return to bounded native fidelity under #12022: preserve
+the rail's 236-pixel floor without changing shared styles or diagnostic budgets.
+
+**Published checkpoint: #18238 — v0.5.11.**
+The release-note detail repair #18197 merged in #18198 and shipped in v0.5.11.
+All existing payload checks and the immutable metadata audit passed.
+The immutable v0.5.10 checkpoint (#18112) is published and audited:
+13 assets, 12 checksum entries, and 11 manifest payloads from
+`1eee296461f07dd5a1657c7a4822799aa1552df9`. All release lanes passed in
+run 40168462613. Keep the existing artifact matrix and unsigned limitations
+unchanged; never rewrite that immutable release to repair its notes.
+
 **Published checkpoint: [#17950](https://github.com/adhithyan15/coding-adventures/issues/17950)
 — prepare, publish, and audit `task-app-v0.5.9`.** P0 lifecycle gates are
 complete. Qt Text widths shipped in #17915 with native payload CI passing;
@@ -83,7 +113,7 @@ Published and audited from `fa203bccd486279cbd651ccd492987c1b2b1004e`
 in run 39904677952: all six payload jobs and publisher passed; the immutable
 tag, manifest source, thirteen assets and twelve checksum entries were verified.
 Receipt reconciliation #17999 is complete in #18001. The current bounded
-#12022 fidelity slice is #18030: preserve the 260-pixel board-column minimum
+#12022 fidelity slice #18030 completed in #18031: preserve the 260-pixel board-column minimum
 from both themes' existing width/non-shrink intent on Qt's For delegate, without claiming general flex lowering
 or reducing the style-drop budget. Feature composition remains paused
 behind #14011 and signing remains credential-blocked in #13977.

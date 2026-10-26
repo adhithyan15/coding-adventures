@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C321-ikattha",
+    "language": "urdu",
+    "chapter": 321,
+    "sequence": 19330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8fb05b2a9bc6b7d4"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:b1d10dd1c44837e2",
+  "lessonIds": [
+    "GU-C545-asan",
+    "GU-C545-jatil",
+    "GU-C545-mahattva",
+    "GU-C545-ajmayas",
+    "GU-C545-yukti"
+  ],
+  "tex": "gujarati/book/chapters/ch545-easy-or-complicated.tex"
+}

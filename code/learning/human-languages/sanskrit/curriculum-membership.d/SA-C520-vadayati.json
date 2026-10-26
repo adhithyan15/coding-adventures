@@ -1,0 +1,11 @@
+{
+  "id": "SA-C520-vadayati",
+  "pathSegment": "SA-PATH-520-SVARA520",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-520-SVARA520",
+      "order": 4
+    }
+  ]
+}

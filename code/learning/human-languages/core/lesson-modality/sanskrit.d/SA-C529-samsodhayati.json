@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C529-samsodhayati",
+    "language": "sanskrit",
+    "chapter": 529,
+    "sequence": 30400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d137b63ccb0b75cc"
+  },
+  "findings": []
+}

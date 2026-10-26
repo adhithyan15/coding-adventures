@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C494-asami",
+    "language": "urdu",
+    "chapter": 494,
+    "sequence": 29020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8f263eac44c08c5"
+  },
+  "findings": []
+}

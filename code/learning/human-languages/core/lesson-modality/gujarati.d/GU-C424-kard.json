@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C424-kard",
+    "language": "gujarati",
+    "chapter": 424,
+    "sequence": 23620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c969924bd2d469f5"
+  },
+  "findings": []
+}

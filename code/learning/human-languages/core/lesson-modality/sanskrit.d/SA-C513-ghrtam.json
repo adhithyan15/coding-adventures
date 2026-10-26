@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C513-ghrtam",
+    "language": "sanskrit",
+    "chapter": 513,
+    "sequence": 29580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ceb551a7e945d6de"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C552-upakarakah",
+    "language": "sanskrit",
+    "chapter": 552,
+    "sequence": 31600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5efbf50f7cf482a1"
+  },
+  "findings": []
+}

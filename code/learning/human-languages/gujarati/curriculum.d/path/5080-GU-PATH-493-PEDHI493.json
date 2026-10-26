@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-493-PEDHI493",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GU-EXT-493-PEDHI493"
+  ],
+  "after": []
+}

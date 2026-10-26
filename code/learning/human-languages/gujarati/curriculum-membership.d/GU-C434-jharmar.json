@@ -1,0 +1,11 @@
+{
+  "id": "GU-C434-jharmar",
+  "pathSegment": "GU-PATH-434-SHOWER434",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-434-SHOWER434",
+      "order": 1
+    }
+  ]
+}

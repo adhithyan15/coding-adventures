@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C199-suchna-review",
+    "language": "punjabi",
+    "chapter": 199,
+    "sequence": 10840,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0c1ceb961c42b1d2"
+  },
+  "findings": []
+}

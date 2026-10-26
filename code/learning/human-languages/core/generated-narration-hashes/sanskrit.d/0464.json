@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:258edc9c19769e39",
+  "lessonIds": [
+    "SA-C464-vacalah",
+    "SA-C464-mitabhasi",
+    "SA-C464-sambodhayati",
+    "SA-C464-akrosati",
+    "SA-C464-pralapah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch464.txt",
+  "json": "sanskrit/narration/ch464.json",
+  "textHash": "fnv1a64:fd8cce015b222d87",
+  "jsonHash": "fnv1a64:db6714ee2ff70fbc",
+  "findings": []
+}

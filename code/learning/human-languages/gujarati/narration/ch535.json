@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 535,
+  "title": "Signs and Omens",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a75d1924c6d8b75e",
+  "lessons": [
+    {
+      "id": "GU-C535-sukan",
+      "sequence": 29740,
+      "title": "શુકન (śukan) — an omen",
+      "headword": "શુકન",
+      "romanization": "śukan",
+      "gloss": "an omen",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:368eb0cd0f993133",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a lottery, then the Gujarati for a chance meeting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: શુકન",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શુકન — śukan — \"an omen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો સવારે ગાય સામે આવશે તો દાદી તેને સારું શુકન માનશે. jo savāre gāy sāme āvśe to dādī tene sārũ śukan mānśe. If a cow comes towards her in the morning, my grandmother will take it as a good omen."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શુકન (śukan) goes back to Sanskrit śakuna, \"a bird\", especially a bird of good or bad omen (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śukan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śukan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śukan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śukan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo savāre gāy sāme āvśe to dādī tene sārũ śukan mānśe. — If a cow comes towards her in the morning, my grandmother will take it as a good omen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo savāre gāy sāme āvśe to dādī tene sārũ śukan mānśe.* — If a cow comes towards her in the morning, my grandmother will take it as a good omen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a lottery, then the Gujarati for a chance meeting, then say śukan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a lottery, then the Gujarati for a chance meeting, then say *śukan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does શુકન (śukan) mean? (\"An omen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C535-vahem",
+      "sequence": 29750,
+      "title": "વહેમ (vahem) — a superstition",
+      "headword": "વહેમ",
+      "romanization": "vahem",
+      "gloss": "a superstition",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31a7f9546cadb209",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a chance meeting, then the Gujarati for an omen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વહેમ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વહેમ — vahem — \"a superstition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે આ વહેમ છોડી દેશો તો તમારી ચિંતા ઓછી થશે. jo tame ā vahem choḍī deśo to tamārī cintā ochī thaśe. If you give up this superstition, you'll worry less."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વહેમ (vahem) is usually traced to Arabic wahm, \"a fancy, a groundless idea\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vahem",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vahem*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vahem, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vahem*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame ā vahem choḍī deśo to tamārī cintā ochī thaśe. — If you give up this superstition, you'll worry less.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame ā vahem choḍī deśo to tamārī cintā ochī thaśe.* — If you give up this superstition, you'll worry less.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a chance meeting, then the Gujarati for an omen, then say vahem again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a chance meeting, then the Gujarati for an omen, then say *vahem* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વહેમ (vahem) mean? (\"A superstition\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C535-sanket",
+      "sequence": 29760,
+      "title": "સંકેત (sanket) — a hint",
+      "headword": "સંકેત",
+      "romanization": "sanket",
+      "gloss": "a hint",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab4481ab75695add",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an omen, then the Gujarati for a superstition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સંકેત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંકેત — sanket — \"a hint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો આકાશમાં કાળાં વાદળ હશે તો તે વરસાદનો સંકેત છે. jo ākāśmā̃ kāḷā̃ vādaḷ haśe to te varsādno sanket che. If there are black clouds in the sky, that is a sign of rain."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંકેત (sanket) is a tatsama, taken from Sanskrit saṃketa, \"an agreement; a sign, a signal\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanket*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanket, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanket*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo ākāśmā̃ kāḷā̃ vādaḷ haśe to te varsādno sanket che. — If there are black clouds in the sky, that is a sign of rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo ākāśmā̃ kāḷā̃ vādaḷ haśe to te varsādno sanket che.* — If there are black clouds in the sky, that is a sign of rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an omen, then the Gujarati for a superstition, then say sanket again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an omen, then the Gujarati for a superstition, then say *sanket* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સંકેત (sanket) mean? (\"A hint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C535-grah",
+      "sequence": 29770,
+      "title": "ગ્રહ (grah) — a planet (in astrology)",
+      "headword": "ગ્રહ",
+      "romanization": "grah",
+      "gloss": "a planet (in astrology)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7fc851929574e9a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a superstition, then the Gujarati for a hint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ગ્રહ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગ્રહ — grah — \"a planet (in astrology)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો ગ્રહો સારા હશે તો દાદા આ મહિને નવી દુકાન ખોલશે. jo graho sārā haśe to dādā ā mahine navī dukān kholśe. If the planets are favourable, my grandfather will open a new shop this month."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગ્રહ (grah) is a tatsama, taken from Sanskrit graha, \"a seizer\", and so \"a planet\", one held to seize on a person's fortunes (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grah",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grah*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grah, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grah*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo graho sārā haśe to dādā ā mahine navī dukān kholśe. — If the planets are favourable, my grandfather will open a new shop this month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo graho sārā haśe to dādā ā mahine navī dukān kholśe.* — If the planets are favourable, my grandfather will open a new shop this month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a superstition, then the Gujarati for a hint, then say grah again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a superstition, then the Gujarati for a hint, then say *grah* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ગ્રહ (grah) mean? (\"A planet (in astrology)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C535-kalvu",
+      "sequence": 29780,
+      "title": "કળવું (kaḷvũ) — to make out (to guess)",
+      "headword": "કળવું",
+      "romanization": "kaḷvũ",
+      "gloss": "to make out (to guess)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c819eb1b29c8497a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a hint, then the Gujarati for a planet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કળવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કળવું — kaḷvũ — \"to make out (to guess)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો હું તેની વાત પહેલાં કળત તો હું ત્યાં ન જાત. jo hũ tenī vāt pahelā̃ kaḷat to hũ tyā̃ na jāt. If I had made out what he meant earlier, I wouldn't have gone there."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે વાત કળી, teṇe vāt kaḷī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કળવું (kaḷvũ) is inherited from Sanskrit kaláyati, \"notices, considers\", and CDIAL lists the Gujarati verb, \"to understand, guess\" (CDIAL 2918)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo hũ tenī vāt pahelā̃ kaḷat to hũ tyā̃ na jāt. — If I had made out what he meant earlier, I wouldn't have gone there.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo hũ tenī vāt pahelā̃ kaḷat to hũ tyā̃ na jāt.* — If I had made out what he meant earlier, I wouldn't have gone there.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a hint, then the Gujarati for a planet, then say kaḷvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a hint, then the Gujarati for a planet, then say *kaḷvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કળવું (kaḷvũ) mean? (\"To make out (to guess)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

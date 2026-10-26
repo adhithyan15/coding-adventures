@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R432-review-425-432",
+    "language": "gujarati",
+    "chapter": 432,
+    "sequence": 24040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7727e4f2dca3096b"
+  },
+  "findings": []
+}

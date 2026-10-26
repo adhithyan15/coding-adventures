@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:11cc9a477f627898",
+  "lessonIds": [
+    "GU-C427-pensan",
+    "GU-C427-rokan",
+    "GU-C427-thapan",
+    "GU-C427-mudat",
+    "GU-C427-phalavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch427-savings-and-deposits.tex"
+}

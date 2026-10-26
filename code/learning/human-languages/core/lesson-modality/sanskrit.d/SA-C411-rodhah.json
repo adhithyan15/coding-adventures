@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C411-rodhah",
+    "language": "sanskrit",
+    "chapter": 411,
+    "sequence": 23900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9a42f5cf8e81a37"
+  },
+  "findings": []
+}

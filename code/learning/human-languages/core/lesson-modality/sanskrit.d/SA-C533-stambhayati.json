@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C533-stambhayati",
+    "language": "sanskrit",
+    "chapter": 533,
+    "sequence": 30600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e32a15e5b020adf8"
+  },
+  "findings": []
+}

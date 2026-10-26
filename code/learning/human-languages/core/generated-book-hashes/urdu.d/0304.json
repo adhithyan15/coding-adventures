@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:9fdda5da08159539",
+  "lessonIds": [
+    "UR-C304-fasad",
+    "UR-C304-hangama",
+    "UR-C304-phutna",
+    "UR-C304-lathi",
+    "UR-C304-karfyu"
+  ],
+  "tex": "urdu/book/chapters/ch304-trouble-in-the-town.tex"
+}

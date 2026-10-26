@@ -1,0 +1,11 @@
+{
+  "id": "UR-C393-kandaktar",
+  "pathSegment": "UR-PATH-393-JAM393",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-393-JAM393",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R278-opinion-and-reason",
+    "language": "sanskrit",
+    "chapter": 278,
+    "sequence": 16380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2a49faf26a5bbdd"
+  },
+  "findings": []
+}

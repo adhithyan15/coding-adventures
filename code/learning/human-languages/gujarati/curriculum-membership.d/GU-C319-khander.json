@@ -1,0 +1,11 @@
+{
+  "id": "GU-C319-khander",
+  "pathSegment": "GU-PATH-319-KILLO319",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-319-KILLO319",
+      "order": 1
+    }
+  ]
+}

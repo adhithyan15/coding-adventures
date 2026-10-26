@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C382-siddhi",
+    "language": "gujarati",
+    "chapter": 382,
+    "sequence": 21220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35129899ff5bae49"
+  },
+  "findings": []
+}

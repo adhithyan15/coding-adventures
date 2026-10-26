@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:0405b92307b0ac04",
+  "lessonIds": [
+    "GU-C474-lal",
+    "GU-C474-cavvu",
+    "GU-C474-cusvu",
+    "GU-C474-thukvu",
+    "GU-C474-talvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch474.txt",
+  "json": "gujarati/narration/ch474.json",
+  "textHash": "fnv1a64:70d9e8951ce4e1e6",
+  "jsonHash": "fnv1a64:c61cc5d15e6fa1e1",
+  "findings": []
+}

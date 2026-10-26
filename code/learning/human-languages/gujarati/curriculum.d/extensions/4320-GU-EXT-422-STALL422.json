@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-422-STALL422",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can buy from a street cart or a stall.",
+  "prerequisites": []
+}

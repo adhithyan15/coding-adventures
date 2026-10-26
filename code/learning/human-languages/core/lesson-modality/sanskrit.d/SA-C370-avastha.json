@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C370-avastha",
+    "language": "sanskrit",
+    "chapter": 370,
+    "sequence": 21540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40f526095030fe26"
+  },
+  "findings": []
+}

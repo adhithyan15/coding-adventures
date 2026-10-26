@@ -1,0 +1,11 @@
+{
+  "id": "GU-C373-nirakaran",
+  "pathSegment": "GU-PATH-373-UPAY373",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-373-UPAY373",
+      "order": 1
+    }
+  ]
+}

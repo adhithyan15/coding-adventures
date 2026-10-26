@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:8df4cc8291c7f8cb",
+  "lessonIds": [
+    "SA-C329-puja",
+    "SA-C329-ghanta",
+    "SA-C329-dhupah",
+    "SA-C329-aratrikam",
+    "SA-C329-prarthayate"
+  ],
+  "tex": "sanskrit/book/chapters/ch329-at-the-temple.tex"
+}

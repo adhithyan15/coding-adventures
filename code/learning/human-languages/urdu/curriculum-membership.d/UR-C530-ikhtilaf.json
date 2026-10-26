@@ -1,0 +1,11 @@
+{
+  "id": "UR-C530-ikhtilaf",
+  "pathSegment": "UR-PATH-530-MARZI530",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-530-MARZI530",
+      "order": 2
+    }
+  ]
+}

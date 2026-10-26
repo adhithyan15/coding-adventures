@@ -20,11 +20,18 @@ public static class MosaicRuntimeHost
     // Profiling is opt-in and bounded. Keep disk I/O off the interaction path
     // and never include application data in diagnostic labels or records.
     private static readonly string? ProfilePath = Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH");
+    private static readonly bool ProfileInteractionsOnly =
+        Environment.GetEnvironmentVariable("MOSAIC_PROFILE_INTERACTIONS_ONLY") == "1";
     private static readonly System.Collections.Concurrent.ConcurrentQueue<string> ProfileSamples = new();
     private static int ProfileSampleCount;
     public static IDisposable? BeginProfile(string phase, object? component = null)
     {
         if (string.IsNullOrWhiteSpace(ProfilePath)) return null;
+        // Detailed conversion/setter phases can exhaust the shared budget before
+        // a percentile workload finishes. Filter before reserving a slot or
+        // reading diagnostics; keep the same bound even for pending frames.
+        if (ProfileInteractionsOnly && phase != "interaction-handler"
+            && phase != "interaction-next-render") return null;
         // Reserve before registering frame callbacks: a minimized window may
         // receive events without rendering, so pending scopes must be bounded.
         while (true)
@@ -44,6 +51,8 @@ public static class MosaicRuntimeHost
         private int disposed;
         private readonly object? component;
         private readonly PropertyInfo? projectionProperty;
+        private readonly PropertyInfo? realizationProperty;
+        private readonly (long, long)? realizationStart;
         private readonly (long, long, long, long)? projectionStart;
         internal ProfileScope(string phase, object? component)
         {
@@ -59,11 +68,25 @@ public static class MosaicRuntimeHost
                     projectionProperty = property;
             }
             catch { /* Diagnostics must not affect application success. */ }
+            try
+            {
+                var property = component?.GetType().GetProperty("MosaicRealizationCounts");
+                if (property?.PropertyType == typeof(ValueTuple<long, long>)
+                    && property.GetIndexParameters().Length == 0)
+                    realizationProperty = property;
+            }
+            catch { /* Diagnostics must not affect application success. */ }
+            realizationStart = ReadRealization();
             projectionStart = ReadProjection();
         }
         private (long, long, long, long)? ReadProjection()
         {
             try { return projectionProperty?.GetValue(component) as ValueTuple<long, long, long, long>?; }
+            catch { return null; }
+        }
+        private (long, long)? ReadRealization()
+        {
+            try { return realizationProperty?.GetValue(component) as ValueTuple<long, long>?; }
             catch { return null; }
         }
         public void Dispose()
@@ -73,6 +96,9 @@ public static class MosaicRuntimeHost
             var bytes = GC.GetAllocatedBytesForCurrentThread() - allocated;
             // Intervals may overlap: these deltas describe work during this scope,
             // not exclusive attribution to an event or native element realization.
+            var realizedEnd = ReadRealization();
+            object? realization = realizationStart is { } rs && realizedEnd is { } re
+                ? new { prepared = re.Item1 - rs.Item1, cleared = re.Item2 - rs.Item2 } : null;
             var end = ReadProjection();
             if (projectionStart is { } start && end is { } finish)
             {
@@ -82,9 +108,13 @@ public static class MosaicRuntimeHost
                     reused = finish.Item3 - start.Item3,
                     removed = finish.Item4 - start.Item4
                 };
-                ProfileSamples.Enqueue(JsonSerializer.Serialize(new { phase, milliseconds, bytes, projection }));
+                ProfileSamples.Enqueue(realization is null
+                    ? JsonSerializer.Serialize(new { phase, milliseconds, bytes, projection })
+                    : JsonSerializer.Serialize(new { phase, milliseconds, bytes, projection, realization }));
             }
-            else ProfileSamples.Enqueue(JsonSerializer.Serialize(new { phase, milliseconds, bytes }));
+            else ProfileSamples.Enqueue(realization is null
+                ? JsonSerializer.Serialize(new { phase, milliseconds, bytes })
+                : JsonSerializer.Serialize(new { phase, milliseconds, bytes, realization }));
         }
     }
 
@@ -116,6 +146,51 @@ public static class MosaicRuntimeHost
     }
 
     public static bool IsAvailable => State is not null;
+
+    // A value-equal list is still a different dependency-property reference after
+    // deserialization. Reuse the live value to avoid needless binding invalidation,
+    // but still call the setter: custom controls may observe every assignment.
+    // Only Mosaic's scalar list shapes participate, never arbitrary object Equals.
+    private static object? ReuseEquivalentList(object component, PropertyInfo property, object? value)
+    {
+        if (!property.CanRead || property.GetIndexParameters().Length != 0
+            || !IsScalarList(property.PropertyType)) return value;
+        try
+        {
+            var current = property.GetValue(component);
+            return EqualListValue(current, value, property.PropertyType) ? current : value;
+        }
+        catch { return value; } // An optional optimization cannot make a getter required.
+    }
+
+    private static bool IsScalarList(Type type)
+    {
+        if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(IReadOnlyList<>))
+            return false;
+        var item = type.GetGenericArguments()[0];
+        return item == typeof(string) || item == typeof(double) || item == typeof(bool)
+            || IsScalarList(item);
+    }
+
+    private static bool EqualListValue(object? current, object? incoming, Type type)
+    {
+        if (current is null || incoming is null) return current is null && incoming is null;
+        if (!IsScalarList(type))
+            return current.GetType() == type && incoming.GetType() == type && current.Equals(incoming);
+        // Converted IReadOnlyList values are List<T>. Use their finite count to
+        // bound reads even if a custom existing list has a broken enumerator.
+        if (incoming is not System.Collections.IList values
+            || current is not System.Collections.IEnumerable existing) return false;
+        var item = type.GetGenericArguments()[0];
+        var cursor = existing.GetEnumerator();
+        try
+        {
+            for (var i = 0; i < values.Count; i++)
+                if (!cursor.MoveNext() || !EqualListValue(cursor.Current, values[i], item)) return false;
+            return !cursor.MoveNext();
+        }
+        finally { (cursor as IDisposable)?.Dispose(); }
+    }
 
     public static void LoadRequired()
     {
@@ -1304,7 +1379,7 @@ public static class MosaicRuntimeHost
                             continue;
                         }
                         using (BeginProfile("apply-props-set"))
-                            property.SetValue(component, converted.value);
+                            property.SetValue(component, ReuseEquivalentList(component, property, converted.value));
                     }
                 }
                 finally

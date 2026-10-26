@@ -707,7 +707,8 @@ jobs:
       - name: Set up .NET
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: "9.0.x"
+          # An exact released SDK bypasses the failing aka.ms channel redirect.
+          dotnet-version: "9.0.319"
 
       - name: Set up Python
         uses: actions/setup-python@v7

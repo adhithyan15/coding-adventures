@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:ef3acaf89a9ceb1e",
+  "lessonIds": [
+    "UR-C313-angrez",
+    "UR-C313-tahrik",
+    "UR-C313-jaddojahd",
+    "UR-C313-qurbani",
+    "UR-C313-saunpna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch313.txt",
+  "json": "urdu/narration/ch313.json",
+  "textHash": "fnv1a64:fa87122ccf0e240b",
+  "jsonHash": "fnv1a64:35898b67dcab9e74",
+  "findings": []
+}

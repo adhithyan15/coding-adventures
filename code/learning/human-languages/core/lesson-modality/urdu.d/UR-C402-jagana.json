@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C402-jagana",
+    "language": "urdu",
+    "chapter": 402,
+    "sequence": 23860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:314fbb3308e468aa"
+  },
+  "findings": []
+}

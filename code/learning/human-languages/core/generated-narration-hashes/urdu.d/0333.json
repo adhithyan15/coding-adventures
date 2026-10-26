@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:37d47a801c5d62c8",
+  "lessonIds": [
+    "UR-C333-maqsad",
+    "UR-C333-khatir",
+    "UR-C333-gharaz",
+    "UR-C333-faida",
+    "UR-C333-istemal-karna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch333.txt",
+  "json": "urdu/narration/ch333.json",
+  "textHash": "fnv1a64:8ae5de056bbe016e",
+  "jsonHash": "fnv1a64:0c60b64fdbd704a6",
+  "findings": []
+}

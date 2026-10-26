@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:ee38f3dfc6119cf2",
+  "lessonIds": [
+    "UR-C299-imdad",
+    "UR-C299-razakar",
+    "UR-C299-jama-karna",
+    "UR-C299-hausla",
+    "UR-C299-atiya",
+    "UR-R299-review-292-299"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch299.txt",
+  "json": "urdu/narration/ch299.json",
+  "textHash": "fnv1a64:7930b2a43903f875",
+  "jsonHash": "fnv1a64:c2f2804a20f5fedd",
+  "findings": []
+}

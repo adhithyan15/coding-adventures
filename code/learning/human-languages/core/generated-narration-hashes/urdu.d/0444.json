@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:610c13475293cbbb",
+  "lessonIds": [
+    "UR-C444-ghussa",
+    "UR-C444-chirna",
+    "UR-C444-barham",
+    "UR-C444-khafa",
+    "UR-C444-taish"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch444.txt",
+  "json": "urdu/narration/ch444.json",
+  "textHash": "fnv1a64:f5bc6bc2ba1f303b",
+  "jsonHash": "fnv1a64:e1784492ccf4f0ae",
+  "findings": []
+}

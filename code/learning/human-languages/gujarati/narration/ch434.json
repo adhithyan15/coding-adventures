@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 434,
+  "title": "Showers and Drizzle",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f571284f799481ef",
+  "lessons": [
+    {
+      "id": "GU-C434-jhaptu",
+      "sequence": 24100,
+      "title": "ઝાપટું (jhāpṭũ) — a sharp shower (of rain)",
+      "headword": "ઝાપટું",
+      "romanization": "jhāpṭũ",
+      "gloss": "a sharp shower (of rain)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:808fcb2d76f0c7a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to suit, then the Gujarati for to shrink."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઝાપટું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝાપટું — jhāpṭũ — \"a sharp shower (of rain)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "બપોરે વરસાદનું એક ઝાપટું આવ્યું. bapore varsādnũ ek jhāpṭũ āvyũ. In the afternoon there was a sharp shower."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝાપટું (jhāpṭũ) goes back to jhapp, \"a sudden movement\", a form CDIAL reconstructs; CDIAL lists the Gujarati word, \"a sharp shower of rain\" (CDIAL 5336)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhāpṭũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhāpṭũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhāpṭũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhāpṭũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bapore varsādnũ ek jhāpṭũ āvyũ. — In the afternoon there was a sharp shower.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bapore varsādnũ ek jhāpṭũ āvyũ.* — In the afternoon there was a sharp shower.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to suit, then the Gujarati for to shrink, then say jhāpṭũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to suit, then the Gujarati for to shrink, then say *jhāpṭũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઝાપટું (jhāpṭũ) mean? (\"A sharp shower (of rain)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C434-jharmar",
+      "sequence": 24110,
+      "title": "ઝરમર (jharmar) — a drizzle",
+      "headword": "ઝરમર",
+      "romanization": "jharmar",
+      "gloss": "a drizzle",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b1658cb01e5011ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to shrink, then the Gujarati for a sharp shower."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઝરમર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝરમર — jharmar — \"a drizzle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "સવારથી ઝરમર વરસે છે. savārthī jharmar varse che. It has been drizzling since the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝરમર (jharmar) goes back to Sanskrit jhara, \"a waterfall, a stream\"; CDIAL lists the Gujarati word, \"a drizzle\" (CDIAL 5343). Its doubled sound is like the rain itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jharmar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jharmar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jharmar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jharmar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "savārthī jharmar varse che. — It has been drizzling since the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *savārthī jharmar varse che.* — It has been drizzling since the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to shrink, then the Gujarati for a sharp shower, then say jharmar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to shrink, then the Gujarati for a sharp shower, then say *jharmar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઝરમર (jharmar) mean? (\"A drizzle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C434-reinkot",
+      "sequence": 24120,
+      "title": "રેઈનકોટ (reīnkoṭ) — a raincoat",
+      "headword": "રેઈનકોટ",
+      "romanization": "reīnkoṭ",
+      "gloss": "a raincoat",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a703ecf4a6a2d29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a sharp shower, then the Gujarati for a drizzle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: રેઈનકોટ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રેઈનકોટ — reīnkoṭ — \"a raincoat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ચોમાસામાં હું રેઈનકોટ પહેરીને નીકળું છું. comāsāmā̃ hũ reīnkoṭ paherīne nīkḷũ chũ. In the monsoon I put on a raincoat to go out."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રેઈનકોટ (reīnkoṭ) is borrowed from English raincoat."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reīnkoṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reīnkoṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reīnkoṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reīnkoṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "comāsāmā̃ hũ reīnkoṭ paherīne nīkḷũ chũ. — In the monsoon I put on a raincoat to go out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *comāsāmā̃ hũ reīnkoṭ paherīne nīkḷũ chũ.* — In the monsoon I put on a raincoat to go out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a sharp shower, then the Gujarati for a drizzle, then say reīnkoṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a sharp shower, then the Gujarati for a drizzle, then say *reīnkoṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does રેઈનકોટ (reīnkoṭ) mean? (\"A raincoat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C434-gheravu",
+      "sequence": 24130,
+      "title": "ઘેરાવું (gherāvũ) — to gather (of clouds); to close in",
+      "headword": "ઘેરાવું",
+      "romanization": "gherāvũ",
+      "gloss": "to gather (of clouds); to close in",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da5fe6a92367e23d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a drizzle, then the Gujarati for a raincoat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઘેરાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઘેરાવું — gherāvũ — \"to gather (of clouds); to close in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "સાંજે આકાશમાં કાળાં વાદળ ઘેરાયાં. sā̃je ākāśmā̃ kāḷā̃ vādaḷ gherāyā̃. In the evening dark clouds gathered in the sky."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે વાદળ ઘેરાયું, te vādaḷ gherāyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઘેરાવું (gherāvũ) goes back to ghir, \"to surround\", a form CDIAL reconstructs (CDIAL 4474): clouds that close in round the sky."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gherāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gherāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gherāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gherāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sā̃je ākāśmā̃ kāḷā̃ vādaḷ gherāyā̃. — In the evening dark clouds gathered in the sky.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sā̃je ākāśmā̃ kāḷā̃ vādaḷ gherāyā̃.* — In the evening dark clouds gathered in the sky.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a drizzle, then the Gujarati for a raincoat, then say gherāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a drizzle, then the Gujarati for a raincoat, then say *gherāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઘેરાવું (gherāvũ) mean? (\"To gather (of clouds); to close in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C434-bhijavu",
+      "sequence": 24140,
+      "title": "ભીંજાવું (bhī̃jāvũ) — to get wet through (in rain)",
+      "headword": "ભીંજાવું",
+      "romanization": "bhī̃jāvũ",
+      "gloss": "to get wet through (in rain)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:652557d9a5072935",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a raincoat, then the Gujarati for to gather (of clouds)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ભીંજાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભીંજાવું — bhī̃jāvũ — \"to get wet through (in rain)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "છત્રી ન હતી, એટલે હું ભીંજાઈ ગયો. chatrī na hatī, eṭle hũ bhī̃jāī gayo. I had no umbrella, so I got wet through."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): તે ભીંજાઈ ગયો, te bhī̃jāī gayo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભીંજાવું (bhī̃jāvũ) goes back to bhiyañjati, \"anoints, wets\", a form CDIAL reconstructs; CDIAL lists the Gujarati verb, \"to be wetted\" (CDIAL 9503)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhī̃jāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhī̃jāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhī̃jāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhī̃jāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chatrī na hatī, eṭle hũ bhī̃jāī gayo. — I had no umbrella, so I got wet through.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chatrī na hatī, eṭle hũ bhī̃jāī gayo.* — I had no umbrella, so I got wet through.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a raincoat, then the Gujarati for to gather (of clouds), then say bhī̃jāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a raincoat, then the Gujarati for to gather (of clouds), then say *bhī̃jāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ભીંજાવું (bhī̃jāvũ) mean? (\"To get wet through (in rain)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

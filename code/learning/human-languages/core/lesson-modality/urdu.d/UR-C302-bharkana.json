@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C302-bharkana",
+    "language": "urdu",
+    "chapter": 302,
+    "sequence": 18360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00953ce930b39a30"
+  },
+  "findings": []
+}

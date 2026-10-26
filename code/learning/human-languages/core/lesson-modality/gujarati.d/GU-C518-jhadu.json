@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C518-jhadu",
+    "language": "gujarati",
+    "chapter": 518,
+    "sequence": 28890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ccaab224a7489fc3"
+  },
+  "findings": []
+}

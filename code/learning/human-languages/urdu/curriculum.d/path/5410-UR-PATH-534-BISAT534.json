@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-534-BISAT534",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "UR-EXT-534-BISAT534"
+  ],
+  "after": []
+}

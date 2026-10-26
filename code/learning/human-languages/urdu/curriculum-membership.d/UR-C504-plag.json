@@ -1,0 +1,11 @@
+{
+  "id": "UR-C504-plag",
+  "pathSegment": "UR-PATH-504-SVICH504",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-504-SVICH504",
+      "order": 1
+    }
+  ]
+}

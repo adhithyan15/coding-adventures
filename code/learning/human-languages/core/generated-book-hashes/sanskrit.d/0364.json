@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:d6931092b21a7127",
+  "lessonIds": [
+    "SA-C364-visesajnah",
+    "SA-C364-vimarsah",
+    "SA-C364-tika",
+    "SA-C364-nibandhah",
+    "SA-C364-nirupayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch364-ask-an-expert.tex"
+}
