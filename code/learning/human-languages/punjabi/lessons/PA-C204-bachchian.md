@@ -12,7 +12,7 @@ concept_tag: PA-A2-BACHCHIAN-DIRECT-OWNER
 prerequisites: [PA-C204-child-return, PA-C192-lokaan-naal]
 sounds: []
 roots: []
-etymology_hook: "The origin of bachchaa remains unsettled from Chapter 55; this form adds no new historical claim"
+etymology_hook: "An earlier lesson leaves the origin of bachchaa unsettled; this form adds no new historical claim"
 duration:
   max_seconds: 245
 requires:
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-GRAMMAR-BACHCHIAN-204, PA-LEX-C55-FAMILY55-02, PA-FORM-LOKAAN-OBLIQUE-192]
+  knowledge: [PA-GRAMMAR-BACHCHIAN-204, PA-LEX-C55-FAMILY55-02]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -59,8 +59,8 @@ Sources: [Punjabi University noun grammar](https://www.learnpunjabi.org/noun.htm
 [Punjabi University lexical statistics](https://www.learnpunjabi.org/statistics.html),
 and [Punjabi University Lesson 12](https://pt.learnpunjabi.org/lesson12.aspx?l=12).
 
-Chapter 55 records that the origin of **ਬੱਚਾ** remains unsettled. This lesson
-makes no new historical claim and keeps the new form whole.
+An earlier lesson records that the origin of **ਬੱਚਾ** remains unsettled. This
+lesson makes no new historical claim and keeps the new form whole.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-GRAMMAR-BACHCHIAN-204] -->

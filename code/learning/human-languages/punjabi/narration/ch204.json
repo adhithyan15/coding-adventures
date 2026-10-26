@@ -4,7 +4,7 @@
   "chapter": 204,
   "title": "With Children",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7ca1ac64c6733a8c",
+  "sourceHash": "fnv1a64:e305243acadd0082",
   "lessons": [
     {
       "id": "PA-C204-child-return",
@@ -107,7 +107,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92dcf0dad8647d20",
+      "sourceHash": "fnv1a64:c0046363b56a1365",
       "notice": null,
       "blocks": [
         {
@@ -153,7 +153,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 55 records that the origin of ਬੱਚਾ (bachchaa) remains unsettled. This lesson makes no new historical claim and keeps the new form whole."
+              "text": "An earlier lesson records that the origin of ਬੱਚਾ (bachchaa) remains unsettled. This lesson makes no new historical claim and keeps the new form whole."
             }
           ]
         },
