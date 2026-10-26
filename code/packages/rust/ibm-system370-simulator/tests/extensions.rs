@@ -62,19 +62,13 @@ fn mvcl_moves_pads_and_reports_all_length_relations() {
 }
 
 #[test]
-fn mvcl_overlap_is_directional_and_condition_three_changes_no_pairs_or_data() {
+fn mvcl_overlap_is_directional_and_condition_three_clears_address_high_bytes_only() {
     let mut destructive = loaded(&[0x0e, 0x24]);
-    destructive.write_gpr(2, 0x201).unwrap();
-    destructive.write_gpr(3, 3).unwrap();
-    destructive.write_gpr(4, 0x200).unwrap();
-    destructive.write_gpr(5, 3).unwrap();
+    destructive.write_gpr(2, 0xaa00_0201).unwrap();
+    destructive.write_gpr(3, 0xc500_0003).unwrap();
+    destructive.write_gpr(4, 0xbb00_0200).unwrap();
+    destructive.write_gpr(5, 0x7e00_0003).unwrap();
     destructive.write_memory(0x200, b"ABCD").unwrap();
-    let before_pairs = [
-        destructive.read_gpr(2).unwrap(),
-        destructive.read_gpr(3).unwrap(),
-        destructive.read_gpr(4).unwrap(),
-        destructive.read_gpr(5).unwrap(),
-    ];
     let before_memory = destructive.read_memory(0x200, 4).unwrap();
     destructive.step().unwrap();
     assert_eq!(destructive.get_state().condition_code, 3);
@@ -85,7 +79,7 @@ fn mvcl_overlap_is_directional_and_condition_three_changes_no_pairs_or_data() {
             destructive.read_gpr(4).unwrap(),
             destructive.read_gpr(5).unwrap(),
         ],
-        before_pairs
+        [0x0000_0201, 0xc500_0003, 0x0000_0200, 0x7e00_0003]
     );
     assert_eq!(destructive.read_memory(0x200, 4).unwrap(), before_memory);
 

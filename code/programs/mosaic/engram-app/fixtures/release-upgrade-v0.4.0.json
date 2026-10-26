@@ -1,0 +1,113 @@
+{
+  "fixtureSchema": "mosaic/release-upgrade-fixture",
+  "fixtureVersion": 1,
+  "sourceApp": "engram",
+  "sourceVersion": "0.4.0",
+  "provenance": "Captured from engram-v0.4.0 (a0ad2b717d737864febc921ce65d3bdb15d71443): EngramMosaicApp::default(), then the facade commands createDeck and createCard, then snapshot(). The state is that snapshot's bytes, parsed; re-encoding it as compact sorted JSON reproduces them byte for byte.",
+  "snapshotSchema": "engram-mosaic-app",
+  "snapshotVersion": 1,
+  "acceptedLiveVersions": [
+    1,
+    3
+  ],
+  "expectations": [
+    {
+      "liveVersions": [
+        1
+      ],
+      "pointer": "/decks/0/id",
+      "equals": "upgrade-fixture-deck"
+    },
+    {
+      "liveVersions": [
+        1
+      ],
+      "pointer": "/decks/0/name",
+      "equals": "Upgrade fixture deck"
+    },
+    {
+      "liveVersions": [
+        1
+      ],
+      "pointer": "/cards/0/deckId",
+      "equals": "upgrade-fixture-deck"
+    },
+    {
+      "liveVersions": [
+        1
+      ],
+      "pointer": "/cards/0/front",
+      "equals": "Upgrade fixture front"
+    },
+    {
+      "liveVersions": [
+        1
+      ],
+      "pointer": "/cards/0/back",
+      "equals": "Upgrade fixture back"
+    },
+    {
+      "liveVersions": [
+        3
+      ],
+      "pointer": "/session/state/decks/0/id",
+      "equals": "upgrade-fixture-deck"
+    },
+    {
+      "liveVersions": [
+        3
+      ],
+      "pointer": "/session/state/decks/0/name",
+      "equals": "Upgrade fixture deck"
+    },
+    {
+      "liveVersions": [
+        3
+      ],
+      "pointer": "/session/state/cards/0/deckId",
+      "equals": "upgrade-fixture-deck"
+    },
+    {
+      "liveVersions": [
+        3
+      ],
+      "pointer": "/session/state/cards/0/front",
+      "equals": "Upgrade fixture front"
+    },
+    {
+      "liveVersions": [
+        3
+      ],
+      "pointer": "/session/state/cards/0/back",
+      "equals": "Upgrade fixture back"
+    }
+  ],
+  "state": {
+    "activeSession": null,
+    "cardProgress": [],
+    "cards": [
+      {
+        "back": "Upgrade fixture back",
+        "createdAt": 1700000000000,
+        "deckId": "upgrade-fixture-deck",
+        "front": "Upgrade fixture front",
+        "id": "upgrade-fixture-card"
+      }
+    ],
+    "deckOptions": [],
+    "decks": [
+      {
+        "createdAt": 1700000000000,
+        "description": "Created by the v0.4.0 release",
+        "id": "upgrade-fixture-deck",
+        "name": "Upgrade fixture deck"
+      }
+    ],
+    "externalSources": [],
+    "mediaAssets": [],
+    "noteTypes": [],
+    "notes": [],
+    "reviews": [],
+    "sessions": []
+  }
+}

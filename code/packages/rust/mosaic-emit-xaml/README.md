@@ -299,6 +299,14 @@ See `code/specs/mosaic-xaml-table-viewport-20261012.md` for executed native evid
 and outstanding performance/accessibility acceptance. This is not native release
 acceptance.
 
+Vertical arrow keys at a virtual window boundary request a one-row authored
+viewport shift. A bounded callback confirms the exact new offset before
+activating a realized cell, preserves the column, and cancels on newer input or
+unload. Editors and other tables retain their focus. See
+`code/specs/mosaic-xaml-keyboard-viewport-edge-20261026.md` for validation status;
+native Debug interaction confirms both edges, repeated crossing, formula editing
+and snapshot restart. Broader accessibility and release acceptance remain open.
+
 Native table cell automation names use the authored row-header label, including
 reactive list/index labels for virtual windows. GridItem row indices remain local
 to the realized table. Tables without row headers use one-based local names.

@@ -26,6 +26,10 @@ on:
       - .github/workflows/release-engram.yml
       - code/scripts/engram_release.py
       - code/scripts/tests/test_engram_release.py
+      # The shared upgrade/corrupt-recovery gate, and Engram's v0.4.0 fixture
+      # (under engram-app/** below) that its tests verify end to end.
+      - code/scripts/mosaic_release_state_gate.py
+      - code/scripts/tests/test_mosaic_release_state_gate.py
       - code/scripts/verify_relocatable_bundle.py
       - code/scripts/tests/test_verify_relocatable_bundle.py
       - code/programs/mosaic/engram-app/**
@@ -95,6 +99,8 @@ jobs:
           python -m unittest discover -s code/scripts/tests -p 'test_engram_release.py'
           python -m unittest discover -s code/scripts/tests \
             -p 'test_verify_relocatable_bundle.py'
+          python -m unittest discover -s code/scripts/tests \
+            -p 'test_mosaic_release_state_gate.py'
 
       - name: Validate version and tag
         id: release

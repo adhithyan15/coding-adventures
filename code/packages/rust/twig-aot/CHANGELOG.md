@@ -1,4 +1,29 @@
 # Changelog — `twig-aot`
+## Unreleased — precise GC: build the embedded collector with frame pointers
+
+- **`build.rs` compiles the embedded `gc-core-capi` archive with
+  `-Cforce-frame-pointers=yes`.** The flag is appended to the outer build's
+  `CARGO_ENCODED_RUSTFLAGS`.
+- **Why.** The precise collector anchors its stack walk at `rbp` inside
+  `__gc_collect_precise`. A `--release` build without frame pointers never
+  sets `rbp`, so with rustc 1.97 the walk started at the *mutator's* frame
+  pointer. The innermost Twig frame's stack map was then never consulted:
+  that frame fell into the conservative `[sp, start_fp)` region, and precise
+  collection silently degraded to conservative on x86-64 Linux.
+  `gc_stress_live_bytes_differential_on_linux` and
+  `gc_recursive_frame_live_bytes_differential_on_linux` failed (precise kept 64
+  bytes), and `gc-core-capi`'s own docs call an untrusted anchor unsafe once
+  stack maps are registered. With frame pointers, the archive's
+  `__gc_collect_precise` starts `push rbp; mov rbp, rsp`, the walk reaches the
+  Twig frame's safepoint, and both tests pass.
+- Whether the old build happened to pass depended on the rustc version, which
+  is why CI (latest stable) and a host on 1.97 disagreed.
+- **Windows x64 is not fixed by the flag.** LLVM sets `rbp` with
+  `lea rbp, [rsp+N]` there even under `-Cforce-frame-pointers=yes`, so
+  the Windows precise-GC smoke tests stay skipped. The nested build
+  now keeps the outer rustflags as an `OsString`, so a non-UTF-8 flag no
+  longer drops all of them (security review).
+
 ## Unreleased (LANG84 phase 6e — `Trap.ReferenceError`)
 
 - `__twig_trap`'s kind table (`TWIG_TRAP_KINDS`) gains
