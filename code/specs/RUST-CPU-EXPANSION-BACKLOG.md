@@ -1,7 +1,7 @@
 # Rust CPU Expansion Backlog
 
 **Status:** active
-**Last reprioritized:** 2026-10-25
+**Last reprioritized:** 2026-10-26
 
 This is the live expansion queue after the original 07-series architecture
 matrix. The older `RUST-CPU-SIMULATOR-BACKLOG.md` remains the audit record for
@@ -46,6 +46,18 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | OpenSPARC T1 | PR #18176 | missing | Gate can descend through public OpenSPARC RTL. |
 | P0 | Arm Cortex-M0 | PR #18177 | missing | Gate waits for the Armv6-M oracle. |
 | P0 | Arm Cortex-M3 | local complete | missing | Publish this cell; then gate waits for merge. |
+
+## Gate-integrity repair queue
+
+Completed gate packages are re-audited when source inspection finds a host
+operation deciding an architecturally visible datapath result.  These bounded
+repairs outrank new completeness work because an existing gate claim is
+already public.
+
+| Priority | Target | Finding / next action |
+|---:|---|---|
+| P0 in progress | x86-64 multiply/divide qualification | The fixed-round gate multiplier and divider produce the wide arithmetic result, but `execution.rs` still uses host `i128`/`u128` comparisons to set IMUL/MUL overflow flags and to raise signed/unsigned divide overflow. Move product truncation and quotient-fit decisions into repository-gate reductions and selections; retain host values only for transport. Add exact signed/unsigned boundary differentials, atomic divide-fault witnesses, non-tautological gate-network tests, and a structural execution guard against reintroducing host-wide qualification. |
+| P1 audit | Remaining completed gate packages | Search architecturally visible arithmetic, flags, fault qualification, decode, and state selection for host-language shortcuts; record and repair one bounded cell at a time. Address/control bookkeeping permitted by the educational boundary is not itself a defect. |
 
 ## Independent functional queue
 
