@@ -77,6 +77,12 @@ fn sau_configuration_rejects_privilege_and_shape_errors_atomically() {
         cpu.set_sau_control(true, false),
         Err(CortexM33Error::PrivilegeViolation)
     );
+    let unprivileged_before = cpu.get_state().unwrap();
+    assert_eq!(
+        cpu.set_stack_limits(0x100, 0x80),
+        Err(CortexM33Error::PrivilegeViolation)
+    );
+    assert_eq!(cpu.get_state().unwrap(), unprivileged_before);
 
     let mut plain = CortexM33Simulator::new(false);
     assert_eq!(
@@ -357,6 +363,18 @@ fn direct_nonsecure_access_rejects_secure_and_nsc_memory() {
 
 #[test]
 fn stack_limits_and_restore_fail_atomically() {
+    let mut round_trip = CortexM33Simulator::new(false);
+    round_trip.load(&bytes(&[0xb081, 0xbe00]), 0).unwrap(); // sub sp,#4
+    round_trip.write_register(13, 0x108).unwrap();
+    let direct_snapshot = round_trip.get_state().unwrap();
+    round_trip.restore(direct_snapshot.clone()).unwrap();
+    assert_eq!(round_trip.get_state().unwrap(), direct_snapshot);
+    round_trip.step().unwrap();
+    assert_eq!(round_trip.read_register(13).unwrap(), 0x104);
+    let stepped_snapshot = round_trip.get_state().unwrap();
+    round_trip.restore(stepped_snapshot.clone()).unwrap();
+    assert_eq!(round_trip.get_state().unwrap(), stepped_snapshot);
+
     let mut cpu = CortexM33Simulator::new(false);
     cpu.load(&bytes(&[0xb081, 0xbe00]), 0).unwrap(); // sub sp,#4
     cpu.write_register(13, 0x100).unwrap();

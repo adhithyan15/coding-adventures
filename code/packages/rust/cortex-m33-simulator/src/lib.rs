@@ -299,6 +299,12 @@ impl CortexM33Simulator {
 
     /// Set the active security bank's stack-limit registers.
     pub fn set_stack_limits(&mut self, msplim: u32, psplim: u32) -> Result<(), CortexM33Error> {
+        if self.state.security_state == SecurityState::Secure
+            && !self.state.core.handler_mode
+            && self.state.core.control & 1 != 0
+        {
+            return Err(CortexM33Error::PrivilegeViolation);
+        }
         if msplim & 7 != 0
             || psplim & 7 != 0
             || msplim > MEMORY_SIZE as u32
@@ -457,6 +463,14 @@ impl CortexM33Simulator {
     }
 
     pub fn run(&mut self, max_steps: usize) -> Result<ExecutionResult, CortexM33Error> {
+        self.run_with_final_clone(max_steps, try_clone_state)
+    }
+
+    fn run_with_final_clone(
+        &mut self,
+        max_steps: usize,
+        mut final_clone: impl FnMut(&CortexM33State) -> Result<CortexM33State, CortexM33Error>,
+    ) -> Result<ExecutionResult, CortexM33Error> {
         check_retention(max_steps)?;
         let before = try_clone_state(&self.state)?;
         let mut traces = Vec::new();
@@ -464,21 +478,30 @@ impl CortexM33Simulator {
             .try_reserve_exact(max_steps)
             .map_err(|_| CortexM33Error::AllocationFailed)?;
         for _ in 0..max_steps {
-            match self.step() {
-                Ok(trace) => traces.push(trace),
+            let trace = match self.step() {
+                Ok(trace) => trace,
                 Err(error) => {
                     self.state = before;
                     return Err(error);
                 }
-            }
+            };
             if self.state.core.halted || self.state.core.sleeping {
+                let final_state = match final_clone(&trace.state_after) {
+                    Ok(state) => state,
+                    Err(error) => {
+                        self.state = before;
+                        return Err(error);
+                    }
+                };
+                traces.push(trace);
                 return Ok(ExecutionResult {
                     stopped: true,
                     steps: traces.len(),
                     traces,
-                    final_state: try_clone_state(&self.state)?,
+                    final_state,
                 });
             }
+            traces.push(trace);
         }
         self.state = before;
         Err(CortexM33Error::StepLimitExceeded { limit: max_steps })
@@ -623,10 +646,17 @@ fn validate_region(region: SauRegion) -> Result<(), CortexM33Error> {
 }
 
 fn validate_bank(bank: SecurityBank) -> Result<(), CortexM33Error> {
-    for value in [bank.msp, bank.psp, bank.msplim, bank.psplim] {
+    for value in [bank.msp, bank.psp] {
+        if value & 3 != 0 || value > MEMORY_SIZE as u32 {
+            return Err(CortexM33Error::Core(CortexM3Error::InvalidState {
+                reason: "banked stack pointer is invalid",
+            }));
+        }
+    }
+    for value in [bank.msplim, bank.psplim] {
         if value & 7 != 0 || value > MEMORY_SIZE as u32 {
             return Err(CortexM33Error::Core(CortexM3Error::InvalidState {
-                reason: "banked stack state is invalid",
+                reason: "banked stack limit is invalid",
             }));
         }
     }
@@ -995,5 +1025,17 @@ mod tests {
         assert!(checked_owned_range(u32::MAX, 8).is_err());
         assert_eq!(core_register(&state.core, 14).unwrap(), 0);
         assert!(core_register(&state.core, 16).is_err());
+    }
+
+    #[test]
+    fn final_state_allocation_failure_rolls_back_the_run() {
+        let mut simulator = CortexM33Simulator::new(false);
+        simulator.load(&0xbe00_u16.to_le_bytes(), 0).unwrap();
+        let before = simulator.get_state().unwrap();
+        assert_eq!(
+            simulator.run_with_final_clone(1, |_| Err(CortexM33Error::AllocationFailed)),
+            Err(CortexM33Error::AllocationFailed)
+        );
+        assert_eq!(simulator.get_state().unwrap(), before);
     }
 }

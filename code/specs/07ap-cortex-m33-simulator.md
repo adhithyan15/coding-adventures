@@ -64,7 +64,8 @@ configuration is unavailable, and every owned address is Non-secure. All four
 stack pointers start at the top of owned memory and all stack limits start at
 zero.
 
-Restore validates memory size, PC and stack alignment, status reserved bits,
+Restore validates memory size, PC and 4-byte stack-pointer alignment,
+8-byte stack-limit alignment,
 Thumb state, mode/IPSR agreement, selected-stack consistency, stack-limit
 alignment and ordering, installed-image range, extension/security consistency,
 SAU availability and region count, 32-byte granularity, inclusive limits, and
