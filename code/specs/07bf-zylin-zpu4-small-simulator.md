@@ -13,7 +13,7 @@ deterministic external-word-bus adapter. It is not a ZPUino, a board, an SoC,
 a cycle-accurate VHDL simulator, or a transistor recreation.
 
 The discovery audit was reconciled with `origin/main`
-`f6804fc7dc07338d0ee04338e6120a08abb280ec` on 2026-10-26. Repository
+`08d9140e6c0c60f7e74f1a5ad569e9c7cd68e364` on 2026-10-26. Repository
 packages, specifications, history, local/remote branches, worktrees, and every
 open or merged pull request contained no ZPU or Zylin CPU claim. The parallel
 ZipCPU cell already owns Layer 07be and `RCPU-085` / `RCPU-086`; this distinct
