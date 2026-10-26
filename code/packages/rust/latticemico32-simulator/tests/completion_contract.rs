@@ -244,6 +244,46 @@ fn big_endian_memory_sign_extension_and_self_modification() {
 }
 
 #[test]
+fn narrow_store_traces_match_replicated_rtl_bus_values_on_every_lane() {
+    let source = 0x1234_abcd;
+    for (opcode, width, offsets, bus_value) in [
+        (0x0c, 1_u8, &[0_u16, 1, 2, 3][..], 0xcdcd_cdcd),
+        (0x03, 2_u8, &[0_u16, 2][..], 0xabcd_abcd),
+        (0x16, 4_u8, &[0_u16][..], source),
+    ] {
+        for &offset in offsets {
+            for base in [0x200_u32, 0x1_0000] {
+                let mut cpu = loaded(&[imm(opcode, 1, 2, offset)]);
+                cpu.write_register(1, base).unwrap();
+                cpu.write_register(2, source).unwrap();
+                let trace = cpu.step().unwrap();
+                let transaction = trace.transactions[1];
+                assert_eq!(transaction.kind, BusTransactionKind::DataWrite);
+                assert_eq!(transaction.address, base + u32::from(offset));
+                assert_eq!(transaction.width, width);
+                assert_eq!(transaction.value, bus_value);
+                assert_eq!(transaction.success, base < MEMORY_SIZE as u32);
+                let expected_enable = match (width, offset) {
+                    (1, 0) => 0b1000,
+                    (1, 1) => 0b0100,
+                    (1, 2) => 0b0010,
+                    (1, 3) => 0b0001,
+                    (2, 0) => 0b1100,
+                    (2, 2) => 0b0011,
+                    (4, 0) => 0b1111,
+                    _ => unreachable!(),
+                };
+                assert_eq!(transaction.byte_enable, expected_enable);
+                assert_eq!(
+                    trace.exception.map(|exception| exception.id),
+                    (base >= MEMORY_SIZE as u32).then_some(EXCEPTION_DATA_BUS)
+                );
+            }
+        }
+    }
+}
+
+#[test]
 fn data_alignment_rejects_and_bus_range_enters_exception() {
     let mut misaligned = loaded(&[imm(0x0a, 1, 2, 0)]);
     misaligned.write_register(1, 1).unwrap();
@@ -342,6 +382,36 @@ fn csr_surface_dc_remap_and_manual_alignment_are_exact() {
         loaded(&[csr_write(6, 1)]).step(),
         Err(Lm32Error::UnsupportedCsr { .. })
     ));
+}
+
+#[test]
+fn rcsr_sextb_and_sexth_ignore_every_unused_encoding_bit() {
+    let unused_bits = (0..=10).chain(16..=20).collect::<Vec<_>>();
+    for opcode in [0x24_u32, 0x2c, 0x37] {
+        for mask in core::iter::once(0_u32)
+            .chain(unused_bits.iter().map(|bit| 1_u32 << bit))
+            .chain(core::iter::once(
+                unused_bits
+                    .iter()
+                    .fold(0_u32, |mask, bit| mask | (1 << bit)),
+            ))
+        {
+            let source_or_csr = if opcode == 0x24 { 6 } else { 1 };
+            let word = (opcode << 26) | (source_or_csr << 21) | (3 << 11) | mask;
+            let decoded = decode(word).unwrap();
+            let mut cpu = loaded(&[word]);
+            cpu.write_register(1, 0xffff_8080).unwrap();
+            let trace = cpu.step().unwrap();
+            let expected = match opcode {
+                0x24 => CFG,
+                0x2c => 0xffff_ff80,
+                0x37 => 0xffff_8080,
+                _ => unreachable!(),
+            };
+            assert_eq!(decoded.destination, 3);
+            assert_eq!(trace.destination, Some((3, expected)));
+        }
+    }
 }
 
 #[test]

@@ -10,8 +10,14 @@
 - Add exact full-state and ordered bus-transaction traces, architectural
   exception completion, typed atomic host faults, bounded run/execute, and
   deterministic pre-work and post-candidate allocation failures.
-- Check in the independent 64-row manual primary-opcode matrix, 61-row
-  pinned-RTL decode evidence corpus, and 32 operand seeds that drive 672
-  complete-state manual-oracle transitions.
-- Pass 26 release integration tests, strict Clippy/rustdoc, and 93.83%
-  measured release line coverage (867/924).
+- Check in 265 independently generated manual and 265 separately reproducible
+  pinned-RTL exact full-state/full-transaction transitions, 52 generated
+  lifecycle/fault rollback rows, eight source-hash facts, and retain the 157
+  compact opcode/decode/operand rows that drive 672 extra ALU transitions.
+- Trace actual replicated RTL bus values for SB/SH, exhaust every legal store
+  lane on success and bus error, and accept all ignored-field classes for
+  `rcsr`, `sextb`, and `sexth`.
+- Define construction as the sole ordinary infallible allocation boundary;
+  checked allocation and atomic rollback begin after an instance exists.
+- Pass 32 release integration tests, strict Clippy/rustdoc, and 94.18%
+  measured release line coverage (874/928).

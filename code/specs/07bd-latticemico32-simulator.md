@@ -1,10 +1,10 @@
 # Layer 07bd — LatticeMico32 Functional Simulator
 
 **Status:** `RCPU-083` is complete locally from the independently accepted
-specification: 26 release integration tests, 157 checked-in evidence rows
-including 32 operand seeds that drive 672 complete-state transitions, strict
-checks, and 93.83% measured release line coverage (867/924) pass. A different
-reviewer must still accept
+specification: 32 release integration tests, 747 checked-in evidence rows,
+530 generated exact full-state/full-transaction transitions, 52 generated
+lifecycle/fault rollback rows, strict checks, and 94.18% measured release line
+coverage (874/928) pass. A different reviewer must still accept
 the exact clean implementation head before publication. `RCPU-084`, the
 dependent gate-level cell, begins only after the functional cell merges.
 
@@ -123,9 +123,12 @@ callbacks.
 
 ## 4. Exact instruction and decode surface
 
-The decoder classifies all 64 primary opcodes and validates every reserved
-field before execution. It implements the four manual formats—RI, RR, CR, and
-I—and the following complete profile surface:
+The decoder classifies all 64 primary opcodes and validates every field that
+the sources define as reserved before execution. The pinned decoder selects
+`rcsr`, `sextb`, and `sexth` solely by primary opcode: bits 20:16 and 10:0 are
+unused for those forms and are accepted/ignored in every combination. They
+are not mislabeled as reserved encodings. The decoder implements the four
+manual formats—RI, RR, CR, and I—and the following complete profile surface:
 
 - arithmetic: `add`, `addi`, `sub`, `mul`, `muli`, `divu`, and `modu`;
 - logic: `and`, `andi`, `andhi`, `or`, `ori`, `orhi`, `xor`, `xori`, `xnor`,
@@ -242,6 +245,13 @@ contract errors and do not enter an invented LM32 exception.
 The public checked API provides `new`, `reset`, `load`, `snapshot`, `restore`,
 validated memory helpers, `set_interrupt_lines`, `step`, `run`, and `execute`.
 There is no unchecked state setter or hidden device callback.
+
+`new`/`Default` perform the one-time fixed 64-KiB memory allocation through
+Rust's ordinary infallible allocation API and therefore are intentionally
+outside the typed `AllocationFailed` contract. Once an instance exists, every
+allocation performed by checked snapshot/load/execution/trace/result work is
+fallible, preflighted, deterministic under the test seam, and atomic. This is
+the precise boundary of the package's checked-allocation claim.
 
 Because LM32 has no halt instruction, `run(max_steps)` stops successfully at
 the first exception transition and returns its traces plus typed

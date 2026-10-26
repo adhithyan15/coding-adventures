@@ -26,6 +26,11 @@ invoke, or translate that RTL.
   including failures after prior candidate instructions in `run` and
   `execute`.
 
+`Lm32Simulator::new`/`Default` use Rust's ordinary infallible allocation for
+the initial fixed 64-KiB memory. The typed `AllocationFailed` guarantee begins
+after construction and covers every later checked snapshot, load, execution,
+trace, and result allocation.
+
 Signed `div`/`mod`, user operations, caches, MMU, cycle timing, hardware debug,
 peripherals, DMA, arbitration, and SoC address decoding are explicit exclusions.
 
@@ -56,18 +61,42 @@ cargo test -p latticemico32-simulator --release --no-fail-fast
 cargo clippy -p latticemico32-simulator --all-targets -- -D warnings
 RUSTDOCFLAGS="-D warnings" cargo doc -p latticemico32-simulator --no-deps
 cargo llvm-cov -p latticemico32-simulator --release --tests --summary-only
+python3 latticemico32-simulator/tools/generate_vectors.py --check
+# With an offline checkout of the exact pinned commit:
+python3 latticemico32-simulator/tools/generate_vectors.py --check \
+  --rtl-root /path/to/lm32-84b3e3ca
 ```
 
-The checked-in `tests/vectors/manual-opcodes.csv` is the independent complete
-64-primary-opcode classification matrix. `pinned-rtl-decode.csv` contains 61
-bounded canonical decode observations spanning every implemented family plus
-both raise operations. The 32-row independent manual operand seed corpus
-drives 672 exact complete-state ALU transitions. The integration suite also exercises exact
-state and transaction effects, register overlap, integer boundaries, every
-memory width and endian extension, all branch predicates, all visible CSRs,
-both exception-remap states, every interrupt line, lifecycle rollback, and
-allocation seams. All 26 release integration tests pass, and measured release
-line coverage is 93.83% (867/924).
+`tools/generate_vectors.py` is an independent manual oracle plus an offline
+RTL evidence generator and immutable-source hash checker; it never imports the
+Rust implementation. It
+reproduces 265 manual and 265 separately named pinned-RTL transitions. Both
+corpora compare all 32 GPRs, every scalar state field, the complete 64-KiB
+memory, image metadata, and every trace/transaction/interrupt/exception field.
+They span every implemented family, narrow-store lane, every CSR, both
+exception-remap states, every interrupt line, ignored-field classes, and the
+declared integer/control boundaries. A separate 52-row generated corpus drives
+typed lifecycle/fault rollback. The legacy 64-row opcode, 61-row canonical
+decode, and 32-row operand corpora remain as small classification checks; the
+operand rows drive 672 additional complete-state ALU transitions. In total,
+747 bounded evidence rows and all 32 release integration tests pass. Measured
+release line coverage is 94.18% (874/928).
+
+The source-evidence table pins these SHA-256 values for commit
+`84b3e3ca0ad9535acaef201c1482342871358b08`:
+
+- `lm32_decoder.v`: `9fd441f3ba425ed79042e5305e229087ba5525b3bfb4cb13057c92119c7173c1`
+- `lm32_load_store_unit.v`: `172706c683180f5cae98b7f4bd26efcc674b03de164cd4e0922ee4bd4f22af39`
+- `lm32_interrupt.v`: `495f56e562abb418fccb099a1ad2f4ce86757e223248346844a8bb1e729fc7ca`
+- `lm32_cpu.v`: `e54421ff9fbc6c996cc81ebeb5d98cb16af6737ca2f8571ebd5bd0e79ea8aa17`
+- `lm32_debug.v`: `08e45a33e38c91415d3cd9fb8bcb190567839646ab0b7bb06fa8786cd867328d`
+
+The pinned load/store boundary replicates the low byte across all four bus
+lanes and the low half-word across both half-word lanes. `DataWrite.value`
+records that actual 32-bit RTL bus value while `byte_enable` selects the legal
+lane; every SB/SH/SW lane is checked for both successful and bus-error traces.
+The decoder also explicitly accepts every ignored-bit class of `rcsr`,
+`sextb`, and `sexth`, matching primary-opcode-only RTL selection.
 
 One evidence discrepancy is intentionally not hidden: the manual-visible
 functional EBA/DEBA rule permits bit 8 (256-byte alignment), while the pinned

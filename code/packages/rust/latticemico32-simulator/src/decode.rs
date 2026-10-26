@@ -193,8 +193,10 @@ pub fn decode(raw: u32) -> Result<DecodedInstruction, DecodeError> {
 
     let reserved_ok = match opcode {
         0x34 => raw & 0xffff == 0,
-        0x24 => raw & 0x7ff == 0,
-        0x2c | 0x37 => raw & 0x7ff == 0,
+        // The RTL selects these operations solely from the primary opcode.
+        // Their unused source/destination-position bits are architecturally
+        // ignored rather than reserved encodings.
+        0x24 | 0x2c | 0x37 => true,
         0x30 | 0x36 => raw & 0x001f_ffff == 0,
         0x38 | 0x3e => true,
         0x11..=0x17 | 0x19..=0x1d | 0x1f => true,

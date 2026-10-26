@@ -255,6 +255,12 @@ impl Default for Lm32Simulator {
 }
 
 impl Lm32Simulator {
+    /// Construct the deterministic reset state.
+    ///
+    /// This convenience constructor performs the initial fixed-size memory
+    /// allocation through Rust's ordinary infallible allocation API. The
+    /// typed allocation contract begins once an instance exists; use the
+    /// checked lifecycle and execution methods for fallible, atomic work.
     #[must_use]
     pub fn new() -> Self {
         Self {
@@ -830,12 +836,23 @@ fn data_write(
     tx: &mut Vec<BusTransaction>,
 ) -> Result<bool, Lm32Error> {
     validate_alignment(address, width)?;
+    // The pinned RTL presents narrow stores as replicated values on d_dat_o;
+    // byte-enable selects the addressed lane(s). Keep the trace at that bus
+    // boundary rather than exposing the unmodified register source.
+    let bus_value = match width {
+        1 => (value & 0xff).wrapping_mul(0x0101_0101),
+        2 => {
+            let half = value & 0xffff;
+            half | (half << 16)
+        }
+        _ => value,
+    };
     if !range_fits(address, width) {
         tx.push(BusTransaction {
             kind: BusTransactionKind::DataWrite,
             address,
             width,
-            value,
+            value: bus_value,
             byte_enable: byte_enable(address, width),
             success: false,
         });
@@ -846,7 +863,7 @@ fn data_write(
         kind: BusTransactionKind::DataWrite,
         address,
         width,
-        value,
+        value: bus_value,
         byte_enable: byte_enable(address, width),
         success: true,
     });
