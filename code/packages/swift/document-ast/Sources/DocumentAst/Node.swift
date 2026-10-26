@@ -153,6 +153,27 @@ public struct CodeBlockNode: Equatable, Sendable {
     }
 }
 
+/// A source-preserving fenced block.
+///
+/// A fence carries more information than an indented code block. `name` is
+/// only the first normalized info token, while `info` retains the complete
+/// normalized metadata for an explicit later transform. Renderers must treat
+/// both the metadata and literal payload as inert by default.
+public struct FencedBlockNode: Equatable, Sendable {
+    /// First whitespace-delimited info token, or `nil` for an anonymous fence.
+    public let name: String?
+    /// Complete normalized info string, or `nil` when it is empty.
+    public let info: String?
+    /// Literal payload, including the final newline when non-empty.
+    public let value: String
+
+    public init(name: String?, info: String?, value: String) {
+        self.name = name
+        self.info = info
+        self.value = value
+    }
+}
+
 /// A block quotation.
 ///
 /// Produced by `> ` prefixes in Markdown. May contain any block content,
@@ -492,6 +513,8 @@ public indirect enum BlockNode: Equatable, Sendable {
     case paragraph(ParagraphNode)
     /// A fenced or indented code block.
     case codeBlock(CodeBlockNode)
+    /// A source-preserving fenced block with inert metadata.
+    case fencedBlock(FencedBlockNode)
     /// A block quotation.
     case blockquote(BlockquoteNode)
     /// An ordered or unordered list.
