@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- Made the physical HALT DFF Q output authoritative for execution control,
+  snapshots, restore, trap-zero paths, checked faults, and results.
+  The historical public `halted` boolean remains a synchronized observation
+  mirror for source compatibility, but caller mutation cannot clock state.
+- Replaced the topology constant's self-assertion with a public inventory
+  derived from the concrete memory, register-file, and HALT storage, with
+  deliberate mirror-divergence, restore, halt, and fault tests.
+
 ## [0.2.0] — 2026-08-31
 
 ### Changed

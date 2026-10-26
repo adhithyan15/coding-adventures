@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:9cbd20902a67d050",
+  "lessonIds": [
+    "JA-C257-nakushimashita",
+    "JA-C257-noriokureru",
+    "JA-C257-nihonjuu",
+    "JA-W257-juu-kanji",
+    "JA-R257-something-went-wrong"
+  ],
+  "tex": "japanese/book/chapters/ch257-something-went-wrong.tex"
+}

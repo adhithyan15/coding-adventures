@@ -215,3 +215,11 @@ integer register out, computed by `vm_core::float_format`. A compiler's
 float-layout helper (`__py_write_float`, `__js_write_number`) is integer code
 over these; its call-free parts compile here, and the parts with a `call` run
 on the interpreter tier.
+The LANG83 conversions follow: `int_to_real` (`I64_TO_F64`, Rust `as f64`)
+reads an integer register and writes a float register, and
+`real_to_int_trunc`/`real_to_int_floor` (`F64_TO_I64_TRUNC`/`F64_TO_I64_FLOOR`)
+read a float register and write an integer one. A source of the wrong class
+refuses the function. A failed narrowing (a non-finite value, or one outside
+i64) writes vm-core's own `real_to_i64_checked` text to the error slot, and
+`JITCore` returns it as the same `VMError::Custom`, so both tiers fail
+identically.

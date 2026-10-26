@@ -21,7 +21,7 @@ import {
 it("pins Japanese continuity", () => expectLanguageContinuity("japanese"));
 it("pins Japanese modality", () => expectLanguageModality("japanese"));
 
-it("pins Japanese's writing ladder IN ORDER, pre-A1 through A1", () => {
+it("pins Japanese's writing ladder IN ORDER, pre-A1 through B1", () => {
   const japanese = languageWritingStages("japanese");
   expect(japanese.defects).toEqual([]);
   expect(japanese.levels[0]).toMatchObject({ level: "pre-A1", complete: true, missingStages: [] });
@@ -34,6 +34,9 @@ it("pins Japanese's writing ladder IN ORDER, pre-A1 through A1", () => {
     // the point: a timed or connected paper before a controlled one is invalid.
     "controlled-composition",
     "timed-assessment-production",
+    "connected-composition",
+    // The B1 core's six-line task (JA-W261-six-lines, chapter 261): six
+    // connected lines about a trip, one frame a line and no model to copy.
     "connected-composition",
   ]);
 });

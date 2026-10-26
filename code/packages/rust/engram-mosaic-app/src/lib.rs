@@ -962,6 +962,116 @@ mod tests {
         assert_eq!(update.props["show-decks-screen"], true);
     }
 
+    /// The committed release fixture from Engram v0.4.0 survives the upgrade.
+    ///
+    /// The fixture's `state` was captured by running v0.4.0's own adapter (see
+    /// its `provenance`), not written by hand, so restoring it here is the same
+    /// first launch a v0.4.0 user's file meets. The release lane uses the same
+    /// file through `code/scripts/mosaic_release_state_gate.py` against real
+    /// bundles; this test is what makes the fixture's JSON-pointer
+    /// expectations trustworthy, by checking each one against the bytes the
+    /// *current* adapter really writes rather than against a guess at them.
+    ///
+    /// ```text
+    ///   fixture.state ──restore as v1──▶ EngramMosaicApp ──snapshot──▶ v3 bytes
+    ///        │                                  │                         │
+    ///   v1 expectations                  deck + card present       v3 expectations
+    /// ```
+    #[test]
+    fn the_v0_4_0_release_fixture_survives_the_upgrade() {
+        let fixture: Value = serde_json::from_str(include_str!(
+            "../../../../programs/mosaic/engram-app/fixtures/release-upgrade-v0.4.0.json"
+        ))
+        .expect("the release fixture is valid JSON");
+        assert_eq!(fixture["fixtureSchema"], "mosaic/release-upgrade-fixture");
+        assert_eq!(fixture["sourceVersion"], "0.4.0");
+        assert_eq!(fixture["snapshotSchema"], SNAPSHOT_SCHEMA);
+        assert_eq!(fixture["snapshotVersion"], 1);
+
+        // Every expectation that applies to `version`, as (pointer, value).
+        // An expectation with no `liveVersions` applies to every version --
+        // the same rule the Python gate uses.
+        let expectations_for = |version: u64| -> Vec<(String, Value)> {
+            fixture["expectations"]
+                .as_array()
+                .expect("expectations is a list")
+                .iter()
+                .filter(|expectation| match expectation.get("liveVersions") {
+                    None => true,
+                    Some(versions) => versions
+                        .as_array()
+                        .expect("liveVersions is a list")
+                        .iter()
+                        .any(|candidate| candidate.as_u64() == Some(version)),
+                })
+                .map(|expectation| {
+                    (
+                        expectation["pointer"].as_str().unwrap().to_string(),
+                        expectation["equals"].clone(),
+                    )
+                })
+                .collect()
+        };
+        let check = |payload: &Value, version: u64| {
+            let expectations = expectations_for(version);
+            assert!(
+                !expectations.is_empty(),
+                "the fixture must check something for v{version}"
+            );
+            for (pointer, expected) in expectations {
+                assert_eq!(
+                    payload.pointer(&pointer),
+                    Some(&expected),
+                    "v{version} payload at {pointer}"
+                );
+            }
+        };
+
+        // The untouched-file case: a host that never re-persists leaves v1.
+        check(&fixture["state"], 1);
+
+        let mut app = EngramMosaicApp::default();
+        let update = app
+            .restore(Snapshot {
+                schema: SNAPSHOT_SCHEMA.to_string(),
+                version: 1,
+                bytes: serde_json::to_vec(&fixture["state"]).unwrap(),
+            })
+            .expect("the v0.4.0 fixture must restore");
+        assert!(update.props.is_object());
+
+        // The data itself, read from the restored collection rather than from
+        // any serialised form, so this half does not depend on the pointers.
+        let state = app.session.state();
+        assert_eq!(state.decks.len(), 1);
+        assert_eq!(state.decks[0].id, "upgrade-fixture-deck");
+        assert_eq!(state.decks[0].name, "Upgrade fixture deck");
+        assert_eq!(state.cards.len(), 1);
+        assert_eq!(state.cards[0].deck_id, "upgrade-fixture-deck");
+        assert_eq!(state.cards[0].front, "Upgrade fixture front");
+        assert_eq!(state.cards[0].back, "Upgrade fixture back");
+
+        // The re-persisted case: the current adapter writes the newest version,
+        // and the fixture must say where the deck and card are in it.
+        let snapshot = app.snapshot().unwrap().expect("Engram supports snapshots");
+        assert_eq!(snapshot.schema, SNAPSHOT_SCHEMA);
+        assert_eq!(snapshot.version, SNAPSHOT_VERSION);
+        assert_eq!(snapshot.version, 3);
+        let accepted: Vec<u64> = fixture["acceptedLiveVersions"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter_map(Value::as_u64)
+            .collect();
+        assert_eq!(
+            accepted,
+            vec![1, u64::from(SNAPSHOT_VERSION)],
+            "accepted live versions are the untouched file and a re-persist"
+        );
+        let payload: Value = serde_json::from_slice(&snapshot.bytes).unwrap();
+        check(&payload, u64::from(snapshot.version));
+    }
+
     /// #14523: the payload keeps the facade's document as a fragment beside
     /// the adapter's field, rather than merging the two. The fragment must come
     /// through byte for byte -- that is what proves nothing re-serialised it.

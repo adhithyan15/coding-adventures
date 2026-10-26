@@ -10,7 +10,13 @@ use sparc_v8_simulator::MEMORY_SIZE;
 #[test]
 fn exact_topology_and_restore_are_atomic() {
     let mut cpu = SparcCpu::new();
-    assert_eq!(FLIP_FLOP_COUNT, 526_185);
+    let inventory = cpu.physical_storage_inventory();
+    assert_eq!(inventory.memory_dffs, cpu.mem.len() * 8);
+    assert_eq!(inventory.memory_dffs, 524_288);
+    assert_eq!(inventory.register_dffs, 1_896);
+    assert_eq!(inventory.halt_dffs, 1);
+    assert_eq!(inventory.total(), FLIP_FLOP_COUNT);
+    assert_eq!(inventory.total(), 526_185);
     assert_eq!(cpu.get_state().memory.len(), MEMORY_SIZE);
     assert_eq!(cpu.get_state().npc, 4);
     let before = cpu.get_state();
@@ -47,6 +53,60 @@ fn exact_topology_and_restore_are_atomic() {
         ));
         assert_eq!(cpu.get_state(), before);
     }
+}
+
+#[test]
+fn halt_dff_q_overrides_both_compatibility_mirror_divergences() {
+    let mut running = SparcCpu::new();
+    running
+        .load_checked(&assemble(&[0x0100_0000, encode_ta(0)]))
+        .unwrap();
+    running.halted = true;
+    assert!(!running.halted());
+    assert!(!running.get_state().halted);
+    let trace = running.step_checked().unwrap();
+    assert_eq!(trace.raw, 0x0100_0000);
+    assert_eq!(trace.pc_after, 4);
+    assert!(!running.halted);
+
+    let result = running.run_loaded_checked(2).unwrap();
+    assert!(result.halted);
+    assert_eq!(result.steps, 1);
+    assert!(result.final_state.halted);
+    assert!(running.halted());
+    running.halted = false;
+    let before = running.get_state();
+    assert!(before.halted);
+    assert_eq!(running.step_checked(), Err(SparcError::Halted));
+    assert_eq!(running.get_state(), before);
+    assert!(running.halted);
+}
+
+#[test]
+fn restore_clocks_halt_q_and_faults_preserve_it() {
+    let mut cpu = SparcCpu::new();
+    let mut halted = cpu.get_state();
+    halted.halted = true;
+    cpu.restore(&halted).unwrap();
+    assert!(cpu.halted());
+    assert!(cpu.halted);
+
+    cpu.load_checked(&assemble(&[encode_ta(0)])).unwrap();
+    cpu.step_checked().unwrap();
+    assert!(cpu.halted());
+    assert!(cpu.get_state().halted);
+
+    cpu.load_checked(&assemble(&[encode_alu_imm(0x3f, 4, 2, 3)]))
+        .unwrap();
+    cpu.halted = true;
+    let before = cpu.get_state();
+    assert!(matches!(
+        cpu.step_checked(),
+        Err(SparcError::UnknownInstruction { .. })
+    ));
+    assert_eq!(cpu.get_state(), before);
+    assert!(!cpu.halted());
+    assert!(!cpu.halted);
 }
 
 #[test]

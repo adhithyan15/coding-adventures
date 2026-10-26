@@ -952,6 +952,63 @@ integer literal is refused rather than read as float bits. On BEAM, the five
 refused ops are also listed in `validate_for_beam`'s `UNSUPPORTED_OPS`, so a
 direct `iir-to-beam` caller that skips `lang-aot` gets the same refusal.
 
+### Conversions on the JIT
+
+Until this follow-up, the JIT declared `int_to_real`, `real_to_int_trunc` and
+`real_to_int_floor` `Refused(INTERPRETER_TIER_ONLY)`. Any function that mixed
+an integer with a float therefore ran on the interpreter tier. That covered
+Python's `1 + 2.5`, Dartmouth BASIC's `INT`, and ALGOL's `entier`. All three
+fit the bit-pattern scheme above:
+
+| Op | Bytecode | Source | Destination | Semantics |
+| --- | --- | --- | --- | --- |
+| `int_to_real` | `I64_TO_F64 <dst> <a>` | an integer register, or an integer literal that constant propagation folded in | a float register | Rust `a as f64`: round to nearest, ties to even. It is exact for \|a\| ≤ 2⁵³, and `2⁵³ + 1` becomes `2⁵³`, as on every other backend (`cvtsi2sd`, `scvtf`, `sitofp`, `f64.convert_i64_s`, `l2d`, `conv.r8`) |
+| `real_to_int_trunc` | `F64_TO_I64_TRUNC <dst> <a>` | a float register, or a folded float literal | an integer register | `t = x.trunc()`, then the VM's checked narrowing |
+| `real_to_int_floor` | `F64_TO_I64_FLOOR <dst> <a>` | the same | an integer register | `t = x.floor()`, then the same check |
+
+Because `int_to_real` writes a float register, its destination joins the
+JIT's set of `f64` registers. Each of the two narrowing ops writes an
+ordinary integer register. So a name that some op also writes as a float
+refuses the function, the rule `f64_signbit` already follows. A source of
+the wrong class also refuses the function: a float register or float literal
+given to `int_to_real`, or an integer given to a narrowing op. No float bits
+are ever read as an integer, and no integer is ever read as float bits.
+
+**An integer register must hold an integer.** The class rules above cover
+values the function computes. Values that enter from outside are checked when
+they arrive:
+- Every parameter has a checked prologue entry: `PARAM_I64 <reg>` for a
+  non-`f64` parameter, `PARAM_F64 <reg>` for an `f64` one.
+  - A `PARAM_I64` argument must be `Int` or `Bool`. Anything else fails the
+    call before the body runs. A missing argument leaves the register 0.
+  - Arguments beyond the declared parameters are ignored, as the VM ignores
+    them.
+- A `call_builtin` result stored in a register must be `Int`, `Bool`, or a
+  void `Null` (stored as 0).
+
+Both used to collapse to 0, so `int_to_real` of a parameter that received
+`Float(2.5)` returned `0.0` where the VM raises "operand is not an integer".
+It now fails closed. An `f64` parameter is still checked by its `PARAM_F64`
+prologue instruction.
+
+**The narrowing failure matches the VM, not `Trap.ConvRange`.** vm-core's
+`real_to_i64_checked` rejects a non-finite `t` with
+`VMError::Custom("real_to_int: operand is not finite")`. It rejects a `t`
+outside `[-2⁶³, 2⁶³)` with `VMError::Custom("real_to_int: {t} is outside the
+i64 range")`. The JIT writes exactly that text to its error slot and stops,
+and `error_from_message` passes it through unchanged as the same
+`VMError::Custom`. This way the two tiers fail identically, which is what the
+JIT's declaration rule requires.
+
+The registry table above names `Trap.ConvRange` (id 4) for this case. No
+backend reports it today:
+- the VM raises the custom error above;
+- native x86-64 executes `ud2` and AArch64 executes `udf`;
+- the CLR throws `OverflowException` from `conv.ovf.i8`.
+
+Moving every backend to the typed trap is a separate change. The JIT follows
+the VM until that change lands.
+
 ### Conformance cases
 
 `op_conformance` gains three cases:

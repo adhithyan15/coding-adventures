@@ -2075,9 +2075,11 @@ fn pr7e_float_writers_are_gone_and_the_layouts_run_everywhere() {
         let table = case.name.contains("table value") || case.name.contains("infinities");
         let ran = execute_everywhere(case);
         for (column, backend) in columns {
-            // The table cases use only ops every column lowers; the
-            // computed-float case's `int_to_real` keeps it off the JIT.
-            assert!(!table || case.lowered_on(backend) || backend == Backend::Beam, "{}: {column}", case.name);
+            // Every PR7e case uses only ops every column but BEAM lowers. The
+            // computed-float case's `int_to_real` once kept it off the JIT;
+            // jit-core now lowers the LANG83 conversions, so it is held to
+            // the JIT column like the rest.
+            assert!(case.lowered_on(backend) || backend == Backend::Beam, "{}: {column}", case.name);
             if required.contains(&column) && case.lowered_on(backend) {
                 assert!(ran.contains(&column), "{}: did not run on {column} (ran {ran:?})", case.name);
             }
