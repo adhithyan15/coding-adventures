@@ -1,0 +1,15 @@
+{
+  "language": "japanese",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:cdc91e8322a70a5d",
+  "lessonIds": [
+    "JA-C252-okite",
+    "JA-C252-tabete-kara",
+    "JA-C252-sorekara",
+    "JA-C252-soshite",
+    "JA-C252-tsukihi",
+    "JA-W252-tsuki-kanji",
+    "JA-R252-one-thing-then-the-next"
+  ],
+  "tex": "japanese/book/chapters/ch252-one-thing-then-the-next.tex"
+}

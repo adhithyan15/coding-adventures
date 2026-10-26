@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C260-moshi-tara",
+    "language": "japanese",
+    "chapter": 260,
+    "sequence": 15550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4af0e44c763bb424"
+  },
+  "findings": []
+}

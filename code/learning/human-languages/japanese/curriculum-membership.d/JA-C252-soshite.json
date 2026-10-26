@@ -1,0 +1,11 @@
+{
+  "id": "JA-C252-soshite",
+  "pathSegment": "JA-PATH-252-NARRATE252",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-252-NARRATE252",
+      "order": 3
+    }
+  ]
+}
