@@ -46,6 +46,7 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | OpenSPARC T1 | merged | merged | Complete; gate PR #18295 landed. |
 | P0 | Arm Cortex-M0 | merged | PR #18296 | Conflict reconciliation in progress; squash auto-merge remains armed. |
 | P0 | Arm Cortex-M3 | merged | merged | Complete; gate PR #18297 landed. |
+| P0 | Arm Cortex-M23, Security Extension disabled | merged | specified | Implement the bounded educational ISA-level gate companion from Spec 07ao2; TrustZone/SAU, NVIC, MPU/IDAU, buses, and timing remain separate cells. |
 
 ## P0 gate-integrity repair queue
 
