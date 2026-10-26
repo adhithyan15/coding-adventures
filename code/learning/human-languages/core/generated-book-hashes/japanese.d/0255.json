@@ -1,0 +1,12 @@
+{
+  "language": "japanese",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:f43ec02b79b97709",
+  "lessonIds": [
+    "JA-C255-itta-hou-ga-ii",
+    "JA-C255-dakara",
+    "JA-C255-desu-kara",
+    "JA-R255-advice-and-so"
+  ],
+  "tex": "japanese/book/chapters/ch255-advice-and-so.tex"
+}
