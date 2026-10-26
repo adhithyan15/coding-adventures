@@ -2,12 +2,19 @@ use coding_adventures_mips_r2000_gatelevel::{CpuMipsR2000, MipsError, FLIP_FLOP_
 
 #[test]
 fn topology_is_exact_and_reset_is_complete() {
-    assert_eq!(FLIP_FLOP_COUNT, 525_409);
     let mut cpu = CpuMipsR2000::new();
+    let inventory = cpu.physical_storage_inventory();
+    assert_eq!(inventory.memory_dffs, cpu.mem.len() * 8);
+    assert_eq!(inventory.memory_dffs, 524_288);
+    assert_eq!(inventory.register_dffs, 1_120);
+    assert_eq!(inventory.halt_dffs, 1);
+    assert_eq!(inventory.total(), FLIP_FLOP_COUNT);
+    assert_eq!(inventory.total(), 525_409);
     cpu.write_register_checked(7, 0xDEAD_BEEF).unwrap();
     cpu.write_byte_checked(0x1234, 0xA5).unwrap();
     cpu.load_checked(&0x0000_000Cu32.to_be_bytes()).unwrap();
     cpu.step_checked().unwrap();
+    assert!(cpu.halted());
     assert!(cpu.halted);
     cpu.reset();
     assert_eq!(cpu.get_state(), CpuMipsR2000::new().get_state());
@@ -53,7 +60,58 @@ fn checked_step_traces_every_state_field_and_halt_clock() {
     assert_eq!(trace.raw, 0x0000_000C);
     assert!(!trace.state_before.halted);
     assert!(trace.state_after.halted);
+    assert!(cpu.halted());
+    assert!(cpu.halted);
     assert!(matches!(cpu.step_checked(), Err(MipsError::Halted)));
+}
+
+#[test]
+fn halt_dff_q_overrides_both_compatibility_mirror_divergences() {
+    let mut running = CpuMipsR2000::new();
+    running.load_checked(&[0, 0, 0, 0, 0, 0, 0, 0x0c]).unwrap();
+    running.halted = true;
+    assert!(!running.halted());
+    assert!(!running.get_state().halted);
+    let trace = running.step_checked().unwrap();
+    assert_eq!(trace.raw, 0);
+    assert_eq!(trace.pc_after, 4);
+    assert!(!running.halted);
+
+    running.step_checked().unwrap();
+    assert!(running.halted());
+    running.halted = false;
+    let before = running.get_state();
+    assert!(before.halted);
+    assert_eq!(running.step_checked(), Err(MipsError::Halted));
+    assert_eq!(running.get_state(), before);
+    assert!(running.halted);
+}
+
+#[test]
+fn restore_clocks_halt_q_and_fault_rollback_preserves_it() {
+    let mut cpu = CpuMipsR2000::new();
+    let mut halted = cpu.get_state();
+    halted.halted = true;
+    cpu.restore(&halted).unwrap();
+    assert!(cpu.halted());
+    assert!(cpu.halted);
+
+    let mut running = halted;
+    running.halted = false;
+    running.memory[..4].copy_from_slice(&0xfc00_0000u32.to_be_bytes());
+    running.loaded_origin = 0;
+    running.loaded_len = 4;
+    running.pc = 0;
+    cpu.restore(&running).unwrap();
+    cpu.halted = true;
+    let before = cpu.get_state();
+    assert!(matches!(
+        cpu.step_checked(),
+        Err(MipsError::UnknownInstruction { .. })
+    ));
+    assert_eq!(cpu.get_state(), before);
+    assert!(!cpu.halted());
+    assert!(!cpu.halted);
 }
 
 #[test]
