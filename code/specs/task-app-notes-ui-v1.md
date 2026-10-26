@@ -153,8 +153,10 @@ active project:
 
 - writes nothing, and keeps the whole draft — title, body and the typed
   task name — exactly as it was, so the person can correct the name;
-- sets the new `note-error` slot to a one-line reason, and announces the
-  same reason politely to assistive technology;
+- sets the new `note-error` slot to a one-line reason. The native adapter
+  also announces it politely, as it announces "Note saved"; the web host
+  has no announcement channel for either yet, so there the visible text is
+  the whole signal;
 - is cleared by **any other event** (typing, switching notes, changing
   view), and by the next Save that succeeds. A new Save sets or clears it
   again. Like Journal's `draft-error`, it describes the last attempt, not
