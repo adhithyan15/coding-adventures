@@ -26,6 +26,6 @@ pub mod decoder;
 pub mod register_file;
 mod state;
 
-pub use cpu::{SparcCpu, FLIP_FLOP_COUNT};
+pub use cpu::{PhysicalStorageInventory, SparcCpu, FLIP_FLOP_COUNT};
 pub use sparc_v8_simulator::{ExecutionResult, SparcError, SparcState, StepTrace};
 pub use state::DffMemory;
