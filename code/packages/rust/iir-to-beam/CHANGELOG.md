@@ -1,5 +1,14 @@
 # Changelog — iir-to-beam
 
+## Unreleased — non-finite float constants are refused (LANG84 6e review)
+
+- `validate_for_beam` rejects an `f64` `const` whose value is `±Infinity` or
+  `NaN`, with an `UnsupportedType` error. Erlang floats are always finite, so
+  such a literal used to pass validation and lowering, and then fail when the
+  BEAM loader read the literal table. JavaScript's `console.log(1e999)`
+  produces exactly that: a constant with no `f64_*` op beside it. BEAM now
+  refuses it at compile time, like every other program it cannot run.
+
 ## [0.24.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
 
 - **`f64_signbit`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6c): `is_lt x, 0.0` → 1; else
