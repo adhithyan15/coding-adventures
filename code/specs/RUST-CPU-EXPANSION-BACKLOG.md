@@ -90,15 +90,16 @@ merged, while Cortex-M33 is already in review.
 | 12 | ARM7TDMI | published ARMv4T manuals | Complete locally: bounded ARMv4T ARM/Thumb integer core; all 31 physical GPRs and five SPSRs; pipeline-visible PC, bank/state exchange, checked memory and full-span control targets; exact transactional traces/lifecycle; 39 release tests; and 88.30% line coverage (1,389/1,573). Gate partner and SoC composition remain queued. |
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
-| 15 | RCA CDP1802 | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: all documented encodings except unassigned 0x68, complete COSMAC state, and explicit I/O/DMA/interrupt transaction seams; independent implementation review is next. |
+| 15 | RCA CDP1802 | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Functional merged. Gate Spec 07bc2 is complete locally and pins an independent full decoder/executor, repository-gate ALU/control, exact 524,667-DFF state, complete functional differential, explicit I/O/DMA/interrupt seams, compiler-valid hostile structural fixtures, and typed atomic lifecycle. Implementation follows in this bounded cell. |
 
 CDP1802 is complete locally from its independently reviewed specification.
 The functional cell covers the complete register matrix, instruction table,
 reset/inhibit lifecycle, flags, ports, DMA, and interrupt response. Its
 explicit bus operations make it a high-value bridge from CPU execution toward
 the requested SoC data-movement simulations. A different reviewer's exact-head
-implementation PASS is the remaining publication gate. Educational-gate and
-source-backed SoC compositions remain separate bounded follow-ups.
+implementation PASS is the remaining publication gate. The independently
+specified educational gate partner is now the active bounded cell.
+Source-backed SoC composition remains a separate follow-up.
 The local evidence is 31 release integration tests plus one doctest, including
 256-byte independent decode and execution sweeps, exhaustive 256x256x2 ALU
 relations, strict Clippy/rustdoc, lessons validation, affected BUILD, and
