@@ -207,3 +207,6 @@ LANG83 PR6c adds `ADD_F64` … `DIV_F64`, `NEG_F64`, `SIGNBIT_F64` and `RET_F64`
 the destinations of `f64_add`/`f64_sub`/`f64_mul`/`f64_div`/`f64_neg` are float
 registers too (holding the bits), the ops compute in Rust `f64` (never a trap),
 and `f64_signbit` writes an ordinary integer register.
+LANG83 PR7b adds `CLASS_F64` / `DIGITS_F64` / `EXP10_F64` (`f64_class`,
+`f64_digits`, `f64_exp10`): like `SIGNBIT_F64`, a float register in and an
+integer register out, computed by `vm_core::float_format`.

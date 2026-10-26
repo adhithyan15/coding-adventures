@@ -82,6 +82,10 @@
 //!   `RET_F64`, on float registers (a float's bit pattern in an i64 slot;
 //!   see `f64_vars` in `compile_to_bytecode`). IEEE-754 binary64, never a
 //!   trap: `1/0` is `+Inf`, `0/0` is `NaN`, `-0` survives.
+//! - **LANG83 PR7b**: `f64_class` / `f64_digits` / `f64_exp10` →
+//!   `CLASS_F64` / `DIGITS_F64` / `EXP10_F64`: a float register in, an
+//!   ordinary integer register out (shaped like `SIGNBIT_F64`). The digits
+//!   come from `vm_core::float_format`, the same core as the VM's handlers.
 //! - **Optional linear memory**: `load_mem`, `store_mem` (when the
 //!   GenericCirJit was constructed with a non-zero tape size).
 //!
@@ -162,6 +166,19 @@ pub(crate) mod opcode {
     /// `SIGNBIT_F64 <dst> <a>` — LANG83 PR6c `f64_signbit`: bit 63 of the
     /// float's pattern as the integer 0 or 1 (an i64 result, not a float).
     pub const SIGNBIT_F64: u8 = 0x58;
+    // 0x59–0x5C are reserved for an in-flight branch's int⇄float bytecodes
+    // (I64_TO_F64, F64_TO_I64_TRUNC, F64_TO_I64_FLOOR, PARAM_I64); the PR7b
+    // trio takes the next three free tags so the two can merge in any order.
+    /// `CLASS_F64 <dst> <a>` — LANG83 PR7b `f64_class`: `0` for `±0`, `1` for
+    /// a finite non-zero value, `2` for `±Infinity`, `3` for NaN. Like
+    /// `SIGNBIT_F64`, a float register in and an INTEGER register out.
+    pub const CLASS_F64: u8 = 0x5D;
+    /// `DIGITS_F64 <dst> <a>` — LANG83 PR7b `f64_digits`: the shortest
+    /// round-trip significand of `|a|` (0 unless class 1).
+    pub const DIGITS_F64: u8 = 0x5E;
+    /// `EXP10_F64 <dst> <a>` — LANG83 PR7b `f64_exp10`: the exponent of that
+    /// significand's leading digit (0 unless class 1).
+    pub const EXP10_F64: u8 = 0x5F;
     pub const RET_I64:      u8 = 0x60;
     pub const RET_VOID:     u8 = 0x61;
     pub const RET_BOOL:     u8 = 0x62;
@@ -676,6 +693,23 @@ impl Backend for GenericCirJit {
                     regs[code[pc] as usize] = ((regs[code[pc + 1] as usize] as u64) >> 63) as i64;
                     pc += 2;
                 }
+                // ── LANG83 PR7b: float register in, integer register out ────
+                //
+                // The digits are `vm_core::float_format`'s, so the JIT tier
+                // and the interpreter tier cannot disagree on a digit.
+                opcode::CLASS_F64 | opcode::DIGITS_F64 | opcode::EXP10_F64 => {
+                    if pc + 2 > code.len() {
+                        self.set_error("malformed bytecode: truncated f64 digit query");
+                        return Value::Null;
+                    }
+                    let x = f64::from_bits(regs[code[pc + 1] as usize] as u64);
+                    regs[code[pc] as usize] = match op {
+                        opcode::CLASS_F64 => vm_core::float_format::f64_class(x),
+                        opcode::DIGITS_F64 => vm_core::float_format::f64_digits(x),
+                        _ => vm_core::float_format::f64_exp10(x),
+                    };
+                    pc += 2;
+                }
                 opcode::NEG_I64 => {
                     if pc + 2 > code.len() {
                         self.set_error("malformed bytecode: truncated NEG_I64");
@@ -1010,6 +1044,21 @@ fn ieee_f64_binop(op: &str) -> Option<u8> {
     }
 }
 
+/// The one-operand float ops and their opcode: `f64_neg` (float → float),
+/// `f64_signbit` (LANG83 PR6c) and the PR7b digit queries `f64_class`,
+/// `f64_digits`, `f64_exp10` (float → integer). All five share the encoding
+/// `<opc> <dst> <a>`.
+fn f64_unary(op: &str) -> Option<u8> {
+    match op {
+        "f64_neg" => Some(opcode::NEG_F64),
+        "f64_signbit" => Some(opcode::SIGNBIT_F64),
+        "f64_class" => Some(opcode::CLASS_F64),
+        "f64_digits" => Some(opcode::DIGITS_F64),
+        "f64_exp10" => Some(opcode::EXP10_F64),
+        _ => None,
+    }
+}
+
 fn compile_to_bytecode(
     ir: &[CIRInstr],
     builtin_snapshot: &[(String, BuiltinFn)],
@@ -1062,6 +1111,9 @@ fn compile_to_bytecode(
     // ordinary integer) and `ret_f64` may read one. The rule is unchanged:
     // a float register is only ever read by an instruction that knows it
     // holds float bits.
+    //
+    // LANG83 PR7b adds three more readers that, like `f64_signbit`, write an
+    // ordinary integer register: `f64_class`, `f64_digits`, `f64_exp10`.
     let f64_vars: HashSet<&str> = params
         .iter()
         .filter(|(_, ty)| ty == "f64")
@@ -1197,17 +1249,16 @@ fn compile_to_bytecode(
             code.extend_from_slice(&[opc, didx, a, b]);
             continue;
         }
-        if op == "f64_neg" || op == "f64_signbit" {
+        if let Some(opc) = f64_unary(op) {
             let dest = instr.dest.as_deref()?;
-            // `f64_signbit`'s dest is an INTEGER; a name that is also some
-            // float op's dest would be both, so refuse it.
-            if op == "f64_signbit" && f64_vars.contains(dest) {
+            // Every unary op but `f64_neg` writes an INTEGER; a name that is
+            // also some float op's dest would be both, so refuse it.
+            if opc != opcode::NEG_F64 && f64_vars.contains(dest) {
                 return None;
             }
             let [a] = instr.srcs.as_slice() else { return None };
             let a = f64_operand(a, &mut reg_map, &mut next_reg, &mut code)?;
             let didx = lookup_or_alloc_var(dest, &mut reg_map, &mut next_reg)?;
-            let opc = if op == "f64_neg" { opcode::NEG_F64 } else { opcode::SIGNBIT_F64 };
             code.extend_from_slice(&[opc, didx, a]);
             continue;
         }
@@ -2185,6 +2236,46 @@ mod tests {
         assert_eq!(j.run(&bin, &[]), Value::Int(1));
     }
 
+    /// LANG83 PR7b: `f64_class` / `f64_digits` / `f64_exp10` of an `f64`
+    /// parameter and of a propagated float literal, each into an integer
+    /// register — the same answers as `vm_core::float_format`.
+    #[test]
+    fn f64_digit_queries_read_a_float_register() {
+        let params = [("p".to_string(), "f64".to_string())];
+        let ctx = FunctionContext { name: "f", params: &params, return_type: "i64" };
+        let (j, _) = f64_writer_jit();
+        let query = |op: &str| {
+            vec![
+                CIRInstr::new(op, Some("q"), vec![var("p")], "i64"),
+                CIRInstr::new("ret_i64", None::<&str>, vec![var("q")], "i64"),
+            ]
+        };
+        let class = j.compile_function(&ctx, &query("f64_class")).expect("f64_class compiles");
+        let digits = j.compile_function(&ctx, &query("f64_digits")).expect("f64_digits compiles");
+        let exp10 = j.compile_function(&ctx, &query("f64_exp10")).expect("f64_exp10 compiles");
+        for (x, c, d, e) in [
+            (1.5, 1, 15, 0),
+            (-1.5, 1, 15, 0),
+            (5e-324, 1, 5, -324),
+            (1e21, 1, 1, 21),
+            (2f64.powi(-25), 1, 29802322387695312, -8),
+            (-0.0, 0, 0, 0),
+            (f64::INFINITY, 2, 0, 0),
+            (f64::NAN, 3, 0, 0),
+        ] {
+            assert_eq!(j.run(&class, &[Value::Float(x)]), Value::Int(c), "class({x:e})");
+            assert_eq!(j.run(&digits, &[Value::Float(x)]), Value::Int(d), "digits({x:e})");
+            assert_eq!(j.run(&exp10, &[Value::Float(x)]), Value::Int(e), "exp10({x:e})");
+        }
+        // A literal constant propagation folded into the operand.
+        let lit = vec![
+            CIRInstr::new("f64_digits", Some("q"), vec![CIROperand::Float(123.456)], "i64"),
+            CIRInstr::new("ret_i64", None::<&str>, vec![var("q")], "i64"),
+        ];
+        let bin = j.compile(&lit).expect("f64_digits of a propagated float literal compiles");
+        assert_eq!(j.run(&bin, &[]), Value::Int(123456));
+    }
+
     /// A dest that is also a source is read before it is written; `ret_f64`
     /// hands back the float, bit for bit.
     #[test]
@@ -2215,6 +2306,9 @@ mod tests {
             ("wrong arity", vec![fconst("x", 1.0), CIRInstr::new("f64_sub", Some("r"), vec![var("x")], "f64"), ret()]),
             ("a float result read as an integer", vec![fconst("x", 1.0), one(), CIRInstr::new("f64_add", Some("r"), vec![var("x"), var("x")], "f64"), CIRInstr::new("add_i64", Some("y"), vec![var("r"), var("n")], "i64"), ret()]),
             ("a signbit dest that is also a float", vec![fconst("x", 1.0), CIRInstr::new("f64_signbit", Some("x"), vec![var("x")], "i64"), ret()]),
+            ("f64_class of an integer", vec![one(), CIRInstr::new("f64_class", Some("c"), vec![var("n")], "i64"), ret()]),
+            ("f64_digits of an integer literal", vec![CIRInstr::new("f64_digits", Some("d"), vec![CIROperand::Int(15)], "i64"), ret()]),
+            ("an f64_exp10 dest that is also a float", vec![fconst("x", 1.0), CIRInstr::new("f64_exp10", Some("x"), vec![var("x")], "i64"), ret()]),
             ("ret_f64 of an integer", vec![one(), CIRInstr::new("ret_f64", None::<&str>, vec![var("n")], "f64")]),
         ];
         for (what, cir) in refused {
@@ -2264,7 +2358,16 @@ mod tests {
 
     #[test]
     fn truncated_ieee_bytecode_sets_the_error_slot() {
-        for tail in [&[opcode::ADD_F64, 0, 0][..], &[opcode::DIV_F64], &[opcode::NEG_F64, 0], &[opcode::SIGNBIT_F64, 0], &[opcode::RET_F64]] {
+        for tail in [
+            &[opcode::ADD_F64, 0, 0][..],
+            &[opcode::DIV_F64],
+            &[opcode::NEG_F64, 0],
+            &[opcode::SIGNBIT_F64, 0],
+            &[opcode::RET_F64],
+            &[opcode::CLASS_F64, 0],
+            &[opcode::DIGITS_F64],
+            &[opcode::EXP10_F64, 0],
+        ] {
             let (j, _) = f64_writer_jit();
             let mut bin = 0u16.to_le_bytes().to_vec();
             bin.extend_from_slice(tail);

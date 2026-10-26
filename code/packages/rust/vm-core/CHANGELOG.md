@@ -1,5 +1,22 @@
 # Changelog — vm-core
 
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- **`float_format::shortest_digits(x) -> (u64, i32)`** now returns the
+  shortest round-trip digits as integers (`D`, `e10`); the string form it
+  returned before is the private `shortest_digit_string`, the one core both
+  it and `format_f64` use, so `python_repr` / `js_to_string` output is
+  unchanged (no caller outside this module used the old signature).
+- **`float_format::{f64_class, f64_digits, f64_exp10}`** — the PR7b
+  semantics on one `f64` (class 0/1/2/3 from `f64::classify`; `D` and `e10`,
+  or 0 for classes 0, 2, 3).
+- **Dispatch:** `f64_class` / `f64_digits` / `f64_exp10` handlers (a
+  `Value::Float` operand, a `Value::Int` result, never a trap), so
+  `op_support` derives `Lowered` for all three.
+- Tests: `neutral_primitives_match_the_layouts` (integer digits agree with
+  the laid-out strings and re-read as the same double) and
+  `neutral_float_primitives_dispatch`.
+
 ## [0.31.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
 
 - **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /

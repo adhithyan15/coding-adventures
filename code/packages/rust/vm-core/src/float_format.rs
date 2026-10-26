@@ -52,6 +52,16 @@
 //! The VM's default `write_f64_py` / `write_f64_js` builtins and the JIT's
 //! embedder-registered handlers both call these functions, so the two
 //! in-process columns cannot disagree.
+//!
+//! # The digits on their own (LANG83 PR7b)
+//!
+//! The layout is a language's rule; the digits are not. So the digits are
+//! also exposed as three language-neutral integer queries — [`f64_class`],
+//! [`f64_digits`] and [`f64_exp10`], the VM's (and the JIT's) lowering of the
+//! registry ops of the same names — built on [`shortest_digits`], which
+//! returns `(D, e10)` as integers. A compiler can then print a float in any
+//! layout with integer arithmetic and `putchar`. Both paths share one core
+//! (`shortest_digit_string`), so `format_f64`'s output is unchanged.
 
 /// Which language's layout to use for the shortest digits.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -62,26 +72,102 @@ pub enum FloatLayout {
     JavaScript,
 }
 
-/// The shortest round-trip digits of a finite, non-zero `x`, as
-/// `(digits, e10)` with `|x| ≈ 0.d₁ × 10^(e10+1)`, i.e. `e10` is the decimal
-/// exponent of the first digit.
+/// The shortest round-trip digits of a finite, non-zero `x`, as a digit
+/// STRING: `(digits, e10)` with `|x| ≈ 0.d₁ × 10^(e10+1)`, i.e. `e10` is the
+/// decimal exponent of the first digit. `digits` has no leading or trailing
+/// zeros.
 ///
-/// `digits` has no leading or trailing zeros.
-///
-/// ```
-/// use vm_core::float_format::shortest_digits;
-/// assert_eq!(shortest_digits(123.456), ("123456".to_string(), 2));
-/// assert_eq!(shortest_digits(-0.001), ("1".to_string(), -3));
-/// assert_eq!(shortest_digits(1e16), ("1".to_string(), 16));
-/// ```
-pub fn shortest_digits(x: f64) -> (String, i32) {
-    debug_assert!(x.is_finite() && x != 0.0, "shortest_digits needs a finite non-zero value");
+/// This is the one internal core. [`shortest_digits`] (the LANG83 PR7b
+/// `f64_digits` / `f64_exp10` answer) reads it as an integer, and
+/// [`format_f64`] (PR6a's `write_f64_py` / `write_f64_js`) lays the string
+/// out, so the ops and the writers cannot disagree on a digit.
+fn shortest_digit_string(x: f64) -> (String, i32) {
+    debug_assert!(x.is_finite() && x != 0.0, "shortest_digit_string needs a finite non-zero value");
     // `{:e}` of a positive float is `d[.ddd]e[-]n`: the mantissa's digits ARE
     // the shortest digits, and `n` is the exponent of the first one.
     let (digits, e10) = split_sci(&format!("{:e}", x.abs()));
     match even_tie_neighbour(x.abs(), &digits, e10) {
         Some(even) => even,
         None => (digits, e10),
+    }
+}
+
+/// LANG83 PR7b — the shortest round-trip digits of a finite, non-zero `x` as
+/// integers: `(D, e10)`, where `D` is the significand with no trailing zeros
+/// (`1 <= D < 10^17`) and `e10` the exponent of its leading digit, so
+/// `|x| = D × 10^(e10 − n + 1)` with `n` the number of digits of `D`.
+///
+/// ```text
+///   x         digits     D       e10     check
+///   123.456   "123456"   123456  2       123456 × 10^(2−6+1) = 123.456
+///   -0.001    "1"        1       -3      1 × 10^-3           (the sign is not part of it)
+///   1e16      "1"        1       16
+///   5e-324    "5"        5       -324    the smallest subnormal
+/// ```
+///
+/// At most 17 digits, so `D` always fits in a `u64` (and an `i64`).
+///
+/// ```
+/// use vm_core::float_format::shortest_digits;
+/// assert_eq!(shortest_digits(123.456), (123456, 2));
+/// assert_eq!(shortest_digits(-0.001), (1, -3));
+/// assert_eq!(shortest_digits(1e16), (1, 16));
+/// assert_eq!(shortest_digits(5e-324), (5, -324));
+/// ```
+pub fn shortest_digits(x: f64) -> (u64, i32) {
+    let (digits, e10) = shortest_digit_string(x);
+    // `digits` is 1..=17 ASCII decimal digits, so neither the parse nor the
+    // u64 can fail; `unwrap_or(0)` only keeps a malformed input from panicking.
+    (digits.parse::<u64>().unwrap_or(0), e10)
+}
+
+/// LANG83 PR7b `f64_class`: `0` for `±0`, `1` for a finite non-zero value
+/// (subnormals included), `2` for `±Infinity`, `3` for NaN.
+///
+/// ```
+/// use vm_core::float_format::f64_class;
+/// assert_eq!([f64_class(-0.0), f64_class(5e-324), f64_class(f64::NEG_INFINITY), f64_class(f64::NAN)], [0, 1, 2, 3]);
+/// ```
+pub fn f64_class(x: f64) -> i64 {
+    use std::num::FpCategory::{Infinite, Nan, Normal, Subnormal, Zero};
+    match x.classify() {
+        Zero => 0,
+        Normal | Subnormal => 1,
+        Infinite => 2,
+        Nan => 3,
+    }
+}
+
+/// LANG83 PR7b `f64_digits`: `D` of [`shortest_digits`] for class 1, else `0`.
+///
+/// ```
+/// use vm_core::float_format::f64_digits;
+/// assert_eq!(f64_digits(1.5), 15);
+/// assert_eq!(f64_digits(-2.5), 25);
+/// assert_eq!(f64_digits(f64::INFINITY), 0);
+/// ```
+pub fn f64_digits(x: f64) -> i64 {
+    if f64_class(x) == 1 {
+        shortest_digits(x).0 as i64
+    } else {
+        0
+    }
+}
+
+/// LANG83 PR7b `f64_exp10`: `e10` of [`shortest_digits`] for class 1, else `0`.
+///
+/// ```
+/// use vm_core::float_format::f64_exp10;
+/// assert_eq!(f64_exp10(1.5), 0);
+/// assert_eq!(f64_exp10(1e21), 21);
+/// assert_eq!(f64_exp10(5e-324), -324);
+/// assert_eq!(f64_exp10(0.0), 0);
+/// ```
+pub fn f64_exp10(x: f64) -> i64 {
+    if f64_class(x) == 1 {
+        i64::from(shortest_digits(x).1)
+    } else {
+        0
     }
 }
 
@@ -225,7 +311,7 @@ pub fn format_f64(x: f64, layout: FloatLayout) -> String {
         // (`-0.0`); JavaScript's `Number::toString` prints `0` for both.
         return if py { format!("{sign}0.0") } else { "0".to_string() };
     }
-    let (digits, e10) = shortest_digits(x);
+    let (digits, e10) = shortest_digit_string(x);
     format!("{sign}{}", layout_digits(&digits, e10, layout))
 }
 
@@ -308,6 +394,32 @@ mod tests {
         assert_eq!(python_repr(f64::NAN), "nan");
         assert_eq!(python_repr(-f64::NAN), "nan");
         assert_eq!(js_to_string(f64::NAN), "NaN");
+    }
+
+    /// PR7b: the integer digits agree with the string the writers lay out,
+    /// and the three ops give 0 for the classes without digits.
+    #[test]
+    fn neutral_primitives_match_the_layouts() {
+        for &(x, py, _) in TABLE {
+            let (d, e10) = shortest_digits(x);
+            let (s, se10) = shortest_digit_string(x);
+            assert_eq!((d.to_string(), e10), (s, se10), "{x:e}");
+            assert_eq!(f64_class(x), 1);
+            assert_eq!(f64_digits(x), d as i64);
+            assert_eq!(f64_exp10(x), i64::from(e10));
+            assert!(d % 10 != 0 && d < 100_000_000_000_000_000, "{x:e}: D = {d}");
+            // The digits, re-read with the exponent, give the same double.
+            let n = d.to_string().len() as i32;
+            let back: f64 = format!("{d}e{}", e10 - n + 1).parse().unwrap();
+            assert_eq!(back.to_bits(), x.abs().to_bits(), "{x:e} vs Python {py}");
+        }
+        assert_eq!(shortest_digits(1.5), (15, 0));
+        assert_eq!(shortest_digits(1e21), (1, 21));
+        assert_eq!(shortest_digits(2f64.powi(-25)), (29802322387695312, -8), "ties to even");
+        for (x, class) in [(0.0, 0), (-0.0, 0), (f64::INFINITY, 2), (f64::NEG_INFINITY, 2), (f64::NAN, 3), (-f64::NAN, 3)] {
+            assert_eq!((f64_class(x), f64_digits(x), f64_exp10(x)), (class, 0, 0), "{x:e}");
+        }
+        assert_eq!(f64_class(-5e-324), 1, "subnormals are class 1");
     }
 
     #[test]

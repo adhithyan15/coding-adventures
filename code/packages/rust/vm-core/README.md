@@ -251,6 +251,12 @@ and `i64_neg_ovf` (Rust `checked_*`; an out-of-range result is
 LANG83 PR6c adds `f64_add`, `f64_sub`, `f64_mul`, `f64_div` and `f64_neg`
 (Rust `f64` arithmetic on `Value::Float`: IEEE, never an error, so `1/0` is
 `inf` and `-0.0` survives) and `f64_signbit` (`is_sign_negative()` as 0/1).
+LANG83 PR7b adds the language-neutral float primitives `f64_class` (0 ±0,
+1 finite non-zero, 2 ±Infinity, 3 NaN), `f64_digits` (the shortest round-trip
+significand `D`) and `f64_exp10` (the exponent of `D`'s leading digit), each a
+`Value::Int`. They are `vm_core::float_format::{f64_class, f64_digits,
+f64_exp10}`, built on `shortest_digits(x) -> (u64, i32)`, the same core the
+float writers below lay out (`shortest_digits(1.5) == (15, 0)`).
 LANG83 PR6a adds the default builtins `write_f64_py` and `write_f64_js`. They
 print a float as the shortest decimal that reads back as exactly that value,
 in Python's `repr` layout or JavaScript's `toString` layout, with no newline.

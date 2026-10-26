@@ -5,6 +5,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- **New bytecodes `CLASS_F64` (0x5D), `DIGITS_F64` (0x5E), `EXP10_F64`
+  (0x5F)**, shaped like `SIGNBIT_F64`: a float register in, an ordinary
+  integer register out, computed by `vm_core::float_format` (the VM's own
+  core, so the tiers agree). 0x59–0x5C are left to an in-flight branch's
+  int⇄float bytecodes. The one-operand float ops now share an `f64_unary`
+  table; a dest that is also a float register is refused, as for
+  `f64_signbit`. A propagated float literal operand is accepted.
+- `OP_SUPPORT`: `f64_class`, `f64_digits`, `f64_exp10` are `Lowered`; the
+  declaration test types their result `i64`.
+- Tests: `f64_digit_queries_read_a_float_register`, refusal cases, and the
+  truncated-bytecode check for the three tags.
+
 ## [0.10.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
 
 - **Bytecodes `ADD_F64` / `SUB_F64` / `MUL_F64` / `DIV_F64` / `NEG_F64` /

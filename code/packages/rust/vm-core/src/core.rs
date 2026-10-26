@@ -1571,7 +1571,9 @@ mod tests {
             .map(|(i, x)| IIRInstr::new("const", Some(format!("a{i}")), vec![Operand::Float(*x)], "f64"))
             .collect();
         let vars = (0..srcs.len()).map(|i| Operand::Var(format!("a{i}"))).collect();
-        let ty = if op == "f64_signbit" { "i64" } else { "f64" };
+        // `f64_signbit` and the PR7b queries are Float-family ops with an
+        // INTEGER result.
+        let ty = if matches!(op, "f64_signbit" | "f64_class" | "f64_digits" | "f64_exp10") { "i64" } else { "f64" };
         body.push(IIRInstr::new(op, Some("r".into()), vars, ty));
         body.push(IIRInstr::new("ret", None, vec![Operand::Var("r".into())], ty));
         let mut m = IIRModule::new("test", "test");
@@ -1611,6 +1613,28 @@ mod tests {
         }
         for (x, want) in [(nz, 1), (0.0, 0), (-2.5, 1), (2.5, 0), (ninf, 1), (inf, 0), (-5e-324, 1), (5e-324, 0)] {
             assert_eq!(run_f64_op("f64_signbit", &[x]).unwrap(), Value::Int(want), "signbit({x:e})");
+        }
+    }
+
+    /// LANG83 PR7b: the three neutral float primitives through the dispatch
+    /// table, on the spec's examples and the digit-less classes.
+    #[test]
+    fn neutral_float_primitives_dispatch() {
+        let q = |op: &str, x: f64| run_f64_op(op, &[x]).unwrap();
+        for (x, class, digits, exp10) in [
+            (1.5, 1, 15, 0),
+            (-1.5, 1, 15, 0),
+            (5e-324, 1, 5, -324),
+            (1e21, 1, 1, 21),
+            (0.1, 1, 1, -1),
+            (2f64.powi(-25), 1, 29802322387695312, -8),
+            (-0.0, 0, 0, 0),
+            (f64::NEG_INFINITY, 2, 0, 0),
+            (f64::NAN, 3, 0, 0),
+        ] {
+            assert_eq!(q("f64_class", x), Value::Int(class), "class({x:e})");
+            assert_eq!(q("f64_digits", x), Value::Int(digits), "digits({x:e})");
+            assert_eq!(q("f64_exp10", x), Value::Int(exp10), "exp10({x:e})");
         }
     }
 

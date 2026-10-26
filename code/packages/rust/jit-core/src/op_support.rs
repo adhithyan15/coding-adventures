@@ -27,6 +27,7 @@
 //! | `trap` | `TRAP <kind id>` (error slot `trap: <kind>`) | Lowered |
 //! | `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf`, `i64_neg_ovf` | `ADD_OVF_I64` … `NEG_OVF_I64` (`checked_*`; `Trap.Overflow`) | Lowered |
 //! | `f64_add` `f64_sub` `f64_mul` `f64_div` `f64_neg` `f64_signbit` (LANG83 PR6c) | `ADD_F64` … `SIGNBIT_F64` on float registers (the float's bits; IEEE, never a trap); `ret_f64` → `RET_F64` | Lowered |
+//! | `f64_class` `f64_digits` `f64_exp10` (LANG83 PR7b) | `CLASS_F64` / `DIGITS_F64` / `EXP10_F64`: a float register in, an integer register out; the digits are `vm_core::float_format`'s | Lowered |
 //! | `mod`, strings, `f64` math (`f64_sqrt` … `f64_pow`), conversions, `print_str` | — | Refused (interpreter tier only) |
 //!
 //! Like every backend's table, this one is name-granular: `add` is `Lowered`
@@ -97,6 +98,10 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("f64_div", Lowered),
     ("f64_neg", Lowered),
     ("f64_signbit", Lowered),
+    // LANG83 PR7b — the neutral float primitives (integer results).
+    ("f64_class", Lowered),
+    ("f64_digits", Lowered),
+    ("f64_exp10", Lowered),
     // ── Conversions ─────────────────────────────────────────────────────────
     ("int_to_real", Refused(INTERPRETER_TIER_ONLY)),
     ("real_to_int_trunc", Refused(INTERPRETER_TIER_ONLY)),
@@ -146,8 +151,9 @@ mod tests {
     fn result_type(spec: &OpSpec) -> &'static str {
         match (spec.family, spec.name) {
             (OpFamily::Comparison, _) => "bool",
-            // LANG83 PR6c: a Float-family op whose result is the integer 0/1.
-            (_, "f64_signbit") => "i64",
+            // Float-family ops whose result is an INTEGER: LANG83 PR6c's
+            // sign bit and PR7b's three digit queries.
+            (_, "f64_signbit" | "f64_class" | "f64_digits" | "f64_exp10") => "i64",
             (OpFamily::Float, _) | (_, "int_to_real") => "f64",
             (_, "str_const" | "str_concat" | "str_slice") => "str",
             _ => "i64",
