@@ -154,7 +154,7 @@ pub fn decode_transport(program: &[u8]) -> Result<Vec<u64>, Pdp10Error> {
         });
     }
     let mut words = Vec::new();
-    for (word_index, chunk) in program.chunks_exact(5).enumerate() {
+    for (word_index, chunk) in program.as_chunks::<5>().0.iter().enumerate() {
         if chunk[0] & 0xf0 != 0 {
             return Err(Pdp10Error::NonZeroTransportPadding {
                 word_index,
