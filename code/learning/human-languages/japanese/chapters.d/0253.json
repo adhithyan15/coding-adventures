@@ -1,0 +1,22 @@
+{
+  "chapter": 253,
+  "title": "What Was Going On",
+  "label": "ch:ja-what-was-going-on",
+  "canDo": "I can say what is and was going on (ame ga futte imashita), set a scene with toki (kaetta toki, haha wa nete imashita), and follow a short story of a day at the river.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-R253-what-was-going-on",
+    "kind": "production",
+    "summary": "Complete JA-R253-what-was-going-on: set the scene of a story and say what happened in it.",
+    "assesses": [
+      "JA-GRAMMAR-C253-ONGOING-01",
+      "JA-LEX-C253-TOKI-01",
+      "JA-GRAMMAR-C253-ONGOING-02",
+      "JA-LEX-C253-NENJUU-01",
+      "JA-SCRIPT-KANJI-NEN-01",
+      "JA-SKILL-READ-STORY-B1-01"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 257,
+  "title": "Something Went Wrong",
+  "label": "ch:ja-something-went-wrong",
+  "canDo": "I can say what went wrong on a trip (saifu o nakushimashita; kasa ga kowaremashita; densha ni noriokuremashita), ask for help (tasukete kudasai), and say all over Japan (nihonjū).",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-R257-something-went-wrong",
+    "kind": "production",
+    "summary": "Complete JA-R257-something-went-wrong: report a lost wallet, a missed train and a broken umbrella, and ask for help.",
+    "assesses": [
+      "JA-GRAMMAR-C257-PROBLEM-01",
+      "JA-LEX-C257-NORIOKURERU-01",
+      "JA-GRAMMAR-C257-PROBLEM-02",
+      "JA-LEX-C257-NIHONJUU-01",
+      "JA-SCRIPT-KANJI-JUU-01"
+    ]
+  }
+}

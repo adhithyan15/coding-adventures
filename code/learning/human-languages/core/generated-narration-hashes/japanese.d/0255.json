@@ -1,0 +1,18 @@
+{
+  "language": "japanese",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:8f0067a760e6f9b8",
+  "lessonIds": [
+    "JA-C255-itta-hou-ga-ii",
+    "JA-C255-dakara",
+    "JA-C255-desu-kara",
+    "JA-R255-advice-and-so"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "japanese/narration/ch255.txt",
+  "json": "japanese/narration/ch255.json",
+  "textHash": "fnv1a64:8e88fe5c41603fb5",
+  "jsonHash": "fnv1a64:95572ec3630ecd51",
+  "findings": []
+}

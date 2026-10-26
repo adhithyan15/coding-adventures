@@ -1,0 +1,11 @@
+{
+  "id": "JA-R257-something-went-wrong",
+  "pathSegment": "JA-PATH-257-TRAVEL257",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-257-TRAVEL257",
+      "order": 4
+    }
+  ]
+}

@@ -3,14 +3,16 @@
   "sound": "kon / kin / ima",
   "role": "logograph",
   "components": [
-    "a roof-like top",
-    "a short hook below"
+    "人 (a roof) on top",
+    "a short bar",
+    "a bar turning down to the left"
   ],
   "strokeOrder": [
-    "left-falling",
-    "right-falling",
-    "hook"
+    "draw the falling stroke on the left of the roof, from the top down to the left",
+    "lift, draw the falling stroke on the right of the roof, down to the right",
+    "lift, draw the short bar under the roof from left to right",
+    "lift, draw the lower bar from left to right, then without lifting turn down to the left"
   ],
-  "strokeOrderNote": "authoritative",
-  "notes": "Now. With 日 it forms 今日 konnichi, this day — the fossil inside こんにちは."
+  "strokeOrderNote": "KanjiVG, kanji/04eca.svg (https://github.com/KanjiVG/kanjivg/blob/master/kanji/04eca.svg), records 今 (U+4ECA) as four stroke paths, kvg:04eca-s1 to s4, in this order and direction (Ulrich Apel and contributors, CC BY-SA 3.0). KanjiVG stores each stroke as one directed path in writing order: s1 is the left side of the roof, drawn from the top down to the left (kvg:type ㇒); s2 is the right side of the roof, drawn down to the right (㇏); s3 is the short bar under the roof, drawn left to right (㇐); s4 is the lower bar drawn left to right, turning down to the left without lifting (㇇). Only the order and direction are taken from that file. No ductus geometry has been fitted to the Noto Sans JP outline for this kanji yet, so the row carries no verified pen-lift count or structured source (script-ductus holds every such claim to a ductus): the lessons teach it copy-only, from this order.",
+  "notes": "Now. Read ima in 今まで imamade, until now; with 日 it forms 今日 konnichi, this day — the fossil inside こんにちは."
 }
