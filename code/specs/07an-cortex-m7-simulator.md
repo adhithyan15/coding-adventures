@@ -84,7 +84,8 @@ The cell is complete only when it has:
    traces, and cache/bus boundary documentation;
 3. transactional load, restore, step, run, execute, fetch, bounds, and
    retention tests;
-4. release line coverage above 80 percent; and
+4. release line coverage above 80 percent (completion baseline: 98.47%,
+   258/262 lines); and
 5. Rustfmt, strict Clippy, rustdoc, release tests, BUILD integration, lessons
    validation, affected-package checks, and independent security review before
    publication.
