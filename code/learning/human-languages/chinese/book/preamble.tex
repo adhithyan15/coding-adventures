@@ -182,6 +182,13 @@
   \fi}
 \renewcommand*\l@section{\@dottedtocline{1}{2.8em}{3.2em}}
 \renewcommand*\l@subsection{\@dottedtocline{2}{6.0em}{4.1em}}
+% Four-digit page numbers: with the A1 vocabulary (chapters 99-146) this book
+% passes page 999, and book.cls's 1.55em TOC number box overflows by about 5pt
+% on every entry past it (151 overfull lines). Widen the number box and its
+% title clearance together, as the Japanese and the other long human-language
+% books do, so pages past 999 fit without overfull lines.
+\renewcommand\@pnumwidth{2.4em}
+\renewcommand\@tocrmarg{3.4em}
 \makeatother
 
 % ---------------------------------------------------------------------------
