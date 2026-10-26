@@ -251,6 +251,7 @@ deploy are in. All five checkboxes in #14416 are still unchecked.
 | JO-1 | No first release, and `release-journal.yml` still packages the old Electron app in `code/programs/typescript/journal-app` | **real**. No `journal-v*` tag exists. Release from the Mosaic app, then retire the Electron app | feature | M |
 | JO-2 | Export works on the web only | **real**. #16034 | feature | M |
 | JO-3 | Photos (needs UI88), encryption, calendar navigation, import | **real** | feature | L |
+| JO-4 | `mosaic-pkg-card` does not fit Journal's timeline rows (its first real consumer) | **real** (2026-10-26). The timeline now draws each row as a `Card`, with an *Open* button beside it, and six misfits are recorded in `journal-component-demand-audit-v1.md` ("Card as the timeline row"): M1 the card cannot be the button (EM-8); M2 Card's styles drop on four native backends, and Flutter loses the title's size and weight; M3 no optional regions; M4 no badge slot; M5 no selected state; M6 its palette is not Journal's (X-5, UI90). Generalize Card against these, then retire Journal's `open-label` row field once EM-8 lands | feature | M |
 
 ## Engram (`code/programs/mosaic/engram-app`)
 
