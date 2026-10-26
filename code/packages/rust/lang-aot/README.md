@@ -1378,7 +1378,7 @@ has so far and stops with `Trap.Overflow`: a stated divergence, with bignum
 promotion left for later. A zero divisor stops it with `Trap.DivZero`, like
 `ZeroDivisionError`.
 
-One hundred `lang_matrix` Python rows declare all eight executable columns:
+One hundred `lang_matrix` integer Python rows declare all eight executable columns:
 every accepted case of `code/grammars/python/corpus/py-int-print/` on the
 default 3.13.16 (eighteen), and, since phase 7b slice 2, every case each
 IIR-identity class representative of `python-iir-compiler`'s release sweep
@@ -1395,6 +1395,25 @@ cases are `StdoutThenTrap` rows, which check the output written before the
 trap *and* the kind each column reports. LANG79's
 float pilot (`python_iir_compiler::compile_source`) is a separate API and is
 not reachable from `lang-aot`.
+
+**Floats (phase 7c slice 3).** On 3.5.10 and later (the `py3` profile) the
+same entry point also compiles `py-float-print`: float literals, `/` as true
+division and `int`/`float` mixing, printed as Python `repr`:
+
+| Python | IIR |
+|---|---|
+| `1.5`, `.5`, `1e16` | `const x : f64` |
+| an `int` operand of a float op | `int_to_real` |
+| `+ - *` with a float, `/` | `f64_add`, `f64_sub`, `f64_mul`, `f64_div` (PR6c, IEEE, never trap) |
+| `/` by a known `±0` | `trap "Trap.DivZero"` before the division |
+| `-a` (float) | `f64_neg` |
+| `print(a)` (float) | `write_f64_py`, `putchar 10` |
+
+38 rows run `code/grammars/python/corpus/py-float-print/` on 3.13.16 and
+on its two class representatives, 3.6.0 and 3.5.10 (which refuses `_` in
+a float). The five literal-only rows declare all eight columns; the other
+33 declare `IEEE_COLUMNS`, because BEAM refuses the `f64_*` arithmetic at
+compile time (`UnsupportedOps`).
 
 Since phase 7b, `--lang python@<release>` selects any profiled release of
 `code/grammars/python/releases.csv` exactly, through the same release API as

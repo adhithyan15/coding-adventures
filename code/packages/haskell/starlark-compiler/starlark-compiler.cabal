@@ -1,0 +1,38 @@
+cabal-version: 3.0
+name:          starlark-compiler
+version:       0.1.0
+synopsis:      Pure Haskell Starlark opcode and operator tables
+description:   Inert typed byte, category, and operator metadata for the STP01 standalone Starlark provider profile.
+category:      Language
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files: README.md
+               CHANGELOG.md
+
+library
+    exposed-modules:  StarlarkCompiler
+    build-depends:    base >=4.14 && <5
+                    , containers >=0.6 && <0.9
+    hs-source-dirs:   src
+    default-language: Haskell2010
+    ghc-options:      -Wall
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    STP01ConformanceSpec
+                    , StarlarkCompilerSpec
+    hs-source-dirs:   test
+    build-depends:    aeson >=2.0 && <3
+                    , base >=4.14 && <5
+                    , bytestring >=0.10 && <0.13
+                    , containers >=0.6 && <0.9
+                    , hspec ==2.*
+                    , scientific >=0.3 && <0.4
+                    , starlark-compiler
+                    , text >=1.2 && <2.2
+                    , vector >=0.12 && <0.14
+    default-language: Haskell2010
+    ghc-options:      -Wall
