@@ -46,7 +46,10 @@ func TestQuadPolylineStraight(t *testing.T) {
 	straight := QuadraticBezier{
 		point2d.NewPoint(0, 0), point2d.NewPoint(1, 0), point2d.NewPoint(2, 0),
 	}
-	pts := PolylineQuad(straight, 0.1)
+	pts, err := PolylineQuad(straight, 0.1)
+	if err != nil {
+		t.Fatalf("PolylineQuad returned an unexpected error: %v", err)
+	}
 	if len(pts) != 2 {
 		t.Errorf("Straight line should give 2 points, got %d", len(pts))
 	}
@@ -104,7 +107,10 @@ func TestCubicPolylineStraight(t *testing.T) {
 		point2d.NewPoint(0, 0), point2d.NewPoint(1, 0),
 		point2d.NewPoint(2, 0), point2d.NewPoint(3, 0),
 	}
-	pts := PolylineCubic(straight, 0.1)
+	pts, err := PolylineCubic(straight, 0.1)
+	if err != nil {
+		t.Fatalf("PolylineCubic returned an unexpected error: %v", err)
+	}
 	if len(pts) != 2 {
 		t.Errorf("Straight line should give 2 points, got %d", len(pts))
 	}

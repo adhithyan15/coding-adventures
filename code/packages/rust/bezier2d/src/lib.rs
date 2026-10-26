@@ -519,7 +519,7 @@ mod tests {
             Point::new(1.0, 0.0), // control point ON the line
             Point::new(2.0, 0.0),
         );
-        let pts = q.to_polyline(0.1);
+        let pts = q.to_polyline(0.1).expect("straight quadratic should flatten");
         // Should be two points since the error is zero.
         assert_eq!(pts.len(), 2);
         assert!(point_approx_eq(pts[0], q.p0));
@@ -533,7 +533,7 @@ mod tests {
             Point::new(0.0, 10.0),
             Point::new(10.0, 0.0),
         );
-        let pts = q.to_polyline(0.1);
+        let pts = q.to_polyline(0.1).expect("curved quadratic should flatten");
         assert!(!pts.is_empty());
         assert!(point_approx_eq(pts[0], q.p0));
         assert!(point_approx_eq(pts[pts.len()-1], q.p2));
@@ -651,7 +651,7 @@ mod tests {
             Point::new(2.0, 0.0),
             Point::new(3.0, 0.0),
         );
-        let pts = c.to_polyline(0.1);
+        let pts = c.to_polyline(0.1).expect("straight cubic should flatten");
         assert_eq!(pts.len(), 2); // straight line → just two points
     }
 
@@ -663,7 +663,7 @@ mod tests {
             Point::new(10.0, 10.0),
             Point::new(10.0, 0.0),
         );
-        let pts = c.to_polyline(0.1);
+        let pts = c.to_polyline(0.1).expect("curved cubic should flatten");
         // Should have more than 2 points for a curved cubic.
         assert!(pts.len() > 2);
         // Endpoints must be preserved.
@@ -704,5 +704,136 @@ mod tests {
         assert!((bb.y - 2.0).abs() < 1e-9);
         assert!((bb.width - 3.0).abs() < 1e-9);
         assert!(bb.height.abs() < 1e-9);
+    }
+
+    #[derive(serde::Deserialize)]
+    struct FlatteningFixture {
+        version: u32,
+        max_depth: usize,
+        max_subdivisions: usize,
+        cases: Vec<FlatteningCase>,
+    }
+
+    #[derive(serde::Deserialize)]
+    struct FlatteningCase {
+        id: String,
+        degree: u32,
+        control_points: Vec<[f64; 2]>,
+        tolerance: f64,
+        expected_disposition: String,
+        #[serde(default)]
+        expected_termination: String,
+    }
+
+    fn flattening_fixture() -> FlatteningFixture {
+        serde_json::from_str(include_str!(
+            "../../../../specs/fixtures/bezier2d-flattening-v1/cases.json"
+        ))
+        .expect("the committed flattening fixture should decode")
+    }
+
+    fn fixture_point(coordinates: [f64; 2]) -> Point {
+        Point::new(coordinates[0], coordinates[1])
+    }
+
+    #[test]
+    fn flattening_fixture_conformance() {
+        let fixture = flattening_fixture();
+        assert_eq!(fixture.version, FLATTENING_FIXTURE_VERSION);
+        assert_eq!(fixture.max_depth, FLATTENING_MAX_DEPTH);
+        assert_eq!(fixture.max_subdivisions, FLATTENING_MAX_SUBDIVISIONS);
+        assert_eq!(fixture.cases.len(), 9);
+
+        for case in fixture.cases {
+            let result = match case.degree {
+                2 => QuadraticBezier::new(
+                    fixture_point(case.control_points[0]),
+                    fixture_point(case.control_points[1]),
+                    fixture_point(case.control_points[2]),
+                )
+                .to_polyline(case.tolerance),
+                3 => CubicBezier::new(
+                    fixture_point(case.control_points[0]),
+                    fixture_point(case.control_points[1]),
+                    fixture_point(case.control_points[2]),
+                    fixture_point(case.control_points[3]),
+                )
+                .to_polyline(case.tolerance),
+                degree => panic!("unsupported fixture degree {degree}"),
+            };
+
+            if case.expected_disposition == "invalid-tolerance" {
+                assert_eq!(result, Err(FlatteningError::InvalidTolerance), "{}", case.id);
+                continue;
+            }
+            if case.expected_termination == "budget-error" {
+                assert_eq!(result, Err(FlatteningError::BudgetExceeded), "{}", case.id);
+                continue;
+            }
+
+            let points = result.unwrap_or_else(|error| panic!("{}: {error:?}", case.id));
+            assert_eq!(points.first(), Some(&fixture_point(case.control_points[0])));
+            assert_eq!(
+                points.last(),
+                Some(&fixture_point(*case.control_points.last().expect("endpoint")))
+            );
+            assert!(points.iter().all(|point| point.x.is_finite() && point.y.is_finite()));
+            if case.expected_disposition == "chord" {
+                assert_eq!(points.len(), 2, "{}", case.id);
+            } else if case.expected_disposition == "subdivide" {
+                assert!(points.len() > 2, "{}", case.id);
+            }
+        }
+    }
+
+    #[test]
+    fn flattening_rejects_nonfinite_inputs_atomically() {
+        let straight = QuadraticBezier::new(
+            Point::new(0.0, 0.0),
+            Point::new(0.5, 0.0),
+            Point::new(1.0, 0.0),
+        );
+        for tolerance in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY] {
+            assert_eq!(
+                straight.to_polyline(tolerance),
+                Err(FlatteningError::InvalidTolerance)
+            );
+        }
+
+        let bad_control = QuadraticBezier::new(
+            Point::new(0.0, 0.0),
+            Point::new(f64::INFINITY, 0.0),
+            Point::new(1.0, 0.0),
+        );
+        assert_eq!(
+            bad_control.to_polyline(0.1),
+            Err(FlatteningError::NonFiniteGeometry)
+        );
+    }
+
+    #[test]
+    fn flattening_fails_closed_on_derived_overflow_and_subnormal_geometry() {
+        let max = f64::MAX;
+        let overflow = CubicBezier::new(
+            Point::new(-max, 0.0),
+            Point::new(0.0, 1.0),
+            Point::new(0.0, -1.0),
+            Point::new(max, 0.0),
+        );
+        assert_eq!(
+            overflow.to_polyline(0.1),
+            Err(FlatteningError::NonFiniteGeometry)
+        );
+
+        let tiny = 1e-200;
+        let subnormal = QuadraticBezier::new(
+            Point::new(0.0, 0.0),
+            Point::new(0.0, tiny),
+            Point::new(tiny, 0.0),
+        );
+        assert_eq!(
+            subnormal.to_polyline(f64::from_bits(1)),
+            Err(FlatteningError::BudgetExceeded)
+        );
     }
 }
