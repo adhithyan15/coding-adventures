@@ -74,6 +74,22 @@ data access must be within 0x0000-0x08FF. Direct and indirect data accesses see
 the same authoritative mapped bytes, so writes through a pointer can change
 registers, SREG, SP, or opaque I/O exactly as writes to those addresses do.
 
+The instruction manual marks the operand combinations in which an updating
+pointer overlaps its load destination or store source as undefined. This
+checked model does not invent an assignment order for them. It recognizes and
+atomically rejects all of the following as `UnsupportedOperandCombination`:
+
+- `LD R26,X+`, `LD R27,X+`, `LD R26,-X`, and `LD R27,-X`;
+- `LD R28,Y+`, `LD R29,Y+`, `LD R28,-Y`, and `LD R29,-Y`;
+- `LD R30,Z+`, `LD R31,Z+`, `LD R30,-Z`, and `LD R31,-Z`;
+- `ST X+,R26`, `ST X+,R27`, `ST -X,R26`, and `ST -X,R27`;
+- `ST Y+,R28`, `ST Y+,R29`, `ST -Y,R28`, and `ST -Y,R29`; and
+- `ST Z+,R30`, `ST Z+,R31`, `ST -Z,R30`, and `ST -Z,R31`.
+
+Non-updating indirect forms and displacement forms remain admitted when the
+source or destination names a pointer register because they do not have this
+manual-defined ambiguity.
+
 `IN` and `OUT` address the 64 ordinary I/O locations and therefore map to data
 addresses 0x0020-0x005F. `LDS`/`STS` and pointer forms may also reach extended
 I/O and SRAM. Opaque I/O bytes have storage semantics only; timers, pins,
@@ -84,6 +100,9 @@ fabricated by this CPU cell.
 only after validating the read. Program memory cannot be modified by ordinary
 stores. `SPM` and boot-section programming are excluded. Every two-word
 `LDS`/`STS` validates and fetches both opcode words before mutation.
+The two undefined updating overlaps, `LPM R30,Z+` and `LPM R31,Z+`, return the
+same atomic `UnsupportedOperandCombination` error; implied-destination `LPM`
+and non-updating `LPM Rd,Z` remain admitted.
 
 ## 5. Bits, skips, and control flow
 
@@ -159,7 +178,8 @@ every program/data byte, all register and flag views, SP, halt, and image
 metadata. Errors have stable nonempty display text and distinguish malformed
 program/state, fetch outside image, truncated instruction, data/program/stack
 range, invalid SP, unknown opcode, unsupported profile/system instruction,
-halted execution, trace limit, allocation failure, and exhausted budget.
+unsupported operand combination, halted execution, trace limit, allocation
+failure, and exhausted budget.
 
 ## 8. Explicit exclusions and follow-up backlog
 
@@ -184,7 +204,9 @@ The functional cell is complete only when it has:
 2. exhaustive flag formulas and boundaries, chained Z, every word-register
    pair, multiplier signed/fractional cases, and unaffected-flag preservation;
 3. direct, pointer, displacement, pre/post-update, program-read, mapped-register,
-   opaque-I/O, SP, stack, and complete-range rollback witnesses;
+   opaque-I/O, SP, stack, and complete-range rollback witnesses, plus one
+   classification-and-complete-state rollback witness for every undefined
+   X/Y/Z updating `LD`/`ST` overlap and both undefined `LPM Rd,Z+` overlaps;
 4. taken/not-taken branches and every skip source over one- and two-word
    successors, calls/returns/RETI, PC wrapping boundaries, and target faults;
 5. complete-state reset, load, restore, halt, run, execute, trace-bound,
