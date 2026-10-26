@@ -1,0 +1,10 @@
+[package]
+name = "pa-risc11-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked bounded HP PA-RISC 1.1 functional simulator"
+license = "MIT"
+
+[lib]
+name = "pa_risc11_simulator"
+path = "src/lib.rs"
