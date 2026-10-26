@@ -5879,6 +5879,24 @@ fn emit_code_behind(
     .unwrap();
     writeln!(out, "{{").unwrap();
 
+    // Native lifecycle counts complement VM projection counts without walking
+    // the visual tree or retaining UI elements. Standalone controls need no host.
+    out.push_str(r#"    private static readonly bool mosaicProfileRealization = !string.IsNullOrWhiteSpace(
+        System.Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH"));
+    private long mosaicItemsPrepared, mosaicItemsCleared;
+    public (long Prepared, long Cleared) MosaicRealizationCounts => (mosaicItemsPrepared, mosaicItemsCleared);
+    private void MosaicItemPrepared(Microsoft.UI.Xaml.Controls.ItemsRepeater sender,
+        Microsoft.UI.Xaml.Controls.ItemsRepeaterElementPreparedEventArgs args)
+    {
+        if (mosaicProfileRealization) mosaicItemsPrepared++;
+    }
+    private void MosaicItemClearing(Microsoft.UI.Xaml.Controls.ItemsRepeater sender,
+        Microsoft.UI.Xaml.Controls.ItemsRepeaterElementClearingEventArgs args)
+    {
+        if (mosaicProfileRealization) mosaicItemsCleared++;
+    }
+
+"#);
     // Constructor: `InitializeComponent()`. The XAML compiler generates
     // the actual `InitializeComponent` method at build time from the
     // matching `.xaml` file.
@@ -8217,7 +8235,7 @@ fn emit_for(
     let mut out = String::new();
     writeln!(
         out,
-        "{pad}<ItemsRepeater ItemsSource=\"{{x:Bind {items_source}, Mode=OneWay}}\"{style}>"
+        "{pad}<ItemsRepeater ItemsSource=\"{{x:Bind {items_source}, Mode=OneWay}}\" ElementPrepared=\"MosaicItemPrepared\" ElementClearing=\"MosaicItemClearing\"{style}>"
     )
     .unwrap();
     if let Some(columns) = uniform_columns {
@@ -20476,6 +20494,10 @@ mod tests {
                 r.xaml
             );
             assert!(r.xaml.matches("<ItemsRepeater ItemsSource=").count() >= 2);
+            let repeaters = r.xaml.matches("<ItemsRepeater ItemsSource=").count();
+            assert_eq!(r.xaml.matches("ElementPrepared=\"MosaicItemPrepared\"").count(), repeaters);
+            assert_eq!(r.xaml.matches("ElementClearing=\"MosaicItemClearing\"").count(), repeaters);
+            assert!(r.code_behind.contains("MosaicRealizationCounts"));
         }
     }
 

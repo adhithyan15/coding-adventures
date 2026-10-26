@@ -317,3 +317,13 @@ they do not by themselves establish performance or accessibility acceptance.
 Generated application hosts pass their component to the shared interaction
 profiler. With profiling enabled, JSONL intervals may include projection counter
 deltas; these are view-model counts and do not measure native realization.
+
+### Native repeater lifecycle counters
+
+Opt-in XAML profiling includes an optional `realization` object with per-interval
+`prepared` and `cleared` counts from ItemsRepeater lifecycle events. They count
+item preparations/clearings (including reuse), not unique controls or visibility.
+No visual-tree traversal or element retention is added. Projection counts remain
+separate; absent/malformed/throwing diagnostic contracts omit their own object.
+Overlapping intervals are not exclusive attribution. See
+`code/specs/mosaic-xaml-realization-counters-20261026.md` for acceptance limits.
