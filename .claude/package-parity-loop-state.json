@@ -293,7 +293,7 @@
     {
       "id": "build-tool-extra-ci-toolchain-declaration-remaining-engines",
       "title": "Implement extra CI toolchain declarations in every supported build-tool engine",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "build-tool-csharp-extra-ci-toolchain-declaration-conformance",
         "build-tool-fsharp-extra-ci-toolchain-declaration-conformance",
@@ -20738,7 +20738,15 @@
       "branch": "codex/parity-bezier-haskell-swift-flattening-20261025",
       "pr_number": null,
       "notes": "Resolve Either/throwing API for deterministic failure before source changes. Both use midpoint flatness and unbounded recursion. Consume nine neutral cases; run native Bezier2D and Arc2D tests. Haskell Arc2D lacks a BUILD front and needs explicit cabal test all.",
-      "selection_notes": "Selected from current main after independent review rejected the unpublished TypeScript Arc2D build candidate: the production runner already starts every BUILD line in the package directory, while the proposed POSIX identity guard would fail under the Windows fallback. That non-defect branch was retired rather than published. All three publication slots remain occupied; the ready C#/F# tranche stays first in the publication queue, while Python/Ruby/Perl and TypeScript/Elixir/Lua remain sequenced behind shared selector integration. Haskell/Swift is the highest independent implementation owner because it advances two non-Rust lanes, depends only on the already-merged neutral contract, and has no changed-path overlap with the active or prepared tranches. Keep scope to deterministic safe flattening APIs, all nine neutral fixture cases, native Bezier2D and Arc2D regressions, package docs/changelogs, and lifecycle receipts; Go/Rust, the aggregate owner, and build-selector integration remain separate."
+      "selection_notes": "Selected from current main after independent review rejected the unpublished TypeScript Arc2D build candidate: the production runner already starts every BUILD line in the package directory, while the proposed POSIX identity guard would fail under the Windows fallback. That non-defect branch was retired rather than published. All three publication slots remain occupied; the ready C#/F# tranche stays first in the publication queue, while Python/Ruby/Perl and TypeScript/Elixir/Lua remain sequenced behind shared selector integration. Haskell/Swift is the highest independent implementation owner because it advances two non-Rust lanes, depends only on the already-merged neutral contract, and has no changed-path overlap with the active or prepared tranches. Keep scope to deterministic safe flattening APIs, all nine neutral fixture cases, native Bezier2D and Arc2D regressions, package docs/changelogs, and lifecycle receipts; Go/Rust, the aggregate owner, and build-selector integration remain separate.",
+      "started_at": "2026-10-25T20:56:00-07:00",
+      "reconciled_main_revision": "54f5726481be0ae0d43b08623b14d95efe285f12",
+      "implementation_revision": "b77bc12a78ea02fe560b9cea38aeb06018b53d22",
+      "package_paths": [
+        "code/packages/haskell/bezier2d",
+        "code/packages/swift/bezier2d"
+      ],
+      "validation_notes": "Local implementation is complete but remains unpublished while the three-PR ceiling is full and the shared fixture-selector integration in PR #18293 is pending. Haskell dynamically consumes all nine neutral rows and passes 29 Bezier2D examples; coverage-enabled execution reports 99% expressions (778/781) and 96% alternatives (31/32). Its explicit downstream Arc2D Cabal run passes 25 Arc2D, 29 Bezier2D, 27 Point2D, and 19 Trig examples. Swift dynamically consumes all nine neutral rows and passes 27 Bezier2D tests with 98.21% source-line, 94.68% region, and 96% function coverage; its downstream Arc2D BUILD passes 13 tests. Both lanes reject invalid tolerance, non-finite controls and derived geometry, and subnormal geometry that would otherwise underflow into a false chord; they preserve atomic failure under the pinned depth and 65,535-subdivision budgets. Current-main reconciliation is clean. Publication still requires the selector dependency, refreshed validation after its merge, and an independent exact-head correctness/security review."
     },
     {
       "id": "geometry-bezier2d-flattening-typescript-elixir-lua",

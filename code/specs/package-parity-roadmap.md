@@ -17990,3 +17990,22 @@ all nine neutral cases dynamically. Native Bezier2D tests and downstream Arc2D
 tests must pass; Haskell Arc2D has no BUILD front, so its Cabal suite must be run
 explicitly. Go/Rust adoption, aggregate completion, and shared build-selector
 integration remain separate owners.
+
+## October 25, 2026: Haskell and Swift Bezier flattening local receipt
+
+The bounded implementation is complete on a branch reconciled with
+`54f5726481be0ae0d43b08623b14d95efe285f12`, but it remains unpublished while
+all three parity PR slots are occupied and PR #18293 still owns the shared
+fixture-selector integration. Publication requires rebasing that dependency,
+re-running the affected selector and native suites, and an independent review
+of the resulting exact head.
+
+Haskell consumes all nine neutral rows dynamically and passes 29 Bezier2D
+examples. Coverage-enabled execution records 778/781 expressions (99%) and
+31/32 alternatives (96%). The explicit downstream Cabal run also passes 25
+Arc2D, 27 Point2D, and 19 Trig examples. Swift passes 27 Bezier2D tests at
+98.21% source-line, 94.68% region, and 96% function coverage; its downstream
+Arc2D BUILD passes 13 tests. Both lanes reject invalid tolerance, non-finite
+controls and derived geometry, and subnormal curves that would otherwise
+underflow into a false chord. Failure remains atomic under depth 32 and the
+65,535-subdivision ceiling.
