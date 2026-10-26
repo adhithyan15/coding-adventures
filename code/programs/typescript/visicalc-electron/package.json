@@ -8,7 +8,7 @@
     "build:react": "cd ../visicalc && npm install --silent && npm run components && npx vite build --base ./",
     "start": "npm run build:react && electron .",
     "start:dev": "electron .",
-    "test": "node -e \"require('./main.js'); console.log('main.js parses')\""
+    "test": "node --test dependency-security.test.mjs && node -e \"require('./main.js'); console.log('main.js parses')\""
   },
   "dependencies": {
     "electron": "^43.8.0"
