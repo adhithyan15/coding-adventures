@@ -42,4 +42,4 @@ The release suite differentially covers all first-byte classifications and
 accepted transitions, explicit bus service, lifecycle and allocation rollback,
 exhaustive eight-bit arithmetic, exact topology, and compiler-checked hostile
 anti-bypass mutations. The current evidence is 36 release tests plus one
-doctest and 88.24% combined line coverage (1,268 of 1,437 lines).
+doctest and 92.35% combined line coverage (1,255 of 1,359 lines).

@@ -247,21 +247,6 @@ pub struct Cdp1802Simulator {
     allocation_failure_after: Cell<Option<usize>>,
 }
 
-impl Default for Cdp1802Simulator {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-impl Clone for Cdp1802Simulator {
-    fn clone(&self) -> Self {
-        Self {
-            state: self.state.clone(),
-            allocation_failure_after: Cell::new(self.allocation_failure_after.get()),
-        }
-    }
-}
-
 #[derive(Default)]
 struct TransitionMetadata {
     raw: [u8; 3],
@@ -283,41 +268,12 @@ impl Cdp1802Simulator {
         }
     }
 
-    /// Return to deterministic reset state without allocating.
-    pub fn reset(&mut self) {
-        self.state.registers = [0; 16];
-        self.state.p = 0;
-        self.state.x = 0;
-        self.state.d = 0;
-        self.state.df = false;
-        self.state.ie = true;
-        self.state.q = false;
-        self.state.t = 0;
-        self.state.ef = [false; 4];
-        self.state.input_ports = [0; 7];
-        self.state.memory.fill(0);
-        self.state.origin = None;
-        self.state.length = 0;
-        self.state.first_instruction_pending = true;
-        self.state.idle = false;
+    pub(crate) fn into_state(self) -> Cdp1802State {
+        self.state
     }
 
-    /// Infallibly clone complete state for ordinary inspection.
-    #[must_use]
-    pub fn get_state(&self) -> Cdp1802State {
-        self.state.clone()
-    }
-
-    /// Alias for [`Self::get_state`] using lifecycle terminology.
-    #[must_use]
-    pub fn snapshot(&self) -> Cdp1802State {
-        self.get_state()
-    }
-
-    /// Fallibly clone complete state for checked lifecycle composition.
-    pub fn try_get_state(&self) -> Result<Cdp1802State, Cdp1802Error> {
-        let memory = self.allocate_memory()?;
-        Ok(copy_state_into(&self.state, memory))
+    pub(crate) fn remaining_allocation_checkpoints(&self) -> Option<usize> {
+        self.allocation_failure_after.get()
     }
 
     /// Atomically validate and install a complete snapshot.
@@ -350,63 +306,6 @@ impl Cdp1802Simulator {
             },
             ..state_without_memory()
         };
-    }
-
-    /// Read one byte from full architectural memory.
-    #[must_use]
-    pub fn read_memory(&self, address: u16) -> u8 {
-        self.state.memory[usize::from(address)]
-    }
-
-    /// Write one byte to full architectural memory.
-    pub fn write_memory(&mut self, address: u16, value: u8) {
-        self.state.memory[usize::from(address)] = value;
-    }
-
-    /// Read a register-matrix entry.
-    pub fn read_register(&self, register: u8) -> Result<u16, Cdp1802Error> {
-        self.state
-            .registers
-            .get(usize::from(register))
-            .copied()
-            .ok_or(Cdp1802Error::InvalidState {
-                reason: "register selector is outside 0..15",
-            })
-    }
-
-    /// Write a register-matrix entry.
-    pub fn write_register(&mut self, register: u8, value: u16) -> Result<(), Cdp1802Error> {
-        let slot = self.state.registers.get_mut(usize::from(register)).ok_or(
-            Cdp1802Error::InvalidState {
-                reason: "register selector is outside 0..15",
-            },
-        )?;
-        *slot = value;
-        Ok(())
-    }
-
-    /// Configure an active-low sampled external flag (one-based EF number).
-    pub fn set_external_flag(&mut self, flag: u8, asserted: bool) -> Result<(), Cdp1802Error> {
-        let Some(slot) = flag
-            .checked_sub(1)
-            .and_then(|index| self.state.ef.get_mut(index as usize))
-        else {
-            return Err(Cdp1802Error::InvalidExternalFlag { flag });
-        };
-        *slot = asserted;
-        Ok(())
-    }
-
-    /// Configure one deterministic input port (ports 1 through 7).
-    pub fn set_input_port(&mut self, port: u8, value: u8) -> Result<(), Cdp1802Error> {
-        let Some(slot) = port
-            .checked_sub(1)
-            .and_then(|index| self.state.input_ports.get_mut(index as usize))
-        else {
-            return Err(Cdp1802Error::InvalidPort { port });
-        };
-        *slot = value;
-        Ok(())
     }
 
     /// Execute one checked, transactional instruction.
@@ -561,44 +460,6 @@ impl Cdp1802Simulator {
         }
     }
 
-    /// Acknowledge one DMA input cycle.
-    pub fn dma_in(&mut self, value: u8) -> Result<DmaTransaction, Cdp1802Error> {
-        validate_state(&self.state)?;
-        let address = self.state.registers[0];
-        self.state.memory[usize::from(address)] = value;
-        self.state.registers[0] = increment16(address);
-        self.state.idle = false;
-        Ok(DmaTransaction::In { address, value })
-    }
-
-    /// Acknowledge one DMA output cycle.
-    pub fn dma_out(&mut self) -> Result<DmaTransaction, Cdp1802Error> {
-        validate_state(&self.state)?;
-        let address = self.state.registers[0];
-        let value = self.state.memory[usize::from(address)];
-        self.state.registers[0] = increment16(address);
-        self.state.idle = false;
-        Ok(DmaTransaction::Out { address, value })
-    }
-
-    /// Acknowledge an eligible interrupt using the reset-inhibit-first rule.
-    pub fn interrupt(&mut self) -> Result<InterruptTransaction, Cdp1802Error> {
-        validate_state(&self.state)?;
-        if self.state.first_instruction_pending {
-            return Err(Cdp1802Error::InterruptInhibited);
-        }
-        if !self.state.ie {
-            return Err(Cdp1802Error::InterruptMasked);
-        }
-        let saved_selectors = (self.state.x << 4) | self.state.p;
-        self.state.t = saved_selectors;
-        self.state.x = 2;
-        self.state.p = 1;
-        self.state.ie = false;
-        self.state.idle = false;
-        Ok(InterruptTransaction { saved_selectors })
-    }
-
     /// Install a deterministic failure at a future checked allocation.
     ///
     /// `Some(0)` fails the next allocation checkpoint. This seam is public so
@@ -684,7 +545,7 @@ fn copy_state_into(source: &Cdp1802State, mut memory: Vec<u8>) -> Cdp1802State {
     }
 }
 
-fn validate_program(program: &[u8], origin: u16) -> Result<(), Cdp1802Error> {
+pub(crate) fn validate_program(program: &[u8], origin: u16) -> Result<(), Cdp1802Error> {
     if program.is_empty() {
         return Err(Cdp1802Error::EmptyProgram);
     }
@@ -702,7 +563,7 @@ fn validate_program(program: &[u8], origin: u16) -> Result<(), Cdp1802Error> {
     Ok(())
 }
 
-fn validate_state(state: &Cdp1802State) -> Result<(), Cdp1802Error> {
+pub(crate) fn validate_state(state: &Cdp1802State) -> Result<(), Cdp1802Error> {
     if state.memory.len() != MEMORY_SIZE {
         return Err(Cdp1802Error::InvalidState {
             reason: "memory must contain exactly 65536 bytes",

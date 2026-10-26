@@ -8,5 +8,5 @@
 - Add complete functional differential, exhaustive ALU truth tables, explicit
   port/DMA/interrupt verification, and compiler-valid hostile structural
   fixtures.
-- Record 36 release tests plus one doctest and 88.24% combined line coverage
-  (1,268 of 1,437 lines).
+- Record 36 release tests plus one doctest and 92.35% combined line coverage
+  (1,255 of 1,359 lines).

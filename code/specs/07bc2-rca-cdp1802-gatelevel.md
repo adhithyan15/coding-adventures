@@ -198,6 +198,6 @@ decode byte, all 255 accepted transition differentials, exhaustive 256x256x2
 add/subtract tuples, gate shifts, lifecycle/rollback, all ports, DMA,
 interrupts, and five hostile full temporary crates that compile before the
 validator rejects them. Rustfmt, strict Clippy, rustdoc warnings-as-errors,
-and the package BUILD are green. `cargo llvm-cov` reports 88.24% combined line
-coverage (1,268 of 1,437 lines). Publication still requires an independent
+and the package BUILD are green. `cargo llvm-cov` reports 92.35% combined line
+coverage (1,255 of 1,359 lines). Publication still requires an independent
 review of the exact clean reconciled head.

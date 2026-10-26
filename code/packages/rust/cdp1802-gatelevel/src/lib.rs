@@ -5,7 +5,6 @@
 //! that candidate into the authoritative storage bank.
 
 mod decode;
-#[allow(dead_code)]
 mod engine;
 mod gates;
 mod state;
@@ -159,7 +158,7 @@ impl Cdp1802GateSimulator {
         self.commit_state(&reset);
     }
 
-    fn project_state(&self) -> Cdp1802State {
+    fn project_state_with_memory(&self, memory: Vec<u8>) -> Cdp1802State {
         Cdp1802State {
             registers: std::array::from_fn(|index| self.registers[index].read() as u16),
             p: self.p.read() as u8,
@@ -171,12 +170,16 @@ impl Cdp1802GateSimulator {
             t: self.t.read() as u8,
             ef: std::array::from_fn(|index| self.ef[index] != 0),
             input_ports: std::array::from_fn(|index| self.input_ports[index].read() as u8),
-            memory: self.memory.snapshot(),
+            memory,
             origin: (self.origin_present != 0).then(|| self.origin.read() as u16),
             length: self.length.read() as u32,
             first_instruction_pending: self.first_instruction_pending != 0,
             idle: self.idle != 0,
         }
+    }
+
+    fn project_state(&self) -> Cdp1802State {
+        self.project_state_with_memory(self.memory.snapshot())
     }
 
     fn commit_state(&mut self, candidate: &Cdp1802State) {
@@ -219,14 +222,20 @@ impl Cdp1802GateSimulator {
     }
 
     fn engine(&self) -> Result<TransitionEngine, Cdp1802Error> {
+        self.allocation_checkpoint()?;
+        let memory = self
+            .memory
+            .try_snapshot()
+            .map_err(|()| Cdp1802Error::AllocationFailed)?;
         let mut engine = TransitionEngine::new();
-        engine.restore(self.project_state())?;
+        engine.restore(self.project_state_with_memory(memory))?;
         engine.fail_allocation_after(self.allocation_failure_after.get());
         Ok(engine)
     }
 
-    fn finish_engine(&self) {
-        self.allocation_failure_after.set(None);
+    fn sync_engine(&self, engine: &TransitionEngine) {
+        self.allocation_failure_after
+            .set(engine.remaining_allocation_checkpoints());
     }
 
     /// Infallibly clone all stable Q outputs.
@@ -248,26 +257,24 @@ impl Cdp1802GateSimulator {
             .memory
             .try_snapshot()
             .map_err(|()| Cdp1802Error::AllocationFailed)?;
-        let mut state = self.project_state();
-        state.memory = memory;
-        Ok(state)
+        Ok(self.project_state_with_memory(memory))
     }
 
     /// Atomically validate and clock a complete snapshot into storage.
     pub fn restore(&mut self, state: Cdp1802State) -> Result<(), Cdp1802Error> {
-        let mut validator = TransitionEngine::new();
-        validator.restore(state.clone())?;
+        engine::validate_state(&state)?;
         self.commit_state(&state);
         Ok(())
     }
 
     /// Atomically install a program image.
     pub fn load(&mut self, program: &[u8], origin: u16) -> Result<(), Cdp1802Error> {
+        engine::validate_program(program, origin)?;
         let mut engine = self.engine()?;
         let result = engine.load(program, origin);
-        self.finish_engine();
+        self.sync_engine(&engine);
         result?;
-        self.commit_state(&engine.get_state());
+        self.commit_state(&engine.into_state());
         Ok(())
     }
 
@@ -326,9 +333,15 @@ impl Cdp1802GateSimulator {
 
     /// Execute one independent transition and clock it atomically.
     pub fn step(&mut self) -> Result<StepTrace, Cdp1802Error> {
+        if self.idle != 0 {
+            return Err(Cdp1802Error::Idling);
+        }
+        if self.origin_present == 0 {
+            return Err(Cdp1802Error::NoProgramLoaded);
+        }
         let mut engine = self.engine()?;
         let result = engine.step();
-        self.finish_engine();
+        self.sync_engine(&engine);
         let trace = result?;
         self.commit_state(&trace.state_after);
         Ok(trace)
@@ -336,9 +349,15 @@ impl Cdp1802GateSimulator {
 
     /// Execute a bounded transaction, rolling back on every failure.
     pub fn run(&mut self, max_steps: usize) -> Result<ExecutionResult, Cdp1802Error> {
+        if max_steps > MAX_RETAINED_STEPS {
+            return Err(Cdp1802Error::RetentionLimitExceeded {
+                requested: max_steps,
+                limit: MAX_RETAINED_STEPS,
+            });
+        }
         let mut engine = self.engine()?;
         let result = engine.run(max_steps);
-        self.finish_engine();
+        self.sync_engine(&engine);
         let result = result?;
         self.commit_state(&result.final_state);
         Ok(result)
@@ -351,9 +370,18 @@ impl Cdp1802GateSimulator {
         origin: u16,
         max_steps: usize,
     ) -> Result<ExecutionResult, ExecutionError> {
+        engine::validate_program(program, origin).map_err(|source| ExecutionError { source })?;
+        if max_steps > MAX_RETAINED_STEPS {
+            return Err(ExecutionError {
+                source: Cdp1802Error::RetentionLimitExceeded {
+                    requested: max_steps,
+                    limit: MAX_RETAINED_STEPS,
+                },
+            });
+        }
         let mut engine = self.engine().map_err(|source| ExecutionError { source })?;
         let result = engine.execute(program, origin, max_steps);
-        self.finish_engine();
+        self.sync_engine(&engine);
         let result = result?;
         self.commit_state(&result.final_state);
         Ok(result)
@@ -361,26 +389,37 @@ impl Cdp1802GateSimulator {
 
     /// Acknowledge DMA input and clock the candidate atomically.
     pub fn dma_in(&mut self, value: u8) -> Result<DmaTransaction, Cdp1802Error> {
-        let mut engine = self.engine()?;
-        let transaction = engine.dma_in(value)?;
-        self.commit_state(&engine.get_state());
-        Ok(transaction)
+        let address = self.registers[0].read() as u16;
+        self.memory.write(usize::from(address), value);
+        self.registers[0].clock(u64::from(gates::increment16(address)));
+        clock_bit(&mut self.idle, false);
+        Ok(DmaTransaction::In { address, value })
     }
 
     /// Acknowledge DMA output and clock the candidate atomically.
     pub fn dma_out(&mut self) -> Result<DmaTransaction, Cdp1802Error> {
-        let mut engine = self.engine()?;
-        let transaction = engine.dma_out()?;
-        self.commit_state(&engine.get_state());
-        Ok(transaction)
+        let address = self.registers[0].read() as u16;
+        let value = self.memory.read(usize::from(address));
+        self.registers[0].clock(u64::from(gates::increment16(address)));
+        clock_bit(&mut self.idle, false);
+        Ok(DmaTransaction::Out { address, value })
     }
 
     /// Acknowledge an eligible interrupt and clock the candidate atomically.
     pub fn interrupt(&mut self) -> Result<InterruptTransaction, Cdp1802Error> {
-        let mut engine = self.engine()?;
-        let transaction = engine.interrupt()?;
-        self.commit_state(&engine.get_state());
-        Ok(transaction)
+        if self.first_instruction_pending != 0 {
+            return Err(Cdp1802Error::InterruptInhibited);
+        }
+        if self.ie == 0 {
+            return Err(Cdp1802Error::InterruptMasked);
+        }
+        let saved_selectors = ((self.x.read() as u8) << 4) | self.p.read() as u8;
+        self.t.clock(u64::from(saved_selectors));
+        self.x.clock(2);
+        self.p.clock(1);
+        clock_bit(&mut self.ie, false);
+        clock_bit(&mut self.idle, false);
+        Ok(InterruptTransaction { saved_selectors })
     }
 
     /// Install a deterministic checked-allocation failure seam.
