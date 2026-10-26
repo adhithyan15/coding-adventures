@@ -206,6 +206,33 @@ itself lives in `engram-wasm/js`. Without it the build fails with
 `Could not resolve "./engram-mosaic-host-wasm"`. That step previously existed only
 in `build-all.ps1`, which cannot run on a Linux CI runner.
 
+## Upgrade fixture
+
+`fixtures/release-upgrade-v0.4.0.json` is a collection with one deck and one
+card, captured by running the v0.4.0 release's own adapter and stored in the
+shared [Mosaic release state gate](../../../specs/mosaic-release-state-gate-v1.md)
+format. It is what a v0.4.0 user's state file looks like, so it is the thing
+every later build must still open:
+
+- `engram-mosaic-app`'s `the_v0_4_0_release_fixture_survives_the_upgrade`
+  restores it as a version-1 snapshot, checks the deck and card, and checks the
+  fixture's JSON-pointer expectations against both the v1 state and the v3
+  bytes the current adapter re-persists.
+- `code/scripts/mosaic_release_state_gate.py` materializes it into the host's
+  envelope and verifies a live state file against it:
+
+  ```bash
+  python3 code/scripts/mosaic_release_state_gate.py materialize \
+    --fixture code/programs/mosaic/engram-app/fixtures/release-upgrade-v0.4.0.json \
+    --output "$state_file"
+  # ...launch the new build...
+  python3 code/scripts/mosaic_release_state_gate.py verify \
+    --fixture code/programs/mosaic/engram-app/fixtures/release-upgrade-v0.4.0.json \
+    --state "$state_file"
+  ```
+
+Never edit its `state` by hand; recapture it from a release tag instead.
+
 ## Pinned npm dependencies
 
 `build-web.sh --build` and `build-electron.sh --build`/`--package` install the
