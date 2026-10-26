@@ -134,6 +134,8 @@ author believed the old build wrote. `provenance` records how it was captured.
 3. Write `{"bytes":[...],"schema":snapshotSchema,"version":snapshotVersion}`
    (compact, sorted keys) plus one `\n`, as bytes — no platform newline
    translation — to `S`, creating parent directories.
+   The file is created with mode `0600`, as it stands in for one person's
+   private data.
 
 `S` must not be a symlink or any non-regular file; the gate never writes through
 a link into a location the caller did not name.
@@ -142,10 +144,12 @@ a link into a location the caller did not name.
 
 Fails, with a message naming `sourceApp`, unless all of these hold in order:
 
-1. `S` exists, is a regular file and is not a symlink.
-2. Neither `S.corrupt` nor anything else at that path exists (a dangling
-   symlink counts). A `.corrupt` sibling means the new build rejected a
-   compatible file.
+1. Nothing exists at `S.corrupt` (a dangling symlink counts). A `.corrupt`
+   sibling means the new build rejected a compatible file. This is checked
+   first because it is the most specific diagnosis: a host that quarantined
+   the fixture and then wrote an empty state, or nothing, would otherwise be
+   reported as a missing value or a missing file.
+2. `S` exists, is a regular file and is not a symlink.
 3. `S` is at most 16 MiB, is UTF-8 JSON, and is an object.
 4. Its `schema` equals `snapshotSchema`.
 5. Its `version` is an integer in `acceptedLiveVersions`.
@@ -154,7 +158,7 @@ Fails, with a message naming `sourceApp`, unless all of these hold in order:
 7. The bytes decode as UTF-8 JSON to an object.
 8. Every expectation applicable to that version resolves and equals its value.
 
-## `verify-quarantine --state S --probe P`
+## `verify-quarantine --state S --probe P [--app NAME]`
 
 Used after writing invalid bytes to `S`, copying them to `P` and relaunching:
 
@@ -164,7 +168,9 @@ Used after writing invalid bytes to `S`, copying them to `P` and relaunching:
    file aside; a copy left at the live path is quarantined again on every
    launch and never recovers.
 
-`P` is subject to the same regular-file and size rules.
+`P` is subject to the same regular-file and size rules. No fixture is needed,
+because nothing about garbage is app-specific; `--app` only names the product in
+error messages.
 
 ## Failure modes, summarised
 
