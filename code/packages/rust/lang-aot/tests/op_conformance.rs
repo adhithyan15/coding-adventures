@@ -688,6 +688,79 @@ fn ieee_rows(rows: &[(&str, &[f64], bool)]) -> IIRModule {
     program(body)
 }
 
+/// The PR6c spec's edge table, as `ieee_rows` rows: infinities from
+/// division and overflow, NaN, signed zeros, an inexact sum.
+const IEEE_EDGES: &[(&str, &[f64], bool)] = &[
+    ("f64_div", &[1.0, 0.0], true),
+    ("f64_div", &[-1.0, 0.0], true),
+    ("f64_div", &[1.0, -0.0], true),
+    ("f64_div", &[0.0, 0.0], false),
+    ("f64_sub", &[f64::INFINITY, f64::INFINITY], false),
+    ("f64_mul", &[0.0, f64::INFINITY], false),
+    ("f64_add", &[1e308, 1e308], true),
+    ("f64_mul", &[-1.0, 0.0], true),
+    ("f64_mul", &[-1.0, -0.0], true),
+    ("f64_add", &[-0.0, -0.0], true),
+    ("f64_add", &[-0.0, 0.0], true),
+    ("f64_sub", &[0.0, 0.0], true),
+    ("f64_neg", &[0.0], true),
+    ("f64_neg", &[-0.0], true),
+    ("f64_add", &[0.1, 0.2], true),
+    ("f64_neg", &[-f64::INFINITY], true),
+];
+
+/// `(class, digits, exp10)` of `x`, computed on the host and independently
+/// of vm-core: the class from `f64::classify`, the digits and exponent
+/// from Rust's own shortest round-trip `{:e}` spelling (`3.0000000000000004e-1`
+/// is digits `30000000000000004`, exp10 `-1`). 0 for both unless the class
+/// is 1 (finite, non-zero), as the PR7b ops define.
+fn host_float_parts(x: f64) -> (i64, i64, i64) {
+    use std::num::FpCategory;
+    match x.classify() {
+        FpCategory::Zero => (0, 0, 0),
+        FpCategory::Infinite => (2, 0, 0),
+        FpCategory::Nan => (3, 0, 0),
+        FpCategory::Normal | FpCategory::Subnormal => {
+            let spelled = format!("{:e}", x.abs());
+            let (mantissa, exp10) = spelled.split_once('e').expect("`{:e}` has an exponent");
+            let digits: String = mantissa.chars().filter(|c| *c != '.').collect();
+            (1, digits.parse().expect("digits"), exp10.parse().expect("exp10"))
+        }
+    }
+}
+
+/// The expected stdout of [`ieee_rows`]: each row's op applied on the host,
+/// printed as `class digits exp10` and, when the row asks, its sign bit.
+fn ieee_rows_expect(rows: &[(&str, &[f64], bool)]) -> String {
+    rows.iter()
+        .map(|&(name, xs, sign)| {
+            let r = match (name, xs) {
+                ("f64_add", &[a, b]) => a + b,
+                ("f64_sub", &[a, b]) => a - b,
+                ("f64_mul", &[a, b]) => a * b,
+                ("f64_div", &[a, b]) => a / b,
+                ("f64_neg", &[a]) => -a,
+                other => panic!("no host op for {other:?}"),
+            };
+            let (c, d, e) = host_float_parts(r);
+            let row = format!("{c} {d} {e}");
+            if sign {
+                format!("{row} {}", u8::from(r.is_sign_negative()))
+            } else {
+                row
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
+/// [`ieee_rows_expect`] of [`IEEE_EDGES`], computed once (a `Case` holds
+/// `&'static str`).
+fn ieee_edges_expect() -> &'static str {
+    static EXPECT: std::sync::OnceLock<String> = std::sync::OnceLock::new();
+    EXPECT.get_or_init(|| ieee_rows_expect(IEEE_EDGES))
+}
+
 /// Unary `f64` op `name(x)`, truncated to an integer and printed.
 fn f64_unary(name: &str, x: f64) -> IIRModule {
     program(vec![
@@ -965,33 +1038,11 @@ fn cases() -> Vec<Case> {
         // `write_f64_js`, removed in PR7e).
         Case {
             name: "IEEE edges: infinities, NaN, signed zeros (PR6c)",
-            build: || {
-                let inf = f64::INFINITY;
-                ieee_rows(&[
-                    ("f64_div", &[1.0, 0.0], true),
-                    ("f64_div", &[-1.0, 0.0], true),
-                    ("f64_div", &[1.0, -0.0], true),
-                    ("f64_div", &[0.0, 0.0], false),
-                    ("f64_sub", &[inf, inf], false),
-                    ("f64_mul", &[0.0, inf], false),
-                    ("f64_add", &[1e308, 1e308], true),
-                    ("f64_mul", &[-1.0, 0.0], true),
-                    ("f64_mul", &[-1.0, -0.0], true),
-                    ("f64_add", &[-0.0, -0.0], true),
-                    ("f64_add", &[-0.0, 0.0], true),
-                    ("f64_sub", &[0.0, 0.0], true),
-                    ("f64_neg", &[0.0], true),
-                    ("f64_neg", &[-0.0], true),
-                    ("f64_add", &[0.1, 0.2], true),
-                    ("f64_neg", &[-inf], true),
-                ])
-            },
+            build: || ieee_rows(IEEE_EDGES),
             // Infinity, -Infinity, -Infinity, NaN ×3, Infinity, -0, 0, -0,
-            // 0, 0, -0, 0, 0.30000000000000004, Infinity.
-            expect: Expect::Stdout(
-                "2 0 0 0\n2 0 0 1\n2 0 0 1\n3 0 0\n3 0 0\n3 0 0\n2 0 0 0\n0 0 0 1\n0 0 0 0\n0 0 0 1\n\
-                 0 0 0 0\n0 0 0 0\n0 0 0 1\n0 0 0 0\n1 30000000000000004 -1 0\n2 0 0 0",
-            ),
+            // 0, 0, -0, 0, 0.30000000000000004, Infinity — computed on the
+            // host, not typed (see `ieee_rows_expect`).
+            expect: Expect::Stdout(ieee_edges_expect()),
         },
         // Constants only, finite values only, no arithmetic: the one PR6c case
         // BEAM runs too (its floats have no ±Infinity or NaN to test).
@@ -1010,7 +1061,8 @@ fn cases() -> Vec<Case> {
             expect: Expect::Stdout("0\n1\n0\n1\n0\n1\n0\n1"),
         },
         // Every op with its dest also a source: each backend must read the
-        // operands before it writes the result. 1.5+1.5 = 3, -3, -3/0 = -inf.
+        // operands before it writes the result. 1.5+1.5 = 3, 3·3 = 9, 9-0 = 9,
+        // -9, then -9/0 = -inf.
         Case {
             name: "IEEE ops read their operands before writing an aliased dest (PR6c)",
             build: || {
@@ -1025,6 +1077,9 @@ fn cases() -> Vec<Case> {
                     op("f64_digits", "d", &["x"], "i64"),
                     builtin("write_i64", "d"),
                     builtin("putchar", "sp"),
+                    op("f64_exp10", "e", &["x"], "i64"),
+                    builtin("write_i64", "e"),
+                    builtin("putchar", "sp"),
                     op("f64_signbit", "s", &["x"], "i64"),
                     builtin("write_i64", "s"),
                     builtin("putchar", "sp"),
@@ -1036,8 +1091,9 @@ fn cases() -> Vec<Case> {
                     builtin("write_i64", "s2"),
                 ])
             },
-            // -9 (digits 9, sign 1), then -9 / 0 = -Infinity (class 2, sign 1).
-            expect: Expect::Stdout("9 1 2 1"),
+            // -9 (digits 9, exp10 0, sign 1), then -9 / 0 = -Infinity
+            // (class 2, sign 1).
+            expect: Expect::Stdout("9 0 1 2 1"),
         },
         // ── LANG83 PR7b: the language-neutral float primitives ──────────────
         //
@@ -1908,6 +1964,25 @@ fn execute_everywhere(case: &Case) -> Vec<&'static str> {
 // ===========================================================================
 // The gates
 // ===========================================================================
+
+/// The host oracle behind [`ieee_rows_expect`] agrees with every row of
+/// the PR7b digits table (whose columns were written from host `python3`),
+/// and with the PR6c edge results it describes: `+Infinity` is `2 0 0 0`,
+/// `-0` is `0 0 0 1`, a NaN row has no sign, and `0.1 + 0.2` is digits
+/// `30000000000000004` at exp10 `-1`.
+#[test]
+fn the_host_float_oracle_matches_the_digits_table() {
+    for &(bits, class, digits, exp10) in FLOAT_DIGITS_TABLE {
+        let x = f64::from_bits(bits);
+        assert_eq!(host_float_parts(x), (class, digits, exp10), "{x:e}");
+    }
+    let rows: Vec<String> = ieee_edges_expect().lines().map(str::to_owned).collect();
+    assert_eq!(rows.len(), IEEE_EDGES.len());
+    assert_eq!(rows[0], "2 0 0 0");
+    assert_eq!(rows[3], "3 0 0");
+    assert_eq!(rows[7], "0 0 0 1");
+    assert_eq!(rows[14], "1 30000000000000004 -1 0");
+}
 
 #[test]
 fn every_registry_op_has_cases() {
