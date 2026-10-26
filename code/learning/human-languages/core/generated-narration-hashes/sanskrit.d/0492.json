@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:2fe4ada3621c8e7e",
+  "lessonIds": [
+    "SA-C492-garbhini",
+    "SA-C492-prasute",
+    "SA-C492-janma",
+    "SA-C492-navajatah",
+    "SA-C492-dola"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch492.txt",
+  "json": "sanskrit/narration/ch492.json",
+  "textHash": "fnv1a64:b1b2156558e7cca2",
+  "jsonHash": "fnv1a64:c59ada53a2f60fa0",
+  "findings": []
+}

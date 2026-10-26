@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:39662d58f459777f",
+  "lessonIds": [
+    "SA-C448-bhavah",
+    "SA-C448-anutapah",
+    "SA-C448-hrsyati",
+    "SA-C448-ullasah",
+    "SA-C448-khedah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch448.txt",
+  "json": "sanskrit/narration/ch448.json",
+  "textHash": "fnv1a64:c826720c160f81a0",
+  "jsonHash": "fnv1a64:b872aaf5963f9f4c",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C308-vibhajati",
+  "pathSegment": "SA-PATH-308-SAMUHA308",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-308-SAMUHA308",
+      "order": 2
+    }
+  ]
+}

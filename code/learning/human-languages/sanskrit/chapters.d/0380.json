@@ -1,0 +1,19 @@
+{
+  "chapter": 380,
+  "title": "How Much",
+  "label": "ch:sa-how-much",
+  "canDo": "I can talk about amounts, sizes and degrees.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C380-vistarayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 380: I can talk about amounts, sizes and degrees.",
+    "assesses": [
+      "SA-LEX-C380-MATRA380-03",
+      "SA-LEX-C380-MATRA380-04",
+      "SA-LEX-C380-MATRA380-05"
+    ]
+  }
+}

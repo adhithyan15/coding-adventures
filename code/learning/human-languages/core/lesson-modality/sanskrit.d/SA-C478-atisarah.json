@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C478-atisarah",
+    "language": "sanskrit",
+    "chapter": 478,
+    "sequence": 27550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da179b9807f90dae"
+  },
+  "findings": []
+}

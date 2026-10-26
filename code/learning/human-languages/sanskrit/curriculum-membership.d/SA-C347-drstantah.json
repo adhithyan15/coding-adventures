@@ -1,0 +1,11 @@
+{
+  "id": "SA-C347-drstantah",
+  "pathSegment": "SA-PATH-347-UDAHARANA347",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-347-UDAHARANA347",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-483-GUTIKA483",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how a medicine is taken or applied.",
+  "prerequisites": []
+}

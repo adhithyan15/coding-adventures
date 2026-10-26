@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:1966d2e3668c74d7",
+  "lessonIds": [
+    "SA-C286-cauryam",
+    "SA-C286-yamikah",
+    "SA-C286-apaharati",
+    "SA-C286-saksi",
+    "SA-C286-palayate"
+  ],
+  "tex": "sanskrit/book/chapters/ch286-a-theft-in-the-village.tex"
+}

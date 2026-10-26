@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 371,
+  "output": "sanskrit/book/chapters/ch371-other-options.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

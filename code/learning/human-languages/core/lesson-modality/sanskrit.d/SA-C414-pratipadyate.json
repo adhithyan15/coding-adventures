@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C414-pratipadyate",
+    "language": "sanskrit",
+    "chapter": 414,
+    "sequence": 24040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4ab7c8c11fc33fe"
+  },
+  "findings": []
+}

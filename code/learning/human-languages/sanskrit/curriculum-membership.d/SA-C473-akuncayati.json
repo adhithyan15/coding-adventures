@@ -1,0 +1,11 @@
+{
+  "id": "SA-C473-akuncayati",
+  "pathSegment": "SA-PATH-473-ANGA473",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-473-ANGA473",
+      "order": 4
+    }
+  ]
+}

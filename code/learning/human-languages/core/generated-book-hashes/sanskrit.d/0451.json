@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:056d038d300b1740",
+  "lessonIds": [
+    "SA-C451-vyathate",
+    "SA-C451-asvasiti",
+    "SA-C451-anunayati",
+    "SA-C451-vyakulah",
+    "SA-C451-santapah"
+  ],
+  "tex": "sanskrit/book/chapters/ch451-distress-and-comfort.tex"
+}

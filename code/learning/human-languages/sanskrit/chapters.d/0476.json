@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "Strength and Build",
+  "label": "ch:sa-strength-and-build",
+  "canDo": "I can describe how strong or well-built someone is.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C476-posayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can describe how strong or well-built someone is.",
+    "assesses": [
+      "SA-LEX-C476-SAKTI476-03",
+      "SA-LEX-C476-SAKTI476-04",
+      "SA-LEX-C476-SAKTI476-05"
+    ]
+  }
+}

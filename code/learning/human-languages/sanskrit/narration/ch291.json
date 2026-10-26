@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 291,
+  "title": "Cheats",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:01d46a8c84354636",
+  "lessons": [
+    {
+      "id": "SA-C291-dhurtah",
+      "sequence": 17250,
+      "title": "धूर्तः (dhūrtaḥ) — a rogue; a cheat",
+      "headword": "धूर्तः",
+      "romanization": "dhūrtaḥ",
+      "gloss": "a rogue; a cheat",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5cff1f38562da957",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a piece of jewellery, then the Sanskrit for by force."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धूर्तः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धूर्तः — dhūrtaḥ — \"a rogue; a cheat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सः नरः धूर्तः अस्ति। saḥ naraḥ dhūrtaḥ asti. That man is a rogue."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धूर्तः (dhūrtaḥ) comes from the root √dhūrv, \"to hurt\" (MW also names √dhvṛ); MW gives dhūrta as cunning and, as a noun, a rogue or swindler (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhūrtaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhūrtaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhūrtaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhūrtaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saḥ naraḥ dhūrtaḥ asti. — That man is a rogue.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saḥ naraḥ dhūrtaḥ asti.* — That man is a rogue.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a piece of jewellery, then the Sanskrit for by force, then say dhūrtaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a piece of jewellery, then the Sanskrit for by force, then say *dhūrtaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धूर्तः (dhūrtaḥ) mean? (\"A rogue; a cheat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C291-vancayati",
+      "sequence": 17260,
+      "title": "वञ्चयति (vañcayati) — cheats; deceives",
+      "headword": "वञ्चयति",
+      "romanization": "vañcayati",
+      "gloss": "cheats; deceives",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:841e1ee8047d6a67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for by force, then the Sanskrit for a rogue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वञ्चयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वञ्चयति — vañcayati — \"cheats; deceives\"."
+            },
+            {
+              "kind": "speech",
+              "text": "धूर्तः वृद्धं वञ्चयति। dhūrtaḥ vṛddhaṃ vañcayati. The rogue cheats the old man."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः वृद्धं वञ्चितवान्, saḥ vṛddhaṃ vañcitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वञ्चयति (vañcayati) comes from the root √vañc, \"to go crookedly\"; MW gives its causative vañcayati as to avoid, to lead astray and to cheat (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vañcayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vañcayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vañcayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vañcayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhūrtaḥ vṛddhaṃ vañcayati. — The rogue cheats the old man.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhūrtaḥ vṛddhaṃ vañcayati.* — The rogue cheats the old man.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for by force, then the Sanskrit for a rogue, then say vañcayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for by force, then the Sanskrit for a rogue, then say *vañcayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वञ्चयति (vañcayati) mean? (\"Cheats; deceives\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C291-utkocah",
+      "sequence": 17270,
+      "title": "उत्कोचः (utkocaḥ) — a bribe",
+      "headword": "उत्कोचः",
+      "romanization": "utkocaḥ",
+      "gloss": "a bribe",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b8471912b3e9e70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a rogue, then the Sanskrit for cheats."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उत्कोचः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उत्कोचः — utkocaḥ — \"a bribe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि सः उत्कोचं याचते, तर्हि धूर्तः। yadi saḥ utkocaṃ yācate, tarhi dhūrtaḥ. If he asks for a bribe, then he is a cheat."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उत्कोचः (utkocaḥ) is built from ut and the root √kuc, \"to bend, contract\"; MW's senses run from unwinding to bribery and corruption (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utkocaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utkocaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utkocaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utkocaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi saḥ utkocaṃ yācate, tarhi dhūrtaḥ. — If he asks for a bribe, then he is a cheat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi saḥ utkocaṃ yācate, tarhi dhūrtaḥ.* — If he asks for a bribe, then he is a cheat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a rogue, then the Sanskrit for cheats, then say utkocaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a rogue, then the Sanskrit for cheats, then say *utkocaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उत्कोचः (utkocaḥ) mean? (\"A bribe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C291-kapatam",
+      "sequence": 17280,
+      "title": "कपटम् (kapaṭam) — fraud; a trick",
+      "headword": "कपटम्",
+      "romanization": "kapaṭam",
+      "gloss": "fraud; a trick",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:92a5fbdbe1279203",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for cheats, then the Sanskrit for a bribe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कपटम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कपटम् — kapaṭam — \"fraud; a trick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "एतत् सर्वं कपटम् अस्ति। etat sarvaṃ kapaṭam asti. All this is a fraud."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कपटम् (kapaṭam) MW gives kapaṭa as fraud, deceit and cheating, and reports a commentator's derivation from √kamp, \"to tremble\", so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kapaṭam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kapaṭam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kapaṭam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kapaṭam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "etat sarvaṃ kapaṭam asti. — All this is a fraud.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *etat sarvaṃ kapaṭam asti.* — All this is a fraud.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for cheats, then the Sanskrit for a bribe, then say kapaṭam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for cheats, then the Sanskrit for a bribe, then say *kapaṭam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कपटम् (kapaṭam) mean? (\"Fraud; a trick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C291-krtrimah",
+      "sequence": 17290,
+      "title": "कृत्रिमः (kṛtrimaḥ) — fake; artificial",
+      "headword": "कृत्रिमः",
+      "romanization": "kṛtrimaḥ",
+      "gloss": "fake; artificial",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:870c09cff26c743e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a bribe, then the Sanskrit for fraud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कृत्रिमः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कृत्रिमः — kṛtrimaḥ — \"fake; artificial\"."
+            },
+            {
+              "kind": "speech",
+              "text": "एतत् आभरणं कृत्रिमम् अस्ति। etat ābharaṇaṃ kṛtrimam asti. This jewellery is fake."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कृत्रिमः (kṛtrimaḥ) comes from the root √kṛ, \"to make\": MW gives kṛtrima as made by art, artificial, and also falsified (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṛtrimaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṛtrimaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṛtrimaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṛtrimaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "etat ābharaṇaṃ kṛtrimam asti. — This jewellery is fake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *etat ābharaṇaṃ kṛtrimam asti.* — This jewellery is fake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a bribe, then the Sanskrit for fraud, then say kṛtrimaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a bribe, then the Sanskrit for fraud, then say *kṛtrimaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कृत्रिमः (kṛtrimaḥ) mean? (\"Fake; artificial\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-437-PRAVRSH437",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe the rains, from drizzle to downpour.",
+  "prerequisites": []
+}

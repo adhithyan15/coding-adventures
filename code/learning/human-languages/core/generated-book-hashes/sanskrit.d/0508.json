@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:6ee971c24f474a46",
+  "lessonIds": [
+    "SA-C508-istaka",
+    "SA-C508-cinoti",
+    "SA-C508-nirmanam",
+    "SA-C508-sandadhati",
+    "SA-C508-sudha"
+  ],
+  "tex": "sanskrit/book/chapters/ch508-bricks-and-mortar.tex"
+}

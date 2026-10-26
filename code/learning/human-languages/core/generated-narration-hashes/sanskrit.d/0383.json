@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:94312efb106fd493",
+  "lessonIds": [
+    "SA-C383-sankalpah",
+    "SA-C383-akanksa",
+    "SA-C383-akanksati",
+    "SA-C383-abhilasah",
+    "SA-C383-uttarottaram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch383.txt",
+  "json": "sanskrit/narration/ch383.json",
+  "textHash": "fnv1a64:9b9380426f415028",
+  "jsonHash": "fnv1a64:07779f35ea68fde5",
+  "findings": []
+}

@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 417,
+  "title": "Sandbanks and Shores",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:6d3fef6e87904d76",
+  "lessons": [
+    {
+      "id": "SA-C417-pulinam",
+      "sequence": 24170,
+      "title": "पुलिनम् (pulinam) — a sandbank",
+      "headword": "पुलिनम्",
+      "romanization": "pulinam",
+      "gloss": "a sandbank",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:814908fd2d2063dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for rows, then the Sanskrit for comes ashore."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पुलिनम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुलिनम् — pulinam — \"a sandbank\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नद्याः मध्ये पुलिनम् अस्ति। nadyāḥ madhye pulinam asti. There is a sandbank in the middle of the river."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुलिनम् (pulinam) is the word MW gives for a sandbank, a small island left by a river; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulinam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulinam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulinam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulinam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nadyāḥ madhye pulinam asti. — There is a sandbank in the middle of the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nadyāḥ madhye pulinam asti.* — There is a sandbank in the middle of the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for rows, then the Sanskrit for comes ashore, then say pulinam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for rows, then the Sanskrit for comes ashore, then say *pulinam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पुलिनम् (pulinam) mean? (\"A sandbank\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C417-phenah",
+      "sequence": 24180,
+      "title": "फेनः (phenaḥ) — foam",
+      "headword": "फेनः",
+      "romanization": "phenaḥ",
+      "gloss": "foam",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee002656d9e03344",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for comes ashore, then the Sanskrit for a sandbank."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फेनः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फेनः — phenaḥ — \"foam\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तरंगेषु श्वेतः फेनः अस्ति। taraṅgeṣu śvetaḥ phenaḥ asti. There is white foam on the waves."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फेनः (phenaḥ) is the word MW gives for foam, froth; MW connects it, probably, with a root √phaṇ, so its origin is uncertain; MW compares English foam and Slavonic pěna (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phenaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phenaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phenaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phenaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taraṅgeṣu śvetaḥ phenaḥ asti. — There is white foam on the waves.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taraṅgeṣu śvetaḥ phenaḥ asti.* — There is white foam on the waves.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for comes ashore, then the Sanskrit for a sandbank, then say phenaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for comes ashore, then the Sanskrit for a sandbank, then say *phenaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फेनः (phenaḥ) mean? (\"Foam\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C417-budbudah",
+      "sequence": 24190,
+      "title": "बुद्बुदः (budbudaḥ) — a bubble",
+      "headword": "बुद्बुदः",
+      "romanization": "budbudaḥ",
+      "gloss": "a bubble",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:768d5f0a24a3a971",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a sandbank, then the Sanskrit for foam."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बुद्बुदः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बुद्बुदः — budbudaḥ — \"a bubble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जले बुद्बुदाः क्षणं तिष्ठन्ति। jale budbudāḥ kṣaṇaṃ tiṣṭhanti. Bubbles last a moment on the water."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बुद्बुदः (budbudaḥ) is the word MW gives for a bubble; MW sets it beside buḍabuḍa, the sound of bubbling, and gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "budbudaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *budbudaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "budbudaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *budbudaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jale budbudāḥ kṣaṇaṃ tiṣṭhanti. — Bubbles last a moment on the water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jale budbudāḥ kṣaṇaṃ tiṣṭhanti.* — Bubbles last a moment on the water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a sandbank, then the Sanskrit for foam, then say budbudaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a sandbank, then the Sanskrit for foam, then say *budbudaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बुद्बुदः (budbudaḥ) mean? (\"A bubble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C417-sthalam",
+      "sequence": 24200,
+      "title": "स्थलम् (sthalam) — dry land",
+      "headword": "स्थलम्",
+      "romanization": "sthalam",
+      "gloss": "dry land",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4020ec4553041994",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for foam, then the Sanskrit for a bubble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्थलम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्थलम् — sthalam — \"dry land\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नौका स्थलं प्राप्नोति। naukā sthalaṃ prāpnoti. The boat reaches dry land."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्थलम् (sthalam) is the word MW gives for dry land, firm earth as against water, and also a place or spot; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sthalam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sthalam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sthalam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sthalam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naukā sthalaṃ prāpnoti. — The boat reaches dry land.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naukā sthalaṃ prāpnoti.* — The boat reaches dry land.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for foam, then the Sanskrit for a bubble, then say sthalam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for foam, then the Sanskrit for a bubble, then say *sthalam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्थलम् (sthalam) mean? (\"Dry land\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C417-vela",
+      "sequence": 24210,
+      "title": "वेला (velā) — the coast; the shoreline",
+      "headword": "वेला",
+      "romanization": "velā",
+      "gloss": "the coast; the shoreline",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bee8a5533b720095",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a bubble, then the Sanskrit for dry land."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वेला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वेला — velā — \"the coast; the shoreline\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वेलायां सिकता उष्णा अस्ति। velāyāṃ sikatā uṣṇā asti. The sand on the coast is hot."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वेला (velā) is the word MW gives for a limit or boundary, a time, and the boundary of sea and land, the coast; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "velā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *velā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "velā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *velā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "velāyāṃ sikatā uṣṇā asti. — The sand on the coast is hot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *velāyāṃ sikatā uṣṇā asti.* — The sand on the coast is hot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a bubble, then the Sanskrit for dry land, then say velā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a bubble, then the Sanskrit for dry land, then say *velā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वेला (velā) mean? (\"The coast; the shoreline\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R417-review-410-417",
+      "sequence": 24220,
+      "title": "Looking back: from Breakdowns to Sandbanks and Shores",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Breakdowns to Sandbanks and Shores",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ddde323822b84f4d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for a hole and leaks."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hole, leaks, loose, split open, scrapes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hole, leaks, loose, split open, scrapes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a carriage road, moves off, a signal, a blockage, keeps away from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a carriage road, moves off, a signal, a blockage, keeps away from]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a halt, turns round, approaches, passes by, a kos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a halt, turns round, approaches, passes by, a kos]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raises up, gets ready, a sack, delivers, arranges",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: raises up, gets ready, a sack, delivers, arranges]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "losing one's bearings, astray, finds the way, unfamiliar, a newcomer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: losing one's bearings, astray, finds the way, unfamiliar, a newcomer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a flowing current, a whirlpool, swims across, the far bank, a causeway",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a flowing current, a whirlpool, swims across, the far bank, a causeway]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a boatman, an oar, a helmsman, rows, comes ashore",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a boatman, an oar, a helmsman, rows, comes ashore]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sandbank, foam, a bubble, dry land, the coastline",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sandbank, foam, a bubble, dry land, the coastline]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A hole? (छिद्रम्, chidram.) Leaks? (क्षरति, kṣarati.) Loose? (शिथिलः, śithilaḥ.) Split open? (विदीर्णः, vidīrṇaḥ.) Scrapes? (घर्षति, gharṣati.) A carriage road? (रथ्या, rathyā.) Moves off? (अपयाति, apayāti.) A signal? (संकेतः, saṅketaḥ.) A blockage? (रोधः, rodhaḥ.) Keeps away from? (वर्जयति, varjayati.) A halt? (विरामः, virāmaḥ.) Turns round? (निवर्तते, nivartate.) Approaches? (उपगच्छति, upagacchati.) Passes by? (अतिगच्छति, atigacchati.) A kos? (क्रोशः, krośaḥ.) Raises up? (उन्नयति, unnayati.) Gets ready? (सन्नह्यति, sannahyati.) A sack? (गोणी, goṇī.) Delivers? (प्रापयति, prāpayati.) Arranges? (सम्पादयति, sampādayati.) Losing one's bearings? (दिग्भ्रमः, digbhramaḥ.) Astray? (भ्रान्तः, bhrāntaḥ.) Finds the way? (प्रतिपद्यते, pratipadyate.) Unfamiliar? (अपरिचितः, aparicitaḥ.) A newcomer? (आगन्तुकः, āgantukaḥ.) A flowing current? (स्रोतः, srotaḥ.) A whirlpool? (आवर्तः, āvartaḥ.) Swims across? (सन्तरति, santarati.) The far bank? (पारम्, pāram.) A causeway? (सेतुबन्धः, setubandhaḥ.) A boatman? (नाविकः, nāvikaḥ.) An oar? (अरित्रम्, aritram.) A helmsman? (कर्णधारः, karṇadhāraḥ.) Rows? (वाहयति, vāhayati.) Comes ashore? (उत्तरति, uttarati.) A sandbank? (पुलिनम्, pulinam.) Foam? (फेनः, phenaḥ.) A bubble? (बुद्बुदः, budbudaḥ.) Dry land? (स्थलम्, sthalam.) The coastline? (वेला, velā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

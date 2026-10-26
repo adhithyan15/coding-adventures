@@ -1,0 +1,11 @@
+{
+  "id": "SA-C399-pataka",
+  "pathSegment": "SA-PATH-399-HRADA399",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-399-HRADA399",
+      "order": 4
+    }
+  ]
+}

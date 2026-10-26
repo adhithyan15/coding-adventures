@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C553-hanta",
+    "language": "sanskrit",
+    "chapter": 553,
+    "sequence": 31620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d3a8d320adc0f5b"
+  },
+  "findings": []
+}

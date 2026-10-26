@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:f3b625c4ff564f0b",
+  "lessonIds": [
+    "SA-C296-davagnih",
+    "SA-C296-prajvalati",
+    "SA-C296-sphulingah",
+    "SA-C296-gadhah",
+    "SA-C296-prasarati"
+  ],
+  "tex": "sanskrit/book/chapters/ch296-fire.tex"
+}

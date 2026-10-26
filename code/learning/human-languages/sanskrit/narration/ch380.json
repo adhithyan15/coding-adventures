@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 380,
+  "title": "How Much",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:60d2fec23e80dc29",
+  "lessons": [
+    {
+      "id": "SA-C380-matra",
+      "sequence": 22050,
+      "title": "मात्रा (mātrā) — a quantity; a measure",
+      "headword": "मात्रा",
+      "romanization": "mātrā",
+      "gloss": "a quantity; a measure",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39b4703193124b3e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for ample, then the Sanskrit for increases (something)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मात्रा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मात्रा — mātrā — \"a quantity; a measure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि औषधस्य मात्रा अधिका, तर्हि हानिः भविष्यति। yadi auṣadhasya mātrā adhikā, tarhi hāniḥ bhaviṣyati. If the dose of medicine is too large, it will do harm."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मात्रा (mātrā) comes from the root √mā, \"to measure\"; MW gives mātrā \"measure, quantity, size, duration, degree\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi auṣadhasya mātrā adhikā, tarhi hāniḥ bhaviṣyati. — If the dose of medicine is too large, it will do harm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi auṣadhasya mātrā adhikā, tarhi hāniḥ bhaviṣyati.* — If the dose of medicine is too large, it will do harm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for ample, then the Sanskrit for increases (something), then say mātrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for ample, then the Sanskrit for increases (something), then say *mātrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मात्रा (mātrā) mean? (\"A quantity; a measure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C380-parimanam",
+      "sequence": 22060,
+      "title": "परिमाणम् (parimāṇam) — an amount; a size",
+      "headword": "परिमाणम्",
+      "romanization": "parimāṇam",
+      "gloss": "an amount; a size",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:912525f555bcc36a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for increases (something), then the Sanskrit for a quantity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: परिमाणम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिमाणम् — parimāṇam — \"an amount; a size\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि जलस्य परिमाणं न्यूनम्, तर्हि वृक्षाः शुष्यन्ति। yadi jalasya parimāṇaṃ nyūnam, tarhi vṛkṣāḥ śuṣyanti. If the amount of water is low, the trees dry up."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिमाणम् (parimāṇam) is built on pari, \"around\", and the root √mā, \"to measure\"; MW gives pari-māṇa \"measure of any kind, size, weight, number\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parimāṇam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parimāṇam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parimāṇam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parimāṇam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi jalasya parimāṇaṃ nyūnam, tarhi vṛkṣāḥ śuṣyanti. — If the amount of water is low, the trees dry up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi jalasya parimāṇaṃ nyūnam, tarhi vṛkṣāḥ śuṣyanti.* — If the amount of water is low, the trees dry up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for increases (something), then the Sanskrit for a quantity, then say parimāṇam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for increases (something), then the Sanskrit for a quantity, then say *parimāṇam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does परिमाणम् (parimāṇam) mean? (\"An amount; a size\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C380-madhyamah",
+      "sequence": 22070,
+      "title": "मध्यमः (madhyamaḥ) — moderate; middling",
+      "headword": "मध्यमः",
+      "romanization": "madhyamaḥ",
+      "gloss": "moderate; middling",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83b3dd1bcc88f429",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a quantity, then the Sanskrit for an amount."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मध्यमः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मध्यमः — madhyamaḥ — \"moderate; middling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि व्यायामः मध्यमः, तर्हि देहः स्वस्थः भवति। yadi vyāyāmaḥ madhyamaḥ, tarhi dehaḥ svasthaḥ bhavati. If exercise is moderate, the body stays healthy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मध्यमः (madhyamaḥ) is built on madhya, \"middle\", with the superlative ending -ma; MW gives madhyama \"middle, middlemost, intermediate\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madhyamaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madhyamaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madhyamaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madhyamaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi vyāyāmaḥ madhyamaḥ, tarhi dehaḥ svasthaḥ bhavati. — If exercise is moderate, the body stays healthy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi vyāyāmaḥ madhyamaḥ, tarhi dehaḥ svasthaḥ bhavati.* — If exercise is moderate, the body stays healthy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a quantity, then the Sanskrit for an amount, then say madhyamaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a quantity, then the Sanskrit for an amount, then say *madhyamaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मध्यमः (madhyamaḥ) mean? (\"Moderate; middling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C380-yathestam",
+      "sequence": 22080,
+      "title": "यथेष्टम् (yatheṣṭam) — as much as one likes",
+      "headword": "यथेष्टम्",
+      "romanization": "yatheṣṭam",
+      "gloss": "as much as one likes",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d923d0ba4a76f87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for an amount, then the Sanskrit for moderate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: यथेष्टम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "यथेष्टम् — yatheṣṭam — \"as much as one likes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि भवान् क्षुधितः, तर्हि यथेष्टं खादतु। yadi bhavān kṣudhitaḥ, tarhi yatheṣṭaṃ khādatu. If you are hungry, eat as much as you like."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "यथेष्टम् (yatheṣṭam) is built from yathā, \"as\", and iṣṭa, \"wished\"; MW gives yatheṣṭam \"according to wish, at pleasure\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yatheṣṭam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yatheṣṭam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yatheṣṭam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yatheṣṭam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bhavān kṣudhitaḥ, tarhi yatheṣṭaṃ khādatu. — If you are hungry, eat as much as you like.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bhavān kṣudhitaḥ, tarhi yatheṣṭaṃ khādatu.* — If you are hungry, eat as much as you like.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for an amount, then the Sanskrit for moderate, then say yatheṣṭam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for an amount, then the Sanskrit for moderate, then say *yatheṣṭam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does यथेष्टम् (yatheṣṭam) mean? (\"As much as one likes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C380-vistarayati",
+      "sequence": 22090,
+      "title": "विस्तारयति (vistārayati) — expands; extends",
+      "headword": "विस्तारयति",
+      "romanization": "vistārayati",
+      "gloss": "expands; extends",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b95eb5d8258af2fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for moderate, then the Sanskrit for as much as one likes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विस्तारयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विस्तारयति — vistārayati — \"expands; extends\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि वणिक् व्यापारं विस्तारयति, तर्हि लाभः वर्धते। yadi vaṇik vyāpāraṃ vistārayati, tarhi lābhaḥ vardhate. If the merchant expands his trade, his profit grows."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः व्यापारं विस्तारितवान्, saḥ vyāpāraṃ vistāritavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विस्तारयति (vistārayati) is built on vi and the root √stṛ, \"to spread\", in its causative form; MW gives vi-stārita \"spread, extended\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vistārayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vistārayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vistārayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vistārayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi vaṇik vyāpāraṃ vistārayati, tarhi lābhaḥ vardhate. — If the merchant expands his trade, his profit grows.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi vaṇik vyāpāraṃ vistārayati, tarhi lābhaḥ vardhate.* — If the merchant expands his trade, his profit grows.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for moderate, then the Sanskrit for as much as one likes, then say vistārayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for moderate, then the Sanskrit for as much as one likes, then say *vistārayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विस्तारयति (vistārayati) mean? (\"Expands; extends\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R285-depends-and-would",
+    "language": "sanskrit",
+    "chapter": 285,
+    "sequence": 16680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7485289b92a490ab"
+  },
+  "findings": []
+}

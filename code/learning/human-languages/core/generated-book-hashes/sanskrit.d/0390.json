@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:1dec10a15568c67e",
+  "lessonIds": [
+    "SA-C390-laksanam",
+    "SA-C390-pratyasa",
+    "SA-C390-vyarthah",
+    "SA-C390-sarthakah",
+    "SA-C390-anubhavati"
+  ],
+  "tex": "sanskrit/book/chapters/ch390-signs-of-what-is-coming.tex"
+}

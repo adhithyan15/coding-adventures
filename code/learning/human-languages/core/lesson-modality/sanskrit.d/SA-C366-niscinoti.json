@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C366-niscinoti",
+    "language": "sanskrit",
+    "chapter": 366,
+    "sequence": 21370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:068fdbb2ffe25959"
+  },
+  "findings": []
+}

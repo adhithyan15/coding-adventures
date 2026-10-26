@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:7e0213f42b5b6627",
+  "lessonIds": [
+    "SA-C525-mallah",
+    "SA-C525-bahuyuddham",
+    "SA-C525-patayati",
+    "SA-C525-uttolayati",
+    "SA-C525-ahvanam",
+    "SA-R525-review-518-525"
+  ],
+  "tex": "sanskrit/book/chapters/ch525-in-the-wrestling-pit.tex"
+}

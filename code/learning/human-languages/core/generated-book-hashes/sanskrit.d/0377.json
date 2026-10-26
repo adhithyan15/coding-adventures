@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:16cca3a74981998c",
+  "lessonIds": [
+    "SA-C377-ativa",
+    "SA-C377-atyantam",
+    "SA-C377-tivrah",
+    "SA-C377-nitaram",
+    "SA-C377-atikramati"
+  ],
+  "tex": "sanskrit/book/chapters/ch377-very-and-extremely.tex"
+}

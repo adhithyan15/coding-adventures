@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "Walls and Gates",
+  "label": "ch:sa-walls-and-gates",
+  "canDo": "I can describe how an old town is walled and entered.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C422-khatam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can describe how an old town is walled and entered.",
+    "assesses": [
+      "SA-LEX-C422-PRAKARA422-03",
+      "SA-LEX-C422-PRAKARA422-04",
+      "SA-LEX-C422-PRAKARA422-05"
+    ]
+  }
+}

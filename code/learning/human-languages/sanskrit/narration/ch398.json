@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 398,
+  "title": "At the River Steps",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f9135da31e018769",
+  "lessons": [
+    {
+      "id": "SA-C398-ghattah",
+      "sequence": 23200,
+      "title": "घट्टः (ghaṭṭaḥ) — a bathing ghat; river steps",
+      "headword": "घट्टः",
+      "romanization": "ghaṭṭaḥ",
+      "gloss": "a bathing ghat; river steps",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a89f9d4d8993922",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a hymn of praise, then the Sanskrit for sings the praises of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घट्टः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घट्टः — ghaṭṭaḥ — \"a bathing ghat; river steps\"."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रातः घट्टे यात्रिकाः स्नान्ति। prātaḥ ghaṭṭe yātrikāḥ snānti. In the morning pilgrims bathe at the bathing ghat."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घट्टः (ghaṭṭaḥ) is the word MW gives for a landing-place, a bathing place or steps by a river, with no derivation; CDIAL notes that a Dravidian origin has been suggested (T. Burrow), so its origin is uncertain; it lives on as Hindi ghāṭ, \"a bathing or landing place\" (MW; CDIAL 4414)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghaṭṭaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghaṭṭaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghaṭṭaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghaṭṭaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prātaḥ ghaṭṭe yātrikāḥ snānti. — In the morning pilgrims bathe at the bathing ghat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prātaḥ ghaṭṭe yātrikāḥ snānti.* — In the morning pilgrims bathe at the bathing ghat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a hymn of praise, then the Sanskrit for sings the praises of, then say ghaṭṭaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a hymn of praise, then the Sanskrit for sings the praises of, then say *ghaṭṭaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घट्टः (ghaṭṭaḥ) mean? (\"A bathing ghat; river steps\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C398-avagahate",
+      "sequence": 23210,
+      "title": "अवगाहते (avagāhate) — plunges into; bathes in",
+      "headword": "अवगाहते",
+      "romanization": "avagāhate",
+      "gloss": "plunges into; bathes in",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dec1d63cfb32555c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for sings the praises of, then the Sanskrit for a bathing ghat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अवगाहते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवगाहते — avagāhate — \"plunges into; bathes in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यात्रिकः नद्याम् अवगाहते। yātrikaḥ nadyām avagāhate. The pilgrim plunges into the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः नद्याम् अवगाढवान्, saḥ nadyām avagāḍhavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवगाहते (avagāhate) is built from ava, \"down\", and the root √gāh, \"to plunge, to dive into\"; MW gives ava-gāh as to plunge into or bathe in, with the participle avagāḍha (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avagāhate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avagāhate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avagāhate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avagāhate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātrikaḥ nadyām avagāhate. — The pilgrim plunges into the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātrikaḥ nadyām avagāhate.* — The pilgrim plunges into the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for sings the praises of, then the Sanskrit for a bathing ghat, then say avagāhate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for sings the praises of, then the Sanskrit for a bathing ghat, then say *avagāhate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अवगाहते (avagāhate) mean? (\"Plunges into; bathes in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C398-sangamah",
+      "sequence": 23220,
+      "title": "संगमः (saṅgamaḥ) — a confluence of rivers",
+      "headword": "संगमः",
+      "romanization": "saṅgamaḥ",
+      "gloss": "a confluence of rivers",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce617448b22abeb2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a bathing ghat, then the Sanskrit for plunges into."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संगमः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संगमः — saṅgamaḥ — \"a confluence of rivers\"."
+            },
+            {
+              "kind": "speech",
+              "text": "संगमे जलं शीतलम् अस्ति। saṅgame jalaṃ śītalam asti. The water at the confluence is cool."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संगमः (saṅgamaḥ) is built from sam, \"together\", and the root √gam, \"to go\": a going together; MW gives saṃgama as a meeting and as the confluence of rivers (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅgamaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅgamaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅgamaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅgamaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅgame jalaṃ śītalam asti. — The water at the confluence is cool.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅgame jalaṃ śītalam asti.* — The water at the confluence is cool.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a bathing ghat, then the Sanskrit for plunges into, then say saṅgamaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a bathing ghat, then the Sanskrit for plunges into, then say *saṅgamaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संगमः (saṅgamaḥ) mean? (\"A confluence of rivers\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C398-pavanah",
+      "sequence": 23230,
+      "title": "पावनः (pāvanaḥ) — purifying; holy",
+      "headword": "पावनः",
+      "romanization": "pāvanaḥ",
+      "gloss": "purifying; holy",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e21a0a6aaa812ca0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for plunges into, then the Sanskrit for a confluence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पावनः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पावनः — pāvanaḥ — \"purifying; holy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नद्याः जलं पावनम् अस्ति। nadyāḥ jalaṃ pāvanam asti. The river's water is purifying."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पावनः (pāvanaḥ) comes from the root √pū, \"to make clean, to purify\"; MW gives pāvana as purifying, pure, holy (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāvanaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāvanaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāvanaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāvanaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nadyāḥ jalaṃ pāvanam asti. — The river's water is purifying.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nadyāḥ jalaṃ pāvanam asti.* — The river's water is purifying.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for plunges into, then the Sanskrit for a confluence, then say pāvanaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for plunges into, then the Sanskrit for a confluence, then say *pāvanaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पावनः (pāvanaḥ) mean? (\"Purifying; holy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C398-proksati",
+      "sequence": 23240,
+      "title": "प्रोक्षति (prokṣati) — sprinkles over; sprinkles water on",
+      "headword": "प्रोक्षति",
+      "romanization": "prokṣati",
+      "gloss": "sprinkles over; sprinkles water on",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c05a15bcabdb4c08",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a confluence, then the Sanskrit for purifying."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रोक्षति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रोक्षति — prokṣati — \"sprinkles over; sprinkles water on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पुत्रः पुष्पेषु जलं प्रोक्षति। putraḥ puṣpeṣu jalaṃ prokṣati. The son sprinkles water on the flowers."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः पुष्पेषु जलं प्रोक्षितवान्, saḥ puṣpeṣu jalaṃ prokṣitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रोक्षति (prokṣati) is built from pra, \"forth\", and the root √ukṣ, \"to sprinkle\"; MW gives prokṣ as to sprinkle upon or to purify by sprinkling, with the participle prokṣita (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prokṣati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prokṣati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prokṣati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prokṣati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putraḥ puṣpeṣu jalaṃ prokṣati. — The son sprinkles water on the flowers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putraḥ puṣpeṣu jalaṃ prokṣati.* — The son sprinkles water on the flowers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a confluence, then the Sanskrit for purifying, then say prokṣati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a confluence, then the Sanskrit for purifying, then say *prokṣati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रोक्षति (prokṣati) mean? (\"Sprinkles over; sprinkles water on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

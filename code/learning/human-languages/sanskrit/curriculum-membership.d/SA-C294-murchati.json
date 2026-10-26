@@ -1,0 +1,11 @@
+{
+  "id": "SA-C294-murchati",
+  "pathSegment": "SA-PATH-294-SANGHATTA294",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-294-SANGHATTA294",
+      "order": 4
+    }
+  ]
+}

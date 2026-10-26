@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "Serving the Meal",
+  "label": "ch:sa-serving-the-meal",
+  "canDo": "I can serve a meal and clear up after it.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C514-pidhanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can serve a meal and clear up after it.",
+    "assesses": [
+      "SA-LEX-C514-PARIVESAYATI514-03",
+      "SA-LEX-C514-PARIVESAYATI514-04",
+      "SA-LEX-C514-PARIVESAYATI514-05"
+    ]
+  }
+}

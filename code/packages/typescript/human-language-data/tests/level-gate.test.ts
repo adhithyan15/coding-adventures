@@ -422,6 +422,13 @@ describe("the gate that would have caught the A2 claim", () => {
     // realizing all five B1 nodes, plus letter lessons for ؤ ع غ ذ ث ڈ ص) and
     // chapters 276-547 (1,360 headwords, 370 verbs), which moved it from the A2
     // row of HELD to B1.
+    // Sanskrit followed as the nineteenth, with chapters 275-285 (the B1 core:
+    // the full future, the -tavat past and the present with स्म, -त्वा / -य,
+    // reasons with मम मतेन / यतः / कारणात्, the optative of advice, travel with
+    // the polite -तु, feelings and -अपेक्षया / -तर, and यदि … तर्हि / अन्यथा /
+    // the conditional, realizing all five B1 nodes, plus letter lessons for
+    // घ ढ औ ई) and chapters 286-555 (1,350 headwords, 394 verbs), which moved
+    // it from the A2 row of HELD to B1.
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

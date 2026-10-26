@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C402-parnasala",
+    "language": "sanskrit",
+    "chapter": 402,
+    "sequence": 23420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:388fbb103f62c1e7"
+  },
+  "findings": []
+}

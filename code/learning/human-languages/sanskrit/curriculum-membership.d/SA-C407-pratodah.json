@@ -1,0 +1,11 @@
+{
+  "id": "SA-C407-pratodah",
+  "pathSegment": "SA-PATH-407-YANTA407",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-407-YANTA407",
+      "order": 3
+    }
+  ]
+}

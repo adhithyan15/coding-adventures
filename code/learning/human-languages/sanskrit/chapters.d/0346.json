@@ -1,0 +1,19 @@
+{
+  "chapter": 346,
+  "title": "Saying No to a Claim",
+  "label": "ch:sa-saying-no-to-a-claim",
+  "canDo": "I can object to a claim and reject it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C346-vastutah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can object to a claim and reject it.",
+    "assesses": [
+      "SA-LEX-C346-AKSHEPA346-03",
+      "SA-LEX-C346-AKSHEPA346-04",
+      "SA-LEX-C346-AKSHEPA346-05"
+    ]
+  }
+}

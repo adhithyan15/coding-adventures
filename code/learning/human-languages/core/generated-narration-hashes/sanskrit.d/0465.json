@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:e21106cc78883fd5",
+  "lessonIds": [
+    "SA-C465-cancalah",
+    "SA-C465-udasinah",
+    "SA-C465-pramadyati",
+    "SA-C465-avadhanam",
+    "SA-C465-udyami"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch465.txt",
+  "json": "sanskrit/narration/ch465.json",
+  "textHash": "fnv1a64:c638036174ab95d3",
+  "jsonHash": "fnv1a64:46a365f9ea4dfa1b",
+  "findings": []
+}

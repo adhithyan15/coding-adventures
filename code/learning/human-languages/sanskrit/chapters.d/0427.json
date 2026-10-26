@@ -1,0 +1,19 @@
+{
+  "chapter": 427,
+  "title": "A Night's Lodging",
+  "label": "ch:sa-a-night-s-lodging",
+  "canDo": "I can say where I spent the night and when I woke.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C427-prabudhyate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can say where I spent the night and when I woke.",
+    "assesses": [
+      "SA-LEX-C427-VASATI427-03",
+      "SA-LEX-C427-VASATI427-04",
+      "SA-LEX-C427-VASATI427-05"
+    ]
+  }
+}

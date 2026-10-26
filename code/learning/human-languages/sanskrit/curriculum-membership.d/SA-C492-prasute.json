@@ -1,0 +1,11 @@
+{
+  "id": "SA-C492-prasute",
+  "pathSegment": "SA-PATH-492-JANMA492",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-492-JANMA492",
+      "order": 1
+    }
+  ]
+}

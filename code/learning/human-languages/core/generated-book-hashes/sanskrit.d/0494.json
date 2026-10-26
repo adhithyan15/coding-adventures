@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:37c3d3f757a5ed91",
+  "lessonIds": [
+    "SA-C494-lalayati",
+    "SA-C494-samvardhayati",
+    "SA-C494-bhartsayati",
+    "SA-C494-anujanati",
+    "SA-C494-balyam",
+    "SA-R494-review-488-494"
+  ],
+  "tex": "sanskrit/book/chapters/ch494-bringing-up-a-child.tex"
+}

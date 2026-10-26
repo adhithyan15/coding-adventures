@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "Lonely Roads and Wild Places",
+  "label": "ch:sa-lonely-roads-and-wild-places",
+  "canDo": "I can talk about a wild, empty stretch and where to take cover.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C404-sunyah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can talk about a wild, empty stretch and where to take cover.",
+    "assesses": [
+      "SA-LEX-C404-PRANTARA404-03",
+      "SA-LEX-C404-PRANTARA404-04",
+      "SA-LEX-C404-PRANTARA404-05"
+    ]
+  }
+}

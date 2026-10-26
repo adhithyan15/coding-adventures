@@ -1,0 +1,11 @@
+{
+  "id": "SA-C377-atikramati",
+  "pathSegment": "SA-PATH-377-ATIVA377",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-377-ATIVA377",
+      "order": 4
+    }
+  ]
+}

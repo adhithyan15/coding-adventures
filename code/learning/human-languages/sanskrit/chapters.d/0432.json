@@ -1,0 +1,19 @@
+{
+  "chapter": 432,
+  "title": "Spending and Saving",
+  "label": "ch:sa-spending-and-saving",
+  "canDo": "I can say what I spend, earn and save on a journey.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C432-sancayah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can say what I spend, earn and save on a journey.",
+    "assesses": [
+      "SA-LEX-C432-VYAYA432-03",
+      "SA-LEX-C432-VYAYA432-04",
+      "SA-LEX-C432-VYAYA432-05"
+    ]
+  }
+}

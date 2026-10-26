@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-284-CONDITION284",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what follows if something happens (yadi … tarhi …), with the present or the future in both halves, and what will happen otherwise (anyathā).",
+  "prerequisites": [
+    "SA-EXT-283-EXPERIENCE283"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:b7234491b7de248d",
+  "lessonIds": [
+    "SA-C527-dhanurdharah",
+    "SA-C527-ekagrah",
+    "SA-C527-prahinoti",
+    "SA-C527-utsahayati",
+    "SA-C527-jya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch527.txt",
+  "json": "sanskrit/narration/ch527.json",
+  "textHash": "fnv1a64:d8e9428c5a5ede94",
+  "jsonHash": "fnv1a64:eeeb6d9f3476ad6e",
+  "findings": []
+}

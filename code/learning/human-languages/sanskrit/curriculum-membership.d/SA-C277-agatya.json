@@ -1,0 +1,11 @@
+{
+  "id": "SA-C277-agatya",
+  "pathSegment": "SA-PATH-277-NARRATE277",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-277-NARRATE277",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:a31caae14a8f145a",
+  "lessonIds": [
+    "SA-C519-murtih",
+    "SA-C519-utkirati",
+    "SA-C519-silpam",
+    "SA-C519-krtih",
+    "SA-C519-nirmati"
+  ],
+  "tex": "sanskrit/book/chapters/ch519-craft-and-carving.tex"
+}

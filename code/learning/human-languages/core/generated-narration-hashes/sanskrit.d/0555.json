@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 555,
+  "sourceHash": "fnv1a64:aaae45291049a19c",
+  "lessonIds": [
+    "SA-C555-prerana",
+    "SA-C555-udyuktah",
+    "SA-C555-pratyuta",
+    "SA-C555-karmathah",
+    "SA-C555-adhyavasyati",
+    "SA-R555-review-549-555",
+    "SA-R555-review-final-555"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch555.txt",
+  "json": "sanskrit/narration/ch555.json",
+  "textHash": "fnv1a64:89eb2d921b41465c",
+  "jsonHash": "fnv1a64:8fbf9da0f62cbafe",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C475-svidyati",
+    "language": "sanskrit",
+    "chapter": 475,
+    "sequence": 27380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80df51feb948cb70"
+  },
+  "findings": []
+}

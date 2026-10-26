@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C400-japamala",
+    "language": "sanskrit",
+    "chapter": 400,
+    "sequence": 23310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb41587d982a4a88"
+  },
+  "findings": []
+}

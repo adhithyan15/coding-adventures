@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:95d75066ee6a1359",
+  "lessonIds": [
+    "SA-C336-nitih",
+    "SA-C336-lobhah",
+    "SA-C336-makarah",
+    "SA-C336-mudhah",
+    "SA-C336-lobhayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch336-fables.tex"
+}

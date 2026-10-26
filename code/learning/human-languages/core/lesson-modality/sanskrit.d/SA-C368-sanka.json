@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C368-sanka",
+    "language": "sanskrit",
+    "chapter": 368,
+    "sequence": 21430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eff6b4fd0ff74342"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C539-asankate",
+    "language": "sanskrit",
+    "chapter": 539,
+    "sequence": 30920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:451184c0ce245294"
+  },
+  "findings": []
+}

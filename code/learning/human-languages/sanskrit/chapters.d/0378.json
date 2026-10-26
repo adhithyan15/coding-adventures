@@ -1,0 +1,19 @@
+{
+  "chapter": 378,
+  "title": "A Little",
+  "label": "ch:sa-a-little",
+  "canDo": "I can say what a small change would do.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C378-hrasati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can say what a small change would do.",
+    "assesses": [
+      "SA-LEX-C378-LESHA378-03",
+      "SA-LEX-C378-LESHA378-04",
+      "SA-LEX-C378-LESHA378-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 454,
+  "title": "Envy and Dislike",
+  "label": "ch:sa-envy-and-dislike",
+  "canDo": "I can say whom someone envies or dislikes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C454-sprha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can say whom someone envies or dislikes.",
+    "assesses": [
+      "SA-LEX-C454-IRSYA454-03",
+      "SA-LEX-C454-IRSYA454-04",
+      "SA-LEX-C454-IRSYA454-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C437-galati",
+  "pathSegment": "SA-PATH-437-PRAVRSH437",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-437-PRAVRSH437",
+      "order": 4
+    }
+  ]
+}

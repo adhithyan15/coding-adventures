@@ -1,0 +1,19 @@
+{
+  "chapter": 428,
+  "title": "Hosts and Guests",
+  "label": "ch:sa-hosts-and-guests",
+  "canDo": "I can say how a host receives and sees off travellers.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C428-anuvrajati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 428: I can say how a host receives and sees off travellers.",
+    "assesses": [
+      "SA-LEX-C428-GRHAPATI428-03",
+      "SA-LEX-C428-GRHAPATI428-04",
+      "SA-LEX-C428-GRHAPATI428-05"
+    ]
+  }
+}
