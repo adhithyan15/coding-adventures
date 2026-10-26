@@ -1,0 +1,9 @@
+[package]
+name = "cortex-m23-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked bounded Armv8-M Baseline Cortex-M23 functional simulator"
+license = "MIT"
+
+[dependencies]
+cortex-m0-simulator = { path = "../cortex-m0-simulator" }
