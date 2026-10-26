@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C319-parajayah",
+    "language": "sanskrit",
+    "chapter": 319,
+    "sequence": 18700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b352a5d5c7302c5a"
+  },
+  "findings": []
+}

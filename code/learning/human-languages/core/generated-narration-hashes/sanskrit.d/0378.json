@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:cf6cca33a5d0575d",
+  "lessonIds": [
+    "SA-C378-lesah",
+    "SA-C378-manak",
+    "SA-C378-ardham",
+    "SA-C378-nyunah",
+    "SA-C378-hrasati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch378.txt",
+  "json": "sanskrit/narration/ch378.json",
+  "textHash": "fnv1a64:930c5fd366f160de",
+  "jsonHash": "fnv1a64:7bddc91a335c3635",
+  "findings": []
+}

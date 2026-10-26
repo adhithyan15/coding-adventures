@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:6983dc2581c253c9",
+  "lessonIds": [
+    "SA-C406-adhirohati",
+    "SA-C406-avatarati",
+    "SA-C406-sammardah",
+    "SA-C406-panktih",
+    "SA-C406-avakasah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch406.txt",
+  "json": "sanskrit/narration/ch406.json",
+  "textHash": "fnv1a64:37e592472de8c875",
+  "jsonHash": "fnv1a64:ed146b96abe6fded",
+  "findings": []
+}

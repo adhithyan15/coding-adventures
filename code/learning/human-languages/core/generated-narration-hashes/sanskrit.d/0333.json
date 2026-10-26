@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:33dea2b0d1d39b01",
+  "lessonIds": [
+    "SA-C333-sapah",
+    "SA-C333-devah",
+    "SA-C333-varah",
+    "SA-C333-prasidati",
+    "SA-C333-amarah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch333.txt",
+  "json": "sanskrit/narration/ch333.json",
+  "textHash": "fnv1a64:c297725ea51bdae8",
+  "jsonHash": "fnv1a64:aded41dcca5ec85d",
+  "findings": []
+}

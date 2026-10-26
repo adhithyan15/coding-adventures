@@ -1,6 +1,4 @@
 {
-  "omits": [
-    "VERB-FUTURE"
-  ],
+  "omits": [],
   "relocates": {}
 }

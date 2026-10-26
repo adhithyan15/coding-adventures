@@ -1,0 +1,11 @@
+{
+  "id": "SA-C500-santatih",
+  "pathSegment": "SA-PATH-500-DEVARA500",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-500-DEVARA500",
+      "order": 4
+    }
+  ]
+}

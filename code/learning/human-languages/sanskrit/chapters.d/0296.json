@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "Fire!",
+  "label": "ch:sa-fire",
+  "canDo": "I can say where a fire started and how it spread.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C296-prasarati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can say where a fire started and how it spread.",
+    "assesses": [
+      "SA-LEX-C296-DAVAGNI296-03",
+      "SA-LEX-C296-DAVAGNI296-04",
+      "SA-LEX-C296-DAVAGNI296-05"
+    ]
+  }
+}

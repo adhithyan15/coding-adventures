@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:4a02fcef45b53684",
+  "lessonIds": [
+    "SA-C295-cetana",
+    "SA-C295-utthapayati",
+    "SA-C295-sibika",
+    "SA-C295-apatkalah",
+    "SA-C295-avalambate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch295.txt",
+  "json": "sanskrit/narration/ch295.json",
+  "textHash": "fnv1a64:a5c9e6da1f3ee2f5",
+  "jsonHash": "fnv1a64:2058f269980162cd",
+  "findings": []
+}

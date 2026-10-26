@@ -1,0 +1,11 @@
+{
+  "id": "SA-C427-prabudhyate",
+  "pathSegment": "SA-PATH-427-VASATI427",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-427-VASATI427",
+      "order": 4
+    }
+  ]
+}

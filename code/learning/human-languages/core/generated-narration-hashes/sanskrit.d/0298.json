@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:e8816a9b23f631e2",
+  "lessonIds": [
+    "SA-C298-ksatih",
+    "SA-C298-nasayati",
+    "SA-C298-bhagnah",
+    "SA-C298-paurah",
+    "SA-C298-sesah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch298.txt",
+  "json": "sanskrit/narration/ch298.json",
+  "textHash": "fnv1a64:d75ff820e4bfd1b2",
+  "jsonHash": "fnv1a64:1d2a44e6216cbc89",
+  "findings": []
+}

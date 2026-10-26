@@ -1,0 +1,19 @@
+{
+  "chapter": 521,
+  "title": "Drums and Strings",
+  "label": "ch:sa-drums-and-strings",
+  "canDo": "I can name instruments and say who plays them.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C521-nadah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 521: I can name instruments and say who plays them.",
+    "assesses": [
+      "SA-LEX-C521-VADAKA521-03",
+      "SA-LEX-C521-VADAKA521-04",
+      "SA-LEX-C521-VADAKA521-05"
+    ]
+  }
+}

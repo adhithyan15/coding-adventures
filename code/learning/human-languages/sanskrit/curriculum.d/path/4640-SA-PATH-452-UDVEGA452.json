@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-452-UDVEGA452",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "SA-EXT-452-UDVEGA452"
+  ],
+  "after": []
+}

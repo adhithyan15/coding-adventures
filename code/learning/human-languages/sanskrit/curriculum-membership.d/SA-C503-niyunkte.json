@@ -1,0 +1,11 @@
+{
+  "id": "SA-C503-niyunkte",
+  "pathSegment": "SA-PATH-503-SAHAKARI503",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-503-SAHAKARI503",
+      "order": 4
+    }
+  ]
+}

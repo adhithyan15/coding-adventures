@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:8145babdf215d529",
+  "lessonIds": [
+    "SA-C456-ksubhyati",
+    "SA-C456-prasadayati",
+    "SA-C456-samahitah",
+    "SA-C456-mardayati",
+    "SA-C456-ekantah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch456.txt",
+  "json": "sanskrit/narration/ch456.json",
+  "textHash": "fnv1a64:144aac12ae9747e3",
+  "jsonHash": "fnv1a64:24ba2ac538d283d5",
+  "findings": []
+}

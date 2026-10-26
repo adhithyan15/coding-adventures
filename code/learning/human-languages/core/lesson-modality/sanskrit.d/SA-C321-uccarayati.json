@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C321-uccarayati",
+    "language": "sanskrit",
+    "chapter": 321,
+    "sequence": 18830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8938467fbbd06694"
+  },
+  "findings": []
+}

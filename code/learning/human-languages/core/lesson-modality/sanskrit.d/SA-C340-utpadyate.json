@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C340-utpadyate",
+    "language": "sanskrit",
+    "chapter": 340,
+    "sequence": 20030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b79712c5198f0c5b"
+  },
+  "findings": []
+}

@@ -13780,25 +13780,41 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
 
 fn parse_er_render_config(source: &str) -> diagram_ir::StructuralRenderConfig {
     let defaults = diagram_ir::StructuralRenderConfig::default();
-    let front_matter = mermaid_front_matter_section(source, &["config", "er"]);
-    let config = mermaid_directive_object(source, "er")
+    diagram_ir::StructuralRenderConfig {
+        use_max_width: parse_mermaid_boolean_config(
+            source,
+            "er",
+            "useMaxWidth",
+            defaults.use_max_width,
+        ),
+        html_labels: parse_mermaid_boolean_config(
+            source,
+            "flowchart",
+            "htmlLabels",
+            defaults.html_labels,
+        ),
+    }
+}
+
+fn parse_mermaid_boolean_config(source: &str, section: &str, key: &str, fallback: bool) -> bool {
+    let front_matter = mermaid_front_matter_section(source, &["config", section]);
+    let config = mermaid_directive_object(source, section)
         .or(front_matter.as_deref())
         .unwrap_or("");
-    let value = quadrant_directive_value(config, "useMaxWidth").or_else(|| {
+    let value = quadrant_directive_value(config, key).or_else(|| {
         config.lines().find_map(|line| {
-            let (key, value) = line.trim().split_once(':')?;
-            (key.trim() == "useMaxWidth")
+            let (name, value) = line.trim().split_once(':')?;
+            (name.trim() == key)
                 .then(|| value.trim().trim_matches(['"', '\'']).to_string())
         })
     });
-    let use_max_width = value
+    value
         .and_then(|value| match value.to_ascii_lowercase().as_str() {
             "true" => Some(true),
             "false" => Some(false),
             _ => None,
         })
-        .unwrap_or(defaults.use_max_width);
-    diagram_ir::StructuralRenderConfig { use_max_width }
+        .unwrap_or(fallback)
 }
 
 fn parse_er_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
@@ -14017,6 +14033,8 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     cursor.skip_terminators();
 
     let mut title = None;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
     let mut nodes = Vec::new();
     let mut node_indices = HashMap::new();
     let mut groups = Vec::new();
@@ -14028,6 +14046,33 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
             "TITLE" => {
                 let value = cursor.advance().value.clone();
                 title = Some(value.trim_start_matches("title").trim().to_string());
+            }
+            "ACC_TITLE" => {
+                accessibility_title = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+            }
+            "ACC_DESCR" => {
+                accessibility_description = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+            }
+            "ACC_DESCR_BLOCK" => {
+                let value = cursor.advance().value.clone();
+                let open = value.find('{').expect("C4 accessibility block requires '{'");
+                let close = value.rfind('}').expect("C4 accessibility block requires '}'");
+                accessibility_description = Some(
+                    value[open + 1..close]
+                        .lines()
+                        .map(str::trim)
+                        .filter(|line| !line.is_empty())
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                );
             }
             "DIRECTION" | "CONFIG_MACRO" => {
                 cursor.advance();
@@ -14132,8 +14177,8 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
         architecture_config: None,
         render_config: Default::default(),
         title,
-        accessibility_title: None,
-        accessibility_description: None,
+        accessibility_title,
+        accessibility_description,
         direction: None,
         alignments: Vec::new(),
         nodes,

@@ -1,0 +1,21 @@
+{
+  "chapter": 541,
+  "title": "Two Ways to Go",
+  "label": "ch:sa-two-ways-to-go",
+  "canDo": "I can weigh two options and say what I would do.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-R541-review-534-541",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 541: I can weigh two options and say what I would do.",
+    "assesses": [
+      "SA-LEX-C541-DVIDHA541-01",
+      "SA-LEX-C541-DVIDHA541-02",
+      "SA-LEX-C541-DVIDHA541-03",
+      "SA-LEX-C541-DVIDHA541-04",
+      "SA-LEX-C541-DVIDHA541-05"
+    ]
+  }
+}

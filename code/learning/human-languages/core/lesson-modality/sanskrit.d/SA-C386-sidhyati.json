@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C386-sidhyati",
+    "language": "sanskrit",
+    "chapter": 386,
+    "sequence": 22360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a69503c7e9b9732c"
+  },
+  "findings": []
+}

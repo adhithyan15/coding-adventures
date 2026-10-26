@@ -1,0 +1,21 @@
+{
+  "chapter": 301,
+  "title": "The Storm",
+  "label": "ch:sa-the-storm",
+  "canDo": "I can describe a storm as it came.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-R301-review-294-301",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can describe a storm as it came.",
+    "assesses": [
+      "SA-LEX-C301-CAKRAVATA301-01",
+      "SA-LEX-C301-CAKRAVATA301-02",
+      "SA-LEX-C301-CAKRAVATA301-03",
+      "SA-LEX-C301-CAKRAVATA301-04",
+      "SA-LEX-C301-CAKRAVATA301-05"
+    ]
+  }
+}

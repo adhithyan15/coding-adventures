@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-345-PRATYAYA345",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "SA-EXT-345-PRATYAYA345"
+  ],
+  "after": []
+}

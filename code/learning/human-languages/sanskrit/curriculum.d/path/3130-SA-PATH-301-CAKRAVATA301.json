@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-301-CAKRAVATA301",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "SA-EXT-301-CAKRAVATA301"
+  ],
+  "after": []
+}

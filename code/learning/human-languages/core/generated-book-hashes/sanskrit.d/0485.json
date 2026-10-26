@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:ebd48fa9101f35ce",
+  "lessonIds": [
+    "SA-C485-susrusa",
+    "SA-C485-upacarati",
+    "SA-C485-apyayayati",
+    "SA-C485-upasamah",
+    "SA-C485-rasayanam"
+  ],
+  "tex": "sanskrit/book/chapters/ch485-nursing.tex"
+}

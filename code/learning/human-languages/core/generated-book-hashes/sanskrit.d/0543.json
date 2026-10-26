@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:ca28bbe1d54f8b25",
+  "lessonIds": [
+    "SA-C543-sveccha",
+    "SA-C543-vivasah",
+    "SA-C543-hathah",
+    "SA-C543-agrahah",
+    "SA-C543-svayam"
+  ],
+  "tex": "sanskrit/book/chapters/ch543-free-to-choose.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C404-niliyate",
+    "language": "sanskrit",
+    "chapter": 404,
+    "sequence": 23540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28e4f8dcea0421b1"
+  },
+  "findings": []
+}

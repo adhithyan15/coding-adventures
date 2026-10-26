@@ -1,0 +1,11 @@
+{
+  "id": "JA-C255-desu-kara",
+  "pathSegment": "JA-PATH-255-REASONS255",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-255-REASONS255",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:c4b5dd9aa98c7ee5",
+  "lessonIds": [
+    "SA-C332-akhyanam",
+    "SA-C332-rsih",
+    "SA-C332-munih",
+    "SA-C332-tapah",
+    "SA-C332-sapati",
+    "SA-R332-review-326-332"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch332.txt",
+  "json": "sanskrit/narration/ch332.json",
+  "textHash": "fnv1a64:670dd71239d4d9d3",
+  "jsonHash": "fnv1a64:c1a5ed983c321366",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:0200d187da79ed9f",
+  "lessonIds": [
+    "SA-C540-asannah",
+    "SA-C540-avasistah",
+    "SA-C540-samaptih",
+    "SA-C540-kalaksepah",
+    "SA-C540-ativahayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch540-time-running-out.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:f81747c57527d10e",
+  "lessonIds": [
+    "SA-C360-yasah",
+    "SA-C360-pratistha",
+    "SA-C360-ahankarah",
+    "SA-C360-apamanah",
+    "SA-C360-pratarayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch360-honour-and-dishonour.tex"
+}

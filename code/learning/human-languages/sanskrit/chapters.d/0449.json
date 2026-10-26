@@ -1,0 +1,19 @@
+{
+  "chapter": 449,
+  "title": "Amazed and Pleased",
+  "label": "ch:sa-amazed-and-pleased",
+  "canDo": "I can say what amazed or pleased someone.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C449-romancah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can say what amazed or pleased someone.",
+    "assesses": [
+      "SA-LEX-C449-VISMAYA449-03",
+      "SA-LEX-C449-VISMAYA449-04",
+      "SA-LEX-C449-VISMAYA449-05"
+    ]
+  }
+}

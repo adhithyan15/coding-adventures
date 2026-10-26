@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:714f5e82babb2a5c",
+  "lessonIds": [
+    "SA-C544-parasparam",
+    "SA-C544-yugapat",
+    "SA-C544-mithah",
+    "SA-C544-prthak",
+    "SA-C544-samprati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch544.txt",
+  "json": "sanskrit/narration/ch544.json",
+  "textHash": "fnv1a64:a8a8d58e11e7e595",
+  "jsonHash": "fnv1a64:a0fb5f2e1e8aaea9",
+  "findings": []
+}

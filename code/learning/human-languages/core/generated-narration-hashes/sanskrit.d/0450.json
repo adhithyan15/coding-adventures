@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:0f52cd22d20325bc",
+  "lessonIds": [
+    "SA-C450-visadah",
+    "SA-C450-socati",
+    "SA-C450-rodanam",
+    "SA-C450-baspah",
+    "SA-C450-nihsvasah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch450.txt",
+  "json": "sanskrit/narration/ch450.json",
+  "textHash": "fnv1a64:41f11772f6a5e4c4",
+  "jsonHash": "fnv1a64:d02581ea1a9f5750",
+  "findings": []
+}

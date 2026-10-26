@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 412,
+  "output": "sanskrit/book/chapters/ch412-halts-and-turning-back.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

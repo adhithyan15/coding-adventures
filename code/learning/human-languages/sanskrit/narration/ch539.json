@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 539,
+  "title": "Being Careful",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fc2e5345c5f7ea3a",
+  "lessons": [
+    {
+      "id": "SA-C539-apramattah",
+      "sequence": 30890,
+      "title": "अप्रमत्तः (apramattaḥ) — heedful",
+      "headword": "अप्रमत्तः",
+      "romanization": "apramattaḥ",
+      "gloss": "heedful",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d180d76db680cd13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for an astrologer, then the Sanskrit for draws near."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अप्रमत्तः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अप्रमत्तः — apramattaḥ — \"heedful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि त्वम् अप्रमत्तः असि, तर्हि त्वं न पतसि। yadi tvam apramattaḥ asi, tarhi tvaṃ na patasi. If you are heedful, you will not fall."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अप्रमत्तः (apramattaḥ) is built on a, \"not\", and pramatta, \"careless\", from pra and the root √mad, \"to be drunk\"; MW gives apramatta as not careless, careful, attentive, vigilant (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apramattaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apramattaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apramattaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apramattaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi tvam apramattaḥ asi, tarhi tvaṃ na patasi. — If you are heedful, you will not fall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi tvam apramattaḥ asi, tarhi tvaṃ na patasi.* — If you are heedful, you will not fall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for an astrologer, then the Sanskrit for draws near, then say apramattaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for an astrologer, then the Sanskrit for draws near, then say *apramattaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अप्रमत्तः (apramattaḥ) mean? (\"Heedful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C539-anavadhanam",
+      "sequence": 30900,
+      "title": "अनवधानम् (anavadhānam) — inattention",
+      "headword": "अनवधानम्",
+      "romanization": "anavadhānam",
+      "gloss": "inattention",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ba95ef034d0a13b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for draws near, then the Sanskrit for heedful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अनवधानम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनवधानम् — anavadhānam — \"inattention\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि अनवधानं भवति, तर्हि हानिः अपि भवति। yadi anavadhānaṃ bhavati, tarhi hāniḥ api bhavati. Where there is inattention, there is loss too."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनवधानम् (anavadhānam) is built on an, \"not\", and avadhāna, \"attention\", from ava and the root √dhā, \"to put\"; MW gives anavadhāna as inattention, inadvertence (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anavadhānam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anavadhānam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anavadhānam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anavadhānam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi anavadhānaṃ bhavati, tarhi hāniḥ api bhavati. — Where there is inattention, there is loss too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi anavadhānaṃ bhavati, tarhi hāniḥ api bhavati.* — Where there is inattention, there is loss too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for draws near, then the Sanskrit for heedful, then say anavadhānam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for draws near, then the Sanskrit for heedful, then say *anavadhānam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अनवधानम् (anavadhānam) mean? (\"Inattention\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C539-jagarukah",
+      "sequence": 30910,
+      "title": "जागरूकः (jāgarūkaḥ) — watchful",
+      "headword": "जागरूकः",
+      "romanization": "jāgarūkaḥ",
+      "gloss": "watchful",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc29b2ce1f1f4fac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for heedful, then the Sanskrit for inattention."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जागरूकः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जागरूकः — jāgarūkaḥ — \"watchful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि रक्षकः जागरूकः अस्ति, तर्हि चौरः न आगच्छति। yadi rakṣakaḥ jāgarūkaḥ asti, tarhi cauraḥ na āgacchati. If the guard is watchful, the thief does not come."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जागरूकः (jāgarūkaḥ) comes from the root √jāgṛ, \"to be awake\", with the ending -ūka; MW gives jāgarūka as wakeful, watchful (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāgarūkaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāgarūkaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāgarūkaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāgarūkaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi rakṣakaḥ jāgarūkaḥ asti, tarhi cauraḥ na āgacchati. — If the guard is watchful, the thief does not come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi rakṣakaḥ jāgarūkaḥ asti, tarhi cauraḥ na āgacchati.* — If the guard is watchful, the thief does not come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for heedful, then the Sanskrit for inattention, then say jāgarūkaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for heedful, then the Sanskrit for inattention, then say *jāgarūkaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जागरूकः (jāgarūkaḥ) mean? (\"Watchful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C539-asankate",
+      "sequence": 30920,
+      "title": "आशंकते (āśaṅkate) — suspects; fears",
+      "headword": "आशंकते",
+      "romanization": "āśaṅkate",
+      "gloss": "suspects; fears",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:451184c0ce245294",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for inattention, then the Sanskrit for watchful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आशंकते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आशंकते — āśaṅkate — \"suspects; fears\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि माता चौरम् आशंकते, तर्हि सा द्वारं पिदधाति। yadi mātā cauram āśaṅkate, tarhi sā dvāraṃ pidadhāti. If my mother suspects a thief, she shuts the door."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): सा चौरम् आशंकितवती, sā cauram āśaṅkitavatī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आशंकते (āśaṅkate) is built on ā and the root √śaṅk, \"to doubt, to fear\"; MW gives āśaṅk as to suspect, to fear, to doubt (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśaṅkate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśaṅkate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśaṅkate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśaṅkate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi mātā cauram āśaṅkate, tarhi sā dvāraṃ pidadhāti. — If my mother suspects a thief, she shuts the door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi mātā cauram āśaṅkate, tarhi sā dvāraṃ pidadhāti.* — If my mother suspects a thief, she shuts the door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for inattention, then the Sanskrit for watchful, then say āśaṅkate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for inattention, then the Sanskrit for watchful, then say *āśaṅkate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आशंकते (āśaṅkate) mean? (\"Suspects; fears\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C539-samraksati",
+      "sequence": 30930,
+      "title": "संरक्षति (saṃrakṣati) — keeps safe",
+      "headword": "संरक्षति",
+      "romanization": "saṃrakṣati",
+      "gloss": "keeps safe",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c08a3cdab5ed81f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for watchful, then the Sanskrit for suspects."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संरक्षति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संरक्षति — saṃrakṣati — \"keeps safe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि त्वं धनं संरक्षसि, तर्हि तत् न नश्यति। yadi tvaṃ dhanaṃ saṃrakṣasi, tarhi tat na naśyati. If you keep the money safe, it will not be lost."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः धनं संरक्षितवान्, saḥ dhanaṃ saṃrakṣitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संरक्षति (saṃrakṣati) is built on sam, \"wholly\", and the root √rakṣ, \"to protect\", which also gives rakṣati; MW gives saṃrakṣ as to protect, to guard, to keep, to secure (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃrakṣati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃrakṣati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃrakṣati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃrakṣati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi tvaṃ dhanaṃ saṃrakṣasi, tarhi tat na naśyati. — If you keep the money safe, it will not be lost.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi tvaṃ dhanaṃ saṃrakṣasi, tarhi tat na naśyati.* — If you keep the money safe, it will not be lost.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for watchful, then the Sanskrit for suspects, then say saṃrakṣati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for watchful, then the Sanskrit for suspects, then say *saṃrakṣati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संरक्षति (saṃrakṣati) mean? (\"Keeps safe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

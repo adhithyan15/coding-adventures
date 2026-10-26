@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 552,
+  "title": "Trying It Out",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ba8fe8d251ce8fed",
+  "lessons": [
+    {
+      "id": "SA-C552-parisilayati",
+      "sequence": 31560,
+      "title": "परिशीलयति (pariśīlayati) — practises regularly",
+      "headword": "परिशीलयति",
+      "romanization": "pariśīlayati",
+      "gloss": "practises regularly",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ec86f3cd5c46663",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for detached, then the Sanskrit for lets go of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: परिशीलयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिशीलयति — pariśīlayati — \"practises regularly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि त्वं प्रतिदिनं परिशीलयसि, तर्हि त्वं कुशलः भविष्यसि। yadi tvaṃ pratidinaṃ pariśīlayasi, tarhi tvaṃ kuśalaḥ bhaviṣyasi. If you practise every day, you will become good at it."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः संगीतं परिशीलितवान्, saḥ saṅgītaṃ pariśīlitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिशीलयति (pariśīlayati) is built on pari and the root √śīl, \"to practise, to do repeatedly\"; MW gives pariśīlayati as to practise, to use frequently (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pariśīlayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pariśīlayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pariśīlayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pariśīlayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi tvaṃ pratidinaṃ pariśīlayasi, tarhi tvaṃ kuśalaḥ bhaviṣyasi. — If you practise every day, you will become good at it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi tvaṃ pratidinaṃ pariśīlayasi, tarhi tvaṃ kuśalaḥ bhaviṣyasi.* — If you practise every day, you will become good at it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for detached, then the Sanskrit for lets go of, then say pariśīlayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for detached, then the Sanskrit for lets go of, then say *pariśīlayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does परिशीलयति (pariśīlayati) mean? (\"Practises regularly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C552-dinacarya",
+      "sequence": 31570,
+      "title": "दिनचर्या (dinacaryā) — a daily routine",
+      "headword": "दिनचर्या",
+      "romanization": "dinacaryā",
+      "gloss": "a daily routine",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a14e1a682f81f3db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for lets go of, then the Sanskrit for practises regularly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दिनचर्या",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दिनचर्या — dinacaryā — \"a daily routine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि दिनचर्या उत्तमा अस्ति, तर्हि स्वास्थ्यम् अपि उत्तमं भवति। yadi dinacaryā uttamā asti, tarhi svāsthyam api uttamaṃ bhavati. If your daily routine is good, your health is good too."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दिनचर्या (dinacaryā) is built from dina, \"a day\", and caryā, \"going about, conduct\", from the root √car, \"to move\"; MW gives dinacaryā as daily work (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dinacaryā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dinacaryā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dinacaryā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dinacaryā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi dinacaryā uttamā asti, tarhi svāsthyam api uttamaṃ bhavati. — If your daily routine is good, your health is good too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi dinacaryā uttamā asti, tarhi svāsthyam api uttamaṃ bhavati.* — If your daily routine is good, your health is good too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for lets go of, then the Sanskrit for practises regularly, then say dinacaryā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for lets go of, then the Sanskrit for practises regularly, then say *dinacaryā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दिनचर्या (dinacaryā) mean? (\"A daily routine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C552-prayasah",
+      "sequence": 31580,
+      "title": "प्रयासः (prayāsaḥ) — exertion",
+      "headword": "प्रयासः",
+      "romanization": "prayāsaḥ",
+      "gloss": "exertion",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e586c197cb1db17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for practises regularly, then the Sanskrit for a daily routine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रयासः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रयासः — prayāsaḥ — \"exertion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि प्रयासः सत्यः अस्ति, तर्हि फलम् अवश्यं भवति। yadi prayāsaḥ satyaḥ asti, tarhi phalam avaśyaṃ bhavati. If the effort is real, a result surely comes."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रयासः (prayāsaḥ) is built on pra and the root √yas, \"to heat oneself, to exert oneself\"; MW gives prayāsa as exertion, effort, pains, trouble (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayāsaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayāsaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayāsaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayāsaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi prayāsaḥ satyaḥ asti, tarhi phalam avaśyaṃ bhavati. — If the effort is real, a result surely comes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi prayāsaḥ satyaḥ asti, tarhi phalam avaśyaṃ bhavati.* — If the effort is real, a result surely comes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for practises regularly, then the Sanskrit for a daily routine, then say prayāsaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for practises regularly, then the Sanskrit for a daily routine, then say *prayāsaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रयासः (prayāsaḥ) mean? (\"Exertion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C552-prayunkte",
+      "sequence": 31590,
+      "title": "प्रयुंक्ते (prayuṅkte) — makes use of",
+      "headword": "प्रयुंक्ते",
+      "romanization": "prayuṅkte",
+      "gloss": "makes use of",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63586ed25cbc48bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a daily routine, then the Sanskrit for exertion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रयुंक्ते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रयुंक्ते — prayuṅkte — \"makes use of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि भवान् संगणकं प्रयुंक्ते, तर्हि कार्यं शीघ्रं भविष्यति। yadi bhavān saṅgaṇakaṃ prayuṅkte, tarhi kāryaṃ śīghraṃ bhaviṣyati. If you use a computer, the work will be quick."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः संगणकं प्रयुक्तवान्, saḥ saṅgaṇakaṃ prayuktavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रयुंक्ते (prayuṅkte) is built on pra, \"forth\", and the root √yuj, \"to yoke\"; MW gives prayuj as to use, to employ, to practise (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayuṅkte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayuṅkte*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayuṅkte, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayuṅkte*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bhavān saṅgaṇakaṃ prayuṅkte, tarhi kāryaṃ śīghraṃ bhaviṣyati. — If you use a computer, the work will be quick.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bhavān saṅgaṇakaṃ prayuṅkte, tarhi kāryaṃ śīghraṃ bhaviṣyati.* — If you use a computer, the work will be quick.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a daily routine, then the Sanskrit for exertion, then say prayuṅkte again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a daily routine, then the Sanskrit for exertion, then say *prayuṅkte* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रयुंक्ते (prayuṅkte) mean? (\"Makes use of\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C552-upakarakah",
+      "sequence": 31600,
+      "title": "उपकारकः (upakārakaḥ) — helpful",
+      "headword": "उपकारकः",
+      "romanization": "upakārakaḥ",
+      "gloss": "helpful",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5efbf50f7cf482a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for exertion, then the Sanskrit for makes use of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उपकारकः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपकारकः — upakārakaḥ — \"helpful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि उपायः उपकारकः अस्ति, तर्हि अहं तं करिष्यामि। yadi upāyaḥ upakārakaḥ asti, tarhi ahaṃ taṃ kariṣyāmi. If the method is helpful, I will use it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपकारकः (upakārakaḥ) is built on upa, \"towards\", and the root √kṛ, \"to do\", with the agent ending -aka, like upakāra, \"a favour\"; MW gives upakāraka as doing a service, helping (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upakārakaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upakārakaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upakārakaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upakārakaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi upāyaḥ upakārakaḥ asti, tarhi ahaṃ taṃ kariṣyāmi. — If the method is helpful, I will use it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi upāyaḥ upakārakaḥ asti, tarhi ahaṃ taṃ kariṣyāmi.* — If the method is helpful, I will use it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for exertion, then the Sanskrit for makes use of, then say upakārakaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for exertion, then the Sanskrit for makes use of, then say *upakārakaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उपकारकः (upakārakaḥ) mean? (\"Helpful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

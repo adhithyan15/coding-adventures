@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:9429d38df1cfdc90",
+  "lessonIds": [
+    "SA-C372-vighnah",
+    "SA-C372-badha",
+    "SA-C372-badhate",
+    "SA-C372-vilambayati",
+    "SA-C372-apanayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch372-what-stands-in-the-way.tex"
+}

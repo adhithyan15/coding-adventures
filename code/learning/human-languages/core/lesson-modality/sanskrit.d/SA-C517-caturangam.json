@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C517-caturangam",
+    "language": "sanskrit",
+    "chapter": 517,
+    "sequence": 29760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48ee91a3d1632c5a"
+  },
+  "findings": []
+}

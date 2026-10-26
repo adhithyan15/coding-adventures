@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:2350973dc411c156",
+  "lessonIds": [
+    "JA-C259-yori",
+    "JA-C259-dochira",
+    "JA-C259-ichiban",
+    "JA-C259-nijikan-gurai",
+    "JA-R259-comparing-and-how-long"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch259.txt",
+  "json": "japanese/narration/ch259.json",
+  "textHash": "fnv1a64:0cabdec10d34bf8d",
+  "jsonHash": "fnv1a64:1d72ef0e12898664",
+  "findings": []
+}

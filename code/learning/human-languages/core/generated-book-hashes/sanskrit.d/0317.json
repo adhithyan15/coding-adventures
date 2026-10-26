@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:382eaef229fb5eb7",
+  "lessonIds": [
+    "SA-C317-dutah",
+    "SA-C317-ajna",
+    "SA-C317-adisati",
+    "SA-C317-sandhih",
+    "SA-C317-samantah",
+    "SA-R317-review-310-317"
+  ],
+  "tex": "sanskrit/book/chapters/ch317-the-envoy.tex"
+}

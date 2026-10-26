@@ -9,5 +9,7 @@
   traces, results, and faults.
 - Add topology, lifecycle, malformed-decode, functional lockstep, and all 836
   reproducible Python full-state differential vectors.
-- Pass strict formatting, Clippy, and rustdoc with 97.45% package line coverage
-  (763/783); retain the green 256-test historical Python gate consumer.
+- Make the 32-bit ADD/SUB carry and overflow flags come directly from an exact
+  32-bit ripple network instead of reconstructing carry with a host comparison.
+- Pass strict formatting, Clippy, and rustdoc with 97.79% package line coverage
+  (1,105/1,130); retain the green 256-test historical Python gate consumer.

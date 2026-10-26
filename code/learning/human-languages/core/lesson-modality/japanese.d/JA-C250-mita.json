@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C250-mita",
+    "language": "japanese",
+    "chapter": 250,
+    "sequence": 15000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23cd88a3f6a7f416"
+  },
+  "findings": []
+}

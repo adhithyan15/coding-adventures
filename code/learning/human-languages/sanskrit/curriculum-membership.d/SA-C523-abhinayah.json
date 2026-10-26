@@ -1,0 +1,11 @@
+{
+  "id": "SA-C523-abhinayah",
+  "pathSegment": "SA-PATH-523-NATA523",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-523-NATA523",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:9c5d39b425afd211",
+  "lessonIds": [
+    "SA-C337-vanavasah",
+    "SA-C337-pratijna",
+    "SA-C337-paduka",
+    "SA-C337-pratijanite",
+    "SA-C337-mrgaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch337.txt",
+  "json": "sanskrit/narration/ch337.json",
+  "textHash": "fnv1a64:9900d777df0897aa",
+  "jsonHash": "fnv1a64:f8e00712575c7e8b",
+  "findings": []
+}

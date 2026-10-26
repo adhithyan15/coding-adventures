@@ -1,0 +1,11 @@
+{
+  "id": "SA-C467-upahasah",
+  "pathSegment": "SA-PATH-467-SISTA467",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-467-SISTA467",
+      "order": 1
+    }
+  ]
+}

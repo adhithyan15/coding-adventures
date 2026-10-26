@@ -1,0 +1,11 @@
+{
+  "id": "JA-W256-jin-kanji",
+  "pathSegment": "JA-PATH-256-TRAVEL256",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-256-TRAVEL256",
+      "order": 4
+    }
+  ]
+}

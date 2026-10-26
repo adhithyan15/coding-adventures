@@ -1,0 +1,19 @@
+{
+  "chapter": 419,
+  "title": "Reservoirs, Springs and Pools",
+  "label": "ch:sa-reservoirs-springs-and-pools",
+  "canDo": "I can say where to find water on a journey.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C419-palvalam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can say where to find water on a journey.",
+    "assesses": [
+      "SA-LEX-C419-VAPI419-03",
+      "SA-LEX-C419-VAPI419-04",
+      "SA-LEX-C419-VAPI419-05"
+    ]
+  }
+}

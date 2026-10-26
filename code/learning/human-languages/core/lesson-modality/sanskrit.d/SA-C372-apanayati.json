@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C372-apanayati",
+    "language": "sanskrit",
+    "chapter": 372,
+    "sequence": 21680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7779ac34639de80a"
+  },
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:cd3f30bd36f25788",
+  "lessonIds": [
+    "SA-C301-meghah",
+    "SA-C301-cakravatah",
+    "SA-C301-ghurnate",
+    "SA-C301-sphurati",
+    "SA-C301-unmulayati",
+    "SA-R301-review-294-301"
+  ],
+  "tex": "sanskrit/book/chapters/ch301-the-storm.tex"
+}

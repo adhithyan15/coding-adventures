@@ -1,0 +1,21 @@
+{
+  "chapter": 463,
+  "title": "Courage and Fear",
+  "label": "ch:sa-courage-and-fear",
+  "canDo": "I can say whether someone is brave or timid.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-R463-review-456-463",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can say whether someone is brave or timid.",
+    "assesses": [
+      "SA-LEX-C463-PARAKRAMA463-01",
+      "SA-LEX-C463-PARAKRAMA463-02",
+      "SA-LEX-C463-PARAKRAMA463-03",
+      "SA-LEX-C463-PARAKRAMA463-04",
+      "SA-LEX-C463-PARAKRAMA463-05"
+    ]
+  }
+}

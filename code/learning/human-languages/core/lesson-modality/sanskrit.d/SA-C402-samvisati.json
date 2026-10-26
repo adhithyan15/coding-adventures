@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C402-samvisati",
+    "language": "sanskrit",
+    "chapter": 402,
+    "sequence": 23440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d47d3a86a0b56d5"
+  },
+  "findings": []
+}

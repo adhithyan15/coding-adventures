@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:d7899e77780aad76",
+  "lessonIds": [
+    "SA-C486-upavasati",
+    "SA-C486-pranayamah",
+    "SA-C486-dhyanam",
+    "SA-C486-abhyangah",
+    "SA-C486-brahmamuhurtah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch486.txt",
+  "json": "sanskrit/narration/ch486.json",
+  "textHash": "fnv1a64:728e678f82ba1126",
+  "jsonHash": "fnv1a64:2c71a0bec1671cfa",
+  "findings": []
+}

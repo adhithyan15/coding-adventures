@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C479-ksayah",
+    "language": "sanskrit",
+    "chapter": 479,
+    "sequence": 27600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a77de2ce13bfa3f"
+  },
+  "findings": []
+}

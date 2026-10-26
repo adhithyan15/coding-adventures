@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:f831597f8702233a",
+  "lessonIds": [
+    "SA-C486-upavasati",
+    "SA-C486-pranayamah",
+    "SA-C486-dhyanam",
+    "SA-C486-abhyangah",
+    "SA-C486-brahmamuhurtah"
+  ],
+  "tex": "sanskrit/book/chapters/ch486-fasting-and-meditation.tex"
+}

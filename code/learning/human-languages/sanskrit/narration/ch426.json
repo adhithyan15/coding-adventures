@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 426,
+  "title": "Abroad",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1ba0e6e6dc15da98",
+  "lessons": [
+    {
+      "id": "SA-C426-videsah",
+      "sequence": 24640,
+      "title": "विदेशः (videśaḥ) — a foreign country; abroad",
+      "headword": "विदेशः",
+      "romanization": "videśaḥ",
+      "gloss": "a foreign country; abroad",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9679681ec0f3564",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a round window, then the Sanskrit for memorable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विदेशः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विदेशः — videśaḥ — \"a foreign country; abroad\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मम भ्राता विदेशे वसति। mama bhrātā videśe vasati. My brother lives abroad."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विदेशः (videśaḥ) is built from vi, \"apart, away\", and deśa, \"a country\"; MW gives videśa as another country, a foreign land, abroad (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "videśaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *videśaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "videśaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *videśaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mama bhrātā videśe vasati. — My brother lives abroad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mama bhrātā videśe vasati.* — My brother lives abroad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a round window, then the Sanskrit for memorable, then say videśaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a round window, then the Sanskrit for memorable, then say *videśaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विदेशः (videśaḥ) mean? (\"A foreign country; abroad\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C426-janakirnah",
+      "sequence": 24650,
+      "title": "जनाकीर्णः (janākīrṇaḥ) — crowded",
+      "headword": "जनाकीर्णः",
+      "romanization": "janākīrṇaḥ",
+      "gloss": "crowded",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0acbe1fa35e84e5e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for memorable, then the Sanskrit for a foreign country."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जनाकीर्णः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जनाकीर्णः — janākīrṇaḥ — \"crowded\"."
+            },
+            {
+              "kind": "speech",
+              "text": "विदेशस्य नगराणि जनाकीर्णानि सन्ति। videśasya nagarāṇi janākīrṇāni santi. The cities abroad are crowded."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जनाकीर्णः (janākīrṇaḥ) is built from jana, \"people\", and ākīrṇa, \"scattered over, filled\", from ā and the root √kṝ, \"to scatter\"; MW gives the compound as crowded with people (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janākīrṇaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janākīrṇaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janākīrṇaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janākīrṇaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "videśasya nagarāṇi janākīrṇāni santi. — The cities abroad are crowded.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *videśasya nagarāṇi janākīrṇāni santi.* — The cities abroad are crowded.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for memorable, then the Sanskrit for a foreign country, then say janākīrṇaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for memorable, then the Sanskrit for a foreign country, then say *janākīrṇaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जनाकीर्णः (janākīrṇaḥ) mean? (\"Crowded\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C426-sulkasthanam",
+      "sequence": 24660,
+      "title": "शुल्कस्थानम् (śulkasthānam) — a customs house",
+      "headword": "शुल्कस्थानम्",
+      "romanization": "śulkasthānam",
+      "gloss": "a customs house",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1766e089dd5dbd1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a foreign country, then the Sanskrit for crowded."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शुल्कस्थानम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शुल्कस्थानम् — śulkasthānam — \"a customs house\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सीमान्ते शुल्कस्थानम् अस्ति। sīmānte śulkasthānam asti. There is a customs house at the border."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शुल्कस्थानम् (śulkasthānam) is built from śulka, \"a toll, a duty\", and sthāna, \"a place\"; MW gives the compound as a toll-house, a tax office, a custom house (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śulkasthānam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śulkasthānam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śulkasthānam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śulkasthānam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīmānte śulkasthānam asti. — There is a customs house at the border.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīmānte śulkasthānam asti.* — There is a customs house at the border.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a foreign country, then the Sanskrit for crowded, then say śulkasthānam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a foreign country, then the Sanskrit for crowded, then say *śulkasthānam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शुल्कस्थानम् (śulkasthānam) mean? (\"A customs house\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C426-avatisthate",
+      "sequence": 24670,
+      "title": "अवतिष्ठते (avatiṣṭhate) — stays on; remains",
+      "headword": "अवतिष्ठते",
+      "romanization": "avatiṣṭhate",
+      "gloss": "stays on; remains",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d3b8de01643478c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for crowded, then the Sanskrit for a customs house."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अवतिष्ठते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवतिष्ठते — avatiṣṭhate — \"stays on; remains\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सः विदेशे एकं संवत्सरम् अवतिष्ठते। saḥ videśe ekaṃ saṃvatsaram avatiṣṭhate. He stays on abroad for a year."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः विदेशे अवस्थितवान्, saḥ videśe avasthitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवतिष्ठते (avatiṣṭhate) is built from ava, \"down\", and the root √sthā, \"to stand\", which also gives tiṣṭhati, \"stands\"; MW gives ava-sthā as to remain or stay, with the participle avasthita, and Pāṇini (1.3.22) gives √sthā the middle endings after ava (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avatiṣṭhate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avatiṣṭhate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avatiṣṭhate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avatiṣṭhate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saḥ videśe ekaṃ saṃvatsaram avatiṣṭhate. — He stays on abroad for a year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saḥ videśe ekaṃ saṃvatsaram avatiṣṭhate.* — He stays on abroad for a year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for crowded, then the Sanskrit for a customs house, then say avatiṣṭhate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for crowded, then the Sanskrit for a customs house, then say *avatiṣṭhate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अवतिष्ठते (avatiṣṭhate) mean? (\"Stays on; remains\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C426-pratisrayah",
+      "sequence": 24680,
+      "title": "प्रतिश्रयः (pratiśrayaḥ) — a shelter; a place of refuge",
+      "headword": "प्रतिश्रयः",
+      "romanization": "pratiśrayaḥ",
+      "gloss": "a shelter; a place of refuge",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee86966d34f01059",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a customs house, then the Sanskrit for stays on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रतिश्रयः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिश्रयः — pratiśrayaḥ — \"a shelter; a place of refuge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "विदेशे मित्रस्य गृहं मम प्रतिश्रयः अस्ति। videśe mitrasya gṛhaṃ mama pratiśrayaḥ asti. Abroad, my friend's house is my shelter."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिश्रयः (pratiśrayaḥ) is built from prati, \"towards\", and the root √śri, \"to lean on, to resort to\"; MW gives pratiśraya as refuge, a place of shelter, a house (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiśrayaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiśrayaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiśrayaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiśrayaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "videśe mitrasya gṛhaṃ mama pratiśrayaḥ asti. — Abroad, my friend's house is my shelter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *videśe mitrasya gṛhaṃ mama pratiśrayaḥ asti.* — Abroad, my friend's house is my shelter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a customs house, then the Sanskrit for stays on, then say pratiśrayaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a customs house, then the Sanskrit for stays on, then say *pratiśrayaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रतिश्रयः (pratiśrayaḥ) mean? (\"A shelter; a place of refuge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

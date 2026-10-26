@@ -46,9 +46,14 @@ the shared Rust adapter cannot truthfully choose one backend-specific path.
 The web host identifies its browser-profile IndexedDB database (`task-app`) and
 workspace record (`web`). If IndexedDB cannot open, it explicitly says the session
 is temporary and that closing or reloading loses changes. A rejected engine
-snapshot is copied to the fixed `workspace/web-corrupt` record before the app
-starts fresh, and the warning names that recovery record. A newer rejection
-replaces the older recovery record, matching the desktop `.corrupt` sibling rule.
+snapshot is copied to the first free recovery record (`workspace/web-corrupt`,
+then `workspace/web-corrupt.1` … `workspace/web-corrupt.9`) before the app starts
+fresh, and the warning names that record. A recovery record is never replaced,
+because an earlier one may hold the real workspace; a record already kept under
+one of those keys is not copied again. If the copy cannot be written, or all ten
+keys are taken, or the live record cannot be read at all, the host saves nothing
+for the rest of the session, so the record at `workspace/web` is never written
+over, and the warning says so.
 Background write failures also become persistent warnings rather than unhandled
 promises or console-only evidence.
 
@@ -149,3 +154,10 @@ task remains. The same matrix seeds invalid bytes, launches the real bundle
 again, and requires byte-preserving `.corrupt` quarantine. Windows retains its
 separate UI Automation lifecycle; macOS retains replacement-runtime conformance;
 Linux retains its one-time pre-upgrade backup comparison.
+
+The app-agnostic half of this gate — the persistence envelope, the `.corrupt`
+checks, and the schema, version and byte validation — now lives in the shared
+[Mosaic release state gate](mosaic-release-state-gate-v1.md), which Engram and
+the other Mosaic apps adopt with their own fixtures. TaskApp's v0.1.0 fixture
+keeps its original schema and is read through an adapter in
+`taskapp_release.py`; the `expectedTask` check remains TaskApp's own.

@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:8217ae52709b4b61",
+  "lessonIds": [
+    "JA-C258-tanoshikatta",
+    "JA-C258-shourai",
+    "JA-C258-naritai",
+    "JA-C258-itta-koto",
+    "JA-C258-imamade",
+    "JA-W258-ima-kanji",
+    "JA-R258-how-it-felt"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 4,
+  "text": "japanese/narration/ch258.txt",
+  "json": "japanese/narration/ch258.json",
+  "textHash": "fnv1a64:1b8b70ced99cb3fd",
+  "jsonHash": "fnv1a64:3c6477ec1345bf2e",
+  "findings": []
+}

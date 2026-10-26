@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C506-tantuh",
+    "language": "sanskrit",
+    "chapter": 506,
+    "sequence": 29210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17f8f0e03d232312"
+  },
+  "findings": []
+}

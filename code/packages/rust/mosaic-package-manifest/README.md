@@ -11,9 +11,9 @@ It answers with core sections plus optional package resources:
 
 | Section          | What it carries                                                         |
 |------------------|-------------------------------------------------------------------------|
-| `[package]`      | name (kebab-case), semver version, free-text description, SPDX license  |
+| `[package]`      | name (kebab-case), strict SemVer version, free-text description, SPDX license |
 | `[components]`   | `exports = [...]` — PascalCase component names this package publishes   |
-| `[dependencies]` | map from kebab-case package name to semver string                       |
+| `[dependencies]` | map from kebab-case package name to a version requirement (see below)   |
 | `[styles]`       | optional package-relative schema-v1 token palette                       |
 | `[app]`          | optional paired initial desktop-window width and height                 |
 | `[host_assets]`  | optional per-backend files copied into generated project shells          |
@@ -68,15 +68,46 @@ assert_eq!(pkg.kernel.version, "1");
 | Field                    | Rule                                                         |
 |--------------------------|--------------------------------------------------------------|
 | `package.name`           | `^[a-z][a-z0-9]*(-[a-z][a-z0-9]*)*$` (kebab-case)            |
-| `package.version`        | `^\d+\.\d+\.\d+(-[A-Za-z0-9.-]+)?$` (semver-like)             |
+| `package.version`        | strict SemVer 2.0.0, no build metadata (`Version::parse`)     |
 | `package.description`    | non-empty string                                              |
 | `package.license`        | non-empty string (SPDX id recommended)                        |
 | `components.exports[]`   | `^[A-Z][a-zA-Z0-9]*$` (PascalCase)                            |
-| `dependencies.<name>`    | name = kebab-case, value = semver-like                        |
+| `dependencies.<name>`    | name = kebab-case, value = `X.Y.Z` (caret) or `=X.Y.Z` (exact) |
 | `styles.token_palette`    | optional portable package-relative path ending in `.json`      |
 | `app.initial-window-*`    | optional paired integers from 1 through 2,147,483,647 logical pixels |
 | `host_assets.files[]`    | optional `{ backend, source, target }` strings                 |
 | `kernel.version`         | exactly `"1"` (kernel ABI v1)                                 |
+
+## Version requirements
+
+A `[dependencies]` value is a requirement the resolver checks against the
+dependency's `[package].version` (mosaic-package-publishing-v1 §7.4). v1
+has exactly two forms, both Cargo-compatible:
+
+| Written     | Kind  | Means               | Matches          |
+|-------------|-------|---------------------|------------------|
+| `"1.2.3"`   | caret | `>=1.2.3, <2.0.0`   | 1.2.3, 1.9.0     |
+| `"0.16.0"`  | caret | `>=0.16.0, <0.17.0` | 0.16.0, 0.16.3   |
+| `"0.0.3"`   | caret | `>=0.0.3, <0.0.4`   | 0.0.3 only       |
+| `"=0.16.0"` | exact | `=0.16.0`           | 0.16.0 only      |
+
+`~`, `^`, `>=`, `<`, `*`, `1.x`, partial versions (`1.2`) and ranges are
+refused at parse with `UnsupportedVersionRequirement`. A pre-release
+(`1.0.0-rc.1`) matches only a requirement that names a pre-release of the
+same `major.minor.patch`.
+
+```rust
+use mosaic_package_manifest::{Version, VersionReq};
+
+let req = VersionReq::parse("0.16.0").unwrap();
+assert!(req.matches(&Version::parse("0.16.3").unwrap()));
+assert!(!req.matches(&Version::parse("0.17.0").unwrap()));
+assert_eq!(req.range(), ">=0.16.0, <0.17.0");
+```
+
+`MosaicPackage::dependencies` still maps each name to the requirement
+*text* as written; `VersionReq::parse` on a value from a parsed manifest
+cannot fail.
 
 ## Error model
 
@@ -88,7 +119,9 @@ pub enum ManifestError {
     InvalidComponentName(String),
     InvalidKernelVersion(String),
     InvalidSemverString(String),
+    UnsupportedVersionRequirement { dependency: String, requirement: String },
     InvalidStylePath(String),
+    // … plus the [styles], [app] and [host_*] variants listed in lib.rs
 }
 ```
 
@@ -98,13 +131,20 @@ only that it is well-formed; it does not check that the license
 is a real SPDX identifier, only that it is non-empty.  Semantic
 validation (does this dependency exist? does the kernel ABI v1
 actually support these primitives?) belongs to the kernel
-loader, not to the manifest parser.
+loader, not to the manifest parser.  The one exception is a
+dependency's version requirement: the parser accepts only the forms
+the resolver can evaluate, so an unevaluable requirement fails here
+instead of being silently ignored later.
 
 ## Public API
 
 ```rust
 pub fn parse(toml_source: &str) -> Result<MosaicPackage, ManifestError>;
 pub fn parse_path(path: &Path)   -> Result<MosaicPackage, ManifestError>;
+
+pub struct Version { major, minor, patch, pre }   // Version::parse, Ord
+pub enum VersionReq { Caret(Version), Exact(Version) }
+impl VersionReq { fn parse(&str); fn matches(&Version); fn range() }
 ```
 
 ## Where it fits in UI29

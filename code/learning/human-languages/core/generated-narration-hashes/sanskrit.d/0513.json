@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:a8a3d909ed43e349",
+  "lessonIds": [
+    "SA-C513-mathnati",
+    "SA-C513-manthah",
+    "SA-C513-ghrtam",
+    "SA-C513-galayati",
+    "SA-C513-snigdhah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch513.txt",
+  "json": "sanskrit/narration/ch513.json",
+  "textHash": "fnv1a64:79a969e0357776a2",
+  "jsonHash": "fnv1a64:a125d1c9a5ccb3c7",
+  "findings": []
+}

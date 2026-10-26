@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:ffdcde83b26a0263",
+  "lessonIds": [
+    "SA-C308-samuhah",
+    "SA-C308-upakaroti",
+    "SA-C308-vibhajati",
+    "SA-C308-data",
+    "SA-C308-sahayah"
+  ],
+  "tex": "sanskrit/book/chapters/ch308-lending-a-hand.tex"
+}
