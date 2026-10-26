@@ -76,7 +76,7 @@ architecture/core introduction era, not a claim about a particular chip.
 | 6 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
 | 7 | IBM System/370 | published Principles of Operation | Local functional cell complete: owned checked state and lifecycle, the complete modeled System/360 surface through a private adapter, and source-backed MVCL/CLCL/CLM/STCM/ICM semantics, including one-byte zero-mask validation for CLM/ICM and the architecturally exception-free zero-mask STCM. Fourteen tests, strict checks, and 98.78% line coverage (568/575) are green; gate partner follows only after merge. |
 | 8 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
-| 9 | PA-RISC 1.1 | published architecture manuals | Checked integer core and delayed-control boundary. |
+| 9 | PA-RISC 1.1 | published architecture manuals | Local functional complete: checked bounded integer core, big-endian transport, both IA queues, PSW nibble carry/borrow state, delayed control, nullification, calls/returns, complete traces, typed atomic lifecycle, three allocation-seam unit tests, 19 integration tests, one doctest, and 92.80% line coverage (580/625). Gate work remains evidence/scope pending. |
 | 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
 | 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
 | 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
@@ -109,6 +109,11 @@ architecture/core introduction era, not a claim about a particular chip.
   bitfield, saturation, dual-register, byte/halfword exclusive, and remaining
   wide Thumb-2 encodings. This is non-blocking for the core lifecycle and SoC
   composition boundary, but it precedes declaring full Armv7-M ISA coverage.
+- Extend PA-RISC 1.1 problem-state coverage in bounded cells: extract/deposit
+  and variable shifts, unit operations, indexed/short/modifying memory forms,
+  decimal correction, multiply/divide, MOVB/MOVIB, and remaining arithmetic
+  completers. Privileged spaces/control registers, traps, MMU/TLB, caches,
+  coprocessors/FPU, and implementation timing remain separate system cells.
 - Build reusable SoC primitives after the initial missing-core wave: clock and
   reset domains, address-decoded buses, arbitration/backpressure, interrupt
   routing, DMA movement, timers, memory-mapped peripherals, and deterministic
