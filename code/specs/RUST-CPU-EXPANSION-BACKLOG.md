@@ -37,15 +37,15 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | DEC PDP-8 / PDP-8/E | merged | merged | Complete; PR #18120 landed. |
 | P0 | EDSAC | merged | merged | Complete; gate PR #18166 landed. |
 | P0 | IAS machine | merged | merged | Complete; gate PR #18266 landed. |
-| P0 | IBM System/360 | merged | merged | Complete. |
-| P0 | Motorola MC6800 | merged | merged | Complete. |
-| P0 | Intel 8085 | merged | merged | Complete. |
+| P0 | IBM System/360 | merged | merged | Complete; gate PR #18181 landed. |
+| P0 | Motorola MC6800 | merged | merged | Complete; gate PR #18182 landed. |
+| P0 | Intel 8085 | merged | merged | Complete; gate PR #18257 landed. |
 | P0 | DEC VAX-11/780 | merged | merged | Complete; gate PR #18263 landed. |
 | P0 | Motorola 6809 | merged | merged | Complete; gate PR #18269 landed. |
 | P0 | OpenRISC 1000 | merged | merged | Complete; gate PR #18276 landed. |
-| P0 | OpenSPARC T1 | merged | in progress | Gate specification descends from public OpenSPARC T1 RTL. |
-| P0 | Arm Cortex-M0 | merged | ready | Independent Armv6-M gate cell can start now. |
-| P0 | Arm Cortex-M3 | merged | ready | Independent Armv7-M gate cell can start now. |
+| P0 | OpenSPARC T1 | merged | merged | Complete; gate PR #18295 landed. |
+| P0 | Arm Cortex-M0 | merged | PR #18296 | Conflict reconciliation in progress; squash auto-merge remains armed. |
+| P0 | Arm Cortex-M3 | merged | merged | Complete; gate PR #18297 landed. |
 
 ## P0 gate-integrity repair queue
 
@@ -87,6 +87,9 @@ architecture/core introduction era, not a claim about a particular chip.
 
 | Priority | Target | Finding / next action |
 |---:|---|---|
+| P1 complete locally | PowerPC 601 conditional-branch authority | The host-language BO/CTR/CR predicate is replaced by explicit gate ALU, 32:1 CR mux, polarity, bypass-mux, and final-AND networks. Exhaustive tests cover every BO value and CR selector, both selected-bit polarities, and CTR zero/nonzero boundaries against an independent truth table. Three gate/topology suites, three lifecycle suites, all 239 differential vectors, strict checks, and 94.58% line coverage pass. The counted GPR/LR/CTR/XER/CR/CIA, memory, and HALT storage banks remain private stable-Q authority with no public host-state mirrors. |
+| P1 queued | PowerPC 601 CR/XER update authority | Replace host `Ordering`/Boolean control in CR-field, CR0, CA, and SO propagation with explicit relation wires, masks, muxes, and gates while preserving the public lifecycle. |
+| P1 queued | PowerPC 601 shift/count/divide authority | Replace host slice moves, iterator leading-zero counting, and conditional restoring-divide selection with fixed gate/mux networks, then audit multiply accumulation and record-form updates as one bounded datapath family at a time. |
 | P0 complete locally | MIPS R2000 gate HALT storage | HALT DFF Q is now the sole architectural halt authority; the public boolean remains only as a source-compatible observation mirror and is repaired by simulator mutations. The published storage inventory derives 524,288 memory bits, 1,120 register bits, and one HALT bit from the owned physical containers. Deliberate mirror-divergence, restore, and typed-fault atomicity tests pass alongside 33 unit tests, the 218-vector differential suite, nine lifecycle/integrity tests, and 20 doctests. Strict Clippy/rustdoc, the six-package affected build, and 94.50% line coverage (1,581/1,673) are green. |
 | P1 audit | Remaining completed gate packages with public halt fields | Audit each package before changing it. A public observation field is acceptable only when execution, snapshots, restore, and faults are driven by DFF Q; otherwise add one bounded repair cell and a non-tautological storage inventory. Candidate packages discovered by source scan include ARM1, SPARC V8, Motorola 68000, Intel 8051, Intel 8086, and OpenRISC 1000. |
 

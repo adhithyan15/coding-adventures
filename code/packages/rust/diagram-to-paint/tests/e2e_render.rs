@@ -185,6 +185,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/er-use-max-width-11.16.1-visual-corpus.json"
     ));
+    const ER_HTML_LABELS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-html-labels-11.16.1-corpus.json"
+    ));
+    const ER_HTML_LABELS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-html-labels-11.16.1-visual-corpus.json"
+    ));
     const ER_VARIABLE_NODE_WIDTHS_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/er-variable-node-widths-11.16.1-corpus.json"
@@ -2786,6 +2794,52 @@ line "Target" [35, 50, 68, 82]"##,
                 let pixels = render(&scene);
                 write_png(&pixels, "/tmp/mermaid_er_use_max_width_false_e2e.png")
                     .expect("ER useMaxWidth PNG write failed");
+                assert!(pixels.width > 0 && pixels.height > 0);
+            }
+        }
+
+        assert!(dimensions.windows(2).all(|pair| pair[0] == pair[1]));
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_html_labels_to_png() {
+        let syntax: Value = serde_json::from_str(ER_HTML_LABELS_CORPUS)
+            .expect("ER htmlLabels corpus JSON");
+        let visual: Value = serde_json::from_str(ER_HTML_LABELS_VISUAL_CORPUS)
+            .expect("ER htmlLabels visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let mut dimensions = Vec::new();
+
+        for (index, fixture) in syntax["fixtures"].as_array().expect("ER fixtures").iter().enumerate() {
+            assert_eq!(visual["fixtures"][index], fixture["name"]);
+            let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER source"))
+                .expect("configured ER fixture must parse");
+            let layout = layout_structural_diagram(&diagram);
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            let expected = fixture["html_labels"].as_bool().expect("htmlLabels expectation");
+            assert_eq!(
+                scene.metadata.as_ref().and_then(|metadata| metadata.get("flowchart.htmlLabels")),
+                Some(&expected.to_string())
+            );
+            dimensions.push((scene.width, scene.height));
+            if fixture["name"] == "upstream-html-labels-false-frontmatter" {
+                let pixels = render(&scene);
+                write_png(&pixels, "/tmp/mermaid_er_html_labels_false_e2e.png")
+                    .expect("ER htmlLabels PNG write failed");
                 assert!(pixels.width > 0 && pixels.height > 0);
             }
         }
