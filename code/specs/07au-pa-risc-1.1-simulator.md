@@ -170,7 +170,7 @@ The cell is complete only when it has:
    senses, forward/backward delay-slot nullification, calls and returns;
 3. complete-state trace, load, restore, halt, fetch, allocation, rollback,
    malformed-word, delayed-control, and bounded-run tests;
-4. release line coverage above 80 percent (completion baseline: 92.96%,
-   581/625 lines); and
+4. release line coverage above 80 percent (completion baseline: 92.80%,
+   580/625 lines); and
 5. scoped Rustfmt, strict Clippy, rustdoc, release tests, workspace build, BUILD
    integration, lessons validation, and independent review before publication.

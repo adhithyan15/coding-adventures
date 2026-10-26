@@ -125,6 +125,12 @@ and OpenRISC 1000 to ARMv7, AArch64, and x86-64; several have a functional
 simulator beside the gate-level model so the two can be compared. Several browser
 visualizers make those layers interactive.
 
+The independent functional-core queue also includes a checked bounded HP
+PA-RISC 1.1 problem-state integer simulator with big-endian transport, delayed
+branches, direction-sensitive nullification, calls, returns, and complete-state
+transactional traces. Its package and Spec 07au explicitly backlog the
+remaining problem-state, privileged, MMU, cache, FPU, and system facilities.
+
 Start with the [architecture overview](./code/specs/00-architecture.md),
 [deep CPU architecture](./code/specs/D00-deep-cpu-architecture.md), and
 [computing-stack learning guide](./code/learning/computer-architecture/computing-stack.md).
