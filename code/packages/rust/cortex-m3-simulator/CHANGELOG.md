@@ -7,3 +7,5 @@
   operations over R0-R12/SP bases, complete traces, distinct WFE/WFI wakeup
   state, typed atomic faults, bounded transactional execution, 23 completion
   tests, and 86.35% line coverage (1,348/1,561).
+- Expose `try_get_state` so composed cores can retain complete state with typed
+  allocation failures instead of relying on an infallible compatibility clone.
