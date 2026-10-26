@@ -1,0 +1,10 @@
+[package]
+name = "arm7tdmi-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked ARMv4T ARM7TDMI functional simulator"
+license = "MIT"
+
+[lib]
+name = "arm7tdmi_simulator"
+path = "src/lib.rs"
