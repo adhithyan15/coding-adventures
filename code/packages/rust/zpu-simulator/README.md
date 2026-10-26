@@ -59,5 +59,5 @@ allocation in checked load, snapshot, step, run, and execute paths use
 deterministic failure seams, including snapshot, trace reservation, and
 post-progress rollback tests.
 
-Measured release coverage is 90.77% of package source lines (541/596) and
-89.11% of regions (769/863).
+Measured release coverage is 88.82% of package source lines (548/617) and
+89.16% of regions (790/886).
