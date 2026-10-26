@@ -14,6 +14,7 @@
   against the device's 14-bit range, and preflight both return-address bytes
   before CALL, RCALL, or ICALL mutates the candidate stack.
 - Validate the completed boundary with 34 release tests, exhaustive
-  addition/subtraction flag oracles, and bug-sensitive fractional multiply
-  carry/zero/unaffected-flag regressions, reaching 97.43% package line coverage
-  (949/974).
+  addition/subtraction flag oracles, bug-sensitive fractional multiply
+  carry/zero/unaffected-flag regressions, and all-family terminal post-skip
+  target validation with typed atomic rollback, reaching 97.43% package line
+  coverage (949/974).

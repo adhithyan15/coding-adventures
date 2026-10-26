@@ -24,6 +24,7 @@ not a complete microcontroller: peripherals, interrupts, EEPROM protocol,
 timing, pins, watchdog, sleep, and self-programming remain excluded.
 
 The release completion suite exercises 34 lifecycle, exhaustive flag, and
-instruction-family tests. It includes terminal-state restore round trips and
-whole-span call-stack preflight at the lower SRAM boundary, and reaches 97.43%
-line coverage (949/974) in the package library.
+instruction-family tests. It includes terminal-state restore round trips,
+all-family terminal post-skip target validation with typed atomic rollback,
+and whole-span call-stack preflight at the lower SRAM boundary, reaching
+97.43% line coverage (949/974) in the package library.
