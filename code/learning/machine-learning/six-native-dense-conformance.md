@@ -32,8 +32,11 @@ timeouts, malformed receipts, nonfinite/bool numeric leaves and drift fail.
 Local NN49 execution passed all thirty directions through 3002 with zero
 binding lanes and XOR loss 0.0002330712337828204. Local Rust used hash-matched
 source/test/example copies in a minimal workspace, not the full repository
-workspace. Required exact-head CI must independently prove that workspace and
-the selected reusable gate before NN49 is marked delivered. Native-only NN48
+workspace. Exact-head CI then independently proved the real repository workspace,
+normal npm scripts and selected reusable gate: all thirty exchanges passed with
+XOR loss 0.00023307123378282047. Reviewed head `8e93a7917131` merged in #18301
+as `d555c1091cd` after all selected/required checks and actual Linux/macOS/Windows
+package builds passed. CodeQL had no configured C analyzer. Native-only NN48
 receipts retain their historical scope; only NN49's real exchange receipt
 claims six-language conformance. See the [specification](../../specs/NN49-six-native-dense-conformance.md)
 and [required gate contract](../../specs/neural-framework-ci-gate.md).

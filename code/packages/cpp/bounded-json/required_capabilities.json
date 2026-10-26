@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "cpp/bounded-json",
+  "capabilities": [],
+  "justification": "Native C++ parsing owns bounded memory from caller-provided text and performs no filesystem, network or subprocess I/O. Compiler and install-consumer validation are explicitly invoked build tools."
+}
