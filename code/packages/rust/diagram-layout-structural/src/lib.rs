@@ -177,12 +177,14 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
         canvas_h = canvas_h.max(position.y + ROW_H + COMP_PAD);
     }
     LayoutedStructuralDiagram {
+        kind: diagram.kind.clone(),
         width: canvas_w,
         height: canvas_h,
         title: diagram.title.clone(),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         architecture_config: diagram.architecture_config.clone(),
+        render_config: diagram.render_config.clone(),
         groups,
         nodes,
         relationships: rels,
@@ -1447,6 +1449,7 @@ mod tests {
         StructuralDiagram {
             kind: StructuralKind::Class,
             architecture_config: None,
+            render_config: Default::default(),
             title: Some("Domain".into()),
             accessibility_title: None,
             accessibility_description: None,

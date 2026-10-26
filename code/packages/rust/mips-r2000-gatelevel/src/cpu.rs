@@ -50,7 +50,7 @@ use crate::alu::{
 use crate::bits::{bits_to_u32, int_to_bits32, shl_32};
 use crate::decoder::{decode_instruction, InstrFormat};
 use crate::register_file::RegisterFile32;
-use crate::state::{clock_bit, DffMemory};
+use crate::state::{DffBit, DffMemory};
 use mips_r2000_simulator::{ExecutionResult, MipsError, MipsR2000Simulator, MipsState, StepTrace};
 
 /// Memory size in bytes: 64 KB.
@@ -69,15 +69,44 @@ const MEM_MASK: u32 = (MEM_SIZE as u32) - 1;
 /// bits, and one halt bit.
 pub const FLIP_FLOP_COUNT: usize = MEM_SIZE * 8 + 35 * 32 + 1;
 
+/// Counts read from the machine's concrete persistent storage containers.
+///
+/// This inventory is deliberately separate from [`FLIP_FLOP_COUNT`]: callers
+/// can compare the sum of actual memory/register/HALT storage with the
+/// published topology instead of merely asserting the constant against
+/// itself.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct PhysicalStorageInventory {
+    /// One DFF for every bit in the owned 64 KiB memory.
+    pub memory_dffs: usize,
+    /// DFFs physically allocated for 32 GPRs, HI, LO, and PC.
+    pub register_dffs: usize,
+    /// DFFs physically allocated for the HALT latch.
+    pub halt_dffs: usize,
+}
+
+impl PhysicalStorageInventory {
+    /// Sum all independently inventoried storage banks.
+    #[must_use]
+    pub const fn total(self) -> usize {
+        self.memory_dffs + self.register_dffs + self.halt_dffs
+    }
+}
+
 /// The MIPS R2000 gate-level CPU.
 pub struct CpuMipsR2000 {
     /// Register file (32 GPRs + HI + LO + PC).
     pub rf: RegisterFile32,
     /// Flat 64 KB big-endian memory.
     pub mem: DffMemory,
-    /// True after SYSCALL (halt sentinel).
+    /// Source-compatible observation mirror of the authoritative HALT DFF Q.
+    ///
+    /// Simulator operations keep this value synchronized for existing
+    /// callers. Writing it directly does not clock the HALT DFF and therefore
+    /// cannot alter architectural state; use [`Self::halted`] to observe the
+    /// authoritative value.
     pub halted: bool,
-    halt_q: u8,
+    halt: DffBit,
     loaded_origin: u32,
     loaded_len: usize,
 }
@@ -89,7 +118,7 @@ impl CpuMipsR2000 {
             rf: RegisterFile32::new(),
             mem: DffMemory::new(MEM_SIZE),
             halted: false,
-            halt_q: 0,
+            halt: DffBit::new(),
             loaded_origin: 0,
             loaded_len: MEM_SIZE,
         }
@@ -99,8 +128,7 @@ impl CpuMipsR2000 {
     pub fn reset(&mut self) {
         self.rf = RegisterFile32::new();
         self.mem.clear();
-        self.halted = false;
-        clock_bit(&mut self.halt_q, false);
+        self.clock_halted(false);
         self.loaded_origin = 0;
         self.loaded_len = MEM_SIZE;
     }
@@ -145,7 +173,7 @@ impl CpuMipsR2000 {
             hi: self.rf.read_hi(),
             lo: self.rf.read_lo(),
             memory: self.mem.snapshot(),
-            halted: self.halted,
+            halted: self.halted(),
             loaded_origin: self.loaded_origin,
             loaded_len: self.loaded_len,
         }
@@ -166,8 +194,7 @@ impl CpuMipsR2000 {
         rf.write_pc(state.pc);
         self.rf = rf;
         self.mem.restore_snapshot(&state.memory);
-        self.halted = state.halted;
-        clock_bit(&mut self.halt_q, state.halted);
+        self.clock_halted(state.halted);
         self.loaded_origin = state.loaded_origin;
         self.loaded_len = state.loaded_len;
         Ok(())
@@ -250,6 +277,33 @@ impl CpuMipsR2000 {
         self.store_word(address, value)
     }
 
+    /// Read the authoritative HALT DFF Q output.
+    #[must_use]
+    pub const fn halted(&self) -> bool {
+        self.halt.q()
+    }
+
+    /// Inventory the machine's concrete persistent storage containers.
+    #[must_use]
+    pub fn physical_storage_inventory(&self) -> PhysicalStorageInventory {
+        PhysicalStorageInventory {
+            memory_dffs: self.mem.dff_count(),
+            register_dffs: self.rf.dff_count(),
+            halt_dffs: self.halt.dff_count(),
+        }
+    }
+
+    /// Clock the physical HALT bit, then refresh the compatibility observer.
+    fn clock_halted(&mut self, value: bool) {
+        self.halt.clock(value);
+        self.synchronize_halted_mirror();
+    }
+
+    /// Repair the legacy public observer from the physical Q output.
+    fn synchronize_halted_mirror(&mut self) {
+        self.halted = self.halted();
+    }
+
     /// Run the program for up to `max_steps` instructions.
     ///
     /// Returns `Ok(steps)` on halt, `Err(MipsError)` on exception.
@@ -261,7 +315,7 @@ impl CpuMipsR2000 {
     ) -> Result<u32, MipsError> {
         self.load(program, origin)?;
         let mut steps = 0u32;
-        while !self.halted && steps < max_steps {
+        while !self.halted() && steps < max_steps {
             self.step()?;
             steps += 1;
         }
@@ -270,17 +324,17 @@ impl CpuMipsR2000 {
 
     /// Execute one instruction.
     pub fn step(&mut self) -> Result<(), MipsError> {
-        if self.halted {
+        self.synchronize_halted_mirror();
+        if self.halted() {
             return Ok(());
         }
-        let result = self.execute_one();
-        clock_bit(&mut self.halt_q, self.halted);
-        result
+        self.execute_one()
     }
 
     /// Execute one instruction atomically and return the shared full-state trace.
     pub fn step_checked(&mut self) -> Result<StepTrace, MipsError> {
-        if self.halted {
+        self.synchronize_halted_mirror();
+        if self.halted() {
             return Err(MipsError::Halted);
         }
         let before = self.get_state();
@@ -313,7 +367,8 @@ impl CpuMipsR2000 {
     pub fn run_loaded_checked(&mut self, max_steps: usize) -> Result<ExecutionResult, MipsError> {
         let original = self.get_state();
         let mut traces = Vec::new();
-        while traces.len() < max_steps && !self.halted {
+        self.synchronize_halted_mirror();
+        while traces.len() < max_steps && !self.halted() {
             match self.step_checked() {
                 Ok(trace) => traces.push(trace),
                 Err(error) => {
@@ -323,7 +378,7 @@ impl CpuMipsR2000 {
             }
         }
         Ok(ExecutionResult {
-            halted: self.halted,
+            halted: self.halted(),
             steps: traces.len(),
             pc: self.rf.read_pc() as i32,
             final_state: self.get_state(),
@@ -435,7 +490,7 @@ impl CpuMipsR2000 {
 
         // HALT: SYSCALL (op=0, funct=0x0C) or the explicit HALT word
         if iw == HALT_OPCODE_WORD || (iw >> 26 == 0 && (iw & 0x3F) == 0x0C) {
-            self.halted = true;
+            self.clock_halted(true);
             return Ok(());
         }
 

@@ -1,6 +1,6 @@
 # coding_adventures_sha256
 
-SHA-256 cryptographic hash function (FIPS 180-4) implemented from scratch in Rust.
+SHA-256 cryptographic hash function (FIPS 180-4) implemented from scratch in Rust. The core digest and streaming APIs use fixed memory and retain no heap-backed message buffer.
 
 ## What Is SHA-256?
 
@@ -31,6 +31,10 @@ h.update(b"ab");
 h.update(b"c");
 assert_eq!(h.digest(), sha256(b"abc"));
 
+// Security-sensitive callers use the checked operation. It rejects a total
+// message whose bit length would not fit FIPS 180-4 before changing state.
+h.try_update(b"more data")?;
+
 // Branching
 let mut base = Sha256Hasher::new();
 base.update(b"common");
@@ -38,7 +42,16 @@ let mut h1 = base.clone_hasher();
 h1.update(b"A");
 let mut h2 = base.clone_hasher();
 h2.update(b"B");
+
+# Ok::<(), coding_adventures_sha256::Sha256Error>(())
 ```
+
+`update()` remains as the original infallible compatibility API.
+`try_update()` is the production boundary for callers such as a future HMAC:
+it reports cumulative length overflow as a payload-free `Sha256Error`.
+Snapshots and clones are non-destructive and fixed-memory. The hasher scrubs
+its retained chaining state and partial block on drop; digest snapshots also
+scrub temporary state, padding, and compression schedules.
 
 ## Algorithm
 
@@ -46,8 +59,13 @@ SHA-256 follows the Merkle-Damgard construction with 8 x 32-bit state words, 64 
 
 ## Dependencies
 
-None. Pure Rust, no external crates.
+- `coding_adventures_zeroize` (repository-owned secure memory wiping)
+
+No external crates are used.
 
 ## How It Fits
 
-Part of the `coding-adventures` monorepo hash function family (MD5, SHA-1, SHA-256).
+Part of the `coding-adventures` monorepo hash function family (MD5, SHA-1,
+SHA-256, SHA-384, SHA-512). This package is a digest primitive only. It does
+not implement HMAC, HKDF, TLS key scheduling, record protection, certificate
+validation, networking, or OAuth transport.
