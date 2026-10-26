@@ -303,6 +303,36 @@ fn literal_bodies_cannot_hide_code_behind_a_document() {
     }
 }
 
+/// R1b security review, F1. A `?` written straight before a quote, a
+/// backtick or `#` is refused in every mode: our flat modes only approximate
+/// Ruby's lexer state, and where they disagree (after `.end`, after a local)
+/// a CHAR or a QUESTION plus a comment could put a string or comment
+/// boundary where Ruby has none, and let a line-start document hide code.
+#[test]
+fn a_question_mark_before_a_quote_or_hash_is_refused_in_every_mode() {
+    for r in MODERN {
+        for source in [
+            // beg, arg, default and the def head
+            "?\"", "?'", "?`", "?#",
+            "puts ?\"", "puts ?#", "x = 1 ?'", "puts(1) ?`",
+            "def foo(a = ?#) end",
+            // the review's two programs: Ruby runs both `puts`/`p` lines
+            "o = Object.new\ndef o.end(*) = nil\no.end ?#; puts 111\nputs 222\n",
+            "x = 1\ny = x ?\"\n=begin\n\" : 0\np 111\nz = x ?\"\n=end\n#\" : 0\np 222\n",
+        ] {
+            assert!(refused(r, source).contains("QUESTION_OPENER"), "{r} {source:?}");
+        }
+        // Every other character literal still lexes, and a bare quote or
+        // backtick is still a lexer error (strings are not lexed).
+        assert_eq!(stream(r, "puts ?a"), "NAME:puts CHAR:?a");
+        assert_eq!(stream(r, "x = ?1"), "NAME:x EQUALS:= CHAR:?1");
+        assert_eq!(stream(r, "p ?$, ?(, ?/"), "NAME:p CHAR:?$ COMMA:, CHAR:?( COMMA:, CHAR:?/");
+        for source in ["puts \"a\"", "puts 'a'", "puts `a`"] {
+            assert!(lex(r, source).is_err(), "{r} {source:?}");
+        }
+    }
+}
+
 // ---------------------------------------------------------------------------
 // The defparams coverage check
 // ---------------------------------------------------------------------------

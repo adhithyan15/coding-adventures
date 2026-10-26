@@ -6,6 +6,12 @@ All notable changes to the `coding-adventures-ruby-lexer` crate will be document
 
 ### Changed
 
+- **Security review (F1).** The CHAR classes no longer accept `?"`, `?'`,
+  `` ?` `` or `?#`. A new token, `QUESTION_OPENER` (`/\?["'`#]/`), is refused
+  in every mode, so a mode that disagrees with Ruby's lexer state (after
+  `.end`, after a local) cannot turn a quote or `#` into a string or comment
+  boundary Ruby does not have. 0.49 and 0.50 are unchanged: their `?` is
+  always a character literal.
 - `src/_grammar.rs` is regenerated from the R1b pairs. The three 3.3.x token
   grammars (still one deduplicated class) gain the following.
   - **Skip patterns.** `EMBDOC` (`=begin` … `=end`) and `DATA_END` (a

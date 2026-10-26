@@ -1309,6 +1309,31 @@ details:
     any token kind the pair can emit has no rule in `defparams`.
 - **Ripper differential.** It gained `23_embdoc` and `24_end_marker`; the
   embdoc and `__END__` events count as trivia.
+- **Security review (F1).** A differential fuzz of about 37,000 programs
+  against ruby 3.3.6 found no accepted program that runs differently. It did
+  find one latent lexer gap. The CHAR classes accepted `?"`, `?'`, `` ?` ``
+  and `?#`. Ruby reads `?` as a character literal only outside EXPR_END, and
+  our flat modes disagree with Ruby's state in two places:
+  - after `.end`, `.self` and the other `set-mode default` keywords used as
+    method names after `.` or `::` (Ruby is in EXPR_ARG there);
+  - after a local variable (R6).
+
+  So a quote could reach the token stream, or `?#` could become QUESTION
+  plus a comment, and a line-start document could then hide code Ruby runs.
+  Two programs show it; both fail at parse time today. The four characters
+  are now out of every CHAR class, and a new `QUESTION_OPENER` token,
+  `/\?["'`#]/`, is refused in every mode. A bare quote or backtick was
+  already a lexer error. 0.49 and 0.50 are unaffected: their `?` is always a
+  character literal (no ternary token, no state test), so no mode can
+  disagree.
+  - **R6 note:** keywords used as method names after `.`/`::` still switch
+    to `default` (EXPR_END) where Ruby is in EXPR_ARG. With strings
+    unlexed, the regexp, `%` and heredoc openers refused, and
+    `QUESTION_OPENER` refused, no remaining token can hide code because of
+    it. But a slice that adds strings, symbols or `?:` ternaries must model
+    EXPR_DOT, either a `dot` mode entered on `DOT`/`SAFE_NAVIGATION`/
+    `COLON_COLON` whose identifiers and keywords go to `arg`, or a review
+    showing why it is not needed.
 
 **Status (3.2, R0, 2026-10-20).** Five rows have pairs and claim `partial`,
 stage `P`, subset `rb-int-puts`: the start of the inventory (`0.49`, `0.50`,
