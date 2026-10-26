@@ -9,8 +9,8 @@ transport, typed atomic faults, and deterministic lifecycle APIs.
 Later Nova, Eclipse, optional arithmetic, peripheral, interrupt, DMA, and timing
 features remain explicit follow-up cells.
 
-The completion suite exercises 16 unit/integration tests and records 91.47%
-source line coverage (536 of 586 lines).
+The completion suite exercises 17 unit/integration tests and records 91.53%
+source line coverage (540 of 590 lines).
 
 ```bash
 cargo test -p data-general-nova-simulator --release --all-targets

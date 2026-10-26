@@ -80,7 +80,7 @@ fn all_twelve_memory_reference_opac_values_have_exact_destinations() {
 fn direct_address_modes_sign_extend_and_wrap_to_fifteen_bits() {
     for (mode, base, displacement, target) in [
         (AddressMode::PageZero, 0, 0xfe, 0o376),
-        (AddressMode::PcRelative, 0, 0xfe, DEFAULT_ORIGIN - 1),
+        (AddressMode::PcRelative, 0, 0xfe, DEFAULT_ORIGIN - 2),
         (AddressMode::Ac2Relative, 1, 0xff, 0),
         (AddressMode::Ac3Relative, 0, 1, 1),
     ] {
@@ -102,6 +102,31 @@ fn direct_address_modes_sign_extend_and_wrap_to_fifteen_bits() {
     cpu.set_memory_word(0, 0x1234).unwrap();
     cpu.step().unwrap();
     assert_eq!(cpu.accumulator(0).unwrap(), 0x1234);
+}
+
+#[test]
+fn pc_relative_uses_the_instruction_address_and_wraps_at_fifteen_bits() {
+    let direct = mref(
+        MemoryOperation::Lda(0),
+        false,
+        AddressMode::PcRelative,
+        0xff,
+    );
+    let mut cpu = NovaSimulator::new();
+    cpu.load_at(&program(&[direct, HALT]), 0).unwrap();
+    cpu.set_memory_word(ADDRESS_MASK, 0x1234).unwrap();
+    let trace = cpu.step().unwrap();
+    assert_eq!(trace.effective_address, Some(ADDRESS_MASK));
+    assert_eq!(cpu.accumulator(0).unwrap(), 0x1234);
+
+    let indirect = mref(MemoryOperation::Lda(1), true, AddressMode::PcRelative, 0xff);
+    let mut cpu = NovaSimulator::new();
+    cpu.load_at(&program(&[indirect, HALT]), 0).unwrap();
+    cpu.set_memory_word(ADDRESS_MASK, 0o1234).unwrap();
+    cpu.set_memory_word(0o1234, 0xbeef).unwrap();
+    let trace = cpu.step().unwrap();
+    assert_eq!(trace.effective_address, Some(0o1234));
+    assert_eq!(cpu.accumulator(1).unwrap(), 0xbeef);
 }
 
 #[test]

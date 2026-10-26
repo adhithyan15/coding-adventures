@@ -71,7 +71,7 @@ architecture/core introduction era, not a claim about a particular chip.
 | 3 | Arm Cortex-M23 | Armv8-M manuals | Baseline profile and security-state boundary. |
 | 4 | Arm Cortex-M33 | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
 | 5 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
-| 6 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
+| 6 | Data General Nova | published architecture manuals | Local complete: checked common Nova/Nova 1200 core, all 32,768 operate words, atomic lifecycle, 17 release tests, and 91.53% line coverage (540/590). |
 | 7 | IBM System/370 | published Principles of Operation | System/360-compatible extension boundary. |
 | 8 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
 | 9 | PA-RISC 1.1 | published architecture manuals | Checked integer core and delayed-control boundary. |

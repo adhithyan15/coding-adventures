@@ -429,12 +429,16 @@ impl NovaSimulator {
         Ok(())
     }
 
-    fn effective_address(&mut self, instruction: u16, fault_pc: u16) -> Result<u16, NovaError> {
+    fn effective_address(
+        &mut self,
+        instruction: u16,
+        instruction_pc: u16,
+    ) -> Result<u16, NovaError> {
         let displacement = (instruction & 0xff) as u8;
         let mode = (instruction >> 8) & 3;
         let mut address = match mode {
             0 => u16::from(displacement),
-            1 => add_signed_displacement(self.state.pc, displacement),
+            1 => add_signed_displacement(instruction_pc, displacement),
             2 => add_signed_displacement(self.state.accumulators[2], displacement),
             3 => add_signed_displacement(self.state.accumulators[3], displacement),
             _ => unreachable!(),
@@ -456,7 +460,7 @@ impl NovaSimulator {
                 return Ok(address);
             }
         }
-        Err(NovaError::IndirectAddressLimit { pc: fault_pc })
+        Err(NovaError::IndirectAddressLimit { pc: instruction_pc })
     }
 
     fn execute_memory_reference(&mut self, instruction: u16, ea: u16) -> String {
