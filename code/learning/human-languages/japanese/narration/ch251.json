@@ -4,7 +4,7 @@
   "chapter": 251,
   "title": "Tomorrow, and What I Will Not Do",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:99e8043e319ef94a",
+  "sourceHash": "fnv1a64:ffbc11acee3eb531",
   "lessons": [
     {
       "id": "JA-C251-ashita-iku",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59e21ab77ad7027a",
+      "sourceHash": "fnv1a64:b73780c5140a4306",
       "notice": null,
       "blocks": [
         {
@@ -62,7 +62,7 @@
             },
             {
               "kind": "speech",
-              "text": "Without a time word, the same verb is what you do as a rule:"
+              "text": "With まいにち (mainichi), \"every day\", the same verb is what you do as a habit:"
             },
             {
               "kind": "speech",

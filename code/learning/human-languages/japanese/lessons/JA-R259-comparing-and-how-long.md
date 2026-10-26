@@ -44,7 +44,7 @@ reviews_of: [JA-C259-yori, JA-C259-dochira, JA-C259-ichiban, JA-C259-nijikan-gur
 [PAUSE 2s each]
 - [YOU SAY: Summer is hotter than winter.]
 - [YOU SAY: I like the sea more than the mountains.]
-- [YOU SAY: In my family my father is the tallest.]
+- [YOU SAY: In my family my father gets up earliest.]
 - [YOU SAY: I walk about five minutes to the station.]
 - [YOU SAY: I work from Monday to Friday.]
 - [YOU SAY: I have been to the sea, and in the future I want to become a doctor.]

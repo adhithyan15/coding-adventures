@@ -17,7 +17,7 @@ sounds: [mora]
 roots: [japanese-ima]
 etymology_hook: 'A roof, a short bar and a bar that turns down: now.'
 duration:
-  max_seconds: 165
+  max_seconds: 175
 requires:
   knowledge: [JA-LEX-C258-IMAMADE-01, JA-SCRIPT-KANJI-JIN-01]
 introduces:
@@ -37,7 +37,7 @@ reviews_of: [JA-C258-imamade, JA-W256-jin-kanji]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C258-IMAMADE-01, JA-SCRIPT-KANJI-JIN-01] -->
 
-[PAUSE 2s] Say *imamade*, until now. Then call up **人**: two strokes, the second starting on the first.
+[PAUSE 2s] Say *imamade*, until now. Then call up **人**: two strokes, the left one first.
 
 ## Script — the shape
 <!-- hl-knowledge: introduces=[JA-SCRIPT-KANJI-IMA-01]; assesses=[JA-SCRIPT-KANJI-JIN-01] -->
@@ -57,7 +57,7 @@ Four strokes, three lifts:
 3. lift, draw the short bar under the roof from left to right
 4. lift, draw the lower bar from left to right, then without lifting turn down to the left
 
-The roof is drawn like **人**, wider. Here it is read **いま** (*ima*), as in **今まで**; this lesson asks only for that reading.
+The roof is **人**, in its order, left then right, but here the second stroke starts at the very top and both spread wide. Here it is read **いま** (*ima*), as in **今まで**; this lesson asks only for that reading.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KANJI-IMA-01, JA-LEX-C258-IMAMADE-01] -->
@@ -70,6 +70,6 @@ The roof is drawn like **人**, wider. Here it is read **いま** (*ima*), as in
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KANJI-IMA-01] -->
 <!-- hl-activity: {"id": "JA-W258-ima-kanji-strokes", "kind": "text", "assesses": ["JA-SCRIPT-KANJI-IMA-01"], "prompt": "How many strokes does the kanji read ima have?", "answer": "four", "accepted": ["4", "four strokes"], "feedback": {"correct": "Four: the two sides of the roof, a short bar, and a bar that turns down.", "incorrect": "Four strokes: two for the roof, then two bars, the last turning down."}, "response_seconds": 12} -->
 
-Which sign is its roof drawn like? (**人**.)
+Which sign is its roof? (**人**, left stroke first.)
 
 Source: [KanjiVG stroke-order data](https://github.com/KanjiVG/kanjivg/blob/master/kanji/04eca.svg): KanjiVG, kanji/04eca.svg, kanji 今 (U+4ECA), 4 stroke paths kvg:04eca-s1 to s4 (Ulrich Apel and contributors, CC BY-SA 3.0). Only the order and direction are taken from it.

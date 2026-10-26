@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 259,
-  "sourceHash": "fnv1a64:e64257e4c05f6343",
+  "sourceHash": "fnv1a64:2350973dc411c156",
   "lessonIds": [
     "JA-C259-yori",
     "JA-C259-dochira",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch259.txt",
   "json": "japanese/narration/ch259.json",
-  "textHash": "fnv1a64:c808acec28a76593",
-  "jsonHash": "fnv1a64:ab4b4cbc2358fd83",
+  "textHash": "fnv1a64:0cabdec10d34bf8d",
+  "jsonHash": "fnv1a64:1d72ef0e12898664",
   "findings": []
 }

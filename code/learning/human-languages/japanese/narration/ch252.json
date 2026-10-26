@@ -4,7 +4,7 @@
   "chapter": 252,
   "title": "One Thing, Then the Next",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:1f0255e478d8756a",
+  "sourceHash": "fnv1a64:e96e938eb8e26d75",
   "lessons": [
     {
       "id": "JA-C252-okite",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ef3190b0300023e",
+      "sourceHash": "fnv1a64:e62cb0f132eb3a6b",
       "notice": null,
       "blocks": [
         {
@@ -66,7 +66,7 @@
             },
             {
               "kind": "speech",
-              "text": "You know this form already from a request: いって ください (itte kudasai), \"please say it\"."
+              "text": "You know this form already from a request: いって ください (itte kudasai), \"please say it\". That いって comes from 言う, \"to say\"; いく makes the same sound, as the next section shows."
             }
           ]
         },
@@ -492,7 +492,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:893f6d4aef09038c",
+      "sourceHash": "fnv1a64:c436fcf42a283520",
       "notice": null,
       "blocks": [
         {
@@ -538,7 +538,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "そして (soshite) is a native Japanese word (wago), inherited rather than borrowed from Chinese. It is usually explained as そ (so), \"that way\", the same so- as in それ, with して (shite), the -て form of する. JMdict marks it as usually written in kana (JMdict)."
+              "text": "そして (soshite) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict marks it as usually written in kana, and among its kanji spellings gives one whose first kanji KANJIDIC2 glosses \"so\", followed by して (shite), the -て form of する: \"doing so\", \"and so\" (JMdict, KANJIDIC2)."
             }
           ]
         },
@@ -633,7 +633,7 @@
       "modalityReasons": [
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:520268e564a5ad19",
+      "sourceHash": "fnv1a64:32169fa46b2cbed7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -677,7 +677,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two beats, then two more: tsu–ki–hi. The second sign is 日, the kanji you write. The first is new: 月, read つき (tsuki) here, \"the moon\", the word you know. The next lesson writes it."
+              "text": "Three beats: tsu–ki–hi. The second sign is 日, the kanji you write, read ひ (hi) inside this word. The first is new: 月, read つき (tsuki) here, \"the moon\", the word you know. The next lesson writes it."
             }
           ]
         },
@@ -724,11 +724,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the moon, then a day, then the two together",
+              "instruction": "say the moon, tsuki, then tsukihi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the moon, then a day, then the two together]"
+              "source": "[YOU RECALL: say the moon, *tsuki*, then *tsukihi*]"
             },
             {
               "kind": "activity",

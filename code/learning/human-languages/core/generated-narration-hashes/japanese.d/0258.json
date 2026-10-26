@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 258,
-  "sourceHash": "fnv1a64:f174f81314a797ac",
+  "sourceHash": "fnv1a64:8217ae52709b4b61",
   "lessonIds": [
     "JA-C258-tanoshikatta",
     "JA-C258-shourai",
@@ -15,7 +15,7 @@
   "drivablePrefix": 4,
   "text": "japanese/narration/ch258.txt",
   "json": "japanese/narration/ch258.json",
-  "textHash": "fnv1a64:fb5350e3cfafe010",
-  "jsonHash": "fnv1a64:4af2ef186e8b4921",
+  "textHash": "fnv1a64:1b8b70ced99cb3fd",
+  "jsonHash": "fnv1a64:3c6477ec1345bf2e",
   "findings": []
 }

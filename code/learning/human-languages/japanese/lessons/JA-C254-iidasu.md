@@ -15,7 +15,7 @@ concept_tag: JA-VERB-IIDASU
 prerequisites: [JA-C254-kara-node, JA-C28-iu, JA-C31-dasu, JA-C204-ryokou, JA-C13-chichi]
 sounds: []
 roots: [japanese-iu-say, japanese-dasu]
-etymology_hook: 'iidasu: native iu 言う ''to say'' + dasu 出す ''to put out''; both read the native way (kun''yomi)'
+etymology_hook: 'iidasu: native iu 言う ''to say'' + dasu 出す ''to take out''; both read the native way (kun''yomi)'
 duration:
   max_seconds: 165
 requires:
@@ -48,12 +48,12 @@ reviews_of: [JA-C254-kara-node, JA-C28-iu, JA-C31-dasu]
 >
 > *chichi ga ryokō o iidashimashita.* — "My father suggested a trip."
 
-It is **言う** with **だす**, "to put out", after it: to put an idea out first. The first kanji is the **言** you write. The second is new, read **だ** (*da*) here; the next lesson writes it.
+It is **言う** with **だす**, "to take out", after it: to bring an idea out first. The first kanji is the **言** you write. The second is new, read **だ** (*da*) here; the next lesson writes it.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**言い出す** (*iidasu*) is a native Japanese word (wago), inherited rather than borrowed from Chinese: the stem of **言う** (*iu*), "to say", and **だす** (*dasu*), "to put out", each written with its kanji and read the native way. JMdict gives "to begin to say" and "to suggest (doing)" among its senses, and KANJIDIC2 gives い.う and だ.す as the two kanji's native readings (JMdict, KANJIDIC2).
+**言い出す** (*iidasu*) is a native Japanese word (wago), inherited rather than borrowed from Chinese: the stem of **言う** (*iu*), "to say", and **だす** (*dasu*), "to take out", each written with its kanji and read the native way. JMdict gives "to begin to say" and "to suggest (doing)" among its senses, and KANJIDIC2 gives い.う and だ.す as the two kanji's native readings (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C254-IIDASU-01, JA-LEX-C204-TRIP204-01] -->

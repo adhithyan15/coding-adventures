@@ -15,7 +15,7 @@ concept_tag: JA-COND261-BAAI
 prerequisites: [JA-C261-ni-yorimasu, JA-C167-chuushi, JA-C44-ame, JA-C63-matsuri]
 sounds: []
 roots: [japanese-ba-place, japanese-au]
-etymology_hook: 'baai: native ba 場 ''place'' + ai 合 ''meeting'', both read the native way (kun''yomi)'
+etymology_hook: 'baai: native ba 場 ''place'' + ai 合 ''fitting, joining'', both read the native way (kun''yomi)'
 duration:
   max_seconds: 165
 requires:
@@ -55,7 +55,7 @@ reviews_of: [JA-C261-ni-yorimasu, JA-C167-chuushi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ばあい** (*baai*) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict writes it with two kanji that KANJIDIC2 reads the native way: ば, "place", and あ(う), "to fit, to meet", so it is usually explained as "the place where things meet". JMdict glosses it "case; occasion; situation" (JMdict, KANJIDIC2).
+**ばあい** (*baai*) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict writes it with two kanji that KANJIDIC2 reads the native way: ば, "place", and あい, a reading of a kanji KANJIDIC2 glosses "fit, suit, join". JMdict glosses the word "case; occasion; situation" (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C261-BAAI-01, JA-LEX-C167-DONE167-05] -->

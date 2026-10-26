@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 253,
-  "sourceHash": "fnv1a64:c8b7715a3ae7092b",
+  "sourceHash": "fnv1a64:489e1082329cbccc",
   "lessonIds": [
     "JA-C253-futte-imasu",
     "JA-C253-toki",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "japanese/narration/ch253.txt",
   "json": "japanese/narration/ch253.json",
-  "textHash": "fnv1a64:29bd8b26044ce97e",
-  "jsonHash": "fnv1a64:92578144b6282dc6",
+  "textHash": "fnv1a64:e048eb31472f9960",
+  "jsonHash": "fnv1a64:d4e58d05d77319e9",
   "findings": []
 }

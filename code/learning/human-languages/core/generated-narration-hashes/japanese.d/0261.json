@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 261,
-  "sourceHash": "fnv1a64:e7964d9790ea1eef",
+  "sourceHash": "fnv1a64:79d5d12fd8d959a6",
   "lessonIds": [
     "JA-C261-ni-yorimasu",
     "JA-C261-baai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "japanese/narration/ch261.txt",
   "json": "japanese/narration/ch261.json",
-  "textHash": "fnv1a64:030beaae7e4b361d",
-  "jsonHash": "fnv1a64:26fabc21d4b542b6",
+  "textHash": "fnv1a64:eb9f56c9930c8934",
+  "jsonHash": "fnv1a64:63e13743b2c34137",
   "findings": []
 }

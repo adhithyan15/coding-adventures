@@ -4,7 +4,7 @@
   "chapter": 261,
   "title": "It Depends, and What Would Happen",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:e7964d9790ea1eef",
+  "sourceHash": "fnv1a64:79d5d12fd8d959a6",
   "lessons": [
     {
       "id": "JA-C261-ni-yorimasu",
@@ -177,7 +177,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:378bfbd15e4b5249",
+      "sourceHash": "fnv1a64:82718f4ee3858b8f",
       "notice": null,
       "blocks": [
         {
@@ -223,7 +223,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ばあい (baai) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict writes it with two kanji that KANJIDIC2 reads the native way: ば, \"place\", and あ(う), \"to fit, to meet\", so it is usually explained as \"the place where things meet\". JMdict glosses it \"case; occasion; situation\" (JMdict, KANJIDIC2)."
+              "text": "ばあい (baai) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict writes it with two kanji that KANJIDIC2 reads the native way: ば, \"place\", and あい, a reading of a kanji KANJIDIC2 glosses \"fit, suit, join\". JMdict glosses the word \"case; occasion; situation\" (JMdict, KANJIDIC2)."
             }
           ]
         },

@@ -48,7 +48,7 @@ reviews_of: [JA-C252-soshite, JA-C213-tsuki, JA-C49-hayai]
 >
 > *tsukihi wa hayai desu.* — "Time flies."
 
-Two beats, then two more: *tsu–ki–hi*. The second sign is **日**, the kanji you write. The first is new: **月**, read **つき** (*tsuki*) here, "the moon", the word you know. The next lesson writes it.
+Three beats: *tsu–ki–hi*. The second sign is **日**, the kanji you write, read **ひ** (*hi*) inside this word. The first is new: **月**, read **つき** (*tsuki*) here, "the moon", the word you know. The next lesson writes it.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -62,7 +62,7 @@ Two beats, then two more: *tsu–ki–hi*. The second sign is **日**, the kanji
 [PAUSE 1s]
 - [YOU SAY: *tsukihi*]
 - [YOU SAY: "Time flies" — *tsukihi wa hayai desu*]
-- [YOU RECALL: say the moon, then a day, then the two together]
+- [YOU RECALL: say the moon, *tsuki*, then *tsukihi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C252-TSUKIHI-01] -->

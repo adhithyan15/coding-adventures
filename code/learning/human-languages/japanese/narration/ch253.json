@@ -4,7 +4,7 @@
   "chapter": 253,
   "title": "What Was Going On",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c8b7715a3ae7092b",
+  "sourceHash": "fnv1a64:489e1082329cbccc",
   "lessons": [
     {
       "id": "JA-C253-futte-imasu",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22778cefa2e13963",
+      "sourceHash": "fnv1a64:ab687390acbd5fae",
       "notice": null,
       "blocks": [
         {
@@ -240,7 +240,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "とき (toki) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict writes it with a kanji glossed \"time; hour; moment\", and KANJIDIC2 gives とき as that kanji's native reading; it is the とき inside ときどき, \"sometimes\" (JMdict, KANJIDIC2)."
+              "text": "とき (toki) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict writes it with one kanji and glosses it \"time; hour; moment\" and \"occasion; case\"; KANJIDIC2 glosses that kanji \"time, hour\" and gives とき as its native reading. It is the とき inside ときどき, \"sometimes\" (JMdict, KANJIDIC2)."
             }
           ]
         },
@@ -336,7 +336,7 @@
       "modalityReasons": [
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:d5d1c1c82337a89f",
+      "sourceHash": "fnv1a64:342cc8ddc5affe63",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -380,7 +380,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three beats: nen–jū, with the long ū. The first sign is new, read ねん (nen): the nen of らいねん and きょねん. The next lesson writes it."
+              "text": "Four beats: ne–n–ju–u, the long ū held for two. The first sign is new, read ねん (nen): the nen of らいねん and きょねん. The next lesson writes it."
             }
           ]
         },
@@ -391,7 +391,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "年じゅう (nenjū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are nen, \"year\" (Middle Chinese nen) and jū, \"in, inside, middle\" (trjuwng), voiced from chū (KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict spells the word with two kanji, or with the second part in kana, as here, and glosses it \"all year round; throughout the year\" (JMdict)."
+              "text": "年じゅう (nenjū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are nen, \"year\" (Middle Chinese nen) and jū, \"in, inside, middle\" (trjuwng) (KANJIDIC2; Middle Chinese in Baxter's transcription). KANJIDIC2 gives that second kanji the on'yomi chū; JMdict lists nenchū as another reading of this same word, so jū is chū voiced. JMdict spells the word with two kanji, or with the second part in kana, as here, and glosses it \"all year round; throughout the year\" (JMdict)."
             }
           ]
         },

@@ -57,9 +57,9 @@ The plain "not" and the plain past go before **と** the same way:
 >
 > *tomodachi wa konai to omoimasu.* — "I don't think my friend will come."
 
-> **ちちは もう かえったと おもいます。**
+> **ちちは うちに かえったと おもいます。**
 >
-> *chichi wa mō kaetta to omoimasu.* — "I think my father has gone home already."
+> *chichi wa uchi ni kaetta to omoimasu.* — "I think my father has gone home."
 
 ## You'll want to know: どう おもいますか
 <!-- hl-knowledge: introduces=[JA-GRAMMAR-C254-OPINION-02]; assesses=[JA-LEX-C236-FILM236-01, JA-LEX-C83-DEF83-01, JA-LEX-C124-QUAL124-05] -->

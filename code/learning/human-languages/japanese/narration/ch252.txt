@@ -15,7 +15,7 @@ You'll want to know: た becomes て.
 あさ おきて、かおを あらいました。 asa okite, kao o araimashita. — "In the morning I got up and washed my face."
 The other verbs that drop る do the same, and so do する and くる: たべた gives たべて (tabete), した gives して (shite), きた gives きて (kite).
 ばんごはんを たべて、ねました。 bangohan o tabete, nemashita. — "I ate dinner and went to bed."
-You know this form already from a request: いって ください (itte kudasai), "please say it".
+You know this form already from a request: いって ください (itte kudasai), "please say it". That いって comes from 言う, "to say"; いく makes the same sound, as the next section shows.
 
 You'll want to know: って, んで, いて, して.
 The past by the last kana gives the -て form by the last kana, with the same swap: だ becomes で.
@@ -119,7 +119,7 @@ You'll want to know: そして.
 そして、およぎました。 soshite, oyogimashita. — "And I swam."
 
 The word, taken apart.
-そして (soshite) is a native Japanese word (wago), inherited rather than borrowed from Chinese. It is usually explained as そ (so), "that way", the same so- as in それ, with して (shite), the -て form of する. JMdict marks it as usually written in kana (JMdict).
+そして (soshite) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict marks it as usually written in kana, and among its kanji spellings gives one whose first kanji KANJIDIC2 glosses "so", followed by して (shite), the -て form of する: "doing so", "and so" (JMdict, KANJIDIC2).
 
 Guided Practice.
 [pause 1 second]
@@ -150,7 +150,7 @@ Before the new word: say "the moon". (tsuki.) Then say "fast". (hayai.)
 You'll want to know: 月日.
 月日 — tsukihi — "the passing of time": months and days, gone by.
 月日は はやいです。 tsukihi wa hayai desu. — "Time flies."
-Two beats, then two more: tsu–ki–hi. The second sign is 日, the kanji you write. The first is new: 月, read つき (tsuki) here, "the moon", the word you know. The next lesson writes it.
+Three beats: tsu–ki–hi. The second sign is 日, the kanji you write, read ひ (hi) inside this word. The first is new: 月, read つき (tsuki) here, "the moon", the word you know. The next lesson writes it.
 
 The word, taken apart.
 月日 (tsukihi) is a native Japanese word (wago), inherited rather than borrowed from Chinese: つき (tsuki), "the moon, a month", and ひ (hi), "a day", each written with its kanji and read the native way, as a kun'yomi. JMdict glosses the whole as "time; years; days", and KANJIDIC2 gives つき for the first kanji and ひ for the second (JMdict, KANJIDIC2).
@@ -161,7 +161,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "Time flies" — tsukihi wa hayai desu]
 [pause 8 seconds for the answer]
-[your turn — recall: say the moon, then a day, then the two together]
+[your turn — recall: say the moon, tsuki, then tsukihi]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 10 seconds]
 Say the Japanese for 'the passing of time'.

@@ -4,7 +4,7 @@
   "chapter": 259,
   "title": "Comparing, and How Long",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e64257e4c05f6343",
+  "sourceHash": "fnv1a64:2350973dc411c156",
   "lessons": [
     {
       "id": "JA-C259-yori",
@@ -311,7 +311,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2531fdcb536fb6bb",
+      "sourceHash": "fnv1a64:d3faa90e5f41702a",
       "notice": null,
       "blocks": [
         {
@@ -338,7 +338,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "いちばん — ichiban — \"the most\", \"number one\". It goes before the adjective, and with more than two things to choose from:"
+              "text": "いちばん — ichiban — \"the most\", \"number one\". It goes before the word it raises to the top, with more than two things to choose from:"
             },
             {
               "kind": "speech",
@@ -346,7 +346,15 @@
             },
             {
               "kind": "speech",
-              "text": "かぞくの なかで ちちが いちばん たかいです。 kazoku no naka de chichi ga ichiban takai desu. — \"In my family my father is the tallest.\""
+              "text": "なかで (naka de), \"inside\" with で, names the group the choice is made in: \"among the seasons\", \"in my family\"."
+            },
+            {
+              "kind": "speech",
+              "text": "きせつの なかで なつが いちばん すきです。 kisetsu no naka de natsu ga ichiban suki desu. — \"Of all the seasons, I like summer best.\""
+            },
+            {
+              "kind": "speech",
+              "text": "かぞくの なかで ちちが いちばん はやく おきます。 kazoku no naka de chichi ga ichiban hayaku okimasu. — \"In my family my father gets up earliest.\""
             }
           ]
         },
@@ -416,7 +424,7 @@
               ],
               "feedback": {
                 "correct": "Right: ichiban before suki.",
-                "incorrect": "Ichiban goes before the adjective: natsu ga ichiban suki desu."
+                "incorrect": "Ichiban goes before suki: natsu ga ichiban suki desu."
               }
             }
           ]
@@ -607,7 +615,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9231c918205a4ae5",
+      "sourceHash": "fnv1a64:289a89ccae550a1d",
       "notice": null,
       "blocks": [
         {
@@ -659,11 +667,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "In my family my father is the tallest.",
+              "instruction": "In my family my father gets up earliest.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: In my family my father is the tallest.]"
+              "source": "[YOU SAY: In my family my father gets up earliest.]"
             },
             {
               "kind": "prompt",

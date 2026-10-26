@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 254,
-  "sourceHash": "fnv1a64:26388b9053f8489b",
+  "sourceHash": "fnv1a64:66d3fd99e883f59c",
   "lessonIds": [
     "JA-C254-to-omoimasu",
     "JA-C254-kara-node",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "japanese/narration/ch254.txt",
   "json": "japanese/narration/ch254.json",
-  "textHash": "fnv1a64:3f01fdd7dbaae552",
-  "jsonHash": "fnv1a64:7680efb0287cc50b",
+  "textHash": "fnv1a64:7076dd057a65b34d",
+  "jsonHash": "fnv1a64:e6bc9bef5b483ba2",
   "findings": []
 }

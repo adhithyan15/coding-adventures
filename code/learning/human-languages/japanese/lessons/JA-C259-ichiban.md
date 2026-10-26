@@ -12,18 +12,18 @@ headword: "いちばん"
 gloss: "the most; number one"
 romanization: "ichiban"
 concept_tag: JA-EXPR259-ICHIBAN
-prerequisites: [JA-C259-dochira, JA-C259-yori, JA-C14-ichi, JA-C209-kisetsu, JA-C136-kazoku, JA-C56-naka, JA-C49-takai, JA-C240-suki]
+prerequisites: [JA-C259-dochira, JA-C259-yori, JA-C14-ichi, JA-C209-kisetsu, JA-C136-kazoku, JA-C56-naka, JA-C138-okimasu, JA-C240-suki]
 sounds: []
 roots: [middle-chinese-jit, middle-chinese-phjon]
 etymology_hook: 'ichiban: Sino-Japanese 一 ''one'' + 番 ''number in a series'', on''yomi borrowed from Chinese'
 duration:
-  max_seconds: 165
+  max_seconds: 195
 requires:
-  knowledge: [JA-LEX-C259-DOCHIRA-01, JA-GRAMMAR-C259-COMPARE-01, JA-LEX-ICHI, JA-LEX-C209-SEASON209-03, JA-LEX-ANCHOR-KAZOKU, JA-LEX-C56-TIME56-04, JA-LEX-C49-ADJ49-01, JA-LEX-C240-LIKES240-03]
+  knowledge: [JA-LEX-C259-DOCHIRA-01, JA-GRAMMAR-C259-COMPARE-01, JA-LEX-ICHI, JA-LEX-C209-SEASON209-03, JA-LEX-ANCHOR-KAZOKU, JA-LEX-C56-TIME56-04, JA-LEX-C138-OKIMASU, JA-LEX-C240-LIKES240-03]
 introduces:
   knowledge: [JA-LEX-C259-ICHIBAN-01]
 practises:
-  knowledge: [JA-LEX-C259-ICHIBAN-01, JA-LEX-C259-DOCHIRA-01, JA-GRAMMAR-C259-COMPARE-01, JA-LEX-ICHI, JA-LEX-C209-SEASON209-03, JA-LEX-ANCHOR-KAZOKU, JA-LEX-C56-TIME56-04, JA-LEX-C49-ADJ49-01, JA-LEX-C240-LIKES240-03]
+  knowledge: [JA-LEX-C259-ICHIBAN-01, JA-LEX-C259-DOCHIRA-01, JA-GRAMMAR-C259-COMPARE-01, JA-LEX-ICHI, JA-LEX-C209-SEASON209-03, JA-LEX-ANCHOR-KAZOKU, JA-LEX-C56-TIME56-04, JA-LEX-C138-OKIMASU, JA-LEX-C240-LIKES240-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -40,17 +40,23 @@ reviews_of: [JA-C259-dochira, JA-C259-yori, JA-C14-ichi]
 [PAUSE 2s] Before the new word: ask "which do you like better, summer or winter?" (*natsu to fuyu to dochira ga suki desu ka*.) Then say "summer is hotter than winter". (*natsu wa fuyu yori atsui desu*.) And "one". (*ichi*.)
 
 ## You'll want to know: いちばん
-<!-- hl-knowledge: introduces=[JA-LEX-C259-ICHIBAN-01]; assesses=[JA-LEX-C209-SEASON209-03, JA-LEX-ANCHOR-KAZOKU, JA-LEX-C56-TIME56-04, JA-LEX-C49-ADJ49-01] -->
+<!-- hl-knowledge: introduces=[JA-LEX-C259-ICHIBAN-01]; assesses=[JA-LEX-C209-SEASON209-03, JA-LEX-ANCHOR-KAZOKU, JA-LEX-C56-TIME56-04, JA-LEX-C138-OKIMASU] -->
 
-**いちばん** — *ichiban* — "the most", "number one". It goes before the adjective, and with more than two things to choose from:
+**いちばん** — *ichiban* — "the most", "number one". It goes before the word it raises to the top, with more than two things to choose from:
 
 > **なつが いちばん すきです。**
 >
 > *natsu ga ichiban suki desu.* — "I like summer best."
 
-> **かぞくの なかで ちちが いちばん たかいです。**
+**なかで** (*naka de*), "inside" with **で**, names the group the choice is made in: "among the seasons", "in my family".
+
+> **きせつの なかで なつが いちばん すきです。**
 >
-> *kazoku no naka de chichi ga ichiban takai desu.* — "In my family my father is the tallest."
+> *kisetsu no naka de natsu ga ichiban suki desu.* — "Of all the seasons, I like summer best."
+
+> **かぞくの なかで ちちが いちばん はやく おきます。**
+>
+> *kazoku no naka de chichi ga ichiban hayaku okimasu.* — "In my family my father gets up earliest."
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -59,7 +65,7 @@ reviews_of: [JA-C259-dochira, JA-C259-yori, JA-C14-ichi]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C259-ICHIBAN-01, JA-LEX-C240-LIKES240-03] -->
-<!-- hl-activity: {"id": "JA-C259-ichiban-say", "kind": "text", "assesses": ["JA-LEX-C259-ICHIBAN-01"], "prompt": "Say that you like summer best.", "answer": "natsu ga ichiban suki desu", "accepted": ["なつが いちばん すきです。", "なつが いちばん すきです"], "feedback": {"correct": "Right: ichiban before suki.", "incorrect": "Ichiban goes before the adjective: natsu ga ichiban suki desu."}, "response_seconds": 12} -->
+<!-- hl-activity: {"id": "JA-C259-ichiban-say", "kind": "text", "assesses": ["JA-LEX-C259-ICHIBAN-01"], "prompt": "Say that you like summer best.", "answer": "natsu ga ichiban suki desu", "accepted": ["なつが いちばん すきです。", "なつが いちばん すきです"], "feedback": {"correct": "Right: ichiban before suki.", "incorrect": "Ichiban goes before suki: natsu ga ichiban suki desu."}, "response_seconds": 12} -->
 
 [PAUSE 1s]
 - [YOU SAY: *ichiban*]

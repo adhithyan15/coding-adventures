@@ -54,7 +54,7 @@ After a noun it takes の:
 こどもの とき、うみに いきました。 kodomo no toki, umi ni ikimashita. — "When I was a child, I went to the sea."
 
 The word, taken apart.
-とき (toki) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict writes it with a kanji glossed "time; hour; moment", and KANJIDIC2 gives とき as that kanji's native reading; it is the とき inside ときどき, "sometimes" (JMdict, KANJIDIC2).
+とき (toki) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict writes it with one kanji and glosses it "time; hour; moment" and "occasion; case"; KANJIDIC2 glosses that kanji "time, hour" and gives とき as its native reading. It is the とき inside ときどき, "sometimes" (JMdict, KANJIDIC2).
 
 Guided Practice.
 [pause 1 second]
@@ -85,10 +85,10 @@ Before the new word: say "when I was a child". (kodomo no toki.) Then say "hot".
 You'll want to know: 年じゅう.
 年じゅう — nenjū — "all year round", the whole year through.
 ここは 年じゅう あついです。 koko wa nenjū atsui desu. — "It is hot here all year round."
-Three beats: nen–jū, with the long ū. The first sign is new, read ねん (nen): the nen of らいねん and きょねん. The next lesson writes it.
+Four beats: ne–n–ju–u, the long ū held for two. The first sign is new, read ねん (nen): the nen of らいねん and きょねん. The next lesson writes it.
 
 The word, taken apart.
-年じゅう (nenjū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are nen, "year" (Middle Chinese nen) and jū, "in, inside, middle" (trjuwng), voiced from chū (KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict spells the word with two kanji, or with the second part in kana, as here, and glosses it "all year round; throughout the year" (JMdict).
+年じゅう (nenjū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are nen, "year" (Middle Chinese nen) and jū, "in, inside, middle" (trjuwng) (KANJIDIC2; Middle Chinese in Baxter's transcription). KANJIDIC2 gives that second kanji the on'yomi chū; JMdict lists nenchū as another reading of this same word, so jū is chū voiced. JMdict spells the word with two kanji, or with the second part in kana, as here, and glosses it "all year round; throughout the year" (JMdict).
 
 Guided Practice.
 [pause 1 second]

@@ -15,7 +15,7 @@ What you think goes first, in the plain form; と (to) closes it, and おもい�
 あした あめが ふると おもいます。 ashita ame ga furu to omoimasu. — "I think it will rain tomorrow."
 The plain "not" and the plain past go before と the same way:
 ともだちは こないと おもいます。 tomodachi wa konai to omoimasu. — "I don't think my friend will come."
-ちちは もう かえったと おもいます。 chichi wa mō kaetta to omoimasu. — "I think my father has gone home already."
+ちちは うちに かえったと おもいます。 chichi wa uchi ni kaetta to omoimasu. — "I think my father has gone home."
 
 You'll want to know: どう おもいますか.
 To ask what someone thinks, どう (dō), "how", goes where the opinion would be:
@@ -87,10 +87,10 @@ Before the new word: say "to say" and "to take out". (iu, dasu.)
 You'll want to know: 言い出す.
 言い出す — iidasu — "to suggest", "to be the first to say". Polite 言い出します, iidashimasu; a godan verb. Past (polite): ちちが りょこうを 言い出しました, chichi ga ryokō o iidashimashita.
 ちちが りょこうを 言い出しました。 chichi ga ryokō o iidashimashita. — "My father suggested a trip."
-It is 言う with だす, "to put out", after it: to put an idea out first. The first kanji is the 言 you write. The second is new, read だ (da) here; the next lesson writes it.
+It is 言う with だす, "to take out", after it: to bring an idea out first. The first kanji is the 言 you write. The second is new, read だ (da) here; the next lesson writes it.
 
 The word, taken apart.
-言い出す (iidasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese: the stem of 言う (iu), "to say", and だす (dasu), "to put out", each written with its kanji and read the native way. JMdict gives "to begin to say" and "to suggest (doing)" among its senses, and KANJIDIC2 gives い.う and だ.す as the two kanji's native readings (JMdict, KANJIDIC2).
+言い出す (iidasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese: the stem of 言う (iu), "to say", and だす (dasu), "to take out", each written with its kanji and read the native way. JMdict gives "to begin to say" and "to suggest (doing)" among its senses, and KANJIDIC2 gives い.う and だ.す as the two kanji's native readings (JMdict, KANJIDIC2).
 
 Guided Practice.
 [pause 1 second]

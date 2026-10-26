@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 257,
-  "sourceHash": "fnv1a64:9e49930300284c23",
+  "sourceHash": "fnv1a64:650ef1d1eaaba5d9",
   "lessonIds": [
     "JA-C257-nakushimashita",
     "JA-C257-noriokureru",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "japanese/narration/ch257.txt",
   "json": "japanese/narration/ch257.json",
-  "textHash": "fnv1a64:fb1f367e999c84e3",
-  "jsonHash": "fnv1a64:16f7bd2e8c53275e",
+  "textHash": "fnv1a64:e25ea0904a25e9cb",
+  "jsonHash": "fnv1a64:a84db2b2686282b2",
   "findings": []
 }

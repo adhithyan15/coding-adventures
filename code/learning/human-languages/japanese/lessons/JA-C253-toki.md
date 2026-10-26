@@ -17,7 +17,7 @@ sounds: []
 roots: [japanese-toki]
 etymology_hook: 'toki: native Japanese, inherited, not borrowed; kanji 時 attached later as kun''yomi'
 duration:
-  max_seconds: 170
+  max_seconds: 175
 requires:
   knowledge: [JA-GRAMMAR-C253-ONGOING-02, JA-GRAMMAR-C250-PAST-01, JA-LEX-HAHA, JA-LEX-KODOMO, JA-LEX-C138-KAERIMASU, JA-GRAMMAR-C250-TA-SOUND-01]
 introduces:
@@ -61,7 +61,7 @@ After a noun it takes **の**:
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**とき** (*toki*) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict writes it with a kanji glossed "time; hour; moment", and KANJIDIC2 gives とき as that kanji's native reading; it is the **とき** inside **ときどき**, "sometimes" (JMdict, KANJIDIC2).
+**とき** (*toki*) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict writes it with one kanji and glosses it "time; hour; moment" and "occasion; case"; KANJIDIC2 glosses that kanji "time, hour" and gives とき as its native reading. It is the **とき** inside **ときどき**, "sometimes" (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C253-TOKI-01, JA-LEX-KODOMO] -->

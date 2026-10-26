@@ -4,7 +4,7 @@
   "chapter": 258,
   "title": "How It Felt, and What I Hope For",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f174f81314a797ac",
+  "sourceHash": "fnv1a64:8217ae52709b4b61",
   "lessons": [
     {
       "id": "JA-C258-tanoshikatta",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:987816721e956742",
+      "sourceHash": "fnv1a64:c99d68521591c068",
       "notice": null,
       "blocks": [
         {
@@ -62,7 +62,7 @@
             },
             {
               "kind": "speech",
-              "text": "いい works from its older form よい: よかった (yokatta), \"it was good\"."
+              "text": "いい takes its past from よい, another form of the same word: よかった (yokatta), \"it was good\"."
             },
             {
               "kind": "speech",
@@ -804,7 +804,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:53613bb69e6906d5",
+      "sourceHash": "fnv1a64:16f00bd1ee0b52b0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -832,7 +832,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say imamade, until now. Then call up 人: two strokes, the second starting on the first."
+              "text": "Say imamade, until now. Then call up 人: two strokes, the left one first."
             }
           ]
         },
@@ -883,7 +883,7 @@
             },
             {
               "kind": "speech",
-              "text": "The roof is drawn like 人, wider. Here it is read いま (ima), as in 今まで (imamade); this lesson asks only for that reading."
+              "text": "The roof is 人, in its order, left then right, but here the second stroke starts at the very top and both spread wide. Here it is read いま (ima), as in 今まで (imamade); this lesson asks only for that reading."
             }
           ]
         },
@@ -913,7 +913,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Which sign is its roof drawn like? (人.)"
+              "text": "Which sign is its roof? (人, left stroke first.)"
             },
             {
               "kind": "speech",

@@ -16,7 +16,7 @@ prerequisites: [JA-C23-tanoshii, JA-C245-ureshii, JA-C204-ryokou, JA-C53-samui, 
 sounds: []
 roots: []
 duration:
-  max_seconds: 175
+  max_seconds: 180
 requires:
   knowledge: [JA-LEX-C23-HEALTH23-04, JA-LEX-C245-JOY245-01, JA-LEX-C204-TRIP204-01, JA-LEX-C53-ADJ53-04, JA-LEX-C48-ANIMALS48-03, JA-LEX-C23-HEALTH23-03, JA-LEX-C124-QUAL124-05, JA-LEX-C163-HOME163-02, JA-LEX-C135-GENKI, JA-GRAMMAR-C251-NAI-02]
 introduces:
@@ -55,7 +55,7 @@ An i-adjective carries its own past: the last **い** becomes **かった**, and
 >
 > *kinō wa samukatta desu.* — "It was cold yesterday."
 
-**いい** works from its older form **よい**: **よかった** (*yokatta*), "it was good".
+**いい** takes its past from **よい**, another form of the same word: **よかった** (*yokatta*), "it was good".
 
 > **えいがは よかったです。**
 >

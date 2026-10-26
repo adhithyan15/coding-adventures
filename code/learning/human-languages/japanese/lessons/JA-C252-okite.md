@@ -16,7 +16,7 @@ prerequisites: [JA-C250-mita, JA-C250-katta, JA-C147-arau, JA-C11-kao, JA-C138-o
 sounds: []
 roots: []
 duration:
-  max_seconds: 235
+  max_seconds: 245
 requires:
   knowledge: [JA-GRAMMAR-C250-PAST-01, JA-GRAMMAR-C250-TA-SOUND-02, JA-LEX-C147-WASH147-01, JA-LEX-KAO, JA-LEX-C138-OKIMASU, JA-LEX-C172-MEALS172-04, JA-LEX-C138-NEMASU, JA-LEX-C152-READY152-03, JA-LEX-ANCHOR-KIPPU, JA-LEX-ANCHOR-EKI, JA-LEX-C26-FAMILY26-05, JA-LEX-ANCHOR-OCHA]
 introduces:
@@ -57,7 +57,7 @@ The other verbs that drop **る** do the same, and so do **する** and **くる
 >
 > *bangohan o tabete, nemashita.* — "I ate dinner and went to bed."
 
-You know this form already from a request: **いって ください** (*itte kudasai*), "please say it".
+You know this form already from a request: **いって ください** (*itte kudasai*), "please say it". That **いって** comes from **言う**, "to say"; **いく** makes the same sound, as the next section shows.
 
 ## You'll want to know: って, んで, いて, して
 <!-- hl-knowledge: introduces=[JA-GRAMMAR-C252-TE-02]; assesses=[JA-LEX-C152-READY152-03, JA-LEX-ANCHOR-KIPPU, JA-LEX-ANCHOR-EKI, JA-LEX-C26-FAMILY26-05] -->

@@ -4,7 +4,7 @@
   "chapter": 257,
   "title": "Something Went Wrong",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:9e49930300284c23",
+  "sourceHash": "fnv1a64:650ef1d1eaaba5d9",
   "lessons": [
     {
       "id": "JA-C257-nakushimashita",
@@ -327,7 +327,7 @@
       "modalityReasons": [
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:96f42f0219d4a18e",
+      "sourceHash": "fnv1a64:2c12d6fe3321e84e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -382,7 +382,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "日本中 (nihonjū) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ni, \"sun\" (Middle Chinese nyit), hon, \"origin\" (pwonX) and jū, \"in, inside, middle\" (trjuwng), voiced from chū (KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict glosses it \"throughout Japan\" (JMdict)."
+              "text": "日本中 (nihonjū) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ni, \"sun\" (Middle Chinese nyit), hon, \"origin\" (pwonX) and jū, \"in, inside, middle\" (trjuwng), the voiced chū of 年じゅう (KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict glosses it \"throughout Japan\" (JMdict)."
             }
           ]
         },

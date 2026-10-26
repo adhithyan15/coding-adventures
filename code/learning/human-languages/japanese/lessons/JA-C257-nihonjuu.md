@@ -53,7 +53,7 @@ You write **日本**. The third sign is new, read **じゅう** (*jū*) here; th
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**日本中** (*nihonjū*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ni*, "sun" (Middle Chinese *nyit*), *hon*, "origin" (*pwonX*) and *jū*, "in, inside, middle" (*trjuwng*), voiced from *chū* (KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict glosses it "throughout Japan" (JMdict).
+**日本中** (*nihonjū*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ni*, "sun" (Middle Chinese *nyit*), *hon*, "origin" (*pwonX*) and *jū*, "in, inside, middle" (*trjuwng*), the voiced *chū* of **年じゅう** (KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict glosses it "throughout Japan" (JMdict).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C257-NIHONJUU-01, JA-LEX-C25-FAMILY25-01] -->

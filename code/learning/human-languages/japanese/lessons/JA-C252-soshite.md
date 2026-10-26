@@ -55,7 +55,7 @@ reviews_of: [JA-C252-sorekara, JA-C252-okite]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**そして** (*soshite*) is a native Japanese word (wago), inherited rather than borrowed from Chinese. It is usually explained as **そ** (*so*), "that way", the same *so-* as in **それ**, with **して** (*shite*), the **-て** form of **する**. JMdict marks it as usually written in kana (JMdict).
+**そして** (*soshite*) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict marks it as usually written in kana, and among its kanji spellings gives one whose first kanji KANJIDIC2 glosses "so", followed by **して** (*shite*), the **-て** form of **する**: "doing so", "and so" (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C252-SOSHITE-01, JA-LEX-C42-NATURE42-02] -->

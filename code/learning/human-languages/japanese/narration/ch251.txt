@@ -14,7 +14,7 @@ You'll want to know: no future form.
 Japanese has no separate form for the future. いきます (ikimasu) is "I go" and also "I will go"; the time word says which.
 あした やまに いきます。 ashita yama ni ikimasu. — "I will go to the mountains tomorrow."
 らいしゅう はたらきます。 raishū hatarakimasu. — "I will work next week."
-Without a time word, the same verb is what you do as a rule:
+With まいにち (mainichi), "every day", the same verb is what you do as a habit:
 まいにち はたらきます。 mainichi hatarakimasu. — "I work every day."
 
 You'll want to know: the plain future.

@@ -50,7 +50,7 @@ You'll want to know: ばあい.
 あめの ばあいは、まつりは ちゅうしです。 ame no baai wa, matsuri wa chūshi desu. — "In case of rain, the festival is called off."
 
 The word, taken apart.
-ばあい (baai) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict writes it with two kanji that KANJIDIC2 reads the native way: ば, "place", and あ(う), "to fit, to meet", so it is usually explained as "the place where things meet". JMdict glosses it "case; occasion; situation" (JMdict, KANJIDIC2).
+ばあい (baai) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict writes it with two kanji that KANJIDIC2 reads the native way: ば, "place", and あい, a reading of a kanji KANJIDIC2 glosses "fit, suit, join". JMdict glosses the word "case; occasion; situation" (JMdict, KANJIDIC2).
 
 Guided Practice.
 [pause 1 second]

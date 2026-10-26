@@ -4,7 +4,7 @@
   "chapter": 254,
   "title": "What I Think, and Why",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:26388b9053f8489b",
+  "sourceHash": "fnv1a64:66d3fd99e883f59c",
   "lessons": [
     {
       "id": "JA-C254-to-omoimasu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7aa5ce770bcabf64",
+      "sourceHash": "fnv1a64:6b3428b0a04d9f14",
       "notice": null,
       "blocks": [
         {
@@ -66,7 +66,7 @@
             },
             {
               "kind": "speech",
-              "text": "ちちは もう かえったと おもいます。 chichi wa mō kaetta to omoimasu. — \"I think my father has gone home already.\""
+              "text": "ちちは うちに かえったと おもいます。 chichi wa uchi ni kaetta to omoimasu. — \"I think my father has gone home.\""
             }
           ]
         },
@@ -343,7 +343,7 @@
       "modalityReasons": [
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:e532c024d9d9a1af",
+      "sourceHash": "fnv1a64:6b79d7f7e24b979f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -387,7 +387,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is 言う with だす, \"to put out\", after it: to put an idea out first. The first kanji is the 言 you write. The second is new, read だ (da) here; the next lesson writes it."
+              "text": "It is 言う with だす, \"to take out\", after it: to bring an idea out first. The first kanji is the 言 you write. The second is new, read だ (da) here; the next lesson writes it."
             }
           ]
         },
@@ -398,7 +398,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "言い出す (iidasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese: the stem of 言う (iu), \"to say\", and だす (dasu), \"to put out\", each written with its kanji and read the native way. JMdict gives \"to begin to say\" and \"to suggest (doing)\" among its senses, and KANJIDIC2 gives い.う and だ.す as the two kanji's native readings (JMdict, KANJIDIC2)."
+              "text": "言い出す (iidasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese: the stem of 言う (iu), \"to say\", and だす (dasu), \"to take out\", each written with its kanji and read the native way. JMdict gives \"to begin to say\" and \"to suggest (doing)\" among its senses, and KANJIDIC2 gives い.う and だ.す as the two kanji's native readings (JMdict, KANJIDIC2)."
             }
           ]
         },

@@ -16,7 +16,7 @@ prerequisites: [JA-C54-ashita, JA-C26-iku, JA-C141-raishuu, JA-C41-yama, JA-C138
 sounds: []
 roots: []
 duration:
-  max_seconds: 205
+  max_seconds: 210
 requires:
   knowledge: [JA-LEX-C54-TIME54-02, JA-LEX-C26-FAMILY26-03, JA-LEX-C141-RAISHUU, JA-LEX-C41-SCHOOL41-05, JA-LEX-C138-HATARAKIMASU, JA-LEX-C141-RAINEN, JA-LEX-C141-TSUMORI, JA-LEX-C141-DESHOU, JA-LEX-C207-WEATHER207-02, JA-LEX-C44-NATURE44-05, JA-LEX-C42-NATURE42-02]
 introduces:
@@ -55,7 +55,7 @@ Japanese has no separate form for the future. **いきます** (*ikimasu*) is "I
 >
 > *raishū hatarakimasu.* — "I will work next week."
 
-Without a time word, the same verb is what you do as a rule:
+With **まいにち** (*mainichi*), "every day", the same verb is what you do as a habit:
 
 > **まいにち はたらきます。**
 >

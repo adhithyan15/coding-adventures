@@ -14,7 +14,7 @@ You'll want to know: -かった.
 An i-adjective carries its own past: the last い becomes かった, and です stays as it is to keep the sentence polite. たのしい gives たのしかった (tanoshikatta), うれしい gives うれしかった (ureshikatta).
 うれしかったです。 ureshikatta desu. — "I was glad."
 きのうは さむかったです。 kinō wa samukatta desu. — "It was cold yesterday."
-いい works from its older form よい: よかった (yokatta), "it was good".
+いい takes its past from よい, another form of the same word: よかった (yokatta), "it was good".
 えいがは よかったです。 eiga wa yokatta desu. — "The film was good."
 
 You'll want to know: -くなかった, and でした.
@@ -182,7 +182,7 @@ Before we start: this one needs your hands, so it is not a driving lesson. You w
 
 Warm-up.
 [pause 2 seconds]
-Say imamade, until now. Then call up 人: two strokes, the second starting on the first.
+Say imamade, until now. Then call up 人: two strokes, the left one first.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script — the shape.
@@ -196,7 +196,7 @@ draw the falling stroke on the left of the roof, from the top down to the left.
 lift, draw the falling stroke on the right of the roof, down to the right.
 lift, draw the short bar under the roof from left to right.
 lift, draw the lower bar from left to right, then without lifting turn down to the left.
-The roof is drawn like 人, wider. Here it is read いま (ima), as in 今まで (imamade); this lesson asks only for that reading.
+The roof is 人, in its order, left then right, but here the second stroke starts at the very top and both spread wide. Here it is read いま (ima), as in 今まで (imamade); this lesson asks only for that reading.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -205,7 +205,7 @@ Copy 今 three times, saying ima at each one.
 Find it once more, in 今まで ちかくに すんでいました (imamade chikaku ni sunde imashita), and say the line.
 
 Wrap-up Recall.
-Which sign is its roof drawn like? (人.)
+Which sign is its roof? (人, left stroke first.)
 Source: KanjiVG stroke-order data: KanjiVG, kanji/04eca.svg, kanji 今 (ima) (U+4ECA), 4 stroke paths kvg:04eca-s1 to s4 (Ulrich Apel and contributors, CC BY-SA 3.0). Only the order and direction are taken from it.
 [question — say your answer, then pause 12 seconds]
 How many strokes does the kanji read ima have?

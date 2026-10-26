@@ -74,9 +74,11 @@ Warm-up.
 Before the new word: ask "which do you like better, summer or winter?" (natsu to fuyu to dochira ga suki desu ka.) Then say "summer is hotter than winter". (natsu wa fuyu yori atsui desu.) And "one". (ichi.)
 
 You'll want to know: いちばん.
-いちばん — ichiban — "the most", "number one". It goes before the adjective, and with more than two things to choose from:
+いちばん — ichiban — "the most", "number one". It goes before the word it raises to the top, with more than two things to choose from:
 なつが いちばん すきです。 natsu ga ichiban suki desu. — "I like summer best."
-かぞくの なかで ちちが いちばん たかいです。 kazoku no naka de chichi ga ichiban takai desu. — "In my family my father is the tallest."
+なかで (naka de), "inside" with で, names the group the choice is made in: "among the seasons", "in my family".
+きせつの なかで なつが いちばん すきです。 kisetsu no naka de natsu ga ichiban suki desu. — "Of all the seasons, I like summer best."
+かぞくの なかで ちちが いちばん はやく おきます。 kazoku no naka de chichi ga ichiban hayaku okimasu. — "In my family my father gets up earliest."
 
 The word, taken apart.
 いちばん (ichiban) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, "one" (Middle Chinese 'jit) and ban, "number in a series" (phjon), so "number one" (KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict gives "number one; first" and "best; most" (JMdict).
@@ -144,7 +146,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: I like the sea more than the mountains.]
 [pause 8 seconds for the answer]
-[your turn — say: In my family my father is the tallest.]
+[your turn — say: In my family my father gets up earliest.]
 [pause 8 seconds for the answer]
 [your turn — say: I walk about five minutes to the station.]
 [pause 8 seconds for the answer]
