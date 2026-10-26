@@ -79,8 +79,10 @@ condition-code wires must be derived from reductions and comparisons over the
 settled gate vectors.
 
 For `MVCL`, a fixed-width unsigned range/ordering network detects the forbidden
-destructive-overlap direction before any state changes. The overlap wire
-selects condition code 3 and preserves both register pairs and storage.
+destructive-overlap direction before any storage access or movement. The
+overlap wire selects condition code 3, preserves both length registers and
+storage, preserves the low 24 address bits, and clears the ignored high byte of
+both address registers through the normal 24-bit address-result path.
 Otherwise the initial length relation selects condition code 0, 1, or 2;
 source exhaustion selects the pad byte through a mux; and every transferred
 byte clocks the exact Layer 07as register progress.
