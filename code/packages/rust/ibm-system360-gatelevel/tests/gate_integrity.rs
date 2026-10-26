@@ -276,6 +276,44 @@ fn verify_branch_structure(networks: &str, executor: &str, validator: &str) -> R
     )?;
     require_exact_body(
         networks,
+        "u32_to_bits",
+        "std::array::from_fn(|bit|((value>>bit)&1)as u8)",
+    )?;
+    require_exact_body(
+        networks,
+        "bits_to_u32",
+        "bits.iter().enumerate().fold(0,|value,(bit,q)|value|(u32::from(*q)<<bit))",
+    )?;
+    require_exact_body(
+        networks,
+        "select_u32",
+        "let d0=u32_to_bits(d0);
+         let d1=u32_to_bits(d1);
+         bits_to_u32(&std::array::from_fn::<_,32,_>(|bit|{mux2(d0[bit],d1[bit],select)}))",
+    )?;
+    require_exact_body(
+        networks,
+        "add_32",
+        "let a_bits=u32_to_bits(a);
+         let b_bits=u32_to_bits(b);
+         let full=ripple_carry_adder_with_carry(&a_bits,&b_bits,carry_in);
+         let low=ripple_carry_adder_with_carry(&a_bits[..31],&b_bits[..31],carry_in);
+         (bits_to_u32(&full.sum),full.carry_out,xor_gate(low.carry_out,full.carry_out),)",
+    )?;
+    require_exact_body(
+        networks,
+        "add_24",
+        "let a_bits=u32_to_bits(a);
+         let b_bits=u32_to_bits(b);
+         bits_to_u32(&ripple_carry_adder_with_carry(&a_bits[..24],&b_bits[..24],0).sum)",
+    )?;
+    require_exact_body(
+        networks,
+        "bit_not_32",
+        "bits_to_u32(&u32_to_bits(value).map(not_gate))",
+    )?;
+    require_exact_body(
+        networks,
         "branch_selected",
         "let condition=[condition_code&1,(condition_code>>1)&1];
          let mask=[mask&1,(mask>>1)&1,(mask>>2)&1,(mask>>3)&1];
@@ -307,6 +345,33 @@ fn verify_branch_structure(networks: &str, executor: &str, validator: &str) -> R
          let high_bit=(compare_condition_code>>1)&1;
          let high=and_gate(high_bit,not_gate(low));
          or_gate(and_gate(decode[0x86],high),and_gate(decode[0x87],not_gate(high)),)",
+    )?;
+    require_exact_body(
+        networks,
+        "signed_compare_condition_code",
+        "let a_sign=u32_to_bits(a)[31];
+         let b_sign=u32_to_bits(b)[31];
+         let signs_differ=xor_gate(a_sign,b_sign);
+         let(difference,_,_)=add_32(a,bit_not_32(b),1);
+         let same_sign_less=u32_to_bits(difference)[31];
+         let less=or_gate(and_gate(signs_differ,a_sign),and_gate(not_gate(signs_differ),same_sign_less),);
+         let equal=is_zero_32(difference);
+         let greater=and_gate(not_gate(less),not_gate(equal));
+         less|(greater<<1)",
+    )?;
+
+    require_exact_body(
+        executor,
+        "execute",
+        "let mut next=before.clone();
+         next.pc=gates::add_24(before.pc,u32::from(trace.width));
+         match trace.raw.len(){
+             2=>execute_rr(before,&mut next,&trace.raw)?,
+             4=>execute_four(before,&mut next,&trace.raw)?,
+             6=>execute_ss(before,&mut next,&trace.raw)?,
+             _=>return gate_error(\"reason\"),
+         }
+         Ok(next)",
     )?;
 
     require_exact_arm(
@@ -491,4 +556,39 @@ fn structural_verifier_rejects_adversarial_host_shortcuts_and_dead_anchors() {
         1,
     );
     assert!(verify_branch_structure(networks, &shadowed_helpers, validator).is_err());
+
+    let host_select_with_dead_anchor = networks.replacen(
+        "bits_to_u32(&std::array::from_fn::<_, 32, _>(|bit| {\n        mux2(d0[bit], d1[bit], select)\n    }))",
+        "{ if false { let _ = mux2(d0[0], d1[0], select); } if select != 0 { d1 } else { d0 } }",
+        1,
+    );
+    assert!(verify_branch_structure(&host_select_with_dead_anchor, executor, validator).is_err());
+
+    let host_bit_expansion = networks.replacen(
+        "std::array::from_fn(|bit| ((value >> bit) & 1) as u8)",
+        "std::array::from_fn(|bit| u8::from(value & (1 << bit) != 0))",
+        1,
+    );
+    assert!(verify_branch_structure(&host_bit_expansion, executor, validator).is_err());
+
+    let host_add_with_dead_anchor = networks.replacen(
+        "let full = ripple_carry_adder_with_carry(&a_bits, &b_bits, carry_in);\n    let low = ripple_carry_adder_with_carry(&a_bits[..31], &b_bits[..31], carry_in);\n    (\n        bits_to_u32(&full.sum),",
+        "let full = ripple_carry_adder_with_carry(&a_bits, &b_bits, carry_in);\n    let low = ripple_carry_adder_with_carry(&a_bits[..31], &b_bits[..31], carry_in);\n    if false { let _ = bits_to_u32(&full.sum); }\n    (\n        a.wrapping_add(b).wrapping_add(u32::from(carry_in)),",
+        1,
+    );
+    assert!(verify_branch_structure(&host_add_with_dead_anchor, executor, validator).is_err());
+
+    let host_signed_compare = networks.replacen(
+        "let a_sign = u32_to_bits(a)[31];",
+        "if false { let _ = u32_to_bits(a)[31]; }\n    let a_sign = u8::from((a as i32) < (b as i32));",
+        1,
+    );
+    assert!(verify_branch_structure(&host_signed_compare, executor, validator).is_err());
+
+    let post_dispatch_overwrite = executor.replacen(
+        "    Ok(next)\n}",
+        "    if false { let _ = gates::select_u32(next.pc, next.pc, 0); }\n    next.pc = before.pc;\n    Ok(next)\n}",
+        1,
+    );
+    assert!(verify_branch_structure(networks, &post_dispatch_overwrite, validator).is_err());
 }

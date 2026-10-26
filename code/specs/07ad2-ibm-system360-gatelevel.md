@@ -97,6 +97,8 @@ The accepted implementation passes eleven Rust differential suites and three
 gate-integrity suites, including every first-byte classification, every
 supported hexadecimal-floating order, exhaustive branch predicate truth
 tables, both architectural branch paths, overlap semantics, lifecycle, typed
-atomic faults, and token-normalized exact-body structural checks with hostile
-bypass fixtures. Rustfmt, strict Clippy, rustdoc, lesson validation, and the
+atomic faults, and token-normalized exact-body structural checks over the full
+branch-select, fixed-width-adder, signed-comparator, and top-level dispatch
+dependency chain, with hostile helper-rewrite and post-dispatch-overwrite
+fixtures. Rustfmt, strict Clippy, rustdoc, lesson validation, and the
 package BUILD are green. Package line coverage is 93.01% (1,662/1,787).

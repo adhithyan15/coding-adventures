@@ -11,7 +11,9 @@ All notable changes to this package will be documented in this file.
 - Add exhaustive mask, condition-code, register-field, count-wire, and
   index-branch truth tables plus token-normalized exact-body structural
   coverage with adversarial host-predicate, indirection, dead-anchor, and
-  primitive/helper-shadowing fixtures.
+  primitive/helper-shadowing fixtures. Exact locks cover the complete branch
+  select, fixed-width adder, signed-comparator, and top-level dispatch data
+  flow; adversarial helper rewrites and post-dispatch overwrites are rejected.
 
 ## [0.1.0] - 2026-10-24
 
