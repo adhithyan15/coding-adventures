@@ -212,7 +212,6 @@ pub enum Arm7TdmiError {
         requested: usize,
         limit: usize,
     },
-    AllocationFailed,
     StepLimitExceeded {
         limit: usize,
     },
@@ -285,7 +284,6 @@ impl fmt::Display for Arm7TdmiError {
                 f,
                 "requested {requested} traces exceeds retention limit {limit}"
             ),
-            Self::AllocationFailed => f.write_str("trace allocation failed"),
             Self::StepLimitExceeded { limit } => {
                 write!(f, "step limit {limit} exhausted before halt")
             }
@@ -403,10 +401,7 @@ impl Arm7TdmiSimulator {
     pub fn run(&mut self, max_steps: usize) -> Result<ExecutionResult, Arm7TdmiError> {
         preflight_retention(max_steps)?;
         let original = self.state.clone();
-        let mut traces = Vec::new();
-        traces
-            .try_reserve(max_steps)
-            .map_err(|_| Arm7TdmiError::AllocationFailed)?;
+        let mut traces = Vec::with_capacity(max_steps);
         for _ in 0..max_steps {
             match self.step() {
                 Ok(trace) => traces.push(trace),
@@ -572,12 +567,15 @@ fn validate_state(state: &Arm7TdmiState) -> Result<(), Arm7TdmiError> {
             validate_status(status)?;
         }
     }
-    if state.loaded_len == 0 {
+    if state.loaded_len == 0 && state.loaded_origin != 0 {
         return Err(Arm7TdmiError::InvalidState {
-            reason: "installed image must be nonempty",
+            reason: "empty installed image must have zero origin",
         });
     }
-    if !(state.loaded_origin as usize).is_multiple_of(2) || !state.loaded_len.is_multiple_of(2) {
+    if state.loaded_len != 0
+        && (!(state.loaded_origin as usize).is_multiple_of(2)
+            || !state.loaded_len.is_multiple_of(2))
+    {
         return Err(Arm7TdmiError::InvalidState {
             reason: "installed image is not halfword aligned",
         });
@@ -1001,6 +999,9 @@ fn execute_data_processing(
     let set_flags = raw & (1 << 20) != 0;
     let rn = ((raw >> 16) & 0xf) as usize;
     let rd = ((raw >> 12) & 0xf) as usize;
+    if (0x8..=0xb).contains(&opcode) && (!set_flags || rd != 0) {
+        return Err(Arm7TdmiError::UnpredictableInstruction { raw, pc });
+    }
     let left = arm_operand(state, rn, pc);
     let (right, shifter_carry) = decode_operand2(state, raw, pc);
     let carry = state.cpsr & CPSR_C != 0;

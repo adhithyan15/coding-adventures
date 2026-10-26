@@ -226,7 +226,7 @@ Typed errors distinguish invalid programs and restored states, reserved modes,
 unavailable SPSR, privilege and unpredictable-instruction violations,
 misaligned and out-of-range fetch/data/targets, fetch outside the installed
 image, unknown and unsupported instructions, unsupported exceptions, halted
-execution, excessive trace retention, allocation failure, and exhausted
+execution, excessive trace retention, and exhausted
 budgets. Every error has stable nonempty display text.
 
 ## 10. Explicit exclusions and follow-up backlog
@@ -258,7 +258,7 @@ The functional cell is complete only when it has:
    halves, taken/not-taken control flow, and target-fault rollback;
 4. every transfer width/sign/addressing mode, swap, multiple-transfer order,
    overlap rejection, writeback, memory boundary, and full rollback;
-5. complete-state load, restore, halt, run, execute, trace-bound, allocation,
+5. complete-state load, restore, halt, run, execute, trace-bound,
    malformed-image, fetch, exact self-modifying bytes, and transactional
    rollback tests;
 6. release line coverage above 80 percent; and

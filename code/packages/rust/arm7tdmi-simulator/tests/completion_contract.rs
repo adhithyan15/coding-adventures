@@ -33,6 +33,9 @@ fn with_state(cpu: &mut Arm7TdmiSimulator, change: impl FnOnce(&mut Arm7TdmiStat
 #[test]
 fn reset_load_and_complete_physical_state() {
     let mut cpu = Arm7TdmiSimulator::new();
+    let initial = cpu.get_state();
+    cpu.restore(initial.clone()).unwrap();
+    assert_eq!(cpu.state(), &initial);
     assert_eq!(cpu.state().memory.len(), MEMORY_SIZE);
     assert_eq!(cpu.state().cpsr, Mode::Supervisor as u32 | CPSR_I | CPSR_F);
     cpu.load(&arm(&[0xef00_0000]), 0x100, InstructionSet::Arm)
@@ -46,6 +49,17 @@ fn reset_load_and_complete_physical_state() {
     cpu.reset();
     assert_eq!(cpu.state().registers, PhysicalRegisters::default());
     assert_eq!(cpu.state().loaded_len, 0);
+    let reset = cpu.get_state();
+    cpu.restore(reset.clone()).unwrap();
+    assert_eq!(cpu.state(), &reset);
+
+    let mut malformed_empty = reset.clone();
+    malformed_empty.loaded_origin = 2;
+    assert!(matches!(
+        cpu.restore(malformed_empty),
+        Err(Arm7TdmiError::InvalidState { .. })
+    ));
+    assert_eq!(cpu.state(), &reset);
 }
 
 #[test]
@@ -130,7 +144,8 @@ fn all_arm_conditions_have_taken_and_failed_witnesses() {
 #[test]
 fn arm_data_processing_all_sixteen_operations() {
     for opcode in 0..16 {
-        let mut cpu = arm_cpu(&[dp_imm(0xe, opcode, true, 1, 2, 3)]);
+        let rd = if (0x8..=0xb).contains(&opcode) { 0 } else { 2 };
+        let mut cpu = arm_cpu(&[dp_imm(0xe, opcode, true, 1, rd, 3)]);
         cpu.write_register(1, 7).unwrap();
         cpu.step().unwrap();
         assert_ne!(
@@ -625,6 +640,33 @@ fn later_architecture_and_reserved_neighbors_are_fail_closed() {
 }
 
 #[test]
+fn arm_test_and_compare_fixed_fields_are_enforced_atomically() {
+    for opcode in 0x8..=0xb {
+        let legal = dp_imm(0xe, opcode, true, 0, 0, 1);
+        let mut cpu = arm_cpu(&[legal]);
+        let trace = cpu.step().unwrap();
+        assert!(matches!(trace.mnemonic, "TST" | "TEQ" | "CMP" | "CMN"));
+
+        for malformed in [
+            dp_imm(0xe, opcode, false, 0, 0, 1),
+            dp_imm(0xe, opcode, true, 0, 1, 1),
+            dp_imm(0xe, opcode, false, 0, 1, 1),
+        ] {
+            let mut cpu = arm_cpu(&[malformed]);
+            let before = cpu.get_state();
+            assert_eq!(
+                cpu.step(),
+                Err(Arm7TdmiError::UnpredictableInstruction {
+                    raw: malformed,
+                    pc: 0,
+                })
+            );
+            assert_eq!(cpu.state(), &before);
+        }
+    }
+}
+
+#[test]
 fn public_pc_write_obeys_current_state_target_rules() {
     let mut cpu = arm_cpu(&[0xef00_0000]);
     cpu.write_register(15, 2).unwrap(); // ordinary ARM PC write discards bits 1:0
@@ -751,7 +793,6 @@ fn every_error_has_stable_nonempty_text() {
             requested: 65,
             limit: 64,
         },
-        Arm7TdmiError::AllocationFailed,
         Arm7TdmiError::StepLimitExceeded { limit: 1 },
     ];
     for error in errors {
