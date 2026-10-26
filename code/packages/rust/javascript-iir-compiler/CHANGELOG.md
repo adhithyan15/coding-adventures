@@ -7,6 +7,15 @@ JavaScript's number layout out of every backend and puts it in the module.
 
 ### Changed
 
+- **The native runner's step budget is sized from the node limit**
+  (`MAX_VM_STEPS = MAX_AST_NODES × 256`, about 4.2M; it was a flat 100,000).
+  A printed number now runs `__js_write_number`, about 110–165 VM steps
+  instead of one builtin call, so the old budget refused valid programs
+  such as `console.log(1e20, 1e20, 1e20)` written 200 times, with a message
+  that blamed an infinite loop (security review of this release). The new
+  test `the_step_budget_covers_every_program_the_limits_accept` runs the
+  largest program the source and node limits accept for the most
+  expensive print lines.
 - **`write_f64_js` is no longer emitted.** A module that prints a number
   carries four functions this compiler writes (new `number_to_string`
   module): `__js_write_number(x)` is `Number::toString(x)`, built from the

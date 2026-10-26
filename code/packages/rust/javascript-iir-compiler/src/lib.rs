@@ -217,6 +217,25 @@ const MINUS_BYTE: i64 = b'-' as i64;
 /// The most bytes [`run_module`] collects before it stops the program.
 const MAX_OUTPUT_BYTES: usize = 1_000_000;
 
+/// The VM step budget [`run_module`] gives a program.
+///
+/// The subset has no loops and no user calls, so a program's work is
+/// bounded by its size. The dear part is printing: since PR7c-js each
+/// number goes through the module's own `__js_write_number`, which runs
+/// about 110 VM instructions for `1.5` and about 165 for `1e20` (the
+/// longest layouts, `-1.7976931348623157e+308` and the 21-digit integrals,
+/// stay under 256). One printed number needs at least one AST node, so
+/// `MAX_AST_NODES × 256` steps cover the largest program the parser
+/// accepts. Before PR7c-js a print was one `call_builtin` and the budget
+/// was 100,000. That stayed fine for a builtin, but with the helper it
+/// refused `console.log(1e20, 1e20, 1e20)` repeated 200 times, a 5.8 KB
+/// program well inside the source and node limits, with a message that
+/// blamed an infinite loop.
+///
+/// At most one `putchar` per step and at most ~25 bytes per number keep
+/// the output under [`MAX_OUTPUT_BYTES`] anyway.
+const MAX_VM_STEPS: u64 = MAX_AST_NODES as u64 * 256;
+
 /// Names the native runner's global object is defined to hold.
 ///
 /// ECMAScript resolves an identifier that no `let`/`const` binds against the
@@ -1713,7 +1732,7 @@ fn run_compiled(compiled: Compiled) -> Result<String, JavaScriptRunError> {
 pub fn run_module(mut module: IIRModule) -> Result<String, JavaScriptRunError> {
     let output = Arc::new(Mutex::new(Vec::<u8>::new()));
     let mut vm = VMCore::new();
-    vm.max_instructions = Some(100_000);
+    vm.max_instructions = Some(MAX_VM_STEPS);
     let captured = Arc::clone(&output);
     vm.builtins_mut().register("putchar", move |args| {
         let [Value::Int(byte)] = args else {
@@ -1741,9 +1760,9 @@ pub fn run_module(mut module: IIRModule) -> Result<String, JavaScriptRunError> {
 }
 
 // Append to the runner's output buffer, refusing to grow it past
-// MAX_OUTPUT_BYTES. A source is at most 64 KiB and the VM stops after 100,000
-// instructions (each one at most one `putchar`), so a program cannot get near
-// the limit today; it stays as a backstop for whoever raises those budgets.
+// MAX_OUTPUT_BYTES. A source is at most MAX_AST_NODES nodes, and each printed
+// number writes at most ~25 bytes, so a program cannot get near the limit
+// today; it stays as a backstop for whoever raises those budgets.
 fn append_output(sink: &Mutex<Vec<u8>>, bytes: &[u8]) -> Result<Value, vm_core::errors::VMError> {
     let mut sink = sink
         .lock()
@@ -2418,6 +2437,50 @@ mod tests {
         assert!(compile_source(&" ".repeat(MAX_SOURCE_BYTES + 1), "too-large").is_err());
         let ast = cst(&"1;".repeat(MAX_AST_NODES + 1));
         assert!(compile_ast(&ast, "too-many-nodes").is_err());
+    }
+
+    /// The step budget fits the biggest printing program the limits admit.
+    ///
+    /// Since PR7c-js every printed number runs the module's own
+    /// `__js_write_number` (about 165 steps for `1e20`), so the old flat
+    /// 100,000-step budget refused `console.log(1e20, 1e20, 1e20)` written
+    /// 200 times. [`MAX_VM_STEPS`] is sized from the node limit instead; this
+    /// test grows the most expensive print line until the compiler refuses
+    /// it, and requires the largest accepted program to run to the end.
+    #[test]
+    fn the_step_budget_covers_every_program_the_limits_accept() {
+        let lines = |line: &str, count: usize| line.repeat(count);
+        assert_eq!(
+            run_source(&lines("console.log(1e20, 1e20, 1e20);\n", 300)).unwrap(),
+            "100000000000000000000 100000000000000000000 100000000000000000000\n"
+                .repeat(300)
+        );
+
+        for line in [
+            "console.log(-1.7976931348623157e+308, -5e-324, 123456789012345680000);\n",
+            "console.log(1e20);\n",
+            "console.log(-0.000001234567890123456);\n",
+        ] {
+            // Largest repetition count the compiler still accepts.
+            assert!(compile_source(line, "budget").is_ok(), "{line:?}");
+            let (mut fits, mut over) = (1usize, 2usize);
+            while compile_source(&lines(line, over), "budget").is_ok() {
+                fits = over;
+                over *= 2;
+            }
+            while over - fits > 1 {
+                let middle = fits + (over - fits) / 2;
+                if compile_source(&lines(line, middle), "budget").is_ok() {
+                    fits = middle;
+                } else {
+                    over = middle;
+                }
+            }
+            let source = lines(line, fits);
+            let output = run_source(&source)
+                .unwrap_or_else(|error| panic!("{fits} × {line:?}: {}", error.message));
+            assert_eq!(output.lines().count(), fits, "{line:?}");
+        }
     }
 
     // ---- top-level numeric let/const (0.2.0) -------------------------------
