@@ -75,13 +75,19 @@ architecture/core introduction era, not a claim about a particular chip.
 | 7 | IBM System/370 | published Principles of Operation | System/360-compatible extension boundary. |
 | 8 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
 | 9 | PA-RISC 1.1 | published architecture manuals | Checked integer core and delayed-control boundary. |
-| 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
+| 10 | SuperH-2 | published programming manuals | Complete locally awaiting independent exact-head review: Spec 07av's bounded SH-2 integer core has complete 64 KiB state, big-endian transport, delayed control flow, integer/memory and multiply/divide families including `MUL.L`, MAC alias sequencing, typed atomic lifecycle, 18 tests, and 92.77% line coverage (950/1,024). Remaining interrupt/peripheral/SoC and later-SuperH work stays explicit below. |
 | 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
 | 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
 
 ## Discovered follow-up work
+
+- After independent review and publication of the completed local SuperH-2
+  cell, resume the chronological independent queue with SPARC V9. SuperH
+  follow-ups remain lower priority: little-endian transport, interrupt entry
+  and wake from `SLEEP`, SR/VBR system transfers, exception return, `TAS.B`,
+  and a source-backed SH-2 microcontroller SoC composition.
 
 ### Gate-integrity audit queue
 
