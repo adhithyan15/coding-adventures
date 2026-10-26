@@ -163,7 +163,12 @@ Fetch requires the first word and every required second word to be wholly
 inside the exact installed image. Terminal fetches never wrap, read erased
 Flash, or synthesize zeros. `restore` validates PC, installed byte range and
 evenness, exact program/data lengths, SREG storage, SP, and halt before
-committing.
+committing. PC validation always enforces the device's 14-bit word-address
+range, including for an unloaded state. It deliberately permits a complete
+post-state whose PC is just outside the installed image: a terminal ordinary
+instruction may produce that state, `restore` must round-trip it, and the next
+`step` then returns `FetchOutsideProgram`. A halted terminal `BREAK` state also
+round-trips and continues to return `Halted`.
 
 Every successful step returns PC before and after, exact two or four fetched
 bytes captured before any mutation, raw word(s), width, stable uppercase
