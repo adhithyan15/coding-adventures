@@ -60,8 +60,11 @@ fn reset_load_snapshot_restore_and_helper_contracts_are_complete() {
     assert_eq!(reset.internal_memory.len(), INTERNAL_MEMORY_BYTES);
     assert_eq!(reset.external_bus_words.len(), EXTERNAL_WORDS);
 
+    cpu.write_internal_word(0x20, 0xa5a5_5a5a).unwrap();
+    let before_load_faults = cpu.snapshot().unwrap();
+    assert_ne!(before_load_faults, reset);
     assert_eq!(cpu.load(&[], 0), Err(ZpuError::EmptyProgram));
-    assert_eq!(cpu.snapshot().unwrap(), reset);
+    assert_eq!(cpu.snapshot().unwrap(), before_load_faults);
     assert_eq!(
         cpu.load(&[0; 2], 0x7fff),
         Err(ZpuError::ProgramOutOfRange {
@@ -69,6 +72,7 @@ fn reset_load_snapshot_restore_and_helper_contracts_are_complete() {
             length: 2,
         })
     );
+    assert_eq!(cpu.snapshot().unwrap(), before_load_faults);
     cpu.load(&[0x0b], 0x123).unwrap();
     assert_eq!(cpu.snapshot().unwrap().pc, 0x123);
     cpu.write_internal_word(0x10, 0x1122_3344).unwrap();
