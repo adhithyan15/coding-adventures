@@ -73,7 +73,7 @@ architecture/core introduction era, not a claim about a particular chip.
 | 5 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
 | 6 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
 | 7 | IBM System/370 | published Principles of Operation | System/360-compatible extension boundary. |
-| 8 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
+| 8 | Motorola 68020 | published programmer reference | Functional first cell complete locally: bounded checked full-format `MOVE.L` and problem-state extensions, including reserved IS/IIS rejection, immutable fetched trace bytes, and unaligned data transfers. |
 | 9 | PA-RISC 1.1 | published architecture manuals | Checked integer core and delayed-control boundary. |
 | 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
 | 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
@@ -94,6 +94,26 @@ architecture/core introduction era, not a claim about a particular chip.
   bitfield, saturation, dual-register, byte/halfword exclusive, and remaining
   wide Thumb-2 encodings. This is non-blocking for the core lifecycle and SoC
   composition boundary, but it precedes declaring full Armv7-M ISA coverage.
+- Expand the bounded Motorola MC68020 first cell after merge. The follow-up
+  queue is: complete inherited MC68000-family coverage with MC68020 effective
+  addresses, bit fields, `CAS`/`CAS2`, `CHK2`/`CMP2`, long multiply/divide,
+  `PACK`/`UNPK`, `CALLM`/`RTM`, `MOVEC`, and architected exception frames.
+  Cache/MMU/coprocessor, interrupt, and bus behavior belong to later CPU/SoC
+  cells and must not be inferred by the instruction-level model.
+
+The MC68020 bounded first cell is complete locally and awaiting independent
+publication review. It owns full D/A, PC/SR,
+USP/ISP/MSP, 16 MiB memory, halt, and installed-image state; implements
+compatible `MOVE.L`/`MOVEA.L` modes, scaled brief and full extension words,
+both memory-indirect orders, long branches, `RTD`, `LINK.L`, `EXTB.L`, and all
+`TRAPcc` forms; and privately delegates a bounded inherited register subset to
+the checked MC68000 core. Eighteen tests cover the claimed surface, complete
+state/lifecycle, aliases, stack banks, typed rollback, all reserved
+index-suppressed indirect selectors and their legal neighbors, immutable trace
+bytes across self-modifying writes, odd-address data and indirect-pointer
+transfers, boundary rollback, and inherited differentials. Strict checks, the
+package BUILD, lessons validation, and 89.28% line coverage (641/718) are green.
+Publication remains blocked only on independent review and merge.
 - Build reusable SoC primitives after the initial missing-core wave: clock and
   reset domains, address-decoded buses, arbitration/backpressure, interrupt
   routing, DMA movement, timers, memory-mapped peripherals, and deterministic
