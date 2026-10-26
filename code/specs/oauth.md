@@ -1654,6 +1654,25 @@ key scheduling, transcript hashing, record protection, certificate validation,
 trust, revocation, I/O, HTTP, OAuth transport, and concrete HTTPS remain
 unavailable.
 
+A fixed-memory `sha384` prerequisite now supplies the missing repository-owned
+FIPS 180-4 digest selected by `TLS_AES_256_GCM_SHA384`. Its one-shot and
+streaming entry points share the SHA-384 initial state, 1024-bit block
+compression, 128-bit length encoding, and 384-bit truncation rules. Streaming
+updates reject a message whose encoded bit length would exceed the standard's
+128-bit field before mutating retained state. Digest snapshots are
+non-destructive, allocate no heap memory, and scrub their temporary state and
+padding; the live hasher also scrubs its retained chaining state and partial
+block on drop. Stable failures contain no input bytes or lengths.
+
+This digest primitive does not implement HMAC, HKDF, `HKDF-Expand-Label`, a
+TLS key schedule, transcript sequencing, cipher-suite negotiation, AEAD, record
+protection, handshake processing, certificate validation, trust, revocation,
+I/O, HTTP, OAuth transport, or any network effect. In particular, its presence
+does not make the existing generic repository HKDF suitable for production TLS
+secret handling. Reviewed fixed-output HMAC-SHA-256/HMAC-SHA-384 and HKDF
+execution remain prerequisites before the label framing can derive traffic
+keys or IVs. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,

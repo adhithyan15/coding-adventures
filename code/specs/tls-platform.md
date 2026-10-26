@@ -596,6 +596,30 @@ must consume one selected cipher-suite value and reviewed repository-owned HKDF
 execution when applying the RFC 8446 section 7.3 `"key"` and `"iv"` labels
 with empty context.
 
+The next package is `sha384`. It supplies the repository-owned FIPS 180-4 hash
+route named by `TLS_AES_256_GCM_SHA384` without widening the existing
+cross-language SHA-512 package contract:
+
+- the one-shot and streaming APIs use SHA-384's distinct eight-word initial
+  state, the shared SHA-512-family 80-round compression function, the 1024-bit
+  message block and 128-bit big-endian bit-length field, and the leftmost six
+  final state words;
+- streaming state retains one fixed 128-byte partial block and a checked
+  128-bit byte count, rejects an unencodable message length before mutation,
+  and never allocates;
+- digest snapshots are non-destructive and use at most two fixed stack blocks
+  for final padding; and
+- temporary and retained chaining state and partial blocks are scrubbed through
+  the repository-owned volatile zeroization primitive, while errors retain no
+  caller bytes or lengths.
+
+SHA-384 is only a digest primitive. It does not add HMAC-SHA-384, HKDF,
+`HKDF-Expand-Label`, a TLS key schedule, transcript sequencing, negotiation,
+AEAD, record protection, handshake processing, certificate validation, trust,
+revocation, I/O, HTTP, OAuth transport, or network authority. The existing
+generic HKDF is not thereby approved for production TLS secrets, and concrete
+HTTPS remains unavailable.
+
 ---
 
 ## Test Strategy
