@@ -66,7 +66,11 @@ that prefix to the first root. Zero divisors, inexact divisions, dynamic
 divisors, and rooted divisors fail closed. The same checked reductions may
 occur between roots when each later root enters by multiplication; exact `/`
 still requires the conservative common divisor to prove every quotient
-integral.
+integral. If a sign-rooted reduction's magnitude equals that common divisor,
+its values are confined to the negative magnitude, zero, and the positive
+magnitude; `div` and `mod` preserve the exact reduced divisor for this stable
+shape, including across another stable multiplied root, and may thereby prove
+a later `/` exact. Wider value sets keep the conservative fallback.
 Checked exact-integer normalizers may provide the sign-rooted transform's
 nonnegative exponent when the right-associative chain stays within the power
 unroll cap. A zero result proves the complete power is exactly one; negative,
