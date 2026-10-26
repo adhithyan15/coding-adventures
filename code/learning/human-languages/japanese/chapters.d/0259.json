@@ -1,0 +1,22 @@
+{
+  "chapter": 259,
+  "title": "Comparing, and How Long",
+  "label": "ch:ja-comparing-and-how-long",
+  "canDo": "I can compare two things (hikōki wa densha yori hayai desu; dochira ga suki desu ka), say which is the most (ichiban), and say how long something takes and from when to when (nijikan gurai; kuji kara goji made).",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-R259-comparing-and-how-long",
+    "kind": "production",
+    "summary": "Complete JA-R259-comparing-and-how-long: compare two places, say which you like best and how long the trip takes.",
+    "assesses": [
+      "JA-GRAMMAR-C259-COMPARE-01",
+      "JA-GRAMMAR-C259-DURATION-01",
+      "JA-GRAMMAR-C259-COMPARE-02",
+      "JA-LEX-C259-DOCHIRA-01",
+      "JA-LEX-C259-ICHIBAN-01",
+      "JA-GRAMMAR-C259-DURATION-02"
+    ]
+  }
+}
