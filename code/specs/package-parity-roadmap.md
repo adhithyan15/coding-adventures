@@ -18028,6 +18028,22 @@ fleet are out of scope. The active parity PRs touch none of these package or
 build-front files; shared bookkeeping will be reconciled only when a
 publication slot opens.
 
+## October 25, 2026: Swift fenced-block prerequisite selection
+
+The current dependency review selected
+`gfm-fenced-block-swift-contract-adoption` as the smallest unblocked Swift GFM
+prerequisite. The neutral TE04 fixture is merged, while the 652-example Swift
+CommonMark reconciliation, missing GFM parser, aggregate Swift GFM owner, and
+facade all remain downstream.
+
+An older local Swift GFM preparation predates that decomposition and combines
+the fenced-block contract with the missing parser and facade work. It is useful
+as implementation evidence but is not publishable as one bounded owner. The
+new branch therefore carries only the Document AST variant, existing
+CommonMark-parser projection, inert HTML fallback, focused native tests, and
+package documentation. It does not claim all sixteen GFM cases or any of the
+downstream owners.
+
 ## October 25, 2026: C# document-AST Windows-front preparation
 
 After locally completing the independent .NET WasmOpcodes coverage repair,
