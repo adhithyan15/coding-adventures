@@ -57,9 +57,18 @@ Source assertions and stub execution alone do not establish native acceptance.
 The emitted keyboard boundary arithmetic is implemented and exercised by the
 compiled C# projection probe (2026-10-26): upper/lower steps, global boundaries,
 short windows, fractional/nonfinite/out-of-range metadata and invalid capacity
-pass. The helper is not connected to keyboard input yet. The cancellable
-continuation, native regeneration and interaction acceptance remain pending;
-this intermediate commit does not fix the observed native navigation defect.
+pass. Keyboard input now requests the shared viewport shift and uses a bounded,
+generation/request-scoped continuation. Executed emitted C# probes cover exact
+offset confirmation, rejected/clamped/delayed dispatch, missing/replaced cells,
+unload, newer requests, focus ownership, focus failure, editor focus retention,
+and one activation. Nested-table lookup isolation also passes. All 395 emitter
+library tests pass. Native regeneration and interaction acceptance remain
+pending; stub execution does not establish that WinUI realizes the new window.
+
+An attempted full Cargo test link exhausted the available disk (LNK1318 PDB
+LIMIT). Cleaning only this checkout's regenerable Cargo target recovered 1.1 GiB.
+The passing library run disables debug symbols and incremental artifacts; no
+source or test coverage was removed. Integration/native validation is pending.
 Existing #16865 warm populated measurements remain valid but do not cover this
 boundary. The separate PickerHost tooling limitation in #14548 does not block
 implementation or independent keyboard probes; do not claim Save/Open acceptance.
