@@ -55,7 +55,7 @@ boundary owns result qualification:
 
 - two-operand signed `IMUL` sets CF and OF from a 128-bit sign-extension
   equivalence network over the low result sign and every discarded high bit;
-- unsigned `MUL` sets CF and OF from a NOR reduction of the high product word;
+- unsigned `MUL` sets CF and OF from an OR reduction of the high product word;
 - signed `IDIV` accepts a quotient only when its high 64 bits are the exact
   sign extension of quotient bit 63; and
 - unsigned `DIV` accepts a quotient only when its high 64 bits are zero.
