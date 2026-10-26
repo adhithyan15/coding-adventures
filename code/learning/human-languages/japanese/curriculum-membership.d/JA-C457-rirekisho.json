@@ -1,0 +1,11 @@
+{
+  "id": "JA-C457-rirekisho",
+  "pathSegment": "JA-PATH-457-JOBHUNT457",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-457-JOBHUNT457",
+      "order": 2
+    }
+  ]
+}

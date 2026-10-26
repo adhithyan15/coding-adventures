@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:8d004f044e591a51",
+  "lessonIds": [
+    "JA-C522-nanika",
+    "JA-C522-dareka",
+    "JA-C522-dokoka",
+    "JA-C522-itsudemo",
+    "JA-C522-nandemo"
+  ],
+  "tex": "japanese/book/chapters/ch522-something-someone-somewhere.tex"
+}

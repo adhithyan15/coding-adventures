@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:f68e20864c02b006",
+  "lessonIds": [
+    "JA-C446-kushami",
+    "JA-C446-hanamizu",
+    "JA-C446-samuke",
+    "JA-C446-ugai",
+    "JA-C446-taichou"
+  ],
+  "tex": "japanese/book/chapters/ch446-a-cold-coming-on.tex"
+}

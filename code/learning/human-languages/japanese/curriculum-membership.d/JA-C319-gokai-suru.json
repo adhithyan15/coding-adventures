@@ -1,0 +1,11 @@
+{
+  "id": "JA-C319-gokai-suru",
+  "pathSegment": "JA-PATH-319-HONNE319",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-319-HONNE319",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C449-kizuato",
+    "language": "japanese",
+    "chapter": 449,
+    "sequence": 26210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:298bb76388203b05"
+  },
+  "findings": []
+}

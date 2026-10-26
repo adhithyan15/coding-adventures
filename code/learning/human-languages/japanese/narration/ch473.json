@@ -1,0 +1,954 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 473,
+  "title": "Simmering and Melting",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:207e47de232af48c",
+  "lessons": [
+    {
+      "id": "JA-C473-nikomu",
+      "sequence": 27420,
+      "title": "にこむ (nikomu) — to stew; to simmer",
+      "headword": "にこむ",
+      "romanization": "nikomu",
+      "gloss": "to stew; to simmer",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65abc7585df1c2db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for wheat flour, then the Japanese for soybeans."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: にこむ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にこむ — nikomu — \"to stew; to simmer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やさいを ながく にこんで ください。 — yasai o nagaku nikonde kudasai — \"Please simmer the vegetables for a long time.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite にこみます, nikomimasu; a godan verb. Past (polite): ははが にくを にこみました。, haha ga niku o nikomimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にこむ (nikomu) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: ni, \"boiling (niru)\" and komu, \"going in\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikomu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikomu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikomu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikomu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yasai o nagaku nikonde kudasai — Please simmer the vegetables for a long time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yasai o nagaku nikonde kudasai* — Please simmer the vegetables for a long time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for wheat flour, then the Japanese for soybeans, then say nikomu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for wheat flour, then the Japanese for soybeans, then say *nikomu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does にこむ (nikomu) mean? (\"To stew; to simmer\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C473-nikomu-type",
+              "prompt": "Say the Japanese for 'to stew'.",
+              "assesses": [
+                "JA-LEX-C473-SIMMER473-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "にこむ",
+                "nikomu"
+              ],
+              "feedback": {
+                "correct": "Right: にこむ (nikomu) is 'to stew; to simmer'.",
+                "incorrect": "'To stew' is にこむ (nikomu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C473-tokasu",
+      "sequence": 27430,
+      "title": "とかす (tokasu) — to melt something; to dissolve",
+      "headword": "とかす",
+      "romanization": "tokasu",
+      "gloss": "to melt something; to dissolve",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:47000e13e902cb62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for soybeans, then the Japanese for to stew."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とかす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とかす — tokasu — \"to melt something; to dissolve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "なべで さとうを とかしました。 — nabe de satō o tokashimashita — \"I melted the sugar in a pot.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite とかします, tokashimasu; a godan verb. Past (polite): ちちが こおりを とかしました。, chichi ga kōri o tokashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とかす (tokasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese: the transitive partner of tokeru, \"to melt\", and its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nabe de satō o tokashimashita — I melted the sugar in a pot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nabe de satō o tokashimashita* — I melted the sugar in a pot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for soybeans, then the Japanese for to stew, then say tokasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for soybeans, then the Japanese for to stew, then say *tokasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とかす (tokasu) mean? (\"To melt something; to dissolve\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C473-tokasu-type",
+              "prompt": "Say the Japanese for 'to melt something'.",
+              "assesses": [
+                "JA-LEX-C473-SIMMER473-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とかす",
+                "tokasu"
+              ],
+              "feedback": {
+                "correct": "Right: とかす (tokasu) is 'to melt something; to dissolve'.",
+                "incorrect": "'To melt something' is とかす (tokasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C473-kogasu",
+      "sequence": 27440,
+      "title": "こがす (kogasu) — to scorch; to burn (food)",
+      "headword": "こがす",
+      "romanization": "kogasu",
+      "gloss": "to scorch; to burn (food)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c9ebfad6a437525",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to stew, then the Japanese for to melt something."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こがす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こがす — kogasu — \"to scorch; to burn (food)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "なべの ごはんを こがしました。 — nabe no gohan o kogashimashita — \"I scorched the rice in the pot.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite こがします, kogashimasu; a godan verb. Past (polite): あにが さかなを こがしました。, ani ga sakana o kogashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こがす (kogasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese: the transitive partner of kogeru, \"to get burnt\", and its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kogasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kogasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kogasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kogasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nabe no gohan o kogashimashita — I scorched the rice in the pot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nabe no gohan o kogashimashita* — I scorched the rice in the pot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to stew, then the Japanese for to melt something, then say kogasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to stew, then the Japanese for to melt something, then say *kogasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こがす (kogasu) mean? (\"To scorch; to burn (food)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C473-kogasu-type",
+              "prompt": "Say the Japanese for 'to scorch'.",
+              "assesses": [
+                "JA-LEX-C473-SIMMER473-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こがす",
+                "kogasu"
+              ],
+              "feedback": {
+                "correct": "Right: こがす (kogasu) is 'to scorch; to burn (food)'.",
+                "incorrect": "'To scorch' is こがす (kogasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C473-fukuramu",
+      "sequence": 27450,
+      "title": "ふくらむ (fukuramu) — to swell; to puff up",
+      "headword": "ふくらむ",
+      "romanization": "fukuramu",
+      "gloss": "to swell; to puff up",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef16512b1c03af40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to melt something, then the Japanese for to scorch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふくらむ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふくらむ — fukuramu — \"to swell; to puff up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もちが おおきく ふくらみました。 — mochi ga ōkiku fukuramimashita — \"The rice cake puffed up big.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ふくらみます, fukuramimasu; a godan verb. Past (polite): もちが ふくらみました。, mochi ga fukuramimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふくらむ (fukuramu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fukuramu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fukuramu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fukuramu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fukuramu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mochi ga ōkiku fukuramimashita — The rice cake puffed up big.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mochi ga ōkiku fukuramimashita* — The rice cake puffed up big.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to melt something, then the Japanese for to scorch, then say fukuramu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to melt something, then the Japanese for to scorch, then say *fukuramu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふくらむ (fukuramu) mean? (\"To swell; to puff up\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C473-fukuramu-type",
+              "prompt": "Say the Japanese for 'to swell'.",
+              "assesses": [
+                "JA-LEX-C473-SIMMER473-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふくらむ",
+                "fukuramu"
+              ],
+              "feedback": {
+                "correct": "Right: ふくらむ (fukuramu) is 'to swell; to puff up'.",
+                "incorrect": "'To swell' is ふくらむ (fukuramu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C473-samasu",
+      "sequence": 27460,
+      "title": "さます (samasu) — to let cool",
+      "headword": "さます",
+      "romanization": "samasu",
+      "gloss": "to let cool",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:132d5d8f3760388e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to scorch, then the Japanese for to swell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さます",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さます — samasu — \"to let cool\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おちゃを すこし さまして ください。 — ocha o sukoshi samashite kudasai — \"Please let the tea cool a little.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite さまします, samashimasu; a godan verb. Past (polite): ははが みそしるを さましました。, haha ga misoshiru o samashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さます (samasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ocha o sukoshi samashite kudasai — Please let the tea cool a little.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ocha o sukoshi samashite kudasai* — Please let the tea cool a little.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to scorch, then the Japanese for to swell, then say samasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to scorch, then the Japanese for to swell, then say *samasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さます (samasu) mean? (\"To let cool\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C473-samasu-type",
+              "prompt": "Say the Japanese for 'to let cool'.",
+              "assesses": [
+                "JA-LEX-C473-SIMMER473-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さます",
+                "samasu"
+              ],
+              "feedback": {
+                "correct": "Right: さます (samasu) is 'to let cool'.",
+                "incorrect": "'To let cool' is さます (samasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R473-review-468-473",
+      "sequence": 27470,
+      "title": "Looking back: from Works of Art to Simmering and Melting",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Works of Art to Simmering and Melting",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a14b6b8333b1169",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for a work of art and an exhibition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a work of art, an exhibition, a sculpture, a masterpiece, to assemble",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a work of art, an exhibition, a sculpture, a masterpiece, to assemble]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a musical instrument, a small bell, to beat a drum, to play music, the tone of an instrument",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a musical instrument, a small bell, to beat a drum, to play music, the tone of an instrument]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a piece of music, sheet music, a folk song, an enka ballad, whistling",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a piece of music, sheet music, a folk song, an enka ballad, whistling]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a stage, acting, to applaud, to sing in a choir, to compose music",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a stage, acting, to applaud, to sing in a choir, to compose music]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ingredients, a seasoning, a green onion, wheat flour, soybeans",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ingredients, a seasoning, a green onion, wheat flour, soybeans]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to stew, to melt something, to scorch, to swell, to let cool",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to stew, to melt something, to scorch, to swell, to let cool]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A work of art? (さくひん, sakuhin.) An exhibition? (てんらんかい, tenrankai.) A sculpture? (ちょうこく, chōkoku.) A masterpiece? (けっさく, kessaku.) To assemble? (くみたてる, kumitateru.) A musical instrument? (がっき, gakki.) A small bell? (すず, suzu.) To beat a drum? (たたく, tataku.) To play music? (かなでる, kanaderu.) The tone of an instrument? (ねいろ, neiro.) A piece of music? (きょく, kyoku.) Sheet music? (がくふ, gakufu.) A folk song? (みんよう, min'yō.) An enka ballad? (えんか, enka.) Whistling? (くちぶえ, kuchibue.) A stage? (ぶたい, butai.) Acting? (えんぎ, engi.) To applaud? (はくしゅする, hakushu suru.) To sing in a choir? (がっしょうする, gasshō suru.) To compose music? (さっきょくする, sakkyoku suru.) Ingredients? (ざいりょう, zairyō.) A seasoning? (ちょうみりょう, chōmiryō.) A green onion? (ねぎ, negi.) Wheat flour? (こむぎこ, komugiko.) Soybeans? (だいず, daizu.) To stew? (にこむ, nikomu.) To melt something? (とかす, tokasu.) To scorch? (こがす, kogasu.) To swell? (ふくらむ, fukuramu.) To let cool? (さます, samasu.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R473-review-468-473-type",
+              "prompt": "Say the Japanese for 'a work of art'.",
+              "assesses": [
+                "JA-LEX-C468-WORKS468-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さくひん",
+                "sakuhin"
+              ],
+              "feedback": {
+                "correct": "Right: さくひん (sakuhin) is 'a work of art; a piece'.",
+                "incorrect": "'A work of art' is さくひん (sakuhin)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

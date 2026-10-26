@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:d7cadc384802fd92",
+  "lessonIds": [
+    "JA-C277-ouyuki",
+    "JA-C277-tsumoru",
+    "JA-C277-fubuki",
+    "JA-C277-teiden",
+    "JA-C277-kogoeru"
+  ],
+  "tex": "japanese/book/chapters/ch277-snowed-in.tex"
+}

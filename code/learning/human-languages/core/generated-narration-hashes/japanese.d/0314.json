@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:19cffa9ea7a827d3",
+  "lessonIds": [
+    "JA-C314-sukkari",
+    "JA-C314-itsunomanika",
+    "JA-C314-yagate",
+    "JA-C314-heru",
+    "JA-C314-omoitsuku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch314.txt",
+  "json": "japanese/narration/ch314.json",
+  "textHash": "fnv1a64:98e3c57562bbf06e",
+  "jsonHash": "fnv1a64:08539ddefc012484",
+  "findings": []
+}

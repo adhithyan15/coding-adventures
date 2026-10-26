@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "Soft and Salty",
+  "label": "ch:ja-soft-and-salty",
+  "canDo": "I can say what food is like and what it contains.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C496-shokuzai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can say what food is like and what it contains.",
+    "assesses": [
+      "JA-LEX-C496-SOFT496-03",
+      "JA-LEX-C496-SOFT496-04",
+      "JA-LEX-C496-SOFT496-05"
+    ]
+  }
+}

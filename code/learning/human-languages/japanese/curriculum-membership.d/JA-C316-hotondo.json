@@ -1,0 +1,11 @@
+{
+  "id": "JA-C316-hotondo",
+  "pathSegment": "JA-PATH-316-MONOGATARI316",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-316-MONOGATARI316",
+      "order": 2
+    }
+  ]
+}

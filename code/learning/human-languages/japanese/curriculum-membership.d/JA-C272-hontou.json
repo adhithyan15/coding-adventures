@@ -1,0 +1,11 @@
+{
+  "id": "JA-C272-hontou",
+  "pathSegment": "JA-PATH-272-SAGI272",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-272-SAGI272",
+      "order": 4
+    }
+  ]
+}

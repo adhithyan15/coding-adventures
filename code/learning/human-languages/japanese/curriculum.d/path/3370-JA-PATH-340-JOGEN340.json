@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-340-JOGEN340",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "JA-EXT-340-JOGEN340"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:515be0f783a0b851",
+  "lessonIds": [
+    "JA-C453-shiryou",
+    "JA-C453-uchiawase",
+    "JA-C453-shimekiri",
+    "JA-C453-teishutsu-suru",
+    "JA-C453-tetsuya-suru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch453.txt",
+  "json": "japanese/narration/ch453.json",
+  "textHash": "fnv1a64:470f9a5d36e2707f",
+  "jsonHash": "fnv1a64:653ec8a560d6af07",
+  "findings": []
+}

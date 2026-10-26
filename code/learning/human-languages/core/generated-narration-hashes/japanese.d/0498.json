@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:1bd3b03ddd579582",
+  "lessonIds": [
+    "JA-C498-kyuujitsu",
+    "JA-C498-fuyuyasumi",
+    "JA-C498-hirune",
+    "JA-C498-inemuri",
+    "JA-C498-yuukyuu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch498.txt",
+  "json": "japanese/narration/ch498.json",
+  "textHash": "fnv1a64:6518d6ddf263aeaf",
+  "jsonHash": "fnv1a64:4d6a4c51e98ec582",
+  "findings": []
+}

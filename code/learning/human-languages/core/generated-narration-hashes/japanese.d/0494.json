@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:65eadf0df04059e9",
+  "lessonIds": [
+    "JA-C494-tamanegi",
+    "JA-C494-kyuuri",
+    "JA-C494-kinoko",
+    "JA-C494-takenoko",
+    "JA-C494-shiitake"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch494.txt",
+  "json": "japanese/narration/ch494.json",
+  "textHash": "fnv1a64:804fec5319d04911",
+  "jsonHash": "fnv1a64:b50b6cb61b29fb97",
+  "findings": []
+}

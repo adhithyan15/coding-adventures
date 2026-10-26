@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:ef636646bc1e6388",
+  "lessonIds": [
+    "JA-C378-man-in",
+    "JA-C378-konzatsu",
+    "JA-C378-gyuugyuu",
+    "JA-C378-tsumekomu",
+    "JA-C378-tachiagaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch378.txt",
+  "json": "japanese/narration/ch378.json",
+  "textHash": "fnv1a64:c5a286a17421acdd",
+  "jsonHash": "fnv1a64:31ef13d3c3dabc76",
+  "findings": []
+}

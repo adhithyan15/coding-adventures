@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C390-shasen",
+    "language": "japanese",
+    "chapter": 390,
+    "sequence": 22940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90fe9bfb78c3323a"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C508-un",
+    "language": "japanese",
+    "chapter": 508,
+    "sequence": 29440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d25ce978f9019f6d"
+  },
+  "findings": []
+}

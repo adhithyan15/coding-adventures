@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C395-ikisugiru",
+    "language": "japanese",
+    "chapter": 395,
+    "sequence": 23220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e82715f546427a9"
+  },
+  "findings": []
+}

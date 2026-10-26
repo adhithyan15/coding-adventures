@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C503-mau",
+    "language": "japanese",
+    "chapter": 503,
+    "sequence": 29220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:154d3a062b57783e"
+  },
+  "findings": []
+}

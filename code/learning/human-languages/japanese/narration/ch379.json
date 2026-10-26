@@ -1,0 +1,805 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 379,
+  "title": "Finding a Seat",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:74eff0a1da78e2de",
+  "lessons": [
+    {
+      "id": "JA-C379-suwaru",
+      "sequence": 22360,
+      "title": "すわる (suwaru) — to sit down",
+      "headword": "すわる",
+      "romanization": "suwaru",
+      "gloss": "to sit down",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:96c96bc02c0814e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to cram in, then the Japanese for to stand up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すわる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すわる — suwaru — \"to sit down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "でんしゃで ははの となりに すわりました。 — densha de haha no tonari ni suwarimashita — \"On the train I sat next to my mother.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite すわります, suwarimasu; a godan verb. Past (polite): おじいさんが ざせきに すわりました。, ojiisan ga zaseki ni suwarimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すわる (suwaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suwaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suwaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suwaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suwaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "densha de haha no tonari ni suwarimashita — On the train I sat next to my mother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *densha de haha no tonari ni suwarimashita* — On the train I sat next to my mother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to cram in, then the Japanese for to stand up, then say suwaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to cram in, then the Japanese for to stand up, then say *suwaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すわる (suwaru) mean? (\"To sit down\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C379-suwaru-type",
+              "prompt": "Say the Japanese for 'to sit down'.",
+              "assesses": [
+                "JA-LEX-C379-SHARYOU379-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すわる",
+                "suwaru"
+              ],
+              "feedback": {
+                "correct": "Right: すわる (suwaru) is 'to sit down'.",
+                "incorrect": "'To sit down' is すわる (suwaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C379-sharyou",
+      "sequence": 22370,
+      "title": "しゃりょう (sharyō) — a railway carriage",
+      "headword": "しゃりょう",
+      "romanization": "sharyō",
+      "gloss": "a railway carriage",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fac1273e769de692",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to stand up, then the Japanese for to sit down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゃりょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゃりょう — sharyō — \"a railway carriage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まえの しゃりょうは すいていました。 — mae no sharyō wa suite imashita — \"The front carriage was empty.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゃりょう (sharyō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sha, \"car\" (Middle Chinese tsyhae) and ryō, \"counter for carriages\" (ljangH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sharyō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sharyō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sharyō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sharyō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mae no sharyō wa suite imashita — The front carriage was empty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mae no sharyō wa suite imashita* — The front carriage was empty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to stand up, then the Japanese for to sit down, then say sharyō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to stand up, then the Japanese for to sit down, then say *sharyō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゃりょう (sharyō) mean? (\"A railway carriage\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C379-sharyou-type",
+              "prompt": "Say the Japanese for 'a railway carriage'.",
+              "assesses": [
+                "JA-LEX-C379-SHARYOU379-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゃりょう",
+                "sharyō",
+                "sharyou",
+                "sharyoo",
+                "sharyo"
+              ],
+              "feedback": {
+                "correct": "Right: しゃりょう (sharyō) is 'a railway carriage'.",
+                "incorrect": "'A railway carriage' is しゃりょう (sharyō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C379-tsuuro",
+      "sequence": 22380,
+      "title": "つうろ (tsūro) — an aisle; a passage",
+      "headword": "つうろ",
+      "romanization": "tsūro",
+      "gloss": "an aisle; a passage",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7ccfd36b4601e9f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to sit down, then the Japanese for a railway carriage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つうろ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つうろ — tsūro — \"an aisle; a passage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "つうろに にもつを おかないで ください。 — tsūro ni nimotsu o okanaide kudasai — \"Please do not leave your bags in the aisle.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つうろ (tsūro) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tsū, \"pass through\" (Middle Chinese thuwng) and ro, \"path\" (luH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsūro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsūro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsūro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsūro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsūro ni nimotsu o okanaide kudasai — Please do not leave your bags in the aisle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsūro ni nimotsu o okanaide kudasai* — Please do not leave your bags in the aisle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to sit down, then the Japanese for a railway carriage, then say tsūro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to sit down, then the Japanese for a railway carriage, then say *tsūro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つうろ (tsūro) mean? (\"An aisle; a passage\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C379-tsuuro-type",
+              "prompt": "Say the Japanese for 'an aisle'.",
+              "assesses": [
+                "JA-LEX-C379-SHARYOU379-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つうろ",
+                "tsūro",
+                "tsuuro",
+                "tsuro"
+              ],
+              "feedback": {
+                "correct": "Right: つうろ (tsūro) is 'an aisle; a passage'.",
+                "incorrect": "'An aisle' is つうろ (tsūro)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C379-shanai",
+      "sequence": 22390,
+      "title": "しゃない (shanai) — inside the train",
+      "headword": "しゃない",
+      "romanization": "shanai",
+      "gloss": "inside the train",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7e02f1981b90e4a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a railway carriage, then the Japanese for an aisle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゃない",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゃない — shanai — \"inside the train\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しゃないで でんわを しないで ください。 — shanai de denwa o shinaide kudasai — \"Please do not make phone calls on the train.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゃない (shanai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sha, \"car\" (Middle Chinese tsyhae) and nai, \"inside\" (nwojH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shanai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shanai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shanai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shanai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shanai de denwa o shinaide kudasai — Please do not make phone calls on the train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shanai de denwa o shinaide kudasai* — Please do not make phone calls on the train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a railway carriage, then the Japanese for an aisle, then say shanai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a railway carriage, then the Japanese for an aisle, then say *shanai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゃない (shanai) mean? (\"Inside the train\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C379-shanai-type",
+              "prompt": "Say the Japanese for 'inside the train'.",
+              "assesses": [
+                "JA-LEX-C379-SHARYOU379-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゃない",
+                "shanai"
+              ],
+              "feedback": {
+                "correct": "Right: しゃない (shanai) is 'inside the train'.",
+                "incorrect": "'Inside the train' is しゃない (shanai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C379-unchin",
+      "sequence": 22400,
+      "title": "うんちん (unchin) — a fare",
+      "headword": "うんちん",
+      "romanization": "unchin",
+      "gloss": "a fare",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2e182189343f3e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an aisle, then the Japanese for inside the train."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うんちん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うんちん — unchin — \"a fare\"."
+            },
+            {
+              "kind": "speech",
+              "text": "みなとまでの うんちんは いくらですか。 — minato made no unchin wa ikura desu ka — \"How much is the fare to the harbour?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うんちん (unchin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are un, \"carry\" (Middle Chinese hjunH) and chin, \"fare\" (nrimH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unchin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unchin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unchin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unchin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "minato made no unchin wa ikura desu ka — How much is the fare to the harbour?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *minato made no unchin wa ikura desu ka* — How much is the fare to the harbour?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an aisle, then the Japanese for inside the train, then say unchin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an aisle, then the Japanese for inside the train, then say *unchin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うんちん (unchin) mean? (\"A fare\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C379-unchin-type",
+              "prompt": "Say the Japanese for 'a fare'.",
+              "assesses": [
+                "JA-LEX-C379-SHARYOU379-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うんちん",
+                "unchin"
+              ],
+              "feedback": {
+                "correct": "Right: うんちん (unchin) is 'a fare'.",
+                "incorrect": "'A fare' is うんちん (unchin)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

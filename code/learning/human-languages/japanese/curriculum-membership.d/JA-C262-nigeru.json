@@ -1,0 +1,11 @@
+{
+  "id": "JA-C262-nigeru",
+  "pathSegment": "JA-PATH-262-JIKO262",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-262-JIKO262",
+      "order": 2
+    }
+  ]
+}

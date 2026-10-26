@@ -1,0 +1,19 @@
+{
+  "chapter": 408,
+  "title": "Incense and Candles",
+  "label": "ch:ja-incense-and-candles",
+  "canDo": "I can talk about prayer, altars and religion.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C408-matsuru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can talk about prayer, altars and religion.",
+    "assesses": [
+      "JA-LEX-C408-SENKOU408-03",
+      "JA-LEX-C408-SENKOU408-04",
+      "JA-LEX-C408-SENKOU408-05"
+    ]
+  }
+}

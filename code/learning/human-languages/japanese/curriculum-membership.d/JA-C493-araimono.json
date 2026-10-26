@@ -1,0 +1,11 @@
+{
+  "id": "JA-C493-araimono",
+  "pathSegment": "JA-PATH-493-FREEZE493",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-493-FREEZE493",
+      "order": 3
+    }
+  ]
+}

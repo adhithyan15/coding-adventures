@@ -1,0 +1,11 @@
+{
+  "id": "JA-C295-omikuji",
+  "pathSegment": "JA-PATH-295-HATSUMOUDE295",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-295-HATSUMOUDE295",
+      "order": 1
+    }
+  ]
+}

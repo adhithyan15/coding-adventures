@@ -1,0 +1,11 @@
+{
+  "id": "JA-C347-tsuideni",
+  "pathSegment": "JA-PATH-347-HOUMON347",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-347-HOUMON347",
+      "order": 3
+    }
+  ]
+}

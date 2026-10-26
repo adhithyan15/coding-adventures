@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:b5fa9f7b83833b16",
+  "lessonIds": [
+    "JA-C386-ryoken",
+    "JA-C386-zeikan",
+    "JA-C386-nyuukoku",
+    "JA-C386-shukkoku",
+    "JA-C386-toridasu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch386.txt",
+  "json": "japanese/narration/ch386.json",
+  "textHash": "fnv1a64:2be3ce4a49c3e5f7",
+  "jsonHash": "fnv1a64:919eba767bb452ac",
+  "findings": []
+}

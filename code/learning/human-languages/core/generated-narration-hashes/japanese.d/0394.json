@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:03717fa67f907581",
+  "lessonIds": [
+    "JA-C394-sakamichi",
+    "JA-C394-kewashii",
+    "JA-C394-haba",
+    "JA-C394-kudaru",
+    "JA-C394-koeru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch394.txt",
+  "json": "japanese/narration/ch394.json",
+  "textHash": "fnv1a64:4191c949e1d1f524",
+  "jsonHash": "fnv1a64:ee3370759336caa1",
+  "findings": []
+}

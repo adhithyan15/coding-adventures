@@ -1,0 +1,812 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 412,
+  "title": "Mountain Passes and High Plains",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:d71c1265aea3227f",
+  "lessons": [
+    {
+      "id": "JA-C412-touge",
+      "sequence": 24060,
+      "title": "とうげ (tōge) — a mountain pass",
+      "headword": "とうげ",
+      "romanization": "tōge",
+      "gloss": "a mountain pass",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af74db0cb639dab8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to surround, then the Japanese for to scoop up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とうげ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とうげ — tōge — \"a mountain pass\"."
+            },
+            {
+              "kind": "speech",
+              "text": "くるまで とうげを こえました。 — kuruma de tōge o koemashita — \"We crossed the mountain pass by car.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とうげ (tōge) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōge*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōge, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōge*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuruma de tōge o koemashita — We crossed the mountain pass by car.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuruma de tōge o koemashita* — We crossed the mountain pass by car.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to surround, then the Japanese for to scoop up, then say tōge again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to surround, then the Japanese for to scoop up, then say *tōge* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とうげ (tōge) mean? (\"A mountain pass\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C412-touge-type",
+              "prompt": "Say the Japanese for 'a mountain pass'.",
+              "assesses": [
+                "JA-LEX-C412-TOUGE412-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とうげ",
+                "tōge",
+                "touge",
+                "tooge",
+                "toge"
+              ],
+              "feedback": {
+                "correct": "Right: とうげ (tōge) is 'a mountain pass'.",
+                "incorrect": "'A mountain pass' is とうげ (tōge)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C412-choujou",
+      "sequence": 24070,
+      "title": "ちょうじょう (chōjō) — a summit; the top",
+      "headword": "ちょうじょう",
+      "romanization": "chōjō",
+      "gloss": "a summit; the top",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:990eabe80266a81c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to scoop up, then the Japanese for a mountain pass."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちょうじょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちょうじょう — chōjō — \"a summit; the top\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やまの ちょうじょうは さむかったです。 — yama no chōjō wa samukatta desu — \"It was cold at the top of the mountain.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちょうじょう (chōjō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chō, \"summit\" (Middle Chinese tengX) and jō, \"above\" (dzyangH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōjō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōjō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōjō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōjō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yama no chōjō wa samukatta desu — It was cold at the top of the mountain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yama no chōjō wa samukatta desu* — It was cold at the top of the mountain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to scoop up, then the Japanese for a mountain pass, then say chōjō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to scoop up, then the Japanese for a mountain pass, then say *chōjō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちょうじょう (chōjō) mean? (\"A summit; the top\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C412-choujou-type",
+              "prompt": "Say the Japanese for 'a summit'.",
+              "assesses": [
+                "JA-LEX-C412-TOUGE412-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちょうじょう",
+                "chōjō",
+                "choujou",
+                "choojoo",
+                "chojo"
+              ],
+              "feedback": {
+                "correct": "Right: ちょうじょう (chōjō) is 'a summit; the top'.",
+                "incorrect": "'A summit' is ちょうじょう (chōjō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C412-sanmyaku",
+      "sequence": 24080,
+      "title": "さんみゃく (sanmyaku) — a mountain range",
+      "headword": "さんみゃく",
+      "romanization": "sanmyaku",
+      "gloss": "a mountain range",
+      "script": "japanese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:2d2ff1d61b39144a",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a mountain pass, then the Japanese for a summit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さんみゃく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さんみゃく — sanmyaku — \"a mountain range\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ひこうきから さんみゃくが みえました。 — hikōki kara sanmyaku ga miemashita — \"We could see the mountain range from the plane.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さんみゃく (sanmyaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are san, \"mountain\" (Middle Chinese srean) and myaku, \"vein\" (meak) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanmyaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanmyaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanmyaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanmyaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikōki kara sanmyaku ga miemashita — We could see the mountain range from the plane.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikōki kara sanmyaku ga miemashita* — We could see the mountain range from the plane.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a mountain pass, then the Japanese for a summit, then say sanmyaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a mountain pass, then the Japanese for a summit, then say *sanmyaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さんみゃく (sanmyaku) mean? (\"A mountain range\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C412-sanmyaku-type",
+              "prompt": "Say the Japanese for 'a mountain range'.",
+              "assesses": [
+                "JA-LEX-C412-TOUGE412-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さんみゃく",
+                "sanmyaku"
+              ],
+              "feedback": {
+                "correct": "Right: さんみゃく (sanmyaku) is 'a mountain range'.",
+                "incorrect": "'A mountain range' is さんみゃく (sanmyaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C412-kougen",
+      "sequence": 24090,
+      "title": "こうげん (kōgen) — a plateau; highlands",
+      "headword": "こうげん",
+      "romanization": "kōgen",
+      "gloss": "a plateau; highlands",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f7ad69379fb40eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a summit, then the Japanese for a mountain range."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こうげん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こうげん — kōgen — \"a plateau; highlands\"."
+            },
+            {
+              "kind": "speech",
+              "text": "なつは こうげんが すずしいです。 — natsu wa kōgen ga suzushii desu — \"The highlands are cool in summer.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こうげん (kōgen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kō, \"high\" (Middle Chinese kaw) and gen, \"plain\" (ngjwon) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōgen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōgen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōgen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōgen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natsu wa kōgen ga suzushii desu — The highlands are cool in summer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natsu wa kōgen ga suzushii desu* — The highlands are cool in summer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a summit, then the Japanese for a mountain range, then say kōgen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a summit, then the Japanese for a mountain range, then say *kōgen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こうげん (kōgen) mean? (\"A plateau; highlands\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C412-kougen-type",
+              "prompt": "Say the Japanese for 'a plateau'.",
+              "assesses": [
+                "JA-LEX-C412-TOUGE412-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こうげん",
+                "kōgen",
+                "kougen",
+                "koogen",
+                "kogen"
+              ],
+              "feedback": {
+                "correct": "Right: こうげん (kōgen) is 'a plateau; highlands'.",
+                "incorrect": "'A plateau' is こうげん (kōgen)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C412-tozan",
+      "sequence": 24100,
+      "title": "とざん (tozan) — mountain climbing",
+      "headword": "とざん",
+      "romanization": "tozan",
+      "gloss": "mountain climbing",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab9d6cd7c48d72dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a mountain range, then the Japanese for a plateau."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とざん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とざん — tozan — \"mountain climbing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しゅうまつに ちちと とざんに いきました。 — shūmatsu ni chichi to tozan ni ikimashita — \"At the weekend I went mountain climbing with my father.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とざん (tozan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are to, \"ascend\" (Middle Chinese tong) and zan, \"mountain\" (srean) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tozan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tozan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tozan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tozan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shūmatsu ni chichi to tozan ni ikimashita — At the weekend I went mountain climbing with my father.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shūmatsu ni chichi to tozan ni ikimashita* — At the weekend I went mountain climbing with my father.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a mountain range, then the Japanese for a plateau, then say tozan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a mountain range, then the Japanese for a plateau, then say *tozan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とざん (tozan) mean? (\"Mountain climbing\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C412-tozan-type",
+              "prompt": "Say the Japanese for 'mountain climbing'.",
+              "assesses": [
+                "JA-LEX-C412-TOUGE412-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とざん",
+                "tozan"
+              ],
+              "feedback": {
+                "correct": "Right: とざん (tozan) is 'mountain climbing'.",
+                "incorrect": "'Mountain climbing' is とざん (tozan)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

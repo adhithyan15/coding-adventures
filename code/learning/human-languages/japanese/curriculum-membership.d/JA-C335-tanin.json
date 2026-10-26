@@ -1,0 +1,11 @@
+{
+  "id": "JA-C335-tanin",
+  "pathSegment": "JA-PATH-335-DANTAI335",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-335-DANTAI335",
+      "order": 4
+    }
+  ]
+}

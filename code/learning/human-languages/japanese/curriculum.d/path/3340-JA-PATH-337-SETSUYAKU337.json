@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-337-SETSUYAKU337",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "JA-EXT-337-SETSUYAKU337"
+  ],
+  "after": []
+}

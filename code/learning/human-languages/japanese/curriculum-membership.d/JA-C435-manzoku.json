@@ -1,0 +1,11 @@
+{
+  "id": "JA-C435-manzoku",
+  "pathSegment": "JA-PATH-435-CONTENT435",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-435-CONTENT435",
+      "order": 0
+    }
+  ]
+}

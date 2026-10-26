@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C509-kujibiki",
+    "language": "japanese",
+    "chapter": 509,
+    "sequence": 29500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3cc3377c532809d7"
+  },
+  "findings": []
+}

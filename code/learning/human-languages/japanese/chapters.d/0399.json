@@ -1,0 +1,19 @@
+{
+  "chapter": 399,
+  "title": "Futon, Pillow and Blanket",
+  "label": "ch:ja-futon-pillow-and-blanket",
+  "canDo": "I can ask for bedding and get ready for bed.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C399-nekorobu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can ask for bedding and get ready for bed.",
+    "assesses": [
+      "JA-LEX-C399-MAKURA399-03",
+      "JA-LEX-C399-MAKURA399-04",
+      "JA-LEX-C399-MAKURA399-05"
+    ]
+  }
+}

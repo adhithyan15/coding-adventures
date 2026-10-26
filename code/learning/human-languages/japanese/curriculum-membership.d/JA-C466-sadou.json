@@ -1,0 +1,11 @@
+{
+  "id": "JA-C466-sadou",
+  "pathSegment": "JA-PATH-466-ARTS466",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-466-ARTS466",
+      "order": 2
+    }
+  ]
+}

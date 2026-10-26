@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:002ab35a1ccc1ac8",
+  "lessonIds": [
+    "JA-C341-settoku-suru",
+    "JA-C341-unagasu",
+    "JA-C341-hikitomeru",
+    "JA-C341-narubeku",
+    "JA-C341-tatoeba"
+  ],
+  "tex": "japanese/book/chapters/ch341-persuading-someone.tex"
+}

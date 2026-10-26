@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "Clay and China",
+  "label": "ch:ja-clay-and-china",
+  "canDo": "I can talk about clay, pots and bowls.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C483-katamaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can talk about clay, pots and bowls.",
+    "assesses": [
+      "JA-LEX-C483-CLAY483-03",
+      "JA-LEX-C483-CLAY483-04",
+      "JA-LEX-C483-CLAY483-05"
+    ]
+  }
+}
