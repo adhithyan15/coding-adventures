@@ -159,8 +159,9 @@ Pinning varies between lanes. `release-venture.yml` pins every action,
 first-party ones included, to a 40-character SHA. `release-task-app.yml` pins
 third-party actions but uses `actions/checkout@v7` and other first-party tags.
 `publish.yml` interpolates `${{ github.event.release.tag_name }}` straight
-into a shell script. A new lane should copy the first of these patterns and
-neither of the other two (§9.2).
+into a shell script. That is a script-injection path that can reach
+`RUBYGEMS_API_KEY` (§9.3). A new lane should copy the first of these
+patterns and neither of the other two (§9.2).
 
 ### 2.4 Repository facts that bear on the choice
 
@@ -173,14 +174,20 @@ These were checked on 2026-10-26.
 - **GitHub release attestations already work.** `gh release verify
   task-app-v0.5.12` reports "Release task-app-v0.5.12 verified!" and lists a
   digest for each of its 13 assets. A consumer can check any asset with
-  `gh release verify-asset <tag> <file>`.
+  `gh release verify-asset <tag> <file>`. GitHub attests whatever is
+  attached to a release, including a file uploaded by hand. So this proves
+  integrity, not who built the bytes (§8.4).
 - **The only deployment environment is `github-pages`.** The `pypi`
   environment that `publish.yml` names does not exist, so it carries no
   protection rules today.
-- **One ruleset exists, `BlockMainPush`, and it targets branches.** No tag
-  ruleset exists. A published release protects its own tag, but nothing stops
-  someone with write access from creating an unpublished tag with a future
-  package's name.
+- **One ruleset exists, `BlockMainPush`, and it targets branches.** It
+  requires a pull request, but `required_approving_review_count` is 0 and
+  `require_code_owner_review` is false. There is no `CODEOWNERS` file. So a
+  change reaches `main` without a second person's approval (§8.8).
+- **No tag ruleset exists.** A published release protects its own tag. But
+  anyone with write access can create a tag with a future package's name, or
+  a whole release with hand-made assets, which GitHub then attests
+  automatically (§8.4).
 - **Name availability, read-only lookups on 2026-10-26:** `mosaic` is taken on
   both crates.io and npm. `mosaic-pkg-toolkit`, `mosaic-compile` and
   `mosaic-package-manifest` are free on crates.io, and `mosaic-pkg-toolkit`
@@ -209,10 +216,21 @@ installed.
 1. **Immutable.** A published `name@version` never changes bytes.
 2. **Verifiable offline.** CI builds must pass a `--locked --offline` check
    that touches no network. This is B03's rule applied to Mosaic.
-3. **Provenance.** A consumer can tell that the bytes came from this
-   repository, built by a specific workflow from a specific commit.
-4. **No squatting surface.** Package names should not be claimable by third
-   parties in a namespace consumers trust.
+3. **Provenance, not only integrity.** A consumer must be able to check that
+   an archive was *built by the release workflow, from a commit on `main`*,
+   not merely that it is the file attached to a release. Those are different
+   claims (§8.4). GitHub's release attestation, which immutable releases
+   produce automatically, says an asset is the one attached to a tag. That is
+   integrity, and GitHub attests a hand-uploaded file just as readily. Only a
+   build-provenance attestation, signed with the release workflow's identity,
+   says who built the bytes.
+4. **A namespace only the lane can fill.** Third parties must not be able to
+   claim package names in a namespace consumers trust. Hosting the packages
+   in this repository keeps outsiders out, but it does not keep out this
+   repository's writers: anyone with `contents: write` can create a release.
+   So package names are protected by property 3's provenance check, not by
+   where the files are hosted. That check in turn trusts whatever merges to
+   `main` (§8.8).
 5. **Least secret.** No long-lived publish tokens. The RubyGems pattern in
    `publish.yml` is the counter-example.
 6. **Cheap for the maintainer.** No new accounts unless one buys something
@@ -231,9 +249,9 @@ installed.
 | **Fits the artifact?** | Poorly: a Rust crate that carries non-Rust data | Poorly outside web: only npm users have the client | npm/Maven/NuGet registries: same as (b). GHCR OCI artifact: yes | **Yes**, designed for it | Yes, the sources as they are |
 | **mosaic-compile reads it** | Only by learning Cargo's registry cache layout, which is not a stable interface | Only by learning `node_modules` | Needs an OCI client (`oras`) or a reimplemented OCI pull | **Directly**, with one new reader (§6) | Needs `git` and a partial clone of a very large repository |
 | **Non-Rust consumers** | Need Cargo | Need npm | npm/Maven/NuGet: an **auth token even for public installs**. GHCR: anonymous pulls | Anonymous HTTPS download | Need git |
-| **Name squatting** | Global first-come namespace (`mosaic` already taken) | Global namespace, unless we own a scope | Namespaced by owner | **Namespaced by repository.** Only this repo's writers can create its releases | Namespaced by repository |
+| **Name squatting** | Global first-come namespace (`mosaic` already taken) | Global namespace, unless we own a scope | Namespaced by owner | **Namespaced by repository.** Outsiders cannot claim names. Every repo writer can still create a release, so names are protected by the provenance check (§8.4), not by the hosting | Namespaced by repository |
 | **Immutability** | Yank only, no overwrite | Version numbers are never reused, but unpublish is possible inside a short window | GHCR: digests immutable, tags mutable | **Enforced**: immutable releases are on (§2.4) | Tags are mutable, and no tag ruleset exists |
-| **Provenance** | Trusted publishing (OIDC) exists; first publish of a new crate needs a token | Trusted publishing and npm provenance (OIDC + Sigstore) | Artifact attestations can be pushed as OCI referrers | **GitHub release attestation, already working** (§2.4), plus optional `actions/attest-build-provenance` | Commit SHA only |
+| **Provenance** | Trusted publishing (OIDC) exists; first publish of a new crate needs a token | Trusted publishing and npm provenance (OIDC + Sigstore) | Artifact attestations can be pushed as OCI referrers | **Mandatory** SLSA build provenance (`actions/attest-build-provenance`), checked against the release workflow's identity. The automatic release attestation (§2.4) gives integrity only | Commit SHA only |
 | **Offline/CI reproducibility** | `Cargo.lock` checksums | `package-lock.json` integrity | Pin by digest | Lockfile SHA-256 + cache (§8) | Pin by commit SHA |
 | **Accounts and secrets** | crates.io account and an initial API token | npm account, 2FA, scope ownership, possibly an initial token | None new (`GITHUB_TOKEN` with `packages: write`) | **None new** (`GITHUB_TOKEN` with `contents: write`) | None |
 | **Cost** | Free | Free | Free for public packages | Free | Free |
@@ -314,13 +332,16 @@ lockfile. `mosaic-compile pkg fetch` downloads and verifies it into a cache,
 and the resolver reads only from that verified cache (§8).
 
 - **For:** It is built for the artifact `mosaic-compile` actually consumes.
-  It needs **no new account and no secret**. The namespace cannot be
-  squatted. Immutability and release attestations are already on and already
-  proven by TaskApp. It reuses an identity scheme the maintainer already runs
+  It needs **no new account and no secret**. Outsiders cannot claim names,
+  and immutability is already on and already proven by TaskApp. Build
+  provenance comes from a pinned GitHub action and needs no extra account
+  (§8.4). It reuses an identity scheme the maintainer already runs
   (`task-app-v*`), and anyone can download it anonymously over HTTPS with no
   package manager.
-- **Against:** We write the tooling: archive writer and reader, lockfile,
-  cache, and release script. That is real code with a security boundary (§6.3,
+- **Against:** Hosting alone does not stop a repository writer from making
+  a release by hand. The mandatory provenance check (§8.4) does, and it makes
+  the trust root "whatever merges to `main`" (§8.8). We also write the
+  tooling: archive writer and reader, lockfile, cache, and release script. That is real code with a security boundary (§6.3,
   §8.4). There is no discovery or search, and no "latest compatible version"
   query without an index (§8.7). Package releases share the release list with
   TaskApp and human-languages releases. `--latest=false` keeps them from
@@ -347,8 +368,11 @@ locks the commit SHA, the way Go modules or SwiftPM resolve git dependencies.
 > **Proposed:** adopt **(d)**. Mosaic component packages are **not** crates.
 > They are published as `.mospkg` archives attached to immutable GitHub
 > Releases tagged `<package-name>-v<semver>`, through a manually approved
-> `workflow_dispatch` lane modelled on `release-task-app.yml`. The resolver
-> consumes them only through a lockfile-pinned, verified local cache.
+> `workflow_dispatch` lane modelled on `release-task-app.yml`. That lane
+> signs each archive with **mandatory SLSA build provenance**, and every
+> consumer verifies it against the lane's workflow identity on `main`. The
+> resolver consumes packages only through lockfile-pinned, content-addressed
+> archives.
 > `publish = false` stays on every harness `Cargo.toml`.
 >
 > Keep the format registry-neutral, so that (b) npm or (c) GHCR can later
@@ -364,17 +388,26 @@ locks the commit SHA, the way Go modules or SwiftPM resolve git dependencies.
 - (c)'s npm registry adds a token to every consumer's CI, and its OCI store
   adds an OCI client.
 - (e) makes each consumer clone this repository.
-- (d) is the only option that needs no new account or secret, cannot be
-  squatted, and already has immutability and attestation working in this
-  repository.
+- (d) is the only option that needs no new account or secret, keeps the
+  namespace inside this repository, and already has immutability working
+  here. Its weak point is that any writer can create a release. Mandatory
+  build provenance closes it (§8.4), which leaves the trust root at whatever
+  merges to `main` (§8.8). Release attestation plus immutability gives
+  integrity only, never provenance.
 
-**What (d) costs**, so it can be weighed: about four implementation PRs
-before the first publish (§10). Three of them add security-relevant parsing
-or filesystem code, and each needs `/security-review`.
+**What (d) costs**, so it can be weighed: five implementation PRs before the
+first publish (Phases 1, 1b, 2, 3 and 4 in §10). Two of them (Phases 2 and 3)
+add security-relevant parsing and filesystem code, and the lane (Phase 4)
+holds write and OIDC tokens. Each of those three needs `/security-review`.
+The proposal also asks the maintainer to tighten review on `main` for the
+lane's own files (§8.8), because provenance cannot be stronger than the
+review of the workflow that signs it.
 
-**If the maintainer prefers a registry anyway**, §6 to §8 still apply
-unchanged. The archive, lockfile and cache design does not depend on where
-the bytes are hosted. Only §9's publish step changes.
+**If the maintainer prefers a registry anyway**, §6, §7 and most of §8 still
+apply. The archive, lockfile and cache design does not depend on where the
+bytes are hosted. What changes is the provenance check (§8.4), which becomes
+that registry's own mechanism (npm provenance, or crates.io trusted
+publishing), and §9's publish step.
 
 ---
 
@@ -447,12 +480,28 @@ files:
 | `src/*.mil`, `src/*.mll`, `src/*.msl`, `src/*.stories.json` | |
 | The file named by `[styles].token_palette` | Other `tokens/` files |
 
-`pkg pack` **refuses** a package whose manifest has `[host_effects]`,
-`[host_assets]` or `[app]`. Those sections carry native host code
-(`main.cpp`, Kotlin, C#) and third-party build dependencies that would
-**execute in the consumer's build**. That is a different trust model, and no
-library package uses them today (§2.1). Supporting them is a later format
-version (§11 Q7).
+`pkg pack` **refuses**:
+
+- A manifest with any top-level section other than `[package]`,
+  `[components]`, `[dependencies]`, `[styles]` and `[kernel]`. That rules out
+  `[host_effects]`, `[host_assets]` and `[app]`, which carry native host code
+  (`main.cpp`, Kotlin, C#) and third-party build dependencies that would
+  **execute in the consumer's build**. That is a different trust model, and
+  no library package uses those sections today (§2.1). Supporting them is a
+  later format version (§11 Q7). It also rules out the consumer-side
+  `[sources]` table (§8.1).
+- A dependency entry that is not a plain version string. A published package
+  may not carry `path` or `source`, because a transitive dependency resolves
+  under the *root* consumer's source policy (§8.1).
+- A `[styles].token_palette` that is not exactly `tokens/<name>.json`, with
+  `<name>` matching `[A-Za-z0-9_-]+`. The manifest parser accepts any safe
+  relative JSON path today, so pack is stricter than it.
+- A git tree entry whose mode is not `100644` or `100755`. Pack reads the
+  package from the git tree at the source commit (§6.4), so this check makes
+  it impossible to pack a symlink (`120000`) or a submodule gitlink
+  (`160000`), even when the allowlist matches its name. On 2026-10-26 all 473
+  tracked files under `code/packages/mosaic/` were `100644`. The archive does
+  not record the executable bit.
 
 ### 6.4 Determinism
 
@@ -472,32 +521,69 @@ digests (§9.1, gate G4).
 
 ### 6.5 Reader rules
 
-The reader treats every archive as hostile. It checks these rules **before**
-writing anything to disk. Note that a lockfile hash (§8.4) is always checked
-first, so in practice the reader only parses bytes whose hash is already
-pinned.
+**These rules are the security boundary by themselves.** It would be
+convenient to say the reader only ever parses bytes whose hash is already
+pinned. That holds for builds, but not for three other callers:
 
-1. Size limits: the archive is at most 16 MiB, has at most 4,096 entries, and
-   no entry exceeds 8 MiB. (Proposed numbers, about 30× the toolkit.)
-2. Only compression method 0. The local header and the central directory
-   must agree on name, sizes and CRC, and the CRC must match the data.
-3. Entry names are UTF-8 and are **rejected, not lossily converted**, if
-   they are not. (The in-house ZIP reader uses `from_utf8_lossy` and lets
-   the first of two duplicate names win. The `.mospkg` reader must wrap it
-   with stricter checks rather than inherit that behaviour.)
-4. Each path is relative, uses `/`, has no `.` or `..` component, no empty
-   component, no backslash, no drive letter, no NUL or control character,
-   and no Windows reserved name (`CON`, `NUL`, `COM1` …). Each component
-   matches `[A-Za-z0-9._-]+` and is at most 255 bytes. Every path starts
-   with the single top-level directory.
-5. No duplicates, including **case-insensitive** duplicates, because the
-   default macOS and Windows filesystems would fold them into one file.
-6. Only regular files: symlink, device and directory-with-data attributes
-   are rejected.
-7. The set of entries equals `mospkg.json`'s `files` plus `mospkg.json`
-   itself, and every size and SHA-256 matches.
-8. The archived manifest passes `mosaic-package-manifest` validation and
-   §6.3's section rules.
+- `pkg add` parses a freshly downloaded archive before any lock entry exists.
+- `pkg verify` is handed an arbitrary file.
+- The release lane verifies the archive it has just packed.
+
+So the reader must be safe on hostile input. It checks every rule below
+**before** it writes anything to disk or hands any byte to a compiler.
+
+1. **Size.** The archive is at most 16 MiB, has at most 4,096 entries, and no
+   entry exceeds 8 MiB. These are proposed numbers, about 30× the toolkit.
+2. **ZIP structure.**
+   - There is exactly one end-of-central-directory record, it is at the end
+     of the file, and its comment is **empty**. There is exactly one central
+     directory. There are no ZIP64 records and no extra fields.
+   - Local entries are contiguous and do not overlap. Together with the
+     central directory they cover the whole file:
+     - the first local header is at offset 0;
+     - each entry starts where the previous one ended;
+     - the central directory starts where the last entry ends.
+
+     So there is no prefix, no gap and no trailing data.
+   - Every entry uses compression method 0. General-purpose flag bit 0
+     (encryption) and bit 3 (data descriptor) are clear. The only flag that
+     may be set is bit 11 (UTF-8 names).
+   - Each local header agrees with its central-directory record on name,
+     flags, sizes and CRC-32, and the CRC matches the data.
+3. **Names are UTF-8.** A name that is not valid UTF-8 is rejected. It is
+   never converted lossily. (The in-house ZIP reader uses `from_utf8_lossy`
+   and lets the first of two duplicate names win. The `.mospkg` reader must
+   wrap it with stricter checks rather than inherit either behaviour.)
+4. **Path syntax.**
+   - A path is relative and `/`-separated. It has no empty component, no `.`
+     or `..`, no backslash, no drive letter or colon, and no NUL or control
+     character.
+   - Each component matches `[A-Za-z0-9._-]+` and is at most 255 bytes. A
+     component may not end in `.` or consist only of dots.
+   - Every path starts with the single top-level directory.
+5. **Windows device names.** Take the part of each component before its
+   first `.`. The component is rejected if that part, compared
+   case-insensitively, is `CON`, `PRN`, `AUX`, `NUL`, `COM0`–`COM9` or
+   `LPT0`–`LPT9`. So `nul`, `Con.txt` and `com1.mil` are all rejected.
+6. **No duplicates after normalisation.** The duplicate check runs after
+   rules 4 and 5, on case-folded paths, because the default macOS and Windows
+   filesystems fold case. Any two names one filesystem would treat as the same
+   file are rejected.
+7. **Only regular files.** Directory entries and entries with symlink or
+   device attributes are rejected.
+8. **File list.** The set of entries equals `mospkg.json`'s `files` plus
+   `mospkg.json` itself, and every size and SHA-256 matches.
+9. **Manifest-referenced paths are confined.** Every path the archived
+   manifest names must satisfy rules 4–6, must name an entry in `files`, and
+   must sit under the directory its section allows. Today that means only
+   `[styles].token_palette`, which must be `tokens/<name>.json` (§6.3).
+   Consumers open package files only through this verified list (§8.3).
+10. **Manifest sections.** The archived manifest must pass
+    `mosaic-package-manifest` validation. Format `mospkg/1` allows only
+    `[package]`, `[components]`, `[dependencies]`, `[styles]` and `[kernel]`.
+    Any other top-level table is rejected, never ignored: `[host_effects]`,
+    `[host_assets]`, `[app]`, `[sources]`, and any section invented later.
+    Dependency entries must be plain version strings.
 
 ---
 
@@ -647,256 +733,512 @@ behaviour-neutral, because the builds already compile against 0.16.0.
 
 ## 8. Resolver and artifact-builder changes (proposed)
 
-### 8.1 The lockfile: `mosaic-package.lock`
+### 8.1 Declared sources and the lockfile
 
-UI29 §8 Q4 recommended a Cargo-shaped lockfile. A consumer that uses
-published packages commits one beside its manifest:
+**The consumer's manifest says where each package may come from.** A
+lockfile records what was resolved. It must not also decide what is
+*allowed*, or editing that one generated file could redirect a dependency.
+So the allowed source lives in the consumer's `mosaic-package.toml`, which is
+reviewed like code:
 
 ```toml
-# mosaic-package.lock — written by `mosaic-compile pkg lock`. Do not edit.
+[sources]
+# Default source for every dependency that does not name its own.
+# Proposed form: "github-release:<owner>/<repo>".
+default = "github-release:adhithyan15/coding-adventures"
+
+[dependencies]
+mosaic-pkg-toolkit = "0.16.0"                      # from [sources].default
+mosaic-pkg-sheet   = { version = "0.2.0", source = "github-release:adhithyan15/coding-adventures" }
+my-widgets         = { version = "0.1.0", path = "../my-widgets" }   # explicit path dependency
+```
+
+- The bare-string form stays valid, so every existing manifest parses
+  unchanged.
+- `path` is relative to the manifest, must stay inside the project root
+  (§8.3), and names a directory, not an archive. A dependency cannot have
+  both `source` and `path`.
+- `[sources]` is a consumer-side table. A published archive may not contain
+  it, and its dependencies may not use `path` or `source` (§6.5 rule 10). A
+  transitive dependency resolves under the **root** consumer's source policy.
+
+A consumer that uses published packages commits `mosaic-package.lock` beside
+its manifest. UI29 §8 Q4 asked for a Cargo-shaped lockfile:
+
+```toml
+# mosaic-package.lock — written by `mosaic-compile pkg add`. Do not edit.
 version = 1
 
 [[package]]
-name    = "mosaic-pkg-toolkit"
-version = "0.16.0"
-source  = "github-release:adhithyan15/coding-adventures"
-tag     = "mosaic-pkg-toolkit-v0.16.0"
-archive = "mosaic-pkg-toolkit-0.16.0.mospkg"
-sha256  = "<64-hex of the whole archive>"
+name     = "mosaic-pkg-toolkit"
+version  = "0.16.0"
+source   = "github-release:adhithyan15/coding-adventures"
+tag      = "mosaic-pkg-toolkit-v0.16.0"
+archive  = "mosaic-pkg-toolkit-0.16.0.mospkg"
+sha256   = "<all 64 hex of the whole archive>"
+commit   = "<40-hex source commit, as verified in the provenance>"
+attested = true
 dependencies = []
 ```
 
-- The lockfile lists the **whole** graph, transitive dependencies included.
-- The download URL is derived, never stored:
-  `https://github.com/<repo>/releases/download/<tag>/<archive>`.
-  `<repo>` must match `^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$`, the same pattern
-  `taskapp_release.py` uses.
-- Packages found on a search path (the monorepo case) are **not** locked.
-  This matches Cargo's treatment of path dependencies, and it keeps every
-  in-repo build exactly as it is.
+**Every field is rebuilt and compared on every use. None is trusted because
+it was stored.**
+
+| Check | Fails with |
+|---|---|
+| `lock.source` equals the source the consumer manifest declares for that name | `LockSourceMismatch` |
+| `lock.tag == f"{name}-v{version}"` and `lock.archive == f"{name}-{version}.mospkg"` | `LockEntryMalformed` |
+| `sha256(archive bytes) == lock.sha256` | `ArchiveDigestMismatch` |
+| `mospkg.json.name == lock.name` and `mospkg.json.version == lock.version` | `ArchiveIdentityMismatch` |
+| The single top-level directory is `{name}-{version}` | `ArchiveIdentityMismatch` |
+| `mospkg.json.source.commit == lock.commit`, and `mospkg.json.source.repository` is the declared source's repository | `ArchiveIdentityMismatch` |
+| The archived `mosaic-package.toml` agrees with `mospkg.json` (§6.2) | `ArchiveRejected` |
+| `attested = true`, under `--locked` | `UnattestedLockEntry` |
+
+Version requirements (§7.4) are checked against the **archived manifest's**
+`[package].version`, not against the lockfile's copy of it.
+
+- The lockfile lists the whole graph, transitive dependencies included.
+- The download URL is built, never stored:
+  `https://github.com/<owner>/<repo>/releases/download/<tag>/<archive>`.
+  `<owner>/<repo>` comes from the manifest-declared source and must match
+  `^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$`.
+- Path and workspace packages are not locked, just as Cargo does not lock
+  path dependencies.
 
 ### 8.2 The cache
 
+**The content-addressed archive is the only trusted object.** Nothing
+extracted from it is trusted by itself.
+
 ```
-$MOSAIC_PACKAGE_CACHE            default: ~/.cache/mosaic/packages (Linux),
-                                 ~/Library/Caches/mosaic/packages (macOS),
-                                 %LOCALAPPDATA%\mosaic\packages (Windows)
-├── archives/sha256/<64-hex>.mospkg          content-addressed
-└── unpacked/<name>-<version>-<first 16 hex>/ extracted, plus .mospkg-verified
+$MOSAIC_PACKAGE_CACHE         default: ~/.cache/mosaic/packages (Linux),
+                              ~/Library/Caches/mosaic/packages (macOS),
+                              %LOCALAPPDATA%\mosaic\packages (Windows)
+└── archives/sha256/<all 64 hex>.mospkg
 ```
 
-- Every cache path is built from **validated** pieces: a manifest-valid name,
-  a strict-SemVer version and a hex digest. No path is ever taken from
-  inside an archive.
-- Extraction writes to a fresh sibling temporary directory created with
-  exclusive-create semantics, verifies, then renames into place. A
-  destination that already exists, or that is a symlink, is never written
-  through. (A lesson records the same rule for registry sync: check with
-  `lstat`, refuse linked parents, write a temporary file in the same
-  directory, then rename.)
-- `.mospkg-verified` records the full archive digest. The resolver trusts
-  an unpacked directory only if that digest equals the lockfile's, **and**
-  it re-hashes the files against `mospkg.json` on every build. For about
-  100 small files that costs milliseconds, and it catches a cache someone
-  edited by hand.
+- **Every build re-hashes the archive against the lockfile, then reads the
+  sources from those same bytes.** The resolver reads the archive into memory
+  once (it is capped at 16 MiB, §6.5), hashes that buffer and parses that
+  buffer. It never hashes one read and parses another, so swapping the file
+  between the two achieves nothing. For the toolkit that is about 0.5 MB and
+  a few milliseconds.
+- **No unpacked directory is trusted.** v1 never extracts to disk for a
+  build. A `pkg unpack` command may extract a copy for people to read, but
+  the resolver never reads that copy. (An earlier draft trusted unpacked
+  directories that carried a `.mospkg-verified` marker. Anyone who can write
+  to the cache can forge such a marker, so it proved nothing.)
+- **Names.** Cache file names use the full 64-hex digest, never a prefix.
+  Every cache path is built from validated parts. Nothing from inside an
+  archive ever becomes a filesystem path during a build.
+- **Filesystem rules.**
+  - The cache root is canonicalized once, and every path component below it
+    is checked with `lstat`. A symlink is refused.
+  - The cache root and `archives/sha256/` are created with mode 0700 and
+    must be owned by the current user. A cache directory that is group- or
+    world-writable, or owned by another user, is refused.
+  - A new archive is written to an exclusive-create temporary file in the
+    same directory, flushed, verified, and then renamed into place. A lesson
+    records the same rule for registry sync.
+  - Windows has no mode bits. Phase 3 must specify the equivalent ACL check
+    (owner SID, no write access for other principals), because a lesson
+    records that a private directory alone does not make path-based writes
+    safe.
+- **What this protects.** The re-hash detects corruption, and any cached
+  archive that does not match the lockfile. It does not defend against an
+  attacker who can already write both the lockfile and the cache, or who can
+  run code as the user, because that attacker controls the build anyway.
 
 ### 8.3 Lookup order
 
-There is one locator, used by both today's paths. Phase 3 replaces the two
-independent locators in §2.2 with a single `PackageGraph`, computed once per
-build. `build()` and `LayoutPackageResolver` both read from it, so they can
-no longer pick different directories for the same name.
+There is one locator. Phase 3 replaces the two locators of §2.2 with a single
+`PackageGraph`, computed once per build. `build()`, `LayoutPackageResolver`
+and the artifact builder all read from it, so they can no longer pick
+different directories for one name.
 
-For each dependency, in order:
+Each resolved package exposes its files only through a **verified file list**
+(§6.5 rule 9):
 
-1. **Explicit override:** `--package-override <name>=<dir>`, for local
-   development against an unpublished change. A warning is printed every
-   time. It is refused under `--locked`.
-2. **Lockfile:** if the lockfile has an entry for the name, the package
-   resolves **only** from the verified cache (§8.2). Search paths are
-   ignored for that name. A directory on a search path that declares the
-   same name is reported as shadowed and is not used. This closes the
-   dependency-confusion hole where a stray directory could replace a pinned
-   package.
-3. **Search paths:** if there is no lockfile entry, use today's search paths,
-   with two corrections. A match is by **manifest name**. Two directories
-   that declare the same name fail with `AmbiguousPackage`, instead of
-   letting `read_dir` order decide.
-4. **Otherwise:** `DependencyNotFound`, with a hint to run
-   `mosaic-compile pkg fetch`.
+- for an archive, the entries in `mospkg.json`;
+- for a path or workspace package, the files `pkg pack`'s allowlist would
+  select.
 
-Then, for every resolved package: its `[package].version` must satisfy each
-requirement on it (§7.4), and a `pkg::P::C` reference must name the package
-itself or a declared dependency (`UndeclaredPackageReference`). Every
-existing reference already does (§2.2).
+The resolver and the artifact builder open package files only through that
+list. A manifest therefore cannot point them at any other file.
+
+**Ambient search paths are a monorepo convenience, not a source of
+packages.** Today the search paths come from two places: the ancestors of the
+package root, and the working directory (§2.2). Outside this repository,
+that means any `packages/` directory above a project, or below the shell's
+current directory, can supply a dependency. That is dependency confusion. So
+ambient search paths are allowed only in **workspace mode**:
+
+- Workspace mode is detected positively. Some ancestor of the package root,
+  at or below the project root, must contain a `mosaic-workspace.toml` that
+  lists the workspace's package roots. Phase 3 adds one to this repository,
+  at `code/`, listing `packages/` and `packages/mosaic/` (§11 Q15).
+- The project root is the top of the git work tree that contains the
+  package, or the package root itself when there is no work tree. No walk
+  ever goes above the project root.
+- `mosaic-compile`'s default of `code/packages` relative to the working
+  directory also applies only in workspace mode.
+
+Each dependency resolves through the first of these that applies:
+
+1. **Explicit override:** `--package-override <name>=<dir>`, for developing
+   against an unpublished change. It prints a warning every time, and
+   `--locked` refuses it.
+2. **Explicit path dependency:** `path = "…"` in the consumer manifest
+   (§8.1).
+3. **Lockfile:** a locked name resolves only from the verified cache (§8.2).
+   Search paths are never consulted for it. A workspace directory that
+   declares the same name is reported as shadowed.
+4. **Search paths:** workspace search paths, or an explicit
+   `--package-search-path`. These are used only when the consumer has **no
+   lockfile**, and never under `--locked`. Matching is by manifest name, and
+   two directories that declare the same name fail with `AmbiguousPackage`.
+5. **Otherwise:** `DependencyNotFound`, with a hint to run
+   `mosaic-compile pkg add`.
+
+**With a lockfile, and always under `--locked`, every dependency other than
+the root package must be locked or be an explicit path dependency.**
+Anything that would resolve from an ambient or `--package-search-path`
+directory fails with `AmbientResolutionRefused`. In-repo builds have no
+lockfile and run in workspace mode, so they keep working exactly as today.
+
+Then two checks apply to every resolved package. Its `[package].version`
+must satisfy each requirement on it (§7.4). And a `pkg::P::C` reference must
+name the package itself or one of its declared dependencies, or the build
+fails with `UndeclaredPackageReference`. Every existing reference already
+does (§2.2).
 
 **The compiler never touches the network.** `compile` and `pkg` builds only
-read. Downloading is the separate, explicit `pkg fetch` step. This answers
-"path override, then cache, then fetch?": fetch is **never implicit**.
+read. Downloading happens in the separate, explicit `pkg add` and `pkg
+fetch` commands. So the answer to "path override, then cache, then fetch?"
+is: fetching is **never implicit**.
 
-### 8.4 Integrity verification
+### 8.4 Integrity and provenance
+
+Two GitHub mechanisms are easy to confuse, so here is what each one does.
+
+| | Release attestation | Build-provenance attestation |
+|---|---|---|
+| Produced by | GitHub, automatically, for every release in a repository with immutable releases | The release workflow, through `actions/attest-build-provenance` (which needs `id-token: write` and `attestations: write`) |
+| Says | "This asset is the one attached to this tag" | "These bytes were built by workflow W, on ref R, at commit C, on a GitHub-hosted runner" |
+| Checked with | `gh release verify`, `gh release verify-asset` | `gh attestation verify` |
+| Proves | **Integrity** | **Provenance** |
+| A writer who uploads hand-made bytes | **Passes**, because GitHub attests whatever was attached | **Fails**, because the bytes carry no signature from the release workflow on `main` |
+
+Release attestation plus immutability gives integrity: the bytes cannot
+change after publication. They do not give provenance. Any of these could
+create `mosaic-pkg-toolkit-v0.17.0` with arbitrary bytes, and
+`gh release verify` would still pass:
+
+- any repository writer;
+- an agent's PAT;
+- a workflow token with `contents: write`, including one dispatched from a
+  branch whose copy of the workflow drops `environment:`.
+
+**So build provenance is mandatory, and every consumer checks it.** The
+lane's gates G7a and G8, and `pkg add`, all run:
 
 ```
-publish (CI, §9)        lock / add (developer, once)        fetch / build (anyone, every time)
-────────────────        ────────────────────────────        ──────────────────────────────────
-pack from git blobs     download archive + SHA256SUMS       sha256(archive) == lock.sha256 ── else refuse
-SHA256SUMS              gh release verify-asset (GitHub      §6.5 reader rules
-immutable release         release attestation)               files == mospkg.json hashes
-release attestation     optional: gh attestation verify      unpacked marker == lock.sha256
-(+ build provenance)      (SLSA build provenance)
-                        record sha256 in lockfile
+gh attestation verify <archive> \
+  --repo adhithyan15/coding-adventures \
+  --signer-workflow adhithyan15/coding-adventures/.github/workflows/release-mosaic-package.yml \
+  --source-ref refs/heads/main \
+  --source-digest <mospkg.json.source.commit> \
+  --deny-self-hosted-runners
 ```
 
-- **The lockfile hash is the offline root of trust.** It is recorded once,
-  when the developer adds the dependency. At that moment it is checked
-  against GitHub's release attestation, so it does not rest on "trust on
-  first use" alone.
-- `SHA256SUMS` protects against corruption. It does **not** protect against
-  a compromised release, because whoever could replace the archive could
-  replace the checksums too. The attestation and immutability are what cover
-  that case.
-- Verifying Sigstore attestations is delegated to the `gh` CLI in v1, as an
-  optional step of `pkg add`. Reimplementing Sigstore verification in Rust
-  is out of scope (§11 Q4).
+- `--repo`, and the repository inside `--signer-workflow`, come from the
+  source the consumer manifest declares (§8.1), never from the archive.
+- `--source-digest` makes the attested source commit equal
+  `mospkg.json.source.commit`.
+- The default predicate type, SLSA provenance v1, is kept.
+- These flags were checked against the `attestation verify --help` output
+  of `gh` 2.92.0 on 2026-10-26.
+
+**The chain of checks:**
+
+```
+publish (CI, §9)                 pkg add (developer, once, online)      build / fetch (anyone, offline)
+────────────────                 ─────────────────────────────────      ───────────────────────────────
+pack from git blobs              §6.5 reader rules on the download      sha256(bytes) == lock.sha256
+attest-build-provenance          gh attestation verify (above)          §6.5 reader rules on those bytes
+G7a: verify provenance           §8.1 identity and source checks        §8.1 checks
+SHA256SUMS from verified bytes   write lock: sha256, commit,            attested == true (under --locked)
+immutable release                  attested = true
+G8: verify as consumers do
+```
+
+- **`pkg add` requires the provenance check.** If `gh` is missing, or the
+  check fails, `pkg add` fails. For development and air-gapped experiments,
+  `--insecure-skip-attestation` skips the check. It prints a warning and
+  records `attested = false`, and `--locked` refuses such an entry
+  (`UnattestedLockEntry`). v1 is therefore **not** trust-on-first-use,
+  except through that explicit, recorded opt-out.
+- **Offline builds trust the lockfile hash.** That hash is written only
+  after the provenance check passes, so the offline check, which compares
+  hashes, inherits the verification.
+- **`SHA256SUMS` is not a security control.** It catches corruption in
+  transfer and gives people a familiar check. Anyone who could replace an
+  asset could also replace the checksums.
+- **v1 delegates Sigstore verification to the `gh` CLI.** A Rust verifier is
+  out of scope (§11 Q4).
 
 ### 8.5 Offline mode for CI
 
 | Flag | Effect |
 |---|---|
-| `--locked` | Fails if the lockfile is missing, out of date (a requirement it does not satisfy), or would change. Overrides are refused |
-| `--offline` | No network. `pkg fetch --offline` only verifies that every locked archive is already in the cache with the right hash, like B03's `vendor --offline` |
-| `pkg fetch --from-file <archive>` | Imports a local archive into the cache, checked against the lockfile. This lets CI test resolution with no network at all |
-| `pkg vendor <dir>` (later) | Copies the locked archives into a directory the consumer commits, and the cache can be pointed there |
+| `--locked` | Fails in any of these cases: the lockfile is missing; it does not satisfy a requirement; it would change; an entry has `attested = false`; the lockfile's source differs from the manifest's; a dependency would resolve from an ambient path. Overrides are refused |
+| `--offline` | No network. `pkg fetch --offline` only checks that every locked archive is already in the cache with the right hash, like B03's `vendor --offline` |
+| `pkg fetch --from-file <archive>` | Imports a local archive into the cache, if it matches an existing lock entry. It never creates a lock entry |
+| `pkg add --from-file <archive>` | Creates a lock entry from a local archive. It runs the same provenance check as a download, or records `attested = false` under `--insecure-skip-attestation` |
+| `pkg vendor <dir>` (later) | Copies the locked archives into a directory the consumer commits. The cache can be pointed at that directory |
 
-The recommended CI shape for a consumer is a verified `pkg fetch` step, then
-`compile --locked --offline`. A network failure then shows up as a fetch
+A consumer's CI should run a verified `pkg fetch` step first, then
+`compile --locked --offline`. A network failure then appears as a fetch
 failure, never as a confusing build error.
 
 ### 8.6 New errors
 
 `VersionMismatch`, `ConflictingRequirements`, `AmbiguousPackage`,
-`UndeclaredPackageReference`, `LockfileOutOfDate`, `ArchiveDigestMismatch`,
-`ArchiveRejected { rule }` (one variant per §6.5 rule, following the
-manifest crate's "one cause, one variant" style), `CacheEntryCorrupt`, and
-`OverrideRefusedWhenLocked`.
+`UndeclaredPackageReference`, `AmbientResolutionRefused`,
+`LockfileOutOfDate`, `LockSourceMismatch`, `LockEntryMalformed`,
+`UnattestedLockEntry`, `ArchiveDigestMismatch`, `ArchiveIdentityMismatch`,
+`ArchiveRejected { rule }` (one variant per §6.5 rule, in the manifest
+crate's "one cause, one variant" style), `CacheUnsafe` (a symlink, the wrong
+owner, or loose permissions) and `OverrideRefusedWhenLocked`.
 
-### 8.7 What v1 does without an index
+### 8.7 What v1 does without an index, and how a bad release is withdrawn
 
 v1 resolves **only locked, exact versions**. `pkg add <name>@<version>`
-writes the lock entry for a version the developer names, and caret
-requirements are then *checked* against it. Choosing the newest compatible
-version automatically requires a list of what exists. There are three
-options for that, which belong to Phase 7:
+writes the lock entry for a version the developer names. Caret requirements
+are then *checked* against it, not used to choose. Choosing the newest
+compatible version automatically needs a list of what exists. That belongs
+to Phase 7, and there are three ways to provide it:
 
-1. List releases through the GitHub API, filtered by exact tag construction.
-   This hits rate limits when unauthenticated.
-2. Commit an index file to this repository, updated by a PR after each
-   release. It is reviewable and anchored in git, but every release then
-   needs a follow-up PR.
-3. Attach an index to a rolling release. That conflicts with immutable
+1. List releases through the GitHub API, filtering by exact tag
+   construction. Unauthenticated callers hit rate limits.
+2. Commit an index file to this repository and update it by PR after each
+   release. It is reviewable and anchored in git, but every release needs a
+   follow-up PR.
+3. Attach the index to a rolling release. That conflicts with immutable
    releases, so it is not recommended.
+
+**Yanks and advisories.** An immutable release cannot be edited, so a bad
+version is withdrawn by listing it, not by changing it. The Phase 7 index
+carries a yank and advisory list: `name`, `version`, `kind` (`yanked` or
+`advisory`), a reason and a link. `pkg add` and `pkg fetch` consult it when
+they are online. Until the index exists, a withdrawal is recorded in the
+package's CHANGELOG and in a GitHub issue, and consumers are not
+warned. Whether a yank blocks a version or only warns is §11 Q14.
+
+### 8.8 The trust root is whatever merges to `main`
+
+The provenance check pins the *workflow file on `main`*. It cannot tell a
+good release workflow from a bad one. Anyone who can change
+`release-mosaic-package.yml`, `mosaic_package_release.py`, or the code the
+lane packs, and get the change merged to `main`, can publish attested bytes.
+So the trust root of every published package is **whatever merges to
+`main`**.
+
+Today that is a low bar (§2.4). `BlockMainPush` requires a pull request but
+zero approvals, code-owner review is off, there is no `CODEOWNERS` file, and
+PRs routinely merge through auto-merge. The proposal (§11 Q10):
+
+- **Review the lane's own files.** Add `CODEOWNERS` entries for
+  `.github/workflows/release-mosaic-package.yml`,
+  `code/scripts/mosaic_package_release.py` and its tests, and turn on
+  required code-owner review in the `main` ruleset. Alternatively, require
+  one approving review for PRs that touch those paths.
+- **Keep the `mosaic-package-release` environment's required reviewer.** It
+  gates *running* the lane, not *changing* it, so it does not replace the
+  review above.
+- **Do not rely on a tag ruleset to single out the lane.** A ruleset's bypass
+  list accepts only users, teams, repository roles, organization admins,
+  deploy keys and GitHub Apps ("Integration"). This was checked against the
+  REST rulesets documentation on 2026-10-26. `GITHUB_TOKEN` acts as the
+  GitHub Actions app, so letting that app create `mosaic-pkg-*` tags lets
+  *every* workflow create them. A tag ruleset can narrow who creates tags,
+  but it cannot make one workflow the only creator. Provenance is the
+  control that can.
 
 ---
 
 ## 9. The release workflow shape (proposed, no YAML)
 
-The workflow is `.github/workflows/release-mosaic-package.yml`, with a
-helper script `code/scripts/mosaic_package_release.py` and tests in
+The workflow is `.github/workflows/release-mosaic-package.yml`. Its helper
+script, `code/scripts/mosaic_package_release.py`, uses only the Python
+standard library, and its tests live in
 `code/scripts/tests/test_mosaic_package_release.py`.
 
 ### 9.1 Jobs and gates
 
 ```
 pull_request (paths: the workflow, the script, code/packages/mosaic/**,
-              mosaic-package-{manifest,resolver,artifact-builder}, mosaic-compile)
+              mosaic-package-{manifest,resolver,archive,artifact-builder}, mosaic-compile)
 workflow_dispatch (inputs: package, version, tag)
         │
         ▼
- ┌─────────────┐   G1 identity (§7.2 rules 1–7; on PRs, dry-run values)
- │  validate   │   G2 CHANGELOG heading present (dispatch only)
- └──────┬──────┘   G3 dispatch ref is main, commit is main's head (dispatch only)
+ validate        G1 identity (§7.2 rules 1–7; dry-run values on PRs)
+                 G2 CHANGELOG heading present (dispatch only)
+                 G3 ref is main and github.sha is main's head (dispatch only)
+                 output: commit = github.sha   (every later job checks out exactly this)
         │
-        ├──────────────────────────┬────────────────────────────┐
-        ▼                          ▼                            ▼
- ┌─────────────┐          ┌─────────────────┐          ┌──────────────────┐
- │ pack-linux  │          │  pack-windows   │          │   test-package   │
- │ pkg pack    │          │  pkg pack       │          │ cargo test in the│
- │ pkg verify  │          │                 │          │ package (compile │
- │ digest out  │          │  digest out     │          │ + native gate),  │
- └──────┬──────┘          └────────┬────────┘          │ MosaicBook check │
-        │  G4 digests equal        │                   └────────┬─────────┘
-        ├──────────────────────────┘                            │
-        ▼                                                       │
- ┌──────────────────────┐  G5 consumer fixture outside the repo │
- │ consume-from-archive │  builds every backend from the archive│
- │ pkg fetch --from-file│  (--locked --offline), not the tree   │
- └──────────┬───────────┘                                       │
-            ├───────────────────────────────────────────────────┘
-            ▼   (dispatch only, main only, environment approval)
- ┌──────────────────────────────────────────────────────────────┐
- │ publish   environment: mosaic-package-release                │
- │  G6 re-hash downloaded archive == pack-linux digest output   │
- │  G7 re-check tag + release absent                            │
- │  gh release create <tag> --target <commit> --latest=false    │
- │    [--prerelease] with .mospkg, mospkg.json, SHA256SUMS      │
- │  G8 audit: gh release verify + verify-asset for each asset;  │
- │    asset digests == SHA256SUMS                                │
- └──────────────────────────────────────────────────────────────┘
+        ├──────────────────┬───────────────────┐
+        ▼                  ▼                   ▼
+ pack-linux          pack-windows         test-package
+ pkg pack            pkg pack             cargo test in the package
+ pkg verify          digest output        (compile + native gate), MosaicBook check
+ upload archive
+ digest output
+        │  G4 the two digests are equal
+        ▼
+ consume-from-archive    G5 download pack-linux's artifact; its sha256 equals
+                            pack-linux's digest output; a fixture outside the
+                            repo builds every backend from it (--offline)
+        │
+        ▼   dispatch only · main only · environment approval
+ publish   environment: mosaic-package-release
+   G6  download pack-linux's artifact; sha256 == pack-linux's digest output
+       the script extracts mospkg.json from those bytes (standard-library zipfile;
+       the full §6.5 rules already ran in pack-linux's pkg verify and in G5);
+       name, version, source.commit == the validated inputs and commit
+   attest-build-provenance on the archive (subject = the archive's digest)
+   G7a gh attestation verify with the §8.4 flags, before anything is public
+   SHA256SUMS and the release copy of mospkg.json, generated from the verified bytes
+   G7  tag and release still absent (checked again)
+   create the tag atomically:
+       POST /repos/{owner}/{repo}/git/refs  ref=refs/tags/<tag>  sha=<validated commit>
+       any response but 201 fails the job; read the ref back, it must name that commit
+   gh release create <tag> --verify-tag --latest=false [--prerelease]
+       --title "<package> v<version>" --notes-file notes.md
+       assets: <name>-<version>.mospkg, mospkg.json, SHA256SUMS
+   G8  audit, exactly as a consumer would:
+       gh attestation verify (§8.4 flags) · gh release verify · gh release verify-asset per asset
+       asset digests == SHA256SUMS
+       tag commit == validated commit == mospkg.json.source.commit
 ```
 
-Pull requests run everything above `publish`, so a PR that changes the lane
-tests the lane. That is the same reasoning `release-engram.yml` gives.
+Pull requests run every job above `publish`, so a PR that changes the lane
+tests the lane. `release-engram.yml` gives the same reason for its PR runs.
+
+**Notes on the publish steps**
+
+- **The tag is created atomically.** The git refs endpoint creates a
+  reference or fails. The REST documentation lists `422 Validation failed`
+  for that endpoint. The page does not say explicitly that an existing ref is
+  one such failure, although that is GitHub's long-standing behaviour. So the
+  script treats any status other than 201 as failure, and Phase 4's tests pin
+  that. `gh release create --verify-tag` then refuses to run unless the tag
+  exists, so `gh` never creates a tag of its own at some other commit.
+- **A run that fails after the tag is created burns that version.** The lane
+  never deletes tags. If no release was published, the maintainer may delete
+  the orphan tag by hand. Otherwise the next patch version is cut.
+- **G7a runs before the tag exists**, so a provenance failure leaves nothing
+  public. G8 repeats the check, plus the release attestation, after
+  publication. If G8 ever fails, that is an incident: the version is listed
+  as yanked (§8.7) and is never reused.
 
 ### 9.2 Security requirements
 
-1. **No publish on `pull_request`.** The `publish` job runs only when
+1. **No publish on `pull_request`.** `publish` runs only when
    `github.event_name == 'workflow_dispatch'` and `github.ref ==
    'refs/heads/main'`. There is no `pull_request_target` trigger and no
-   `push: tags` trigger, because a tag push publishes whatever the tag points
-   at.
+   `push: tags` trigger, because a tag push publishes whatever the tag
+   points at.
 2. **Manual approval.** `publish` uses a new environment,
    `mosaic-package-release`, with a required reviewer and a deployment-branch
-   policy of `main` only. The maintainer has to create it (§11 Q10).
-   Remember that the `pypi` environment `publish.yml` names does not exist,
-   so it provides no gate. Do not copy that assumption.
-3. **Least privilege.** The workflow-level setting is `permissions: contents:
-   read`. Only `publish` gets `contents: write`, plus `id-token: write` and
-   `attestations: write` if build provenance is adopted (§11 Q4). **No
-   repository secrets are used**: `GITHUB_TOKEN` only.
-4. **Pinned actions.** Every `uses:`, first-party `actions/*` included, is
-   pinned to a 40-character SHA with a trailing `# vX.Y.Z` comment, following
-   `release-venture.yml` rather than `release-task-app.yml`. The SHA is
-   checked against the tag with `gh api repos/OWNER/REPO/tags`. The Rust
-   toolchain is pinned to an exact version (a `RUST_VERSION` env, as in
-   TaskApp), never `stable`. Lessons apply here: a branch or tag ref is not a
-   pin, and the toolchain that *builds* the published bytes matters as much
-   as the action that uploads them.
+   policy of `main` only. The maintainer must create it (§11 Q10). The `pypi`
+   environment that `publish.yml` names does not exist, so it gates nothing;
+   this lane must not make the same assumption. Approval gates *running* the
+   lane. Changes to the lane are gated by review on `main` (§8.8).
+3. **Least privilege.** The workflow-level default is `permissions:
+   contents: read`. Only `publish` gets `contents: write`, `id-token: write`
+   and `attestations: write`. **No repository secrets are used**; the job
+   uses `GITHUB_TOKEN` only.
+4. **Pinned actions.**
+   - Every `uses:` is pinned to a 40-character SHA with a trailing
+     `# vX.Y.Z` comment. That includes first-party `actions/*` and
+     `actions/attest-build-provenance`, following `release-venture.yml`
+     rather than `release-task-app.yml`.
+   - Check each SHA against its tag with `gh api repos/OWNER/REPO/tags`.
+   - The Rust toolchain is pinned to an exact version (a `RUST_VERSION` env,
+     as in TaskApp), never `stable`.
+   - Lessons apply: a branch or tag ref is not a pin, and the toolchain that
+     *builds* the published bytes matters as much as the action that uploads
+     them.
 5. **No input interpolation into shell.** Inputs reach scripts only through
-   `env:`. `publish.yml`'s inline `${{ github.event.release.tag_name }}` is
-   the pattern not to copy. The `package` input is checked against the
-   regular expression and a directory allowlist before it is used as a path.
-6. **Checkout hygiene.** `persist-credentials: false` on every checkout in
-   non-publishing jobs.
-7. **Byte custody.** The bytes that get published are the bytes that were
-   tested. `publish` re-hashes the downloaded artifact and compares it with
-   the digest output by `pack-linux` (G6).
-8. **Checksums and provenance.** `SHA256SUMS` is attached. Immutable releases
-   (already enabled) make the GitHub release attestation automatic, and G8
-   verifies it. Build-provenance attestation through
-   `actions/attest-build-provenance` (pinned) is recommended in addition
-   (§11 Q4).
-9. **Serialized publication.** One concurrency group per package, with
-   `cancel-in-progress: false`.
-10. **`/security-review` before the push**, as CLAUDE.md requires, for the
-    workflow PR and for every PR that adds parsing or filesystem code
-    (Phases 2, 3 and 6).
+   `env:`. The `package` input is checked against the §7.2 pattern and a
+   directory allowlist before it is used as a path.
+6. **Checkout hygiene.** Every job checks out `ref:` set to the validated
+   commit (`github.sha`, as passed on by `validate`), with
+   `persist-credentials: false`. That includes `publish`. The token reaches
+   `gh` only as `GH_TOKEN` in a step's `env:`.
+7. **Byte custody.** The bytes that are published are the bytes that were
+   tested:
+   - G5 and G6 each download `pack-linux`'s artifact and compare it with
+     `pack-linux`'s digest output.
+   - `mospkg.json` and `SHA256SUMS` are taken from the verified archive
+     bytes, never regenerated from the tree.
+8. **`publish` runs no repository build code.** It runs only the pinned
+   actions, `gh`, and `mosaic_package_release.py` at the validated commit.
+   There is no `cargo`, no `mosaic-compile` and no `npm install`. The job
+   that holds write and OIDC tokens should execute nothing beyond the
+   reviewed script (§8.8).
+9. **No caches.** The pack, consume-from-archive and publish jobs use no
+   `actions/cache`, and no built-in caching of `setup-*` actions
+   (`cache: npm` and the like). A cache is written by other runs and could
+   alter the bytes being packed or checked.
+10. **Release notes go through `--notes-file`.** The script writes them to a
+    file. They are never passed as a command-line string built from
+    changelog text.
+11. **Serialized publication.** One concurrency group per package, with
+    `cancel-in-progress: false`.
+12. **Checksums and provenance.**
+    - `SHA256SUMS` is attached.
+    - Build provenance is **mandatory**, checked at G7a and G8 (§8.4).
+    - The automatic release attestation is checked at G8, as an integrity
+      check.
+13. **`/security-review` before the push**, as CLAUDE.md requires. That
+    applies to the workflow PR and to every PR that adds parsing,
+    filesystem or network code (Phases 2, 3 and 6).
 
-**An interaction to fix on the way.** `publish.yml` runs on every
-`release: published` event and fails on any tag that is not
-`<language>/<pkg>/v…`. Releases created with `GITHUB_TOKEN` do not trigger
-other workflows, which is why TaskApp releases never trip it. A package
-release made by hand would. The workflow PR should make `publish.yml` skip
-tags it does not own.
+### 9.3 A script-injection fix in `publish.yml` (Phase 4)
+
+`publish.yml` runs on every `release: published` event, and its `parse-tag`
+job writes `${{ github.event.release.tag_name }}` straight into a shell
+script.
+
+- **Git ref names can carry shell syntax.** `git check-ref-format` accepts
+  `refs/tags/a$(id)`, `refs/tags/a;b|c` and `refs/tags/a${IFS}b`. It rejects
+  spaces, but `${IFS}` stands in for one. This was checked locally on
+  2026-10-26. So a crafted tag runs code in `parse-tag`.
+- **That code can reach the RubyGems key.** `parse-tag` can write any value
+  to its outputs. `publish-ruby` interpolates
+  `${{ needs.parse-tag.outputs.pkg_dir }}` into a `run:` script, and that is
+  the job that writes `RUBYGEMS_API_KEY` to disk.
+- **Who can exploit it.** Only someone who can publish a release can trigger
+  it today. It is still exactly the kind of path §8.8 says must not exist.
+- **Why TaskApp has never tripped it.** Releases created with `GITHUB_TOKEN`
+  do not trigger other workflows. A release made by hand, or with a PAT,
+  would.
+
+Phase 4 fixes this, and names the change as a **script-injection fix** in
+its commit and PR:
+
+- The tag reaches the script through `env:`
+  (`TAG: ${{ github.event.release.tag_name }}`), and so does every
+  downstream output (`PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}`).
+  None is interpolated into `run:`.
+- `parse-tag` gets a job-level filter, `if:
+  startsWith(github.event.release.tag_name, 'python/') ||
+  startsWith(github.event.release.tag_name, 'ruby/')`. Tags it does not own,
+  `mosaic-pkg-*` included, then never start a job, instead of failing in
+  shell.
 
 ---
 
@@ -911,50 +1253,76 @@ Decide §5 and answer §11. **Out of scope:** all code.
 
 ### Phase 1 — version strings get semantics (first implementation PR, small)
 
-- `mosaic-package-manifest`: parse a requirement as bare (caret) or `=`
-  (exact), and reject other operators. Add a `VersionReq` type with
-  `matches(&Version)` and Cargo's caret and pre-release rules. Write it by
-  hand, without the `semver` crate, in line with the parser's existing
-  zero-dependency stance.
-- `mosaic-package-resolver`: both `build()` and `LayoutPackageResolver` check
-  the located package's version and fail with `VersionMismatch`.
-- Bump the five stale requirement strings in §2.2.
+- `mosaic-package-manifest`:
+  - Parse a requirement as bare (caret) or `=` (exact), and reject every
+    other operator.
+  - Add a `VersionReq` type with `matches(&Version)`, following Cargo's
+    caret and pre-release rules. Write it by hand, without the `semver`
+    crate, in line with the parser's existing zero-dependency stance.
+- `mosaic-package-resolver`: both `build()` and `LayoutPackageResolver`
+  check the located package's version, and fail with `VersionMismatch`.
+- Bump the five stale requirement strings listed in §2.2.
 - Tests: the caret table in §7.4, pre-releases, mismatch errors from both
   locators, and every in-repo package and program still resolving.
 
-**Out of scope:** archives, lockfile, cache, network, workflows, unifying the
-two locators, and gating `pkg::` references.
+**Out of scope:** archives, the lockfile, the cache, the network, workflows,
+`[sources]` and path dependencies, workspace mode, unifying the two
+locators, and gating `pkg::` references.
 
 ### Phase 1b — locator correctness (small)
 
-- `pkg::P::C` must name the package itself or a declared dependency
-  (`UndeclaredPackageReference`).
-- Two directories declaring one manifest name fail with `AmbiguousPackage`.
+- A `pkg::P::C` reference must name the package itself or a declared
+  dependency (`UndeclaredPackageReference`).
+- Two directories that declare the same manifest name fail with
+  `AmbiguousPackage`.
 
-**Out of scope:** as Phase 1.
+**Out of scope:** the same as Phase 1.
 
 ### Phase 2 — the `.mospkg` format
 
-- `mosaic-compile pkg pack <dir> --commit <sha> --out <file>`, built from
-  git blob bytes (§6.4), and `pkg verify <file>`. A new library crate,
-  `mosaic-package-archive`, wraps the in-house `zip` and `sha256` crates.
-- Tests: determinism (pack twice → same digest), one rejection test per
-  §6.5 rule (traversal, case collision, duplicate, deflate entry, oversize,
-  symlink attribute, file-list mismatch, a manifest with `[host_effects]`).
+- `mosaic-compile pkg pack <dir> --commit <sha> --out <file>`, which reads
+  git blob bytes (§6.4) and applies the git-mode, section and
+  `token_palette` rules (§6.3), and `pkg verify <file>`.
+- A new library crate, `mosaic-package-archive`, wrapping the in-house `zip`
+  and `sha256` crates.
+- Tests:
+  - determinism: packing twice gives the same digest;
+  - at least one rejection test for each clause of §6.5 — ZIP64, the
+    encryption flag, a data descriptor, an EOCD comment, a prefix, a gap,
+    overlapping entries, deflate, oversize, a non-UTF-8 name, traversal, a
+    trailing dot, `nul` and `Com1.mil`, case-collision duplicates, symlink
+    attributes, a file-list mismatch, a `token_palette` outside the file
+    list, and an unknown manifest section;
+  - pack refusing a symlink (`120000`) and a gitlink (`160000`) tree entry.
 - Needs `/security-review`.
 
-**Out of scope:** cache, lockfile, resolver changes, workflow, publishing.
+**Out of scope:** the cache, the lockfile, resolver changes, workflows,
+publishing.
 
-### Phase 3 — lockfile, cache and the single locator
+### Phase 3 — sources, lockfile, cache and the single locator
 
-- `mosaic-package.lock`, `$MOSAIC_PACKAGE_CACHE`, `pkg fetch --from-file`,
-  `--locked`, `--offline` and `--package-override`.
-- The single `PackageGraph` from §8.3, adopted by `build()`,
-  `LayoutPackageResolver` and `mosaic-package-artifact-builder`'s search-path
-  defaults. With no lockfile, the behaviour is unchanged.
-- A consumer fixture that copies only an app and its lockfile into a
-  temporary directory **outside the repository**, imports a locally packed
-  toolkit archive, and builds every backend with `--locked --offline`.
+- **Manifest:** `[sources]`, plus table-form dependencies carrying `source`
+  or `path`.
+- **Workspace:** `mosaic-workspace.toml`, workspace-mode detection bounded
+  by the project root, and this repository's own workspace file.
+- **Lockfile and commands:** `mosaic-package.lock` with the §8.1 binding
+  checks; `pkg add --from-file` (running the provenance check, or
+  `--insecure-skip-attestation`); `pkg fetch --from-file`; and the
+  `--locked`, `--offline` and `--package-override` flags.
+- **Cache:** `$MOSAIC_PACKAGE_CACHE` with the §8.2 rules, archives read and
+  parsed from one in-memory buffer, and the Windows ACL check specified.
+- **Locator:** the single `PackageGraph` with verified file lists (§8.3),
+  adopted by `build()`, `LayoutPackageResolver` and the artifact builder.
+  With no lockfile, in workspace mode, behaviour is unchanged.
+- **Tests:**
+  - a consumer fixture copied into a temporary directory **outside the
+    repository** builds every backend from a locally packed toolkit archive
+    with `--offline`;
+  - `--locked` refuses that fixture's `attested = false` entry;
+  - a stray `packages/` directory above the fixture, and one below the
+    working directory, are both ignored;
+  - a symlinked or world-writable cache is refused;
+  - each §8.1 mismatch produces its own error.
 - Needs `/security-review`.
 
 **Out of scope:** network download, the workflow, publishing, indexes.
@@ -962,12 +1330,15 @@ two locators, and gating `pkg::` references.
 ### Phase 4 — the release lane
 
 - `release-mosaic-package.yml`, `mosaic_package_release.py` and its tests,
-  matching §9. On PRs it exercises everything except `publish`.
-- The toolkit CHANGELOG restructured for a release heading and converted to
-  `CHANGELOG.d/`.
-- `publish.yml` taught to skip tags it does not own.
-- Maintainer actions, which the PR cannot do: create the
-  `mosaic-package-release` environment, and add license files (§11 Q1).
+  matching §9, including the build-provenance attestation and atomic tag
+  creation. On PRs the workflow runs everything except `publish`.
+- The `publish.yml` script-injection fix (§9.3).
+- The toolkit CHANGELOG restructured to carry a release heading, and
+  converted to `CHANGELOG.d/`.
+- **Maintainer actions, which a PR cannot do:**
+  - create the `mosaic-package-release` environment;
+  - add `CODEOWNERS` and required review for the lane's files (§8.8);
+  - add license files (§11 Q1).
 
 **Out of scope:** publishing anything, any package other than the toolkit,
 network fetch.
@@ -975,94 +1346,131 @@ network fetch.
 ### Phase 5 — first publication: `mosaic-pkg-toolkit-v0.16.0`
 
 - The maintainer dispatches the lane and approves the environment.
-- Audit, as TaskApp's releases are audited: tag and `mospkg.json` commit
-  match; `gh release verify` passes; every asset digest matches `SHA256SUMS`.
-- Prove resolution of the **published** package. Download the asset with
-  `gh release download`, run `pkg fetch --from-file`, and build the Phase 3
-  fixture with `--locked --offline` against the lockfile pinned to the
-  published digest. This meets #14014's last acceptance criterion with no
-  new network code in the resolver.
+- An independent audit repeats G8 from a clean machine:
+  - `gh attestation verify` with the §8.4 flags;
+  - `gh release verify`;
+  - every asset digest matches `SHA256SUMS`;
+  - the tag commit, the validated commit and `mospkg.json.source.commit` are
+    the same.
+- Prove resolution of the **published** package:
+  1. download the asset with `gh release download`;
+  2. run `pkg add --from-file`, which performs the real provenance check and
+     writes `attested = true`;
+  3. build the Phase 3 fixture with `--locked --offline`.
+
+  This meets #14014's last acceptance criterion without adding network code
+  to the resolver.
 
 **Out of scope:** other packages, an in-compiler downloader.
 
-### Phase 6 — `pkg fetch` from the network and `pkg add`
+### Phase 6 — `pkg add` and `pkg fetch` from the network
 
-- Download by derived URL (§8.1) and verify against the lockfile. `pkg add
-  <name>@<version>` writes the lock entry, with optional `gh release
-  verify-asset`. The transport choice is §11 Q11.
-- A manual or scheduled "consume published" job that builds the fixture from
-  the real release. It does not run on PRs, so network trouble cannot turn
-  PRs red.
+- **Download** by the URL built from the manifest-declared source (§8.1).
+- **Size cap while streaming:** the 16 MiB limit is enforced while the bytes
+  arrive, so an oversized response is abandoned before it is fully read,
+  hashed or parsed.
+- **Redirects:** only HTTPS targets are followed. GitHub serves release
+  assets through a redirect. Whether to restrict redirect hosts to a list is
+  part of §11 Q11.
+- **Verification** against the lockfile (`fetch`), or through the provenance
+  check (`add`).
+- **A manual or scheduled "consume published" job** that builds the fixture
+  from the real release. It does not run on PRs, so network trouble cannot
+  turn PRs red.
 - Needs `/security-review`.
 
 **Out of scope:** automatic version selection, indexes, mirrors.
 
 ### Phase 7 — the rest
 
-Publish the other packages leaf first (`grid`, `rating-controls`,
-`std-foundation`, then their dependants). Add the interface-diff check
-(§7.3), an index for caret selection (§8.7), and, if wanted, npm or GHCR
-mirrors of the same bytes, `pkg vendor`, and pre-compiled per-backend bundles
-(§11 Q9). Each is its own item in `MOSAIC-BACKLOG.md`.
+- Publish the remaining packages leaf first: `grid`, `rating-controls` and
+  `std-foundation`, then their dependants.
+- The interface-diff check (§7.3).
+- The index, with its yank and advisory list, consulted by `pkg add` and
+  `pkg fetch` (§8.7).
+- If wanted: npm or GHCR mirrors of the same bytes, `pkg vendor`, and
+  pre-compiled per-backend bundles (§11 Q9).
+
+Each of these gets its own item in `MOSAIC-BACKLOG.md`.
 
 ---
 
 ## 11. Open questions for the maintainer
 
 1. **License.** The manifests say `MIT OR Apache-2.0`, but the repository has
-   no license text, and its README says everything is copyrighted with
-   packages "licensed separately". Is `MIT OR Apache-2.0` the intended grant
-   for published Mosaic packages? If it is, `LICENSE-MIT` and
-   `LICENSE-APACHE` must be added (to each package, or once and copied into
-   each archive) **before** the first public release. This blocks Phase 5.
+   no license text, and its README says everything is copyrighted, with
+   packages "licensed separately". Is `MIT OR Apache-2.0` the grant you
+   intend for published Mosaic packages? If so, `LICENSE-MIT` and
+   `LICENSE-APACHE` must be added **before** the first public release,
+   either to each package or once and copied into each archive. This blocks
+   Phase 5.
 2. **Is there a concrete external consumer?** No app outside this repository
    uses Mosaic packages today. If the near-term consumers are only the
-   per-component test apps and the docs site, both of which live in this
-   repository, is the goal "a released, immutable version to link to"
-   (Phases 2, 4 and 5) rather than "a resolver that fetches" (Phase 6)? That
-   would let Phase 6 wait.
-3. **Per-package or per-component versions?** This spec proposes per-package
-   versioning, which diverges from the component program's "per-component
-   SemVer" (§7.1). Accept that divergence, and update the component program
-   to match?
-4. **Provenance depth.** Is the GitHub release attestation plus `SHA256SUMS`
-   enough, or should the lane also emit SLSA build provenance with
-   `actions/attest-build-provenance`? That adds `id-token: write` and
-   `attestations: write` to `publish`. Should `pkg add` *require* `gh` for
-   attestation checks, or only offer them?
+   per-component test apps and the docs site, both inside this repository,
+   is the goal "a released, immutable version to link to" (Phases 2–5)
+   rather than "a resolver that downloads" (Phase 6)? That would let Phase 6
+   wait.
+3. **Per-package or per-component versions?** This spec proposes
+   per-package versions, which diverges from the component program's
+   "per-component SemVer" (§7.1). Accept the divergence, and update the
+   component program to match?
+4. **The provenance verifier.** Build provenance is now mandatory (§8.4).
+   - Is depending on the `gh` CLI for `pkg add` acceptable in v1, or must a
+     Rust Sigstore verifier exist first?
+   - Should `--insecure-skip-attestation` exist at all, given that
+     `--locked` refuses its entries?
 5. **Kernel compatibility.** `[kernel] version = "1"` has gained primitives
    without a bump, so a package cannot say which compiler it needs. Options:
-   bump the kernel version on every new primitive; add a `[kernel]
-   min-revision`; or record the verifying `mosaic-compile` commit in
-   `mospkg.json` and treat new-primitive adoption as breaking (§7.3).
+   - bump the kernel version on every new primitive;
+   - add a `[kernel] min-revision`;
+   - record the verifying `mosaic-compile` commit in `mospkg.json`, and
+     treat adopting a new primitive as breaking (§7.3).
 6. **Archive container.** Is a stored-only ZIP over the in-house `zip` crate
-   (§6.1) acceptable, or should it be tar plus gzip, which would mean a new
-   in-house tar implementation or a third-party crate?
+   (§6.1) acceptable? The alternative, tar plus gzip, needs a new in-house
+   tar implementation or a third-party crate.
 7. **Host code in packages.** v1 refuses `[host_effects]` and `[host_assets]`
    (§6.3). Is that the right line, given that no library package uses them
    today?
 8. **Distributing `mosaic-compile`.** A consumer outside this repository
-   cannot build anything without the compiler, and it is not released. Should
-   there be a `mosaic-compile-v*` release lane (binaries on GitHub
-   Releases), crates.io publishing of the compiler crates (option (a) is
-   reasonable for *Rust* code), or "build from source at a pinned commit" for
-   now? This may matter more than package publishing to an external consumer.
+   cannot build anything without the compiler, and it is not released. The
+   choices:
+   - a `mosaic-compile-v*` release lane with binaries on GitHub Releases,
+     carrying the same provenance as §8.4;
+   - crates.io publishing of the compiler crates (option (a) is reasonable
+     for *Rust* code);
+   - "build from source at a pinned commit", for now.
+
+   This may matter more to an external consumer than package publishing
+   does.
 9. **Pre-compiled bundles.** UI29 §4.3 promised per-backend compiled
    artifacts. Should releases also attach those, for hosts that will not run
    `mosaic-compile`? If so, from which phase?
-10. **Approval gate.** Create the `mosaic-package-release` environment with
-    the maintainer as required reviewer, restricted to `main`? Add a tag
-    ruleset that reserves `mosaic-pkg-*` and `mosaic-std-*` tags for that
-    workflow?
+10. **The trust root (§8.8).** Today `main` accepts merges with zero
+    approvals and no code-owner review.
+    - Add `CODEOWNERS` for the lane's workflow, its script and the script's
+      tests, and require code-owner review, or require one approving review
+      on those paths?
+    - Create the `mosaic-package-release` environment with you as the
+      required reviewer, restricted to `main`?
+    - Add a tag ruleset for `mosaic-pkg-*` and `mosaic-std-*` anyway? It can
+      narrow who creates those tags, but its bypass list cannot single out
+      one workflow, so it is defence in depth, not the control.
 11. **Network transport for Phase 6.** Use the in-house HTTP/1 client and
     platform TLS crates, shell out to `gh release download` or `curl`, or
-    leave fetching to the consumer's CI entirely (`pkg fetch --from-file`
-    only)?
-12. **First version and 1.0.** Publish the toolkit as 0.16.0, its current
-    manifest version, which consumers already require? When does the
-    toolkit commit to 1.0.0 and the stricter bump rules that come with it?
+    leave downloading to the consumer's CI entirely (`--from-file` only)?
+    Should redirect targets be limited to a host allowlist?
+12. **First version, and 1.0.** Publish the toolkit as 0.16.0, its current
+    manifest version, which consumers already require? When does it commit
+    to 1.0.0 and the stricter bump rules that come with it?
 13. **Mirrors.** If (d) is adopted, is an npm mirror for web hosts wanted at
     all, and under which scope?
+14. **Yanks and advisories (§8.7).** Who may add an entry? Does `pkg add`
+    refuse a yanked version or only warn? Should an existing lock entry for a
+    yanked version keep working, as Cargo allows, with a warning, and only
+    `--locked` plus an advisory of kind `security` fail?
+15. **The workspace marker (§8.3).** Is `mosaic-workspace.toml` at `code/`
+    the right name and place for the file that turns on ambient search paths
+    in this repository?
 
 ---
 
