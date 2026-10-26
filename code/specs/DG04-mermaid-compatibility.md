@@ -167,6 +167,11 @@ labels while native backends continue to receive portable shaped text.
 ER remains partial while the rest of the pinned upstream syntax and visual corpus
 is incomplete.
 
+C4 accessibility titles and single-line or block descriptions are grammar-first
+and survive semantic IR plus structural layout into backend-neutral PaintScene
+metadata. Metal-to-PNG fixtures cover the pinned Mermaid 11.16.1 forms. C4
+remains partial while its remaining macro semantics and visual corpus are incomplete.
+
 ## Required New Semantic Families
 
 The remaining languages cluster into reusable domains:
