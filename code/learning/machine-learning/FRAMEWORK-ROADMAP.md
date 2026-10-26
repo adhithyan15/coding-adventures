@@ -201,7 +201,10 @@ SGD training, inspection, and portable save/reload/resume.
 - [ ] Required six-native conformance incorporating actual C checkpoint
   exchanges (NN49): thirty directed pairs and return trips, 78 real children,
   complete model comparisons through 3002, six native lanes and zero bindings.
-  Specified separately after NN48; implementation/runtime evidence pending.
+  Local runner and gate integration implemented after NN48; actual all-thirty
+  exchanges passed with XOR loss 0.0002330712337828204. Local Rust used an
+  exact-source minimal workspace; full repository CI and exact-head merge
+  remain pending. See the [teaching trace](./six-native-dense-conformance.md).
 - [ ] C++ native framework.
 - [ ] C# native framework.
 - [ ] F# native framework.

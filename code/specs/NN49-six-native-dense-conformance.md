@@ -1,6 +1,7 @@
 # NN49: Six Native Dense Framework Conformance
 
-Status: specification committed before implementation; runtime evidence pending.
+Status: specification committed before implementation; local all-thirty-direction
+runtime evidence passed; publication/exact-head CI/merge pending.
 
 ## Selection and prerequisites
 
@@ -78,3 +79,26 @@ push. Publish one READY PR, inspect exact-head selected conformance receipts,
 actual package BUILDs, annotations and required roll-up, and verify the exact
 head merged before marking NN49 complete. Queued runners require waiting, not
 invented source changes or cancelled runs.
+
+## Local evidence
+
+The actual runner executed 78 children across Python/TypeScript/Rust/Go/Ruby/C,
+all thirty distinct directed pairs and return trips, zero binding lanes, exact
+final step 3002 and XOR loss 0.0002330712337828204. Rust used a minimal workspace
+whose current source/test/example files match; README/changelog differ from the
+retained historical copy and are not compiled inputs. Full repository-workspace
+validation remains mandatory in CI. C's actual GCC and Clang fronts each passed
+6857 checks, all 55 schema cases and real command/native resume validation.
+
+Nine interchange regression tests cover 96% of runner statements; four gate
+tests include the actual fail-closed shell. No native library API, math or
+checkpoint schema changed. Publication, independent final-head review and
+required exact-head CI/merge remain pending.
+
+The actual full Go registry suite exposed the existing 50-million-unit matching
+budget on its unchanged 10,751-path language-shard regression after adding C.
+Consolidate only the neural validator/test filename families into two globs,
+preserving all previous selecting inputs and explicit native dependency paths.
+Exercise old/new paths and negative suffix controls through the production
+evaluator. Keep its work cap and regression workload unchanged; no evaluator,
+matcher or global resource-limit change belongs to this tranche.
