@@ -60,4 +60,3 @@ f0000000,cmpgeu
 f4000000,cmpgu
 f8000000,calli
 fc000000,cmpne
-
