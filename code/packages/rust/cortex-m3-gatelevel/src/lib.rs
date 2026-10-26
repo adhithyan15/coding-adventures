@@ -6,6 +6,7 @@
 
 mod engine;
 pub mod gates;
+pub mod integration;
 mod state;
 
 pub use engine::{

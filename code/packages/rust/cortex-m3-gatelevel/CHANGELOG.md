@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Add a narrow gate-to-gate integration boundary with preallocated fallible
+  snapshots, non-committing delegated traces, validated candidates, explicit
+  commit, deterministic allocation failure, and production-derived DFF
+  inventory for the Cortex-M7 gate companion.
+
 ## 0.1.0 — 2026-10-25
 
 - Add an independent Armv7-M Cortex-M3 gate transition engine.

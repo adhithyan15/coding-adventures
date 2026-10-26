@@ -403,7 +403,7 @@ fn try_memory_buffer(len: usize) -> Result<Vec<u8>, CortexM3Error> {
     Ok(memory)
 }
 
-fn clone_state_into(state: &CortexM3State, mut memory: Vec<u8>) -> CortexM3State {
+pub(crate) fn clone_state_into(state: &CortexM3State, mut memory: Vec<u8>) -> CortexM3State {
     memory.clear();
     memory.extend_from_slice(&state.memory);
     CortexM3State {
