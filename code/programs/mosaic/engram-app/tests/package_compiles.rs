@@ -2941,6 +2941,27 @@ fn source_tree_has_expected_shape() {
     assert_contains(&xaml_host, "ENGRAM_SNAPSHOT_PATH");
     assert_contains(&xaml_host, "mosaic-snapshot.v1.json");
     assert_contains(&xaml_host, "HydrateSession");
+    // A snapshot the engine rejects is moved aside, never saved over, and a
+    // failed move switches saving off. tests/snapshot_quarantine.rs runs that
+    // contract for the Electron and web hosts under Node; this host needs
+    // WinUI, so its source is pinned here instead.
+    assert_contains(&xaml_host, "QuarantineSnapshot(path);");
+    assert_contains(&xaml_host, "path + \".corrupt\"");
+    assert_contains(&xaml_host, "File.Move(path, corrupt, overwrite: true)");
+    assert_contains(&xaml_host, "PersistenceDisabled = true;");
+    // The react backend's TypeScript web host mirrors engram-host.mjs, whose
+    // quarantine tests/snapshot_quarantine.rs runs under Node.
+    let react_web_host = fs::read_to_string(package_root().join("host/web/engram-host.ts"))
+        .expect("react web host template");
+    assert_contains(
+        &react_web_host,
+        "const CORRUPT_SNAPSHOT_STORAGE_KEY = `${SNAPSHOT_STORAGE_KEY}.corrupt`;",
+    );
+    assert_contains(
+        &react_web_host,
+        "if (!writeStorage(CORRUPT_SNAPSHOT_STORAGE_KEY, snapshot)) {",
+    );
+    assert_contains(&react_web_host, "persistenceDisabled = true;");
     assert_contains(&xaml_host, "PersistSnapshot");
     assert_contains(&xaml_host, "eg_snapshot");
     assert_contains(&xaml_host, "eg_load_snapshot");

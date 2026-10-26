@@ -29,6 +29,13 @@ public static class MosaicHost
     private static IntPtr Session = IntPtr.Zero;
     private static string? LoadError;
 
+    // A snapshot this build cannot load is someone's study history, not
+    // garbage. HydrateSession moves it aside to `<snapshot>.corrupt` (the name
+    // every generated Mosaic host uses) before the demo deck is saved in its
+    // place. If even that move fails, saving is switched off for the session:
+    // an unsaved session is recoverable, an overwritten snapshot is not.
+    private static bool PersistenceDisabled;
+
     public static event EventHandler<MosaicHostIntent>? HostIntentReceived;
 
     public static MosaicHostIntent? LastHostIntent { get; private set; }
@@ -623,18 +630,41 @@ public static class MosaicHost
                 {
                     return;
                 }
+                Console.Error.WriteLine("Engram persisted snapshot was invalid");
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
             {
                 Console.Error.WriteLine($"Engram could not read persisted snapshot: {ex.Message}");
             }
+            QuarantineSnapshot(path);
         }
 
         PersistSnapshot(session);
     }
 
+    private static void QuarantineSnapshot(string path)
+    {
+        var corrupt = path + ".corrupt";
+        try
+        {
+            File.Move(path, corrupt, overwrite: true);
+            Console.Error.WriteLine($"Engram moved the unreadable snapshot to {corrupt}");
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            PersistenceDisabled = true;
+            Console.Error.WriteLine(
+                $"Engram could not move the unreadable snapshot aside; this session will not be saved: {ex.Message}");
+        }
+    }
+
     private static void PersistSnapshot(IntPtr session)
     {
+        if (PersistenceDisabled)
+        {
+            return;
+        }
+
         try
         {
             var json = Native.TakeString(Native.eg_snapshot(session));

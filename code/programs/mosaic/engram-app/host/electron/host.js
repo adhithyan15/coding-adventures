@@ -1,6 +1,6 @@
 import { dialog } from "electron";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, extname, join } from "node:path";
 import { homedir } from "node:os";
 import { fileURLToPath } from "node:url";
@@ -14,6 +14,13 @@ const snapshotPath =
 const sidecarPath =
   process.env.ENGRAM_HOST_CLI ??
   join(here, process.platform === "win32" ? "engram-host-cli.exe" : "engram-host-cli");
+
+// A snapshot this build cannot load is someone's study history, not garbage.
+// It is moved aside to `<snapshot>.corrupt` (the name every generated Mosaic
+// host uses) before the demo deck is saved in its place. If even that move
+// fails, saving is switched off for the session: an unsaved session is
+// recoverable, an overwritten snapshot is not.
+let persistenceDisabled = false;
 
 export async function createMosaicHost() {
   const engine = createEngramEngine(readFileSync(wasmPath), {
@@ -146,10 +153,29 @@ function loadPersistedSnapshot(engine) {
   } catch (error) {
     console.warn("Engram could not read persisted snapshot", error);
   }
+  quarantineSnapshot();
   return false;
 }
 
+function quarantineSnapshot() {
+  const corruptPath = `${snapshotPath}.corrupt`;
+  try {
+    rmSync(corruptPath, { force: true });
+    renameSync(snapshotPath, corruptPath);
+    console.warn(`Engram moved the unreadable snapshot to ${corruptPath}`);
+  } catch (error) {
+    persistenceDisabled = true;
+    console.warn(
+      "Engram could not move the unreadable snapshot aside; this session will not be saved",
+      error,
+    );
+  }
+}
+
 function persistSnapshot(engine) {
+  if (persistenceDisabled) {
+    return;
+  }
   const snapshot = engine.snapshot();
   if (snapshot.ok !== true || snapshot.state === undefined) {
     console.warn("Engram snapshot could not be persisted", snapshot.error);

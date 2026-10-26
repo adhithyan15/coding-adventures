@@ -38,6 +38,13 @@ type HostedWindow = {
 const WASM_URL = "./engram_engine.wasm";
 const DECK_ID_STORAGE_KEY = "engram.deckId";
 const SNAPSHOT_STORAGE_KEY = "engram.snapshot.v1";
+// A snapshot this build cannot load is someone's study history, not garbage.
+// It is copied to `engram.snapshot.v1.corrupt` (the `.corrupt` name every
+// generated Mosaic host uses for a rejected file) before the demo deck is
+// saved in its place. If even that copy fails, saving is switched off for the
+// session: an unsaved session is recoverable, an overwritten snapshot is not.
+const CORRUPT_SNAPSHOT_STORAGE_KEY = `${SNAPSHOT_STORAGE_KEY}.corrupt`;
+let persistenceDisabled: boolean = false;
 const HOST_INTENT_EVENT = "engram-host-intent";
 const HOST_READY_EVENT = "mosaic-host-ready";
 
@@ -80,6 +87,10 @@ function hydrateEngine(engine: EngramEngine): void {
       return;
     }
     console.warn("Engram persisted snapshot was invalid; resetting demo state", loaded.error);
+    if (!writeStorage(CORRUPT_SNAPSHOT_STORAGE_KEY, snapshot)) {
+      persistenceDisabled = true;
+      console.warn("Engram could not set the unreadable snapshot aside; this session will not be saved");
+    }
   }
 
   engine.resetDemo();
@@ -279,6 +290,9 @@ function downloadBytes(bytes: Uint8Array, name: string): void {
 }
 
 function persistSnapshot(engine: EngramEngine): void {
+  if (persistenceDisabled) {
+    return;
+  }
   const snapshot = engine.snapshot();
   if (snapshot.ok !== true || snapshot.state === undefined) {
     console.warn("Engram snapshot could not be persisted", snapshot.error);
@@ -473,11 +487,13 @@ function readStorage(key: string): string | null {
   }
 }
 
-function writeStorage(key: string, value: string): void {
+function writeStorage(key: string, value: string): boolean {
   try {
     window.localStorage.setItem(key, value);
+    return true;
   } catch (error) {
     console.warn(`Engram could not write ${key} to localStorage`, error);
+    return false;
   }
 }
 
