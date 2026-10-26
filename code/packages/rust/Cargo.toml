@@ -41,6 +41,7 @@ members = [
     "arithmetic",
     "array-runtime",
     "arm-simulator",
+    "arm7tdmi-simulator",
     "cortex-m0-gatelevel",
     "cortex-m0-simulator",
     "cortex-m23-simulator",
