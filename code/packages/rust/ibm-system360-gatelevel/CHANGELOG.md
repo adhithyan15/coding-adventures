@@ -9,7 +9,9 @@ All notable changes to this package will be documented in this file.
 - Route every modeled branch predicate through gate reductions, muxes,
   comparator condition-code wires, and one-hot opcode lines.
 - Add exhaustive mask, condition-code, register-field, count-wire, and
-  index-branch truth tables plus structural anti-shortcut coverage.
+  index-branch truth tables plus token-normalized exact-body structural
+  coverage with adversarial host-predicate, indirection, dead-anchor, and
+  primitive/helper-shadowing fixtures.
 
 ## [0.1.0] - 2026-10-24
 
