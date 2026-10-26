@@ -1,5 +1,5 @@
 use quote::ToTokens;
-use syn::{Expr, ExprMatch, Item, ItemFn, Stmt};
+use syn::{Expr, ExprMatch, Item, ItemFn, ItemMod, Stmt};
 
 const UNSIGNED_ENTRY: &str = r#"
 pub(crate) fn multiply_unsigned(a: u64, b: u64) -> QualifiedWideResult {
@@ -181,12 +181,43 @@ fn unique_top_level_function<'a>(file: &'a syn::File, name: &str) -> Result<&'a 
     Ok(matches[0])
 }
 
+fn unique_top_level_module<'a>(file: &'a syn::File, name: &str) -> Result<&'a ItemMod, String> {
+    let matches: Vec<_> = file
+        .items
+        .iter()
+        .filter_map(|item| match item {
+            Item::Mod(module) if module.ident == name => Some(module),
+            _ => None,
+        })
+        .collect();
+    if matches.len() != 1 {
+        return Err(format!(
+            "expected exactly one top-level module named {name}, found {}",
+            matches.len()
+        ));
+    }
+    Ok(matches[0])
+}
+
 fn validate_function(source: &str, name: &str, expected: &str) -> Result<(), String> {
     let file = syn::parse_file(source).map_err(|error| error.to_string())?;
     let actual = unique_top_level_function(&file, name)?;
     let expected: ItemFn = syn::parse_str(expected).map_err(|error| error.to_string())?;
     if canonical(actual) != canonical(&expected) {
         return Err(format!("top-level function {name} changed"));
+    }
+    Ok(())
+}
+
+fn validate_external_module(source: &str, name: &str) -> Result<(), String> {
+    let file = syn::parse_file(source).map_err(|error| error.to_string())?;
+    let actual = unique_top_level_module(&file, name)?;
+    let expected: ItemMod =
+        syn::parse_str(&format!("mod {name};")).map_err(|error| error.to_string())?;
+    if canonical(actual) != canonical(&expected) {
+        return Err(format!(
+            "top-level module {name} must be the attribute-free external file binding"
+        ));
     }
     Ok(())
 }
@@ -277,6 +308,11 @@ fn validate_execution_contracts(source: &str) -> Result<(), String> {
     validate_instruction_arms(source, DIVIDE_CONSUMER)
 }
 
+fn validate_production_routing(source: &str) -> Result<(), String> {
+    validate_external_module(source, "execution")?;
+    validate_external_module(source, "gate_networks")
+}
+
 fn replace_once(source: &str, old: &str, new: &str) -> String {
     assert_eq!(
         source.matches(old).count(),
@@ -288,11 +324,49 @@ fn replace_once(source: &str, old: &str, new: &str) -> String {
 
 #[test]
 fn production_qualification_call_paths_match_the_reviewed_contract() {
+    let crate_root = include_str!("../src/lib.rs");
+    validate_production_routing(crate_root).expect("production module routing contract");
+
     let gates = include_str!("../src/gate_networks.rs");
     validate_gate_contracts(gates).expect("gate qualification contract");
 
     let execution = include_str!("../src/execution.rs");
     validate_execution_contracts(execution).expect("instruction consumer contract");
+}
+
+#[test]
+fn structural_contract_rejects_alternate_production_module_routing() {
+    let crate_root = include_str!("../src/lib.rs");
+
+    let path_alias = replace_once(
+        crate_root,
+        "mod execution;",
+        "#[path = \"execution.rs\"]\nmod execution;",
+    );
+    syn::parse_file(&path_alias).expect("path-attribute fixture remains valid Rust syntax");
+    assert!(validate_production_routing(&path_alias).is_err());
+
+    let inline_replacement = replace_once(crate_root, "mod gate_networks;", "mod gate_networks {}");
+    syn::parse_file(&inline_replacement).expect("inline fixture remains valid Rust syntax");
+    assert!(validate_production_routing(&inline_replacement).is_err());
+
+    let inactive_duplicate = replace_once(
+        crate_root,
+        "mod gate_networks;",
+        "#[cfg(any())]\nmod gate_networks;\nmod gate_networks;",
+    );
+    syn::parse_file(&inactive_duplicate)
+        .expect("inactive duplicate fixture remains valid Rust syntax");
+    assert!(validate_production_routing(&inactive_duplicate).is_err());
+
+    let dead_reviewed_module = replace_once(
+        crate_root,
+        "mod execution;",
+        "#[cfg(any())]\nmod execution;\nmod execution {\n    pub fn exec_one() {}\n}",
+    );
+    syn::parse_file(&dead_reviewed_module)
+        .expect("dead-reviewed-module fixture remains valid Rust syntax");
+    assert!(validate_production_routing(&dead_reviewed_module).is_err());
 }
 
 #[test]

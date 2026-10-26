@@ -16,6 +16,9 @@
   top-level definitions and the instruction consumers must belong to the
   direct `exec_one` dispatch; reject inactive `cfg` decoys and later active
   host-wide duplicates.
+- Bind those checks to the unique attribute-free external `execution` and
+  `gate_networks` modules, rejecting path aliases, inline replacements,
+  duplicate routing, and inactive reviewed-file decoys.
 - Document the reproducible all-target coverage command and its 88.40%
   (1,357/1,535) package result.
 
