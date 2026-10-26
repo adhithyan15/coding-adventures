@@ -42,7 +42,7 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | Intel 8085 | merged | ready | Gate cell follows MC6800 gate start. |
 | P0 | DEC VAX-11/780 | PR #18164 | missing | Gate waits for functional oracle. |
 | P0 | Motorola 6809 | PR #18169 | missing | Gate waits for functional oracle. |
-| P0 | OpenRISC 1000 | merged | in progress | Gate implementation is under completion review against public mor1kx RTL. |
+| P0 | OpenRISC 1000 | merged | merged | Complete; gate PR #18276 landed. |
 | P0 | OpenSPARC T1 | merged | in progress | Gate specification descends from public OpenSPARC T1 RTL. |
 | P0 | Arm Cortex-M0 | PR #18177 | missing | Gate waits for the Armv6-M oracle. |
 | P0 | Arm Cortex-M3 | local complete | missing | Publish this cell; then gate waits for merge. |

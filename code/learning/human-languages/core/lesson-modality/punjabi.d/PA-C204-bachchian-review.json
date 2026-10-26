@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C204-bachchian-review",
+    "language": "punjabi",
+    "chapter": 204,
+    "sequence": 11090,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:38decb8f5be5d956"
+  },
+  "findings": []
+}

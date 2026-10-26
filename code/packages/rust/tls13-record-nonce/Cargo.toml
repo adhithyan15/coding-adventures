@@ -1,0 +1,8 @@
+[package]
+name = "tls13-record-nonce"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded TLS 1.3 record sequence and per-record nonce derivation"
+license = "MIT"
+
+[dependencies]

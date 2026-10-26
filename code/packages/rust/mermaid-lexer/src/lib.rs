@@ -1977,6 +1977,63 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_attribute_type_boundaries() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nENTITY {\n  PKType primary\n  PK id\n  1 numeric\n}\n",
+        );
+
+        assert!(tokens.iter().any(|token| {
+            token.type_name.as_deref() == Some("IDENTIFIER") && token.value == "PKType"
+        }));
+        assert!(tokens.iter().any(|token| {
+            token.type_name.as_deref() == Some("ATTRIBUTE_KEY") && token.value == "PK"
+        }));
+        assert!(tokens.iter().any(|token| token.type_ == TokenType::Number && token.value == "1"));
+    }
+
+    #[test]
+    fn tokenizes_er_attribute_comment_line_break_variants() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nENTITY {\n  string first \"Primary<br>identifier\"\n  string second \"Second<br/>line\"\n  string third \"Third<br />line\"\n}\n",
+        );
+        let comments: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.value.contains("<br"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(
+            comments,
+            [
+                "Primary<br>identifier",
+                "Second<br/>line",
+                "Third<br />line"
+            ]
+        );
+    }
+
+    #[test]
+    fn tokenizes_er_entity_alias_line_break_variants() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nFIRST[\"Primary<br>Entity\"]\nSECOND[\"Second<br/>Entity\"]\nTHIRD[\"Third<br />Entity\"]\n",
+        );
+        let aliases: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.value.contains("<br"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(
+            aliases,
+            [
+                "Primary<br>Entity",
+                "Second<br/>Entity",
+                "Third<br />Entity"
+            ]
+        );
+    }
+
+    #[test]
     fn tokenizes_er_unicode_symbol_identifiers() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\n_**testẽζ➕Ø😀㌕ぼ**_\nperson[😀]\nperson ||--o| a : __hẽ😀__\n",

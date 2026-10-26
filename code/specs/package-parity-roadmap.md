@@ -17939,7 +17939,6 @@ and 4,818 slots with no collisions.
 The existing C# document-AST Windows repeat-build gap has a separate pending
 owner; its four directly executed native tests grant no build-front credit.
 
-
 ## October 25: serial CommonMark foundation recovery
 
 PR #18147 externally merged its bounded sixteen-case TypeScript adoption as `e0f73e7d56b6a9f2fec1f5ca4ab760d7e7094d89`. The unpublished sixty-seven-case GFM draft remains separate. Existing CommonMark foundation PR #18174 is the sole active recovery under the current one-PR ceiling; Haskell opcode PR #18183 remains untouched serial backlog.
@@ -17947,3 +17946,24 @@ PR #18147 externally merged its bounded sixteen-case TypeScript adoption as `e0f
 The private operational journal has reconciled all 103 pinned audits and eleven new pending classifications after a full collision-clean inventory: 1,559 identities and 4,846 established-lane slots across fifteen languages at `d6ce5d38efeca48e0aa6d5366102c756b6d508ea`. OCaml remains emerging with five packages. These structural counts grant no native qualification or reviewed exception. Neural-framework delivery retains separate roadmap coordination, and OCSP policy composition remains documentary and blocked from security delivery.
 
 This PR preserves the neutral validator and fixture bytes, recovers the observed Venture-only Node/npm setup failure, and retains the foundation-versus-reader-migration boundary. See the [current validation receipt](fixtures/commonmark-0.31.2/VALIDATION.md).
+
+## October 25, 2026: C# document-AST Windows-front preparation
+
+After locally completing the independent .NET WasmOpcodes coverage repair,
+the next non-overlapping preparation is
+`csharp-document-ast-windows-build-repeatability`. The package is an existing
+C# Markdown prerequisite and is independent of the three active parity PRs.
+
+The Windows front begins with ungrouped `if not exist` setup clauses. Under
+`cmd.exe`, the following `&&` chain becomes part of the conditional body, so a
+warm run where the directory already exists returns success without running
+tests. Parenthesize each setup conditional and require consecutive runs to
+emit the real test count and coverage table.
+
+Fresh inspection also finds that the test project has no Coverlet integration,
+so both platform fronts currently pass inert `CollectCoverage` and `Threshold`
+properties. This owner must therefore build the clean project-reference graph
+with production-only MSBuild instrumentation, run tests from that graph, and
+enforce the 95% library line target on Unix and Windows. Package APIs, AST
+nodes, parser behavior, renderer behavior, and the wider .NET fleet remain out
+of scope.

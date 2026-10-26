@@ -1586,6 +1586,93 @@ validate certificates, select trust roots, check revocation, perform I/O, open
 a socket, authorize HTTP or OAuth transport, or replace `tls-platform`.
 Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-record-nonce` prerequisite now specifies record
+sequence consumption and nonce derivation for one TLS 1.3 traffic key in one
+direction. A caller-selected policy fixes the exact static-IV length from 8
+through 255 bytes and a per-key record ceiling from 1 through `u64::MAX`.
+Fresh state starts at sequence zero and has no reset operation. Each successful
+reservation left-pads the current 64-bit network-order sequence to the selected
+IV length, XORs it with the caller-borrowed static IV into caller-owned output,
+and consumes that sequence before returning. Static-IV and output lengths are
+validated before either output or sequence state changes; exhaustion also
+leaves both untouched. The largest policy ceiling conservatively stops after
+sequence `u64::MAX - 1`, before an increment could wrap. Callers must own
+separate read and write state, create fresh state after each key change, and
+select the lower cipher-suite-specific cryptographic usage limit.
+
+The package's 255-byte IV ceiling is an explicit work bound, not permission for
+an AEAD to use an unsupported nonce length. It stores no static IV, key, nonce,
+plaintext, or ciphertext bytes, and stable failures retain no caller lengths or
+bytes. It does not select or invoke an AEAD, encrypt, decrypt, authenticate,
+derive traffic keys or IVs, negotiate a cipher suite, perform key updates,
+process handshake or alert messages, validate certificates, select trust
+roots, check revocation, perform I/O, open a socket, authorize HTTP or OAuth
+transport, or replace `tls-platform`. Concrete HTTPS remains unavailable.
+
+An allocation-free `tls13-cipher-suite-policy` prerequisite now binds the
+three repository-targeted RFC 8446 TLS 1.3 cipher-suite wire identifiers to
+their exact AEAD algorithm, HKDF hash, key length, IV length, authentication-tag
+length, and conservative maximum records per traffic key. The standard
+metadata is immutable. A caller supplies a non-empty, duplicate-free allowlist
+and an explicit nonzero record ceiling for every allowed suite; each ceiling
+must be no greater than the suite maximum. Selection accepts only an exact
+known wire identifier already authorized by that policy and returns one
+validated value carrying all parameters together, so later key derivation,
+nonce state, and AEAD routing cannot independently reinterpret the negotiated
+suite. AES-GCM policies conservatively stop at `2^24` records, below RFC 8446
+section 5.5's `2^24.5` full-size-record bound. ChaCha20-Poly1305 policies are
+bounded by the record sequence because RFC 8446 states that it wraps before the
+algorithm's safety limit; the nonce prerequisite's conservative sequence
+semantics still stop before increment wrap.
+
+The registry is policy data only. It neither proves that a repository-owned
+AEAD or hash implementation is suitable for production nor selects a suite on
+behalf of a handshake. It stores no keys, IVs, nonces, plaintext, ciphertext,
+or provider data; invokes no cryptography; and performs no negotiation, key
+derivation, record protection, key update, certificate processing, trust,
+revocation, I/O, HTTP, OAuth transport, or network effect. Unsupported RFC 8446
+CCM suites fail closed until separately reviewed repository-owned primitives
+and limits are added. Concrete HTTPS remains unavailable.
+
+An allocation-free `tls13-hkdf-label` prerequisite now owns only the exact
+RFC 8446 section 7.1 `HkdfLabel` information framing consumed by a future
+repository-owned HKDF boundary. A validated value binds one public 16-bit
+requested output length, a caller label from 1 through 249 bytes, and a context
+from 0 through 255 bytes. Encoding always prepends the six-byte `"tls13 "`
+namespace, emits the resulting 7-through-255-byte label and one-byte context
+lengths, and writes into caller-owned storage only after the complete encoded
+length and capacity have been checked. The maximum encoded value is 514 bytes.
+Stable failures expose only categories, never caller bytes or lengths.
+
+This framing slice receives no secret, performs no HKDF or hashing, selects no
+cipher-suite hash, derives or stores no key or IV, and does not audit the
+generic repository HKDF implementation for production TLS secret handling.
+Later traffic-key composition must combine a selected cipher suite, reviewed
+HKDF execution, the labels `"key"` and `"iv"`, and empty context without
+letting detached caller parameters reinterpret the selected suite. Handshake
+key scheduling, transcript hashing, record protection, certificate validation,
+trust, revocation, I/O, HTTP, OAuth transport, and concrete HTTPS remain
+unavailable.
+
+A fixed-memory `sha384` prerequisite now supplies the missing repository-owned
+FIPS 180-4 digest selected by `TLS_AES_256_GCM_SHA384`. Its one-shot and
+streaming entry points share the SHA-384 initial state, 1024-bit block
+compression, 128-bit length encoding, and 384-bit truncation rules. Streaming
+updates reject a message whose encoded bit length would exceed the standard's
+128-bit field before mutating retained state. Digest snapshots are
+non-destructive, allocate no heap memory, and scrub their temporary state and
+padding; the live hasher also scrubs its retained chaining state and partial
+block on drop. Stable failures contain no input bytes or lengths.
+
+This digest primitive does not implement HMAC, HKDF, `HKDF-Expand-Label`, a
+TLS key schedule, transcript sequencing, cipher-suite negotiation, AEAD, record
+protection, handshake processing, certificate validation, trust, revocation,
+I/O, HTTP, OAuth transport, or any network effect. In particular, its presence
+does not make the existing generic repository HKDF suitable for production TLS
+secret handling. Reviewed fixed-output HMAC-SHA-256/HMAC-SHA-384 and HKDF
+execution remain prerequisites before the label framing can derive traffic
+keys or IVs. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,

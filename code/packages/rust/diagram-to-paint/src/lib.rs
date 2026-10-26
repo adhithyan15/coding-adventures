@@ -7525,16 +7525,19 @@ where
                 1.0,
             )));
             // Row text
-            for (i, row) in comp.rows.iter().enumerate() {
+            let mut line_offset = 0;
+            for row in &comp.rows {
+                let line_count = row.split('\n').count();
                 text_children.push(text_node(
                     row,
                     node.x + 8.0,
-                    comp_y + 8.0 + i as f64 * (node.style.font_size * 1.4),
+                    comp_y + 8.0 + line_offset as f64 * (node.style.font_size * 1.4),
                     node.width - 16.0,
-                    node.style.font_size * 1.2,
+                    line_count as f64 * node.style.font_size * 1.4,
                     node_font.clone(),
                     css_to_color(&node.style.text_color),
                 ));
+                line_offset += line_count;
             }
         }
     }

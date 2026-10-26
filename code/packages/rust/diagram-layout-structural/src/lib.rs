@@ -256,12 +256,19 @@ fn node_width(node: &StructuralNode, architecture_config: Option<&ArchitectureCo
         .compartments
         .iter()
         .flat_map(|c| c.entries.iter())
-        .map(|e| e.len())
+        .flat_map(|entry| entry.split('\n'))
+        .map(str::len)
         .max()
         .unwrap_or(0);
     // Approximate 8 px/char + padding; header is the label
     let char_width = style.font_size * 0.57;
-    let text_w = (node.label.len().max(max_entry) as f64 * char_width + 24.0).ceil();
+    let label_width = node
+        .label
+        .split('\n')
+        .map(str::len)
+        .max()
+        .unwrap_or(0);
+    let text_w = (label_width.max(max_entry) as f64 * char_width + 24.0).ceil();
     let minimum_width = architecture_config.map_or(MIN_NODE_W, |config| {
         MIN_NODE_W * config.icon_size / 80.0
     });
@@ -273,17 +280,37 @@ fn node_height(node: &StructuralNode, architecture_config: Option<&ArchitectureC
         return 18.0 * architecture_config.map_or(1.0, |config| config.icon_size / 80.0);
     }
     let font_size = structural_style(node, architecture_config).font_size;
-    let header_height = if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
+    let header_height = node_header_height(node, architecture_config, font_size);
+    let row_height = ROW_H.max(font_size * 1.4);
+    let mut h = header_height;
+    for comp in &node.compartments {
+        let line_count = comp
+            .entries
+            .iter()
+            .map(|entry| entry.split('\n').count())
+            .sum::<usize>();
+        h += COMP_PAD + line_count as f64 * row_height + COMP_PAD;
+    }
+    h
+}
+
+fn node_header_height(
+    node: &StructuralNode,
+    architecture_config: Option<&ArchitectureConfig>,
+    font_size: f64,
+) -> f64 {
+    let base_height = if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
         architecture_config.map_or(72.0, |config| config.icon_size * 0.9).max(font_size * 2.4)
     } else {
         HEADER_H.max(font_size * 2.4)
     };
-    let row_height = ROW_H.max(font_size * 1.4);
-    let mut h = header_height;
-    for comp in &node.compartments {
-        h += COMP_PAD + comp.entries.len() as f64 * row_height + COMP_PAD;
+    let label_lines = node.label.split('\n').count();
+    if label_lines > 1 {
+        let stereotype_lines = usize::from(node.stereotype.is_some());
+        base_height.max((label_lines + stereotype_lines) as f64 * font_size * 1.4 + 16.0)
+    } else {
+        base_height
     }
-    h
 }
 
 fn architecture_icon_name(node: &StructuralNode) -> Option<&str> {
@@ -355,15 +382,15 @@ fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
         // Build layouted compartments.
         let style = structural_style(node, architecture_config);
         let row_height = ROW_H.max(style.font_size * 1.4);
-        let mut y_off = if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
-            architecture_config.map_or(72.0, |config| config.icon_size * 0.9)
-                .max(style.font_size * 2.4)
-        } else {
-            HEADER_H.max(style.font_size * 2.4)
-        };
+        let mut y_off = node_header_height(node, architecture_config, style.font_size);
         let mut comps: Vec<LayoutedCompartment> = Vec::new();
         for comp in &node.compartments {
-            let ch = COMP_PAD + comp.entries.len() as f64 * row_height + COMP_PAD;
+            let line_count = comp
+                .entries
+                .iter()
+                .map(|entry| entry.split('\n').count())
+                .sum::<usize>();
+            let ch = COMP_PAD + line_count as f64 * row_height + COMP_PAD;
             comps.push(LayoutedCompartment {
                 y_offset: y_off,
                 height: ch,
@@ -1772,6 +1799,65 @@ mod tests {
 
         assert_eq!(layout.nodes[0].compartments[0].rows.len(), 2);
         assert!(layout.nodes[0].height > 60.0);
+    }
+
+    #[test]
+    fn key_prefix_attribute_types_reserve_rows() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.nodes[0].id = "ENTITY".into();
+        diagram.nodes[0].label = "ENTITY".into();
+        diagram.nodes[0].compartments[0].entries = vec![
+            "primary: PKType".into(),
+            "foreign: fk_type".into(),
+            "alias: string? [UK]".into(),
+        ];
+        diagram.relationships.clear();
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes[0].compartments[0].rows.len(), 3);
+        assert!(layout.nodes[0].height > 70.0);
+    }
+
+    #[test]
+    fn multiline_attribute_comments_reserve_each_semantic_line() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.nodes[0].id = "ENTITY".into();
+        diagram.nodes[0].label = "ENTITY".into();
+        diagram.nodes[0].compartments[0].entries = vec![
+            "first: string - Primary\nidentifier".into(),
+            "second: string - Second\nline".into(),
+            "third: string [PK] - Third\nline".into(),
+        ];
+        diagram.relationships.clear();
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes[0].compartments[0].rows.len(), 3);
+        assert!(layout.nodes[0].height > 130.0);
+        assert!(layout.nodes[0].width < 300.0);
+    }
+
+    #[test]
+    fn multiline_entity_aliases_reserve_header_geometry() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.nodes[0].id = "ENTITY".into();
+        diagram.nodes[0].label = "Primary\nEntity".into();
+        diagram.nodes[0].compartments[0].entries = vec!["id: string [PK]".into()];
+        diagram.relationships.clear();
+
+        let layout = layout_structural_diagram(&diagram);
+        let node = &layout.nodes[0];
+
+        assert!(node.compartments[0].y_offset > 50.0);
+        assert!(node.height > 90.0);
+        assert_eq!(node.header, "Primary\nEntity");
     }
 
     #[test]

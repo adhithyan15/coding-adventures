@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C204-with-children",
+    "language": "punjabi",
+    "chapter": 204,
+    "sequence": 11100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13a253efad8e2523"
+  },
+  "findings": []
+}
