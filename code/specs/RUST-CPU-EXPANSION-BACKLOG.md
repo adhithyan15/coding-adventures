@@ -81,7 +81,7 @@ architecture/core introduction era, not a claim about a particular chip.
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
 | 15 | MSP430 classic (MSP430F2274 profile) | TI SLAU144K family guide and SLAS504G device data sheet | Source-pinned classic 16-bit von-Neumann CPU with the full documented 27-instruction core; MSP430X, peripherals, clocks, power, and timing stay outside the first cell. |
-| 16 | PIC16 classic mid-range (PIC16F84A profile) | Microchip DS35007C device data sheet and DS33023A family reference manual | Source-pinned 14-bit Harvard CPU with all 35 documented instructions, exact banked file-register/PCL/stack behavior, and typed peripheral boundaries. |
+| 16 | PIC16 classic mid-range (PIC16F84A profile) | Microchip DS35007C device data sheet and DS33023A family reference manual | Complete locally: source-pinned 14-bit Harvard CPU with all 35 documented instructions, exact banked file-register/PCL/stack behavior, typed peripheral boundaries, 14 release tests, one doctest, strict checks, and 98.67% package-source line coverage (670/679). |
 
 MSP430 follows Xtensa rather than displacing an active item. TI's public
 SLAU144K chapter 3 gives a complete classic encoding, addressing, flag, and
@@ -91,14 +91,15 @@ boundary makes the CPU independently implementable now. Its educational gate
 and MSP430F2274 SoC compositions remain later cells so neither undocumented
 silicon topology nor peripheral behavior is inferred.
 
-PIC16F84A follows MSP430 as the next independent cell. Microchip's public
+PIC16F84A follows MSP430 in the independent queue. Microchip's public
 DS35007C pins the exact 1K-by-14 program memory, 68-byte GPR file, core SFR
 map, eight-entry 13-bit stack, and 35-instruction profile; DS33023A supplies
 the detailed mid-range PC, stack, and instruction rules. The first cell keeps
 Timer0, ports, watchdog, EEPROM, interrupts, clocks, and electrical behavior
 behind typed boundaries instead of inventing peripheral semantics. A later
-educational gate cell and a source-backed PIC16F84A SoC composition are
-separate backlog work.
+educational gate cell and a source-backed PIC16F84A SoC composition remain
+separate queued follow-up cells after independent implementation review and
+publication of the functional core.
 
 ## Discovered follow-up work
 
