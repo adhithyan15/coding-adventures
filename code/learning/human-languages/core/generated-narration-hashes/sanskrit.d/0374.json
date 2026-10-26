@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:1b846eb02d225d79",
+  "lessonIds": [
+    "SA-C374-avahitah",
+    "SA-C374-pramadah",
+    "SA-C374-pariharati",
+    "SA-C374-anarthah",
+    "SA-C374-viramati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch374.txt",
+  "json": "sanskrit/narration/ch374.json",
+  "textHash": "fnv1a64:d105fb694ecf1d7a",
+  "jsonHash": "fnv1a64:c75bdc74290d4ddb",
+  "findings": []
+}

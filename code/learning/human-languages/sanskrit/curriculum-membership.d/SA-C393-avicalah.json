@@ -1,0 +1,11 @@
+{
+  "id": "SA-C393-avicalah",
+  "pathSegment": "SA-PATH-393-VIJAYA393",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-393-VIJAYA393",
+      "order": 1
+    }
+  ]
+}

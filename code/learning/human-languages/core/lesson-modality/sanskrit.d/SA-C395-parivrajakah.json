@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C395-parivrajakah",
+    "language": "sanskrit",
+    "chapter": 395,
+    "sequence": 23090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4acae0e92b8b6b7"
+  },
+  "findings": []
+}

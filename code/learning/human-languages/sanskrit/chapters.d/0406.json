@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "Getting On and Off",
+  "label": "ch:sa-getting-on-and-off",
+  "canDo": "I can say how I got on, found room and got off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C406-avakasah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can say how I got on, found room and got off.",
+    "assesses": [
+      "SA-LEX-C406-ADHIROHA406-03",
+      "SA-LEX-C406-ADHIROHA406-04",
+      "SA-LEX-C406-ADHIROHA406-05"
+    ]
+  }
+}

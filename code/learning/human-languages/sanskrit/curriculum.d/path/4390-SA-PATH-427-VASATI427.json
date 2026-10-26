@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-427-VASATI427",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "SA-EXT-427-VASATI427"
+  ],
+  "after": []
+}

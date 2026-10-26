@@ -1,0 +1,19 @@
+{
+  "chapter": 499,
+  "title": "Aunts and Nephews",
+  "label": "ch:sa-aunts-and-nephews",
+  "canDo": "I can name more members of the family.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C499-dauhitrah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 499: I can name more members of the family.",
+    "assesses": [
+      "SA-LEX-C499-SVASR499-03",
+      "SA-LEX-C499-SVASR499-04",
+      "SA-LEX-C499-SVASR499-05"
+    ]
+  }
+}

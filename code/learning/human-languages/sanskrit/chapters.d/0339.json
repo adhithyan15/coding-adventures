@@ -1,0 +1,21 @@
+{
+  "chapter": 339,
+  "title": "The Prince's Choice",
+  "label": "ch:sa-the-prince-s-choice",
+  "canDo": "I can tell how a crown prince won a bride.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-R339-review-final-339",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can tell how a crown prince won a bride.",
+    "assesses": [
+      "SA-LEX-C339-YUVARAJA339-01",
+      "SA-LEX-C339-YUVARAJA339-02",
+      "SA-LEX-C339-YUVARAJA339-03",
+      "SA-LEX-C339-YUVARAJA339-04",
+      "SA-LEX-C339-YUVARAJA339-05"
+    ]
+  }
+}

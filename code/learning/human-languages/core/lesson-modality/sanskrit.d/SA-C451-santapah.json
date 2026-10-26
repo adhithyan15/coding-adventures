@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C451-santapah",
+    "language": "sanskrit",
+    "chapter": 451,
+    "sequence": 26190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62bf4cae73f4ccd5"
+  },
+  "findings": []
+}

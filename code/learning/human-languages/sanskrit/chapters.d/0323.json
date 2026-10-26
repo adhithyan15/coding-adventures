@@ -1,0 +1,19 @@
+{
+  "chapter": 323,
+  "title": "Ruins of the Past",
+  "label": "ch:sa-ruins-of-the-past",
+  "canDo": "I can describe old ruins and what was found there.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C323-aviskaroti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can describe old ruins and what was found there.",
+    "assesses": [
+      "SA-LEX-C323-STUPA323-03",
+      "SA-LEX-C323-STUPA323-04",
+      "SA-LEX-C323-STUPA323-05"
+    ]
+  }
+}

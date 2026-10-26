@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:3169de5681d86eb5",
+  "lessonIds": [
+    "SA-C473-angam",
+    "SA-C473-jangha",
+    "SA-C473-parsnih",
+    "SA-C473-mustih",
+    "SA-C473-akuncayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch473.txt",
+  "json": "sanskrit/narration/ch473.json",
+  "textHash": "fnv1a64:e0f63c8ec7bdff51",
+  "jsonHash": "fnv1a64:a181e88e06a1f8d7",
+  "findings": []
+}

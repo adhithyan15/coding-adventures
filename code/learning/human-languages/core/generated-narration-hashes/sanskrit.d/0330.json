@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:34cfdb1048044fe2",
+  "lessonIds": [
+    "SA-C330-parampara",
+    "SA-C330-ritih",
+    "SA-C330-acarati",
+    "SA-C330-parva",
+    "SA-C330-tilakah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch330.txt",
+  "json": "sanskrit/narration/ch330.json",
+  "textHash": "fnv1a64:e32cf7e9d4ee8021",
+  "jsonHash": "fnv1a64:d12dda6fe7be41ea",
+  "findings": []
+}

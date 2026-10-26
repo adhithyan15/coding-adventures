@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 485,
+  "title": "Nursing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0206b24e2c944bbd",
+  "lessons": [
+    {
+      "id": "SA-C485-susrusa",
+      "sequence": 27890,
+      "title": "शुश्रूषा (śuśrūṣā) — nursing; dutiful service",
+      "headword": "शुश्रूषा",
+      "romanization": "śuśrūṣā",
+      "gloss": "nursing; dutiful service",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:285dd6777ca32479",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for phlegm, then the Sanskrit for a wholesome diet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शुश्रूषा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शुश्रूषा — śuśrūṣā — \"nursing; dutiful service\"."
+            },
+            {
+              "kind": "speech",
+              "text": "परिचारिकायाः शुश्रूषया आतुरः स्वस्थः भवति। paricārikāyāḥ śuśrūṣayā āturaḥ svasthaḥ bhavati. With the nurse's care the patient gets well."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शुश्रूषा (śuśrūṣā) is built on the desiderative of the root √śru, \"to hear\", the root of शृणोति: MW's first sense is \"desire to hear\", then \"reverence, obedience, service\"; \"nursing the sick\" is the modern sense (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śuśrūṣā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śuśrūṣā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śuśrūṣā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śuśrūṣā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paricārikāyāḥ śuśrūṣayā āturaḥ svasthaḥ bhavati. — With the nurse's care the patient gets well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paricārikāyāḥ śuśrūṣayā āturaḥ svasthaḥ bhavati.* — With the nurse's care the patient gets well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for phlegm, then the Sanskrit for a wholesome diet, then say śuśrūṣā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for phlegm, then the Sanskrit for a wholesome diet, then say *śuśrūṣā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शुश्रूषा (śuśrūṣā) mean? (\"Nursing; dutiful service\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C485-upacarati",
+      "sequence": 27900,
+      "title": "उपचरति (upacarati) — attends on",
+      "headword": "उपचरति",
+      "romanization": "upacarati",
+      "gloss": "attends on",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e17a3e06553f5d8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a wholesome diet, then the Sanskrit for nursing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उपचरति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपचरति — upacarati — \"attends on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पुत्री रुग्णां मातरम् उपचरति। putrī rugṇāṃ mātaram upacarati. The daughter looks after her sick mother."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): सा मातरम् उपचरितवती, sā mātaram upacaritavatī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपचरति (upacarati) is built from upa, \"near\", and the root √car, \"to move\"; MW gives \"to wait upon, serve, attend\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upacarati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upacarati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upacarati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upacarati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putrī rugṇāṃ mātaram upacarati. — The daughter looks after her sick mother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putrī rugṇāṃ mātaram upacarati.* — The daughter looks after her sick mother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a wholesome diet, then the Sanskrit for nursing, then say upacarati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a wholesome diet, then the Sanskrit for nursing, then say *upacarati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उपचरति (upacarati) mean? (\"Attends on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C485-apyayayati",
+      "sequence": 27910,
+      "title": "आप्याययति (āpyāyayati) — revives; refreshes",
+      "headword": "आप्याययति",
+      "romanization": "āpyāyayati",
+      "gloss": "revives; refreshes",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:668b6974c8a283b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for nursing, then the Sanskrit for attends on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आप्याययति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आप्याययति — āpyāyayati — \"revives; refreshes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उष्णः सूपः आतुरम् आप्याययति। uṣṇaḥ sūpaḥ āturam āpyāyayati. Warm soup refreshes the patient."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): सूपः आतुरम् आप्यायितवान्, sūpaḥ āturam āpyāyitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आप्याययति (āpyāyayati) is built from ā and the root √pyai, \"to swell, to grow full\": to fill up again; MW's ppp āpyāyita is \"satisfied, improved, pleased\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpyāyayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpyāyayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpyāyayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpyāyayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṣṇaḥ sūpaḥ āturam āpyāyayati. — Warm soup refreshes the patient.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṣṇaḥ sūpaḥ āturam āpyāyayati.* — Warm soup refreshes the patient.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for nursing, then the Sanskrit for attends on, then say āpyāyayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for nursing, then the Sanskrit for attends on, then say *āpyāyayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आप्याययति (āpyāyayati) mean? (\"Revives; refreshes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C485-upasamah",
+      "sequence": 27920,
+      "title": "उपशमः (upaśamaḥ) — relief",
+      "headword": "उपशमः",
+      "romanization": "upaśamaḥ",
+      "gloss": "relief",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b325b655a9df884",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for attends on, then the Sanskrit for revives."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उपशमः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपशमः — upaśamaḥ — \"relief\"."
+            },
+            {
+              "kind": "speech",
+              "text": "औषधेन वेदनायाः उपशमः भवति। auṣadhena vedanāyāḥ upaśamaḥ bhavati. The medicine brings relief from the pain."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपशमः (upaśamaḥ) is built from upa and the root √śam, \"to be calm\"; MW gives \"assuagement, alleviation, cessation\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upaśamaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upaśamaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upaśamaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upaśamaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "auṣadhena vedanāyāḥ upaśamaḥ bhavati. — The medicine brings relief from the pain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *auṣadhena vedanāyāḥ upaśamaḥ bhavati.* — The medicine brings relief from the pain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for attends on, then the Sanskrit for revives, then say upaśamaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for attends on, then the Sanskrit for revives, then say *upaśamaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उपशमः (upaśamaḥ) mean? (\"Relief\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C485-rasayanam",
+      "sequence": 27930,
+      "title": "रसायनम् (rasāyanam) — a rejuvenating tonic",
+      "headword": "रसायनम्",
+      "romanization": "rasāyanam",
+      "gloss": "a rejuvenating tonic",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a941194cee167d0f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for revives, then the Sanskrit for relief."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रसायनम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रसायनम् — rasāyanam — \"a rejuvenating tonic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वैद्यः वृद्धाय रसायनं ददाति। vaidyaḥ vṛddhāya rasāyanaṃ dadāti. The physician gives the old man a tonic."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रसायनम् (rasāyanam) is built from रसः, \"sap, essence\", and ayana, \"a way\"; MW gives \"a medicine supposed to prevent old age and prolong life, an elixir\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rasāyanam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rasāyanam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rasāyanam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rasāyanam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaidyaḥ vṛddhāya rasāyanaṃ dadāti. — The physician gives the old man a tonic.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaidyaḥ vṛddhāya rasāyanaṃ dadāti.* — The physician gives the old man a tonic.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for revives, then the Sanskrit for relief, then say rasāyanam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for revives, then the Sanskrit for relief, then say *rasāyanam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रसायनम् (rasāyanam) mean? (\"A rejuvenating tonic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

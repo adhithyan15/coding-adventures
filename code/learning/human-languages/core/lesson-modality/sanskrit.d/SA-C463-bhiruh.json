@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C463-bhiruh",
+    "language": "sanskrit",
+    "chapter": 463,
+    "sequence": 26780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45ce93d15eba54ae"
+  },
+  "findings": []
+}

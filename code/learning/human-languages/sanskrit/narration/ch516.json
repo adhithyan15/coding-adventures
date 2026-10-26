@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 516,
+  "title": "Free Time",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9716485f560a104d",
+  "lessons": [
+    {
+      "id": "SA-C516-manoranjanam",
+      "sequence": 29710,
+      "title": "मनोरञ्जनम् (manorañjanam) — entertainment",
+      "headword": "मनोरञ्जनम्",
+      "romanization": "manorañjanam",
+      "gloss": "entertainment",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4900c924f44abc98",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for ripe, then the Sanskrit for sucks."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मनोरञ्जनम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मनोरञ्जनम् — manorañjanam — \"entertainment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रविवासरे वयं मनोरञ्जनाय उद्यानं गच्छामः। ravivāsare vayaṃ manorañjanāya udyānaṃ gacchāmaḥ. On Sunday we go to the park for some fun."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मनोरञ्जनम् (manorañjanam) is built from manas, \"the mind\", and rañjana, \"colouring, delighting\", from the root √rañj, \"to be coloured, to be pleased\"; MW records manorañjana only as the title of a book, so \"entertainment\" is the modern sense (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manorañjanam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manorañjanam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manorañjanam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manorañjanam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ravivāsare vayaṃ manorañjanāya udyānaṃ gacchāmaḥ. — On Sunday we go to the park for some fun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ravivāsare vayaṃ manorañjanāya udyānaṃ gacchāmaḥ.* — On Sunday we go to the park for some fun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for ripe, then the Sanskrit for sucks, then say manorañjanam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for ripe, then the Sanskrit for sucks, then say *manorañjanam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मनोरञ्जनम् (manorañjanam) mean? (\"Entertainment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C516-hasyam",
+      "sequence": 29720,
+      "title": "हास्यम् (hāsyam) — fun; laughter",
+      "headword": "हास्यम्",
+      "romanization": "hāsyam",
+      "gloss": "fun; laughter",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5bb3ad3c23880a5e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for sucks, then the Sanskrit for entertainment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हास्यम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हास्यम् — hāsyam — \"fun; laughter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बालस्य हास्यं मह्यं रोचते। bālasya hāsyaṃ mahyaṃ rocate. I love the child's laughter."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हास्यम् (hāsyam) comes from the root √has, \"to laugh\", which also gives hasati; MW gives hāsya as laughter, mirth, and jest, fun, amusement (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāsyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāsyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāsyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāsyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālasya hāsyaṃ mahyaṃ rocate. — I love the child's laughter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālasya hāsyaṃ mahyaṃ rocate.* — I love the child's laughter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for sucks, then the Sanskrit for entertainment, then say hāsyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for sucks, then the Sanskrit for entertainment, then say *hāsyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हास्यम् (hāsyam) mean? (\"Fun; laughter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C516-vinodayati",
+      "sequence": 29730,
+      "title": "विनोदयति (vinodayati) — amuses",
+      "headword": "विनोदयति",
+      "romanization": "vinodayati",
+      "gloss": "amuses",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:284cb886b98abc8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for entertainment, then the Sanskrit for fun."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विनोदयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विनोदयति — vinodayati — \"amuses\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पितामहः गीतेन बालान् विनोदयति। pitāmahaḥ gītena bālān vinodayati. Grandfather amuses the children with a song."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः बालान् विनोदितवान्, saḥ bālān vinoditavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विनोदयति (vinodayati) is built on vi, \"away\", and the causative of the root √nud, \"to push\", which also gives nudati: to drive dullness away; MW gives vinud as to drive away, and to divert (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vinodayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vinodayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vinodayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vinodayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pitāmahaḥ gītena bālān vinodayati. — Grandfather amuses the children with a song.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pitāmahaḥ gītena bālān vinodayati.* — Grandfather amuses the children with a song.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for entertainment, then the Sanskrit for fun, then say vinodayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for entertainment, then the Sanskrit for fun, then say *vinodayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विनोदयति (vinodayati) mean? (\"Amuses\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C516-sangrahah",
+      "sequence": 29740,
+      "title": "संग्रहः (saṅgrahaḥ) — a collection",
+      "headword": "संग्रहः",
+      "romanization": "saṅgrahaḥ",
+      "gloss": "a collection",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a70816f8f56fb5f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for fun, then the Sanskrit for amuses."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संग्रहः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संग्रहः — saṅgrahaḥ — \"a collection\"."
+            },
+            {
+              "kind": "speech",
+              "text": "एषः मम भ्रातुः संग्रहः अस्ति। eṣaḥ mama bhrātuḥ saṅgrahaḥ asti. This is my brother's collection."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संग्रहः (saṅgrahaḥ) is built on sam, \"together\", and the root √grah, \"to seize, to take\"; MW gives saṃgraha as collecting, gathering, an accumulation (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅgrahaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅgrahaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅgrahaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅgrahaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṣaḥ mama bhrātuḥ saṅgrahaḥ asti. — This is my brother's collection.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṣaḥ mama bhrātuḥ saṅgrahaḥ asti.* — This is my brother's collection.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for fun, then the Sanskrit for amuses, then say saṅgrahaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for fun, then the Sanskrit for amuses, then say *saṅgrahaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संग्रहः (saṅgrahaḥ) mean? (\"A collection\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C516-rucih",
+      "sequence": 29750,
+      "title": "रुचिः (ruciḥ) — a liking",
+      "headword": "रुचिः",
+      "romanization": "ruciḥ",
+      "gloss": "a liking",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da24739cf5eb6e5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for amuses, then the Sanskrit for a collection."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रुचिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रुचिः — ruciḥ — \"a liking\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मम भगिन्याः संगीते रुचिः अस्ति। mama bhaginyāḥ saṅgīte ruciḥ asti. My sister has a liking for music."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रुचिः (ruciḥ) comes from the root √ruc, \"to shine, to be pleasing\", which also gives rocate; MW gives ruci as light, and as liking, taste, relish (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ruciḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ruciḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ruciḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ruciḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mama bhaginyāḥ saṅgīte ruciḥ asti. — My sister has a liking for music.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mama bhaginyāḥ saṅgīte ruciḥ asti.* — My sister has a liking for music.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for amuses, then the Sanskrit for a collection, then say ruciḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for amuses, then the Sanskrit for a collection, then say *ruciḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रुचिः (ruciḥ) mean? (\"A liking\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C532-dukulam",
+  "pathSegment": "SA-PATH-532-UPAYANA532",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-532-UPAYANA532",
+      "order": 2
+    }
+  ]
+}

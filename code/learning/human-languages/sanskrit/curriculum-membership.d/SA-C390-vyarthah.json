@@ -1,0 +1,11 @@
+{
+  "id": "SA-C390-vyarthah",
+  "pathSegment": "SA-PATH-390-LAKSHANA390",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-390-LAKSHANA390",
+      "order": 2
+    }
+  ]
+}

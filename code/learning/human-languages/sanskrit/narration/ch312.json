@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 312,
+  "title": "Claims and Denials",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c53e8178cf1017be",
+  "lessons": [
+    {
+      "id": "SA-C312-pravakta",
+      "sequence": 18330,
+      "title": "प्रवक्ता (pravaktā) — a spokesman",
+      "headword": "प्रवक्ता",
+      "romanization": "pravaktā",
+      "gloss": "a spokesman",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f7fe6a44b19e8ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for doubts, then the Sanskrit for a misunderstanding."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रवक्ता",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रवक्ता — pravaktā — \"a spokesman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रवक्ता सभायां वदति। pravaktā sabhāyāṃ vadati. The spokesman speaks at the meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रवक्ता (pravaktā) is built from pra, \"forth\", and vaktṛ, \"a speaker\", from the root √vac, \"to speak\"; MW gives pravaktṛ as one who tells or relates, an announcer, and a spokesman is its modern use (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravaktā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravaktā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravaktā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravaktā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravaktā sabhāyāṃ vadati. — The spokesman speaks at the meeting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravaktā sabhāyāṃ vadati.* — The spokesman speaks at the meeting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for doubts, then the Sanskrit for a misunderstanding, then say pravaktā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for doubts, then the Sanskrit for a misunderstanding, then say *pravaktā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रवक्ता (pravaktā) mean? (\"A spokesman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C312-aropah",
+      "sequence": 18340,
+      "title": "आरोपः (āropaḥ) — an allegation",
+      "headword": "आरोपः",
+      "romanization": "āropaḥ",
+      "gloss": "an allegation",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9f700668ccbf84c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a misunderstanding, then the Sanskrit for a spokesman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आरोपः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आरोपः — āropaḥ — \"an allegation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पत्रिका न्यायाधीशे आरोपं प्रकाशयति। patrikā nyāyādhīśe āropaṃ prakāśayati. The newspaper publishes an allegation against the judge."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आरोपः (āropaḥ) is built from ā and the causative of the root √ruh, \"to rise\", as in āropayati; MW gives āropa as imposing a burden, charging with, attributing to, and an allegation is its modern use (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āropaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āropaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āropaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āropaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrikā nyāyādhīśe āropaṃ prakāśayati. — The newspaper publishes an allegation against the judge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrikā nyāyādhīśe āropaṃ prakāśayati.* — The newspaper publishes an allegation against the judge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a misunderstanding, then the Sanskrit for a spokesman, then say āropaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a misunderstanding, then the Sanskrit for a spokesman, then say *āropaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आरोपः (āropaḥ) mean? (\"An allegation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C312-nirakaroti",
+      "sequence": 18350,
+      "title": "निराकरोति (nirākaroti) — denies; rejects",
+      "headword": "निराकरोति",
+      "romanization": "nirākaroti",
+      "gloss": "denies; rejects",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f05b5c9512a8932",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a spokesman, then the Sanskrit for an allegation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निराकरोति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निराकरोति — nirākaroti — \"denies; rejects\"."
+            },
+            {
+              "kind": "speech",
+              "text": "न्यायाधीशः आरोपं दृढं निराकरोति। nyāyādhīśaḥ āropaṃ dṛḍhaṃ nirākaroti. The judge firmly denies the allegation."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः आरोपं निराकृतवान्, saḥ āropaṃ nirākṛtavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निराकरोति (nirākaroti) is built from nir, ā and the root √kṛ, \"to do\"; MW gives nir-ā-kṛ as to drive away, repudiate, reject and contradict (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirākaroti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirākaroti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirākaroti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirākaroti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyāyādhīśaḥ āropaṃ dṛḍhaṃ nirākaroti. — The judge firmly denies the allegation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyāyādhīśaḥ āropaṃ dṛḍhaṃ nirākaroti.* — The judge firmly denies the allegation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a spokesman, then the Sanskrit for an allegation, then say nirākaroti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a spokesman, then the Sanskrit for an allegation, then say *nirākaroti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निराकरोति (nirākaroti) mean? (\"Denies; rejects\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C312-anrtam",
+      "sequence": 18360,
+      "title": "अनृतम् (anṛtam) — a lie; an untruth",
+      "headword": "अनृतम्",
+      "romanization": "anṛtam",
+      "gloss": "a lie; an untruth",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8651bea96bfa721b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for an allegation, then the Sanskrit for denies."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अनृतम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनृतम् — anṛtam — \"a lie; an untruth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सः आरोपः अनृतम् अस्ति। saḥ āropaḥ anṛtam asti. That allegation is a lie."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनृतम् (anṛtam) is built from an, \"not\", and ṛta, \"right, true\"; MW gives anṛta as not true and, as a noun, falsehood, lying (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anṛtam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anṛtam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anṛtam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anṛtam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saḥ āropaḥ anṛtam asti. — That allegation is a lie.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saḥ āropaḥ anṛtam asti.* — That allegation is a lie.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for an allegation, then the Sanskrit for denies, then say anṛtam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for an allegation, then the Sanskrit for denies, then say *anṛtam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अनृतम् (anṛtam) mean? (\"A lie; an untruth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C312-sandigdhah",
+      "sequence": 18370,
+      "title": "सन्दिग्धः (sandigdhaḥ) — doubtful; questionable",
+      "headword": "सन्दिग्धः",
+      "romanization": "sandigdhaḥ",
+      "gloss": "doubtful; questionable",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:730b7396f1eb1eea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for denies, then the Sanskrit for a lie."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सन्दिग्धः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सन्दिग्धः — sandigdhaḥ — \"doubtful; questionable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रवक्तुः उत्तरं सन्दिग्धम् अस्ति। pravaktuḥ uttaraṃ sandigdham asti. The spokesman's answer is doubtful."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सन्दिग्धः (sandigdhaḥ) is built from sam and the root √dih, like sandeha; MW gives saṃdigdha as smeared over, confused, and questionable (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandigdhaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandigdhaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandigdhaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandigdhaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravaktuḥ uttaraṃ sandigdham asti. — The spokesman's answer is doubtful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravaktuḥ uttaraṃ sandigdham asti.* — The spokesman's answer is doubtful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for denies, then the Sanskrit for a lie, then say sandigdhaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for denies, then the Sanskrit for a lie, then say *sandigdhaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सन्दिग्धः (sandigdhaḥ) mean? (\"Doubtful; questionable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

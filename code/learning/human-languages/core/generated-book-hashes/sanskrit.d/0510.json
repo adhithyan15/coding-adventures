@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:201cd13fe56c456e",
+  "lessonIds": [
+    "SA-C510-avakarah",
+    "SA-C510-utsarayati",
+    "SA-C510-vyavasthapayati",
+    "SA-C510-punjah",
+    "SA-C510-sammarjanam"
+  ],
+  "tex": "sanskrit/book/chapters/ch510-clearing-the-clutter.tex"
+}

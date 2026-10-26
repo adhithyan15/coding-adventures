@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:ea8d47f7db206659",
+  "lessonIds": [
+    "SA-C393-vijayate",
+    "SA-C393-avicalah",
+    "SA-C393-nirantaram",
+    "SA-C393-tatparah",
+    "SA-C393-krtakrtyah",
+    "SA-R393-review-387-393",
+    "SA-R393-review-final-393"
+  ],
+  "tex": "sanskrit/book/chapters/ch393-what-it-takes.tex"
+}

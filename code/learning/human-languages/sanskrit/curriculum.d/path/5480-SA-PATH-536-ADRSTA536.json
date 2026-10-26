@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-536-ADRSTA536",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "SA-EXT-536-ADRSTA536"
+  ],
+  "after": []
+}

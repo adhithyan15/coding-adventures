@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:551115cfc744ad50",
+  "lessonIds": [
+    "SA-C545-anukramah",
+    "SA-C545-yathakramam",
+    "SA-C545-rte",
+    "SA-C545-adau",
+    "SA-C545-alocayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch545-in-the-right-order.tex"
+}

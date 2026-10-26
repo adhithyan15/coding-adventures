@@ -1,0 +1,21 @@
+{
+  "chapter": 347,
+  "title": "For Example",
+  "label": "ch:sa-for-example",
+  "canDo": "I can back up a point with an example.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-R347-review-340-347",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 347: I can back up a point with an example.",
+    "assesses": [
+      "SA-LEX-C347-UDAHARANA347-01",
+      "SA-LEX-C347-UDAHARANA347-02",
+      "SA-LEX-C347-UDAHARANA347-03",
+      "SA-LEX-C347-UDAHARANA347-04",
+      "SA-LEX-C347-UDAHARANA347-05"
+    ]
+  }
+}

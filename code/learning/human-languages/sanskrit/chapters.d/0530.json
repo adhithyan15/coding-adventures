@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "Planning a Feast",
+  "label": "ch:sa-planning-a-feast",
+  "canDo": "I can plan a feast and say what we will serve if guests come.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C530-paryusitah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can plan a feast and say what we will serve if guests come.",
+    "assesses": [
+      "SA-LEX-C530-BHOJYA530-03",
+      "SA-LEX-C530-BHOJYA530-04",
+      "SA-LEX-C530-BHOJYA530-05"
+    ]
+  }
+}

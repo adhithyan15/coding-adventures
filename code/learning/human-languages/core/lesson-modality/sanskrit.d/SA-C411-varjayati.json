@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C411-varjayati",
+    "language": "sanskrit",
+    "chapter": 411,
+    "sequence": 23910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e6e71b2a76a1c7a"
+  },
+  "findings": []
+}

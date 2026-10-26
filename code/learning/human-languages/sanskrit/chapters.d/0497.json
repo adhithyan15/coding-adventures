@@ -1,0 +1,19 @@
+{
+  "chapter": 497,
+  "title": "Wedding Rites",
+  "label": "ch:sa-wedding-rites",
+  "canDo": "I can name the rites of a wedding.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C497-saubhagyam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can name the rites of a wedding.",
+    "assesses": [
+      "SA-LEX-C497-KANYADANA497-03",
+      "SA-LEX-C497-KANYADANA497-04",
+      "SA-LEX-C497-KANYADANA497-05"
+    ]
+  }
+}

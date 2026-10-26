@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C452-udvegah",
+    "language": "sanskrit",
+    "chapter": 452,
+    "sequence": 26200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0d9adf1a32cf431"
+  },
+  "findings": []
+}

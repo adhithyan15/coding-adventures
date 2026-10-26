@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:16a6879f741e6362",
+  "lessonIds": [
+    "SA-C460-svabhavah",
+    "SA-C460-sabhyah",
+    "SA-C460-pravartate",
+    "SA-C460-gunah",
+    "SA-C460-dustah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch460.txt",
+  "json": "sanskrit/narration/ch460.json",
+  "textHash": "fnv1a64:b7c4264903f23aa4",
+  "jsonHash": "fnv1a64:4e73342591bd7922",
+  "findings": []
+}

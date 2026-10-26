@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C350-nirdharayati",
+    "language": "sanskrit",
+    "chapter": 350,
+    "sequence": 20530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2fa13ec5d6dc868"
+  },
+  "findings": []
+}

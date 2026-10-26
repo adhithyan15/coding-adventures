@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:dfeaf2ea74d47e65",
+  "lessonIds": [
+    "SA-C352-himsa",
+    "SA-C352-sahisnuh",
+    "SA-C352-apakaroti",
+    "SA-C352-anugrhnati",
+    "SA-C352-ksama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch352.txt",
+  "json": "sanskrit/narration/ch352.json",
+  "textHash": "fnv1a64:89c721ec05715e8f",
+  "jsonHash": "fnv1a64:005fbf66d75cce4d",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:1530132ef5c57986",
+  "lessonIds": [
+    "SA-C517-caturangam",
+    "SA-C517-prahelika",
+    "SA-C517-kridakah",
+    "SA-C517-gulika",
+    "SA-C517-putrika",
+    "SA-R517-review-510-517"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch517.txt",
+  "json": "sanskrit/narration/ch517.json",
+  "textHash": "fnv1a64:728d112cc2e0bcf4",
+  "jsonHash": "fnv1a64:f736d5930b97fa2b",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:2228715b66ca31b8",
+  "lessonIds": [
+    "SA-C353-sasanam",
+    "SA-C353-adhitisthati",
+    "SA-C353-rastram",
+    "SA-C353-sasakah",
+    "SA-C353-adesah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch353.txt",
+  "json": "sanskrit/narration/ch353.json",
+  "textHash": "fnv1a64:811dbd0101e16d6f",
+  "jsonHash": "fnv1a64:3138f24546728e1b",
+  "findings": []
+}

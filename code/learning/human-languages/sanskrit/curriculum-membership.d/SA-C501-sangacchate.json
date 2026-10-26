@@ -1,0 +1,11 @@
+{
+  "id": "SA-C501-sangacchate",
+  "pathSegment": "SA-PATH-501-SAMBANDHA501",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-501-SAMBANDHA501",
+      "order": 2
+    }
+  ]
+}

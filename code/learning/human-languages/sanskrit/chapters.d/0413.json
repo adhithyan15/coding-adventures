@@ -1,0 +1,19 @@
+{
+  "chapter": 413,
+  "title": "Packing for the Road",
+  "label": "ch:sa-packing-for-the-road",
+  "canDo": "I can say what I packed and who will carry it.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C413-sampadayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can say what I packed and who will carry it.",
+    "assesses": [
+      "SA-LEX-C413-UNNAYA413-03",
+      "SA-LEX-C413-UNNAYA413-04",
+      "SA-LEX-C413-UNNAYA413-05"
+    ]
+  }
+}

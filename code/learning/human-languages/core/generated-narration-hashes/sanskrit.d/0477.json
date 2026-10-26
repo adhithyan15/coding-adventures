@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:fb6084c26d954602",
+  "lessonIds": [
+    "SA-C477-bhramah",
+    "SA-C477-vamati",
+    "SA-C477-glayati",
+    "SA-C477-dahah",
+    "SA-C477-jvarati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch477.txt",
+  "json": "sanskrit/narration/ch477.json",
+  "textHash": "fnv1a64:ce10e9654f150d3b",
+  "jsonHash": "fnv1a64:2dc368b6f2d301ea",
+  "findings": []
+}

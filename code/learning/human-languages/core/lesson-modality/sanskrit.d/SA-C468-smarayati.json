@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C468-smarayati",
+    "language": "sanskrit",
+    "chapter": 468,
+    "sequence": 27050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8d186ce594119f0"
+  },
+  "findings": []
+}

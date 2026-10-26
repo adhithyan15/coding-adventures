@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:28d9617c1f274739",
+  "lessonIds": [
+    "SA-C502-karmasala",
+    "SA-C502-taksakah",
+    "SA-C502-taksati",
+    "SA-C502-krakacah",
+    "SA-C502-tankah"
+  ],
+  "tex": "sanskrit/book/chapters/ch502-in-the-workshop.tex"
+}

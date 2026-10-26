@@ -1,0 +1,19 @@
+{
+  "chapter": 295,
+  "title": "Help for the Injured",
+  "label": "ch:sa-help-for-the-injured",
+  "canDo": "I can say how people helped someone who was hurt.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C295-avalambate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can say how people helped someone who was hurt.",
+    "assesses": [
+      "SA-LEX-C295-CETANA295-03",
+      "SA-LEX-C295-CETANA295-04",
+      "SA-LEX-C295-CETANA295-05"
+    ]
+  }
+}

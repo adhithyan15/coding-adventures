@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:a43e05595c2e1fa1",
+  "lessonIds": [
+    "SA-C385-spardhate",
+    "SA-C385-pratidvandvi",
+    "SA-C385-jeta",
+    "SA-C385-puraskaroti",
+    "SA-C385-utkarsah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch385.txt",
+  "json": "sanskrit/narration/ch385.json",
+  "textHash": "fnv1a64:69358832c1e27ed8",
+  "jsonHash": "fnv1a64:2c776df845604bea",
+  "findings": []
+}

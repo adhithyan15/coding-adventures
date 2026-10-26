@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:92c2209b90aa9dd5",
+  "lessonIds": [
+    "SA-C444-purnima",
+    "SA-C444-amavasya",
+    "SA-C444-suklapaksah",
+    "SA-C444-krsnapaksah",
+    "SA-C444-rajate"
+  ],
+  "tex": "sanskrit/book/chapters/ch444-the-moon-s-fortnights.tex"
+}

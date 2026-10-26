@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:a9eab95c1ed67597",
+  "lessonIds": [
+    "SA-C462-sathah",
+    "SA-C462-kutilah",
+    "SA-C462-apalapati",
+    "SA-C462-visvasaniyah",
+    "SA-C462-visvasaghatah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch462.txt",
+  "json": "sanskrit/narration/ch462.json",
+  "textHash": "fnv1a64:a920a08b1c2430ff",
+  "jsonHash": "fnv1a64:c178cdbf9451cdd5",
+  "findings": []
+}

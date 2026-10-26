@@ -1,0 +1,19 @@
+{
+  "chapter": 544,
+  "title": "Each in Turn",
+  "label": "ch:sa-each-in-turn",
+  "canDo": "I can say whether people act together, apart or with each other.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C544-samprati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 544: I can say whether people act together, apart or with each other.",
+    "assesses": [
+      "SA-LEX-C544-PARASPARA544-03",
+      "SA-LEX-C544-PARASPARA544-04",
+      "SA-LEX-C544-PARASPARA544-05"
+    ]
+  }
+}

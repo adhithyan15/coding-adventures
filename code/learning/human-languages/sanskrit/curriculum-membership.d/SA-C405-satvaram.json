@@ -1,0 +1,11 @@
+{
+  "id": "SA-C405-satvaram",
+  "pathSegment": "SA-PATH-405-JAVA405",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-405-JAVA405",
+      "order": 1
+    }
+  ]
+}

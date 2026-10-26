@@ -1,0 +1,19 @@
+{
+  "chapter": 506,
+  "title": "Thread and Loom",
+  "label": "ch:sa-thread-and-loom",
+  "canDo": "I can talk about weaving, dyeing and stitching cloth.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C506-saucikah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 506: I can talk about weaving, dyeing and stitching cloth.",
+    "assesses": [
+      "SA-LEX-C506-VAYATI506-03",
+      "SA-LEX-C506-VAYATI506-04",
+      "SA-LEX-C506-VAYATI506-05"
+    ]
+  }
+}

@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 554,
+  "title": "Looking Ahead",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5288f3c271423b1d",
+  "lessons": [
+    {
+      "id": "SA-C554-sambhavati",
+      "sequence": 31660,
+      "title": "सम्भवति (sambhavati) — is possible; comes about",
+      "headword": "सम्भवति",
+      "romanization": "sambhavati",
+      "gloss": "is possible; comes about",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef604bc795f0c8d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a reversal, then the Sanskrit for a reproach."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सम्भवति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सम्भवति — sambhavati — \"is possible; comes about\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि श्वः वर्षा सम्भवति, तर्हि छत्रं नयतु। yadi śvaḥ varṣā sambhavati, tarhi chatraṃ nayatu. If rain is possible tomorrow, take an umbrella."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): उत्सवः सम्भूतवान्, utsavaḥ sambhūtavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सम्भवति (sambhavati) is built on sam, \"together\", and the root √bhū, \"to be, to become\", which also gives bhavati; MW gives sambhū as to come together, to arise, to happen, and to be possible; its past participle is sambhūta (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhavati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhavati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhavati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhavati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi śvaḥ varṣā sambhavati, tarhi chatraṃ nayatu. — If rain is possible tomorrow, take an umbrella.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi śvaḥ varṣā sambhavati, tarhi chatraṃ nayatu.* — If rain is possible tomorrow, take an umbrella.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a reversal, then the Sanskrit for a reproach, then say sambhavati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a reversal, then the Sanskrit for a reproach, then say *sambhavati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सम्भवति (sambhavati) mean? (\"Is possible; comes about\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C554-dirghadarsi",
+      "sequence": 31670,
+      "title": "दीर्घदर्शी (dīrghadarśī) — far-sighted",
+      "headword": "दीर्घदर्शी",
+      "romanization": "dīrghadarśī",
+      "gloss": "far-sighted",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73488d5111e7f7ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a reproach, then the Sanskrit for is possible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दीर्घदर्शी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दीर्घदर्शी — dīrghadarśī — \"far-sighted\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि नायकः दीर्घदर्शी अस्ति, तर्हि देशः सुरक्षितः भवति। yadi nāyakaḥ dīrghadarśī asti, tarhi deśaḥ surakṣitaḥ bhavati. If the leader is far-sighted, the country is safe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दीर्घदर्शी (dīrghadarśī) is built from dīrgha, \"long, far\", and darśin, \"seeing\", from the root √dṛś, \"to see\"; MW gives dīrghadarśin as the same as dīrghadarśa, far-sighted (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīrghadarśī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīrghadarśī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīrghadarśī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīrghadarśī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi nāyakaḥ dīrghadarśī asti, tarhi deśaḥ surakṣitaḥ bhavati. — If the leader is far-sighted, the country is safe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi nāyakaḥ dīrghadarśī asti, tarhi deśaḥ surakṣitaḥ bhavati.* — If the leader is far-sighted, the country is safe.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a reproach, then the Sanskrit for is possible, then say dīrghadarśī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a reproach, then the Sanskrit for is possible, then say *dīrghadarśī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दीर्घदर्शी (dīrghadarśī) mean? (\"Far-sighted\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C554-abhipraiti",
+      "sequence": 31680,
+      "title": "अभिप्रैति (abhipraiti) — intends",
+      "headword": "अभिप्रैति",
+      "romanization": "abhipraiti",
+      "gloss": "intends",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba0497c1ec886376",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for is possible, then the Sanskrit for far-sighted."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अभिप्रैति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अभिप्रैति — abhipraiti — \"intends\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि भवान् गन्तुम् अभिप्रैति, तर्हि अहम् अपि आगच्छामि। yadi bhavān gantum abhipraiti, tarhi aham api āgacchāmi. If you intend to go, I will come too."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः गन्तुम् अभिप्रेतवान्, saḥ gantum abhipretavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अभिप्रैति (abhipraiti) is built on abhi, \"towards\", pra, \"forth\", and the root √i, \"to go\"; MW gives abhipre as to approach in mind, to aim at, to intend; its past participle is abhipreta (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhipraiti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhipraiti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhipraiti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhipraiti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bhavān gantum abhipraiti, tarhi aham api āgacchāmi. — If you intend to go, I will come too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bhavān gantum abhipraiti, tarhi aham api āgacchāmi.* — If you intend to go, I will come too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for is possible, then the Sanskrit for far-sighted, then say abhipraiti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for is possible, then the Sanskrit for far-sighted, then say *abhipraiti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अभिप्रैति (abhipraiti) mean? (\"Intends\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C554-ayatih",
+      "sequence": 31690,
+      "title": "आयतिः (āyatiḥ) — the time ahead",
+      "headword": "आयतिः",
+      "romanization": "āyatiḥ",
+      "gloss": "the time ahead",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6066697a0fa2f286",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for far-sighted, then the Sanskrit for intends."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आयतिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आयतिः — āyatiḥ — \"the time ahead\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि आयतिः शुभा अस्ति, तर्हि वयं प्रसन्नाः स्मः। yadi āyatiḥ śubhā asti, tarhi vayaṃ prasannāḥ smaḥ. If the future looks bright, we are glad."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आयतिः (āyatiḥ) is built on ā and the root √yam, \"to hold, to stretch\": a stretching out; MW gives āyati as extension, and following or future time (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyatiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyatiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āyatiḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āyatiḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi āyatiḥ śubhā asti, tarhi vayaṃ prasannāḥ smaḥ. — If the future looks bright, we are glad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi āyatiḥ śubhā asti, tarhi vayaṃ prasannāḥ smaḥ.* — If the future looks bright, we are glad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for far-sighted, then the Sanskrit for intends, then say āyatiḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for far-sighted, then the Sanskrit for intends, then say *āyatiḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आयतिः (āyatiḥ) mean? (\"The time ahead\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C554-arambhah",
+      "sequence": 31700,
+      "title": "आरम्भः (ārambhaḥ) — a start",
+      "headword": "आरम्भः",
+      "romanization": "ārambhaḥ",
+      "gloss": "a start",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8229d13990395a42",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for intends, then the Sanskrit for the time ahead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आरम्भः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आरम्भः — ārambhaḥ — \"a start\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि आरम्भः उत्तमः अस्ति, तर्हि फलम् अपि उत्तमं भविष्यति। yadi ārambhaḥ uttamaḥ asti, tarhi phalam api uttamaṃ bhaviṣyati. If the start is good, the result will be good too."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आरम्भः (ārambhaḥ) is built on ā and the root √rabh, \"to take hold of\", which also gives ārabhate, \"begins\"; MW gives ārambha as undertaking, beginning (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārambhaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārambhaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārambhaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārambhaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi ārambhaḥ uttamaḥ asti, tarhi phalam api uttamaṃ bhaviṣyati. — If the start is good, the result will be good too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi ārambhaḥ uttamaḥ asti, tarhi phalam api uttamaṃ bhaviṣyati.* — If the start is good, the result will be good too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for intends, then the Sanskrit for the time ahead, then say ārambhaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for intends, then the Sanskrit for the time ahead, then say *ārambhaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आरम्भः (ārambhaḥ) mean? (\"A start\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

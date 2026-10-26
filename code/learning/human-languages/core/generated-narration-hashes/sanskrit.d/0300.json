@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:eac20593d0c06cf6",
+  "lessonIds": [
+    "SA-C300-bhukampah",
+    "SA-C300-kampate",
+    "SA-C300-isat",
+    "SA-C300-sphutati",
+    "SA-C300-gartah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch300.txt",
+  "json": "sanskrit/narration/ch300.json",
+  "textHash": "fnv1a64:d8c949c02f2b1520",
+  "jsonHash": "fnv1a64:74f1fc50ec4fd879",
+  "findings": []
+}

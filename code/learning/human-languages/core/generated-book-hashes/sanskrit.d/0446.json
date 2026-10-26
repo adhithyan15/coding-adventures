@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:7ce09dfc08d94035",
+  "lessonIds": [
+    "SA-C446-adhityaka",
+    "SA-C446-sikharam",
+    "SA-C446-gulmah",
+    "SA-C446-kusah",
+    "SA-C446-pallavah"
+  ],
+  "tex": "sanskrit/book/chapters/ch446-peaks-and-plateaus.tex"
+}

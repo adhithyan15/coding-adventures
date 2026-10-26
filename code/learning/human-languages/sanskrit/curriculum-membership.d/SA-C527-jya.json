@@ -1,0 +1,11 @@
+{
+  "id": "SA-C527-jya",
+  "pathSegment": "SA-PATH-527-DHANURDHARA527",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-527-DHANURDHARA527",
+      "order": 4
+    }
+  ]
+}
