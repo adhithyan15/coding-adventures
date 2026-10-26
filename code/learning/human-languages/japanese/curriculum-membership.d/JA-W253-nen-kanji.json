@@ -1,0 +1,11 @@
+{
+  "id": "JA-W253-nen-kanji",
+  "pathSegment": "JA-PATH-253-NARRATE253",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-253-NARRATE253",
+      "order": 3
+    }
+  ]
+}
