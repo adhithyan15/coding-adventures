@@ -11,4 +11,3 @@ cortex-m3-simulator = { path = "../cortex-m3-simulator" }
 [lib]
 name = "cortex_m33_simulator"
 path = "src/lib.rs"
-

@@ -66,10 +66,10 @@ architecture/core introduction era, not a claim about a particular chip.
 
 | Order | Target | Public basis | Planned boundary |
 |---:|---|---|---|
-| 1 | Arm Cortex-M4 | Armv7E-M manuals | Cortex-M3 integer base plus documented DSP/FPU boundary. |
-| 2 | Arm Cortex-M7 | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
-| 3 | Arm Cortex-M23 | Armv8-M manuals | Baseline profile and security-state boundary. |
-| 4 | Arm Cortex-M33 | Armv8-M manuals | Functional cell complete locally: bounded Mainline integer core, optional Security Extension, banked control/stack-limit state, eight-region SAU, checked transition hooks, and exact inherited-family differential witnesses. Publish after independent review; encoded security instructions, DSP/FPU, exceptions, MPU/NVIC/SoC, and evidence-backed gate topology remain separate cells. |
+| 1 | Arm Cortex-M4 (in publication) | Armv7E-M manuals | Cortex-M3 integer base plus documented DSP/FPU boundary. |
+| 2 | Arm Cortex-M7 (merged) | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
+| 3 | Arm Cortex-M23 (in publication) | Armv8-M manuals | Baseline profile and security-state boundary. |
+| 4 | Arm Cortex-M33 (in review) | Armv8-M manuals | Functional cell complete locally: bounded Mainline integer core, optional Security Extension, banked control/stack-limit state, eight-region SAU, checked transition hooks, and exact inherited-family differential witnesses. Publish after independent review; encoded security instructions, DSP/FPU, exceptions, MPU/NVIC/SoC, and evidence-backed gate topology remain separate cells. |
 | 5 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
 | 6 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
 | 7 | IBM System/370 | published Principles of Operation | System/360-compatible extension boundary. |
