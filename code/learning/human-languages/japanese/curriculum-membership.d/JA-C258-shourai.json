@@ -1,0 +1,11 @@
+{
+  "id": "JA-C258-shourai",
+  "pathSegment": "JA-PATH-258-EXPERIENCE258",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-258-EXPERIENCE258",
+      "order": 1
+    }
+  ]
+}

@@ -69,10 +69,12 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next: #18305 — preserve Qt timeline labels' 150-pixel width floor.**
-Reuse the conservative static non-shrink bridge for text, preserve diagnostics,
-and validate both product themes. This is a bounded native fidelity slice under
-#12022; feature composition and signing remain outside scope.
+**Next: #18334 — publish and audit v0.5.13.**
+The timeline-label floor #18305 merged in #18306 with all payload validation
+passing in run 40280477318. Prepare its compatible patch together with the
+authoritative toolkit-pin change, publish only after preparation merges, then
+audit immutable provenance, inventory, and checksums. Preparation is not publication.
+Feature composition and signing remain outside scope; artifact coverage is unchanged.
 
 **Published and audited: #18264 — v0.5.12 Qt rail checkpoint.**
 Run 40269564825 passed all payloads and publication. The immutable source is
