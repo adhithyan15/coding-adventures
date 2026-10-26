@@ -1,4 +1,4 @@
-# Keyboard navigation across virtual row windows
+### Fixed — Keyboard navigation across virtual row windows
 
 - Request the existing authored viewport shift when an arrow reaches a vertical
   row-window boundary and another logical row exists.
