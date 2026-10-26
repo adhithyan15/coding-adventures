@@ -47,6 +47,37 @@ Native integers are limited to decoder field extraction, little-endian byte
 assembly, stable bit-vector conversion, range decisions, and trace bookkeeping.
 They are not substitutes for the listed datapaths.
 
+### Multiply/divide result qualification
+
+The fixed-round multiplier and divider do not hand their wide results to host
+integer comparisons to decide architectural flags or faults.  The same gate
+boundary owns result qualification:
+
+- two-operand signed `IMUL` sets CF and OF from a 128-bit sign-extension
+  equivalence network over the low result sign and every discarded high bit;
+- unsigned `MUL` sets CF and OF from an OR reduction of the high product word;
+- signed `IDIV` accepts a quotient only when its high 64 bits are the exact
+  sign extension of quotient bit 63; and
+- unsigned `DIV` accepts a quotient only when its high 64 bits are zero.
+
+Zero-divisor detection remains a gate reduction.  The execution layer may
+transport the qualified low words and convert the qualifier wire to the
+public flag/fault type, but it must not repeat these decisions with `i128` or
+`u128` ordering, equality, or range operators.  Completion evidence includes
+the exact fit/overflow boundaries, signed extremes, high-half divergence, and
+a structural call-path guard that fails if host-wide qualification reappears
+in instruction execution. That guard parses the production Rust syntax,
+requires exactly one reviewed top-level definition for both qualifier networks
+and every multiply/divide qualification entry point, requires `exec_one` to
+dispatch directly through its instruction match, and locks the relevant
+consumer arms. The crate root must also bind `execution` and `gate_networks`
+through their unique, attribute-free external module declarations so the
+reviewed source files cannot be replaced by path aliases, inline modules, or
+duplicate/dead routing. Its adversarial fixtures must reject helper indirection,
+shadowed gate results, unused gate anchors, direct high-word predicates,
+iterator `sum`/`count`/`min`, host equality/range variants, inactive `cfg`
+decoys, later active duplicate definitions, and alternate module routing.
+
 ## Lifecycle and atomicity
 
 `X86GateSimulator` exposes the complete Spec 07w checked integer boundary:
