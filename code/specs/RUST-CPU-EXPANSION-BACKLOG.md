@@ -47,19 +47,17 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | Arm Cortex-M0 | merged | ready | Independent Armv6-M gate cell can start now. |
 | P0 | Arm Cortex-M3 | merged | ready | Independent Armv7-M gate cell can start now. |
 
-## Gate-integrity audit queue
+## P0 gate-integrity repair queue
 
-Completed gate packages are re-audited one bounded architectural decision at a
-time. A public gate claim implemented by host comparisons or host state is a
-correctness defect and outranks new completeness work.
+Independent review of the completed architecture matrix found a recurring
+storage-authority defect: some packages counted DFF banks in their physical
+topology while executing from parallel public host fields. These repairs
+outrank new architecture cells because a shadow bank makes the published gate
+claim unsound even when ISA differentials remain green.
 
-| Priority | Target | Finding / next action |
-|---:|---|---|
-| P1 complete locally | IBM System/360 branch predicates | `BCR`/`BC`, `BALR`, `BCTR`/`BCT`, and `BXH`/`BXLE` now derive their select wires from gate mask muxes, target/count OR reductions, signed comparator condition-code wires, and one-hot opcode lines in both the executor and independent validator. Exhaustive mask/CC/register/count/index truth tables and token-normalized exact-body structural checks cover the complete branch-select, fixed-width-adder, signed-comparator, and top-level dispatch chain, including the exact four-byte router, RR/RX/RS dispatcher shells, complete validation router, branch-validator shell, public `step`/`run`/`execute` bridge, and file-backed executor-module identity, and reject hostile helper rewrites, dead anchors/dispatch, attributed/aliased/inline routing modules, binding shadows, oracle substitution, expectation shadowing, and post-dispatch overwrites. All eleven existing differential/lifecycle suites, strict checks, and 93.01% package-source line coverage (1,662/1,787) pass. |
-| P1 queued | IBM System/360 decode authority | The independent executor dispatches architectural orders with host `match` ranges while the one-hot gate decoder is only checked afterward. Bound a separate repair that makes decoded gate lines authoritative without conflating instruction semantics. |
-| P1 queued | IBM System/360 divide qualification | The restoring divider uses gate subtraction per round but host equality detects zero and host `quotient > limit` decides the architectural divide fault. Replace both with exact-width gate reductions/comparison and pin signed fit boundaries. |
-| P1 queued | IBM System/360 DFF transition discipline | Register banks are private stable-Q authority, but main-storage reset and snapshot restore write the packed Q bytes directly despite Spec 07ad2 promising sequential primitives. Decide and enforce a scalable clocked-restore boundary without weakening the topology claim. |
-| P2 queued | IBM System/360 shifts and hexadecimal floating control | Shift movement/count bounds and substantial HFP zero/sign/exponent/normalization control still use host comparisons and native shifts. Split these broad surfaces into independently reviewable gate-network cells. |
+| Priority | Target | Status | Required boundary |
+|---:|---|---|---|
+| P0 | Motorola 68000 gate | local complete | All 560 register/PC/SR DFF Q outputs and the HALT DFF Q output are authoritative; public fields are synchronized observers. Concrete inventory, deliberate observer-divergence lifecycle regressions, 71 unit tests, all 82 differential vectors, 6 lifecycle tests, 7 doctests, strict checks, lessons, and 83.39% combined line coverage are green. |
 
 ## Independent functional queue
 
@@ -90,6 +88,11 @@ architecture/core introduction era, not a claim about a particular chip.
 | Priority | Target | Finding / next action |
 |---:|---|---|
 | P0 complete locally | MIPS R2000 gate HALT storage | HALT DFF Q is now the sole architectural halt authority; the public boolean remains only as a source-compatible observation mirror and is repaired by simulator mutations. The published storage inventory derives 524,288 memory bits, 1,120 register bits, and one HALT bit from the owned physical containers. Deliberate mirror-divergence, restore, and typed-fault atomicity tests pass alongside 33 unit tests, the 218-vector differential suite, nine lifecycle/integrity tests, and 20 doctests. Strict Clippy/rustdoc, the six-package affected build, and 94.50% line coverage (1,581/1,673) are green. |
+| P1 complete locally | IBM System/360 branch predicates | `BCR`/`BC`, `BALR`, `BCTR`/`BCT`, and `BXH`/`BXLE` now derive their select wires from gate mask muxes, target/count OR reductions, signed comparator condition-code wires, and one-hot opcode lines in both the executor and independent validator. Exhaustive mask/CC/register/count/index truth tables and token-normalized exact-body structural checks cover the complete branch-select, fixed-width-adder, signed-comparator, and top-level dispatch chain, including the exact four-byte router, RR/RX/RS dispatcher shells, complete validation router, branch-validator shell, public `step`/`run`/`execute` bridge, and file-backed executor-module identity, and reject hostile helper rewrites, dead anchors/dispatch, attributed/aliased/inline routing modules, binding shadows, oracle substitution, expectation shadowing, and post-dispatch overwrites. All eleven existing differential/lifecycle suites, strict checks, and 93.01% package-source line coverage (1,662/1,787) pass. |
+| P1 queued | IBM System/360 decode authority | The independent executor dispatches architectural orders with host `match` ranges while the one-hot gate decoder is only checked afterward. Bound a separate repair that makes decoded gate lines authoritative without conflating instruction semantics. |
+| P1 queued | IBM System/360 divide qualification | The restoring divider uses gate subtraction per round but host equality detects zero and host `quotient > limit` decides the architectural divide fault. Replace both with exact-width gate reductions/comparison and pin signed fit boundaries. |
+| P1 queued | IBM System/360 DFF transition discipline | Register banks are private stable-Q authority, but main-storage reset and snapshot restore write the packed Q bytes directly despite Spec 07ad2 promising sequential primitives. Decide and enforce a scalable clocked-restore boundary without weakening the topology claim. |
+| P2 queued | IBM System/360 shifts and hexadecimal floating control | Shift movement/count bounds and substantial HFP zero/sign/exponent/normalization control still use host comparisons and native shifts. Split these broad surfaces into independently reviewable gate-network cells. |
 | P1 audit | Remaining completed gate packages with public halt fields | Audit each package before changing it. A public observation field is acceptable only when execution, snapshots, restore, and faults are driven by DFF Q; otherwise add one bounded repair cell and a non-tautological storage inventory. Candidate packages discovered by source scan include ARM1, SPARC V8, Motorola 68000, Intel 8051, Intel 8086, and OpenRISC 1000. |
 
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,
