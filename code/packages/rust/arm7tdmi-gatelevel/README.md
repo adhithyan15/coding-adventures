@@ -16,15 +16,16 @@ This is a repository-owned ISA-level teaching topology. It is not Arm's
 proprietary ARM7TDMI netlist, a transistor model, or a cycle-accurate pipeline,
 bus, cache, EmbeddedICE, or SoC simulation.
 
-Completion evidence is 58 release tests, including full inherited functional
+Completion evidence is 59 release tests, including full inherited functional
 contracts, independent ARM/Thumb full-state and exact-trace differentials,
 every publicly reachable typed functional fault with exact full-state
 rollback, explicit narrowing evidence for compatibility-only unreachable
 fault variants, exhaustive condition lines, arithmetic/shift/multiply
 boundaries, a typed mid-commit rollback seam, and compiler-checked hostile
-source mutations. Parsed whole-file and focused source-to-sink locks cover the
-complete ARM and Thumb decode, suboperation/fixed-bit selectors, destination
-enables, mnemonic/trace control, condition, arithmetic, flags, banks, memory,
+source mutations. Syntax-normalized whole-file token locks and named parsed-body
+source-to-sink locks cover the complete ARM and Thumb decode,
+suboperation/fixed-bit selectors, destination enables, mnemonic/trace control,
+condition, arithmetic, flags, banks, memory,
 BX exchange, stable-Q storage, and public lifecycle routes. Host
 arithmetic/decode, oracle substitution, dead anchors, direct Q/memory writes,
 post-gate overwrite, and post-commit overwrite are all rejected after their

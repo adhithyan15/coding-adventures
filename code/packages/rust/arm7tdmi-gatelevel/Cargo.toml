@@ -15,4 +15,5 @@ logic-gates = { path = "../logic-gates" }
 
 [dev-dependencies]
 arm7tdmi-simulator = { path = "../arm7tdmi-simulator" }
+proc-macro2 = "1"
 syn = { version = "2", features = ["full", "visit"] }

@@ -2,18 +2,88 @@ use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
 
+use proc_macro2::{Delimiter, TokenStream, TokenTree};
+use syn::visit::Visit;
+
 const ENGINE: &str = include_str!("../src/engine.rs");
 const GATES: &str = include_str!("../src/gates.rs");
 const LIB: &str = include_str!("../src/lib.rs");
 const STATE: &str = include_str!("../src/state.rs");
 
-// FNV-1a locks make every parsed production token part of the reviewed
-// source-to-sink boundary, including the complete Thumb decoder and all of its
-// control consumers.  The focused anchors below keep failures diagnostic.
-const ENGINE_FNV: u64 = 0xc28d_6360_fb7b_3ce3;
-const GATES_FNV: u64 = 0x29cb_d49c_182f_8d5e;
-const LIB_FNV: u64 = 0xe9dc_7525_07f0_208e;
-const STATE_FNV: u64 = 0x22aa_8713_44f9_3c28;
+// These fingerprints are over parsed token trees, not source bytes. Harmless
+// formatting and comments disappear, while identifiers, punctuation,
+// delimiters, literals, and complete control/data flow stay exact.
+const ENGINE_TOKENS: u64 = 0xf1df_9761_2b39_65f6;
+const GATES_TOKENS: u64 = 0xaeab_896f_d817_7402;
+const LIB_TOKENS: u64 = 0x20c4_cc8d_1401_7460;
+const STATE_TOKENS: u64 = 0x5433_6bcd_7c59_f1f7;
+
+const THUMB_FUNCTION_TOKENS: &[(&str, u64)] = &[
+    ("bx", 0xbec5_297d_40dd_5018),
+    ("execute_thumb", 0x7a5f_8ac6_a898_32cc),
+    ("execute_thumb_shift_add", 0xb4fd_e8e3_7259_a32f),
+    ("execute_thumb_immediate", 0x8f0e_3f6c_2ada_8530),
+    (
+        "execute_thumb_data_or_register_transfer",
+        0x392f_5ea2_de23_7a5c,
+    ),
+    ("execute_thumb_alu", 0xd5db_cf80_9cd1_2c3e),
+    ("execute_thumb_high", 0x60c5_3c82_39b0_8aa5),
+    ("execute_thumb_register_transfer", 0xc3ee_9be3_79c1_5840),
+    ("execute_thumb_immediate_transfer", 0x9662_4fd9_5bb3_89d5),
+    ("execute_thumb_sp_transfer", 0xb640_3b98_8f1a_5df7),
+    ("execute_thumb_misc", 0xe65c_50fc_556a_2a00),
+    ("execute_thumb_push_pop", 0xbc79_0716_f32e_2613),
+    (
+        "execute_thumb_multiple_or_conditional",
+        0x5e8b_ac46_4593_1345,
+    ),
+    ("execute_thumb_branch_or_link", 0x1fa1_7dbe_e7b4_006c),
+];
+
+const ENGINE_FUNCTION_TOKENS: &[(&str, u64)] = &[
+    ("condition_passed", 0x11b4_fdee_fae6_82fe),
+    ("add_with_carry", 0x8369_a176_321a_3cb1),
+    ("shifted", 0x08ca_0bcd_9536_80e3),
+    ("execute_arm", 0x95d6_c1fd_21d8_d1e7),
+    ("execute_data_processing", 0xaf8c_c292_6ea9_5275),
+    ("set_nzcv", 0x6698_44d5_6cee_bece),
+    ("read_register", 0xeabd_f22a_b9fc_4dd3),
+    ("write_register", 0xe336_537c_57de_fe24),
+    ("spsr", 0xaf8d_9584_0f4f_bd7f),
+    ("set_spsr", 0x4656_d03d_b4fd_0d5e),
+    ("read_mem", 0x3deb_b143_6cff_df20),
+    ("write_mem", 0x9fce_d1bf_6473_efa1),
+];
+
+const GATE_FUNCTION_TOKENS: &[(&str, u64)] = &[
+    ("masked_eq_32", 0xa595_ac2b_b09d_e845),
+    ("add_32", 0x3f51_7e16_b87a_ae35),
+    ("status_with_nz", 0x05cf_60ef_dca0_176e),
+    ("arm_shift", 0xd45c_2e15_6f65_4573),
+];
+
+const STATE_FUNCTION_TOKENS: &[(&str, u64)] = &[
+    ("clock_bit", 0x5878_89b0_80a4_78b9),
+    ("clock_bits", 0xcad6_c6fc_2a73_a44b),
+    ("write", 0x5318_fb0e_97ec_cef9),
+    ("snapshot", 0x6f24_14ca_45e4_a312),
+];
+
+const LIB_FUNCTION_TOKENS: &[(&str, u64)] = &[
+    ("reset", 0xf90f_81c3_e413_81df),
+    ("restore", 0x67f6_d9c7_18b2_8311),
+    ("load", 0x882d_02e0_c0c1_ecda),
+    ("get_state", 0xd1e0_9435_4585_5fb7),
+    ("engine", 0x7d42_545d_a4e9_3953),
+    ("write_register", 0xf737_cd22_7566_4e88),
+    ("write_memory", 0xc593_ce39_d01a_8be7),
+    ("step", 0xd48f_4dfa_a87c_3db3),
+    ("run", 0xdf45_641b_d065_7de8),
+    ("execute", 0x8704_f455_0120_1b5e),
+    ("clock_complete_state", 0x1a99_690c_f181_04fb),
+    ("commit_transition", 0xb705_15c6_8347_d5a2),
+];
 
 const CONDITION: &str = r#"fn condition_passed(cpsr: u32, condition: u8) -> bool {
     gates::condition_holds(cpsr, condition) == 1
@@ -21,9 +91,6 @@ const CONDITION: &str = r#"fn condition_passed(cpsr: u32, condition: u8) -> bool
 const ADD: &str = r#"fn add_with_carry(left: u32, right: u32, carry: bool) -> (u32, bool, bool) {
     let (result, carry, overflow) = gates::add_32(left, right, u8::from(carry));
     (result, carry == 1, overflow == 1)
-}"#;
-const SHIFT: &str = r#"fn shifted(value: u32, kind: u32, amount: u32, immediate: bool, old_carry: bool) -> (u32, bool) {
-    gates::arm_shift(value, kind, amount, immediate, old_carry)
 }"#;
 const CLOCK_BIT: &str = r#"pub(crate) fn clock_bit(q: &mut u8, value: bool) {
     let input = [u8::from(value)];
@@ -55,107 +122,113 @@ const ARM_FAMILY_ROUTE: &str = r#"let family = gates::field(raw, 25, 3);
             execute_block_transfer(state, raw, pc)?
         } else if gates::selected(family, 5, 3) == 1 {
             execute_branch(state, raw, pc)?"#;
-const THUMB_FAMILY_ROUTE: &str = r#"let family = gates::field(word, 13, 3);
-    let condition = gates::field(word, 8, 4);
-    let conditional_family = gates::masked_eq_16(raw, 0xf000, 0xd000);
-    let ordinary_condition = and_gate(
-        not_gate(gates::selected(condition, 0xe, 4)),
-        not_gate(gates::selected(condition, 0xf, 4)),
-    );
-    let conditional_branch = and_gate(conditional_family, ordinary_condition);
-    let condition_selected = u8::from(condition_passed(state.cpsr, condition as u8));
-    let executed = or_gate(not_gate(conditional_branch), condition_selected);
-    let mnemonic = if gates::selected(family, 0, 3) == 1 {
-        execute_thumb_shift_add(state, raw, pc)?
-    } else if gates::selected(family, 1, 3) == 1 {
-        execute_thumb_immediate(state, raw)?
-    } else if gates::selected(family, 2, 3) == 1 {
-        execute_thumb_data_or_register_transfer(state, raw, pc)?
-    } else if gates::selected(family, 3, 3) == 1 {
-        execute_thumb_immediate_transfer(state, raw, false)?"#;
-const FLAG_ROUTE: &str = r#"fn set_nzcv(state: &mut Arm7TdmiState, value: u32, carry: bool, overflow: bool) {
-    state.cpsr = gates::status_with_nzcv(state.cpsr, value, u8::from(carry), u8::from(overflow));
-}"#;
-const BANK_READ_ROUTE: &str = r#"0..=7 => state.registers.common_r0_r7[register],
-        8..=12 if mode(state) == Mode::Fiq => state.registers.fiq_r8_r14[register - 8],
-        8..=12 => state.registers.normal_r8_r12[register - 8],
-        13..=14 => bank_13_14(&state.registers, mode(state))[register - 13],
-        15 => state.registers.pc,"#;
-const BANK_WRITE_ROUTE: &str = r#"0..=7 => state.registers.common_r0_r7[register] = value,
-        8..=12 if current_mode == Mode::Fiq => state.registers.fiq_r8_r14[register - 8] = value,
-        8..=12 => state.registers.normal_r8_r12[register - 8] = value,
-        13..=14 => bank_13_14_mut(&mut state.registers, current_mode)[register - 13] = value,
-        15 => state.registers.pc = value,"#;
-const STATUS_READ_ROUTE: &str = r#"Mode::Fiq => Ok(state.spsr_fiq),
-        Mode::Irq => Ok(state.spsr_irq),
-        Mode::Supervisor => Ok(state.spsr_supervisor),
-        Mode::Abort => Ok(state.spsr_abort),
-        Mode::Undefined => Ok(state.spsr_undefined),
-        mode @ (Mode::User | Mode::System) => Err(Arm7TdmiError::UnavailableSavedStatus { mode }),"#;
-const STATUS_WRITE_ROUTE: &str = r#"Mode::Fiq => state.spsr_fiq = value,
-        Mode::Irq => state.spsr_irq = value,
-        Mode::Supervisor => state.spsr_supervisor = value,
-        Mode::Abort => state.spsr_abort = value,
-        Mode::Undefined => state.spsr_undefined = value,"#;
-const PC_STATE_ROUTE: &str = r#"let low_bits = gates::field(target, 0, 2);
-    let unpredictable_target = gates::selected(low_bits, 2, 2);
-    let thumb_selected = gates::selected(gates::field(target, 0, 1), 1, 1);
-    if unpredictable_target == 1 {
-        return Err(Arm7TdmiError::UnpredictableInstruction { raw, pc });
-    }
-    if thumb_selected == 1 {
-        let exchanged = target & !1;
-        checked_target(exchanged, InstructionSet::Thumb)?;
-        state.cpsr = gates::bit_or_32(state.cpsr, CPSR_T);
-        state.registers.pc = exchanged;
-    } else {
-        checked_target(target, InstructionSet::Arm)?;
-        state.cpsr = gates::bit_and_32(state.cpsr, gates::bit_not_32(CPSR_T));
-        state.registers.pc = target;
-    }"#;
-const MEMORY_READ_ROUTE: &str = r#"check_alignment(address, width)?;
-    let range = checked_range(address, width)?;
-    Ok(match width {
-        1 => state.memory[range.start] as u32,
-        2 => u32::from(gates::assemble_le_u16(
-            state.memory[range].try_into().expect("halfword range"),
-        )),
-        4 => gates::assemble_le_u32(state.memory[range].try_into().expect("word range")),"#;
-const MEMORY_CONTROL_ROUTE: &str = r#"check_alignment(address, width)?;
-    let range = checked_range(address, width)?;
-    let bytes = gates::split_le_u32(value);
-    state.memory[range].copy_from_slice(&bytes[..width]);"#;
-const STABLE_Q_READ: &str = r#"bits.iter()
-        .enumerate()
-        .fold(0, |value, (bit, q)| value | (u64::from(*q) << bit))"#;
-const GATE_DECODE: &str = r#"(0..32).fold(1, |line, bit| {
-        let equal = xnor_gate(value[bit], expected[bit]);
-        and_gate(line, mux2(1, equal, mask[bit]))
-    })"#;
-const GATE_ADD: &str = r#"let full = ripple_carry_adder_with_carry(&left_bits, &right_bits, carry_in);
-    let low = ripple_carry_adder_with_carry(&left_bits[..31], &right_bits[..31], carry_in);"#;
-const GATE_FLAGS: &str = r#"status[31] = value[31];
-    status[30] = not_gate(value.into_iter().fold(0, or_gate));"#;
-const GATE_SHIFT_OUTPUT: &str = r#"let result = (0..4).fold(0, |out, index| {
-        bit_or_32(out, select_32(0, outputs[index], kind_lines[index]))
-    });
-    let carry = (0..4).fold(0, |out, index| {
-        or_gate(out, and_gate(carries[index], kind_lines[index]))
-    });"#;
 
-fn one(source: &str, needle: &str) -> Result<(), String> {
-    if source.matches(needle).count() == 1 {
-        Ok(())
-    } else {
-        Err(format!(
-            "expected one exact authority chain, found {}",
-            source.matches(needle).count()
-        ))
+fn delimiter_name(delimiter: Delimiter) -> &'static str {
+    match delimiter {
+        Delimiter::Parenthesis => "paren",
+        Delimiter::Brace => "brace",
+        Delimiter::Bracket => "bracket",
+        Delimiter::None => "none",
     }
 }
 
-fn exact_count(source: &str, needle: &str, expected: usize) -> Result<(), String> {
-    let actual = source.matches(needle).count();
+fn flatten_tree(tree: TokenTree, tokens: &mut Vec<String>) {
+    match tree {
+        TokenTree::Group(group) => {
+            let delimiter = delimiter_name(group.delimiter());
+            tokens.push(format!("open:{delimiter}"));
+            flatten_stream(group.stream(), tokens);
+            tokens.push(format!("close:{delimiter}"));
+        }
+        TokenTree::Ident(ident) => tokens.push(format!("ident:{ident}")),
+        TokenTree::Punct(punct) => {
+            tokens.push(format!("punct:{}:{:?}", punct.as_char(), punct.spacing()))
+        }
+        TokenTree::Literal(literal) => tokens.push(format!("literal:{literal}")),
+    }
+}
+
+fn flatten_stream(stream: TokenStream, tokens: &mut Vec<String>) {
+    for tree in stream {
+        flatten_tree(tree, tokens);
+    }
+}
+
+fn parsed_tokens(source: &str) -> Result<Vec<String>, String> {
+    let stream = source
+        .parse::<TokenStream>()
+        .map_err(|error| error.to_string())?;
+    let mut tokens = Vec::new();
+    flatten_stream(stream, &mut tokens);
+    Ok(tokens)
+}
+
+fn fingerprint(tokens: &[String]) -> u64 {
+    tokens
+        .iter()
+        .flat_map(|token| token.bytes().chain(std::iter::once(0xff)))
+        .fold(0xcbf2_9ce4_8422_2325, |hash, byte| {
+            (hash ^ u64::from(byte)).wrapping_mul(0x0000_0100_0000_01b3)
+        })
+}
+
+fn token_fingerprint(source: &str) -> Result<u64, String> {
+    parsed_tokens(source).map(|tokens| fingerprint(&tokens))
+}
+
+fn find_function_fingerprint(stream: TokenStream, name: &str) -> Option<u64> {
+    let trees: Vec<_> = stream.into_iter().collect();
+    for index in 0..trees.len().saturating_sub(1) {
+        let TokenTree::Ident(keyword) = &trees[index] else {
+            continue;
+        };
+        let TokenTree::Ident(candidate) = &trees[index + 1] else {
+            continue;
+        };
+        if keyword != "fn" || candidate != name {
+            continue;
+        }
+        let mut function = Vec::new();
+        for tree in trees[index..].iter().cloned() {
+            let body =
+                matches!(&tree, TokenTree::Group(group) if group.delimiter() == Delimiter::Brace);
+            flatten_tree(tree, &mut function);
+            if body {
+                return Some(fingerprint(&function));
+            }
+        }
+    }
+    for tree in trees {
+        if let TokenTree::Group(group) = tree {
+            if let Some(found) = find_function_fingerprint(group.stream(), name) {
+                return Some(found);
+            }
+        }
+    }
+    None
+}
+
+fn function_fingerprint(source: &str, name: &str) -> Result<u64, String> {
+    let stream = source
+        .parse::<TokenStream>()
+        .map_err(|error| error.to_string())?;
+    find_function_fingerprint(stream, name).ok_or_else(|| format!("missing parsed function {name}"))
+}
+
+fn token_sequence_count(source: &str, needle: &str) -> Result<usize, String> {
+    let source = parsed_tokens(source)?;
+    let needle = parsed_tokens(needle)?;
+    if needle.is_empty() {
+        return Err("empty token lock".into());
+    }
+    Ok(source
+        .windows(needle.len())
+        .filter(|window| *window == needle)
+        .count())
+}
+
+fn exact_token_count(source: &str, needle: &str, expected: usize) -> Result<(), String> {
+    let actual = token_sequence_count(source, needle)?;
     if actual == expected {
         Ok(())
     } else {
@@ -163,10 +236,76 @@ fn exact_count(source: &str, needle: &str, expected: usize) -> Result<(), String
     }
 }
 
-fn fnv1a(source: &str) -> u64 {
-    source.bytes().fold(0xcbf2_9ce4_8422_2325, |hash, byte| {
-        (hash ^ u64::from(byte)).wrapping_mul(0x0000_0100_0000_01b3)
-    })
+fn validate_function_locks(label: &str, source: &str, locks: &[(&str, u64)]) -> Result<(), String> {
+    let mut mismatches = Vec::new();
+    for (name, expected) in locks {
+        let actual = function_fingerprint(source, name)?;
+        if actual != *expected {
+            mismatches.push(format!(
+                "{name}: expected {expected:#018x}, found {actual:#018x}"
+            ));
+        }
+    }
+    if mismatches.is_empty() {
+        Ok(())
+    } else {
+        Err(format!(
+            "{label} exact parsed-body lock changed: {}",
+            mismatches.join(", ")
+        ))
+    }
+}
+
+struct SelectedCallCounter<'a> {
+    argument: &'a str,
+    count: usize,
+}
+
+impl<'ast> Visit<'ast> for SelectedCallCounter<'_> {
+    fn visit_expr_call(&mut self, call: &'ast syn::ExprCall) {
+        let is_selected = matches!(call.func.as_ref(), syn::Expr::Path(path) if path.path.segments.last().is_some_and(|segment| segment.ident == "selected"));
+        let has_argument = matches!(call.args.first(), Some(syn::Expr::Path(path)) if path.path.is_ident(self.argument));
+        if is_selected && has_argument {
+            self.count += 1;
+        }
+        syn::visit::visit_expr_call(self, call);
+    }
+}
+
+fn selected_call_count(source: &str, argument: &str) -> Result<usize, String> {
+    let syntax = syn::parse_file(source).map_err(|error| error.to_string())?;
+    let mut counter = SelectedCallCounter { argument, count: 0 };
+    counter.visit_file(&syntax);
+    Ok(counter.count)
+}
+
+#[derive(Default)]
+struct ForbiddenPathVisitor {
+    paths: Vec<String>,
+}
+
+impl<'ast> Visit<'ast> for ForbiddenPathVisitor {
+    fn visit_path(&mut self, path: &'ast syn::Path) {
+        if let Some(first) = path.segments.first() {
+            if first.ident == "arm7tdmi_simulator" || first.ident == "oracle" {
+                self.paths.push(
+                    path.segments
+                        .iter()
+                        .map(|segment| segment.ident.to_string())
+                        .collect::<Vec<_>>()
+                        .join("::"),
+                );
+            }
+        }
+        syn::visit::visit_path(self, path);
+    }
+}
+
+fn forbidden_paths(source: &str) -> Result<Vec<String>, String> {
+    let syntax = syn::parse_file(source).map_err(|error| error.to_string())?;
+    let mut visitor = ForbiddenPathVisitor::default();
+    visitor.visit_file(&syntax);
+    Ok(visitor.paths)
 }
 
 fn validate(engine: &str, gates: &str, lib: &str, state: &str) -> Result<(), String> {
@@ -174,92 +313,46 @@ fn validate(engine: &str, gates: &str, lib: &str, state: &str) -> Result<(), Str
     syn::parse_file(gates).map_err(|error| error.to_string())?;
     syn::parse_file(lib).map_err(|error| error.to_string())?;
     syn::parse_file(state).map_err(|error| error.to_string())?;
-    for (name, source, expected) in [
-        ("engine", engine, ENGINE_FNV),
-        ("gates", gates, GATES_FNV),
-        ("lib", lib, LIB_FNV),
-        ("state", state, STATE_FNV),
+    validate_function_locks("engine authority", engine, ENGINE_FUNCTION_TOKENS)?;
+    validate_function_locks("complete Thumb", engine, THUMB_FUNCTION_TOKENS)?;
+    for (argument, expected, name) in [
+        ("opcode", 31, "complete operation-wire route"),
+        ("family", 14, "complete family-wire route"),
+        ("operation", 14, "complete Thumb suboperation-wire route"),
     ] {
-        let actual = fnv1a(source);
+        let actual = selected_call_count(engine, argument)?;
         if actual != expected {
+            return Err(format!("{name}: expected {expected} calls, found {actual}"));
+        }
+    }
+    exact_token_count(engine, "Arm7TdmiError::PrivilegedInstruction", 0)
+        .map_err(|error| format!("unreachable privileged fault: {error}"))?;
+    exact_token_count(engine, "Arm7TdmiError::MisalignedFetch", 1)
+        .map_err(|error| format!("private fetch-only alignment fault: {error}"))?;
+    validate_function_locks("gate datapath", gates, GATE_FUNCTION_TOKENS)?;
+    validate_function_locks("stable-Q storage", state, STATE_FUNCTION_TOKENS)?;
+    validate_function_locks("public lifecycle", lib, LIB_FUNCTION_TOKENS)?;
+    for source in [engine, gates, lib, state] {
+        let forbidden = forbidden_paths(source)?;
+        if !forbidden.is_empty() {
             return Err(format!(
-                "{name} exact source lock changed: expected {expected:#018x}, found {actual:#018x}"
+                "production source references forbidden oracle paths: {}",
+                forbidden.join(", ")
             ));
         }
     }
-    for (name, contract) in [
-        ("condition", CONDITION),
-        ("add", ADD),
-        ("shift", SHIFT),
-        ("arm family route", ARM_FAMILY_ROUTE),
-        ("thumb family route", THUMB_FAMILY_ROUTE),
-        ("flag route", FLAG_ROUTE),
-        ("bank read route", BANK_READ_ROUTE),
-        ("bank write route", BANK_WRITE_ROUTE),
-        ("status read route", STATUS_READ_ROUTE),
-        ("status write route", STATUS_WRITE_ROUTE),
-        ("PC/state route", PC_STATE_ROUTE),
-        ("memory read route", MEMORY_READ_ROUTE),
-        ("memory control route", MEMORY_CONTROL_ROUTE),
+    for (name, source, expected) in [
+        ("engine", engine, ENGINE_TOKENS),
+        ("gates", gates, GATES_TOKENS),
+        ("lib", lib, LIB_TOKENS),
+        ("state", state, STATE_TOKENS),
     ] {
-        one(engine, contract).map_err(|error| format!("{name}: {error}"))?;
-    }
-    exact_count(engine, "gates::selected(opcode", 31)
-        .map_err(|error| format!("complete operation-wire route: {error}"))?;
-    exact_count(engine, "gates::selected(family", 14)
-        .map_err(|error| format!("complete family-wire route: {error}"))?;
-    exact_count(engine, "gates::selected(operation", 14)
-        .map_err(|error| format!("complete Thumb suboperation-wire route: {error}"))?;
-    exact_count(engine, "Arm7TdmiError::PrivilegedInstruction", 0)
-        .map_err(|error| format!("unreachable privileged fault: {error}"))?;
-    exact_count(engine, "Arm7TdmiError::MisalignedFetch", 1)
-        .map_err(|error| format!("private fetch-only alignment fault: {error}"))?;
-    for (name, contract) in [
-        ("masked decoder", GATE_DECODE),
-        ("ripple arithmetic", GATE_ADD),
-        ("flag datapath", GATE_FLAGS),
-        ("barrel output mux", GATE_SHIFT_OUTPUT),
-    ] {
-        one(gates, contract).map_err(|error| format!("{name}: {error}"))?;
-    }
-    for (name, contract) in [("clock_bit", CLOCK_BIT), ("memory_write", MEMORY_WRITE)] {
-        one(state, contract).map_err(|error| format!("{name}: {error}"))?;
-    }
-    one(state, STABLE_Q_READ).map_err(|error| format!("stable-Q read: {error}"))?;
-    one(state, "register(&input, 0, &mut state);\n    q.copy_from_slice(&register(&input, 1, &mut state));").map_err(|e| format!("clock_bits: {e}"))?;
-    one(lib, "self.clock_complete_state(&Arm7TdmiState::default());")
-        .map_err(|e| format!("reset: {e}"))?;
-    one(
-        lib,
-        "validator.restore(snapshot.clone())?;\n        self.commit_transition(&snapshot)?;",
-    )
-    .map_err(|e| format!("restore: {e}"))?;
-    one(lib, "candidate.load(program, origin, instruction_set)?;\n        self.commit_transition(&candidate.get_state())?;").map_err(|e| format!("load: {e}"))?;
-    one(lib, "self.state_with_memory(self.memory.snapshot())")
-        .map_err(|e| format!("snapshot: {e}"))?;
-    one(lib, "engine.restore(self.get_state())?;")
-        .map_err(|e| format!("stable-Q engine entry: {e}"))?;
-    one(lib, "candidate.write_register(register, value)?;\n        self.commit_transition(&candidate.get_state())?;").map_err(|e| format!("register write: {e}"))?;
-    one(lib, "candidate.write_memory(address, bytes)?;\n        self.commit_transition(&candidate.get_state())?;").map_err(|e| format!("memory write: {e}"))?;
-    one(
-        lib,
-        "registers,\n            cpsr: read_bits(&self.cpsr) as u32,",
-    )
-    .map_err(|e| format!("status observation: {e}"))?;
-    one(lib, "let mut candidate = self.engine()?;\n        let trace = candidate.step()?;\n        self.commit_transition(&trace.state_after)?;").map_err(|e| format!("step: {e}"))?;
-    one(lib, "let mut candidate = self.engine()?;\n        let result = candidate.run(max_steps)?;\n        self.commit_transition(&result.final_state)?;").map_err(|e| format!("run: {e}"))?;
-    one(lib, "let mut candidate = self.engine()?;\n        let result = candidate.execute(program, origin, instruction_set, max_steps)?;\n        self.commit_transition(&result.final_state)?;").map_err(|e| format!("execute: {e}"))?;
-    one(
-        lib,
-        "clock_bits(&mut self.loaded_len, next.loaded_len as u64);\n    }",
-    )
-    .map_err(|e| format!("complete commit: {e}"))?;
-    one(lib, "clock_bits(\n                &mut self.registers[0],\n                u64::from(next.registers.common_r0_r7[0]),\n            );\n            self.clock_complete_state(&before);\n            return Err(Arm7TdmiError::CommitFailed);").map_err(|e| format!("rollback: {e}"))?;
-    if [engine, gates, lib, state]
-        .iter()
-        .any(|source| source.contains("arm7tdmi_simulator") || source.contains("oracle::"))
-    {
-        return Err("production source references the functional oracle".into());
+        let actual = token_fingerprint(source)?;
+        if actual != expected {
+            return Err(format!(
+                "{name} exact parsed-token lock changed: expected {expected:#018x}, found {actual:#018x}"
+            ));
+        }
     }
     Ok(())
 }
@@ -307,14 +400,58 @@ fn compile_variant(engine: &str, gates: &str, lib: &str, state: &str) {
     );
 }
 
-fn compile_and_reject_engine(engine: &str) {
+fn assert_rejected_for(
+    engine: &str,
+    gates: &str,
+    lib: &str,
+    state: &str,
+    expected_markers: &[&str],
+) {
+    let error = validate(engine, gates, lib, state).expect_err("hostile source must be rejected");
+    for marker in expected_markers {
+        assert!(
+            error.contains(marker),
+            "hostile source must be rejected through {marker:?}, got: {error}"
+        );
+    }
+}
+
+fn compile_and_reject_engine(engine: &str, expected_markers: &[&str]) {
     compile_variant(engine, GATES, LIB, STATE);
-    assert!(validate(engine, GATES, LIB, STATE).is_err());
+    assert_rejected_for(engine, GATES, LIB, STATE, expected_markers);
 }
 
 #[test]
 fn reviewed_source_to_sink_authority_chains_are_exact() {
     validate(ENGINE, GATES, LIB, STATE).unwrap();
+}
+
+#[test]
+fn parsed_locks_ignore_layout_and_lookalikes_but_reject_real_semantic_changes() {
+    let formatted = replace_once(
+        ENGINE,
+        "use core::fmt;",
+        "/* gates::selected(opcode, 0, 4); oracle::execute(); \"string\" 'x' */\nuse  core::fmt ;",
+    );
+    validate(&formatted, GATES, LIB, STATE)
+        .expect("comments and harmless layout cannot change parsed authority");
+
+    let host = replace_once(
+        CONDITION,
+        "gates::condition_holds(cpsr, condition) == 1",
+        "condition == 14 || (cpsr & (1 << 30) != 0 && condition == 0)",
+    );
+    let hostile = replace_once(ENGINE, CONDITION, &host);
+    let hostile = format!(
+        "{hostile}\nconst CONDITION_ROUTE_LOOKALIKE: &str = {CONDITION:?};\nconst CHAR_LOOKALIKES: [char; 4] = ['g', ':', '(', ')'];"
+    );
+    compile_variant(&hostile, GATES, LIB, STATE);
+    let error = validate(&hostile, GATES, LIB, STATE).unwrap_err();
+    assert!(
+        error.contains("engine authority exact parsed-body lock changed")
+            && error.contains("condition_passed"),
+        "string/char lookalikes must not satisfy the semantic lock: {error}"
+    );
 }
 
 #[test]
@@ -326,7 +463,16 @@ fn compile_valid_hostile_condition_and_helper_bypasses_are_rejected() {
     );
     let mutated = replace_once(ENGINE, CONDITION, &host);
     compile_variant(&mutated, GATES, LIB, STATE);
-    assert!(validate(&mutated, GATES, LIB, STATE).is_err());
+    assert_rejected_for(
+        &mutated,
+        GATES,
+        LIB,
+        STATE,
+        &[
+            "engine authority exact parsed-body lock changed",
+            "condition_passed",
+        ],
+    );
 
     let indirect = replace_once(
         CONDITION,
@@ -336,7 +482,16 @@ fn compile_valid_hostile_condition_and_helper_bypasses_are_rejected() {
     let indirect = format!("{indirect}\nfn host_condition(cpsr: u32, condition: u8) -> bool {{ condition == 14 || (condition == 0 && cpsr & (1 << 30) != 0) }}");
     let mutated = replace_once(ENGINE, CONDITION, &indirect);
     compile_variant(&mutated, GATES, LIB, STATE);
-    assert!(validate(&mutated, GATES, LIB, STATE).is_err());
+    assert_rejected_for(
+        &mutated,
+        GATES,
+        LIB,
+        STATE,
+        &[
+            "engine authority exact parsed-body lock changed",
+            "condition_passed",
+        ],
+    );
 }
 
 #[test]
@@ -348,7 +503,16 @@ fn compile_valid_hostile_arithmetic_decode_and_oracle_bypasses_are_rejected() {
     );
     let mutated = replace_once(ENGINE, ADD, &host_add);
     compile_variant(&mutated, GATES, LIB, STATE);
-    assert!(validate(&mutated, GATES, LIB, STATE).is_err());
+    assert_rejected_for(
+        &mutated,
+        GATES,
+        LIB,
+        STATE,
+        &[
+            "engine authority exact parsed-body lock changed",
+            "add_with_carry",
+        ],
+    );
 
     let host_decode = replace_once(
         ARM_FAMILY_ROUTE,
@@ -357,7 +521,16 @@ fn compile_valid_hostile_arithmetic_decode_and_oracle_bypasses_are_rejected() {
     );
     let mutated = replace_once(ENGINE, ARM_FAMILY_ROUTE, &host_decode);
     compile_variant(&mutated, GATES, LIB, STATE);
-    assert!(validate(&mutated, GATES, LIB, STATE).is_err());
+    assert_rejected_for(
+        &mutated,
+        GATES,
+        LIB,
+        STATE,
+        &[
+            "engine authority exact parsed-body lock changed",
+            "execute_arm",
+        ],
+    );
 
     let oracle_condition = replace_once(
         CONDITION,
@@ -369,7 +542,16 @@ fn compile_valid_hostile_arithmetic_decode_and_oracle_bypasses_are_rejected() {
     );
     let mutated = replace_once(ENGINE, CONDITION, &oracle_condition);
     compile_variant(&mutated, GATES, LIB, STATE);
-    assert!(validate(&mutated, GATES, LIB, STATE).is_err());
+    assert_rejected_for(
+        &mutated,
+        GATES,
+        LIB,
+        STATE,
+        &[
+            "engine authority exact parsed-body lock changed",
+            "condition_passed",
+        ],
+    );
 }
 
 #[test]
@@ -400,7 +582,17 @@ fn compile_valid_hostile_complete_thumb_dispatch_surface_is_rejected() {
         "if gates::selected(operation, 0, 3) == 1 {",
         "if operation == 0 {",
     );
-    compile_and_reject_engine(&register_transfer);
+    compile_and_reject_engine(
+        &register_transfer,
+        &[
+            "complete Thumb exact parsed-body lock changed",
+            "execute_thumb",
+            "execute_thumb_immediate",
+            "execute_thumb_alu",
+            "execute_thumb_high",
+            "execute_thumb_register_transfer",
+        ],
+    );
 
     // Immediate/SP/misc fixed-bit and transfer-direction selectors.
     let immediate_transfer = replace_once(
@@ -418,7 +610,15 @@ fn compile_valid_hostile_complete_thumb_dispatch_surface_is_rejected() {
         "let use_sp = gates::selected(gates::field(u32::from(raw), 11, 1), 1, 1);",
         "let use_sp = u8::from(raw & (1 << 11) != 0);",
     );
-    compile_and_reject_engine(&misc);
+    compile_and_reject_engine(
+        &misc,
+        &[
+            "complete Thumb exact parsed-body lock changed",
+            "execute_thumb_immediate_transfer",
+            "execute_thumb_sp_transfer",
+            "execute_thumb_misc",
+        ],
+    );
 
     // Stack/multiple register write enables and their direction bits.
     let stack = replace_once(
@@ -436,7 +636,14 @@ fn compile_valid_hostile_complete_thumb_dispatch_surface_is_rejected() {
         "if pop == 1 {\n        for register in 0..8 {\n            let selected_register = gates::selected(gates::field(list, register, 1), 1, 1);",
         "if pop == 1 {\n        for register in 0..8 {\n            let selected_register = u8::from(list & (1 << register) != 0);",
     );
-    compile_and_reject_engine(&list_write_enable);
+    compile_and_reject_engine(
+        &list_write_enable,
+        &[
+            "complete Thumb exact parsed-body lock changed",
+            "execute_thumb_push_pop",
+            "execute_thumb_multiple_or_conditional",
+        ],
+    );
 
     // High-register PC write enable, conditional fixed bits, and trace route.
     let high_write = replace_once(
@@ -459,7 +666,16 @@ fn compile_valid_hostile_complete_thumb_dispatch_surface_is_rejected() {
         "Ok((mnemonic, executed == 1))",
         "Ok((mnemonic, mnemonic != \"CONDITION_FAILED\"))",
     );
-    compile_and_reject_engine(&mnemonic);
+    compile_and_reject_engine(
+        &mnemonic,
+        &[
+            "complete Thumb exact parsed-body lock changed",
+            "bx",
+            "execute_thumb",
+            "execute_thumb_high",
+            "execute_thumb_multiple_or_conditional",
+        ],
+    );
 }
 
 #[test]
@@ -471,7 +687,16 @@ fn compile_valid_hostile_dead_anchor_and_post_gate_overwrite_are_rejected() {
     );
     let mutated = replace_once(ENGINE, ADD, &dead_anchor);
     compile_variant(&mutated, GATES, LIB, STATE);
-    assert!(validate(&mutated, GATES, LIB, STATE).is_err());
+    assert_rejected_for(
+        &mutated,
+        GATES,
+        LIB,
+        STATE,
+        &[
+            "engine authority exact parsed-body lock changed",
+            "add_with_carry",
+        ],
+    );
 
     let post_gate = replace_once(
         ADD,
@@ -480,7 +705,16 @@ fn compile_valid_hostile_dead_anchor_and_post_gate_overwrite_are_rejected() {
     );
     let mutated = replace_once(ENGINE, ADD, &post_gate);
     compile_variant(&mutated, GATES, LIB, STATE);
-    assert!(validate(&mutated, GATES, LIB, STATE).is_err());
+    assert_rejected_for(
+        &mutated,
+        GATES,
+        LIB,
+        STATE,
+        &[
+            "engine authority exact parsed-body lock changed",
+            "add_with_carry",
+        ],
+    );
 }
 
 #[test]
@@ -488,14 +722,38 @@ fn compile_valid_hostile_direct_q_and_post_commit_bypasses_are_rejected() {
     let direct = replace_once(CLOCK_BIT, "register(&input, 0, &mut state);\n    *q = register(&input, 1, &mut state)[0];", "register(&input, 0, &mut state);\n    let _anchor = register(&input, 1, &mut state)[0];\n    *q = u8::from(value);");
     let mutated_state = replace_once(STATE, CLOCK_BIT, &direct);
     compile_variant(ENGINE, GATES, LIB, &mutated_state);
-    assert!(validate(ENGINE, GATES, LIB, &mutated_state).is_err());
+    assert_rejected_for(
+        ENGINE,
+        GATES,
+        LIB,
+        &mutated_state,
+        &[
+            "stable-Q storage exact parsed-body lock changed",
+            "clock_bit",
+        ],
+    );
 
     let direct_memory = replace_once(MEMORY_WRITE, "self.q[address] = register(&input, 1, &mut state)\n            .iter()\n            .enumerate()\n            .fold(0, |byte, (bit, q)| byte | (q << bit));", "let _anchor = register(&input, 1, &mut state);\n        self.q[address] = value;");
     let mutated_state = replace_once(STATE, MEMORY_WRITE, &direct_memory);
     compile_variant(ENGINE, GATES, LIB, &mutated_state);
-    assert!(validate(ENGINE, GATES, LIB, &mutated_state).is_err());
+    assert_rejected_for(
+        ENGINE,
+        GATES,
+        LIB,
+        &mutated_state,
+        &["stable-Q storage exact parsed-body lock changed", "write"],
+    );
 
     let mutated_lib = replace_once(LIB, "clock_bits(&mut self.loaded_len, next.loaded_len as u64);\n    }", "clock_bits(&mut self.loaded_len, next.loaded_len as u64);\n        self.halted = 0;\n    }");
     compile_variant(ENGINE, GATES, &mutated_lib, STATE);
-    assert!(validate(ENGINE, GATES, &mutated_lib, STATE).is_err());
+    assert_rejected_for(
+        ENGINE,
+        GATES,
+        &mutated_lib,
+        STATE,
+        &[
+            "public lifecycle exact parsed-body lock changed",
+            "clock_complete_state",
+        ],
+    );
 }
