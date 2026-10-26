@@ -1,0 +1,21 @@
+{
+  "chapter": 401,
+  "title": "Monks and Monasteries",
+  "label": "ch:sa-monks-and-monasteries",
+  "canDo": "I can talk about monks, alms and the shrines they keep.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-R401-review-394-401",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can talk about monks, alms and the shrines they keep.",
+    "assesses": [
+      "SA-LEX-C401-BHIKSHU401-01",
+      "SA-LEX-C401-BHIKSHU401-02",
+      "SA-LEX-C401-BHIKSHU401-03",
+      "SA-LEX-C401-BHIKSHU401-04",
+      "SA-LEX-C401-BHIKSHU401-05"
+    ]
+  }
+}

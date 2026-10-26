@@ -1,0 +1,11 @@
+{
+  "id": "SA-C321-mantrah",
+  "pathSegment": "SA-PATH-321-ABHISHEKA321",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-321-ABHISHEKA321",
+      "order": 2
+    }
+  ]
+}

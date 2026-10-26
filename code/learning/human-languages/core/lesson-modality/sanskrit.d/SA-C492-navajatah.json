@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C492-navajatah",
+    "language": "sanskrit",
+    "chapter": 492,
+    "sequence": 28280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:602552044ccade5a"
+  },
+  "findings": []
+}

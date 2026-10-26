@@ -1,0 +1,11 @@
+{
+  "id": "SA-C284-yadi-varsa-bhavisyati",
+  "pathSegment": "SA-PATH-284-CONDITION284",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-284-CONDITION284",
+      "order": 1
+    }
+  ]
+}

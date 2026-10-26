@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C319-apasarati",
+    "language": "sanskrit",
+    "chapter": 319,
+    "sequence": 18720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb36744723ca3f48"
+  },
+  "findings": []
+}

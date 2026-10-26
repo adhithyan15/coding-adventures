@@ -1,0 +1,21 @@
+{
+  "chapter": 479,
+  "title": "Diseases",
+  "label": "ch:sa-diseases",
+  "canDo": "I can talk about illnesses that last or spread.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-R479-review-472-479",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can talk about illnesses that last or spread.",
+    "assesses": [
+      "SA-LEX-C479-VYADHI479-01",
+      "SA-LEX-C479-VYADHI479-02",
+      "SA-LEX-C479-VYADHI479-03",
+      "SA-LEX-C479-VYADHI479-04",
+      "SA-LEX-C479-VYADHI479-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C374-anarthah",
+    "language": "sanskrit",
+    "chapter": 374,
+    "sequence": 21770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cf34237b58dd2f5"
+  },
+  "findings": []
+}

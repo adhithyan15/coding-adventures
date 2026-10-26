@@ -1,0 +1,11 @@
+{
+  "id": "SA-C490-gaurah",
+  "pathSegment": "SA-PATH-490-RUPA490",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-490-RUPA490",
+      "order": 0
+    }
+  ]
+}

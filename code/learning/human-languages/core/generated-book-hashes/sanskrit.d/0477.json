@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:dde96ae11af4e79e",
+  "lessonIds": [
+    "SA-C477-bhramah",
+    "SA-C477-vamati",
+    "SA-C477-glayati",
+    "SA-C477-dahah",
+    "SA-C477-jvarati"
+  ],
+  "tex": "sanskrit/book/chapters/ch477-feeling-unwell.tex"
+}

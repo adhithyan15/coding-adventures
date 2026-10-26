@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "Taking Care",
+  "label": "ch:sa-taking-care",
+  "canDo": "I can warn someone what will happen if they are careless.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C374-viramati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can warn someone what will happen if they are careless.",
+    "assesses": [
+      "SA-LEX-C374-PRAMADA374-03",
+      "SA-LEX-C374-PRAMADA374-04",
+      "SA-LEX-C374-PRAMADA374-05"
+    ]
+  }
+}

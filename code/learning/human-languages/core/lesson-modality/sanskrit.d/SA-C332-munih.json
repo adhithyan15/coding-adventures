@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C332-munih",
+    "language": "sanskrit",
+    "chapter": 332,
+    "sequence": 19370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92bdd3999574ca2c"
+  },
+  "findings": []
+}

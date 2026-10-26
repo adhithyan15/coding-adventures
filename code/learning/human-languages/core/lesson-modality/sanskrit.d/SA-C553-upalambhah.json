@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C553-upalambhah",
+    "language": "sanskrit",
+    "chapter": 553,
+    "sequence": 31650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89f60a1b0b322f43"
+  },
+  "findings": []
+}

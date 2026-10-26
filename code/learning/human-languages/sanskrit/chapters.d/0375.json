@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "In Hard Times",
+  "label": "ch:sa-in-hard-times",
+  "canDo": "I can say what harm will follow if nothing is done.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C375-pratikaroti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can say what harm will follow if nothing is done.",
+    "assesses": [
+      "SA-LEX-C375-VIPATTI375-03",
+      "SA-LEX-C375-VIPATTI375-04",
+      "SA-LEX-C375-VIPATTI375-05"
+    ]
+  }
+}

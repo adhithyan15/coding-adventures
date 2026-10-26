@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C422-prakarah",
+    "language": "sanskrit",
+    "chapter": 422,
+    "sequence": 24430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ee5dd44f061c116"
+  },
+  "findings": []
+}

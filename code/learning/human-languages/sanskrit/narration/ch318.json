@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 318,
+  "title": "The Army Marches",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2cc00954d581a203",
+  "lessons": [
+    {
+      "id": "SA-C318-sena",
+      "sequence": 18640,
+      "title": "सेना (senā) — an army",
+      "headword": "सेना",
+      "romanization": "senā",
+      "gloss": "an army",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1934ef9933ae2a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a peace treaty, then the Sanskrit for a vassal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सेना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सेना — senā — \"an army\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सेना नगरात् निर्गच्छति। senā nagarāt nirgacchati. The army marches out of the city."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सेना (senā) comes from the root √si, \"to bind\", by MW's account; its oldest sense is a missile or spear, and its usual sense an army, an armed force (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senā nagarāt nirgacchati. — The army marches out of the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senā nagarāt nirgacchati.* — The army marches out of the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a peace treaty, then the Sanskrit for a vassal, then say senā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a peace treaty, then the Sanskrit for a vassal, then say *senā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सेना (senā) mean? (\"An army\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C318-yodhah",
+      "sequence": 18650,
+      "title": "योधः (yodhaḥ) — a warrior",
+      "headword": "योधः",
+      "romanization": "yodhaḥ",
+      "gloss": "a warrior",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18e698726c28db61",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a vassal, then the Sanskrit for an army."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: योधः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "योधः — yodhaḥ — \"a warrior\"."
+            },
+            {
+              "kind": "speech",
+              "text": "योधः हस्ते खड्गं धारयति। yodhaḥ haste khaḍgaṃ dhārayati. The warrior holds a sword in his hand."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "योधः (yodhaḥ) comes from the root √yudh, \"to fight\"; MW gives yodha as a fighter, warrior, soldier (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yodhaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yodhaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yodhaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yodhaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yodhaḥ haste khaḍgaṃ dhārayati. — The warrior holds a sword in his hand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yodhaḥ haste khaḍgaṃ dhārayati.* — The warrior holds a sword in his hand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a vassal, then the Sanskrit for an army, then say yodhaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a vassal, then the Sanskrit for an army, then say *yodhaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does योधः (yodhaḥ) mean? (\"A warrior\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C318-yuddham",
+      "sequence": 18660,
+      "title": "युद्धम् (yuddham) — a war; a battle",
+      "headword": "युद्धम्",
+      "romanization": "yuddham",
+      "gloss": "a war; a battle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a04787a4af0a98a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for an army, then the Sanskrit for a warrior."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: युद्धम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "युद्धम् — yuddham — \"a war; a battle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सीमायां युद्धं भवति। sīmāyāṃ yuddhaṃ bhavati. There is a war on the border."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "युद्धम् (yuddham) comes from the root √yudh, \"to fight\"; MW gives yuddha as fought and, as a neuter noun, a battle, fight, war (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuddham",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuddham*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuddham, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuddham*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīmāyāṃ yuddhaṃ bhavati. — There is a war on the border.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīmāyāṃ yuddhaṃ bhavati.* — There is a war on the border.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for an army, then the Sanskrit for a warrior, then say yuddham again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for an army, then the Sanskrit for a warrior, then say *yuddham* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does युद्धम् (yuddham) mean? (\"A war; a battle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C318-prayati",
+      "sequence": 18670,
+      "title": "प्रयाति (prayāti) — sets out",
+      "headword": "प्रयाति",
+      "romanization": "prayāti",
+      "gloss": "sets out",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d677bf6186d5062",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a warrior, then the Sanskrit for a war."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रयाति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रयाति — prayāti — \"sets out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रातः सेना युद्धाय प्रयाति। prātaḥ senā yuddhāya prayāti. In the morning the army sets out for battle."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): सेना प्रातः प्रयातवती, senā prātaḥ prayātavatī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रयाति (prayāti) is built from pra, \"forth\", and the root √yā, \"to go\"; MW gives pra-yā as to go forth, set out, advance (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayāti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayāti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayāti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayāti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prātaḥ senā yuddhāya prayāti. — In the morning the army sets out for battle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prātaḥ senā yuddhāya prayāti.* — In the morning the army sets out for battle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a warrior, then the Sanskrit for a war, then say prayāti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a warrior, then the Sanskrit for a war, then say *prayāti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रयाति (prayāti) mean? (\"Sets out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C318-yudhyate",
+      "sequence": 18680,
+      "title": "युध्यते (yudhyate) — fights",
+      "headword": "युध्यते",
+      "romanization": "yudhyate",
+      "gloss": "fights",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f25ea33c7364ee2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a war, then the Sanskrit for sets out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: युध्यते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "युध्यते — yudhyate — \"fights\"."
+            },
+            {
+              "kind": "speech",
+              "text": "योधाः शौर्येण युध्यन्ते। yodhāḥ śauryeṇa yudhyante. The warriors fight with valour."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः शौर्येण युद्धवान्, saḥ śauryeṇa yuddhavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "युध्यते (yudhyate) comes from the root √yudh, \"to fight\", which also gives yuddha, \"a war\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yudhyate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yudhyate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yudhyate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yudhyate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yodhāḥ śauryeṇa yudhyante. — The warriors fight with valour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yodhāḥ śauryeṇa yudhyante.* — The warriors fight with valour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a war, then the Sanskrit for sets out, then say yudhyate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a war, then the Sanskrit for sets out, then say *yudhyate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does युध्यते (yudhyate) mean? (\"Fights\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

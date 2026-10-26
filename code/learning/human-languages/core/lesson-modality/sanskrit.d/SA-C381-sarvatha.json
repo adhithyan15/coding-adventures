@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C381-sarvatha",
+    "language": "sanskrit",
+    "chapter": 381,
+    "sequence": 22120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f8dd087a0131d47"
+  },
+  "findings": []
+}

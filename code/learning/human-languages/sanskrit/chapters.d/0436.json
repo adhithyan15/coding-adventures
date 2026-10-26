@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "Clouds and Showers",
+  "label": "ch:sa-clouds-and-showers",
+  "canDo": "I can say that it is clouding over and starting to rain.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C436-picchilah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can say that it is clouding over and starting to rain.",
+    "assesses": [
+      "SA-LEX-C436-ABHRA436-03",
+      "SA-LEX-C436-ABHRA436-04",
+      "SA-LEX-C436-ABHRA436-05"
+    ]
+  }
+}

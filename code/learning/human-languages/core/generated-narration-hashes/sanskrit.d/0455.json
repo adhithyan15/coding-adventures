@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:7685c8b35f26a0fb",
+  "lessonIds": [
+    "SA-C455-sannidhyam",
+    "SA-C455-kamayate",
+    "SA-C455-mohah",
+    "SA-C455-asaktih",
+    "SA-C455-vatsalyam",
+    "SA-R455-review-448-455"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch455.txt",
+  "json": "sanskrit/narration/ch455.json",
+  "textHash": "fnv1a64:dd57e0761610923c",
+  "jsonHash": "fnv1a64:3cc0d8e0451d1ae8",
+  "findings": []
+}

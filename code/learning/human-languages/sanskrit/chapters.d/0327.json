@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "A Festival of Colours",
+  "label": "ch:sa-a-festival-of-colours",
+  "canDo": "I can tell how a spring festival was played.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C327-utksipati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can tell how a spring festival was played.",
+    "assesses": [
+      "SA-LEX-C327-HOLIKA327-03",
+      "SA-LEX-C327-HOLIKA327-04",
+      "SA-LEX-C327-HOLIKA327-05"
+    ]
+  }
+}

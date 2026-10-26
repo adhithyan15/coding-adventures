@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:ac3a7d81a3ee70ae",
+  "lessonIds": [
+    "SA-C458-darpah",
+    "SA-C458-slaghate",
+    "SA-C458-adambarah",
+    "SA-C458-uddhatah",
+    "SA-C458-vinitah"
+  ],
+  "tex": "sanskrit/book/chapters/ch458-pride-and-modesty.tex"
+}

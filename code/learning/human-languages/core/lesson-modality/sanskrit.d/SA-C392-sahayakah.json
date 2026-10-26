@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C392-sahayakah",
+    "language": "sanskrit",
+    "chapter": 392,
+    "sequence": 22670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd6958d744cc00eb"
+  },
+  "findings": []
+}

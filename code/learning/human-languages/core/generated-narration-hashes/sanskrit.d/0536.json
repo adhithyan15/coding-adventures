@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:dc8b6d7885368af9",
+  "lessonIds": [
+    "SA-C536-adrstam",
+    "SA-C536-bhavitavyata",
+    "SA-C536-samyogah",
+    "SA-C536-yadrcchaya",
+    "SA-C536-sampadyate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch536.txt",
+  "json": "sanskrit/narration/ch536.json",
+  "textHash": "fnv1a64:89e4647a4ed6a797",
+  "jsonHash": "fnv1a64:9782d5166ffa6cb2",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 282,
+  "title": "How I Feel, and What I Hope For",
+  "label": "ch:sa-how-i-feel-and-what-i-hope-for",
+  "canDo": "I can say how I feel, with the adjective agreeing with me (ahaṃ prasannaḥ / prasannā asmi), and what I want to become (ahaṃ vaidyaḥ bhavitum icchāmi; mama svapnaḥ asti …).",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-R282-feelings-and-hopes",
+    "kind": "production",
+    "summary": "Complete SA-R282-feelings-and-hopes: say how you feel and what you hope to become.",
+    "assesses": [
+      "SA-GRAMMAR-C282-FEELING-01",
+      "SA-GRAMMAR-C282-FEELING-02",
+      "SA-GRAMMAR-C282-AMBITION-01",
+      "SA-GRAMMAR-C282-AMBITION-02",
+      "SA-LEX-C282-UTSUKAH-01"
+    ]
+  }
+}

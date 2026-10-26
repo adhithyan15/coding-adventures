@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-414-DIGBHRAMA414",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say I am lost and find the way again.",
+  "prerequisites": []
+}

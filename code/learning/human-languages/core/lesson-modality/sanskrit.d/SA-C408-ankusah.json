@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C408-ankusah",
+    "language": "sanskrit",
+    "chapter": 408,
+    "sequence": 23740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca839d7b26914aff"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C505-mrdnati",
+    "language": "sanskrit",
+    "chapter": 505,
+    "sequence": 29170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:caf0d25c1c089ba2"
+  },
+  "findings": []
+}

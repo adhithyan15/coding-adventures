@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "Honour and Dishonour",
+  "label": "ch:sa-honour-and-dishonour",
+  "canDo": "I can talk about fame, standing and insults.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C360-pratarayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can talk about fame, standing and insults.",
+    "assesses": [
+      "SA-LEX-C360-YASHAS360-03",
+      "SA-LEX-C360-YASHAS360-04",
+      "SA-LEX-C360-YASHAS360-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:a3d2da97f5c6b904",
+  "lessonIds": [
+    "SA-C436-abhram",
+    "SA-C436-vrstih",
+    "SA-C436-pravarsati",
+    "SA-C436-klidyati",
+    "SA-C436-picchilah"
+  ],
+  "tex": "sanskrit/book/chapters/ch436-clouds-and-showers.tex"
+}

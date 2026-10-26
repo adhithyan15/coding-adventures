@@ -1,0 +1,11 @@
+{
+  "id": "SA-C551-utsrjati",
+  "pathSegment": "SA-PATH-551-PARITYAJATI551",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-551-PARITYAJATI551",
+      "order": 4
+    }
+  ]
+}

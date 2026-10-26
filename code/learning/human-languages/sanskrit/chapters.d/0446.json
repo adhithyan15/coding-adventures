@@ -1,0 +1,19 @@
+{
+  "chapter": 446,
+  "title": "Peaks and Plateaus",
+  "label": "ch:sa-peaks-and-plateaus",
+  "canDo": "I can describe high ground and what grows there.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C446-pallavah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can describe high ground and what grows there.",
+    "assesses": [
+      "SA-LEX-C446-SHIKHARA446-03",
+      "SA-LEX-C446-SHIKHARA446-04",
+      "SA-LEX-C446-SHIKHARA446-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 415,
+  "title": "River Currents",
+  "label": "ch:sa-river-currents",
+  "canDo": "I can say how we got across a river.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C415-setubandhah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can say how we got across a river.",
+    "assesses": [
+      "SA-LEX-C415-SROTAS415-03",
+      "SA-LEX-C415-SROTAS415-04",
+      "SA-LEX-C415-SROTAS415-05"
+    ]
+  }
+}

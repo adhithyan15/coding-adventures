@@ -1,0 +1,11 @@
+{
+  "id": "SA-W285-six-lines",
+  "pathSegment": "SA-PATH-285-CONDITION285",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-285-CONDITION285",
+      "order": 3
+    }
+  ]
+}

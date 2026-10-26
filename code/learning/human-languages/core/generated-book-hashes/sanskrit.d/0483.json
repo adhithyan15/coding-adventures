@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:200952405bcf0f1b",
+  "lessonIds": [
+    "SA-C483-gutika",
+    "SA-C483-curnam",
+    "SA-C483-lepah",
+    "SA-C483-kasayah",
+    "SA-C483-limpati"
+  ],
+  "tex": "sanskrit/book/chapters/ch483-medicines.tex"
+}

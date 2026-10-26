@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-306-SHIBIRA306",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "SA-EXT-306-SHIBIRA306"
+  ],
+  "after": []
+}

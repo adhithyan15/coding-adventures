@@ -1,0 +1,11 @@
+{
+  "id": "SA-C501-pitarau",
+  "pathSegment": "SA-PATH-501-SAMBANDHA501",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-501-SAMBANDHA501",
+      "order": 4
+    }
+  ]
+}

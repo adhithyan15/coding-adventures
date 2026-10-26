@@ -1,0 +1,11 @@
+{
+  "id": "SA-C495-praudhah",
+  "pathSegment": "SA-PATH-495-YAUVANA495",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-495-YAUVANA495",
+      "order": 2
+    }
+  ]
+}

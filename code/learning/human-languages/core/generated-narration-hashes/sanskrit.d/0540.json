@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:54d6adff199eed63",
+  "lessonIds": [
+    "SA-C540-asannah",
+    "SA-C540-avasistah",
+    "SA-C540-samaptih",
+    "SA-C540-kalaksepah",
+    "SA-C540-ativahayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch540.txt",
+  "json": "sanskrit/narration/ch540.json",
+  "textHash": "fnv1a64:a907f5bb0e996ce6",
+  "jsonHash": "fnv1a64:d7d02abe173cb300",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:3e5ea75fbe423097",
+  "lessonIds": [
+    "SA-C319-vijayah",
+    "SA-C319-parajayah",
+    "SA-C319-bandi",
+    "SA-C319-apasarati",
+    "SA-C319-abhibhavati"
+  ],
+  "tex": "sanskrit/book/chapters/ch319-victory-and-defeat.tex"
+}

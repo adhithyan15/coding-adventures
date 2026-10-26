@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C325-sulam",
+    "language": "sanskrit",
+    "chapter": 325,
+    "sequence": 19000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca3b0b85aea976e9"
+  },
+  "findings": []
+}

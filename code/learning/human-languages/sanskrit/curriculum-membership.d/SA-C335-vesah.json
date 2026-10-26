@@ -1,0 +1,11 @@
+{
+  "id": "SA-C335-vesah",
+  "pathSegment": "SA-PATH-335-MAYA335",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-335-MAYA335",
+      "order": 1
+    }
+  ]
+}

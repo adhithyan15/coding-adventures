@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C477-bhramah",
+    "language": "sanskrit",
+    "chapter": 477,
+    "sequence": 27480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce3b042d5771c675"
+  },
+  "findings": []
+}

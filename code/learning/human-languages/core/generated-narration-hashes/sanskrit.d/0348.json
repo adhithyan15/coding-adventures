@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:4388bc709c68a049",
+  "lessonIds": [
+    "SA-C348-sosanam",
+    "SA-C348-nyayyah",
+    "SA-C348-vidhih",
+    "SA-C348-paksapatah",
+    "SA-C348-ullanghayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch348.txt",
+  "json": "sanskrit/narration/ch348.json",
+  "textHash": "fnv1a64:e2950c77aa8fd5ea",
+  "jsonHash": "fnv1a64:103a8e0eadbb834f",
+  "findings": []
+}

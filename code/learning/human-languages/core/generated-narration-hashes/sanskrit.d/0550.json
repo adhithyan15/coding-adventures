@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 550,
+  "sourceHash": "fnv1a64:e10a44a9eb68e87f",
+  "lessonIds": [
+    "SA-C550-vantayati",
+    "SA-C550-pratyekam",
+    "SA-C550-dayah",
+    "SA-C550-viniyunkte",
+    "SA-C550-vitaranam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch550.txt",
+  "json": "sanskrit/narration/ch550.json",
+  "textHash": "fnv1a64:8b591c95a995dad5",
+  "jsonHash": "fnv1a64:5716032eb3fc6048",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-R285-depends-and-would",
+  "pathSegment": "SA-PATH-285-CONDITION285",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-285-CONDITION285",
+      "order": 4
+    }
+  ]
+}

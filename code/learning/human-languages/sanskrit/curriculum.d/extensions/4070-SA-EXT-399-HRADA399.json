@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-399-HRADA399",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a holy pool and the gate before a shrine.",
+  "prerequisites": []
+}

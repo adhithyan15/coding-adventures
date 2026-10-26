@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C499-bhagineyah",
+    "language": "sanskrit",
+    "chapter": 499,
+    "sequence": 28640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41b32e40c46919ef"
+  },
+  "findings": []
+}

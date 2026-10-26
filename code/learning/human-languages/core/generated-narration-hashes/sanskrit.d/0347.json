@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:5ad9f3080f5496e0",
+  "lessonIds": [
+    "SA-C347-udaharanam",
+    "SA-C347-drstantah",
+    "SA-C347-ittham",
+    "SA-C347-bodhayati",
+    "SA-C347-abhiprayah",
+    "SA-R347-review-340-347"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch347.txt",
+  "json": "sanskrit/narration/ch347.json",
+  "textHash": "fnv1a64:f3c925a013d80e3e",
+  "jsonHash": "fnv1a64:1345ea862d26400e",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:8a65d4872efb0727",
+  "lessonIds": [
+    "SA-C515-svadah",
+    "SA-C515-svaduh",
+    "SA-C515-amah",
+    "SA-C515-pakvah",
+    "SA-C515-cusati"
+  ],
+  "tex": "sanskrit/book/chapters/ch515-how-does-it-taste.tex"
+}

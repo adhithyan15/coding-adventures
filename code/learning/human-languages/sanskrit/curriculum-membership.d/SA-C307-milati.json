@@ -1,0 +1,11 @@
+{
+  "id": "SA-C307-milati",
+  "pathSegment": "SA-PATH-307-VIYOGA307",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-307-VIYOGA307",
+      "order": 2
+    }
+  ]
+}

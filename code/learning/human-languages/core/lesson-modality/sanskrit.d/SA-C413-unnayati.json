@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C413-unnayati",
+    "language": "sanskrit",
+    "chapter": 413,
+    "sequence": 23970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb04cffed4a2d966"
+  },
+  "findings": []
+}

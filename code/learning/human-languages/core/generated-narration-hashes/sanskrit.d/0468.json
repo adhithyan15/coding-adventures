@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:67c6d0ab2ca56f59",
+  "lessonIds": [
+    "SA-C468-lolupah",
+    "SA-C468-pratyupakarah",
+    "SA-C468-apakarah",
+    "SA-C468-smarayati",
+    "SA-C468-krtavedi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch468.txt",
+  "json": "sanskrit/narration/ch468.json",
+  "textHash": "fnv1a64:b5a6daade4eba044",
+  "jsonHash": "fnv1a64:f6d7fbbeee852234",
+  "findings": []
+}

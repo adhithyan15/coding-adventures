@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:409942439d31f84f",
+  "lessonIds": [
+    "SA-C349-nyayalayah",
+    "SA-C349-prativadi",
+    "SA-C349-aparadhyati",
+    "SA-C349-nigrhnati",
+    "SA-C349-sapathah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch349.txt",
+  "json": "sanskrit/narration/ch349.json",
+  "textHash": "fnv1a64:496887da52dae6e2",
+  "jsonHash": "fnv1a64:d83e08ba89d67267",
+  "findings": []
+}

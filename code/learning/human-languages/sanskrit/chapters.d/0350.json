@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "Release",
+  "label": "ch:sa-release",
+  "canDo": "I can say who was set free and what made amends.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C350-prayascittam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can say who was set free and what made amends.",
+    "assesses": [
+      "SA-LEX-C350-MUKTI350-03",
+      "SA-LEX-C350-MUKTI350-04",
+      "SA-LEX-C350-MUKTI350-05"
+    ]
+  }
+}
