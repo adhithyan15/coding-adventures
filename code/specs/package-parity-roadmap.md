@@ -17815,6 +17815,55 @@ self-test with the existing external CI-registry guard, which rejects job/step
 conditions and shell control flow and counts each exact executable line. A fresh
 exact-head review remains required before publication.
 
+## Post-#18154 reprioritization: Haskell opcode provider
+
+After the shared CommonMark 0.31.2 foundation completed local implementation
+and validation, the next independent item is
+`starlark-compiler-haskell-opcode-provider-parity`. STP01 is already merged and
+the Haskell provider root is genuinely absent. This tranche adds only the inert
+typed opcode/operator tables, public lookup APIs, dynamic neutral-corpus reader,
+native ownership tests, build fronts, coverage evidence, and empty capability
+declaration. It does not compile or execute Starlark, load modules, print,
+activate a VM, or depend on the unpublished CommonMark work.
+
+PR #18154 merged at `75dc311bc4`, freeing one of the operator-set three PR
+slots. Reprioritization keeps this already-complete independent Haskell tranche
+ahead of Swift, which still depends on PR #18147, and the CommonMark reader
+migrations, which still depend on PR #18174. Before publication, reconcile the
+F# merge receipt, rerun native and build-tool validation, and obtain a fresh
+independent security review.
+
+Local implementation is complete at source head `4081a54143e7cd8515388bcec754410f3c93e825`:
+the Haskell suite passes 10 examples over all 359 records, HPC reports 100%
+expression and alternative coverage for production, `cabal check` and the real
+BUILD front pass, and the focused fixture-routing tests pass for ten repeated
+runs. Adding the second native reader exposed unordered Go map iteration in
+serialized affected-package arrays; the tranche now sorts once at the
+nil-preserving set-to-list boundary and locks exact platform order with a
+regression. A temporarily complete checkout now lets the production planner
+evaluate all 86 Starlark BUILD files, discover 5,365 packages, select the exact
+14-package affected/prerequisite/dependent closure, and keep both orphan gates
+clean with 38 reviewed pending exemptions.
+
+The branch now includes current main 2a2b36cd29 at merge head 78a3e07fd4. The
+two Rust/x509 package additions and final Closure Compiler fix merged without
+conflict. The Closure delta adds no BUILD file or package root, so the 5,365-
+package complete-checkout planner receipt remains current; focused native, Go
+routing/vet/build, lesson, JSON and diff validation pass after integration. The earlier
+two shared-document conflicts preserve both the F# merge receipt and this
+Haskell lifecycle; the 1,547-owner graph remains unique, dependency-complete,
+acyclic, and free of merged-to-unfinished edges. The exact reconciled head again
+passes all 10 native examples over
+359 records, 100% production expression/alternative coverage, cabal check, and
+ten repeated exact STP01 routing runs. All 1,496 lesson shards and diff/JSON
+checks pass. The branch now owns the freed publication slot.
+
+Draft PR #18183 opened from exact independently reviewed head `7ce76c946e`
+over current main `2a2b36cd29`. GitHub reports it mergeable. The draft exists
+only to record the durable PR identity; the lifecycle-only follow-up must pass
+independent delta review before the PR is marked ready. Guarded auto-merge stays
+off until every exact-head check is terminal acceptable and conflict-free.
+
 ## Post-#18118 F# renderer selection and prerequisite decomposition (October 24, 2026)
 
 PR #18118 merged the language-neutral GFM fixture at
@@ -17947,6 +17996,38 @@ The private operational journal has reconciled all 103 pinned audits and eleven 
 
 This PR preserves the neutral validator and fixture bytes, recovers the observed Venture-only Node/npm setup failure, and retains the foundation-versus-reader-migration boundary. See the [current validation receipt](fixtures/commonmark-0.31.2/VALIDATION.md).
 
+## October 25, 2026: C# and F# WasmOpcodes coverage-gate preparation
+
+The publication ceiling remains occupied by the TypeScript GFM adoption,
+CommonMark fixture foundation, and Haskell Starlark opcode provider. Work does
+not need to idle behind their hosted queues, so the next dependency-safe local
+preparation is `dotnet-wasm-opcodes-build-coverage-enforcement`.
+
+The C# and F# `wasm-opcodes` build fronts currently pass
+`CollectCoverage`, `Threshold`, and `ThresholdType` properties to MSBuild. A
+clean C# baseline executes all seven tests successfully but emits no coverage
+report because its test project has no coverage provider. F# has only the data
+collector, while the build front invokes the separate MSBuild integration.
+Those green commands therefore do not prove or enforce their stated floor.
+
+This tranche is limited to those two existing packages and their Unix and
+Windows fronts. Each front must:
+
+1. build the project-reference graph with the same production-assembly filter
+   that the coverage run will use, so a clean isolated artifact tree is
+   instrumented before `--no-build` testing;
+2. produce an actual line-coverage report for only the corresponding
+   WasmOpcodes production assembly;
+3. enforce the repository's 95% library target rather than weakening the
+   historical 80% placeholder; and
+4. fail nonzero when a deliberately incomplete test selection leaves the
+   measured line coverage below that threshold.
+
+The package APIs, opcode tables, WebAssembly semantics, and wider .NET package
+fleet are out of scope. The active parity PRs touch none of these package or
+build-front files; shared bookkeeping will be reconciled only when a
+publication slot opens.
+
 ## October 25, 2026: C# document-AST Windows-front preparation
 
 After locally completing the independent .NET WasmOpcodes coverage repair,
@@ -17967,3 +18048,7 @@ with production-only MSBuild instrumentation, run tests from that graph, and
 enforce the 95% library line target on Unix and Windows. Package APIs, AST
 nodes, parser behavior, renderer behavior, and the wider .NET fleet remain out
 of scope.
+
+## October 25: serial Haskell opcode-provider recovery
+
+PR #18174 actually merged as `bd533925647b7fbac74eba35e611a8ba3930757f`; PR #18147 previously merged its frozen16 adoption. The unpublished67 draft remains separate. Earlier three-slot and draft-publication statements above are historical. Existing PR #18183 is now the sole active implementation. Its original `231de32b` head is preserved locally while its net change is carefully rebased onto `9000beddee61a136cf5c0c6c5787f81d3d717834`. Actual CI fails before compilation in Cabal3.10.3.0 coverage planning for vector0.13.2; preserve coverage and inert metadata APIs while validating a package-local repair. Local native13tests/all359records, productionHPC100percent expressions/alternatives, Go15packages/84.6percentcoverage, vet/build, realplanner14-packageclosure and metadata/parity checks pass. Runtime source80a01 passed independent review; final documentation delta and fresh hosted CI remain required. See [the exact recovery evidence](../packages/haskell/starlark-compiler/VALIDATION.md).
