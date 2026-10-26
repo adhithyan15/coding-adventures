@@ -20718,13 +20718,16 @@
     {
       "id": "geometry-bezier2d-flattening-go-rust",
       "title": "Consume safe Bezier flattening contract in Go and Rust",
-      "status": "pending",
+      "status": "in_progress",
       "depends_on": [
         "geometry-bezier2d-flattening-termination-contract"
       ],
-      "branch": null,
+      "branch": "codex/parity-bezier-go-rust-flattening-20261025",
       "pr_number": null,
-      "notes": "Explicit error-return API slice for bounded flattening failure. Both use midpoint flatness and unbounded recursion. Consume nine neutral cases, validate finite controls/tolerance, finite-segment bound, depth/work limit, and Bezier2D plus Arc2D tests; document any API compatibility adjustment."
+      "notes": "Explicit error-return API slice for bounded flattening failure. Both use midpoint flatness and unbounded recursion. Consume nine neutral cases, validate finite controls/tolerance, finite-segment bound, depth/work limit, and Bezier2D plus Arc2D tests; document any API compatibility adjustment.",
+      "selection_notes": "Selected as the final bounded existing-lane G2D02 implementation child after the C#/F#, Python/Ruby/Perl, TypeScript/Elixir/Lua, and Haskell/Swift tranches were implemented or prepared. Its neutral termination-contract dependency is merged, its Go and Rust package paths do not overlap the three active PRs or prepared branches, and it closes the last two stale midpoint-recursive implementations before the aggregate owner can be evaluated. Change the public flattening methods to explicit error returns, preserve evaluation/split/bounds behavior, consume all nine fixture rows dynamically, carry the subnormal-underflow regression, and run native Bezier2D plus same-language Arc2D suites. Shared selector integration remains sequenced behind PR #18293; no fourth PR opens while the publication ceiling is full.",
+      "started_at": "2026-10-25T22:12:00-07:00",
+      "base_revision": "20ba82cbe644174616d85b05a314c8395772ad8f"
     },
     {
       "id": "geometry-bezier2d-flattening-haskell-swift",

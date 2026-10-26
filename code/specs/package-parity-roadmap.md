@@ -18027,7 +18027,25 @@ The package APIs, opcode tables, WebAssembly semantics, and wider .NET package
 fleet are out of scope. The active parity PRs touch none of these package or
 build-front files; shared bookkeeping will be reconciled only when a
 publication slot opens.
+## October 25, 2026: Go and Rust Bezier flattening selection
 
+The last bounded existing-lane G2D02 implementation child is
+`geometry-bezier2d-flattening-go-rust`. The termination contract is merged,
+the four other implementation tranches are active or locally prepared, and
+these two package trees do not overlap any current PR. Work can proceed on a
+sparse branch while the three publication slots remain occupied; no fourth PR
+opens before a slot is available.
+
+Both lanes still expose midpoint-only recursive flattening with no invalid
+input or work-budget result. This owner changes those public APIs to explicit
+error returns, measures every control point against the finite endpoint
+segment, walks a left-first bounded stack, and consumes all nine neutral rows
+dynamically. Native regressions must cover invalid tolerance, non-finite
+controls and derived geometry, deterministic depth/split exhaustion, and the
+subnormal-distance underflow boundary. Go and Rust Bezier2D plus their
+same-language Arc2D suites must remain green. Shared selector integration stays
+sequenced behind PR #18293, and the twelve-lane aggregate remains a later
+owner rather than a claim of this branch.
 ## October 25, 2026: C# document-AST Windows-front preparation
 
 After locally completing the independent .NET WasmOpcodes coverage repair,
