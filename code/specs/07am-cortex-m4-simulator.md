@@ -23,7 +23,7 @@ The package models one deterministic Cortex-M4 core with:
   installed-image metadata, and 64 KiB little-endian teaching memory;
 - APSR N/Z/C/V/Q and Armv7E-M GE[3:0] state;
 - an explicit DSP surface containing saturating QADD/QSUB, SSAT/USAT,
-  lane-parallel SADD8/UADD8, dual-halfword SMUAD, and SMLAD;
+lane-parallel SADD8/UADD8, dual-halfword SMUAD, and SMLAD;
 - an explicit optional FPv4-SP surface containing S0-S31, FPSCR condition and
   cumulative exception state, VADD/VSUB/VMUL/VDIV, VMOV/VABS/VNEG/VSQRT,
   VCMP, VMRS, and VMSR; and
@@ -73,7 +73,7 @@ faults preserve the entire prior state.
 
 DSP saturation sets sticky APSR.Q. Parallel byte arithmetic writes APSR.GE
 lane results. SMUAD/SMLAD perform signed dual-halfword products and set sticky
-Q only when the 32-bit accumulate result saturates. FPU operations update
+Q only when the 32-bit result overflows. FPU operations update
 FPSCR cumulative exception flags while preserving supported control bits;
 VCMP updates FPSCR.NZCV exactly. VMRS/VMSR transport the bounded FPSCR through
 integer registers.
@@ -94,7 +94,8 @@ The cell is complete only when it has:
    FPU state/arithmetic/compare/status behavior;
 3. transactional load, restore, step, run, execute, fetch, bounds, FPU
    configuration, and retention tests;
-4. release line coverage above 80 percent; and
+4. release line coverage above 80 percent (completion baseline: 91.08 percent,
+   766/841 lines); and
 5. Rustfmt, strict Clippy, rustdoc, release tests, BUILD integration, lessons
    validation, affected-package checks, and independent security review before
    publication.
