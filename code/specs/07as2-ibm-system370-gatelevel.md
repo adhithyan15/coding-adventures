@@ -7,15 +7,13 @@ It preserves the complete checked System/370 functional boundary: the modeled
 System/360 problem-state integer, branch, character, and hexadecimal-floating
 surface plus `MVCL`, `CLCL`, `CLM`, `STCM`, and `ICM`.
 
-**Implementation is blocked.** Pull request #18363 must merge first, and this
-specification branch must then be reconciled with that corrected functional
-oracle before package code, tests, workspace wiring, or BUILD wiring begin.
-The pre-#18363 oracle leaves the ignored high bytes of both `MVCL` address
-registers unchanged on destructive-overlap completion. The architecture and
-this contract require those high bytes to become zero even though condition
-code 3 suppresses storage access, movement, length progress, and low-24-bit
-address progress. A gate package built against the pre-fix oracle would
-therefore encode a known-invalid differential expectation.
+**Implementation is unblocked.** Pull request #18363 merged into `origin/main`
+as `08d9140e6c0c60f7e74f1a5ad569e9c7cd68e364`, this specification branch is
+reconciled with that exact functional oracle, and all fourteen functional
+release tests pass. The corrected oracle clears the ignored high bytes of
+both `MVCL` address registers on destructive-overlap completion while
+condition code 3 suppresses storage access, movement, length progress, and
+low-24-bit address progress, exactly as this reviewed contract requires.
 
 The pinned architectural source is IBM, *IBM System/370 Principles of
 Operation*, seventh edition, March 1980, form GA22-7000-6. The bounded
@@ -238,7 +236,7 @@ Completion requires all of the following:
    Clippy, strict rustdoc, release tests, affected builds, and lesson
    validation, and exceeds 80% package line coverage with a 95% target.
 
-This repaired specification receives independent review while implementation
-remains blocked. After #18363 merges, this branch must be reconciled with the
-corrected oracle and receive a narrow exact-head freshness review. Only then
-may tests or implementation begin.
+This repaired specification received independent review before implementation.
+Its prerequisite and freshness gates are now satisfied; package code may be
+implemented only against the corrected oracle recorded above and must receive
+a different reviewer's exact-clean-head PASS before publication.
