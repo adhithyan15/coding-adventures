@@ -219,6 +219,38 @@ fn require_exact_arm(
     }
 }
 
+fn require_exact_opcode_match_tail(
+    source: &str,
+    function: &str,
+    expected: &str,
+) -> Result<(), String> {
+    let body = function_body(&rust_tokens(source), function)?;
+    let mut curly_depth = 0;
+    let mut match_open = None;
+    for index in 0..body.len().saturating_sub(2) {
+        match body[index].as_str() {
+            "{" => curly_depth += 1,
+            "}" => curly_depth -= 1,
+            "match" if curly_depth == 0 && body[index + 1] == "opcode" => {
+                match_open = (index + 2..body.len()).find(|&next| body[next] == "{");
+                break;
+            }
+            _ => {}
+        }
+    }
+    let open = match_open.ok_or_else(|| format!("{function} has no top-level match opcode"))?;
+    let close = matching_delimiter(&body, open, "{", "}")?;
+    let actual = &body[close + 1..];
+    let expected = rust_tokens(expected);
+    if actual == expected {
+        Ok(())
+    } else {
+        Err(format!(
+            "{function} has unapproved control flow after opcode dispatch\nactual: {actual:?}\nexpected: {expected:?}"
+        ))
+    }
+}
+
 fn verify_branch_structure(networks: &str, executor: &str, validator: &str) -> Result<(), String> {
     let network_tokens = rust_tokens(networks);
     let decode_fn = network_tokens
@@ -373,6 +405,9 @@ fn verify_branch_structure(networks: &str, executor: &str, validator: &str) -> R
          }
          Ok(next)",
     )?;
+    require_exact_opcode_match_tail(executor, "execute_rr", "Ok(())")?;
+    require_exact_opcode_match_tail(executor, "execute_rx", "Ok(())")?;
+    require_exact_opcode_match_tail(executor, "execute_rs", "Ok(())")?;
 
     require_exact_arm(
         executor,
@@ -591,4 +626,25 @@ fn structural_verifier_rejects_adversarial_host_shortcuts_and_dead_anchors() {
         1,
     );
     assert!(verify_branch_structure(networks, &post_dispatch_overwrite, validator).is_err());
+
+    let rr_post_match_overwrite = executor.replacen(
+        "    Ok(())\n}\n\nfn execute_four",
+        "    next.pc = before.pc;\n    Ok(())\n}\n\nfn execute_four",
+        1,
+    );
+    assert!(verify_branch_structure(networks, &rr_post_match_overwrite, validator).is_err());
+
+    let rx_post_match_overwrite = executor.replacen(
+        "    Ok(())\n}\n\nfn execute_rs",
+        "    next.pc = before.pc;\n    Ok(())\n}\n\nfn execute_rs",
+        1,
+    );
+    assert!(verify_branch_structure(networks, &rx_post_match_overwrite, validator).is_err());
+
+    let rs_post_match_overwrite = executor.replacen(
+        "    Ok(())\n}\n\nfn execute_si",
+        "    next.pc = before.pc;\n    Ok(())\n}\n\nfn execute_si",
+        1,
+    );
+    assert!(verify_branch_structure(networks, &rs_post_match_overwrite, validator).is_err());
 }

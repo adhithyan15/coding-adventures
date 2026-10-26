@@ -13,7 +13,8 @@ All notable changes to this package will be documented in this file.
   coverage with adversarial host-predicate, indirection, dead-anchor, and
   primitive/helper-shadowing fixtures. Exact locks cover the complete branch
   select, fixed-width adder, signed-comparator, and top-level dispatch data
-  flow; adversarial helper rewrites and post-dispatch overwrites are rejected.
+  flow, including the RR, RX, and RS dispatcher tails; adversarial helper
+  rewrites and post-dispatch overwrites are rejected.
 
 ## [0.1.0] - 2026-10-24
 
