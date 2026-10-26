@@ -146,6 +146,7 @@ harness is in Appendix A.
 | P11 | Add `slot children : list<node> ;` with a `slot: children` mount, unfilled | 2/2 | The mount is removed |
 | **P12** | `slot count : number ;` used only in `If ( when: ( count > 0 ) )` | **9/9** | **Leaks into generated code.** React `{( count > 0 ) && …}` gives `tsc` `TS2304: Cannot find name 'count'`. SwiftUI `let _mosaicCondition0: Bool = count > 0` gives `swiftc` `cannot find 'count' in scope` |
 | P13 | Bind a `list<text>` slot to a `text` slot, and `"yes"` to a `bool` | 2/2 | Not type-checked |
+| **P14** | `slot tone : one-of calm loud ;` used only in `If ( when: ( tone == "calm" ) )`, and the call site passes the literal `tone: calm` | **2/2** | **The same leak as P12, from a literal.** The bare `Keyword` is spliced into the expression as an identifier (`layout_prop_value_as_expression`, resolver `lib.rs:1176`). React emits `{( calm == "calm" ) && …}` and `tsc` reports `TS2304: Cannot find name 'calm'`. SwiftUI emits `calm == "calm"` and `swiftc` reports `cannot find 'calm' in scope`. This happens today, without any default |
 
 ### 1.4 What the specs say
 
@@ -304,13 +305,17 @@ compatibly under *any* reading, because they cannot have a default.
   slot without one: breaking" become *true*. Once R3 (§4) lands, they hold
   for lists and `one-of` too. The rows needed are listed in §5.4.
 - **Accessibility:** safe with rule R4. A package author cannot default a
-  name slot to `""` unless the named element is gated on that same slot, as
-  DraftEditor does. And a literal `""` left on a name prop after inlining is
-  an error.
+  name slot to an empty or whitespace-only string. The one exception is an
+  exact `""` with the named element gated on that same slot, as DraftEditor
+  does. And an empty literal (after trimming whitespace) left on a name prop
+  after inlining is an error.
 - **Emitters:** for text, number and bool, nothing: the resolver and all 8
   standalone default paths already work (§1.2, §1.5; P2, P9b, D-default).
-  `one-of` defaults need a default literal in the 8 paths. At inline time
-  they are the same as a caller passing a literal, which already works.
+  `one-of` defaults need a default literal in the 8 paths. At inline time a
+  default is substituted the way a caller's literal is. That already works in
+  prop position, but **not inside an expression**: a literal `one-of` value is
+  spliced in as a bare identifier (P14). R3 fixes that for defaults and
+  call-site literals together (F5).
   `[]` needs the 8 paths, plus inline-time folding of `For ( each: [] )`, plus
   a literal form for any other list use (F6).
 - **Existing packages:** none. The 22 defaults keep their meaning, and the 553
@@ -368,7 +373,15 @@ enforce it.** Concretely:
     `For ( each: [] ) { … }` away, as `fold_constant_conditionals` folds
     `If ( when: false )`.
   - `one-of a b c = b`: a bare value, which must be one of the declared
-    values.
+    values. **Substitution rule.** In prop position the default becomes
+    `LayoutPropValue::Keyword("b")`, exactly what a caller's `tone: b`
+    produces today. Inside an expression, the value of a `one-of` slot,
+    whether it comes from a default or a call-site literal, is always spliced
+    as a quoted string literal (`"b"`) and never as a bare identifier.
+    `rewrite_expression_bindings` gets this from the callee slot's type, so
+    only `true` and `false` for `bool` slots and numbers stay unquoted.
+    Without the rule, a defaulted `one-of` reproduces P14's undeclared
+    identifier in every consumer that omits it.
   - `node` and `list<node>` child slots are already optional (P11), and the
     spec says so.
   - `image`, `color` and component types stay non-defaultable (Q8). None
@@ -380,15 +393,25 @@ enforce it.** Concretely:
   `Icon` `label`; `HostDialog` `title`; and `HostNavigationSplit`
   `pane-title`. F4 pins the list in one constant, checked against UI29 §2.1,
   and shares it with the native-degradation analyser.
+  - **"Empty" means empty after trimming Unicode whitespace** (Rust
+    `str::trim`, i.e. the `White_Space` property). `" "`, `"\n"` and
+    `"\u{3000}"` name nothing, so a screen reader announces them as an
+    unnamed control. They are also *truthy*, so an `If ( when: slot: x )` gate
+    keeps the element rather than removing it.
   - (i) **Package time.** In the package's own layout, a slot whose default
-    is `""` and whose value reaches a name prop is
-    `EmptyAccessibleNameDefault`, *unless* every such use sits inside
+    is empty and whose value reaches a name prop is
+    `EmptyAccessibleNameDefault`. There is one exemption: a default of
+    **exactly** `""`, where every use sits inside
     `If ( when: slot: <that slot> )`. That is the label-gated pattern of
-    `DraftEditor` and `EmptyState`, where `""` removes the named element.
-  - (ii) **After inlining** and constant folding, a name prop that holds the
-    literal `""` is `EmptyAccessibleName`. This catches a consumer binding
-    `""` to an ungated name. Gated uses have already folded away, so (ii)
-    needs no exemption. The 7 existing `action-label : ""` sites pass.
+    `DraftEditor` and `EmptyState`, where `""` is falsy and removes the named
+    element. A whitespace-only default is never exempt, gated or not, because
+    the gate lets it through.
+  - (ii) **After inlining** and constant folding, a name prop holding a
+    literal that is empty is `EmptyAccessibleName`. This catches a consumer
+    binding `""` or `" "` to an ungated name, and `" "` to a gated one (the
+    gate does not fold away). An exact `""` under its own gate has already
+    folded away, so (ii) needs no exemption. The 7 existing
+    `action-label : ""` sites pass.
   - (iii) A non-empty literal default on a name slot is the warning
     `LiteralAccessibleNameDefault`, because it is untranslated English. Grid's
     `"Cell value"` is the only instance today.
@@ -436,9 +459,11 @@ These are made in follow-up PRs once §4 is decided, not here.
 1. §2 `Grid`: change "unbound slots use zero values" to "an unset `Grid`
    prop uses its zero value". Add: "This is about a primitive's props. A
    component's unbound slots follow UI13 §1."
-2. §7 Validation: add "8. **Accessible names.** A slot whose default is `""`
-   may not reach a name prop (list in UI29 §2.1), unless every such use is
-   inside `If ( when: slot: <that slot> )`."
+2. §7 Validation: add "8. **Accessible names.** A slot whose default is
+   empty after trimming Unicode whitespace may not reach a name prop (list in
+   UI29 §2.1). The one exception is a default of exactly `""` where every such
+   use is inside `If ( when: slot: <that slot> )`. After inlining, a name prop
+   holding such an empty literal is an error, gated or not."
 3. §9 Errors: add `EmptyAccessibleNameDefault` and the warning
    `LiteralAccessibleNameDefault`.
 
@@ -449,8 +474,8 @@ These are made in follow-up PRs once §4 is decided, not here.
    (`SlotBindingMissing`). A call-site prop must name a callee slot or emit
    (`UnknownSlotBinding`). An omitted defaulted slot takes its default. An
    omitted emit is dropped. An unfilled child mount is removed. After
-   substitution and constant folding, a name prop holding `""` is
-   `EmptyAccessibleName`."
+   substitution and constant folding, a name prop holding a literal that is
+   empty after trimming Unicode whitespace is `EmptyAccessibleName`."
 2. §7: the `SlotBindingMissing` fix text becomes "Bind the slot at the call
    site, or give it a default in the component's `.mil`". Add
    `UnknownSlotBinding` and `EmptyAccessibleName` rows. Add the note: "Until
@@ -469,7 +494,7 @@ Do not edit the file here. Proposed table edits:
 | Change a slot's default value | No (minor), called out in the CHANGELOG | Every call site that omits it changes behaviour, but none fails to compile (Q2) |
 | Add an `image`, `color` or component-typed slot | **Yes** | These types cannot have a default (UI13 §5) |
 | Add a `node` / `list<node>` child-mount slot | No | An unfilled mount renders nothing (UI29-2) |
-| Default a slot that feeds an accessible name to `""` | Not allowed | `EmptyAccessibleNameDefault` (UI14 §7) |
+| Default a slot that feeds an accessible name to an empty or whitespace-only string | Not allowed, except an exact `""` gated on itself | `EmptyAccessibleNameDefault` (UI14 §7) |
 
 Notes:
 
@@ -486,8 +511,8 @@ Add two items to the definition of done:
 
 - [ ] Every slot added after the component's first release has a default, or
       the release is a breaking bump.
-- [ ] No slot that feeds an accessible name defaults to `""` outside a gate
-      on itself.
+- [ ] No slot that feeds an accessible name defaults to an empty or
+      whitespace-only string, except an exact `""` gated on itself.
 
 ### 5.6 Editor convergence audit (#18370)
 
@@ -509,8 +534,8 @@ answers to Q2 to Q8, because they enforce what UI13 and UI34 already say.
 | **F1** | `SlotBindingMissing`: check every required callee slot is bound, against the interface, before substitution; report every error | `mosaic-package-resolver` (`substitute`), `LayoutResolveError`; builder stops reporting only `errs[0]` | S | P1, P3, P5b, P9 and P12 become `SlotBindingMissing` naming the package; P2, P9b and D-default still pass; every package and program in the repo still builds on all 9 backends (any new failure is a latent capture, fixed in the same PR) |
 | **F2** | `UnknownSlotBinding`, with a closest-name hint | resolver | S | P4 fails; a full repo build finds existing typos, if any |
 | F3 | Call-site type check (`SlotBindingTypeMismatch`): literal and slot-ref kinds against the callee slot type | resolver, using the consumer descriptor | M | P13 fails. Adjacent to E6, not required by it (Q7) |
-| **F4** | Accessible-name rules R4 (i) to (iii): one `ACCESSIBLE_NAME_PROPS` constant; (i) in `moslayout_compiler::validate` with descriptor defaults; (ii) after inlining in `resolve_layout_package_references` | `moslayout-compiler`, artifact builder | S–M | P7 fails; the DraftEditor and EmptyState gated patterns pass; Grid warns |
-| F5 | `one-of` defaults: `slot_default` admits `NAME`, validated against the set, with the 8 standalone default paths | grammar (regenerate projections), `mosmodel-compiler`, 8 emitters | S–M | P6 passes on 9/9; a value outside the set is `InvalidDefault` |
+| **F4** | Accessible-name rules R4 (i) to (iii): one `ACCESSIBLE_NAME_PROPS` constant; (i) in `moslayout_compiler::validate` with descriptor defaults; (ii) after inlining in `resolve_layout_package_references` | `moslayout-compiler`, artifact builder | S–M | P7 fails; so does P7 with a whitespace-only default (`= " "`, `= "\n"`), gated or ungated, and so does a call-site `label: " "`; the DraftEditor and EmptyState gated `""` patterns pass; Grid warns |
+| F5 | `one-of` defaults: `slot_default` admits `NAME`, validated against the set; the default becomes `Keyword` in prop position and a quoted string literal inside an expression (R3), and the same quoting applies to call-site `one-of` literals (fixes P14); plus the 8 standalone default paths | grammar (regenerate projections), `mosmodel-compiler`, resolver (`rewrite_expression_bindings`), 8 emitters | S–M | P6 passes on 9/9; a value outside the set is `InvalidDefault`; P14, and P14 with `tone` omitted and `= calm` defaulted, build on 9/9, and the generated React passes `tsc --noEmit` and the SwiftUI passes `swiftc -typecheck` (P12-style) |
 | F6 | `list<T> = []`: lexer `[ ]`, `SlotDefault::EmptyList`, inline folding of `For ( each: [] )`, a literal form for other list uses, and the 8 standalone default paths | grammar, `mosmodel-compiler`, resolver, 8 emitters | M | P5a passes on 9/9; a `For` over an unbound defaulted list renders nothing |
 | F7 | Adopt it: DraftEditor `body-placeholder = ""` (this is E1); toolkit `EmptyState.action-label = ""`, then drop the 7 redundant `""` bindings | packages | S each | Native gates unchanged |
 | F8 | Docs: §5.1 to §5.3 and §5.5 (and §5.4 into #18358 if it is still open) | specs | S | |
