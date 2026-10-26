@@ -43,7 +43,7 @@ fn manifest_exposes_the_core_standard_controls() {
     assert_eq!(exports, COMPONENTS);
     assert_eq!(
         manifest["dependencies"]["mosaic-pkg-toolkit"].as_str(),
-        Some("0.11.0")
+        Some("0.16.0")
     );
     // The foundation dependency tracks the foundation's own version, read
     // from its manifest rather than restated here.

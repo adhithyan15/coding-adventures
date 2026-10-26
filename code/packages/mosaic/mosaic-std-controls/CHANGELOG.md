@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Requires `mosaic-pkg-toolkit` `0.16.0` (was `0.11.0`). The old string was
+  never checked and no longer matched the toolkit on disk; it is now a caret
+  requirement the resolver enforces (mosaic-package-publishing-v1 §7.4). No
+  source change: the build already compiled against 0.16.0, and the only
+  breaking toolkit change since 0.11.0 (`SegmentedControl.options`, 0.15.0)
+  touches no component this package uses (`Button`, `Checkbox`, `Input`, `NumberInput`).
 - Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
 - Depends on `mosaic-std-foundation` 0.2.0 (`Surface`'s `items` slot).
 
