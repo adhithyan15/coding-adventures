@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:66e1a4deda8d05c1",
+  "lessonIds": [
+    "SA-C335-maya",
+    "SA-C335-vesah",
+    "SA-C335-chalam",
+    "SA-C335-mohayati",
+    "SA-C335-akarsati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch335.txt",
+  "json": "sanskrit/narration/ch335.json",
+  "textHash": "fnv1a64:ec390b3787fd8458",
+  "jsonHash": "fnv1a64:de76a1b7f860ec5b",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 548,
+  "sourceHash": "fnv1a64:813bc2dc14f09ec5",
+  "lessonIds": [
+    "SA-C548-visvasayati",
+    "SA-C548-durdasa",
+    "SA-C548-santvana",
+    "SA-C548-akulah",
+    "SA-C548-saranam",
+    "SA-R548-review-542-548"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch548.txt",
+  "json": "sanskrit/narration/ch548.json",
+  "textHash": "fnv1a64:dc57bd53037539ad",
+  "jsonHash": "fnv1a64:256129de47c6f0ef",
+  "findings": []
+}

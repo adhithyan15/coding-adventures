@@ -1,0 +1,19 @@
+{
+  "chapter": 395,
+  "title": "Caravans and Companions",
+  "label": "ch:sa-caravans-and-companions",
+  "canDo": "I can say who I travel with and how I take leave.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C395-parivrajakah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can say who I travel with and how I take leave.",
+    "assesses": [
+      "SA-LEX-C395-SARTHA395-03",
+      "SA-LEX-C395-SARTHA395-04",
+      "SA-LEX-C395-SARTHA395-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C341-uddesyam",
+  "pathSegment": "SA-PATH-341-PRAYOJANA341",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-341-PRAYOJANA341",
+      "order": 1
+    }
+  ]
+}

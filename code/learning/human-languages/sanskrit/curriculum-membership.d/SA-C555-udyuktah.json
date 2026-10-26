@@ -1,0 +1,11 @@
+{
+  "id": "SA-C555-udyuktah",
+  "pathSegment": "SA-PATH-555-PRERANA555",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-555-PRERANA555",
+      "order": 1
+    }
+  ]
+}

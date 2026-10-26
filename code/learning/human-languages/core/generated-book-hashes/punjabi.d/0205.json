@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:13482fdd55e91232",
+  "lessonIds": [
+    "PA-C205-fine-return",
+    "PA-C205-sabh",
+    "PA-C205-sabh-review",
+    "PA-C205-everything-fine",
+    "PA-C205-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch205-everything-fine.tex"
+}

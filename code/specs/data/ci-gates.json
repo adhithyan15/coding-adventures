@@ -4,7 +4,7 @@
   "gates": {
     "neural-framework-conformance": {
       "scope": "job",
-      "description": "NN46 five-native-language training and twenty directed checkpoint exchanges.",
+      "description": "NN49 six-native-language training and thirty directed checkpoint exchanges.",
       "packages": [
         "python/neural-framework",
         "typescript/neural-framework",
@@ -16,7 +16,12 @@
         "go/neural-framework",
         "go/matrix",
         "ruby/neural-framework",
-        "ruby/matrix"
+        "ruby/matrix",
+        "c/neural-framework",
+        "c/matrix",
+        "c/float-math",
+        "c/bounded-json",
+        "c/iso-harness"
       ],
       "paths": [
         "code/packages/python/neural-framework/**",
@@ -32,16 +37,14 @@
         "code/packages/go/matrix/**",
         "code/packages/ruby/neural-framework/**",
         "code/packages/ruby/matrix/**",
-        "code/scripts/validate_neural_framework_ruby.py",
-        "code/scripts/tests/test_neural_framework_ruby.py",
-        "code/scripts/validate_neural_framework_go.py",
-        "code/scripts/tests/test_neural_framework_go.py",
-        "code/scripts/validate_neural_framework_rust.py",
-        "code/scripts/tests/test_neural_framework_rust.py",
-        "code/scripts/tests/test_neural_framework_interchange.py",
+        "code/packages/c/neural-framework/**",
+        "code/packages/c/matrix/**",
+        "code/packages/c/float-math/**",
+        "code/packages/c/bounded-json/**",
+        "code/packages/c/iso-harness/**",
+        "code/scripts/validate_neural_framework_*.py",
+        "code/scripts/tests/test_neural_framework_*.py",
         "code/specs/fixtures/neural-framework-v1/**",
-        "code/scripts/validate_neural_framework_interchange.py",
-        "code/scripts/tests/test_neural_framework_ci_gate.py",
         "code/specs/data/ci-gates.json",
         ".github/workflows/ci.yml",
         ".github/workflows/neural-framework.yml"

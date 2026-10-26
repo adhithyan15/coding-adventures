@@ -1,0 +1,11 @@
+{
+  "id": "SA-C329-aratrikam",
+  "pathSegment": "SA-PATH-329-PUJA329",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-329-PUJA329",
+      "order": 3
+    }
+  ]
+}

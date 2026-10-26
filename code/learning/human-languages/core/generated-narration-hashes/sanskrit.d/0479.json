@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:a5de630ec13c83f5",
+  "lessonIds": [
+    "SA-C479-vyadhih",
+    "SA-C479-madhumehah",
+    "SA-C479-ksayah",
+    "SA-C479-sancarati",
+    "SA-C479-mari",
+    "SA-R479-review-472-479"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch479.txt",
+  "json": "sanskrit/narration/ch479.json",
+  "textHash": "fnv1a64:e65948894a024472",
+  "jsonHash": "fnv1a64:68050f78c9b0444b",
+  "findings": []
+}

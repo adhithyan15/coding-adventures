@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:b052f9b61ee48788",
+  "lessonIds": [
+    "SA-C535-pratipalayati",
+    "SA-C535-satyasandhah",
+    "SA-C535-visvastah",
+    "SA-C535-bhangah",
+    "SA-C535-vacanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch535.txt",
+  "json": "sanskrit/narration/ch535.json",
+  "textHash": "fnv1a64:29923e3952e46c01",
+  "jsonHash": "fnv1a64:b9c9b8fdf7c40ecc",
+  "findings": []
+}

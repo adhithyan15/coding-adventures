@@ -2,11 +2,12 @@
 
 Independent ISO C17 dense training above the native `matrix`, `float-math`
 and `bounded-json` packages. No libm, foreign runtime, Rust binding, external
-JSON parser or ML engine supplies training. Six-native interchange is a
-separate pending tranche; this package alone does not prove it.
+JSON parser or ML engine supplies training. Six-native interchange is the
+separate NN49 integration; this package alone does not prove it.
 
-NN48 is locally implemented and validated. Publication, actual repository CI
-and confirmed exact-head merge remain required before delivery.
+NN48 merged exact head `437c4c2d01bb` in PR #18285, with actual Linux/macOS/
+Windows package BUILDs and all selected workflows/required gates passed.
+CodeQL detection passed with no C analyzer configured; no C scanning is claimed.
 
 ```c
 #include "neural_framework.h"
@@ -116,7 +117,11 @@ passes Clang ASan/UBSan. Command gcov is 100% lines (45), 100% branches executed
 Run `python ../../../scripts/validate_neural_framework_c.py --executable PATH`
 with a trusted compiled command path to execute five children and compare full
 native baseline/resume state through 3002. No checkpoint content controls paths
-or argv. The validator explicitly reports six-language interchange pending.
+or argv. That native-only validator retains its NN48 scope. NN49 separately runs
+`python code/scripts/validate_neural_framework_interchange.py --c-executable PATH`
+from repository root with all peer dependencies available: thirty directed
+pairs and return trips, 78 children, complete model comparison through 3002.
+Its actual local run passed; selected exact-head CI/merge remains pending.
 
 ## Static-library installation
 

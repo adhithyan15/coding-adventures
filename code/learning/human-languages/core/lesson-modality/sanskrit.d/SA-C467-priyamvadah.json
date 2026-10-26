@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C467-priyamvadah",
+    "language": "sanskrit",
+    "chapter": 467,
+    "sequence": 27010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14ba567f25bfb40f"
+  },
+  "findings": []
+}

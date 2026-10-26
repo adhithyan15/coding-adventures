@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:35c278b5913d56e7",
+  "lessonIds": [
+    "SA-C394-tirthayatra",
+    "SA-C394-pratisthate",
+    "SA-C394-patheyam",
+    "SA-C394-yati",
+    "SA-C394-kamandaluh"
+  ],
+  "tex": "sanskrit/book/chapters/ch394-setting-out-on-pilgrimage.tex"
+}

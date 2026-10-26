@@ -1,4 +1,4 @@
-//! # Walking the `py-int-print` / `py2-int-print` parse tree into IIR (LANG84 phases 7a, 7c)
+//! # Walking the `py-int-print` / `py-float-print` / `py2-int-print` parse tree into IIR (LANG84 phases 7a, 7c)
 //!
 //! This is the hand-written half of the LANG84 pipeline. Everything before
 //! it is generic and table-driven (`GrammarLexer` over
@@ -74,6 +74,9 @@
 //! | `a / b` (`py2` only)  | as `a // b`: classic division floors on ints      |
 //! | end of module         | `const 0`, `ret` (a script that ends exits 0)     |
 //!
+//! The float rows (`py-float-print`, phase 7c slice 3, `py3` profile only)
+//! are in "Floats" below.
+//!
 //! There is no Python-named builtin anywhere (LANG84 C2), so every backend
 //! that lowers LANG83 runs these programs with no Python-specific code.
 //!
@@ -111,13 +114,49 @@
 //! `-1` divisor; every operation is still emitted and checked at run time.
 //! A value whose operation certainly traps is `None`: nothing after a certain
 //! trap ever runs.
+//!
+//! ## Floats (`py-float-print`, phase 7c slice 3)
+//!
+//! Under a profile with [`Floats::Repr`] (`py3`: 3.5.10 and later) every
+//! value has a static type, `int` or `float`, known while lowering. An
+//! `int` lives in an `i64` register exactly as above; a `float` in an `f64`
+//! register, and all its arithmetic is the LANG83 PR6c IEEE family, which
+//! never traps (CPython's `float_add`/`float_sub`/`float_mul` never raise
+//! either: an overflow is `inf`, `inf - inf` is `nan`).
+//!
+//! | Python                          | IIR                                              |
+//! |---------------------------------|--------------------------------------------------|
+//! | `1.5`, `.5`, `1.`, `1e16`       | `pyN = const 1.5 : f64` (correctly rounded)      |
+//! | `int` operand of a float op     | `pyN = int_to_real i : f64`                      |
+//! | `a + b`, `a - b`, `a * b`       | `f64_add` / `f64_sub` / `f64_mul` (either is a float) |
+//! | `a / b` (any types)             | both converted, then `f64_div`                   |
+//! | `a / b`, `b` known `±0.0`       | `trap "Trap.DivZero"`, then the (dead) `f64_div` |
+//! | `-a`, `+a` (float)              | `f64_neg` (`-0.0` stays `-0.0`); nothing         |
+//! | `print(a)` (float)              | `call_builtin write_f64_py, a`; `putchar 10`     |
+//! | `a // b`, `a % b`, one a float  | refused (`Unsupported`): no LANG83 op yet        |
+//!
+//! Three refusals keep the IIR exactly CPython's arithmetic:
+//!
+//! - **A zero divisor** is a compile-time fact here (every value is known),
+//!   so the `ZeroDivisionError` that `float_div` and `long_true_divide`
+//!   raise becomes LANG83's `trap`, after the program's earlier output.
+//! - **`int / int` with an operand above 2^53** is refused: CPython divides
+//!   the exact integers and rounds once, but converting first rounds twice.
+//!   At or below 2^53 both convert exactly and `f64_div` rounds once, which
+//!   is `long_true_divide`'s own fast path.
+//! - **A literal that overflows to `inf`** (`1e400`) is refused: a
+//!   non-finite `const` has no LANG83 contract (BEAM's literal table cannot
+//!   hold one). `1e308 * 10` still reaches `inf`, through `f64_mul`.
+//!
+//! Known float values are folded with Rust's `f64`, the same IEEE binary64
+//! arithmetic the PR6c ops specify; they decide only the zero-divisor test.
 
 use interpreter_ir::{IIRInstr, Operand};
 use lexer::token::Token;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 use crate::frontend_error::FrontendError;
-use crate::profiles::{IntLiterals, ReleaseProfile, Slash};
+use crate::profiles::{Floats, IntLiterals, ReleaseProfile, Slash};
 
 /// LANG84 C5: most IIR instructions one module may hold.
 pub const MAX_IIR_INSTRUCTIONS: usize = 1_000_000;
@@ -165,6 +204,10 @@ pub const DISPATCHED_TOKENS: &[&str] = &[
 /// The newline `print()` writes, as the byte `putchar` takes.
 const NEWLINE_BYTE: i64 = b'\n' as i64;
 
+/// The largest magnitude an `int` may have in a true division: 2^53, the
+/// last power of two below which every integer is an exact `f64`.
+const EXACT_F64_INT: i128 = 1 << 53;
+
 /// A binary operator of the subset.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum BinOp {
@@ -173,6 +216,8 @@ enum BinOp {
     Mul,
     FloorDiv,
     Mod,
+    /// `/` under [`Slash::True`] with floats: always a float result.
+    TrueDiv,
 }
 
 impl BinOp {
@@ -184,15 +229,71 @@ impl BinOp {
             BinOp::Mul => "i64_mul_ovf",
             BinOp::FloorDiv => "i64_div_floor",
             BinOp::Mod => "i64_mod_floor",
+            // Never reached: true division is always lowered as a float.
+            BinOp::TrueDiv => "f64_div",
+        }
+    }
+
+    /// The LANG83 PR6c op that computes it on two `f64`s, if there is one.
+    fn f64_op(self) -> Option<&'static str> {
+        match self {
+            BinOp::Add => Some("f64_add"),
+            BinOp::Sub => Some("f64_sub"),
+            BinOp::Mul => Some("f64_mul"),
+            BinOp::TrueDiv => Some("f64_div"),
+            BinOp::FloorDiv | BinOp::Mod => None,
         }
     }
 }
 
-/// One evaluated expression: where its value lives, and the value itself
-/// unless evaluation certainly traps first.
+/// A value's static type. Python's `int` and `float` are the only two.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Ty {
+    Int,
+    Float,
+}
+
+/// A value known while lowering: exact for an `int`, IEEE for a `float`.
+#[derive(Debug, Clone, Copy, PartialEq)]
+enum Known {
+    Int(i128),
+    Float(f64),
+}
+
+/// One evaluated expression: where its value lives, its type, and the
+/// value itself unless evaluation certainly traps first.
 struct Evaluated {
     operand: Operand,
-    known: Option<i128>,
+    ty: Ty,
+    known: Option<Known>,
+}
+
+impl Evaluated {
+    /// An `int` result.
+    fn int(register: String, known: Option<i128>) -> Self {
+        Evaluated { operand: Operand::Var(register), ty: Ty::Int, known: known.map(Known::Int) }
+    }
+
+    /// A `float` result.
+    fn float(register: String, known: Option<f64>) -> Self {
+        Evaluated { operand: Operand::Var(register), ty: Ty::Float, known: known.map(Known::Float) }
+    }
+
+    /// The exact value of a known `int`.
+    fn known_int(&self) -> Option<i128> {
+        match self.known {
+            Some(Known::Int(value)) => Some(value),
+            _ => None,
+        }
+    }
+
+    /// The value of a known `float`.
+    fn known_float(&self) -> Option<f64> {
+        match self.known {
+            Some(Known::Float(value)) => Some(value),
+            _ => None,
+        }
+    }
 }
 
 /// The state of one compile.
@@ -274,7 +375,7 @@ impl<'a> Lowering<'a> {
                         if !self.profile_owns_rule("print_stmt") {
                             return Err(self.unsupported(
                                 print,
-                                format!("a `print` statement is not in {}; this tree is not from this release's grammar", self.profile.subset),
+                                format!("a `print` statement is not in {}; this tree is not from this release's grammar", self.profile.subset()),
                             ));
                         }
                         self.lower_print_stmt(print)?;
@@ -329,12 +430,7 @@ impl<'a> Lowering<'a> {
                 // The item is evaluated before PRINT_ITEM writes anything, so
                 // a trap inside it writes nothing for this statement.
                 let value = self.lower_expression(expression)?;
-                self.emit(
-                    "call_builtin",
-                    None,
-                    vec![Operand::Var("print_i64".into()), value.operand],
-                    "void",
-                )
+                self.emit_print(value)
             }
             [ASTNodeOrToken::Node(expression), ASTNodeOrToken::Token(comma)]
                 if expression.rule_name == "expression" && comma.effective_type_name() == "COMMA" =>
@@ -345,7 +441,7 @@ impl<'a> Lowering<'a> {
                     format!(
                         "`print x,` (no newline) is not in {}: it leaves softspace set, and CPython 2 \
                          flushes softspace as a newline before an uncaught exception",
-                        self.profile.subset
+                        self.profile.subset()
                     ),
                 ))
             }
@@ -358,11 +454,35 @@ impl<'a> Lowering<'a> {
                     format!(
                         "`print a, b` is not in {}: items are separated by softspace, which CPython 2 \
                          flushes as a newline before an uncaught exception; print one value per statement",
-                        self.profile.subset
+                        self.profile.subset()
                     ),
                 ))
             }
             _ => Err(self.unsupported(print, "expected `print` or `print <expression>`")),
+        }
+    }
+
+    /// `print(x)` writes `str(x)` and `\n`. For an `int` that is LANG83
+    /// `print_i64`, newline included; for a `float` it is `repr(x)` (what
+    /// `str` is since 3.2, and the only floats a profile admits) through
+    /// `write_f64_py`, which writes no newline, then `putchar 10`.
+    fn emit_print(&mut self, value: Evaluated) -> Result<(), FrontendError> {
+        match value.ty {
+            Ty::Int => self.emit(
+                "call_builtin",
+                None,
+                vec![Operand::Var("print_i64".into()), value.operand],
+                "void",
+            ),
+            Ty::Float => {
+                self.emit(
+                    "call_builtin",
+                    None,
+                    vec![Operand::Var("write_f64_py".into()), value.operand],
+                    "void",
+                )?;
+                self.emit_newline()
+            }
         }
     }
 
@@ -389,7 +509,7 @@ impl<'a> Lowering<'a> {
                 small,
                 format!(
                     "only print statements are in {}; a bare expression statement is not",
-                    self.profile.subset
+                    self.profile.subset()
                 ),
             ));
         };
@@ -397,7 +517,7 @@ impl<'a> Lowering<'a> {
             return Err(self.unsupported_token(
                 small,
                 callee,
-                format!("only `print` is in {}, not {}", self.profile.subset, shown(&callee.value)),
+                format!("only `print` is in {}, not {}", self.profile.subset(), shown(&callee.value)),
             ));
         }
         // In a `py2` grammar `print` is a keyword, so a call-shaped `print(…)`
@@ -410,7 +530,7 @@ impl<'a> Lowering<'a> {
                 callee,
                 format!(
                     "`print` is a statement in {}; a call-form `print(…)` tree is not from this release's grammar",
-                    self.profile.subset
+                    self.profile.subset()
                 ),
             ));
         }
@@ -421,13 +541,7 @@ impl<'a> Lowering<'a> {
                 // The argument is evaluated completely before `print`
                 // writes, so a trap inside it prints nothing for this call.
                 let value = self.lower_expression(argument)?;
-                // `print(n)` writes `str(n)` and `\n`: LANG83 `print_i64`.
-                self.emit(
-                    "call_builtin",
-                    None,
-                    vec![Operand::Var("print_i64".into()), value.operand],
-                    "void",
-                )
+                self.emit_print(value)
             }
             _ => Err(self.unsupported(
                 suffix,
@@ -462,7 +576,7 @@ impl<'a> Lowering<'a> {
                 }
             }
             [ASTNodeOrToken::Node(atom), ASTNodeOrToken::Node(_), ..] if atom.rule_name == "atom" => {
-                Err(self.unsupported(node, format!("a call of a call's result is not in {}", self.profile.subset)))
+                Err(self.unsupported(node, format!("a call of a call's result is not in {}", self.profile.subset())))
             }
             _ => Ok(None),
         }
@@ -536,15 +650,15 @@ impl<'a> Lowering<'a> {
         }
         let mut accumulator = self.lower_operand(chain, &parts[0], operand_rule)?;
         for pair in parts[1..].as_chunks::<2>().0 {
-            let op = match &pair[0] {
-                ASTNodeOrToken::Token(token) => self.binary_operator(chain, token)?,
+            let (op, token) = match &pair[0] {
+                ASTNodeOrToken::Token(token) => (self.binary_operator(chain, token)?, token),
                 ASTNodeOrToken::Node(node) => return Err(self.unsupported(node, "expected an operator")),
             };
             if (operand_rule == "term") != matches!(op, BinOp::Add | BinOp::Sub) {
                 return Err(self.unsupported(chain, "operator at the wrong precedence level"));
             }
             let right = self.lower_operand(chain, &pair[1], operand_rule)?;
-            accumulator = self.binary(op, accumulator, right)?;
+            accumulator = self.binary(chain, token, op, accumulator, right)?;
         }
         Ok(accumulator)
     }
@@ -558,26 +672,29 @@ impl<'a> Lowering<'a> {
             "FLOOR_DIV" => BinOp::FloorDiv,
             "PERCENT" => BinOp::Mod,
             "SLASH" => {
-                return Err(match self.profile.slash {
-                    Slash::True => self.unsupported_token(
+                return Err(match (self.profile.slash, self.profile.floats) {
+                    // True division gives a float (PEP 238).
+                    (Slash::True, Floats::Repr) => return Ok(BinOp::TrueDiv),
+                    (Slash::True, Floats::None) => self.unsupported_token(
                         chain,
                         token,
                         format!(
                             "`/` is true division in this release's profile ({}) and gives a \
-                             float, which py-int-print does not have; use `//`",
-                            self.profile.name
+                             float, which {} does not have; use `//`",
+                            self.profile.name,
+                            self.profile.subset()
                         ),
                     ),
                     // Classic division on two ints is floor division
                     // (`i_divmod` in Python 2's `Objects/intobject.c`).
-                    Slash::Classic => return Ok(BinOp::FloorDiv),
+                    (Slash::Classic, _) => return Ok(BinOp::FloorDiv),
                 })
             }
             _ => {
                 return Err(self.unsupported_token(
                     chain,
                     token,
-                    format!("not an operator of {}", self.profile.subset),
+                    format!("not an operator of {}", self.profile.subset()),
                 ))
             }
         })
@@ -621,7 +738,8 @@ impl<'a> Lowering<'a> {
             if negate {
                 value = self.negate(value)?;
             }
-            // Unary `+` on an int is `int.__pos__`, the identity: no op.
+            // Unary `+` is `int.__pos__` / `float.__pos__`, the identity: no
+            // op (so `+-0.0` is still `-0.0`).
         }
         Ok(value)
     }
@@ -635,7 +753,7 @@ impl<'a> Lowering<'a> {
                     primary,
                     format!(
                         "a call's result used as a value is not in {} (there are no functions to call)",
-                        self.profile.subset
+                        self.profile.subset()
                     ),
                 ))
             }
@@ -646,10 +764,13 @@ impl<'a> Lowering<'a> {
                 let value = self.decode_integer(atom, number)?;
                 let register = self.register();
                 self.emit("const", Some(register.clone()), vec![Operand::Int(value)], "i64")?;
-                Ok(Evaluated {
-                    operand: Operand::Var(register),
-                    known: Some(i128::from(value)),
-                })
+                Ok(Evaluated::int(register, Some(i128::from(value))))
+            }
+            [ASTNodeOrToken::Token(number)] if number.effective_type_name() == "FLOAT" => {
+                let value = self.decode_float(atom, number)?;
+                let register = self.register();
+                self.emit("const", Some(register.clone()), vec![Operand::Float(value)], "f64")?;
+                Ok(Evaluated::float(register, Some(value)))
             }
             [ASTNodeOrToken::Token(name)] if name.effective_type_name() == "NAME" => Err(self.unsupported_token(
                 atom,
@@ -657,7 +778,7 @@ impl<'a> Lowering<'a> {
                 format!(
                     "names such as {} are not in {} (no variables)",
                     shown(&name.value),
-                    self.profile.subset
+                    self.profile.subset()
                 ),
             )),
             [ASTNodeOrToken::Node(paren)] if paren.rule_name == "paren_expr" => match paren.children.as_slice() {
@@ -669,53 +790,149 @@ impl<'a> Lowering<'a> {
                 }
                 _ => Err(self.unsupported(paren, "expected `(` expression `)`")),
             },
-            _ => Err(self.unsupported(atom, "expected an integer, a name or `(expr)`")),
+            _ => Err(self.unsupported(atom, "expected a number, a name or `(expr)`")),
         }
     }
 
-    /// `-a` as LANG83 `i64_neg_ovf` (only `-i64::MIN` traps).
+    /// `-a`: LANG83 `i64_neg_ovf` on an `int` (only `-i64::MIN` traps), PR6c
+    /// `f64_neg` on a `float` (a sign flip, so `-0.0` is `-0.0`; `0 - x`
+    /// would give `0.0`).
     fn negate(&mut self, value: Evaluated) -> Result<Evaluated, FrontendError> {
-        let known = value.known.map(|v| -v).filter(|v| fits_i64(*v));
         let register = self.register();
-        self.emit("i64_neg_ovf", Some(register.clone()), vec![value.operand], "i64")?;
-        Ok(Evaluated {
-            operand: Operand::Var(register),
-            known,
-        })
+        match value.ty {
+            Ty::Int => {
+                let known = value.known_int().map(|v| -v).filter(|v| fits_i64(*v));
+                self.emit("i64_neg_ovf", Some(register.clone()), vec![value.operand], "i64")?;
+                Ok(Evaluated::int(register, known))
+            }
+            Ty::Float => {
+                let known = value.known_float().map(|v| -v);
+                self.emit("f64_neg", Some(register.clone()), vec![value.operand], "f64")?;
+                Ok(Evaluated::float(register, known))
+            }
+        }
     }
 
-    /// Emit one binary operator.
-    fn binary(&mut self, op: BinOp, left: Evaluated, right: Evaluated) -> Result<Evaluated, FrontendError> {
+    /// An `int` operand of a float operation, widened with LANG83
+    /// `int_to_real` (round to nearest even, as `PyLong_AsDouble` does); a
+    /// `float` is returned as it is.
+    fn widen_to_float(&mut self, value: Evaluated) -> Result<Evaluated, FrontendError> {
+        match value.ty {
+            Ty::Float => Ok(value),
+            Ty::Int => {
+                // In range: a known int is an `i64` (larger ones trapped).
+                let known = value.known_int().and_then(|v| i64::try_from(v).ok()).map(|v| v as f64);
+                let register = self.register();
+                self.emit("int_to_real", Some(register.clone()), vec![value.operand], "f64")?;
+                Ok(Evaluated::float(register, known))
+            }
+        }
+    }
+
+    /// Emit one binary operator: on two `int`s as checked `i64` arithmetic,
+    /// otherwise (or for a true `/`) as IEEE `f64` arithmetic.
+    fn binary(
+        &mut self,
+        chain: &GrammarASTNode,
+        token: &Token,
+        op: BinOp,
+        left: Evaluated,
+        right: Evaluated,
+    ) -> Result<Evaluated, FrontendError> {
+        if op == BinOp::TrueDiv || left.ty == Ty::Float || right.ty == Ty::Float {
+            return self.float_binary(chain, token, op, left, right);
+        }
+        self.int_binary(op, left, right)
+    }
+
+    /// Two `int`s: the checked `i64` ops of `py-int-print`.
+    fn int_binary(&mut self, op: BinOp, left: Evaluated, right: Evaluated) -> Result<Evaluated, FrontendError> {
         // A divisor known to be -1: `a // -1 == -a` and `a % -1 == 0` for
         // every integer. Emitting those keeps `i64::MIN // -1` and
         // `i64::MIN % -1` away from every backend's divide (module docs).
         // Both operands were already evaluated above, so nothing observable
         // is skipped.
-        if right.known == Some(-1) {
+        if right.known_int() == Some(-1) {
             match op {
                 BinOp::FloorDiv => return self.negate(left),
                 BinOp::Mod => {
                     let register = self.register();
                     self.emit("const", Some(register.clone()), vec![Operand::Int(0)], "i64")?;
-                    return Ok(Evaluated {
-                        operand: Operand::Var(register),
-                        known: Some(0),
-                    });
+                    return Ok(Evaluated::int(register, Some(0)));
                 }
                 _ => {}
             }
         }
-        let known = match (left.known, right.known) {
+        let known = match (left.known_int(), right.known_int()) {
             (Some(a), Some(b)) => fold(op, a, b).filter(|v| fits_i64(*v)),
             // An operand certainly traps first; this operator never runs.
             _ => None,
         };
         let register = self.register();
         self.emit(op.iir_op(), Some(register.clone()), vec![left.operand, right.operand], "i64")?;
-        Ok(Evaluated {
-            operand: Operand::Var(register),
-            known,
-        })
+        Ok(Evaluated::int(register, known))
+    }
+
+    /// A float operation (`py-float-print`): either operand is a `float`,
+    /// or the operator is a true `/`. The module docs' "Floats" table.
+    fn float_binary(
+        &mut self,
+        chain: &GrammarASTNode,
+        token: &Token,
+        op: BinOp,
+        left: Evaluated,
+        right: Evaluated,
+    ) -> Result<Evaluated, FrontendError> {
+        let Some(iir_op) = op.f64_op() else {
+            // `float_floor_div` and `float_rem` take `fmod` and adjust its
+            // sign; LANG83 has no op for that yet.
+            return Err(self.unsupported_token(
+                chain,
+                token,
+                format!("`//` and `%` on a float are not in {} yet", self.profile.subset()),
+            ));
+        };
+        if op == BinOp::TrueDiv && left.ty == Ty::Int && right.ty == Ty::Int {
+            // `long_true_divide` rounds the exact quotient once; converting
+            // first is the same only while both operands are exact `f64`s.
+            for operand in [&left, &right] {
+                if operand.known_int().is_some_and(|v| v.abs() > EXACT_F64_INT) {
+                    return Err(self.unsupported_token(
+                        chain,
+                        token,
+                        format!(
+                            "`/` on an int above 2**53 in magnitude is not in {}: CPython rounds the \
+                             exact quotient once, and converting the int first would round twice",
+                            self.profile.subset()
+                        ),
+                    ));
+                }
+            }
+        }
+        let left = self.widen_to_float(left)?;
+        let right = self.widen_to_float(right)?;
+        let (a, b) = (left.known_float(), right.known_float());
+        if op == BinOp::TrueDiv && b == Some(0.0) {
+            // `±0.0` divisor (`0.0 == -0.0`): CPython raises
+            // ZeroDivisionError before dividing. Every value is known, so
+            // the trap is emitted here, after the output so far; the
+            // division below is never reached.
+            self.emit("trap", None, vec![Operand::Str("Trap.DivZero".into())], "void")?;
+        }
+        let known = match (a, b) {
+            (Some(_), Some(b)) if op == BinOp::TrueDiv && b == 0.0 => None,
+            (Some(a), Some(b)) => Some(match op {
+                BinOp::Add => a + b,
+                BinOp::Sub => a - b,
+                BinOp::Mul => a * b,
+                _ => a / b,
+            }),
+            // An operand certainly trapped first.
+            _ => None,
+        };
+        let register = self.register();
+        self.emit(iir_op, Some(register.clone()), vec![left.operand, right.operand], "f64")?;
+        Ok(Evaluated::float(register, known))
     }
 
     /// Decode one `INT` token's value (LANG84 C1.4 allows decoding a single
@@ -747,7 +964,44 @@ impl<'a> Lowering<'a> {
                     "integer literal {} is outside i64; CPython would keep it as a bigger int, \
                      which {} does not have yet",
                     shown(text),
-                    self.profile.subset
+                    self.profile.subset()
+                ),
+            )),
+            Err(why) => Err(self.unsupported_token(atom, token, why)),
+        }
+    }
+
+    /// Decode one `FLOAT` token (`py-float-print`). Only a profile with
+    /// floats has them; a caller-supplied tree is re-checked against the
+    /// Python 3 float grammar ([`decode_float_text`]) per profile, as
+    /// integers are (C2). The profile allows PEP 515's `_` in a float, so a
+    /// tree forged through `compile_cst` that claims 3.5.10 and carries
+    /// `1_0.5` decodes to 10.5. Only the 3.5.10 lexer refuses that spelling:
+    /// lowering never branches on the release, and no source text 3.5.10 can
+    /// lex decodes to a wrong value. A literal that overflows to `inf` is
+    /// refused (module docs, "Floats").
+    fn decode_float(&self, atom: &GrammarASTNode, token: &Token) -> Result<f64, FrontendError> {
+        if self.profile.floats == Floats::None {
+            return Err(self.unsupported_token(
+                atom,
+                token,
+                format!(
+                    "floats are not in {}: this release's `str(float)` is not `repr`, and LANG83 \
+                     has no writer for its layout",
+                    self.profile.subset()
+                ),
+            ));
+        }
+        let text = token.value.as_str();
+        match decode_float_text(text) {
+            Ok(value) if value.is_finite() => Ok(value),
+            Ok(_) => Err(self.unsupported_token(
+                atom,
+                token,
+                format!(
+                    "float literal {} overflows to inf; a non-finite constant is not in {}",
+                    shown(text),
+                    self.profile.subset()
                 ),
             )),
             Err(why) => Err(self.unsupported_token(atom, token, why)),
@@ -877,6 +1131,50 @@ fn digits_value(digits: &str, radix: u32) -> Option<i64> {
     })
 }
 
+/// A Python 3 float literal's value, correctly rounded (as CPython's
+/// `PyOS_string_to_double` is), or why the text is not one:
+///
+/// | token value                  | value     | why                                  |
+/// |------------------------------|-----------|--------------------------------------|
+/// | `1.5`, `1.`, `.5`, `00.5`    | 1.5 … 0.5 | a float may start with zeros         |
+/// | `1e3`, `1.5E-3`, `1.e5`      | 1000.0 …  | an exponent needs a digit            |
+/// | `1_000.5`, `1e1_0`           | 1000.5 …  | single `_` between digits (PEP 515)  |
+/// | `1e400`                      | `inf`     | the caller refuses it                |
+/// | `1`, `1e`, `1_.5`, `inf`, `.`| refused   | not a Python float literal           |
+///
+/// The lexer already enforced this shape (and, per release, whether `_`
+/// exists); a caller-supplied tree is not bound by it, so it is checked
+/// again, and only digits, `.`, `e`/`E` and an exponent sign can reach
+/// Rust's parser (never `inf` or `nan`).
+fn decode_float_text(text: &str) -> Result<f64, String> {
+    let refused = || Err(format!("{} is not a Python float literal", shown(text)));
+    // A digit part: digits with single `_` separators between digits.
+    let digit_part = |part: &str| {
+        !part.is_empty() && part.split('_').all(|group| !group.is_empty() && group.bytes().all(|b| b.is_ascii_digit()))
+    };
+    let (mantissa, exponent) = match text.find(['e', 'E']) {
+        Some(at) => (&text[..at], Some(&text[at + 1..])),
+        None => (text, None),
+    };
+    let mantissa_ok = match mantissa.split_once('.') {
+        Some((whole, fraction)) => {
+            (whole.is_empty() || digit_part(whole))
+                && (fraction.is_empty() || digit_part(fraction))
+                && !(whole.is_empty() && fraction.is_empty())
+        }
+        // No `.`: digits, and then an exponent is required.
+        None => digit_part(mantissa) && exponent.is_some(),
+    };
+    let exponent_ok = exponent.is_none_or(|e| digit_part(e.strip_prefix(['+', '-']).unwrap_or(e)));
+    if !mantissa_ok || !exponent_ok {
+        return refused();
+    }
+    // A token's text, decoded once (C1.4); never a release ID (C2).
+    let digits: String = text.chars().filter(|c| *c != '_').collect();
+    let value: Result<f64, _> = digits.parse();
+    value.or_else(|_| refused())
+}
+
 fn fits_i64(value: i128) -> bool {
     i64::try_from(value).is_ok()
 }
@@ -902,6 +1200,8 @@ fn fold(op: BinOp, a: i128, b: i128) -> Option<i128> {
             let r = a % b;
             Some(if r != 0 && (r < 0) != (b < 0) { r + b } else { r })
         }
+        // Never an integer result: `binary` sends `/` to `float_binary`.
+        BinOp::TrueDiv => None,
     }
 }
 

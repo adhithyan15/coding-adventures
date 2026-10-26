@@ -1,0 +1,19 @@
+{
+  "chapter": 438,
+  "title": "Summer Heat",
+  "label": "ch:sa-summer-heat",
+  "canDo": "I can talk about the hot season and the blazing sun.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C438-dipyate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can talk about the hot season and the blazing sun.",
+    "assesses": [
+      "SA-LEX-C438-NIDAGHA438-03",
+      "SA-LEX-C438-NIDAGHA438-04",
+      "SA-LEX-C438-NIDAGHA438-05"
+    ]
+  }
+}

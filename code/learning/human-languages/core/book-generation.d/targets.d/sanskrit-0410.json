@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 410,
+  "output": "sanskrit/book/chapters/ch410-breakdowns.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

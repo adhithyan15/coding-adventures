@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:553ae5336bedd019",
+  "lessonIds": [
+    "SA-C478-vedana",
+    "SA-C478-kasate",
+    "SA-C478-atisarah",
+    "SA-C478-klesah",
+    "SA-C478-asahyah"
+  ],
+  "tex": "sanskrit/book/chapters/ch478-aches-and-pains.tex"
+}

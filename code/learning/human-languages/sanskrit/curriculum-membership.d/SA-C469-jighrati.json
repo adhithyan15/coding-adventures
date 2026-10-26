@@ -1,0 +1,11 @@
+{
+  "id": "SA-C469-jighrati",
+  "pathSegment": "SA-PATH-469-INDRIYA469",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-469-INDRIYA469",
+      "order": 4
+    }
+  ]
+}

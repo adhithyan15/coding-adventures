@@ -34,6 +34,23 @@ clocks both phases through `logic-gates::sequential::register`. This is an exact
 lossless boundary representation without expanding 16 MiB into a 512 MiB host
 object. Register, PC, SR, and halt banks retain explicit `FlipFlopState` values.
 
+### Persistent-state authority
+
+The stable Q output of every inventoried D flip-flop is the sole architectural
+authority. The public `RegisterFile68K::{d, a, pc, sr}` fields and
+`Cpu68K::halted` remain for source compatibility, but they are synchronized
+observers only: external writes to those fields do not change architectural
+state and the next mutating execution boundary repairs them from Q. Register
+reads, partial writes, flag predicates, instruction fetch and PC updates,
+snapshots, restores, traces, results, halt decisions, and transactional
+rollback all consume or clock the owned DFF banks directly.
+
+Topology conformance must not prove a count by restating the production total.
+It independently inventories memory bits, each data/address register bank, PC,
+SR, and HALT from the concrete storage owners, checks their widths and stable-Q
+reset values, and deliberately diverges every compatibility observer to prove
+that snapshots, execution, results, and fault rollback remain Q-authoritative.
+
 ## Datapath gate contract
 
 - ADD, ADDX, SUB, SUBX, NEG, NEGX, and address arithmetic use full-adder chains.
@@ -108,6 +125,8 @@ functional oracle's lightweight D7 behavior. STOP loads SR and halts.
 the functional Rust simulator.
 
 - `get_state()` owns every register, flag, halt bit, and all 16 MiB of memory.
+- Public compatibility observers are repaired from stable Q before each
+  mutating checked or legacy execution boundary.
 - `restore()` validates memory length and the 24-bit PC before mutation.
 - `load_checked()` and `load_at_checked()` reject overflowing programs before
   reset or memory writes.

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:2bd9c20e41eabc7b",
+  "lessonIds": [
+    "SA-C538-sakunah",
+    "SA-C538-niyatih",
+    "SA-C538-mangalam",
+    "SA-C538-ganakah",
+    "SA-C538-upatisthate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch538.txt",
+  "json": "sanskrit/narration/ch538.json",
+  "textHash": "fnv1a64:1c938c5a1e915472",
+  "jsonHash": "fnv1a64:80d826f325e78fa4",
+  "findings": []
+}

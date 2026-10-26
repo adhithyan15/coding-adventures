@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 385,
+  "output": "sanskrit/book/chapters/ch385-competing.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

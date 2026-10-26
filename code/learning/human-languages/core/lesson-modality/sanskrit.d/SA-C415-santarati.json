@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C415-santarati",
+    "language": "sanskrit",
+    "chapter": 415,
+    "sequence": 24090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8fad7c94522c513"
+  },
+  "findings": []
+}

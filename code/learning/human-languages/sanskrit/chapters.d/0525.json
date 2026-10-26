@@ -1,0 +1,21 @@
+{
+  "chapter": 525,
+  "title": "In the Wrestling Pit",
+  "label": "ch:sa-in-the-wrestling-pit",
+  "canDo": "I can describe a wrestling match.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-R525-review-518-525",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can describe a wrestling match.",
+    "assesses": [
+      "SA-LEX-C525-MALLA525-01",
+      "SA-LEX-C525-MALLA525-02",
+      "SA-LEX-C525-MALLA525-03",
+      "SA-LEX-C525-MALLA525-04",
+      "SA-LEX-C525-MALLA525-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C518-alikhati",
+    "language": "sanskrit",
+    "chapter": 518,
+    "sequence": 29850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4bbc4b407f402d2f"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:568494bf75ec9baf",
+  "lessonIds": [
+    "SA-C469-indriyam",
+    "SA-C469-drstih",
+    "SA-C469-sparsah",
+    "SA-C469-gandhah",
+    "SA-C469-jighrati"
+  ],
+  "tex": "sanskrit/book/chapters/ch469-the-senses.tex"
+}

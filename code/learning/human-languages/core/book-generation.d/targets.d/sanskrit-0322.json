@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 322,
+  "output": "sanskrit/book/chapters/ch322-ancestors.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

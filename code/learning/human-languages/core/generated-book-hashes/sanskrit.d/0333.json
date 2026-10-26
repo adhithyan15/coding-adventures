@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:9ae6e258e0e1db05",
+  "lessonIds": [
+    "SA-C333-sapah",
+    "SA-C333-devah",
+    "SA-C333-varah",
+    "SA-C333-prasidati",
+    "SA-C333-amarah"
+  ],
+  "tex": "sanskrit/book/chapters/ch333-the-curse-and-the-boon.tex"
+}

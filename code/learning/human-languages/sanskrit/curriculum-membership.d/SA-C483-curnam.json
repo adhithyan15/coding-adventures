@@ -1,0 +1,11 @@
+{
+  "id": "SA-C483-curnam",
+  "pathSegment": "SA-PATH-483-GUTIKA483",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-483-GUTIKA483",
+      "order": 1
+    }
+  ]
+}

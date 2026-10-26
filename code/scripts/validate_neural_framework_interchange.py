@@ -1,6 +1,6 @@
-"""Execute native Python/TypeScript/Rust/Go/Ruby training and exchange checkpoints.
+"""Execute native Python/TypeScript/Rust/Go/Ruby/C training and exchange checkpoints.
 
-This is runtime evidence, not a registry count: all five languages must actually
+This is runtime evidence, not a registry count: all six languages must actually
 train, read the other one's parameters, and produce the same resumed result.
 Run after installing the TypeScript neural-framework package's dependencies.
 """
@@ -20,10 +20,14 @@ ROOT = Path(__file__).resolve().parents[2]
 PYTHON = ROOT / "code/packages/python/neural-framework"
 TYPESCRIPT = ROOT / "code/packages/typescript/neural-framework"
 TOLERANCE = 1e-9
-LANES = ("python", "typescript", "rust", "go", "ruby")
+LANES = ("python", "typescript", "rust", "go", "ruby", "c")
 GO = ROOT / "code/packages/go/neural-framework"
 RUBY = ROOT / "code/packages/ruby/neural-framework"
 RUST_MANIFEST = ROOT / "code/packages/rust/Cargo.toml"
+C = ROOT / "code/packages/c/neural-framework"
+C_EXECUTABLE = (
+    C / "_build" / ("gcc-native-xor.exe" if os.name == "nt" else "gcc-native-xor")
+)
 
 
 def equivalent(actual: object, expected: object) -> None:
@@ -48,7 +52,11 @@ def equivalent(actual: object, expected: object) -> None:
 
 
 def execute(
-    language: str, checkpoint: dict | None = None, *, manifest: Path = RUST_MANIFEST
+    language: str,
+    checkpoint: dict | None = None,
+    *,
+    manifest: Path = RUST_MANIFEST,
+    c_executable: Path = C_EXECUTABLE,
 ) -> dict:
     env = os.environ.copy()
     cwd = ROOT
@@ -109,6 +117,14 @@ def execute(
             str(RUBY / "examples/xor.rb"),
         ]
         cwd = RUBY
+    elif language == "c":
+        # Compiler scheduling belongs to the existing ISO harness. This path
+        # comes from trusted build configuration, never the transported model.
+        executable = c_executable.resolve()
+        if not executable.is_file() or not os.access(executable, os.X_OK):
+            raise ValueError("a harness-built native C executable is required")
+        command = [str(executable)]
+        cwd = C
     else:
         raise ValueError("unknown native framework lane")
     if checkpoint is not None:
@@ -161,15 +177,16 @@ def execute(
     return receipt
 
 
-def validate(manifest: Path = RUST_MANIFEST) -> dict:
-    """Run five independent models, then twenty actual directed exchanges."""
-    starts = {lane: execute(lane, manifest=manifest) for lane in LANES}
+def validate(manifest: Path = RUST_MANIFEST, c_executable: Path = C_EXECUTABLE) -> dict:
+    """Run six models, twelve baselines and thirty directed return trips."""
+    configuration = {"manifest": manifest, "c_executable": c_executable}
+    starts = {lane: execute(lane, **configuration) for lane in LANES}
     reference = starts["python"]
     baselines = {}
     for lane in LANES:
         equivalent(starts[lane], reference)
-        one = execute(lane, starts[lane]["checkpoint"], manifest=manifest)
-        two = execute(lane, one["checkpoint"], manifest=manifest)
+        one = execute(lane, starts[lane]["checkpoint"], **configuration)
+        two = execute(lane, one["checkpoint"], **configuration)
         equivalent(one["initial_loss"], starts[lane]["final_loss"])
         equivalent(two["initial_loss"], one["final_loss"])
         baselines[lane] = (one, two)
@@ -182,19 +199,20 @@ def validate(manifest: Path = RUST_MANIFEST) -> dict:
             if source == destination:
                 continue
             resumed = execute(
-                destination, starts[source]["checkpoint"], manifest=manifest
+                destination, starts[source]["checkpoint"], **configuration
             )
             equivalent(resumed, baselines[source][0])
-            returned = execute(source, resumed["checkpoint"], manifest=manifest)
+            returned = execute(source, resumed["checkpoint"], **configuration)
             equivalent(returned, baselines[source][1])
             exchanges.append(f"{source}->{destination}")
     return {
-        "contract": "NN46",
+        "contract": "NN49",
+        "child_processes": 3 * len(LANES) + 2 * len(exchanges),
         "native_lanes": list(LANES),
         "binding_lanes": [],
         "xor_loss": reference["final_loss"],
         "resumed_step": 3002,
-        "checkpoint_exchange": "passed-all-twenty-directions",
+        "checkpoint_exchange": "passed-all-thirty-directions",
         "exchanges": exchanges,
     }
 
@@ -202,4 +220,15 @@ def validate(manifest: Path = RUST_MANIFEST) -> dict:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--rust-manifest-path", type=Path, default=RUST_MANIFEST)
-    print(json.dumps(validate(parser.parse_args().rust_manifest_path), allow_nan=False))
+    parser.add_argument(
+        "--c-executable",
+        type=Path,
+        default=C_EXECUTABLE,
+        help="trusted ISO-harness binary, never checkpoint content",
+    )
+    options = parser.parse_args()
+    print(
+        json.dumps(
+            validate(options.rust_manifest_path, options.c_executable), allow_nan=False
+        )
+    )

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:f34cd16a8f743c98",
+  "lessonIds": [
+    "SA-C483-gutika",
+    "SA-C483-curnam",
+    "SA-C483-lepah",
+    "SA-C483-kasayah",
+    "SA-C483-limpati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch483.txt",
+  "json": "sanskrit/narration/ch483.json",
+  "textHash": "fnv1a64:51d5b6e7d87c01c6",
+  "jsonHash": "fnv1a64:bff942d572442b65",
+  "findings": []
+}

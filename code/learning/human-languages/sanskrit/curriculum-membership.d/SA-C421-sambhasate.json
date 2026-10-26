@@ -1,0 +1,11 @@
+{
+  "id": "SA-C421-sambhasate",
+  "pathSegment": "SA-PATH-421-PALLI421",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-421-PALLI421",
+      "order": 4
+    }
+  ]
+}

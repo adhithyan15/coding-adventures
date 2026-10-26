@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:99561fd7bcd6e1dd",
+  "lessonIds": [
+    "SA-C295-cetana",
+    "SA-C295-utthapayati",
+    "SA-C295-sibika",
+    "SA-C295-apatkalah",
+    "SA-C295-avalambate"
+  ],
+  "tex": "sanskrit/book/chapters/ch295-help-for-the-injured.tex"
+}

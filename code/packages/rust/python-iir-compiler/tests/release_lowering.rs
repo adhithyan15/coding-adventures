@@ -86,7 +86,9 @@ fn traps_keep_the_output_before_them() {
 #[test]
 fn refusals_are_typed_and_located() {
     let cases = [
-        ("print(7 / 2)\n", "true division"),
+        ("print(7.5 // 2)\n", "`//` and `%` on a float"),
+        ("print(1e400)\n", "overflows to inf"),
+        ("print(9007199254740993 / 3)\n", "above 2**53"),
         ("abs(-3)\n", "only `print`"),
         ("print(1, 2)\n", "at most one argument"),
         ("1 + 2\n", "bare expression"),
@@ -158,7 +160,7 @@ fn a_tree_from_the_other_profiles_grammar_is_refused() {
 
     let error = compile_cst(&py2_tree, Some("3.13.16"), "t").unwrap_err();
     assert_eq!(error.category(), "Unsupported", "{error}");
-    assert!(error.to_string().contains("`print` statement is not in py-int-print"), "{error}");
+    assert!(error.to_string().contains("`print` statement is not in py-float-print"), "{error}");
 }
 
 #[test]
@@ -274,4 +276,120 @@ fn release_not_available_reasons_are_self_describing() {
         stage: phrase.into(),
     });
     assert!(matches!(&bug, FrontendError::ReleaseNotAvailable { stage, .. } if stage == phrase), "{bug:?}");
+}
+
+// ---------------------------------------------------------------------------
+// LANG84 phase 7c slice 3: `py-float-print`
+// ---------------------------------------------------------------------------
+
+/// A float literal is an `f64` `const`; `print` writes it with LANG83
+/// `write_f64_py` (no newline) and then `putchar 10`.
+#[test]
+fn a_float_prints_through_write_f64_py_and_a_newline() {
+    let module = compile("print(1.5)\n").unwrap();
+    let main = &module.functions[0].instructions;
+    let ops: Vec<_> = main.iter().map(|i| i.op.as_str()).collect();
+    assert_eq!(ops, ["const", "call_builtin", "const", "call_builtin", "const", "ret"]);
+    assert_eq!(main[0].type_hint, "f64");
+    assert!(matches!(main[0].srcs[..], [interpreter_ir::Operand::Float(x)] if x == 1.5));
+    assert!(matches!(&main[1].srcs[0], interpreter_ir::Operand::Var(name) if name == "write_f64_py"));
+    assert!(matches!(&main[3].srcs[0], interpreter_ir::Operand::Var(name) if name == "putchar"));
+}
+
+/// An int meeting a float is widened with `int_to_real`; float arithmetic
+/// is the PR6c IEEE family, never the classic `add`/`div` (whose edges are
+/// backend-dependent) and never the checked `i64_*` ops.
+#[test]
+fn mixed_arithmetic_widens_the_int_and_uses_the_ieee_ops() {
+    assert_eq!(
+        ops("print(1 + 0.5)\n"),
+        ["const", "const", "int_to_real", "f64_add", "call_builtin", "const", "call_builtin", "const", "ret"]
+    );
+    let all = ops("print(2 * 0.5 - 1.5 / 3)\n");
+    for op in ["f64_mul", "f64_sub", "f64_div", "int_to_real"] {
+        assert!(all.iter().any(|o| o == op), "{op} missing from {all:?}");
+    }
+    for op in ["add", "sub", "mul", "div", "neg", "i64_add_ovf", "i64_sub_ovf", "i64_mul_ovf"] {
+        assert!(!all.iter().any(|o| o == op), "{op} in {all:?}");
+    }
+    // True division of two ints converts both.
+    assert_eq!(
+        ops("print(7 / 2)\n"),
+        ["const", "const", "int_to_real", "int_to_real", "f64_div", "call_builtin", "const", "call_builtin", "const", "ret"]
+    );
+    // An int sub-expression keeps its checked int ops.
+    let nested = ops("print(7 // 2 * 1.5)\n");
+    assert!(nested.contains(&"i64_div_floor".to_string()) && nested.contains(&"f64_mul".to_string()), "{nested:?}");
+}
+
+/// `-x` on a float flips the sign bit (`f64_neg`); `+x` is the identity.
+#[test]
+fn float_signs_are_a_sign_flip_and_the_identity() {
+    assert_eq!(ops("print(-0.0)\n"), ["const", "f64_neg", "call_builtin", "const", "call_builtin", "const", "ret"]);
+    assert_eq!(ops("print(+1.5)\n"), ["const", "call_builtin", "const", "call_builtin", "const", "ret"]);
+    for (source, stdout) in [("print(-0.0)\n", "-0.0\n"), ("print(+-0.0)\n", "-0.0\n"), ("print(0.0 - 0.0)\n", "0.0\n")] {
+        assert_eq!(run_source_at(source, None).unwrap().stdout, stdout, "{source:?}");
+    }
+}
+
+/// A zero divisor (`0`, `0.0` or `-0.0`, known while lowering) emits LANG83
+/// `trap "Trap.DivZero"` before the division, so the program stops after
+/// its earlier output as CPython's ZeroDivisionError does. Any other
+/// divisor emits no trap: `f64_div` itself never traps.
+#[test]
+fn a_zero_divisor_traps_before_the_division() {
+    for source in ["print(1.0 / 0)\n", "print(1 / 0)\n", "print(1 / -0.0)\n", "print(1.5 / (2 - 2))\n"] {
+        let all = ops(source);
+        let trap = all.iter().position(|o| o == "trap").unwrap_or_else(|| panic!("{source:?}: {all:?}"));
+        let div = all.iter().position(|o| o == "f64_div").unwrap();
+        assert!(trap < div, "{source:?}: {all:?}");
+        let ran = run_source_at(&format!("print(2.5)\n{source}print(3)\n"), None).unwrap();
+        assert_eq!(ran, RunOutput { stdout: "2.5\n".into(), trap: Some("Trap.DivZero".into()) }, "{source:?}");
+    }
+    assert!(!ops("print(1.0 / 1e-300)\n").contains(&"trap".to_string()));
+    // `inf` and `nan` come from arithmetic, never from a trap.
+    let ran = run_source_at("print(1e308 * 10)\nprint(1e308 * 10 - 1e308 * 10)\n", None).unwrap();
+    assert_eq!(ran, RunOutput { stdout: "inf\nnan\n".into(), trap: None });
+}
+
+/// `int / int` at the 2^53 boundary: both exact, accepted; one past it,
+/// refused (CPython rounds the exact quotient once).
+#[test]
+fn true_division_of_ints_stops_at_two_to_the_53() {
+    let ran = run_source_at("print(9007199254740992 / 3)\nprint(-9007199254740992 / 9007199254740992)\n", None).unwrap();
+    assert_eq!(ran.stdout, "3002399751580330.5\n-1.0\n");
+    for source in ["print(9007199254740993 / 3)\n", "print(3 / -9007199254740993)\n"] {
+        assert_eq!(compile(source).unwrap_err().category(), "Unsupported", "{source:?}");
+    }
+    // Mixing is not division: an int above 2^53 meeting a float is
+    // converted once, as `PyLong_AsDouble` does.
+    assert_eq!(run_source_at("print(9007199254740993 + 0.0)\n", None).unwrap().stdout, "9007199254740992.0\n");
+}
+
+/// A caller-supplied FLOAT token is re-checked: only a Python 3 float
+/// spelling reaches Rust's parser (never `inf` or `nan`), and one that
+/// overflows is refused.
+#[test]
+fn forged_float_tokens_are_refused() {
+    for to in ["1x", "inf", "nan", "1e", ".", "_1.5", "1.5_", "1__0.5", "1e+-3", "+1.5", "0x1p3", "1.5.5", "1", "", "1e5.5"] {
+        let mut ast = tree("print(2.5)\n");
+        assert!(edit_first_token(&mut ast, &mut |t| (t.value == "2.5").then(|| t.value = to.into()).is_some()));
+        let error = compile_cst(&ast, None, "t").unwrap_err();
+        assert_eq!(error.category(), "Unsupported", "{to:?}: {error}");
+        assert!(error.to_string().contains("not a Python float literal"), "{to:?}: {error}");
+    }
+    for to in ["1e400", "1_0e3_08"] {
+        let mut ast = tree("print(2.5)\n");
+        assert!(edit_first_token(&mut ast, &mut |t| (t.value == "2.5").then(|| t.value = to.into()).is_some()));
+        assert!(compile_cst(&ast, None, "t").unwrap_err().to_string().contains("overflows to inf"), "{to:?}");
+    }
+    // Every accepted spelling of one value lowers to the same IIR.
+    let iir = |source: &str| {
+        let mut module = compile(source).unwrap();
+        module.release = None;
+        format!("{module:?}")
+    };
+    for spelling in ["0.5", ".5", "00.5", "5e-1", "5E-1", "0.5e0", "0_0.5", ".5_0", "50e-2"] {
+        assert_eq!(iir(&format!("print({spelling})\n")), iir("print(0.5)\n"), "{spelling}");
+    }
 }

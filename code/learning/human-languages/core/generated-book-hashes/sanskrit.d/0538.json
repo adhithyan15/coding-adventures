@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:e7a2d2971f802ecc",
+  "lessonIds": [
+    "SA-C538-sakunah",
+    "SA-C538-niyatih",
+    "SA-C538-mangalam",
+    "SA-C538-ganakah",
+    "SA-C538-upatisthate"
+  ],
+  "tex": "sanskrit/book/chapters/ch538-fate-and-omens.tex"
+}

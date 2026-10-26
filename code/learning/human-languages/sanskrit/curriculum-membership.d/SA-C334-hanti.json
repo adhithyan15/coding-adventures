@@ -1,0 +1,11 @@
+{
+  "id": "SA-C334-hanti",
+  "pathSegment": "SA-PATH-334-RAKSHASA334",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-334-RAKSHASA334",
+      "order": 3
+    }
+  ]
+}

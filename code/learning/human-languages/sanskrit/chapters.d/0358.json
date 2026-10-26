@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "Good Conduct",
+  "label": "ch:sa-good-conduct",
+  "canDo": "I can talk about good conduct and good people.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C358-adriyate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can talk about good conduct and good people.",
+    "assesses": [
+      "SA-LEX-C358-ACHARA358-03",
+      "SA-LEX-C358-ACHARA358-04",
+      "SA-LEX-C358-ACHARA358-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C462-kutilah",
+    "language": "sanskrit",
+    "chapter": 462,
+    "sequence": 26720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:afb08e85e88e77e4"
+  },
+  "findings": []
+}

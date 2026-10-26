@@ -1002,7 +1002,7 @@ noted.
 | Maxima | re-exports Macsyma | — | CST | none of its own | No grammar of its own | Own `maxima<release>` pairs from Maxima tags before any `Language::Maxima`. Until then `--lang maxima` is an error, not a silent Macsyma alias |
 | Maple, Reduce | GL | GP | CST | unversioned | Compliant, not in lang-aot | Inventory; `Language` variants |
 | Nib, Oct | GL | GP | CST | unversioned | Compliant (in-repo languages) | Single-row inventory (see open questions) |
-| Python | GL (indentation mode) | GP | CST | 11 release pairs (2.2, 2.4, 2.6, 2.7.18, 3.0a1, 3.5.10, 3.6.0, 3.11.17, 3.12.3, 3.13.16, 3.16.0a1) + legacy minor lines 2.7, 3.0, 3.6, 3.8, 3.10, 3.12 + unversioned | **Compliant; release selection real since phase 7a** for `py-int-print` (`compile_source_at`, I and B for all seven Python 3 releases, `Language::Python` on all nine backends; `--lang python@<release>` since 7b slice 1; release sweep since 7b slice 2; 3.5.10 and 3.6.0 since 7c slice 2); Python 2 `py2-int-print` (print statement, classic `/`, and since 7c slice 2 octal, hex, `0o`/`0b` and `L` literals) on 2.2, 2.4, 2.6 and 2.7.18 with B. LANG79's float pilot still uses the legacy `"3.12"` minor line | 7c (rest) |
+| Python | GL (indentation mode) | GP | CST | 11 release pairs (2.2, 2.4, 2.6, 2.7.18, 3.0a1, 3.5.10, 3.6.0, 3.11.17, 3.12.3, 3.13.16, 3.16.0a1) + legacy minor lines 2.7, 3.0, 3.6, 3.8, 3.10, 3.12 + unversioned | **Compliant; release selection real since phase 7a** for `py-int-print` (`compile_source_at`, I and B for all seven Python 3 releases, `Language::Python` on all nine backends; `--lang python@<release>` since 7b slice 1; release sweep since 7b slice 2; 3.5.10 and 3.6.0 since 7c slice 2); Python 2 `py2-int-print` (print statement, classic `/`, and since 7c slice 2 octal, hex, `0o`/`0b` and `L` literals) on 2.2, 2.4, 2.6 and 2.7.18 with B. since 7c slice 3 `py-float-print` (IEEE floats, true `/`, `repr` output) on the six `py3` releases with B; 3.0a1 is profile `py30` (no floats). LANG79's float pilot still uses the legacy `"3.12"` minor line | 7c (rest) |
 | Perl | GL | GP | CST | 118 partial versioned pairs, compiled into 5 distinct token and 2 distinct parser tables; `releases.csv` 776 rows | Compliant; `compile_source_at` selects any checked release; `DEFAULT_RELEASE` is the inventory release `5.38.0` and the unversioned pair is off the IIR path (4b); `IIRModule.release` recorded; `Language::Perl` on all nine backends with `--lang perl@<release>` (4a, 4b) | Phase 4c |
 | COBOL-60 | GL + `strip_cobol_columns` | GP | CST | unversioned | Compliant (C3 hook) | Inventory (60, 61, 61-ext, 65, 68, 74, 85, 2002, 2014, 2023); `Cobol60` → `Cobol` |
 | Dartmouth BASIC | GL + 2 hooks (`lib.rs`: 391 non-test lines incl. docs) | GP | CST | unversioned | Compliant (C3 hooks) | Inventory (editions 1–7) |
@@ -1010,7 +1010,7 @@ noted.
 | MacroOct, MacroNib | GL + Oct/Nib GP | GP | CST | — | Base parse compliant; directive layer is a preprocessor | See [Preprocessor dialects](#preprocessor-dialects) |
 | McCarthy Lisp | GL | GP | CST | unversioned | Compliant since `mccarthy-lisp-iir-compiler` 0.9.0 (was C2 typed lift via `extract_program` → `Vec<LispExpr>`) | Phase 8 CST rewrite done; inventory (LISP 1, 1.5) |
 | Twig | GL | GP | CST | unversioned | Compliant since `twig-ir-compiler` 0.46.0 (was C2 typed lift via `ast_extract.rs` + `ast_nodes.rs` → `twig_parser::Program`). The TW05-B gate's checker still lifts internally; see open question 2 | Phase 8 CST rewrite done; single-row inventory (see open question 5) |
-| JavaScript | GL with the F10 regex/division table (es2015–es2025; es3/es5 pending) | GP over `es*.grammar` + `asi.rs` (≈338) | CST (`parse_javascript_cst_bounded`) | 14 pairs (es1, es3, es5, es2015–es2025) + unversioned; `releases.csv` 29 rows, es2016–es2025 at stage P; `compile_source_at` selects any claiming edition (default es2020) | **Partial:** the IIR compiler walks the CST since `javascript-iir-compiler` 0.3.0 (decision 6 met; was a C2 typed lift via `bridge.rs` (≈4,214) → `javascript_ast::Program`). The runtime `REGEX` deletion is gone since 6a (`javascript-lexer` 0.10.0). Still non-compliant under C2: `asi.rs`, which is longer than a small hook, remains until 6b replaces it | Phases 6a, 6c and 6d done (6d: es2016–es2025 claim `es-number-log` at stages P and I); 6b (needs `@asi`) and 6e remain; es3/es5 need F10 in Swift grammar-tools before they can claim |
+| JavaScript | GL with the F10 regex/division table (es2015–es2025; es3/es5 pending) | GP over `es*.grammar` + `asi.rs` (≈338) | CST (`parse_javascript_cst_bounded`) | 14 pairs (es1, es3, es5, es2015–es2025) + unversioned; `releases.csv` 29 rows, es2016–es2025 at stage P, I and B(`es-number-log`); `compile_source_at` selects any claiming edition (default es2020), and `--lang javascript@<edition>` reaches it from `lang-aot` | **Partial:** the IIR compiler walks the CST since `javascript-iir-compiler` 0.3.0 (decision 6 met; was a C2 typed lift via `bridge.rs` (≈4,214) → `javascript_ast::Program`). The runtime `REGEX` deletion is gone since 6a (`javascript-lexer` 0.10.0). Still non-compliant under C2: `asi.rs`, which is longer than a small hook, remains until 6b replaces it | Phases 6a, 6c, 6d and 6e done (6d: es2016–es2025 claim `es-number-log` at stages P and I; 6e: `Language::JavaScript` on all nine backends, B for es2016–es2025); 6b (needs `@asi`) remains; es3/es5 need F10 in Swift grammar-tools before they can claim |
 | Ruby | IIR path: GL over `ruby<release>.tokens` (R0 pairs). Legacy non-IIR callers: hand-written `ruby-lexer` (≈2,200 lines) driving `ruby-1.8.lexer.states.toml` (1,917 lines) | GP over `ruby<release>.grammar` (IIR path) or `ruby.grammar` (legacy) | CST | 5 R0 pairs (0.49, 0.50, 3.3.5–3.3.7) + unversioned | **Compliant on the IIR path since phase 5a**: `ruby-iir-compiler` walks the release CST; I(rb-int-puts) for 3.3.5–3.3.7, `Language::Ruby` on all nine backends, `--lang ruby@<release>` since 5b slice 1; release sweep and B for 3.3.5 and 3.3.7 in 5b slice 2. The hand-written lexer remains only for non-IIR consumers | R1–R7 (phase 3) |
 
 ### Ruby: port the lexer to `ruby<release>.tokens`
@@ -1465,6 +1465,127 @@ Divergences from this spec in 5b/7b slice 2:
    are `f64`, so B(S) for a printing subset depends on LANG83's `f64`
    formatting ops (`f64_to_str_js` / `write_f64_js`, LANG83 PR6). Until then,
    subsets are limited to what LANG83 has registered.
+
+   **6e plan (2026-10-24): blocked on a LANG83 slice, recorded here.**
+   `write_f64_js` (PR6a) landed, but it is not enough for B(`es-number-log`).
+   Two of the subset's twelve accepted cases need behaviour no registered op
+   gives on every backend:
+
+   | Case | Output (node v22) | Blocker |
+   | --- | --- | --- |
+   | `negative_zero`: `console.log(-0, 0 * -1, 5 - 5)` | `-0 -0 0` | `console.log` formats with `util.inspect`, which keeps the sign of zero. `write_f64_js` is `String(x)`, which prints `-0` as `0`. Telling `-0` from `0` needs the sign bit, and the usual `1 / x < 0` test divides by zero |
+   | `infinities_and_nan`: `console.log(1 / 0, -1 / 0, 0 / 0)` | `Infinity -Infinity NaN` | BEAM has no non-finite float: `erlang:'/'/2`, `'*'/2` and `'+'/2` raise `badarith` before one exists (`iir-to-beam` notes this beside its PR6a writer). The registry's `div` is also `DIV_ZERO_ONLY`, with edges that differ by backend (LANG83 "Legacy edge behaviour") |
+
+   B(S) allows a backend to refuse a module at compile time with
+   `UnsupportedOps`, but not at run time. A JavaScript module that emits the
+   classic `add`/`sub`/`mul`/`div` therefore fails B on BEAM as soon as any
+   case overflows to infinity or divides by zero, and `1e308 * 10` makes this
+   reachable for every arithmetic operator, not only `/`.
+
+   **Prerequisite (a LANG83 slice, "PR6c"):**
+   - **IEEE-754 binary64 ops with defined edges.** Type-first, like
+     `i64_*_ovf`: `f64_add`, `f64_sub`, `f64_mul`, `f64_div` and `f64_neg`.
+     Each returns the IEEE result, `±Infinity` or `NaN` included, and never
+     traps.
+     - Every backend whose floats are IEEE lowers them to its native float
+       op: LLVM `fadd` and friends, WASM `f64.*`, JVM `d*`, CLR `add`/`div`
+       on `float64`, x86-64 SSE2, AArch64 `fadd`, and vm-core and the JIT
+       on `f64`.
+     - BEAM declares them `Refused` until it has a non-finite
+       representation, so BEAM rejects a JavaScript module at compile time,
+       which B allows.
+     - The classic ops keep their legacy edges, as PR1b kept `div`'s.
+   - **`f64_signbit`** (one `f64`, `int` result 0/1). The frontend then
+     prints `-` before `write_f64_js` when a zero's sign bit is set, which
+     reproduces `util.inspect`'s `-0`. It is Lowered everywhere, including
+     BEAM (OTP 27 keeps `-0.0` distinct; test with a `<<S:1, _/bits>>` binary
+     match).
+
+   **Then 6e itself:**
+   - **Lowering.** `javascript-iir-compiler` lowers `console.log(a, …)` to
+     the ops below, in place of the VM-only `call_builtin js_console_log`:
+     each argument through `f64_signbit` and `write_f64_js`, `putchar 32`
+     between arguments, and `putchar 10` at the end. Arithmetic uses the
+     `f64_*` ops. The ReferenceError builtins become
+     `trap "Trap.ReferenceError"`, a new closed kind, so rows use
+     `StdoutThenTrap` for the TDZ and not-defined cases.
+   - **`run_module`** keeps its captured sink by registering `write_f64_js`
+     and `putchar` into the same buffer.
+   - **lang-aot.** `Language::JavaScript` (`javascript`, `js`, `.js`)
+     resolves `--lang javascript@<edition>` through 6d's
+     `compile_source_at` and `resolve_release`. `has_release_inventory` and
+     `MATRIX_LANGUAGES` gain JavaScript.
+   - **Rows.** `lang_matrix` gets a row for each case on each of 6d's two
+     IIR-identity class representatives, es2016 and es2021, checked against
+     host node v22.
+   - **Claim.** B(`es-number-log`) for es2016–es2025 only when every row
+     passes on all nine backends, with BEAM's compile-time refusal counting
+     as allowed.
+
+   **6e result (2026-10-25).** Landed, with these divergences from the plan:
+   - **Printing `-0` needs a zero test, not only the sign bit.** The plan
+     said "each argument through `f64_signbit` and `write_f64_js`", but
+     `-` belongs only before a *zero* whose sign bit is set (`-2.5` already
+     prints its own `-`). No registry op compares floats on every backend:
+     the JIT keeps float registers away from `cmp_*` (the function would
+     silently fall back to the interpreter) and BEAM's `cmp_eq` is exact.
+     So the test reads two sign bits, as integers: `s = f64_signbit x`,
+     `t = f64_signbit (f64_add x, 0.0)`, and `putchar '-'` behind
+     `jmp_if_false (cmp_gt s, t)`. IEEE rounds `-0 + +0` to `+0` and keeps
+     every other non-NaN value, so `s > t` holds for `-0` alone; a NaN's
+     sign is not observable (LANG83 PR6c) and every IEEE backend returns
+     `x + 0`'s NaN operand unchanged, so no `-NaN` appears. A literal is
+     never `-0`, so a literal, or a binding initialized straight from one,
+     skips the test.
+   - **BEAM runs the literal-only modules.** Because of that skip,
+     `console.log(42)` emits no `f64_*` arithmetic, and BEAM lowers it
+     (`f64_signbit`, `write_f64_js`, `putchar` are all lowered there). Of the
+     38 rows, the 11 literal-only rows declare all eight columns; the 27
+     with arithmetic declare the seven IEEE columns, and BEAM refuses them
+     at compile time with `UnsupportedOps` naming only `f64_*` arithmetic
+     (`javascript_rows_pass_the_lang83_check_on_all_nine_backends`).
+     A literal can still be non-finite: `1e999` is `Infinity`. An Erlang
+     float cannot hold that, so the BEAM validator refuses a non-finite
+     `f64` constant at compile time. It used to accept the constant and
+     leave the failure to the loader. This came from the 6e security review.
+     The same review closed a second gap: `decode_number` now refuses
+     spellings that Rust's float parser would accept but no edition can lex,
+     such as `-0`, `inf` and `NaN`. Those could only arrive in a tree forged
+     through `compile_ast`.
+   - **`Trap.ReferenceError` is a built-in `Trap.*` leaf, id 7**, not a
+     `LANGUAGE_TRAP_KINDS` entry: an unbound name is not JavaScript's alone
+     (Python's `NameError`, a Lisp's unbound variable). `twig_runtime.c`'s
+     kind table gains it. A trap ends straight-line code, so the compiler
+     drops every instruction after it (the function still ends with its
+     exit status, `const 0` and an `i64` `ret`; a `ret_void` `main` read
+     back as `[]` on BEAM, which CI caught), and records V8's message (`ReferenceError: z is not
+     defined`) for `run_source`, since the IIR does not name the binding;
+     `run_module` alone reports `trap: Trap.ReferenceError`.
+   - **No `StdoutThenTrap` rows in `PROGRAMS`.** The `es-number-log` corpus
+     has no failing case, and the rows are exactly the sweep's boundary
+     set, so the two ReferenceError programs (undeclared, TDZ) are checked
+     on every column by a separate test,
+     `javascript_reference_errors_trap_after_output_on_every_available_backend`.
+   - **Rows include the default edition.** The boundary set is every case on
+     each class representative (es2016: 12, es2021: 14) plus every case on
+     the default es2020 (12), as for Ruby and Python: 38 rows, 277 cells.
+   - **No display-range refusal.** The VM-only builtin refused numbers
+     outside `1e-6..1e21`; `write_f64_js` is `String(x)`, so `1e21` prints
+     `1e+21` as node does.
+   - **Bindings take their value without a `mov`.** `let x = 2` renames the
+     `const` to write `js.x` directly; the JIT keeps float registers away
+     from `mov`, so a copy would send the script to the interpreter tier.
+     Every row's `main` compiles to JIT bytecode and, run compiled, prints
+     the expected line
+     (`javascript_rows_compile_and_run_on_the_jit_without_its_interpreter_fallback`).
+
+   *Evidence.* On this host the 38 rows ran on native x86-64, LLVM (clang),
+   WASM, JVM (JDK 21), VM and JIT, 228 cells, all agreeing with host node
+   v22.22.0. CLR and BEAM have no toolchain here: every row's textual IL is
+   emitted, every literal-only row lowers to BEAM bytes and every other row
+   is refused by BEAM at compile time; CI executes both columns. Following
+   the Ruby and Python precedent, `backend_status` claims `es-number-log`
+   for es2016–es2025 (`check --matrix`: 38 cells direct, 92 by IIR class).
 6. **Later.** E7 goals replace the F10 approximation for full JavaScript.
 
 ### Twig and McCarthy Lisp: rewrite to walk `GrammarASTNode`
@@ -2263,6 +2384,158 @@ print 7L / 2                    # 3   (classic division floors on longs too)
   and finds no digit, so they read it as the int `0`. The fix is in the
   plan's text above. The pairs refuse `0x` either way.
 
+**Phase 7c, slice 3 (`py-float-print`: floats on the Python 3 releases
+whose `print` writes `repr`).** LANG83 PR6c (IEEE `f64_add`/`f64_sub`/
+`f64_mul`/`f64_div`/`f64_neg`, merged) and PR6a (`write_f64_py`) are what the
+float subset waited on. This slice moves floats onto the release path.
+
+```python
+print(7 / 2)            # 3.5    true division of two ints (PEP 238)
+print(0.1 + 0.2)        # 0.30000000000000004   repr: shortest round trip
+print(1 + 0.5)          # 1.5    the int is converted (PyLong_AsDouble)
+print(-0.0, end="")     # refused: keyword arguments (as in py-int-print)
+print(-0.0)             # -0.0
+print(1e308 * 10)       # inf    float * never raises
+print(1.0 / 0)          # Trap.DivZero (ZeroDivisionError: float division by zero)
+print(7.5 // 2)         # refused: float `//` and `%` (no LANG83 op yet)
+```
+
+- **The subset.** `py-float-print` (the name LANG79 gave its pilot) becomes
+  a LANG84 release subset: `py-int-print` plus float literals, `/` as true
+  division, and `int`/`float` mixing in `+ - * /` and unary `+ -`, with a
+  float printed as `repr`. Its corpus, `corpus/py-float-print/`, holds the
+  float cases only; the int cases stay in `py-int-print`. A release that
+  claims both lists both: `iir_status` and `backend_status` become
+  `py-int-print;py-float-print`, and `grammar_subset` names the larger one,
+  `py-float-print`. LANG79's pilot (`compile_source`, `run_source`) keeps its
+  API, its legacy `"3.12"` grammar and its own tests. It is not a claim of
+  `py-float-print`: it predates the corpus model, and its bindings, NameError
+  and multi-argument `print` are later slices of the release subset.
+- **Which releases.** The six `py3` releases whose `str(float)` is `repr`:
+  3.5.10, 3.6.0, 3.11.17, 3.12.3, 3.13.16 and 3.16.0a1 (`float_repr` is
+  `tp_str` since 3.2; `Objects/floatobject.c` at v3.5.10 lines 1849/1855).
+  **Not** 3.0a1: its `float_str` formats with `PREC_STR` 12 (`%.12g`,
+  `Objects/floatobject.c` at v3.0a1 lines 285–299), so `print(1/3)` writes
+  `0.333333333333`, a layout no LANG83 writer has. **Not** Python 2: every
+  2.x `str(float)` is `%.12g` too. Both wait for a `write_f64_py_str12`-style
+  writer (a LANG83 addition, not this slice).
+- **Profiles.** A new field `ReleaseProfile::floats` (`Floats::Repr` or
+  `Floats::None`). `py3` keeps the six releases above and gets `Repr`.
+  3.0a1 moves to a new profile `py30` (`Floats::None`, otherwise as `py3`),
+  because the difference is semantic, not lexical (C2): its lexer could
+  never be the only guard, since `7 / 2` lexes in every release. `py2` gets
+  `Floats::None`. A profile now names a *list* of subsets (`subsets`):
+  `py3` → `py-int-print`, `py-float-print`; `py30` → `py-int-print`;
+  `py2` → `py2-int-print`. Under `Floats::None` a `FLOAT` token (from a
+  forged `compile_cst` tree) and a true `/` stay `Unsupported`.
+- **Lexing (the six pairs).** One `FLOAT` token, before `INT`, from each
+  tag's `tok_get` (`Parser/tokenizer.c`, `Parser/lexer/lexer.c` at 3.13.16
+  and 3.16.0a1): a digit part `D` is `[0-9]+` at 3.5.10 and
+  `[0-9](?:_?[0-9])*` from 3.6.0 (PEP 515); a float is `D.D?E?`, `.D E?` or
+  `D E`, with `E` = `[eE][+-]?D`. Leading zeros are allowed in a float
+  (`00.5`, `0123e1`), unlike an int. A second definition, `D.` aliased to
+  `FLOAT`, accepts a trailing-dot literal before a non-word character
+  (`print(1.)`), which the first, `\b`-terminated pattern cannot. Not lexed:
+  imaginary literals (`1j`, `1.5j`), hex floats (Python has none).
+  Narrowings (each rejects): a float running into a name character
+  (`1.5if`), as for `INT`.
+- **Grammar (the six pairs).** `atom = INT | FLOAT | NAME | paren_expr`.
+  3.0a1's and the `py2` pairs are unchanged.
+- **Lowering.** Each value has a static type, `int` (`i64`) or `float`
+  (`f64`), known at compile time because the subset has no variables.
+
+  | Python | IIR |
+  | --- | --- |
+  | `1.5`, `.5`, `1e16`, `1_0.5` | `const 1.5 : f64` (correctly rounded, as `PyOS_string_to_double`) |
+  | `int + float` (any order), `- *` | `int_to_real` on the int, then `f64_add` / `f64_sub` / `f64_mul` |
+  | `float + float`, `- *` | `f64_add` / `f64_sub` / `f64_mul` |
+  | `a / b` (any types) | `int_to_real` on each int, then `f64_div` |
+  | `a / b`, `b` is `±0` | `trap "Trap.DivZero"`, then the `f64_div` (dead) |
+  | `-x` (float) | `f64_neg` (so `-0.0` is `-0.0`) |
+  | `+x` (float) | nothing: `float.__pos__` is the identity |
+  | `print(x)` (float) | `call_builtin write_f64_py, x`, `putchar 10` |
+  | `a // b`, `a % b` with a float | `Unsupported` |
+
+  - *Why the zero test is at compile time.* CPython's `float_div` (and
+    `long_true_divide`) raise `ZeroDivisionError` on a zero divisor;
+    `f64_div` never traps (PR6c). Every value is known while lowering, so
+    the compiler knows when a divisor is `±0` and emits LANG83's `trap`
+    there; the program stops after its earlier output, as CPython does.
+    Known float values are computed with Rust's IEEE `f64` ops, the same
+    binary64 arithmetic the PR6c ops specify.
+  - *Why `int / int` above 2^53 is refused.* `long_true_divide` returns the
+    correctly rounded quotient of the exact integers. When both operands
+    are at most 2^53 in magnitude it takes the fast path `(double)a /
+    (double)b`, which is exactly `int_to_real` then `f64_div`. Above that,
+    converting first rounds twice and can differ, so such a division is
+    `Unsupported` (the operands are known).
+  - *Why a literal that overflows is refused.* `1e400` is `inf` in CPython,
+    but a non-finite `const` has no LANG83 contract (BEAM's literal table
+    cannot hold one). `1e308 * 10` reaches `inf` through `f64_mul` instead.
+  - *Mixing.* `float + int` converts the int with `PyLong_AsDouble`, which
+    rounds to nearest even, as `int_to_real` does (`cvtsi2sd`, `l2d`,
+    `conv.r8`, `f64.convert_i64_s`, `sitofp`). An int expression inside a
+    float one keeps its checked `i64` ops, so `(2**62 * 4) * 1.0` still
+    traps `Trap.Overflow` (the subset's stated divergence; the example is
+    corrected in the status note below).
+- **Backends.** Every op above is LANG83. BEAM lowers `write_f64_py`,
+  `int_to_real` and `trap` but refuses the PR6c arithmetic at compile time
+  (`UnsupportedOps`, which stage B allows), so a row with float arithmetic
+  declares the seven IEEE columns and a literal-only row all eight.
+- **Tests and oracle.** New `py-float-print` corpus (positive cases with
+  `.expect` and `.cite`, negative cases for every refusal above, a
+  `.reject@3.5.10` for `_` in a float). The oracle is the host
+  interpreters 3.11.17, 3.12.3 and 3.13.16; 3.5.10, 3.6.0 and 3.16.0a1 rest
+  on the pinned source (`float_repr` as `tp_str`, `long_true_divide`'s fast
+  path, `float_div`'s zero check). `py-int-print`'s `reject_float` and
+  `reject_true_division` leave that corpus: they compile on the six
+  releases now, and 3.0a1's refusal of both is pinned in
+  `release_lowering.rs`. The release sweep adds `py-float-print` (two
+  classes are expected: 3.5.10, without `_`, and the five from 3.6.0), and
+  `lang_matrix` runs the corpus on the default release and on each class
+  representative.
+- **Not in this slice:** float `//`, `%` and `**`; comparisons; multi-item
+  `print`; bindings and NameError (LANG79's remaining features); floats on
+  3.0a1 and Python 2 (a `%.12g` writer); literals that overflow to `inf`.
+
+**Status (7c slice 3, 2026-10-25).** Landed as planned above.
+- **Pairs.** The six `py3` token files gain `FLOAT` and
+  `FLOAT_TRAILING_DOT -> FLOAT`; their grammars admit `FLOAT` as an `atom`
+  and now form one grammar class, apart from 3.0a1's. The stage-P probes add
+  11 float probes (parse on the six, fail on 3.0a1), three `_`-in-a-float
+  probes (from 3.6.0) and 11 malformed spellings that every Python 3 release
+  refuses (`1j`, `1._5`, `1e`, `1..5`, `1.5if`, `1.real`, …).
+- **Profiles and inventory.** `ReleaseProfile` gains `floats` and turns
+  `subset` into `subsets`; `py30` (3.0a1) is new. 3.0a1's row changes only
+  its profile. The six other Python 3 rows have `grammar_subset`
+  `py-float-print` and claim `py-int-print;py-float-print` at I and B.
+  `check --matrix` reports Python 17 claims: 138 cells direct, 157 by IIR
+  class, 5 not applicable.
+- **Stage I.** `py-float-print` has 24 cases (13 accepted, five of which
+  trap; 11 refused: five `Unsupported`, three `Lex` and three `Parse`), checked on all six releases and against host CPython 3.11.17,
+  3.12.3 and 3.13.16. `py-int-print` loses `reject_float` and
+  `reject_true_division` (now 34 cases); 3.0a1's refusal of both is pinned
+  by `release_3_0a1_refuses_floats_and_true_division`.
+- **Sweep and matrix.** The float sweep finds the two expected classes,
+  represented by 3.6.0 and 3.5.10; the integer classes are unchanged.
+  `lang_matrix` runs 38 float rows (13 on 3.13.16, 13 on 3.6.0, 12 on
+  3.5.10): the five literal-only rows on all eight columns, the 33 others
+  on the seven IEEE columns. Python is now 138 rows and 1,071 cells.
+  Locally, native, LLVM, WASM, JVM, VM and JIT ran all 228 float cells
+  (828 Python cells in all, 372 of which trapped as expected); CLR and
+  BEAM run in CI only. The VM and JIT harnesses now capture
+  `write_f64_py` into the ordered output buffer.
+- **Divergences from the plan:** two notes, no change of design.
+  - The generic JIT declares `int_to_real` `Refused(INTERPRETER_TIER_ONLY)`,
+    so a float row that widens an int runs on the JIT column's interpreter
+    tier (as every printing function's JIT cell already does);
+    `python_rows_pass_the_lang83_check_on_all_nine_backends` pins that this
+    is the JIT's only refusal. Lowering `int_to_real` in `GenericCirJit` is
+    separate backend work.
+  - The plan's example of an int overflow inside a float expression used
+    `**`, which the subset does not have; the corpus case
+    `overflow_inside_float` writes `(9223372036854775807 + 1) * 1.0`.
+
 ### Wire every IIR frontend into lang-aot
 
 Add `Language` variants with release support for Python, JavaScript, Ruby and
@@ -2344,7 +2617,7 @@ are rough estimates of reviewed diff size, not counting regenerated
 | 4 | 4a–4c | **Perl on all backends** (= LANG83 PR3, after LANG83 PR1b). **4a done:** compile versioned pairs (deduplicating generator); `compile_source_at`; `print` → `write_i64`; `Language::Perl`; matrix rows. **4b done:** default on the inventory release `5.38.0` (new pair grounded in tag `v5.38.0`); `IIRModule.release`; lang-aot release API; `cst_contract`; child-process hostile probes. **4c done:** `pl-int-print` corpus, `ReleaseProfile`s, release sweep (3 IIR-identity classes), `Prog.release`/`case`, I and B for all 118 checked releases. Fastest win, because Perl is already compliant | ~1,500 lines over 3 PRs |
 | 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs. **5a done:** `rb_int_div` → `i64_div_floor`, `%` → `i64_mod_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer`; I(rb-int-puts) for 3.3.5–3.3.7, B for 3.3.6. **5b slice 1 done:** lang-aot release selection (`--lang ruby@<release>`, `IIRModule.release`). **5b slice 2 done:** release sweep (one IIR-identity class, representative 3.3.5), matrix rows on it, B for 3.3.5 and 3.3.7 | ~1,200 lines over 2 PRs |
 | 6 | 6a–6e | JavaScript CST rewrite (see above; 6c, the compiler rewrite, done in `javascript-iir-compiler` 0.3.0; 6a, the F10 table in es2015–es2024 replacing the `REGEX` deletion, done in `javascript-iir-compiler` 0.4.0) | ~3,000 lines over 5 PRs |
-| 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family. **7a done:** `py-int-print` on five release pairs (3.0a1 … 3.16.0a1), PR4 `*_ovf` ops, `StdoutThenTrap` rows for `Trap.DivZero` and `Trap.Overflow`, I for all five, B for 3.13.16. **7b slice 1 done:** lang-aot release selection (`--lang python@<release>`, `IIRModule.release`). **7b slice 2 done:** release sweep (two classes, representatives 3.0a1 and 3.12.3), matrix rows on them, B for all five. **7c slice 1 done:** Python 2 (`py2-int-print`: print statement, classic `/`) on 2.2 and 2.7.18, B for both. **7c slice 2 done:** Python 2 octal, hex and long literals; releases 2.4, 2.6, 3.5.10 and 3.6.0 (four classes, representatives 3.0a1, 3.6.0, 2.2 and 2.6), B for all eleven. **7c rest:** more releases, multi-item `print` (needs catchable traps), and the float subset after LANG83 float formatting | ~2,000 lines over 3 PRs |
+| 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family. **7a done:** `py-int-print` on five release pairs (3.0a1 … 3.16.0a1), PR4 `*_ovf` ops, `StdoutThenTrap` rows for `Trap.DivZero` and `Trap.Overflow`, I for all five, B for 3.13.16. **7b slice 1 done:** lang-aot release selection (`--lang python@<release>`, `IIRModule.release`). **7b slice 2 done:** release sweep (two classes, representatives 3.0a1 and 3.12.3), matrix rows on them, B for all five. **7c slice 1 done:** Python 2 (`py2-int-print`: print statement, classic `/`) on 2.2 and 2.7.18, B for both. **7c slice 2 done:** Python 2 octal, hex and long literals; releases 2.4, 2.6, 3.5.10 and 3.6.0 (four classes, representatives 3.0a1, 3.6.0, 2.2 and 2.6), B for all eleven. **7c slice 3 done:** `py-float-print` (IEEE floats, true `/`, `repr` output) on the six `py3` releases, I and B; 3.0a1 moves to profile `py30`. **7c rest:** more releases, multi-item `print` (needs catchable traps), float `//`/`%`, and floats on 3.0a1 and Python 2 (a `%.12g` writer) | ~2,000 lines over 3 PRs |
 | 8 | 8.x | Twig CST rewrite (≈5,700-line compiler, ~6–10 PRs by construct family, IIR-identity gate; done in one, `twig-ir-compiler` 0.46.0). McCarthy Lisp CST rewrite (~3 PRs; done in one, `mccarthy-lisp-iir-compiler` 0.9.0) | large |
 | 9 | ongoing | Release backfill, earliest first: per-release pairs and subset status for every language; remaining inventories (BASIC, ALGOL, COBOL and others); remaining lang-aot variants | many small PRs |
 

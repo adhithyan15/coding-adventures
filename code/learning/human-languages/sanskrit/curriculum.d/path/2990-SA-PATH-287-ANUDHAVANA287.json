@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-287-ANUDHAVANA287",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "SA-EXT-287-ANUDHAVANA287"
+  ],
+  "after": []
+}

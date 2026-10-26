@@ -3,6 +3,12 @@
 All notable changes to the Twig VS Code extension are
 documented in this file.
 
+## Unreleased
+
+- `BUILD_windows` is one `cmd /C`-compatible command per line. It started with
+  PowerShell's `$ErrorActionPreference = 'Stop'`, which fails under `cmd /C`
+  the moment Windows CI rebuilds this package.
+
 ## 0.1.2 - 2026-05-11
 
 **LANG25 follow-up — Bundle deps + fix LSP blocking + enable gutter breakpoints.**

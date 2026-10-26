@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 509,
+  "output": "sanskrit/book/chapters/ch509-something-needs-mending.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

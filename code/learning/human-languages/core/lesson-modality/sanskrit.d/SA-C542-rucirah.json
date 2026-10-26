@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C542-rucirah",
+    "language": "sanskrit",
+    "chapter": 542,
+    "sequence": 31080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d3dd7d76f3b8aac"
+  },
+  "findings": []
+}

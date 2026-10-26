@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:30fcacd72408ce43",
+  "lessonIds": [
+    "SA-C311-kimvadanti",
+    "SA-C311-atankah",
+    "SA-C311-uttejayati",
+    "SA-C311-sankate",
+    "SA-C311-bhrantih"
+  ],
+  "tex": "sanskrit/book/chapters/ch311-a-rumour-spreads.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:2cc01682591bc176",
+  "lessonIds": [
+    "SA-C421-palli",
+    "SA-C421-upanagaram",
+    "SA-C421-catvaram",
+    "SA-C421-harmyam",
+    "SA-C421-sambhasate"
+  ],
+  "tex": "sanskrit/book/chapters/ch421-hamlets-and-suburbs.tex"
+}

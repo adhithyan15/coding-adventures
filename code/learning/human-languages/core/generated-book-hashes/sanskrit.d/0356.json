@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:124baad0d19d766f",
+  "lessonIds": [
+    "SA-C356-vijnapayati",
+    "SA-C356-niyojayati",
+    "SA-C356-anumodate",
+    "SA-C356-vibhagah",
+    "SA-C356-prastavah"
+  ],
+  "tex": "sanskrit/book/chapters/ch356-notices-from-an-office.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C549-pratiksa",
+  "pathSegment": "SA-PATH-549-LALASA549",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-549-LALASA549",
+      "order": 2
+    }
+  ]
+}

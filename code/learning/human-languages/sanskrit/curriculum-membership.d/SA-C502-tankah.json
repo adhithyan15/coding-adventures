@@ -1,0 +1,11 @@
+{
+  "id": "SA-C502-tankah",
+  "pathSegment": "SA-PATH-502-KARMASALA502",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-502-KARMASALA502",
+      "order": 4
+    }
+  ]
+}

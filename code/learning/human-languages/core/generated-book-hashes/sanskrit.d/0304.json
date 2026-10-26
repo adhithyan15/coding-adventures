@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:0af23ef29e70f7d7",
+  "lessonIds": [
+    "SA-C304-rasih",
+    "SA-C304-artah",
+    "SA-C304-krosati",
+    "SA-C304-vilapati",
+    "SA-C304-nihsarayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch304-trapped.tex"
+}

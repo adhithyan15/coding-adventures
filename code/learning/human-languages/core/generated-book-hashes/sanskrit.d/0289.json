@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:c29585c938e0bb7e",
+  "lessonIds": [
+    "SA-C289-abhijanati",
+    "SA-C289-varnayati",
+    "SA-C289-niriksate",
+    "SA-C289-cihnam",
+    "SA-C289-pratyaksam"
+  ],
+  "tex": "sanskrit/book/chapters/ch289-what-the-witness-saw.tex"
+}

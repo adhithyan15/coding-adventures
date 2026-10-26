@@ -1,0 +1,11 @@
+{
+  "id": "SA-C323-aviskaroti",
+  "pathSegment": "SA-PATH-323-STUPA323",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-323-STUPA323",
+      "order": 4
+    }
+  ]
+}

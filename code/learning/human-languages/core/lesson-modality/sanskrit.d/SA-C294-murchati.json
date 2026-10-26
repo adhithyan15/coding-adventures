@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C294-murchati",
+    "language": "sanskrit",
+    "chapter": 294,
+    "sequence": 17450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7a7d26aa29b37b0"
+  },
+  "findings": []
+}

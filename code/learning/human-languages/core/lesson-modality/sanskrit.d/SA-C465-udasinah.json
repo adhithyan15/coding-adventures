@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C465-udasinah",
+    "language": "sanskrit",
+    "chapter": 465,
+    "sequence": 26880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e8e5d203f5586db"
+  },
+  "findings": []
+}

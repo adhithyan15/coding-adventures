@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:394819f5ff9cacfb",
+  "lessonIds": [
+    "SA-C406-adhirohati",
+    "SA-C406-avatarati",
+    "SA-C406-sammardah",
+    "SA-C406-panktih",
+    "SA-C406-avakasah"
+  ],
+  "tex": "sanskrit/book/chapters/ch406-getting-on-and-off.tex"
+}

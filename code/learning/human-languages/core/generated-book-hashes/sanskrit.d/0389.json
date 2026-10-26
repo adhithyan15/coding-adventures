@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:10d036b8783c1c4c",
+  "lessonIds": [
+    "SA-C389-sakyah",
+    "SA-C389-sadhyah",
+    "SA-C389-kalpayati",
+    "SA-C389-kalpana",
+    "SA-C389-yatharthah"
+  ],
+  "tex": "sanskrit/book/chapters/ch389-can-it-be-done.tex"
+}
