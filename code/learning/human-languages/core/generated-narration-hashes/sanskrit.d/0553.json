@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 553,
+  "sourceHash": "fnv1a64:baf23efad0e92959",
+  "lessonIds": [
+    "SA-C553-skhalanam",
+    "SA-C553-hanta",
+    "SA-C553-pariraksati",
+    "SA-C553-viparyayah",
+    "SA-C553-upalambhah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch553.txt",
+  "json": "sanskrit/narration/ch553.json",
+  "textHash": "fnv1a64:29dd7ba26015f53e",
+  "jsonHash": "fnv1a64:9500f96a37d02983",
+  "findings": []
+}

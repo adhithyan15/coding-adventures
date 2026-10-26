@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:98c005b09b835e92",
+  "lessonIds": [
+    "SA-C450-visadah",
+    "SA-C450-socati",
+    "SA-C450-rodanam",
+    "SA-C450-baspah",
+    "SA-C450-nihsvasah"
+  ],
+  "tex": "sanskrit/book/chapters/ch450-sadness-and-tears.tex"
+}

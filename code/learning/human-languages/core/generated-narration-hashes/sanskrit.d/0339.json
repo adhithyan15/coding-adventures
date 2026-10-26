@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:315d4fd2d737e514",
+  "lessonIds": [
+    "SA-C339-yuvarajah",
+    "SA-C339-svayamvarah",
+    "SA-C339-vrnite",
+    "SA-C339-pracchannah",
+    "SA-C339-nyayah",
+    "SA-R339-review-333-339",
+    "SA-R339-review-final-339"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch339.txt",
+  "json": "sanskrit/narration/ch339.json",
+  "textHash": "fnv1a64:503efc794fdba4d7",
+  "jsonHash": "fnv1a64:fe01e489faae1886",
+  "findings": []
+}

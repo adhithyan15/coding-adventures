@@ -1,0 +1,19 @@
+{
+  "chapter": 547,
+  "title": "Ups and Downs",
+  "label": "ch:sa-ups-and-downs",
+  "canDo": "I can talk about rising, falling and climbing.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C547-ucchalati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 547: I can talk about rising, falling and climbing.",
+    "assesses": [
+      "SA-LEX-C547-UTTHANA547-03",
+      "SA-LEX-C547-UTTHANA547-04",
+      "SA-LEX-C547-UTTHANA547-05"
+    ]
+  }
+}

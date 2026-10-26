@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "Giving Up for Others",
+  "label": "ch:sa-giving-up-for-others",
+  "canDo": "I can talk about selfless and selfish acts.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C359-samarpayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can talk about selfless and selfish acts.",
+    "assesses": [
+      "SA-LEX-C359-TYAGA359-03",
+      "SA-LEX-C359-TYAGA359-04",
+      "SA-LEX-C359-TYAGA359-05"
+    ]
+  }
+}

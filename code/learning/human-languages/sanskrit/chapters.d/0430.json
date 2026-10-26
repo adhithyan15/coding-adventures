@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "At the Bazaar",
+  "label": "ch:sa-at-the-bazaar",
+  "canDo": "I can talk with sellers and buyers at a bazaar.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C430-panate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can talk with sellers and buyers at a bazaar.",
+    "assesses": [
+      "SA-LEX-C430-HATTA430-03",
+      "SA-LEX-C430-HATTA430-04",
+      "SA-LEX-C430-HATTA430-05"
+    ]
+  }
+}

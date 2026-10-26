@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:641e2c862dbd907c",
+  "lessonIds": [
+    "SA-C364-visesajnah",
+    "SA-C364-vimarsah",
+    "SA-C364-tika",
+    "SA-C364-nibandhah",
+    "SA-C364-nirupayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch364.txt",
+  "json": "sanskrit/narration/ch364.json",
+  "textHash": "fnv1a64:09f258ac46d528a6",
+  "jsonHash": "fnv1a64:65f2cc76e8a9a9fa",
+  "findings": []
+}

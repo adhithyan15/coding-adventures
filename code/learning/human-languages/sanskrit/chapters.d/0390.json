@@ -1,0 +1,19 @@
+{
+  "chapter": 390,
+  "title": "Signs of What Is Coming",
+  "label": "ch:sa-signs-of-what-is-coming",
+  "canDo": "I can say what a sign tells us will happen.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C390-anubhavati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can say what a sign tells us will happen.",
+    "assesses": [
+      "SA-LEX-C390-LAKSHANA390-03",
+      "SA-LEX-C390-LAKSHANA390-04",
+      "SA-LEX-C390-LAKSHANA390-05"
+    ]
+  }
+}

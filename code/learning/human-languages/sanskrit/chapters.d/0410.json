@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Breakdowns",
+  "label": "ch:sa-breakdowns",
+  "canDo": "I can say what has broken or worn on a cart.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C410-gharsati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can say what has broken or worn on a cart.",
+    "assesses": [
+      "SA-LEX-C410-CHIDRA410-03",
+      "SA-LEX-C410-CHIDRA410-04",
+      "SA-LEX-C410-CHIDRA410-05"
+    ]
+  }
+}

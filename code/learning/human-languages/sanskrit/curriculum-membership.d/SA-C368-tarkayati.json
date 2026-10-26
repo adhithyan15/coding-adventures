@@ -1,0 +1,11 @@
+{
+  "id": "SA-C368-tarkayati",
+  "pathSegment": "SA-PATH-368-SHANKA368",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-368-SHANKA368",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:21765b0a9aff5dbd",
+  "lessonIds": [
+    "SA-C382-hitam",
+    "SA-C382-kalyanam",
+    "SA-C382-sreyah",
+    "SA-C382-visramyati",
+    "SA-C382-satkaroti"
+  ],
+  "tex": "sanskrit/book/chapters/ch382-for-our-good.tex"
+}

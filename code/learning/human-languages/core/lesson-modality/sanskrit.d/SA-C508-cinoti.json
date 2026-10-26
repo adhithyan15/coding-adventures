@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C508-cinoti",
+    "language": "sanskrit",
+    "chapter": 508,
+    "sequence": 29310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3293b23b74a15783"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-390-LAKSHANA390",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "SA-EXT-390-LAKSHANA390"
+  ],
+  "after": []
+}

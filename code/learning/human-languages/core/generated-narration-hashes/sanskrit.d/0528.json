@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:92bb4eb545157049",
+  "lessonIds": [
+    "SA-C528-ayojayati",
+    "SA-C528-samagri",
+    "SA-C528-sambharah",
+    "SA-C528-upakalpayati",
+    "SA-C528-pancangam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch528.txt",
+  "json": "sanskrit/narration/ch528.json",
+  "textHash": "fnv1a64:6902a8600e9ba89b",
+  "jsonHash": "fnv1a64:baa92f862adcdaf2",
+  "findings": []
+}

@@ -55,7 +55,7 @@ fn the_release_path_never_calls_a_legacy_grammar() {
 fn the_release_path_never_compares_release_ids() {
     for file in RELEASE_PATH {
         let text = code_of(file);
-        for needle in ["release >", "release <", "release.split", "release.starts_with", "parse::<f"] {
+        for needle in ["release >", "release <", "release.split", "release.starts_with", "release.parse", "parse::<f"] {
             assert!(!text.contains(needle), "{file} compares release IDs: {needle}");
         }
     }

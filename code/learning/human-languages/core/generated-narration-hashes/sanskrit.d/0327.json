@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:4788a48d528a59b1",
+  "lessonIds": [
+    "SA-C327-holika",
+    "SA-C327-kunkumam",
+    "SA-C327-sincati",
+    "SA-C327-vikirati",
+    "SA-C327-utksipati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch327.txt",
+  "json": "sanskrit/narration/ch327.json",
+  "textHash": "fnv1a64:a05a4be548c84d48",
+  "jsonHash": "fnv1a64:e98ededbd791c190",
+  "findings": []
+}

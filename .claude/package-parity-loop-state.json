@@ -19,14 +19,13 @@
   "active_pr": 18293,
   "active_prs": [
     18293,
-    18312,
     18324
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-26T08:35:36Z",
-    "pr_number": 18183,
-    "head_revision": "17c40bca2a27f31ee1366bf123ab01978618c6fd",
-    "action": "Verified every exact-head check terminal acceptable and the reviewed head conflict-free, confirmed guarded squash auto-merge as ab25faef874fdc7788b37eabc19b87b7c1c79835, removed the completed Haskell worktree and local branch, and reprioritized the reviewed Python gradient-descent front for the freed hosted slot.",
+    "observed_at": "2026-10-26T11:52:29Z",
+    "pr_number": 18312,
+    "head_revision": "b804a122612f4ae64d967efbff454af771bf6130",
+    "action": "Verified every exact-head check terminal acceptable and the reviewed head conflict-free, completed guarded squash merge as 0be03745d775ffa9ee8c66ffda1700baa76ba58f, verified the receipt on origin/main, and removed the clean completed Swift hash-functions worktree and local branch.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -14206,7 +14205,7 @@
     {
       "id": "swift-hash-functions-lane-parity",
       "title": "Implement the portable hash-functions package in Swift",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "hash-functions-dt17-vector-and-documentation-correction"
       ],
@@ -14214,8 +14213,15 @@
       "pr_number": 18312,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18312",
       "pr_opened_at": "2026-10-26T06:59:52Z",
-      "publication_head": "e60a15a73ed7ed2d090b996b0b184454e811b947",
-      "publication_notes": "PR #18312 is open, non-draft, and mergeable at its exact independently reviewed lifecycle head. Required checks are queued or running with zero observed failures; guarded auto-merge remains disabled until every exact-head check is terminal acceptable.",
+      "publication_head": "b804a122612f4ae64d967efbff454af771bf6130",
+      "publication_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. GitHub reported the independently reviewed head conflict-free, and guarded squash merge completed without bypassing review or checks.",
+      "merged_head_revision": "b804a122612f4ae64d967efbff454af771bf6130",
+      "merged_at": "2026-10-26T11:52:29Z",
+      "merge_revision": "0be03745d775ffa9ee8c66ffda1700baa76ba58f",
+      "merge_notes": "The merge receipt is an ancestor of current origin/main. The exact clean completed worktree and local branch were removed after receipt verification.",
+      "selection_revision": "20ba82cbe644174616d85b05a314c8395772ad8f",
+      "reconciled_main_revision": "263e05f201003afd0395e82e6b810fe25a1260b4",
+      "validation_notes": "The rebased Swift 6.3.1 front passed eight tests, all 64 upstream SipHash-2-4 vectors, release compilation, package-manifest evaluation, empty-capability validation, exact one-package planner selection, lesson validation, hosted Windows/macOS/Ubuntu builds, metadata contracts, Swift CodeQL, Human Languages, and final CI gate at exact head b804a122612f4ae64d967efbff454af771bf6130.",
       "notes": "First exact Swift high-consensus child materialized by the post-#14615 lane audit. Implement the existing deterministic hash-functions contract with package-native tests, empty capabilities, and no host authority. This dependency-shaped root unlocks the explicit Swift bloom-filter, hash-map, hash-set, and HyperLogLog children. The store engine remains separately gated on hash-map, hash-set, HyperLogLog, skip-list, protocol IR, and the neutral injected-clock contract. The remaining non-CT Swift high-consensus gaps stay owned by the selection-blocked classifier until decomposed into exact children.",
       "validation_plan": "swift-hash-foundation-native-validation-preparation.md: fourDT17 core families, explicit polynomial compatibility decision, upstream64 SipHash vectors, deterministic caller samples instead of OS randomness, native RED/full SwiftPM/Sources coverage/truthful fronts; actual SDK/link/native execution still unqualified despite resolved tool paths. Three direct pure leaves; no absent downstream execution claim.",
       "postmerge_preparation_evidence": [
@@ -16522,10 +16528,10 @@
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18324",
       "pr_opened_at": "2026-10-26T09:06:48Z",
       "publication_head": "773fb4cafe0033da22128682b3b14ae19a6cb4d2",
-      "publication_notes": "Draft PR #18324 opened from the exact independently reviewed implementation head after rebasing onto current main. GitHub reports the branch mergeable. The draft records its durable PR identity; this lifecycle-only receipt must receive independent delta review before the PR is marked ready. Guarded auto-merge remains disabled until every exact-head check is terminal acceptable and the head remains conflict-free.",
+      "publication_notes": "Draft PR #18324 opened from exact independently reviewed implementation head 773fb4cafe0033da22128682b3b14ae19a6cb4d2, and lifecycle head 9176757d3a1cebc015779131e1f41085bd833680 passed every hosted check. Swift hash-functions PR #18312 then advanced main and made the Python branch conflicting. Current main is merged into this published branch without rewriting history; the exact merge head requires independent review and fresh hosted checks before guarded auto-merge.",
       "selection_revision": "27dc687739ac74e8f5bbab70916a03d62a609743",
       "selection_notes": "Selected after the local Swift hash-functions tranche reached an exact-head independent PASS while the hosted parity queue remained full. Among dependency-ready portable owners, this bounded Python front ranks ahead of the Swift paint-vm-ascii capability-only repair because it removes one exact orphan exemption and unblocks two recorded descendants without changing SGD behavior. Scope is limited to truthful Unix and Windows BUILD fronts, production-only coverage, Ruff, existing ML02 behavior tests, publishable metadata, package documentation, and removal of the exact gradient-descent exemption. No training loop, randomness, convergence guarantee, model API, native runtime, or new host authority is introduced.",
-      "reconciled_main_revision": "263e05f201003afd0395e82e6b810fe25a1260b4",
+      "reconciled_main_revision": "0be03745d775ffa9ee8c66ffda1700baa76ba58f",
       "queue_notes": "Rebased onto current origin/main after guarded auto-merge of Haskell Starlark provider PR #18183 freed one hosted slot. Fresh prioritization keeps this reviewed Python front ahead of the prepared Swift PaintVmAscii and Kotlin micro-qr metadata repairs because it retires an exact orphan exemption and unblocks two recorded descendants. The Bezier successors remain publication-blocked on PR #18293.",
       "validation_notes": "Fresh post-rebase native validation uses Python 3.12.13 and passes Ruff lint, Ruff format checking, all 11 focused optimizer tests, and the production-only 95% coverage gate at 100% lines. Two consecutive clean source and wheel builds succeed while an intentionally hostile in-package validation environment points through an absolute Python symlink; the resulting source archive excludes every .venv variant, cache, coverage file, bytecode directory, and dist recursion. The empty required-capabilities declaration validates against the repository schema, and the exact gradient-descent exemption is absent. The root changelog filename digest matches its full heading. A real Go diff plan evaluates 12 Starlark BUILD files, discovers five Python packages, and selects only python/gradient-descent. All 1,576 lesson shards validate. The 1,547-owner state is JSON-valid, unique, dependency-complete, acyclic, and free of merged-to-unfinished edges; only this local owner is in progress and exactly the three published owners are pr-open.",
       "prepublication_revalidation_notes": "After rebasing onto 263e05f201003afd0395e82e6b810fe25a1260b4, Python 3.12.13 again passes Ruff, formatting, all 11 tests, and 100% production-line coverage. Two clean builds with an absolute-symlink .venv-review-absolute again exclude all validation environments, caches, coverage, bytecode, and dist recursion from the sdist. The capability schema, exact exemption removal, and root changelog digest pass. The real Go planner again selects only python/gradient-descent from five discovered Python packages. All 1,583 lesson shards validate. The 1,547-owner graph remains unique, dependency-complete, acyclic, and free of merged-to-unfinished edges with exactly this owner in_progress and the two remaining hosted owners pr-open.",

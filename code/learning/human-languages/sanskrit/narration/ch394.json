@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 394,
+  "title": "Setting Out on Pilgrimage",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:aae6a186157d3429",
+  "lessons": [
+    {
+      "id": "SA-C394-tirthayatra",
+      "sequence": 23000,
+      "title": "तीर्थयात्रा (tīrthayātrā) — a pilgrimage",
+      "headword": "तीर्थयात्रा",
+      "romanization": "tīrthayātrā",
+      "gloss": "a pilgrimage",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c108a4e351eef99c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for radio, then the Sanskrit for the internet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तीर्थयात्रा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तीर्थयात्रा — tīrthayātrā — \"a pilgrimage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अहं श्वः तीर्थयात्रां गमिष्यामि। ahaṃ śvaḥ tīrthayātrāṃ gamiṣyāmi. Tomorrow I will go on a pilgrimage."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तीर्थयात्रा (tīrthayātrā) is built from tīrtha, \"a ford, a holy bathing place\", and yātrā, \"a journey\"; MW gives the compound as a journey to holy places, a pilgrimage (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīrthayātrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīrthayātrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīrthayātrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīrthayātrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahaṃ śvaḥ tīrthayātrāṃ gamiṣyāmi. — Tomorrow I will go on a pilgrimage.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahaṃ śvaḥ tīrthayātrāṃ gamiṣyāmi.* — Tomorrow I will go on a pilgrimage.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for radio, then the Sanskrit for the internet, then say tīrthayātrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for radio, then the Sanskrit for the internet, then say *tīrthayātrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तीर्थयात्रा (tīrthayātrā) mean? (\"A pilgrimage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C394-pratisthate",
+      "sequence": 23010,
+      "title": "प्रतिष्ठते (pratiṣṭhate) — starts on a journey; sets out",
+      "headword": "प्रतिष्ठते",
+      "romanization": "pratiṣṭhate",
+      "gloss": "starts on a journey; sets out",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fbdc7f971104fd0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for the internet, then the Sanskrit for a pilgrimage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रतिष्ठते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिष्ठते — pratiṣṭhate — \"starts on a journey; sets out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यात्रिकः प्रातः गृहात् प्रतिष्ठते। yātrikaḥ prātaḥ gṛhāt pratiṣṭhate. The pilgrim sets out from home in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः प्रातः प्रस्थितवान्, saḥ prātaḥ prasthitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिष्ठते (pratiṣṭhate) is built from the prefix pra, \"forth\", and the root √sthā, \"to stand\", which also gives tiṣṭhati, \"stands\"; MW gives pra-sthā as to set out or depart, with the past participle prasthita, and Pāṇini (1.3.22) gives √sthā the middle endings after pra (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiṣṭhate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiṣṭhate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratiṣṭhate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratiṣṭhate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātrikaḥ prātaḥ gṛhāt pratiṣṭhate. — The pilgrim sets out from home in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātrikaḥ prātaḥ gṛhāt pratiṣṭhate.* — The pilgrim sets out from home in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for the internet, then the Sanskrit for a pilgrimage, then say pratiṣṭhate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for the internet, then the Sanskrit for a pilgrimage, then say *pratiṣṭhate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रतिष्ठते (pratiṣṭhate) mean? (\"Starts on a journey; sets out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C394-patheyam",
+      "sequence": 23020,
+      "title": "पाथेयम् (pātheyam) — food for the journey",
+      "headword": "पाथेयम्",
+      "romanization": "pātheyam",
+      "gloss": "food for the journey",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e20adc349e18e31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a pilgrimage, then the Sanskrit for starts on a journey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पाथेयम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाथेयम् — pātheyam — \"food for the journey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माता मह्यं पाथेयं ददाति। mātā mahyaṃ pātheyaṃ dadāti. Mother gives me food for the journey."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाथेयम् (pātheyam) is built on pathin, \"a road\", with the ending -eya, \"belonging to\"; MW gives pātheya as provisions for a journey (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātheyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātheyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātheyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātheyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātā mahyaṃ pātheyaṃ dadāti. — Mother gives me food for the journey.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātā mahyaṃ pātheyaṃ dadāti.* — Mother gives me food for the journey.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a pilgrimage, then the Sanskrit for starts on a journey, then say pātheyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a pilgrimage, then the Sanskrit for starts on a journey, then say *pātheyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पाथेयम् (pātheyam) mean? (\"Food for the journey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C394-yati",
+      "sequence": 23030,
+      "title": "याति (yāti) — travels; goes",
+      "headword": "याति",
+      "romanization": "yāti",
+      "gloss": "travels; goes",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c3be0784bcaf0ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for starts on a journey, then the Sanskrit for food for the journey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: याति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "याति — yāti — \"travels; goes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सः धूमयानेन नगरं याति। saḥ dhūmayānena nagaraṃ yāti. He travels to the city by train."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः नगरं यातवान्, saḥ nagaraṃ yātavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "याति (yāti) comes from the root √yā, \"to go, to travel\", which also gives yātrā, \"a journey\", and yāna, \"a vehicle\"; MW gives the participle yāta, \"gone\"; it lives on as Hindi jānā, \"to go\" (MW; CDIAL 10452)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yāti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yāti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yāti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yāti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saḥ dhūmayānena nagaraṃ yāti. — He travels to the city by train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saḥ dhūmayānena nagaraṃ yāti.* — He travels to the city by train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for starts on a journey, then the Sanskrit for food for the journey, then say yāti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for starts on a journey, then the Sanskrit for food for the journey, then say *yāti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does याति (yāti) mean? (\"Travels; goes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C394-kamandaluh",
+      "sequence": 23040,
+      "title": "कमण्डलुः (kamaṇḍaluḥ) — an ascetic's water-pot",
+      "headword": "कमण्डलुः",
+      "romanization": "kamaṇḍaluḥ",
+      "gloss": "an ascetic's water-pot",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb009ccdf1b9b53f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for food for the journey, then the Sanskrit for travels."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कमण्डलुः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कमण्डलुः — kamaṇḍaluḥ — \"an ascetic's water-pot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यात्रिकः कमण्डलौ जलं वहति। yātrikaḥ kamaṇḍalau jalaṃ vahati. The pilgrim carries water in his water-pot."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कमण्डलुः (kamaṇḍaluḥ) is the word MW gives for the water-pot that ascetics and pilgrims carry; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamaṇḍaluḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamaṇḍaluḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamaṇḍaluḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamaṇḍaluḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātrikaḥ kamaṇḍalau jalaṃ vahati. — The pilgrim carries water in his water-pot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātrikaḥ kamaṇḍalau jalaṃ vahati.* — The pilgrim carries water in his water-pot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for food for the journey, then the Sanskrit for travels, then say kamaṇḍaluḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for food for the journey, then the Sanskrit for travels, then say *kamaṇḍaluḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कमण्डलुः (kamaṇḍaluḥ) mean? (\"An ascetic's water-pot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

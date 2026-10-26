@@ -1,0 +1,11 @@
+{
+  "id": "SA-C504-pratibha",
+  "pathSegment": "SA-PATH-504-AVEDANA504",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-504-AVEDANA504",
+      "order": 2
+    }
+  ]
+}

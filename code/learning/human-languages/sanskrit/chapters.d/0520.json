@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "Learning a Raga",
+  "label": "ch:sa-learning-a-raga",
+  "canDo": "I can talk about music lessons.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C520-vadayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can talk about music lessons.",
+    "assesses": [
+      "SA-LEX-C520-SVARA520-03",
+      "SA-LEX-C520-SVARA520-04",
+      "SA-LEX-C520-SVARA520-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:52ee4ae419b7d800",
+  "lessonIds": [
+    "SA-C461-mahatma",
+    "SA-C461-khalah",
+    "SA-C461-saujanyam",
+    "SA-C461-nisthurah",
+    "SA-C461-druhyati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch461.txt",
+  "json": "sanskrit/narration/ch461.json",
+  "textHash": "fnv1a64:3b78c1d429854170",
+  "jsonHash": "fnv1a64:1f1ab058771e6e11",
+  "findings": []
+}

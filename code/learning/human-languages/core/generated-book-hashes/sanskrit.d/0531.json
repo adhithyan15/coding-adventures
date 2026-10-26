@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:d45891542c18a339",
+  "lessonIds": [
+    "SA-C531-vanchati",
+    "SA-C531-manorathah",
+    "SA-C531-aradhayati",
+    "SA-C531-prarthana",
+    "SA-C531-kamana"
+  ],
+  "tex": "sanskrit/book/chapters/ch531-wishes-and-prayers.tex"
+}

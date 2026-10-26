@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:d02aa229d5f81aee",
+  "lessonIds": [
+    "SA-C461-mahatma",
+    "SA-C461-khalah",
+    "SA-C461-saujanyam",
+    "SA-C461-nisthurah",
+    "SA-C461-druhyati"
+  ],
+  "tex": "sanskrit/book/chapters/ch461-good-people-and-bad.tex"
+}

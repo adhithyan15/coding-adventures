@@ -1,0 +1,11 @@
+{
+  "id": "SA-C460-pravartate",
+  "pathSegment": "SA-PATH-460-SVABHAVA460",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-460-SVABHAVA460",
+      "order": 2
+    }
+  ]
+}

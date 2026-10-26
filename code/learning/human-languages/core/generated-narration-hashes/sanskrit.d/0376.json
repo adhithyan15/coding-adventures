@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:20c4cefb481b1914",
+  "lessonIds": [
+    "SA-C376-yogyah",
+    "SA-C376-samarthah",
+    "SA-C376-niyacchati",
+    "SA-C376-niyantranam",
+    "SA-C376-asrayate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch376.txt",
+  "json": "sanskrit/narration/ch376.json",
+  "textHash": "fnv1a64:7956e6a7b5f886f6",
+  "jsonHash": "fnv1a64:1c228a8bfde49d61",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C508-sandadhati",
+    "language": "sanskrit",
+    "chapter": 508,
+    "sequence": 29330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5002c22177e7e8c9"
+  },
+  "findings": []
+}

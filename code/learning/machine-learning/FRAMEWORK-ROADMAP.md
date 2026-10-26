@@ -82,8 +82,12 @@ the actual open PR and its current-head CI logs, and revisit this ordering:
    BUILDs on Linux/macOS/Windows, all selected workflows and required roll-up
    successful. Reassess reliability, prerequisites, portability and smallest
    delivery: [NN48 native C dense](../../specs/NN48-native-c-dense-framework.md)
-   now builds above matrix/float-math/bounded-json, before separate six-native
-   checkpoint exchange. Generic C-only detection did not retain Windows until
+   merged in [PR #18285](https://github.com/adhithyan15/coding-adventures/pull/18285)
+   at exact head `437c4c2d01bb` (squash `c91b44a06e7`), with actual Linux/macOS/
+   Windows package BUILDs and all five selected workflows successful. Reassess
+   reliability, prerequisites, portability and smallest complete delivery:
+   [NN49 six-native conformance](../../specs/NN49-six-native-dense-conformance.md)
+   connects C to actual checkpoint exchange before another port. Generic C-only detection did not retain Windows until
    NN47's scoped requirement; carry actual platform execution forward.
 5. **P2 — Optional Rust dense C ABI.** Specify ownership, shapes, errors,
    versioning, and resumable state before exposing binding consumers. Keep
@@ -183,14 +187,24 @@ SGD training, inspection, and portable save/reload/resume.
   package BUILDs and all applicable checks passed. Confirmed Windows ISO-harness
   repairs retain the scheduler and strict flags, add explicit clang-cl pedantic
   diagnostics, and include six cardinality/four flag-policy regressions.
-- [ ] C native framework (NN48): independent dense API/training/typed checkpoint
+- [x] C native framework (NN48): independent dense API/training/typed checkpoint
   acceptance above matrix, float-math and bounded-json; six-native exchange later.
   Local native core/command/installed-consumer validation passes; 6857 library
   checks across GCC/Clang/cl/clang-cl, all 55 schema cases, bit-exact extreme and
   signed-zero round trips, active all-parameter gradients, actual XOR training
   and full baseline/resume comparison through 3002. Library line coverage is
   97.11%; command is 100% and Python validator 95%. Scoped Windows planning and
-  required-build ownership are tested. Publication/exact-head CI/merge pending.
+  required-build ownership are tested. Exact reviewed head `437c4c2d01bb` merged
+  in #18285 as `c91b44a06e7`, with actual three-platform package BUILDs, selected
+  five-native conformance and all five workflows/required gates passed. CodeQL
+  detection passed with no C analyzer configured; no C scanning is claimed.
+- [ ] Required six-native conformance incorporating actual C checkpoint
+  exchanges (NN49): thirty directed pairs and return trips, 78 real children,
+  complete model comparisons through 3002, six native lanes and zero bindings.
+  Local runner and gate integration implemented after NN48; actual all-thirty
+  exchanges passed with XOR loss 0.0002330712337828204. Local Rust used an
+  exact-source minimal workspace; full repository CI and exact-head merge
+  remain pending. See the [teaching trace](./six-native-dense-conformance.md).
 - [ ] C++ native framework.
 - [ ] C# native framework.
 - [ ] F# native framework.

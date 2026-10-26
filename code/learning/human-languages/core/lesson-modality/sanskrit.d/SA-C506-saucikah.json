@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C506-saucikah",
+    "language": "sanskrit",
+    "chapter": 506,
+    "sequence": 29240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea8902bf72a9b157"
+  },
+  "findings": []
+}

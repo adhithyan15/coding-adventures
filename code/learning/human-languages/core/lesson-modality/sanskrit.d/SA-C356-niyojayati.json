@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C356-niyojayati",
+    "language": "sanskrit",
+    "chapter": 356,
+    "sequence": 20830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9350f8735d9f2d0"
+  },
+  "findings": []
+}

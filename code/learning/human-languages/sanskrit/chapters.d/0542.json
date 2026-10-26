@@ -1,0 +1,19 @@
+{
+  "chapter": 542,
+  "title": "Making Up One's Mind",
+  "label": "ch:sa-making-up-one-s-mind",
+  "canDo": "I can say what I will choose and why.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C542-tatasthah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 542: I can say what I will choose and why.",
+    "assesses": [
+      "SA-LEX-C542-UTKRSTA542-03",
+      "SA-LEX-C542-UTKRSTA542-04",
+      "SA-LEX-C542-UTKRSTA542-05"
+    ]
+  }
+}

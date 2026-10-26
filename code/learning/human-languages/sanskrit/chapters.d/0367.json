@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "Is It Possible?",
+  "label": "ch:sa-is-it-possible",
+  "canDo": "I can say whether something is possible and when it may happen.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C367-apeksate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can say whether something is possible and when it may happen.",
+    "assesses": [
+      "SA-LEX-C367-SAMBHAVA367-03",
+      "SA-LEX-C367-SAMBHAVA367-04",
+      "SA-LEX-C367-SAMBHAVA367-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C477-glayati",
+  "pathSegment": "SA-PATH-477-BHRAMA477",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-477-BHRAMA477",
+      "order": 2
+    }
+  ]
+}

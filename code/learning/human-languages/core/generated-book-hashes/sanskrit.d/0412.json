@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:4af724ac6065b3b3",
+  "lessonIds": [
+    "SA-C412-viramah",
+    "SA-C412-nivartate",
+    "SA-C412-upagacchati",
+    "SA-C412-atigacchati",
+    "SA-C412-krosah"
+  ],
+  "tex": "sanskrit/book/chapters/ch412-halts-and-turning-back.tex"
+}

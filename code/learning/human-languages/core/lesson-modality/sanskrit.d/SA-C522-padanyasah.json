@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C522-padanyasah",
+    "language": "sanskrit",
+    "chapter": 522,
+    "sequence": 30020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28ea979902af0304"
+  },
+  "findings": []
+}

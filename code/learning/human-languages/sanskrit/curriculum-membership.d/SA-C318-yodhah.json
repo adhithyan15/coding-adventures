@@ -1,0 +1,11 @@
+{
+  "id": "SA-C318-yodhah",
+  "pathSegment": "SA-PATH-318-SENA318",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-318-SENA318",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-279-REASONS279",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can give advice (bhavān vaidyaṃ gacchet, tvaṃ paṭheḥ) and say what follows from a reason (ataḥ, tasmāt).",
+  "prerequisites": [
+    "SA-EXT-278-REASONS278"
+  ]
+}

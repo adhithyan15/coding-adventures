@@ -1,0 +1,19 @@
+{
+  "chapter": 396,
+  "title": "At the Shrine",
+  "label": "ch:sa-at-the-shrine",
+  "canDo": "I can say what pilgrims find and hear in a shrine.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C396-bhaktah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can say what pilgrims find and hear in a shrine.",
+    "assesses": [
+      "SA-LEX-C396-DARSHANA396-03",
+      "SA-LEX-C396-DARSHANA396-04",
+      "SA-LEX-C396-DARSHANA396-05"
+    ]
+  }
+}

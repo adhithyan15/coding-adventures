@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C359-tyagah",
+    "language": "sanskrit",
+    "chapter": 359,
+    "sequence": 20970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed097b07bd4cce15"
+  },
+  "findings": []
+}

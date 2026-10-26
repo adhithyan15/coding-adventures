@@ -1,0 +1,11 @@
+{
+  "id": "SA-C489-madyam",
+  "pathSegment": "SA-PATH-489-VYASANA489",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-489-VYASANA489",
+      "order": 4
+    }
+  ]
+}

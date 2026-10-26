@@ -1,0 +1,19 @@
+{
+  "chapter": 302,
+  "title": "The Water Rose",
+  "label": "ch:sa-the-water-rose",
+  "canDo": "I can say how a flood rose little by little.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C302-kramasah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 302: I can say how a flood rose little by little.",
+    "assesses": [
+      "SA-LEX-C302-JALAUGHA302-03",
+      "SA-LEX-C302-JALAUGHA302-04",
+      "SA-LEX-C302-JALAUGHA302-05"
+    ]
+  }
+}

@@ -13780,25 +13780,41 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
 
 fn parse_er_render_config(source: &str) -> diagram_ir::StructuralRenderConfig {
     let defaults = diagram_ir::StructuralRenderConfig::default();
-    let front_matter = mermaid_front_matter_section(source, &["config", "er"]);
-    let config = mermaid_directive_object(source, "er")
+    diagram_ir::StructuralRenderConfig {
+        use_max_width: parse_mermaid_boolean_config(
+            source,
+            "er",
+            "useMaxWidth",
+            defaults.use_max_width,
+        ),
+        html_labels: parse_mermaid_boolean_config(
+            source,
+            "flowchart",
+            "htmlLabels",
+            defaults.html_labels,
+        ),
+    }
+}
+
+fn parse_mermaid_boolean_config(source: &str, section: &str, key: &str, fallback: bool) -> bool {
+    let front_matter = mermaid_front_matter_section(source, &["config", section]);
+    let config = mermaid_directive_object(source, section)
         .or(front_matter.as_deref())
         .unwrap_or("");
-    let value = quadrant_directive_value(config, "useMaxWidth").or_else(|| {
+    let value = quadrant_directive_value(config, key).or_else(|| {
         config.lines().find_map(|line| {
-            let (key, value) = line.trim().split_once(':')?;
-            (key.trim() == "useMaxWidth")
+            let (name, value) = line.trim().split_once(':')?;
+            (name.trim() == key)
                 .then(|| value.trim().trim_matches(['"', '\'']).to_string())
         })
     });
-    let use_max_width = value
+    value
         .and_then(|value| match value.to_ascii_lowercase().as_str() {
             "true" => Some(true),
             "false" => Some(false),
             _ => None,
         })
-        .unwrap_or(defaults.use_max_width);
-    diagram_ir::StructuralRenderConfig { use_max_width }
+        .unwrap_or(fallback)
 }
 
 fn parse_er_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {

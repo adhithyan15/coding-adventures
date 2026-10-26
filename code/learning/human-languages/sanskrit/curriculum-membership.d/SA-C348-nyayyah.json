@@ -1,0 +1,11 @@
+{
+  "id": "SA-C348-nyayyah",
+  "pathSegment": "SA-PATH-348-AUCITYA348",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-348-AUCITYA348",
+      "order": 1
+    }
+  ]
+}

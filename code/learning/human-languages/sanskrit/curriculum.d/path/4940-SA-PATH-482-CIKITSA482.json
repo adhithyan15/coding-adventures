@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-482-CIKITSA482",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "SA-EXT-482-CIKITSA482"
+  ],
+  "after": []
+}

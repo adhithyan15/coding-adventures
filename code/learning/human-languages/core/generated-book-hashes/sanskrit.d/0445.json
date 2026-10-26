@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:1913b8d77237eac1",
+  "lessonIds": [
+    "SA-C445-ulka",
+    "SA-C445-dhruvah",
+    "SA-C445-grahanam",
+    "SA-C445-diva",
+    "SA-C445-yapayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch445-stars-by-night-and-day.tex"
+}

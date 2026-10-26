@@ -57,11 +57,13 @@ number of completed SGD steps. It is ordinary JSON data, so Python can write
 it and TypeScript, Rust, Go or Ruby can load it, or vice versa. No implementation executes
 code from the document. Run
 `python code/scripts/validate_neural_framework_interchange.py` at repository
-root after installing the TypeScript package dependencies, Cargo, Go and Ruby to prove
-training and all twenty directed checkpoint exchanges. The JSON receipt identifies
-five native lanes and zero binding lanes, not five wrappers over one runtime.
+root after installing the TypeScript package dependencies, Cargo, Go and Ruby,
+and building the native C command with its ISO harness. Pass `--c-executable`
+with that trusted binary path to execute all thirty directed checkpoint
+exchanges. The NN49 JSON receipt identifies six native lanes and zero binding
+lanes, not six wrappers over one runtime. See the [six-native trace](./six-native-dense-conformance.md).
 
-NN46 extends NN42 and NN39: first train each model to step 3000, then compute native 3001/3002
+Historically NN46 extended NN42 and NN39: first train each model to step 3000, then compute native 3001/3002
 baseline. The trace for Python to Rust is `Python(3000) -> Rust(3001) ->
 Python(3002)`: each arrow transports the actual owned JSON parameters on stdin.
 Every parameter, prediction, loss, and exact step is compared with the baseline;

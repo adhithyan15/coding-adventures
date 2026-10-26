@@ -1,0 +1,23 @@
+{
+  "chapter": 281,
+  "title": "At the Station, and When Things Go Wrong",
+  "label": "ch:sa-at-the-station-and-when-things-go-wrong",
+  "canDo": "I can ask for tickets and when the next train leaves (ekaṃ yānapatraṃ dadātu; agrimaṃ dhūmayānaṃ kadā?), and say what went wrong (mama syūtaḥ naṣṭaḥ; dhūmayānaṃ gatam; ahaṃ rugṇaḥ asmi).",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-R281-at-the-station",
+    "kind": "production",
+    "summary": "Complete SA-R281-at-the-station: buy a ticket, ask when the train leaves, and say what went wrong.",
+    "assesses": [
+      "SA-GRAMMAR-C281-TICKET-01",
+      "SA-GRAMMAR-C281-TICKET-02",
+      "SA-LEX-C281-AGRIMAH-01",
+      "SA-GRAMMAR-C281-PROBLEM-01",
+      "SA-GRAMMAR-C281-PROBLEM-02",
+      "SA-LEX-C281-AUSADHAM-01",
+      "SA-SCRIPT-RECOG-228"
+    ]
+  }
+}

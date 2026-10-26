@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:366d26256a977a30",
+  "lessonIds": [
+    "SA-C499-pitrsvasa",
+    "SA-C499-matrsvasa",
+    "SA-C499-bhratrjah",
+    "SA-C499-bhagineyah",
+    "SA-C499-dauhitrah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch499.txt",
+  "json": "sanskrit/narration/ch499.json",
+  "textHash": "fnv1a64:10e7b3ad633b5728",
+  "jsonHash": "fnv1a64:a504ba404ff3cbc2",
+  "findings": []
+}

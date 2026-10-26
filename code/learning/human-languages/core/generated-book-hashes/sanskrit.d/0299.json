@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:eccb7489a6beba78",
+  "lessonIds": [
+    "SA-C299-ghosayati",
+    "SA-C299-sankatam",
+    "SA-C299-savadhanah",
+    "SA-C299-nivarayati",
+    "SA-C299-apattih"
+  ],
+  "tex": "sanskrit/book/chapters/ch299-a-warning.tex"
+}

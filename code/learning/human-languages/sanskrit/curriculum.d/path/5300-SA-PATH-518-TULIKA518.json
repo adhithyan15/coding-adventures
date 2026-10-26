@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-518-TULIKA518",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "SA-EXT-518-TULIKA518"
+  ],
+  "after": []
+}

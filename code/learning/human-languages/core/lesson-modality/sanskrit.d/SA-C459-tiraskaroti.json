@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C459-tiraskaroti",
+    "language": "sanskrit",
+    "chapter": 459,
+    "sequence": 26580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:389dc664f128c845"
+  },
+  "findings": []
+}

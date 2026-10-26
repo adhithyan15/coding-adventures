@@ -1,0 +1,19 @@
+{
+  "chapter": 475,
+  "title": "Sweat, Yawns and Sneezes",
+  "label": "ch:sa-sweat-yawns-and-sneezes",
+  "canDo": "I can say what the body does by itself.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C475-hikka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can say what the body does by itself.",
+    "assesses": [
+      "SA-LEX-C475-SVEDA475-03",
+      "SA-LEX-C475-SVEDA475-04",
+      "SA-LEX-C475-SVEDA475-05"
+    ]
+  }
+}

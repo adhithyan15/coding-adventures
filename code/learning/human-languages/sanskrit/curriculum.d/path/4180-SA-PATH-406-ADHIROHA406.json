@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-406-ADHIROHA406",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "SA-EXT-406-ADHIROHA406"
+  ],
+  "after": []
+}

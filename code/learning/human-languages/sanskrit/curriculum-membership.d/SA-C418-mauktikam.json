@@ -1,0 +1,11 @@
+{
+  "id": "SA-C418-mauktikam",
+  "pathSegment": "SA-PATH-418-JALA418",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-418-JALA418",
+      "order": 3
+    }
+  ]
+}

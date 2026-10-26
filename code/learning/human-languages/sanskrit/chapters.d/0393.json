@@ -1,0 +1,21 @@
+{
+  "chapter": 393,
+  "title": "What It Takes",
+  "label": "ch:sa-what-it-takes",
+  "canDo": "I can say what it will take to succeed.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-R393-review-final-393",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can say what it will take to succeed.",
+    "assesses": [
+      "SA-LEX-C393-VIJAYA393-01",
+      "SA-LEX-C393-VIJAYA393-02",
+      "SA-LEX-C393-VIJAYA393-03",
+      "SA-LEX-C393-VIJAYA393-04",
+      "SA-LEX-C393-VIJAYA393-05"
+    ]
+  }
+}

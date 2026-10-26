@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 547,
+  "sourceHash": "fnv1a64:139a70541e1f029c",
+  "lessonIds": [
+    "SA-C547-utthanam",
+    "SA-C547-avanatih",
+    "SA-C547-patanam",
+    "SA-C547-arohah",
+    "SA-C547-ucchalati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch547.txt",
+  "json": "sanskrit/narration/ch547.json",
+  "textHash": "fnv1a64:1925f8b07976e907",
+  "jsonHash": "fnv1a64:9ab2da226b766de6",
+  "findings": []
+}

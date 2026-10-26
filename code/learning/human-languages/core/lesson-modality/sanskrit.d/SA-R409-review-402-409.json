@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R409-review-402-409",
+    "language": "sanskrit",
+    "chapter": 409,
+    "sequence": 23810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1518864e8186f139"
+  },
+  "findings": []
+}

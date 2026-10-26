@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:43cf02d6e7413632",
+  "lessonIds": [
+    "SA-C514-parivesayati",
+    "SA-C514-bhojayati",
+    "SA-C514-asnati",
+    "SA-C514-ucchistam",
+    "SA-C514-pidhanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch514.txt",
+  "json": "sanskrit/narration/ch514.json",
+  "textHash": "fnv1a64:ad7151d673321a57",
+  "jsonHash": "fnv1a64:76046e0a8a2bdd50",
+  "findings": []
+}

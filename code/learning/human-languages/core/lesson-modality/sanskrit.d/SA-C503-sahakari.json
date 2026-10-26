@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C503-sahakari",
+    "language": "sanskrit",
+    "chapter": 503,
+    "sequence": 29050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41dd950ba964c39d"
+  },
+  "findings": []
+}

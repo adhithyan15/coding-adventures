@@ -1,0 +1,21 @@
+{
+  "chapter": 447,
+  "title": "Fields on the Way Home",
+  "label": "ch:sa-fields-on-the-way-home",
+  "canDo": "I can describe the fields and the harvest on the road home.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-R447-review-final-447",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can describe the fields and the harvest on the road home.",
+    "assesses": [
+      "SA-LEX-C447-KEDARA447-01",
+      "SA-LEX-C447-KEDARA447-02",
+      "SA-LEX-C447-KEDARA447-03",
+      "SA-LEX-C447-KEDARA447-04",
+      "SA-LEX-C447-KEDARA447-05"
+    ]
+  }
+}

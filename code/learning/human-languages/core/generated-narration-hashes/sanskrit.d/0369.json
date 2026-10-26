@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:c18520dd420ba0c5",
+  "lessonIds": [
+    "SA-C369-bhagyam",
+    "SA-C369-daivam",
+    "SA-C369-akasmat",
+    "SA-C369-upalabhate",
+    "SA-C369-sambhavana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch369.txt",
+  "json": "sanskrit/narration/ch369.json",
+  "textHash": "fnv1a64:f49649028ccd5227",
+  "jsonHash": "fnv1a64:eb2147499dc83bad",
+  "findings": []
+}

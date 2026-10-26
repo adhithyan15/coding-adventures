@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "The Big Match",
+  "label": "ch:sa-the-big-match",
+  "canDo": "I can talk about a match and who won it.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C524-praharati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can talk about a match and who won it.",
+    "assesses": [
+      "SA-LEX-C524-SPARDHA524-03",
+      "SA-LEX-C524-SPARDHA524-04",
+      "SA-LEX-C524-SPARDHA524-05"
+    ]
+  }
+}

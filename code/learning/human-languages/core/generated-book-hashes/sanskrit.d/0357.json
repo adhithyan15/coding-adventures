@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:cded39a2bb2c6609",
+  "lessonIds": [
+    "SA-C357-samitih",
+    "SA-C357-parisad",
+    "SA-C357-pramukhah",
+    "SA-C357-sacivah",
+    "SA-C357-nirdisati"
+  ],
+  "tex": "sanskrit/book/chapters/ch357-a-committee-meets.tex"
+}

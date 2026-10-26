@@ -1,0 +1,11 @@
+{
+  "id": "SA-C373-anivaryah",
+  "pathSegment": "SA-PATH-373-ANUMATI373",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-373-ANUMATI373",
+      "order": 4
+    }
+  ]
+}

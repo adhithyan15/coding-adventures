@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:460a3842441fc370",
+  "lessonIds": [
+    "SA-C459-avajna",
+    "SA-C459-avamanyate",
+    "SA-C459-tiraskaroti",
+    "SA-C459-adarah",
+    "SA-C459-manah"
+  ],
+  "tex": "sanskrit/book/chapters/ch459-respect-and-contempt.tex"
+}
