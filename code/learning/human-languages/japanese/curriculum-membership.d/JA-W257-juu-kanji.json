@@ -1,0 +1,11 @@
+{
+  "id": "JA-W257-juu-kanji",
+  "pathSegment": "JA-PATH-257-TRAVEL257",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-257-TRAVEL257",
+      "order": 3
+    }
+  ]
+}

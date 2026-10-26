@@ -1,0 +1,21 @@
+{
+  "chapter": 251,
+  "title": "Tomorrow, and What I Will Not Do",
+  "label": "ch:ja-tomorrow-and-what-i-will-not-do",
+  "canDo": "I can say what I will do with a time word and the non-past (ashita ikimasu), what I will not do and did not do, plainly (ikanai, ikanakatta), and what something became (naru).",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "JA-R251-tomorrow-and-not",
+    "kind": "production",
+    "summary": "Complete JA-R251-tomorrow-and-not: say what you will and will not do, and what something became.",
+    "assesses": [
+      "JA-GRAMMAR-C251-FUTURE-01",
+      "JA-GRAMMAR-C251-NAI-01",
+      "JA-GRAMMAR-C251-FUTURE-02",
+      "JA-GRAMMAR-C251-NAI-02",
+      "JA-LEX-C251-NARU-01"
+    ]
+  }
+}

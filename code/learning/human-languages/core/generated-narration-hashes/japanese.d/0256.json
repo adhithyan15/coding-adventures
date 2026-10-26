@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:c143865a8e2175c0",
+  "lessonIds": [
+    "JA-C256-dou-yatte",
+    "JA-C256-mai",
+    "JA-C256-kippu-o-nimai",
+    "JA-C256-nihonjin",
+    "JA-W256-jin-kanji",
+    "JA-R256-which-way-to-the-station"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "japanese/narration/ch256.txt",
+  "json": "japanese/narration/ch256.json",
+  "textHash": "fnv1a64:13724a041b46778a",
+  "jsonHash": "fnv1a64:b5e11456e13baf17",
+  "findings": []
+}

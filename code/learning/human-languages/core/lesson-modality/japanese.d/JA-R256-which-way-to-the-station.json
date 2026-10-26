@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R256-which-way-to-the-station",
+    "language": "japanese",
+    "chapter": 256,
+    "sequence": 15350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7425f68e5a0ce13"
+  },
+  "findings": []
+}

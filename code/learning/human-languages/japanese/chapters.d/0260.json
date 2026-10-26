@@ -1,0 +1,21 @@
+{
+  "chapter": 260,
+  "title": "If It Rains",
+  "label": "ch:ja-if-it-rains",
+  "canDo": "I can say what will happen if something happens (ame ga futtara, ikimasen), what I will do once something happens (eki ni tsuitara), and ask what someone will do if (moshi … -tara, dō shimasu ka).",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-R260-if-it-rains",
+    "kind": "production",
+    "summary": "Complete JA-R260-if-it-rains: say what you will do if it rains, and once you arrive.",
+    "assesses": [
+      "JA-GRAMMAR-C260-TARA-01",
+      "JA-LEX-C260-MOSHI-01",
+      "JA-GRAMMAR-C260-TARA-02",
+      "JA-GRAMMAR-C260-IF-01",
+      "JA-GRAMMAR-C260-IF-02"
+    ]
+  }
+}

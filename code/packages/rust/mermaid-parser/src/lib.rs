@@ -14033,6 +14033,8 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     cursor.skip_terminators();
 
     let mut title = None;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
     let mut nodes = Vec::new();
     let mut node_indices = HashMap::new();
     let mut groups = Vec::new();
@@ -14044,6 +14046,33 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
             "TITLE" => {
                 let value = cursor.advance().value.clone();
                 title = Some(value.trim_start_matches("title").trim().to_string());
+            }
+            "ACC_TITLE" => {
+                accessibility_title = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+            }
+            "ACC_DESCR" => {
+                accessibility_description = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+            }
+            "ACC_DESCR_BLOCK" => {
+                let value = cursor.advance().value.clone();
+                let open = value.find('{').expect("C4 accessibility block requires '{'");
+                let close = value.rfind('}').expect("C4 accessibility block requires '}'");
+                accessibility_description = Some(
+                    value[open + 1..close]
+                        .lines()
+                        .map(str::trim)
+                        .filter(|line| !line.is_empty())
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                );
             }
             "DIRECTION" | "CONFIG_MACRO" => {
                 cursor.advance();
@@ -14148,8 +14177,8 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
         architecture_config: None,
         render_config: Default::default(),
         title,
-        accessibility_title: None,
-        accessibility_description: None,
+        accessibility_title,
+        accessibility_description,
         direction: None,
         alignments: Vec::new(),
         nodes,
