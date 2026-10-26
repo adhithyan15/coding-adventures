@@ -78,12 +78,46 @@ assert!(resolver.resolve("Definitely-Not-A-Real-Tag").is_none());
 |--------------------------------|------------------------------------------------------|
 | `DependencyNotFound`           | a name in `[dependencies]` was not in any search path |
 | `BadDependencyManifest`        | dependency's `mosaic-package.toml` failed to parse   |
+| `VersionMismatch`              | dependency's `[package].version` fails the declared requirement |
 | `DuplicateExport`              | two dependencies export the same component name     |
 | `Io`                           | filesystem read error                                |
 
 Unknown-tag-at-resolve-time is **not** an error — `resolve()` returns
 `None` and lets the *compiler* decide what to do (typically: emit a
 "no such component `Foo` (did you mean `Bar`?)" diagnostic).
+
+## Version requirements
+
+A `[dependencies]` value is checked, not ignored
+(mosaic-package-publishing-v1 §7.4). A bare `"0.16.0"` is a caret
+requirement (`>=0.16.0, <0.17.0`; `>=1.2.3, <2.0.0` from 1.0.0 on) and
+`"=0.16.0"` is exact; `mosaic-package-manifest` refuses every other form.
+The resolver compares the requirement with the `[package].version` of the
+package it actually found, and fails on a miss:
+
+```text
+task-app requires mosaic-pkg-toolkit "0.15.0" (>=0.15.0, <0.16.0), but found
+mosaic-pkg-toolkit 0.16.0 at …/mosaic-pkg-toolkit; help: update the
+requirement in …/task-app/mosaic-package.toml
+```
+
+Both locators check:
+
+- `build()` checks the consumer's direct dependencies
+  (`ResolveError::VersionMismatch`).
+- `LayoutPackageResolver` checks the `[dependencies]` of every package it
+  inlines from, and `check_dependencies(&manifest, &path)` checks the
+  consumer itself (`LayoutResolveError::VersionMismatch`). A declared
+  dependency missing from the search path is not a version error there;
+  a layout that references it still fails with `PackageNotFound`.
+
+Lookup is by name, so a build holds one version of each package and every
+requirer is checked against it. The `every_repository_requirement_is_satisfied`
+test walks every `mosaic-package.toml` in the repository and runs both
+checks, so a stale requirement fails this crate's tests with the file to
+fix. (The build tool reruns those tests only when this crate or its
+dependencies change; a package build reaches the same check through
+`mosaic-package-artifact-builder`.)
 
 ## Kernel set
 

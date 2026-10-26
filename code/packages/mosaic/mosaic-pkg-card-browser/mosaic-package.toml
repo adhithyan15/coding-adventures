@@ -8,7 +8,7 @@ license = "MIT OR Apache-2.0"
 exports = ["CardBrowser"]
 
 [dependencies]
-mosaic-pkg-toolkit = "0.11.0"
+mosaic-pkg-toolkit = "0.16.0"
 
 [kernel]
 version = "1"

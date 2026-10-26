@@ -2004,7 +2004,7 @@ fn handle_type_assert(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
 /// (= +2⁶³) therefore rejects 2⁶³ and above; the largest accepted value is the
 /// greatest integral `f64` strictly below 2⁶³.  (`t as i64` for an in-range
 /// integral `t` is exact — Rust's saturating cast never fires here.)
-fn real_to_i64_checked(t: f64) -> Result<i64, VMError> {
+pub fn real_to_i64_checked(t: f64) -> Result<i64, VMError> {
     if !t.is_finite() {
         return Err(VMError::Custom(
             "real_to_int: operand is not finite".into(),

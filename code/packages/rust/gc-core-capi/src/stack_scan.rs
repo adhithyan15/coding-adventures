@@ -204,15 +204,22 @@ unsafe fn spill_and_sp(buf: *mut usize) -> usize {
 // **Frame-pointer dependency.** This reads whatever the register holds; it is a
 // valid chain anchor only if the compiler maintains a frame pointer for the collect
 // entry. That is guaranteed on `aarch64-apple-darwin` (the Apple ABI mandates the
-// `x29` chain) and holds under Rust's current x86-64-host defaults, but is *not*
-// enforced by this crate's build. While **no stack maps are registered** a bogus
+// `x29` chain), but NOT by Rust's x86-64 defaults: a `--release` build omits the
+// frame pointer, and `rbp` then still holds the *caller's* frame pointer (rustc
+// 1.97), or any value at all. `twig-aot`'s build therefore compiles the embedded
+// archive with `-Cforce-frame-pointers=yes`; any other embedder that registers
+// stack maps must do the same. That is enough on SysV x86-64 and AArch64
+// only: on Windows x64 LLVM sets `rbp` with `lea rbp, [rsp+N]` even under
+// the flag, so `[rbp]` is not a saved-rbp record and the precise walk stays
+// unreliable there (the Windows precise-GC smoke tests remain skipped). A
+// frame-building trampoline on the collect entries would fix every ABI. While **no stack maps are registered** a bogus
 // anchor is still safe: `build_precise_roots` then classifies every frame
 // conservatively and its regions tile all of `[sp, base)`, so precise collection
 // degrades to exactly `__gc_collect`. Once maps ARE registered, a valid frame
 // pointer becomes load-bearing for safety (a garbage anchor whose `[fp+8]` aliased a
 // stale return address into a mapped function could exclude a live span) — so the
 // backend-record-emission rung must build this crate with `-Cforce-frame-pointers`
-// (or rely on the aarch64 ABI guarantee). Tracked as a prerequisite of that rung.
+// (or rely on the aarch64 ABI guarantee); `twig-aot/build.rs` does.
 
 #[cfg(target_arch = "aarch64")]
 #[inline(always)]
