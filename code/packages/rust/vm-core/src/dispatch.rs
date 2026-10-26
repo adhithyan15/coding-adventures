@@ -418,13 +418,14 @@ fn handle_i64_mod_floor(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Optio
 
 /// `trap "<kind>"` — terminate the program with a LANG83 trap.
 ///
-/// The kind must be in the closed table (`exception_kind::is_registered_trap_kind`);
+/// The kind must be in the closed table (`exception_kind::is_trap_kind`, the
+/// seven built-in `Trap.*` leaves; LANG83 PR7d retired language kinds);
 /// anything else is malformed IR and reported as such rather than as a trap.
 /// Every VM output builtin flushes as it writes, so "flush, then trap" holds
 /// with nothing to do here.
 fn handle_trap(_ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     match instr.srcs.first() {
-        Some(Operand::Str(kind)) if interpreter_ir::exception_kind::is_registered_trap_kind(kind) => {
+        Some(Operand::Str(kind)) if interpreter_ir::exception_kind::is_trap_kind(kind) => {
             Err(trap(kind))
         }
         other => Err(VMError::Custom(format!(

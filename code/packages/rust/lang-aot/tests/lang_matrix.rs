@@ -29632,8 +29632,9 @@ fn javascript_rows_run_with_their_call_free_number_helpers_compiled_by_the_jit()
     }
 }
 
-/// LANG84 6e: a ReferenceError is `trap "Trap.ReferenceError"`, a closed
-/// LANG83 kind (stable id 7), so every column stops with that kind after the
+/// LANG84 6e: a ReferenceError is `trap "Trap.Unbound"`, a closed, neutral
+/// LANG83 kind (stable id 7; `Trap.ReferenceError` until LANG83 PR7d renamed
+/// it), so every column stops with that kind after the
 /// lines already written — the undeclared name and the temporal dead zone
 /// alike. These programs are not `es-number-log` corpus cases (the corpus has
 /// no failing case yet), so they are checked here rather than as `PROGRAMS`
@@ -29645,7 +29646,7 @@ fn javascript_reference_errors_trap_after_output_on_every_available_backend() {
             lang: Language::JavaScript,
             ext: "js",
             src: "console.log(1);\nconsole.log(z);\nconsole.log(2);\n",
-            expect: Expect::StdoutThenTrap("1", "Trap.ReferenceError"),
+            expect: Expect::StdoutThenTrap("1", "Trap.Unbound"),
             backends: EVERY_COLUMN,
             release: Some("es2016"),
             case: None,
@@ -29654,7 +29655,7 @@ fn javascript_reference_errors_trap_after_output_on_every_available_backend() {
             lang: Language::JavaScript,
             ext: "js",
             src: "console.log(1);\nconsole.log(a + 1);\nlet a = 2;\n",
-            expect: Expect::StdoutThenTrap("1", "Trap.ReferenceError"),
+            expect: Expect::StdoutThenTrap("1", "Trap.Unbound"),
             backends: EVERY_COLUMN,
             release: Some("es2021"),
             case: None,

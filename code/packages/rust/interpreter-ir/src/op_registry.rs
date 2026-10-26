@@ -563,7 +563,7 @@ pub fn support_from_table(table: &[(&str, OpSupport)], name: &str) -> OpSupport 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::exception_kind::is_registered_trap_kind;
+    use crate::exception_kind::is_trap_kind;
     use std::collections::HashSet;
 
     #[test]
@@ -617,7 +617,7 @@ mod tests {
         for spec in STANDARD_OPS {
             for kind in spec.may_trap {
                 assert!(
-                    *kind == CATCH_ANY || is_registered_trap_kind(kind),
+                    *kind == CATCH_ANY || is_trap_kind(kind),
                     "{} lists unregistered trap kind {kind:?}",
                     spec.name
                 );

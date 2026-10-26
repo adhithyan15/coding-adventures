@@ -277,7 +277,7 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             // `env.__trap(<stable id>)`, so an unregistered kind has no id.
             if instr.op == "trap" {
                 let ok = matches!(instr.srcs.as_slice(),
-                    [interpreter_ir::Operand::Str(k)] if interpreter_ir::exception_kind::is_registered_trap_kind(k));
+                    [interpreter_ir::Operand::Str(k)] if interpreter_ir::exception_kind::is_trap_kind(k));
                 if !ok {
                     errors.push(format!(
                         "InvalidTrap: function {:?}, trap requires srcs = [Operand::Str(registered trap kind)], got {:?}",

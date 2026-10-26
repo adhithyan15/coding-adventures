@@ -476,8 +476,9 @@ int64_t __twig_f64_exp10(int64_t bits) {
  * (`interpreter_ir::exception_kind::trap_kind_id`): built-in kinds are 1..=7
  * in `ALL_TRAP_KINDS` order. Append-only; a Rust test
  * (`twig-aot` `runtime_trap_kind_table_matches_exception_kind`) pins this
- * array to the Rust table so the two cannot drift. Language kinds (ids from
- * 1000) are added by the PR that first emits one. */
+ * array to the Rust table so the two cannot drift. The table is closed and
+ * language-neutral: a compiler maps its language's errors onto these kinds
+ * (LANG83 PR7d retired the language-kind ids from 1000). */
 static const char *const TWIG_TRAP_KINDS[] = {
     "Trap.Bounds",    /* 1 */
     "Trap.Null",      /* 2 */
@@ -485,7 +486,7 @@ static const char *const TWIG_TRAP_KINDS[] = {
     "Trap.ConvRange", /* 4 */
     "Trap.Overflow",  /* 5 */
     "Trap.User",      /* 6 */
-    "Trap.ReferenceError", /* 7 (LANG84 6e) */
+    "Trap.Unbound",   /* 7 (LANG84 6e; `Trap.ReferenceError` before LANG83 PR7d) */
 };
 
 /* __twig_trap — LANG83 `trap kind` (and the defined traps of `i64_div_floor`

@@ -3746,10 +3746,9 @@ mod tests {
         for (i, name) in names.iter().enumerate() {
             assert_eq!(interpreter_ir::exception_kind::trap_kind_id(name), Some(i as u32 + 1));
         }
-        assert!(
-            interpreter_ir::exception_kind::LANGUAGE_TRAP_KINDS.is_empty(),
-            "a language trap kind was registered: extend __twig_trap's table for ids >= 1000"
-        );
+        // LANG83 PR7d: id 7 is `Trap.Unbound` (renamed, not renumbered), so
+        // a native trap prints the neutral name.
+        assert_eq!(names[6], "Trap.Unbound");
     }
 
     /// LANG83 PR1b end to end on the host: `write_i64` shares stdout with

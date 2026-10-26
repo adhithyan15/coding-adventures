@@ -116,7 +116,12 @@
 //! | `a + b`, `-`, `*`, `/`      | `f64_add` / `f64_sub` / `f64_mul` / `f64_div`        |
 //! | `console.log(a, b)`         | `a` and `b` evaluated first, then: print `a`, `putchar 32`, print `b`, `putchar 10` |
 //! | print `x`                   | `-0` test (below), then `call __js_write_number, x`  |
-//! | ReferenceError (TDZ or undeclared) | `trap "Trap.ReferenceError"`                  |
+//! | ReferenceError (TDZ or undeclared) | `trap "Trap.Unbound"`                         |
+//!
+//! A ReferenceError is JavaScript's name for a neutral condition, a read of
+//! a name that has no value here, so the module traps with LANG83's
+//! `Trap.Unbound` (stable id 7), the kind Python's `NameError` also maps
+//! onto. The JavaScript wording stays in this compiler (see [`run_source`]).
 //!
 //! The `f64_*` ops are IEEE-754 and never trap, so `1 / 0` is `Infinity`
 //! and `0 * -1` is `-0` on every backend. BEAM, whose floats cannot hold
@@ -206,7 +211,13 @@ const MAX_EXPRESSION_DEPTH: usize = 64;
 /// The LANG83 trap kind a ReferenceError stops the program with: reading a
 /// name that no declaration binds, or a lexical binding inside its temporal
 /// dead zone (after the script starts, before its declaration has executed).
-const REFERENCE_ERROR_TRAP: &str = interpreter_ir::exception_kind::TRAP_REFERENCE_ERROR;
+///
+/// The kind names the condition, `Trap.Unbound`, not JavaScript's exception
+/// class: the IIR is language-neutral (LANG83 PR7d renamed it from
+/// `Trap.ReferenceError`, keeping id 7). Which class a JavaScript reader
+/// would see, and V8's sentence for it, is this compiler's knowledge, kept in
+/// [`Compiled::reference_error`].
+const UNBOUND_TRAP: &str = interpreter_ir::exception_kind::TRAP_UNBOUND;
 
 /// The bytes `console.log` writes with LANG83 `putchar`: a space between
 /// arguments, a newline after the last, and the sign of `-0`.
@@ -359,8 +370,9 @@ pub fn compile_source_at(
 struct Compiled {
     module: IIRModule,
     /// The V8 wording of the ReferenceError the program stops on, if it
-    /// stops on one. The IIR only says `trap "Trap.ReferenceError"`; the
-    /// name is not an operand any backend could print. The code is
+    /// stops on one. The IIR only says `trap "Trap.Unbound"`; neither the
+    /// binding's name nor the word `ReferenceError` is an operand any
+    /// backend could print. The code is
     /// straight-line, so the first trap the compiler emitted is the one that
     /// fires, and [`run_source`] puts this message on the error it returns.
     reference_error: Option<String>,
@@ -1701,16 +1713,18 @@ pub fn run_source_at(source: &str, release: Option<&str>) -> Result<String, Java
     run_compiled(compiled)
 }
 
-/// Run a module the compiler just built. A `Trap.ReferenceError` is reported
-/// with the message the compiler recorded for it (V8's wording, naming the
-/// binding), not the bare `trap: Trap.ReferenceError` of [`run_module`].
+/// Run a module the compiler just built. A `Trap.Unbound` is reported with
+/// the message the compiler recorded for it (V8's wording, naming the
+/// binding: `ReferenceError: z is not defined`), not the bare
+/// `trap: Trap.Unbound` of [`run_module`]. This is where the neutral kind
+/// turns back into JavaScript's error class.
 fn run_compiled(compiled: Compiled) -> Result<String, JavaScriptRunError> {
     let Compiled {
         module,
         reference_error,
     } = compiled;
     run_module(module).map_err(|mut error| {
-        if error.message == format!("trap: {REFERENCE_ERROR_TRAP}") {
+        if error.message == format!("trap: {UNBOUND_TRAP}") {
             if let Some(message) = reference_error {
                 error.message = message;
             }
@@ -1726,7 +1740,7 @@ fn run_compiled(compiled: Compiled) -> Result<String, JavaScriptRunError> {
 /// of a number, which the module's own `__js_write_number` writes. The
 /// runner registers just that, into one bounded buffer in call order.
 ///
-/// A trap (`Trap.ReferenceError`) or any other VM error keeps the output
+/// A trap (`Trap.Unbound`) or any other VM error keeps the output
 /// written before it, exactly as node keeps the lines `console.log` already
 /// wrote before an uncaught exception.
 pub fn run_module(mut module: IIRModule) -> Result<String, JavaScriptRunError> {
@@ -1966,8 +1980,8 @@ impl Compiler {
     //   ----------------------------   -------------------------------------
     //   declared and initialized       read register `js.NAME`
     //   a runner global (NaN, Math…)   compile error: not implemented yet
-    //   declared later in the script   trap Trap.ReferenceError  (TDZ)
-    //   declared nowhere               trap Trap.ReferenceError
+    //   declared later in the script   trap Trap.Unbound  (JS: TDZ ReferenceError)
+    //   declared nowhere               trap Trap.Unbound  (JS: ReferenceError)
     //
     // The trap never returns, so nothing after it is emitted. The read still
     // yields a fresh (never written) register so the enclosing expression
@@ -1990,7 +2004,7 @@ impl Compiler {
         self.emit(
             "trap",
             None,
-            vec![Operand::Str(REFERENCE_ERROR_TRAP.into())],
+            vec![Operand::Str(UNBOUND_TRAP.into())],
             "void",
         );
         self.reference_error.get_or_insert(message);
@@ -2617,15 +2631,17 @@ mod tests {
         assert_eq!(instructions[0].op, "trap");
         assert_eq!(
             instructions[0].srcs,
-            vec![Operand::Str("Trap.ReferenceError".into())]
+            vec![Operand::Str("Trap.Unbound".into())]
         );
         // `main` still ends with its exit status: `const 0`, `ret`.
         assert_eq!((instructions[1].op.as_str(), instructions[2].op.as_str()), ("const", "ret"));
         // `run_module` sees only the IIR, which does not name the binding.
         let error = run_module(compile_source("console.log(8); a; let a = 1;", "tdz").unwrap()).unwrap_err();
-        assert_eq!((error.output.as_str(), error.message.as_str()), ("8\n", "trap: Trap.ReferenceError"));
-        // The trap kind is in LANG83's closed table, with its stable id.
-        assert_eq!(interpreter_ir::exception_kind::trap_kind_id(REFERENCE_ERROR_TRAP), Some(7));
+        assert_eq!((error.output.as_str(), error.message.as_str()), ("8\n", "trap: Trap.Unbound"));
+        // The trap kind is in LANG83's closed table, with its stable id, and
+        // it is the neutral kind, not JavaScript's class (LANG83 PR7d).
+        assert_eq!(interpreter_ir::exception_kind::trap_kind_id(UNBOUND_TRAP), Some(7));
+        assert_eq!(UNBOUND_TRAP, "Trap.Unbound");
     }
 
     #[test]

@@ -2616,7 +2616,7 @@ pub fn lower_iir_to_beam(
                 // `io:put_chars` has already reached it.
                 "trap" => {
                     let kind = match instr.srcs.as_slice() {
-                        [Operand::Str(k)] if interpreter_ir::exception_kind::is_registered_trap_kind(k) => k.clone(),
+                        [Operand::Str(k)] if interpreter_ir::exception_kind::is_trap_kind(k) => k.clone(),
                         other => return Err(IIRBeamError::InvalidOperand {
                             function: fn_name.clone(),
                             detail: format!("trap requires srcs = [Operand::Str(registered trap kind)], got {other:?}"),

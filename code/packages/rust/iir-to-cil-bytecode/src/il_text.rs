@@ -1374,7 +1374,7 @@ fn emit_method(
             // <kind>` on stderr and exits non-zero — after the flush.
             "trap" => {
                 let kind = match instr.srcs.as_slice() {
-                    [Operand::Str(k)] if interpreter_ir::exception_kind::is_registered_trap_kind(k) => k,
+                    [Operand::Str(k)] if interpreter_ir::exception_kind::is_trap_kind(k) => k,
                     other => {
                         return Err(IIRClrError::InvalidOperand {
                             function: f.name.clone(),

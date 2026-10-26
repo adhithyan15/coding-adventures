@@ -5288,7 +5288,7 @@ fn lower_function(
             // accepts the dead code after `athrow` without a StackMapTable.
             "trap" => {
                 let kind = match instr.srcs.as_slice() {
-                    [Operand::Str(k)] if interpreter_ir::exception_kind::is_registered_trap_kind(k) => k.clone(),
+                    [Operand::Str(k)] if interpreter_ir::exception_kind::is_trap_kind(k) => k.clone(),
                     other => {
                         return Err(IIRJvmError::InvalidOperand {
                             function: fname.clone(),

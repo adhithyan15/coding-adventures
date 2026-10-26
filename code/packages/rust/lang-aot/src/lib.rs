@@ -196,8 +196,8 @@ pub enum Language {
     /// `call` of the module's own `String(x)` helper, `__js_write_number`
     /// (LANG83 PR7c-js: `f64_class`/`f64_digits`/`f64_exp10` and integer
     /// code), and `putchar` (the `-` of `-0` behind an `f64_signbit` >
-    /// `f64_class` test), and a ReferenceError is
-    /// `trap "Trap.ReferenceError"`. No backend has JavaScript code.
+    /// `f64_class` test), and a ReferenceError is `trap "Trap.Unbound"`
+    /// (the neutral kind, LANG83 PR7d). No backend has JavaScript code.
     JavaScript,
 }
 
