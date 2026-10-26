@@ -22,8 +22,9 @@ What changed:
   `pkg::P::C` call site before substituting anything, against the callee's
   interface (its `.mil`), not against what its layout reads.
   - Every slot with no default must be bound under its declared name.
-  - `node` and `list<node>` slots are exempt, because the caller's children
-    fill them.
+  - Only the slot named by the layout's child mount is exempt, because the
+    caller's children fill it. Every other `node` or `list<node>` slot is
+    read as a prop, so it is required (security review, finding 1).
   - Defaulted slots keep their default, as before.
   - The walk covers the consumer's tree and, once each, every package
     component layout it reaches, including sibling references written
@@ -39,6 +40,28 @@ What changed:
 - **New variant `LayoutResolveError::Multiple`.** Every miss, plus any
   package that failed to load along the way, is reported in one error.
   A single error is still reported bare.
+- **Callee scope check (security review, findings 1 and 2).** When a
+  package component is loaded, every free name in its expressions must be a
+  declared slot, a `For` `as:`/`index:` binding in scope, or
+  `true`/`false`. The child-mount slot may be read only at the mount. The
+  new variants are `UndeclaredExpressionIdentifier` and
+  `ChildMountSlotReferenced`.
+  - The layout validator treats expressions as opaque text, so a package
+    could otherwise name a consumer value it was never given, by accident
+    or on purpose.
+  - The binding rewrite and this check now share one expression tokenizer,
+    `expression_pieces`. It reads a kebab-case NAME as one name, where the
+    old rewrite split it at the `-`; the grammar has no minus operator.
+- **Bindings come only from declared slots and emits (finding 3).** A
+  call-site prop that names neither is no longer substituted into the
+  callee. Before, `row: slot: x` turned a loop's `row.title` into
+  `x.title`. Inside a `For`, a bare name that matches the loop's binding is
+  never rewritten. Reporting such props is left to F2
+  (`UnknownSlotBinding`).
+- **Bounded error list (finding 4).** At most `MAX_REPORTED_ERRORS` (100)
+  errors are kept, and `Multiple { errors, omitted }` counts the rest:
+  "… and N more". Load errors are deduplicated through a set keyed by
+  (variant, package, component), not a linear scan of every error.
 - **A binding counts only under the slot's kebab-case name.** A
   `bodyValue:` binding never filled a `slot: body-value` prop, so it does
   not satisfy the check either.
@@ -50,12 +73,27 @@ What changed:
 - Several misses reported together; the exact message; a required slot
   the layout never reads; nested and caller-authored call sites; a
   component mounted twice; load errors reported beside misses.
-- `every_repository_layout_binds_every_required_slot` runs the check on
-  every exported layout in `code/`: 93 layouts and 57 call sites. It found
-  no consumer relying on an unbound slot. Removing JournalApp's
-  `selected-key` binding from its `RecordList` makes it fail. Before this
-  check, that omission would have built: JournalApp declares its own
-  `selected-key`, which would have been captured.
+- `every_repository_layout_binds_every_required_slot` runs the binding
+  check on every exported layout in `code/` (93 layouts, 57 call sites),
+  and the callee scope check on all 89 exports. It found no consumer
+  relying on an unbound slot, and no export with a scope error.
+  - Removing JournalApp's `selected-key` binding from its `RecordList`
+    makes it fail. Before this check, that omission would have built:
+    JournalApp declares its own `selected-key`, which would have been
+    captured.
+  - Renaming `selectedKey` to a free name in `RecordList.mll` makes it
+    fail too.
+- Security-review tests:
+  - a `node` slot read as a prop, and an unmounted `list<node>` slot, must
+    be bound;
+  - the mount slot read as a prop, and in an expression, is rejected;
+  - a free name is rejected, with an exact-message test;
+  - the names an expression may use;
+  - `slot:` to an undeclared slot inside an expression is rejected;
+  - an undeclared call-site prop is not substituted;
+  - `For` shadowing;
+  - the kebab-aware tokenizer;
+  - the cap on the error list.
 
 ### Added — a component can be mounted more than once (UI34 §5 step 4)
 

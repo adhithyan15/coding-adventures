@@ -110,12 +110,29 @@ bind `hint` at the call site, or give it a default in Card.mil
 ```
 
 - An omitted slot with a default takes the default.
-- `node` and `list<node>` slots are filled by the caller's children, so they
-  need no binding.
+- The slot that the layout's `slot: <name>` child mount names is filled by
+  the caller's children, so it needs no binding. Every other `node` or
+  `list<node>` slot is read as a prop, so it does need one.
 - An emit the call site does not forward is dropped.
+- A call-site prop that names no slot or emit of `C` is ignored. It never
+  rewrites anything.
 - Every miss in the whole tree is reported at once, as
   `LayoutResolveError::Multiple`. That includes misses inside the layouts
-  of the packages it reaches.
+  of the packages it reaches. At most 100 are listed, followed by
+  "… and N more".
+
+When a package component is loaded, its own names are checked too:
+
+- **Free names in expressions.** Every free name must be a declared slot,
+  a `For` `as:`/`index:` binding in scope, or `true`/`false`. Otherwise
+  the result is `UndeclaredExpressionIdentifier`. Without this check,
+  `If ( when: ( hint > 0 ) )` with no `slot hint` would compile, and after
+  inlining would read the consumer's `hint`.
+- **The child-mount slot.** It may be read only at the mount. A read
+  anywhere else is `ChildMountSlotReferenced`, because nothing ever binds
+  that slot by prop.
+- **Loop variables.** Inside a `For`, a name that matches the loop's
+  binding is the loop variable, and substitution leaves it alone.
 
 The check reads the interface rather than the layout, because an unbound
 name that survives substitution means a slot of the *consumer*. It was

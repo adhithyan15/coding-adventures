@@ -563,13 +563,56 @@ pub enum LayoutResolveError {
         /// offers "or give it a default" as a fix.
         defaultable: bool,
     },
+    /// A package component's expression names something that is neither
+    /// one of its slots nor a `For` binding in scope.
+    ///
+    /// ```text
+    /// // Card.mil: no `hint`       // Card.mll
+    /// component Card { … }         If ( when: ( hint > 0 ) ) { … }
+    /// ```
+    ///
+    /// The layout validator treats an expression as opaque text, so this
+    /// compiled. After inlining, the free `hint` sat in the consumer's
+    /// scope and meant whatever the consumer called `hint`: a silent
+    /// capture, and a way for a dependency to read a consumer value it was
+    /// never given.
+    UndeclaredExpressionIdentifier {
+        package: String,
+        component: String,
+        /// The free name, as written.
+        identifier: String,
+        /// The whole expression it appears in.
+        expression: String,
+    },
+    /// A package component reads its child-mount slot somewhere other than
+    /// the `slot: <name>` mount itself.
+    ///
+    /// A mount slot is filled by the caller's children, which are spliced in
+    /// at the mount, never by a prop, so it has no value anywhere else. Left
+    /// in the tree, that reference would mean the consumer's slot of the same
+    /// name. That is why the mount slot, alone among `node` and `list<node>`
+    /// slots, needs no binding at the call site.
+    ChildMountSlotReferenced {
+        package: String,
+        component: String,
+        slot: String,
+    },
     /// Several independent errors, reported together so one build shows
     /// every call site to fix rather than the first. Never nested, never
     /// empty, never a single error (that is reported bare).
     Multiple {
         errors: Vec<LayoutResolveError>,
+        /// Errors found beyond the reporting cap ([`MAX_REPORTED_ERRORS`])
+        /// and left out of `errors`.
+        omitted: usize,
     },
 }
+
+/// At most this many errors are kept in one [`LayoutResolveError::Multiple`].
+/// A layout that mounts a broken component in a large `For`-free tree can
+/// produce one error per call site; past a hundred, more lines no longer
+/// help anyone, and the rest are only counted.
+pub const MAX_REPORTED_ERRORS: usize = 100;
 
 impl std::fmt::Display for LayoutResolveError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -664,10 +707,34 @@ impl std::fmt::Display for LayoutResolveError {
                     write!(f, " (a slot of this type cannot have a default)")
                 }
             }
-            Self::Multiple { errors } => {
-                write!(f, "{} errors resolving package references:", errors.len())?;
+            Self::UndeclaredExpressionIdentifier {
+                package,
+                component,
+                identifier,
+                expression,
+            } => write!(
+                f,
+                "package `{package}` component `{component}` uses `{identifier}` in the expression `{expression}`, but `{identifier}` is neither a slot declared in {component}.mil nor a `For` binding in scope; declare the slot, or use a name that is one"
+            ),
+            Self::ChildMountSlotReferenced {
+                package,
+                component,
+                slot,
+            } => write!(
+                f,
+                "package `{package}` component `{component}` reads its child-mount slot `{slot}` outside the `slot: {slot}` mount; the caller's children fill that slot only at the mount, so it has no value anywhere else"
+            ),
+            Self::Multiple { errors, omitted } => {
+                write!(
+                    f,
+                    "{} errors resolving package references:",
+                    errors.len() + omitted
+                )?;
                 for (index, error) in errors.iter().enumerate() {
                     write!(f, "\n  {}. {error}", index + 1)?;
+                }
+                if *omitted > 0 {
+                    write!(f, "\n  … and {omitted} more")?;
                 }
                 Ok(())
             }
@@ -716,6 +783,11 @@ struct ResolvedComponent {
     /// required-binding check reads this, never the layout (§ "Required
     /// bindings" below).
     slots: Vec<mosmodel_compiler::SlotDecl>,
+    /// The names of the emits its `.mil` declares.
+    emits: Vec<String>,
+    /// The slot its layout's `slot: <name>` child mount names, if it has
+    /// one. The only slot a call site fills with children instead of a prop.
+    child_mount: Option<String>,
 }
 
 impl LayoutPackageResolver {
@@ -816,9 +888,20 @@ impl LayoutPackageResolver {
         target.props = resolved.layout.root.props;
         target.children = resolved.layout.root.children;
 
+        // Only props that name one of the callee's slots or emits become
+        // bindings. Any other call-site prop names nothing in the callee, so
+        // substituting it could only rewrite a name it does not own (a `For`
+        // binding, say). Reporting such props is F2's `UnknownSlotBinding`.
+        let declared: Vec<LayoutProp> = call_props
+            .into_iter()
+            .filter(|prop| {
+                resolved.slots.iter().any(|slot| slot.name == prop.name)
+                    || resolved.emits.iter().any(|emit| emit == &prop.name)
+            })
+            .collect();
         let mut bindings = resolved.default_bindings;
-        bindings.extend(build_binding_map(&call_props));
-        rewrite_bindings(target, &bindings);
+        bindings.extend(build_binding_map(&declared));
+        rewrite_bindings(target, &bindings, &HashSet::new());
         fold_constant_conditionals(target);
 
         let exports = self.package_exports(pkg)?;
@@ -916,10 +999,32 @@ impl LayoutPackageResolver {
                 detail: format!("{errs:?}"),
             })?;
 
+        // The layout validator treats an expression as opaque text and
+        // allows a mount slot to be read anywhere, so both are checked here,
+        // once per component, before the layout is ever inlined.
+        let child_mount = find_child_mount(&layout_out.def.root);
+        let scope_errors = check_callee_scope(
+            pkg,
+            comp,
+            &layout_out.def.root,
+            &mosmodel_out.component.slots,
+            child_mount.as_deref(),
+        );
+        if let Some(error) = combine_errors(scope_errors, 0) {
+            return Err(error);
+        }
+
         let resolved = ResolvedComponent {
             layout: layout_out.def,
             default_bindings: build_default_binding_map(&mosmodel_out.component.slots),
             slots: mosmodel_out.component.slots,
+            emits: mosmodel_out
+                .component
+                .emits
+                .iter()
+                .map(|emit| emit.name.clone())
+                .collect(),
+            child_mount,
         };
         self.cache.lock().unwrap().insert(key, resolved.clone());
         Ok(resolved)
@@ -964,6 +1069,8 @@ impl LayoutPackageResolver {
     fn check_required_bindings(&self, layout: &LayoutDef) -> Result<(), LayoutResolveError> {
         let mut walk = BindingCheck {
             errors: Vec::new(),
+            omitted: 0,
+            loads_reported: HashSet::new(),
             checked: HashSet::new(),
         };
         let scope = CallScope {
@@ -973,11 +1080,9 @@ impl LayoutPackageResolver {
         let mut path = Vec::new();
         self.check_tree(&layout.root, None, &scope, &mut path, &mut walk);
 
-        let mut errors = walk.errors;
-        match errors.len() {
-            0 => Ok(()),
-            1 => Err(errors.remove(0)),
-            _ => Err(LayoutResolveError::Multiple { errors }),
+        match combine_errors(walk.errors, walk.omitted) {
+            None => Ok(()),
+            Some(error) => Err(error),
         }
     }
 
@@ -996,7 +1101,12 @@ impl LayoutPackageResolver {
         if let Some((pkg, comp)) = scope.call_target(node) {
             match self.resolve_component(&pkg, &comp) {
                 Ok(resolved) => {
-                    for slot in missing_required_slots(&resolved.slots, &node.props) {
+                    let missing = missing_required_slots(
+                        &resolved.slots,
+                        resolved.child_mount.as_deref(),
+                        &node.props,
+                    );
+                    for slot in missing {
                         walk.push(LayoutResolveError::SlotBindingMissing {
                             consumer: scope.consumer.clone(),
                             package: pkg.clone(),
@@ -1014,7 +1124,7 @@ impl LayoutPackageResolver {
                         self.check_component_layout(&pkg, &comp, &resolved.layout, walk);
                     }
                 }
-                Err(error) => walk.push(error),
+                Err(error) => walk.push_load(error, &pkg, &comp),
             }
         }
 
@@ -1040,7 +1150,7 @@ impl LayoutPackageResolver {
         let exports = match self.package_exports(pkg) {
             Ok(exports) => exports,
             Err(error) => {
-                walk.push(error);
+                walk.push_load(error, pkg, comp);
                 return;
             }
         };
@@ -1198,20 +1308,96 @@ fn build_default_binding_map(
 
 /// What the required-binding walk has found so far.
 struct BindingCheck {
-    /// Every error, in walk order, without duplicates.
+    /// The errors kept, in walk order, at most [`MAX_REPORTED_ERRORS`].
     errors: Vec<LayoutResolveError>,
+    /// How many more were found past the cap.
+    omitted: usize,
+    /// The load failures already recorded, keyed by
+    /// [`load_error_key`]: (variant, package, component).
+    loads_reported: HashSet<(&'static str, String, String)>,
     /// The package components whose own layouts have been checked.
     checked: HashSet<(String, String)>,
 }
 
 impl BindingCheck {
-    /// Record `error` unless it is already recorded. A package that cannot
-    /// be found is reached from every call site that names it, and one
-    /// report is enough.
+    /// Record `error`, or count it once the cap is reached. A `Multiple`
+    /// is flattened so the result is never nested.
+    ///
+    /// Misses need no deduplication: each component layout is walked once
+    /// and each call-site path is unique within it, so the same miss
+    /// cannot be found twice.
     fn push(&mut self, error: LayoutResolveError) {
-        if !self.errors.contains(&error) {
-            self.errors.push(error);
+        match error {
+            LayoutResolveError::Multiple { errors, omitted } => {
+                for error in errors {
+                    self.push(error);
+                }
+                self.omitted += omitted;
+            }
+            error if self.errors.len() < MAX_REPORTED_ERRORS => self.errors.push(error),
+            _ => self.omitted += 1,
         }
+    }
+
+    /// Record a failure to load `pkg::comp` (or its package), once. A
+    /// package that cannot be found is reached from every call site that
+    /// names it, and one report is enough. A set lookup, not a scan of
+    /// `errors`, so the cost does not grow with the error count.
+    fn push_load(&mut self, error: LayoutResolveError, pkg: &str, comp: &str) {
+        if self
+            .loads_reported
+            .insert(load_error_key(&error, pkg, comp))
+        {
+            self.push(error);
+        }
+    }
+}
+
+/// The identity of a load failure: which variant, and the package and
+/// component it is about. Variants that name a package or component use
+/// their own fields, so a missing package is one failure whichever of its
+/// components was asked for. Anything else (a component whose layout failed
+/// its scope check, say) is keyed by the component that was requested.
+fn load_error_key(
+    error: &LayoutResolveError,
+    pkg: &str,
+    comp: &str,
+) -> (&'static str, String, String) {
+    use LayoutResolveError as E;
+    match error {
+        E::PackageNotFound { package } => ("PackageNotFound", package.clone(), String::new()),
+        E::ManifestParseError { package, .. } => {
+            ("ManifestParseError", package.clone(), String::new())
+        }
+        E::ComponentNotExported {
+            package, component, ..
+        } => ("ComponentNotExported", package.clone(), component.clone()),
+        E::ComponentSourceMissing {
+            package, component, ..
+        } => ("ComponentSourceMissing", package.clone(), component.clone()),
+        E::NestedCompileError {
+            package, component, ..
+        } => ("NestedCompileError", package.clone(), component.clone()),
+        E::IoError {
+            package, component, ..
+        } => ("IoError", package.clone(), component.clone()),
+        E::SymlinkEscape {
+            package, component, ..
+        } => ("SymlinkEscape", package.clone(), component.clone()),
+        _ => ("Component", pkg.to_string(), comp.to_string()),
+    }
+}
+
+/// `errors` as one error: `None` when empty, the error itself when there is
+/// one and nothing was omitted, otherwise a `Multiple`.
+fn combine_errors(
+    mut errors: Vec<LayoutResolveError>,
+    omitted: usize,
+) -> Option<LayoutResolveError> {
+    match (errors.len(), omitted) {
+        (0, 0) => None,
+        (1, 0) => Some(errors.remove(0)),
+        _ => Some(LayoutResolveError::Multiple { errors, omitted }),
     }
 }
 
@@ -1260,9 +1446,13 @@ fn call_site_segment(node: &LayoutNode, position: Option<usize>) -> String {
 /// The required slots of `slots` that `call_props` does not bind, in
 /// declaration order.
 ///
-/// A slot is required when it has no default (UI13 §1), except a `node` or
-/// `list<node>` slot: that is filled by the caller's children, never by a
-/// prop, and an unfilled child mount is removed (UI29-2).
+/// A slot is required when it has no default (UI13 §1), except the one slot
+/// the layout's child mount names (`child_mount`): that is filled by the
+/// caller's children, never by a prop, and an unfilled mount is removed
+/// (UI29-2). Any other `node` or `list<node>` slot is read as a prop
+/// (`HostSurface ( content: slot: content-surface )`), so children cannot
+/// fill it and it is required like any other. `check_callee_scope`
+/// guarantees the mount slot is read nowhere but the mount.
 ///
 /// A prop binds a slot only under the slot's declared (kebab-case) name.
 /// `build_binding_map` also files each binding under its camelCase
@@ -1275,10 +1465,12 @@ fn call_site_segment(node: &LayoutNode, position: Option<usize>) -> String {
 /// slot title : text ;         bound as  title: "Inbox"      → bound
 /// slot hint  : text ;         not bound                     → MISSING
 /// slot tone  : text = "" ;    not bound                     → default, fine
-/// slot body  : list<node> ;   not bound                     → mount, fine
+/// slot body  : list<node> ;   not bound, the mount's slot   → children, fine
+/// slot icon  : node ;         not bound, read as a prop     → MISSING
 /// ```
 fn missing_required_slots<'a>(
     slots: &'a [mosmodel_compiler::SlotDecl],
+    child_mount: Option<&str>,
     call_props: &[LayoutProp],
 ) -> Vec<&'a mosmodel_compiler::SlotDecl> {
     let bound: HashSet<&str> = call_props.iter().map(|prop| prop.name.as_str()).collect();
@@ -1286,20 +1478,10 @@ fn missing_required_slots<'a>(
         .iter()
         .filter(|slot| {
             slot.required
-                && !is_child_content_slot(&slot.r#type)
+                && Some(slot.name.as_str()) != child_mount
                 && !bound.contains(slot.name.as_str())
         })
         .collect()
-}
-
-/// `node` and `list<node>`: slots the caller fills with children.
-fn is_child_content_slot(slot_type: &mosmodel_compiler::SlotType) -> bool {
-    use mosmodel_compiler::{ListInnerType, SlotType};
-    match slot_type {
-        SlotType::Node => true,
-        SlotType::List(inner) => matches!(**inner, ListInnerType::Node),
-        _ => false,
-    }
 }
 
 /// The slot types that can declare a default today (UI13 §5 rule 3;
@@ -1312,7 +1494,15 @@ fn is_defaultable(slot_type: &mosmodel_compiler::SlotType) -> bool {
     )
 }
 
-fn rewrite_bindings(node: &mut LayoutNode, bindings: &HashMap<String, LayoutPropValue>) {
+/// Rewrite the callee's slot and emit references in `node`'s subtree to
+/// the values in `bindings`. `shadowed` holds the `For` bindings (`as:`,
+/// `index:`) in scope: a bare name in an expression that matches one is the
+/// loop variable, not a slot, and is left alone ("For wins", UI29 §3.4).
+fn rewrite_bindings(
+    node: &mut LayoutNode,
+    bindings: &HashMap<String, LayoutPropValue>,
+    shadowed: &HashSet<String>,
+) {
     // Dependency events are private unless the call site forwards them. Leaving
     // an omitted emit here leaks its name into the consuming component's scope.
     // Caller-authored child content is spliced in after this traversal.
@@ -1333,7 +1523,7 @@ fn rewrite_bindings(node: &mut LayoutNode, bindings: &HashMap<String, LayoutProp
                 }
             }
             LayoutPropValue::Expr(text) => {
-                let rewritten = rewrite_expression_bindings(text, bindings);
+                let rewritten = rewrite_expression_bindings(text, bindings, shadowed);
                 if rewritten != *text {
                     prop.value = LayoutPropValue::Expr(rewritten);
                 }
@@ -1341,9 +1531,27 @@ fn rewrite_bindings(node: &mut LayoutNode, bindings: &HashMap<String, LayoutProp
             _ => {}
         }
     }
+    let inner = for_scope(node, shadowed);
     for child in &mut node.children {
-        rewrite_bindings(child, bindings);
+        rewrite_bindings(child, bindings, &inner);
     }
+}
+
+/// The names in scope for `node`'s children: `scope`, plus the `as:` and
+/// `index:` names when `node` is a `For`. A `For`'s own props (`each:`) are
+/// evaluated outside it, so only its children see them.
+fn for_scope(node: &LayoutNode, scope: &HashSet<String>) -> HashSet<String> {
+    let mut inner = scope.clone();
+    if node.tag == "For" {
+        for prop in &node.props {
+            if let ("as" | "index", LayoutPropValue::Keyword(name)) =
+                (prop.name.as_str(), &prop.value)
+            {
+                inner.insert(name.clone());
+            }
+        }
+    }
+    inner
 }
 
 /// Resolve `If`/`Else` pairs whose condition became a literal during binding.
@@ -1430,12 +1638,63 @@ fn literal_condition(node: &LayoutNode) -> Option<bool> {
     }
 }
 
-fn rewrite_expression_bindings(expr: &str, bindings: &HashMap<String, LayoutPropValue>) -> String {
-    let mut out = String::with_capacity(expr.len());
-    let bytes = expr.as_bytes();
-    let mut i = 0;
-    let mut prev_non_ws: Option<u8> = None;
+// ---------------------------------------------------------------------------
+// Expression names
+// ---------------------------------------------------------------------------
+//
+// A layout expression reaches the resolver as text: the moslayout compiler
+// joins its tokens with spaces (`reconstruct_expr_text`). The grammar
+// (`moslayout.grammar`, `primary`) allows exactly these operands:
+//
+//   slot: NAME   emit: NAME   NAME   NUMBER   STRING   ( expr )
+//
+// and the operators `|| && == != < <= > >= !`, member access `.NAME` and
+// index `[expr]`. There is no arithmetic, so a `-` can only be part of a
+// kebab-case NAME (`selected-index`). There are no calls, and the only
+// word literals are `true` and `false`.
+//
+// Both the binding rewrite and the scope check read the text through
+// `expression_pieces`, so they always agree on what a name is.
 
+/// What a name in an expression is, from where it stands.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum NameRole {
+    /// After `.`: a member of the value before it (`item.title`).
+    Member,
+    /// The word `slot` or `emit` of a `slot: x` / `emit: x` operand.
+    RefKeyword,
+    /// The `x` of `slot: x`.
+    SlotRef,
+    /// The `x` of `emit: x`.
+    EmitRef,
+    /// A bare operand: a slot, a `For` binding, or `true`/`false`.
+    Bare,
+}
+
+/// One piece of expression text.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ExprPiece<'a> {
+    /// A string literal, quotes included. Its contents are never names.
+    Str(&'a str),
+    /// A name and its role.
+    Name(&'a str, NameRole),
+    /// Anything else, one character at a time: operators, digits,
+    /// brackets, whitespace.
+    Other(&'a str),
+}
+
+/// Split expression text into pieces.
+///
+/// ```text
+/// item.title == slot: selected-key && !done
+/// └─┬┘│└─┬─┘    └┬─┘  └─────┬────┘     └┬─┘
+///  Bare│ Member RefKeyword SlotRef     Bare
+///      Other
+/// ```
+fn expression_pieces(expr: &str) -> Vec<ExprPiece<'_>> {
+    let bytes = expr.as_bytes();
+    let mut pieces = Vec::new();
+    let mut i = 0;
     while i < bytes.len() {
         let b = bytes[i];
         if b == b'"' {
@@ -1447,49 +1706,237 @@ fn rewrite_expression_bindings(expr: &str, bindings: &HashMap<String, LayoutProp
                 i += 1;
                 if escaped {
                     escaped = false;
-                    continue;
-                }
-                if c == b'\\' {
+                } else if c == b'\\' {
                     escaped = true;
-                    continue;
-                }
-                if c == b'"' {
+                } else if c == b'"' {
                     break;
                 }
             }
-            out.push_str(&expr[start..i]);
-            prev_non_ws = Some(b'"');
+            pieces.push(ExprPiece::Str(&expr[start..i]));
             continue;
         }
-
         if is_identifier_start(b) {
             let start = i;
             i += 1;
-            while i < bytes.len() && is_identifier_continue(bytes[i]) {
-                i += 1;
-            }
-            let ident = &expr[start..i];
-            if prev_non_ws != Some(b'.') {
-                if let Some(value) = bindings.get(ident) {
-                    out.push_str(&layout_prop_value_as_expression(value));
-                } else {
-                    out.push_str(ident);
+            loop {
+                while i < bytes.len() && is_identifier_continue(bytes[i]) {
+                    i += 1;
                 }
-            } else {
-                out.push_str(ident);
+                // `-` followed by a letter continues a kebab-case NAME.
+                if i + 1 < bytes.len() && bytes[i] == b'-' && bytes[i + 1].is_ascii_alphabetic() {
+                    i += 1;
+                    continue;
+                }
+                break;
             }
-            prev_non_ws = Some(bytes[i - 1]);
+            pieces.push(ExprPiece::Name(&expr[start..i], NameRole::Bare));
             continue;
         }
-
-        out.push(b as char);
-        if !b.is_ascii_whitespace() {
-            prev_non_ws = Some(b);
-        }
-        i += 1;
+        // One whole character, so multi-byte text is never split.
+        let width = expr[i..].chars().next().map_or(1, char::len_utf8);
+        pieces.push(ExprPiece::Other(&expr[i..i + width]));
+        i += width;
     }
 
+    // Second pass: roles, from the significant (non-whitespace) neighbours.
+    let significant: Vec<usize> = (0..pieces.len())
+        .filter(|&k| !matches!(pieces[k], ExprPiece::Other(t) if t.trim().is_empty()))
+        .collect();
+    let text_at = |k: usize| match pieces[k] {
+        ExprPiece::Str(t) | ExprPiece::Name(t, _) | ExprPiece::Other(t) => t,
+    };
+    let mut roles: Vec<(usize, NameRole)> = Vec::new();
+    for (n, &k) in significant.iter().enumerate() {
+        let ExprPiece::Name(text, _) = pieces[k] else {
+            continue;
+        };
+        let prev = n.checked_sub(1).map(|m| text_at(significant[m]));
+        let prev2 = n.checked_sub(2).map(|m| pieces[significant[m]]);
+        let next = significant.get(n + 1).map(|&m| text_at(m));
+        let after_next = significant.get(n + 2).map(|&m| text_at(m));
+        let role = if prev == Some(".") {
+            NameRole::Member
+        } else if (text == "slot" || text == "emit") && next == Some(":") && after_next != Some(":")
+        {
+            NameRole::RefKeyword
+        } else if prev == Some(":") {
+            match prev2 {
+                Some(ExprPiece::Name("slot", _)) => NameRole::SlotRef,
+                Some(ExprPiece::Name("emit", _)) => NameRole::EmitRef,
+                _ => NameRole::Bare,
+            }
+        } else {
+            NameRole::Bare
+        };
+        roles.push((k, role));
+    }
+    for (k, role) in roles {
+        if let ExprPiece::Name(text, _) = pieces[k] {
+            pieces[k] = ExprPiece::Name(text, role);
+        }
+    }
+    pieces
+}
+
+/// Rewrite the callee's names in `expr` to their bound values.
+///
+/// A bare name or the `x` of `slot: x` is replaced when it is bound; a bare
+/// name that a `For` binding in `shadowed` covers is the loop variable and
+/// is kept. Member names, string contents and everything else are copied.
+fn rewrite_expression_bindings(
+    expr: &str,
+    bindings: &HashMap<String, LayoutPropValue>,
+    shadowed: &HashSet<String>,
+) -> String {
+    let mut out = String::with_capacity(expr.len());
+    for piece in expression_pieces(expr) {
+        match piece {
+            ExprPiece::Name(name, NameRole::Bare) if shadowed.contains(name) => out.push_str(name),
+            ExprPiece::Name(name, NameRole::Bare | NameRole::SlotRef) => match bindings.get(name) {
+                Some(value) => out.push_str(&layout_prop_value_as_expression(value)),
+                None => out.push_str(name),
+            },
+            ExprPiece::Str(text) | ExprPiece::Name(text, _) | ExprPiece::Other(text) => {
+                out.push_str(text)
+            }
+        }
+    }
     out
+}
+
+// ---------------------------------------------------------------------------
+// Callee scope check
+// ---------------------------------------------------------------------------
+//
+// Substitution can only rewrite names it knows. Two kinds of name in a
+// package layout would survive it and land in the consumer's scope:
+//
+// - a free name in an expression that is not one of the component's slots
+//   (`If ( when: ( hint > 0 ) )` with no `slot hint`). The layout validator
+//   does not look inside expressions, so it compiled;
+// - a reference to the child-mount slot anywhere but the mount. Nothing
+//   binds that slot by prop, so the reference is never rewritten.
+//
+// Either one, left in the inlined tree, means the consumer's name: capture
+// at best, a dependency reading a consumer value on purpose at worst. Both
+// are rejected when the component is loaded, before it is ever inlined.
+
+/// The slot named by `root`'s `slot: <name>` child mount, if it has one.
+/// The moslayout compiler allows at most one mount per layout.
+fn find_child_mount(root: &LayoutNode) -> Option<String> {
+    if let Some(name) = root.child_slot_name() {
+        return Some(name.to_string());
+    }
+    root.children.iter().find_map(find_child_mount)
+}
+
+/// Every scope error in package component `pkg::comp`'s layout `root`:
+/// [`LayoutResolveError::UndeclaredExpressionIdentifier`] once per free
+/// name, and [`LayoutResolveError::ChildMountSlotReferenced`] once.
+fn check_callee_scope(
+    pkg: &str,
+    comp: &str,
+    root: &LayoutNode,
+    slots: &[mosmodel_compiler::SlotDecl],
+    child_mount: Option<&str>,
+) -> Vec<LayoutResolveError> {
+    let mut scope = CalleeScope {
+        pkg,
+        comp,
+        slots,
+        child_mount,
+        errors: Vec::new(),
+        reported: HashSet::new(),
+    };
+    scope.visit(root, &HashSet::new());
+    scope.errors
+}
+
+struct CalleeScope<'a> {
+    pkg: &'a str,
+    comp: &'a str,
+    slots: &'a [mosmodel_compiler::SlotDecl],
+    child_mount: Option<&'a str>,
+    errors: Vec<LayoutResolveError>,
+    /// Names already reported, so each is reported once per component.
+    reported: HashSet<String>,
+}
+
+impl CalleeScope<'_> {
+    /// The declared slot `name` refers to, matching the kebab-case name or
+    /// its camelCase form (`selected-index` or `selectedIndex`).
+    fn slot_named(&self, name: &str) -> Option<&str> {
+        let camel = to_camel_case_first_lower(name);
+        self.slots
+            .iter()
+            .find(|slot| slot.name == name || to_camel_case_first_lower(&slot.name) == camel)
+            .map(|slot| slot.name.as_str())
+    }
+
+    fn mount_read(&mut self, slot: &str) {
+        if self.reported.insert(format!("slot:{slot}")) {
+            self.errors
+                .push(LayoutResolveError::ChildMountSlotReferenced {
+                    package: self.pkg.to_string(),
+                    component: self.comp.to_string(),
+                    slot: slot.to_string(),
+                });
+        }
+    }
+
+    fn visit(&mut self, node: &LayoutNode, loops: &HashSet<String>) {
+        let is_mount = node.is_child_slot_mount();
+        for prop in &node.props {
+            match &prop.value {
+                // The mount's own `slot: <name>` is the one legal read.
+                LayoutPropValue::SlotRef(_) if is_mount => {}
+                LayoutPropValue::SlotRef(name) if Some(name.as_str()) == self.child_mount => {
+                    self.mount_read(name)
+                }
+                LayoutPropValue::Expr(text) => self.visit_expression(text, loops),
+                _ => {}
+            }
+        }
+        let inner = for_scope(node, loops);
+        for child in &node.children {
+            self.visit(child, &inner);
+        }
+    }
+
+    fn visit_expression(&mut self, text: &str, loops: &HashSet<String>) {
+        for piece in expression_pieces(text) {
+            let ExprPiece::Name(name, role) = piece else {
+                continue;
+            };
+            let slot = match role {
+                NameRole::Member | NameRole::RefKeyword => continue,
+                // `emit:` inside an expression is validated by the emitters
+                // that accept it; it is not a value a consumer could supply.
+                NameRole::EmitRef => continue,
+                NameRole::Bare if name == "true" || name == "false" => continue,
+                NameRole::Bare if loops.contains(name) => continue,
+                NameRole::SlotRef | NameRole::Bare => self.slot_named(name),
+            };
+            match slot {
+                Some(slot) if Some(slot) == self.child_mount => {
+                    let slot = slot.to_string();
+                    self.mount_read(&slot);
+                }
+                Some(_) => {}
+                None => {
+                    if self.reported.insert(name.to_string()) {
+                        self.errors
+                            .push(LayoutResolveError::UndeclaredExpressionIdentifier {
+                                package: self.pkg.to_string(),
+                                component: self.comp.to_string(),
+                                identifier: name.to_string(),
+                                expression: text.to_string(),
+                            });
+                    }
+                }
+            }
+        }
+    }
 }
 
 fn layout_prop_value_as_expression(value: &LayoutPropValue) -> String {
@@ -2505,7 +2952,8 @@ version = "1"
         assert_eq!(
             rewrite_expression_bindings(
                 r#"i == selectedIndex && item.selectedIndex != "selectedIndex""#,
-                &bindings
+                &bindings,
+                &HashSet::new()
             ),
             r#"i == browserSelectedIndex && item.selectedIndex != "selectedIndex""#
         );
@@ -2699,7 +3147,7 @@ version = "1"
     /// The `(component, slot)` of every `SlotBindingMissing` in `error`.
     fn missing_slots(error: &LayoutResolveError) -> Vec<(String, String)> {
         let errors = match error {
-            LayoutResolveError::Multiple { errors } => errors.as_slice(),
+            LayoutResolveError::Multiple { errors, .. } => errors.as_slice(),
             single => std::slice::from_ref(single),
         };
         errors
@@ -2832,7 +3280,7 @@ version = "1"
                 pair("Card", "compact"),
             ]
         );
-        let LayoutResolveError::Multiple { errors } = &error else {
+        let LayoutResolveError::Multiple { errors, .. } = &error else {
             panic!("expected Multiple, got {error:?}");
         };
         assert!(matches!(
@@ -3003,7 +3451,7 @@ version = "1"
         );
 
         let error = resolver.resolve(&mut layout).expect_err("two misses");
-        let LayoutResolveError::Multiple { errors } = &error else {
+        let LayoutResolveError::Multiple { errors, .. } = &error else {
             panic!("expected Multiple, got {error:?}");
         };
         let sites: Vec<(&str, &str)> = errors
@@ -3083,7 +3531,7 @@ version = "1"
         );
 
         let error = resolver.resolve(&mut layout).expect_err("two errors");
-        let LayoutResolveError::Multiple { errors } = &error else {
+        let LayoutResolveError::Multiple { errors, .. } = &error else {
             panic!("expected Multiple, got {error:?}");
         };
         assert_eq!(errors.len(), 2);
@@ -3097,6 +3545,316 @@ version = "1"
             &errors[1],
             LayoutResolveError::SlotBindingMissing { slot, .. } if slot == "title"
         ));
+    }
+
+    // ---- Security review of F1: the holes F1 left open ----
+
+    /// The single error of `error`'s kind, when it is not a `Multiple`.
+    fn only(error: LayoutResolveError) -> LayoutResolveError {
+        assert!(
+            !matches!(error, LayoutResolveError::Multiple { .. }),
+            "expected one error, got {error:?}"
+        );
+        error
+    }
+
+    /// Finding 1: a `node` slot read as a prop is not filled by children,
+    /// so it is required. Here the consumer has its own `content-surface`,
+    /// the P3 shape: before, the package rendered the consumer's.
+    #[test]
+    fn a_node_slot_read_as_a_prop_must_be_bound() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot content-surface : node ; }",
+            "layout Card { HostSurface [ card-surface ] ( content : slot: content-surface ) }",
+        );
+        let mut layout = consumer_layout(
+            r#"layout ProbeApp { Column [ app-root ] {
+  HostSurface [ app-surface ] ( content : slot: content-surface )
+  pkg::mosaic-pkg-lib::Card
+} }"#,
+        );
+
+        let error = resolver
+            .resolve(&mut layout)
+            .expect_err("unbound node slot");
+        assert_eq!(missing_slots(&error), vec![pair("Card", "content-surface")]);
+    }
+
+    /// Finding 1: only the slot the mount names is exempt. A second
+    /// `list<node>` slot that is not mounted is required like any other.
+    #[test]
+    fn only_the_mounted_slot_is_exempt_from_binding() {
+        let (_tmp, resolver) = card_package(
+            r#"component Card {
+  slot children : list<node> ;
+  slot extras : list<node> ;
+}"#,
+            r#"layout Card { Column [ card ] {
+  Box [ card-body ] { slot: children }
+  For ( each: slot: extras , as: extra ) { HostSurface ( content : extra ) }
+} }"#,
+        );
+        let mut layout = consumer_layout("layout ProbeApp { pkg::mosaic-pkg-lib::Card }");
+
+        let error = resolver
+            .resolve(&mut layout)
+            .expect_err("extras is unbound");
+        assert_eq!(missing_slots(&error), vec![pair("Card", "extras")]);
+    }
+
+    /// Finding 1: the mount slot has no value outside the mount, so reading
+    /// it as a prop is rejected when the component loads.
+    #[test]
+    fn reading_the_mount_slot_as_a_prop_is_rejected() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot children : list<node> ; }",
+            r#"layout Card { Column [ card ] {
+  If ( when: slot: children ) { Box [ card-body ] { slot: children } }
+} }"#,
+        );
+        let mut layout = consumer_layout(
+            r#"layout ProbeApp { pkg::mosaic-pkg-lib::Card { Text ( content: "hi" ) } }"#,
+        );
+
+        let error = only(
+            resolver
+                .resolve(&mut layout)
+                .expect_err("mount read as prop"),
+        );
+        assert_eq!(
+            error,
+            LayoutResolveError::ChildMountSlotReferenced {
+                package: "mosaic-pkg-lib".to_string(),
+                component: "Card".to_string(),
+                slot: "children".to_string(),
+            }
+        );
+        assert!(error
+            .to_string()
+            .contains("reads its child-mount slot `children` outside the `slot: children` mount"));
+    }
+
+    /// Finding 1: the same through an expression, in either spelling.
+    #[test]
+    fn reading_the_mount_slot_in_an_expression_is_rejected() {
+        for expression in ["( !body-content )", "( slot: body-content || false )"] {
+            let (_tmp, resolver) = card_package(
+                "component Card { slot body-content : list<node> ; }",
+                &format!(
+                    "layout Card {{ Column [ card ] {{ If ( when: {expression} ) {{ Box {{ slot: body-content }} }} }} }}"
+                ),
+            );
+            let mut layout = consumer_layout("layout ProbeApp { pkg::mosaic-pkg-lib::Card }");
+
+            let error = only(resolver.resolve(&mut layout).expect_err(expression));
+            assert!(
+                matches!(&error, LayoutResolveError::ChildMountSlotReferenced { slot, .. }
+                    if slot == "body-content"),
+                "{expression}: {error:?}"
+            );
+        }
+    }
+
+    /// Finding 2: a free name in a package expression is rejected, so it can
+    /// never resolve to the consumer's `hint` (here the consumer has one).
+    #[test]
+    fn an_undeclared_expression_identifier_is_rejected() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot title : text ; }",
+            r#"layout Card { Column [ card ] {
+  Text ( content: slot: title )
+  If ( when: ( hint > 0 ) ) { Text ( content: "leak" ) }
+} }"#,
+        );
+        let mut layout = consumer_layout(
+            r#"layout ProbeApp { Column [ app-root ] {
+  Text [ app-hint ] ( content: slot: hint )
+  pkg::mosaic-pkg-lib::Card ( title: "x" )
+} }"#,
+        );
+
+        let error = only(resolver.resolve(&mut layout).expect_err("hint is free"));
+        assert_eq!(
+            error,
+            LayoutResolveError::UndeclaredExpressionIdentifier {
+                package: "mosaic-pkg-lib".to_string(),
+                component: "Card".to_string(),
+                identifier: "hint".to_string(),
+                expression: "( hint > 0 )".to_string(),
+            }
+        );
+        assert_eq!(
+            error.to_string(),
+            "package `mosaic-pkg-lib` component `Card` uses `hint` in the expression \
+             `( hint > 0 )`, but `hint` is neither a slot declared in Card.mil nor a \
+             `For` binding in scope; declare the slot, or use a name that is one"
+        );
+    }
+
+    /// Finding 2: what an expression may name. Slots in either spelling and
+    /// through `slot:`, `For` bindings of every enclosing loop (but not of a
+    /// sibling loop), `true`/`false`, members after `.`, string contents and
+    /// numbers. Each free name is reported once, in order.
+    #[test]
+    fn the_expression_scope_check_admits_exactly_the_grammar_s_names() {
+        let (_tmp, resolver) = card_package(
+            r#"component Card {
+  slot rows : list<list<text>> ;
+  slot selected-key : text ;
+  slot count : number ;
+}"#,
+            r#"layout Card { Column [ card ] {
+  For ( each: slot: rows , as: row , index: r ) {
+    For ( each: slot: rows , as: inner ) {
+      If ( when: ( row[0] == selectedKey && inner.size != "ghost" && r > 1.5 ) ) { Text ( content: "a" ) }
+      If ( when: ( slot: selected-key == "x" || selected-key == count || true ) ) { Text ( content: "b" ) }
+    }
+  }
+  If ( when: ( inner == ghost || ghost != false || row.title ) ) { Text ( content: "c" ) }
+} }"#,
+        );
+        let mut layout = consumer_layout(
+            r#"layout ProbeApp { pkg::mosaic-pkg-lib::Card ( rows: slot: r , selected-key: "k" , count: 1 ) }"#,
+        );
+
+        let error = resolver.resolve(&mut layout).expect_err("three free names");
+        let LayoutResolveError::Multiple { errors, omitted: 0 } = &error else {
+            panic!("expected Multiple, got {error:?}");
+        };
+        let names: Vec<&str> = errors
+            .iter()
+            .map(|error| match error {
+                LayoutResolveError::UndeclaredExpressionIdentifier { identifier, .. } => {
+                    identifier.as_str()
+                }
+                other => panic!("expected UndeclaredExpressionIdentifier, got {other:?}"),
+            })
+            .collect();
+        // `inner` and `row` are out of their loops here; `ghost` is free
+        // twice but reported once.
+        assert_eq!(names, vec!["inner", "ghost", "row"]);
+    }
+
+    /// Finding 2: `slot: x` inside an expression must name a declared slot.
+    #[test]
+    fn a_slot_ref_to_an_undeclared_slot_inside_an_expression_is_rejected() {
+        let (_tmp, resolver) = card_package(
+            "component Card { }",
+            r#"layout Card { If ( when: ( slot: hint == "x" ) ) { Text ( content: "y" ) } }"#,
+        );
+        let mut layout = consumer_layout("layout ProbeApp { pkg::mosaic-pkg-lib::Card }");
+
+        let error = only(resolver.resolve(&mut layout).expect_err("hint is free"));
+        assert!(matches!(
+            &error,
+            LayoutResolveError::UndeclaredExpressionIdentifier { identifier, .. } if identifier == "hint"
+        ));
+    }
+
+    /// Finding 3: a call-site prop that names no callee slot is not a
+    /// binding. Before, `row: slot: x` turned the loop's `row.title` into
+    /// `x.title`.
+    #[test]
+    fn an_undeclared_call_site_prop_is_not_substituted() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot rows : list<list<text>> ; }",
+            r#"layout Card { Column [ card ] {
+  For ( each: slot: rows , as: row ) {
+    If ( when: ( row.title ) ) { Text ( content: "t" ) }
+  }
+} }"#,
+        );
+        let mut layout = consumer_layout(
+            "layout ProbeApp { pkg::mosaic-pkg-lib::Card ( rows: slot: items , row: slot: x ) }",
+        );
+
+        resolver.resolve(&mut layout).expect("row: is ignored");
+        let if_node = &layout.root.children[0].children[0];
+        assert_eq!(
+            if_node.props[0].value,
+            LayoutPropValue::Expr("( row . title )".to_string())
+        );
+    }
+
+    /// Finding 3: a `For` binding shadows a slot of the same name inside its
+    /// body ("For wins", UI29 §3.4), so only the uses outside the loop are
+    /// rewritten.
+    #[test]
+    fn a_for_binding_shadows_a_bound_slot_inside_its_body() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot rows : list<text> ; slot row : text ; }",
+            r#"layout Card { Column [ card ] {
+  If ( when: ( row == "a" ) ) { Text ( content: "outside" ) }
+  For ( each: slot: rows , as: row ) {
+    If ( when: ( row == "b" ) ) { Text ( content: "inside" ) }
+  }
+} }"#,
+        );
+        let mut layout = consumer_layout(
+            "layout ProbeApp { pkg::mosaic-pkg-lib::Card ( rows: slot: items , row: slot: picked ) }",
+        );
+
+        resolver.resolve(&mut layout).expect("resolves");
+        let outside = &layout.root.children[0];
+        let inside = &layout.root.children[1].children[0];
+        assert_eq!(
+            outside.props[0].value,
+            LayoutPropValue::Expr(r#"( picked == "a" )"#.to_string())
+        );
+        assert_eq!(
+            inside.props[0].value,
+            LayoutPropValue::Expr(r#"( row == "b" )"#.to_string())
+        );
+    }
+
+    /// A kebab-case name in an expression is one name, as the grammar's
+    /// NAME token is, not `selected - index`: there is no minus operator.
+    #[test]
+    fn expression_pieces_keep_kebab_names_whole_and_assign_roles() {
+        let names: Vec<(&str, NameRole)> = expression_pieces(
+            r#"item.title == slot: selected-key && !row-x2 && emit: onPick != "a-b" && 1.5 > x"#,
+        )
+        .into_iter()
+        .filter_map(|piece| match piece {
+            ExprPiece::Name(name, role) => Some((name, role)),
+            _ => None,
+        })
+        .collect();
+        assert_eq!(
+            names,
+            vec![
+                ("item", NameRole::Bare),
+                ("title", NameRole::Member),
+                ("slot", NameRole::RefKeyword),
+                ("selected-key", NameRole::SlotRef),
+                ("row-x2", NameRole::Bare),
+                ("emit", NameRole::RefKeyword),
+                ("onPick", NameRole::EmitRef),
+                ("x", NameRole::Bare),
+            ]
+        );
+    }
+
+    /// Finding 4: at most `MAX_REPORTED_ERRORS` errors are kept; the rest are
+    /// counted and the message says how many.
+    #[test]
+    fn the_error_list_is_capped() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot a : text ; slot b : text ; slot c : text ; }",
+            "layout Card { Column [ card ] { } }",
+        );
+        let calls = "pkg::mosaic-pkg-lib::Card\n".repeat(50);
+        let mut layout = consumer_layout(&format!("layout ProbeApp {{ Column {{\n{calls}}} }}"));
+
+        let error = resolver.resolve(&mut layout).expect_err("150 misses");
+        let LayoutResolveError::Multiple { errors, omitted } = &error else {
+            panic!("expected Multiple, got {error:?}");
+        };
+        assert_eq!((errors.len(), *omitted), (MAX_REPORTED_ERRORS, 50));
+        let message = error.to_string();
+        assert!(message.starts_with("150 errors resolving package references:"));
+        assert!(message.ends_with("\n  … and 50 more"));
+        assert_eq!(message.lines().count(), 1 + MAX_REPORTED_ERRORS + 1);
     }
 
     // ---- The repository's own packages and apps ----
@@ -3140,7 +3898,9 @@ version = "1"
     }
 
     /// Every layout of every exported component in the repository binds
-    /// every required slot of every package component it mounts.
+    /// every required slot of every package component it mounts, and every
+    /// exported component passes the callee scope check (no free names in
+    /// its expressions, no read of its child-mount slot outside the mount).
     ///
     /// The latent-capture guard: before `SlotBindingMissing`, a consumer
     /// could leave a required slot unbound and still build, if it happened
@@ -3153,7 +3913,7 @@ version = "1"
     /// are covered as callees as well as consumers.
     ///
     /// When it was added, it found no layout in the repository relying on
-    /// an unbound required slot.
+    /// an unbound required slot, and no export with a scope error.
     #[test]
     fn every_repository_layout_binds_every_required_slot() {
         let code = repository_code_root();
@@ -3170,6 +3930,7 @@ version = "1"
         let packages = code.join("packages");
         let mut resolved_layouts = 0;
         let mut call_sites = 0;
+        let mut scoped_components = 0;
         let mut failures = Vec::new();
         for manifest_path in &manifests {
             let Ok(manifest) = mosaic_package_manifest::parse_path(manifest_path) else {
@@ -3184,6 +3945,18 @@ version = "1"
                 packages.join("mosaic"),
             ]);
             for component in &manifest.components.exports {
+                // Every export, mounted or not, must pass the callee scope
+                // check: it is what any future consumer would inline.
+                match resolver.resolve_component(&manifest.package.name, component) {
+                    Ok(_) => scoped_components += 1,
+                    Err(e @ LayoutResolveError::UndeclaredExpressionIdentifier { .. })
+                    | Err(e @ LayoutResolveError::ChildMountSlotReferenced { .. })
+                    | Err(e @ LayoutResolveError::Multiple { .. }) => {
+                        failures.push(format!("{}:\n  {e}", package_root.display()));
+                    }
+                    // Not compiling on its own is the package build's business.
+                    Err(_) => {}
+                }
                 // A component that does not compile on its own is its package
                 // build's failure to report; here it is skipped. The count
                 // assertions below catch a walk that skips everything.
@@ -3238,8 +4011,12 @@ version = "1"
             "expected the repository's ~57 package call sites, found {call_sites}"
         );
         assert!(
+            scoped_components >= 80,
+            "expected the repository's ~89 exports to load, loaded {scoped_components}"
+        );
+        assert!(
             failures.is_empty(),
-            "layouts with unbound required slots:\n{}",
+            "layouts with unbound required slots, or components with scope errors:\n{}",
             failures.join("\n")
         );
     }
