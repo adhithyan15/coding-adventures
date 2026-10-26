@@ -90,7 +90,8 @@ merged, while Cortex-M33 is already in review.
 | 12 | ARM7TDMI | published ARMv4T manuals | Complete locally: bounded ARMv4T ARM/Thumb integer core; all 31 physical GPRs and five SPSRs; pipeline-visible PC, bank/state exchange, checked memory and full-span control targets; exact transactional traces/lifecycle; 39 release tests; and 88.30% line coverage (1,389/1,573). Gate partner and SoC composition remain queued. |
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
-| 15 | RCA CDP1802 | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: all documented encodings except unassigned 0x68, complete COSMAC state, and explicit I/O/DMA/interrupt transaction seams; independent implementation review is next. |
+| 15 | RCA CDP1802 (`RCPU-081` / `RCPU-082`) | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: all documented encodings except unassigned 0x68, complete COSMAC state, and explicit I/O/DMA/interrupt transaction seams; independent implementation review is next. |
+| 16 | LatticeMico32 (`RCPU-083` / `RCPU-084`) | official LatticeMico32 Processor Reference Manual 3.8 plus vendor-origin open RTL at `84b3e3ca0ad9535acaef201c1482342871358b08` | `RCPU-083` functional is the next ready independent cell; `RCPU-084` gate depends on its merge and must use the pinned decoder/datapath/interrupt RTL as structural evidence. |
 
 CDP1802 is complete locally from its independently reviewed specification.
 The functional cell covers the complete register matrix, instruction table,
@@ -103,6 +104,16 @@ The local evidence is 31 release integration tests plus one doctest, including
 256-byte independent decode and execution sweeps, exhaustive 256x256x2 ALU
 relations, strict Clippy/rustdoc, lessons validation, affected BUILD, and
 87.76% line coverage (832/948).
+
+LatticeMico32 was selected after a duplicate and evidence audit found no
+pre-existing package, branch, worktree, open pull request, or merged pull
+request for LM32.
+It ranks ahead of evidence-blocked Itanium and LoongArch because Lattice
+publishes a complete programmer reference while the pinned vendor-origin fork
+retains the original decoder, register file, ALU, shifter, multiplier,
+multi-cycle divider, interrupt logic, top-level CPU, and instruction tests.
+The functional boundary is deliberately configuration-pinned; the dependent
+gate cell is not authorized to claim transistor accuracy or a complete SoC.
 
 ## Discovered follow-up work
 
