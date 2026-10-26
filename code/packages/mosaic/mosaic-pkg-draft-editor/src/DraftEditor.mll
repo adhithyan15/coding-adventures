@@ -5,7 +5,8 @@
 //                         Text      [ draft-editor-title-label ]
 //                         HostInput [ draft-editor-title ]
 //     Text  [ draft-editor-body-label ]
-//     HostInput [ draft-editor-body ]   (multiline; Ctrl/Cmd+Enter saves)
+//     HostInput [ draft-editor-body ]   (multiline; Ctrl/Cmd+Enter saves;
+//                                        placeholder: body-placeholder)
 //     Row   [ draft-editor-actions ]
 //       If (save-label)   HostButton [ draft-editor-save ]
 //       If (delete-label) HostButton [ draft-editor-delete ]
@@ -23,7 +24,10 @@
 // `onSave`, as it already ignores every event it did not wire.
 //
 // The visible label and the accessible name come from the same slot, so a
-// screen reader announces exactly what a sighted user reads.
+// screen reader announces exactly what a sighted user reads. The body's
+// placeholder is a separate slot (0.2.0) because it is a hint, not a name: it
+// disappears as soon as the user types, and "" shows none. Since EM-13 a
+// slot-bound `placeholder` lowers on every backend, the text area included.
 
 layout DraftEditor {
   Column [ draft-editor ] {
@@ -46,6 +50,7 @@ layout DraftEditor {
     )
     HostInput [ draft-editor-body ] (
       value : slot: body-value ,
+      placeholder : slot: body-placeholder ,
       multiline : true ,
       a11y-label : slot: body-label ,
       onChange : emit: onBodyChange ,
