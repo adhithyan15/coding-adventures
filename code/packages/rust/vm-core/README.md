@@ -114,9 +114,12 @@ misleading `undefined variable`. `register_count` is only a pre-allocation hint
 and is clamped (see above), so an absurd value cannot abort the process.
 
 **Register-slot budget.** The frame limit bounds one frame; all live frames of
-one call stack also share `VMCore::max_register_slots` (default 2²⁰ slots), so
+one call stack also share `VMCore::max_register_slots` (default 2²² slots), so
 the register files of an `execute` never hold more than
-`max_register_slots × size_of::<Value>()` bytes — **24 MiB** by default. Every
+`max_register_slots × size_of::<Value>()` bytes — **96 MiB** by default. The
+budget counts capacity, which doubling keeps under 2× the slots in use; the
+default leaves 8,192 slots a frame at the full 512-frame depth, so any function
+using up to 4,096 registers recurses exactly as deep as before. Every
 growth — a new name, `store_reg` past the end of the file
 (`frame.store_index(idx, v)?`), a callee frame's pre-allocation — is checked
 against it and fails with `VMError::RegisterBudgetExceeded { function, slots,
@@ -124,7 +127,8 @@ budget }`. Each frame records what the frames beneath it hold when it is
 pushed; only the top frame grows, so the sum stays exact with no bookkeeping on
 return. Without it, the three-instruction recursion
 `store_reg 65535, 1; call r = f; ret r` grew all 512 frames to 65,536 slots
-(~768 MiB) before `FrameOverflow`; now it stops after 16 frames, at 24 MiB.
+(~768 MiB) before `FrameOverflow`; now it stops after 64 frames, at 96 MiB. A
+failed `execute` clears its frames, releasing that memory immediately.
 
 ### `VMCore` — the execution API
 
@@ -244,7 +248,7 @@ VM's register budget. Growing `frame.registers` directly bypasses the budget.
 | `u8_wrap` | `false` | Mask all arithmetic `& 0xFF` (Tetrad mode) |
 | `profiler_enabled` | `true` | Collect type-feedback observations |
 | `max_frames` | 512 | Call-stack depth limit (raises `FrameOverflow`) |
-| `max_register_slots` | 2²⁰ (1,048,576) | Register slots all live frames may hold together — 24 MiB of `Value`s (raises `RegisterBudgetExceeded`) |
+| `max_register_slots` | 2²² (4,194,304) | Register slots (capacity) all live frames may hold together — 96 MiB of `Value`s (raises `RegisterBudgetExceeded`) |
 
 ---
 

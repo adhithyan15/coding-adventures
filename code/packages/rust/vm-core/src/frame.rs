@@ -96,7 +96,7 @@
 //! used to grow *every* frame to 65,536 × 24-byte `Value`s (1.5 MiB) and
 //! pin ~768 MiB across 512 frames before `FrameOverflow` ended it.  So the
 //! frames on one call stack also share a **budget** of register slots
-//! (`VMCore::max_register_slots`, default 2²⁰), checked whenever a register
+//! (`VMCore::max_register_slots`, default 2²²), checked whenever a register
 //! file grows.  The accounting is a running sum carried down the stack:
 //!
 //! ```text
@@ -118,8 +118,14 @@
 //! The sum is of `Vec` **capacities**, not lengths: capacity is what is
 //! actually allocated, and growth here doubles (amortised O(1) appends) but
 //! never past what the budget allows.  So the register files of one
-//! `execute` occupy at most `budget × size_of::<Value>()` bytes — 24 MiB at
+//! `execute` occupy at most `budget × size_of::<Value>()` bytes — 96 MiB at
 //! the default.  Exceeding it is [`VMError::RegisterBudgetExceeded`].
+//!
+//! Doubling means a frame holds somewhat more than it uses — at most
+//! `max(pre-allocation, 2·used − 1)` slots — and the default budget is sized
+//! for that slack: 8,192 slots a frame at the full 512-frame depth covers
+//! any function using up to 4,096 registers (see
+//! `VMCore::DEFAULT_MAX_REGISTER_SLOTS`).
 //!
 //! Host code that reaches into `pub registers` directly (an opcode
 //! extension, say) is trusted and outside the accounting; it should grow a

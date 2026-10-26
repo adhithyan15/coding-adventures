@@ -80,7 +80,9 @@ pub enum VMError {
     /// `call` pushing a callee frame.  The per-frame limit
     /// ([`Self::RegisterLimitExceeded`]) caps one frame; this caps the whole
     /// call stack, so the memory one `execute` can pin in register files is
-    /// at most `budget × size_of::<Value>()` bytes.
+    /// at most `budget × size_of::<Value>()` bytes.  A host whose programs
+    /// legitimately need more raises `VMCore::max_register_slots` (the
+    /// displayed message says so).
     ///
     /// Before it existed, a three-instruction recursive function
     /// (`store_reg 65535, 1; call r = f; ret r`) grew every one of its 512
@@ -136,7 +138,7 @@ impl fmt::Display for VMError {
                 write!(
                     f,
                     "function {function:?} would bring the call stack to {slots} register slots, \
-                     more than the vm-core budget of {budget}"
+                     more than the vm-core budget of {budget} (raise VMCore::max_register_slots)"
                 )
             }
             VMError::Custom(msg) => write!(f, "{msg}"),
@@ -192,7 +194,7 @@ mod tests {
         assert_eq!(
             e.to_string(),
             "function \"f\" would bring the call stack to 1114112 register slots, \
-             more than the vm-core budget of 1048576"
+             more than the vm-core budget of 1048576 (raise VMCore::max_register_slots)"
         );
     }
 

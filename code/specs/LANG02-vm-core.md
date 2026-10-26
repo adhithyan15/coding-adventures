@@ -140,7 +140,7 @@ function reaches it — `store_reg 65535, 1; call r = f; ret r` grows every
 frame to the limit with one by-index write (measured peak RSS ≈ 792 MB before
 `FrameOverflow`). So all live frames of one call stack also share a
 **VM-wide budget of register slots**, `max_register_slots` (default
-2²⁰ = 1,048,576):
+2²² = 4,194,304):
 
 - **What is counted:** each frame's register-file *capacity* (allocated
   slots, not just used ones), summed over every live frame.
@@ -148,8 +148,11 @@ frame to the limit with one by-index write (measured peak RSS ≈ 792 MB before
   register (including `call`'s return slot), a `store_reg` past the end of
   the file, or a `call` pre-allocating a callee frame (at least
   `params.len()` slots). Growth over the budget is the typed error
-  `RegisterBudgetExceeded { function, slots, budget }`; the frame is left
-  unchanged.
+  `RegisterBudgetExceeded { function, slots, budget }` (its message names
+  the knob: "raise VMCore::max_register_slots"); the frame is left
+  unchanged. A failed `execute` clears its call stack before returning, so
+  the frames' register files are released at once rather than at the next
+  `execute`.
 - **How it is counted (O(1), no pop bookkeeping):** each frame records,
   when it is pushed, the slots held by the frames beneath it
   (`slots_below`). Only the top frame ever grows — a caller cannot run while
@@ -159,9 +162,18 @@ frame to the limit with one by-index write (measured peak RSS ≈ 792 MB before
   with it. Growth doubles capacity (amortised O(1)) but is clamped to what
   the budget leaves, so capacity never overshoots.
 - **The bound:** the register files of one `execute` occupy at most
-  `max_register_slots × size_of::<Value>()` bytes — **24 MiB** at the
-  default. The budget leaves 2,048 slots a frame at the full 512-frame depth,
-  and a single frame can still reach the whole 65,536-slot limit.
+  `max_register_slots × size_of::<Value>()` bytes — **96 MiB** at the
+  default, 8× below the ~768 MiB it prevents.
+- **What the default guarantees.** Capacity runs ahead of use: growth
+  doubles from the pre-allocation (the `register_count` hint, 8 for almost
+  every frontend), so a frame using `u` slots holds at most
+  `max(pre-allocation, 2u − 1)` — the doubling slack is under 2×. The
+  default gives the full 512-frame stack 8,192 slots a frame, so a function
+  whose frames use ≤ 4,096 registers (and pre-allocate ≤ 8,192) still
+  reaches `max_frames` = 512 and ends in `FrameOverflow` exactly as before
+  the budget, and frames of up to the 65,536-register limit reach depth 64.
+  (A 2²⁰ default was tried first: with the slack, a 2,049-register
+  recursive function stopped at depth 255 instead of 512.)
 - **What it does not change:** the `load_reg`/`store_reg` index range stays
   `0..=65_535` (a negative or larger index is still an
   `invalid register index` error). No frontend in the repository emits

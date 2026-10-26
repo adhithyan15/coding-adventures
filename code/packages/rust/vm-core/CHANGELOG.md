@@ -10,14 +10,32 @@
   ≈ 792 MB) before `FrameOverflow`. The per-frame limit bounds one frame,
   not a call stack.
 - **New `VMCore::max_register_slots`** (default
-  `VMCore::DEFAULT_MAX_REGISTER_SLOTS` = 2²⁰ = 1,048,576): a budget of
+  `VMCore::DEFAULT_MAX_REGISTER_SLOTS` = 2²² = 4,194,304): a budget of
   register slots shared by every live frame, counted as `Vec` *capacity*.
   The register files of one `execute` now occupy at most
-  `max_register_slots × size_of::<Value>()` bytes — 24 MiB by default. The
-  reproducer stops after 16 frames (peak RSS ≈ 28 MB in the test binary).
+  `max_register_slots × size_of::<Value>()` bytes — 96 MiB by default, 8×
+  below the ~768 MiB it prevents. The reproducer stops after 64 frames
+  (peak RSS ≈ 100 MB in the test binary).
+- **Why 2²² and not 2²⁰ (review fix).** Capacity runs ahead of use:
+  growth doubles from the pre-allocation (the `register_count` hint, 8 for
+  almost every frontend), so a frame using `u` slots holds at most
+  `max(pre-allocation, 2u − 1)`. With a 2²⁰ default a 2,049- or
+  3,004-register recursive function stopped at depth 255 with
+  `RegisterBudgetExceeded` instead of reaching 512, so the "2,048 slots a
+  frame at full depth" claim held only with an exact hint. At 2²² the full
+  512-frame stack gets 8,192 slots a frame: any function whose frames use
+  ≤ 4,096 registers (pre-allocating ≤ 8,192) reaches `max_frames` exactly as
+  before, and full 65,536-register frames reach depth 64.
 - **New `VMError::RegisterBudgetExceeded { function, slots, budget }`**,
   displayed as `function "f" would bring the call stack to 1114112 register
-  slots, more than the vm-core budget of 1048576`.
+  slots, more than the vm-core budget of 1048576 (raise
+  VMCore::max_register_slots)`.
+- **A failed `execute` / `execute_traced` clears its call stack** before
+  returning the error, so the frames' register files (up to the budget) are
+  released at once instead of living until the next `execute`. Nothing
+  reads the frames after an error (`frames` is private; only `Debug`'s
+  `frames_depth` showed it), and a successful run already ends with an
+  empty stack.
 - **How it is enforced (O(1), nothing on pop).** Each frame records, when
   pushed, the slots the frames beneath it hold (`slots_below`); only the top
   frame ever grows, so the sum stays exact. All growth goes through one
@@ -41,10 +59,13 @@
 - New `VMFrame::stack_slots()`: the slots held by a frame and every frame
   beneath it (the running sum the budget checks).
 - Tests: the recursive `store_reg 65535` reproducer ends with
-  `RegisterBudgetExceeded` after exactly 16 full frames, with the live
+  `RegisterBudgetExceeded` after exactly 64 full frames, with the live
   frames' independently summed capacities equal to the budget; a lowered
   budget is enforced exactly; `store_reg 1023` recursion still ends in
-  `FrameOverflow` at 512; 500-deep ordinary recursion and a
+  `FrameOverflow` at 512; a 3,004-register recursive function with the
+  default hint reaches `FrameOverflow` at 512 under `VMCore::new()` (it
+  fails at the old 2²⁰ default); a failed `execute`/`execute_traced` leaves
+  no frames and the VM reusable; 500-deep ordinary recursion and a
   `store_reg`/`load_reg` round trip are unaffected; a budget too small for
   the entry point's parameters is refused before any instruction; frame
   tests for `store_index` within/past the budget and past the frame limit,

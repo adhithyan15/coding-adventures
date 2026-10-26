@@ -32,7 +32,7 @@
 //! | `u8_wrap` | `false` | Mask arithmetic results with `& 0xFF` (Tetrad mode) |
 //! | `profiler_enabled` | `true` | Enable inline type profiling |
 //! | `max_frames` | 512 | Maximum call-stack depth |
-//! | `max_register_slots` | 2²⁰ | Register slots all live frames may hold together (24 MiB of `Value`s) |
+//! | `max_register_slots` | 2²² | Register slots (capacity) all live frames may hold together (96 MiB of `Value`s) |
 //!
 //! # JIT integration
 //!
@@ -118,8 +118,10 @@ pub struct VMCore {
     ///
     /// Counted in `Vec` capacity (what is allocated), checked whenever a
     /// register file grows; see the [`crate::frame`] module docs for why a
-    /// running sum down the stack is exact.  Default: 2²⁰ = 1,048,576 slots
-    /// (24 MiB) — room for the full 512-frame stack at 2,048 slots a frame.
+    /// running sum down the stack is exact.  Default:
+    /// [`Self::DEFAULT_MAX_REGISTER_SLOTS`] (2²² slots, 96 MiB), which keeps
+    /// every function that ran before the budget existed running to the same
+    /// depth — see that constant for the exact guarantee.
     pub max_register_slots: usize,
 
     /// Maximum number of distinct addresses in the flat memory map.
@@ -274,14 +276,33 @@ pub struct VMCore {
 }
 
 impl VMCore {
-    /// Default [`Self::max_register_slots`]: 2²⁰ = 1,048,576 register slots,
-    /// 24 MiB of 24-byte `Value`s across the whole call stack.
+    /// Default [`Self::max_register_slots`]: 2²² = 4,194,304 register slots,
+    /// 96 MiB of 24-byte `Value`s across the whole call stack — still 8×
+    /// below the ~768 MiB (512 × 65,536 slots) it exists to prevent.
     ///
-    /// Sized so the deepest default stack (`max_frames` = 512) still gets
-    /// 2,048 slots a frame — far more than recursive functions in practice
-    /// use — while one frame alone can still reach the full
-    /// [`VMFrame::MAX_FRAME_REGISTERS`] (65,536).
-    pub const DEFAULT_MAX_REGISTER_SLOTS: usize = 1 << 20;
+    /// # Why 2²², not 2²⁰
+    ///
+    /// The budget counts **capacity**, and capacity runs ahead of use:
+    /// growth doubles from the pre-allocation (the frontend's
+    /// `register_count` hint — 8 by default, which almost every frontend
+    /// keeps), so a frame using `u` slots holds up to the next power of two
+    /// above `u`:
+    ///
+    /// ```text
+    ///   capacity  ≤  max( pre-allocation ,  2·u − 1 )      (doubling slack < 2×)
+    /// ```
+    ///
+    /// At 2²⁰ a function using 2,049 registers held 4,096 a frame and stopped
+    /// at depth 255 with `RegisterBudgetExceeded` where it used to reach 512.
+    /// At 2²² the full 512-frame stack gets 8,192 slots a frame, so:
+    ///
+    /// - a function whose frames use ≤ 4,096 registers (and pre-allocate
+    ///   ≤ 8,192) reaches `max_frames` = 512, whatever its hint; and
+    /// - frames of up to the 65,536-register frame limit reach depth 64.
+    ///
+    /// Only deeper or larger stacks than these — the shapes that used to pin
+    /// hundreds of MiB — meet the budget.
+    pub const DEFAULT_MAX_REGISTER_SLOTS: usize = 1 << 22;
 
     /// Create a `VMCore` with sensible defaults.
     pub fn new() -> Self {
@@ -416,7 +437,27 @@ impl VMCore {
     /// function that needs more than [`VMFrame::MAX_FRAME_REGISTERS`]
     /// registers fails the call with [`VMError::RegisterLimitExceeded`] and
     /// no instruction executes.  Otherwise any error an instruction raises.
+    ///
+    /// On error the call stack is cleared before returning, so a failed run
+    /// does not keep up to [`Self::max_register_slots`] of register files
+    /// alive until the next `execute` (a successful run always ends with an
+    /// empty stack anyway).
     pub fn execute(
+        &mut self,
+        module: &mut IIRModule,
+        fn_name: &str,
+        args: &[Value],
+    ) -> Result<Option<Value>, VMError> {
+        let result = self.run_entry(module, fn_name, args);
+        if result.is_err() {
+            self.frames.clear();
+        }
+        result
+    }
+
+    /// The body of [`Self::execute`], leaving the call stack as the error
+    /// found it — `execute` clears it; tests inspect it.
+    fn run_entry(
         &mut self,
         module: &mut IIRModule,
         fn_name: &str,
@@ -566,7 +607,15 @@ impl VMCore {
             &self.extra_opcodes,
             &self.jit_handlers,
             &mut profiler,
-        )?;
+        );
+        // Same as `execute`: a failed run releases its frames now.
+        let result = match result {
+            Ok(value) => value,
+            Err(err) => {
+                self.frames.clear();
+                return Err(err);
+            }
+        };
         self.profiler = profiler;
         Ok((result, traces))
     }
@@ -921,31 +970,32 @@ mod tests {
     }
 
     /// The security-review reproducer.  Each frame grows to 65,536 slots
-    /// (1.5 MiB); with the default budget of 2²⁰ slots exactly 16 such frames
-    /// fit, and the 17th frame's `store_reg` is refused with the typed error —
-    /// long before the 512-frame `FrameOverflow` that used to end it after
-    /// pinning ~768 MiB.  The accounting is asserted directly: the live
-    /// frames hold exactly the budget, never more.
+    /// (1.5 MiB); with the default budget of 2²² slots exactly 64 such frames
+    /// fit (96 MiB), and the 65th frame's `store_reg` is refused with the
+    /// typed error — long before the 512-frame `FrameOverflow` that used to
+    /// end it after pinning ~768 MiB.  The accounting is asserted directly
+    /// (through `run_entry`, which leaves the stack as the error found it):
+    /// the live frames hold exactly the budget, never more.
     #[test]
     fn recursive_store_reg_hits_the_register_budget_not_hundreds_of_mib() {
         let mut module = recursive_store_reg(65_535);
         let mut vm = VMCore::new();
         let budget = vm.max_register_slots;
-        assert_eq!(budget, 1 << 20);
+        assert_eq!(budget, 1 << 22);
 
-        let err = vm.execute(&mut module, "f", &[]).unwrap_err();
+        let err = vm.run_entry(&mut module, "f", &[]).unwrap_err();
         let per_frame = VMFrame::MAX_FRAME_REGISTERS;
-        let full_frames = budget / per_frame; // 16
+        let full_frames = budget / per_frame; // 64
         match &err {
             VMError::RegisterBudgetExceeded { function, slots, budget: b } => {
                 assert_eq!(function, "f");
                 assert_eq!(*b, budget);
-                // The refused growth: 16 full frames beneath, plus 65,536 more.
+                // The refused growth: 64 full frames beneath, plus 65,536 more.
                 assert_eq!(*slots, full_frames * per_frame + per_frame);
             }
             other => panic!("expected RegisterBudgetExceeded, got {other:?}"),
         }
-        // 16 full frames plus the 17th, which was refused its growth (the
+        // 64 full frames plus the 65th, which was refused its growth (the
         // budget left it no slots at all, so it holds none).
         assert_eq!(vm.frames.len(), full_frames + 1);
         assert_eq!(vm.frames.last().unwrap().registers.capacity(), 0);
@@ -961,7 +1011,7 @@ mod tests {
         let mut module = recursive_store_reg(999); // 1,000 slots a frame
         let mut vm = VMCore::new();
         vm.max_register_slots = 4_500;
-        let err = vm.execute(&mut module, "f", &[]).unwrap_err();
+        let err = vm.run_entry(&mut module, "f", &[]).unwrap_err();
         assert!(
             matches!(&err, VMError::RegisterBudgetExceeded { slots: 5_000, budget: 4_500, .. }),
             "got {err:?}"
@@ -973,15 +1023,68 @@ mod tests {
     }
 
     /// Moderate by-index use is untouched: 1,024 slots a frame × 512 frames
-    /// is half the default budget, so the recursion still ends exactly as it
-    /// always did, at `max_frames` with `FrameOverflow`.
+    /// is an eighth of the default budget, so the recursion still ends
+    /// exactly as it always did, at `max_frames` with `FrameOverflow`.
     #[test]
     fn store_reg_within_the_budget_still_reaches_frame_overflow() {
         let mut module = recursive_store_reg(1_023);
         let mut vm = VMCore::new();
-        let err = vm.execute(&mut module, "f", &[]).unwrap_err();
+        let err = vm.run_entry(&mut module, "f", &[]).unwrap_err();
         assert!(matches!(err, VMError::FrameOverflow { depth: 512, .. }), "got {err:?}");
+        assert_eq!(vm.frames.len(), 512);
         assert!(live_register_slots(&vm) <= vm.max_register_slots);
+    }
+
+    /// The doubling slack is covered by the default budget.  A recursive
+    /// function with 3,004 registers (3,003 `const`s, plus the `call`'s
+    /// result) keeps the default `register_count` hint of 8, so each frame's
+    /// capacity doubles 8 → 16 → … → 4,096 — the slack the budget counts.
+    /// 512 × 4,096 = 2²¹ slots fits the default 2²², so the recursion runs
+    /// to `max_frames` and ends in `FrameOverflow`, exactly as before the
+    /// budget existed (at a 2²⁰ default it stopped at depth 255 with
+    /// `RegisterBudgetExceeded`).
+    #[test]
+    fn a_large_frame_with_the_default_hint_still_reaches_frame_overflow() {
+        let n = 3_003;
+        let mut body: Vec<IIRInstr> = (0..n)
+            .map(|i| IIRInstr::new("const", Some(format!("r{i}")), vec![Operand::Int(i as i64)], "i64"))
+            .collect();
+        body.push(IIRInstr::new("call", Some("r".into()), vec![Operand::Var("deep".into())], "i64"));
+        body.push(IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"));
+        let deep = IIRFunction::new("deep", vec![], "i64", body);
+        assert_eq!(deep.register_count, 8, "the default hint every frontend keeps");
+        let mut module = module_of(vec![deep]);
+
+        let mut vm = VMCore::new();
+        let err = vm.run_entry(&mut module, "deep", &[]).unwrap_err();
+        assert!(matches!(err, VMError::FrameOverflow { depth: 512, .. }), "got {err:?}");
+        assert_eq!(vm.frames.len(), 512);
+        assert!(vm.frames.iter().all(|f| f.registers.capacity() == 4_096));
+        assert_eq!(live_register_slots(&vm), 512 * 4_096);
+        assert!(live_register_slots(&vm) <= vm.max_register_slots);
+    }
+
+    /// A failed `execute` releases its call stack — and with it up to the
+    /// budget's worth of register files — instead of keeping it alive until
+    /// the next run.  `execute_traced` does the same.
+    #[test]
+    fn a_failed_execute_clears_its_frames() {
+        let mut vm = VMCore::new();
+        vm.max_register_slots = 4_500;
+        let mut module = recursive_store_reg(999);
+        let err = vm.execute(&mut module, "f", &[]).unwrap_err();
+        assert!(matches!(err, VMError::RegisterBudgetExceeded { .. }), "got {err:?}");
+        assert!(vm.frames.is_empty());
+
+        let mut module = recursive_store_reg(999);
+        let err = vm.execute_traced(&mut module, "f", &[]).unwrap_err();
+        assert!(matches!(err, VMError::RegisterBudgetExceeded { .. }), "got {err:?}");
+        assert!(vm.frames.is_empty());
+
+        // The VM is still usable afterwards.
+        vm.max_register_slots = VMCore::DEFAULT_MAX_REGISTER_SLOTS;
+        let mut module = module_of(vec![fn_with_registers("main", 3)]);
+        assert_eq!(vm.execute(&mut module, "main", &[]).unwrap(), Some(Value::Int(2)));
     }
 
     /// Ordinary recursion — named registers, a few per frame — runs to a
