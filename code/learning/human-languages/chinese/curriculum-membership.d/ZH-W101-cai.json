@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W101-cai",
+  "pathSegment": "ZH-PATH-101-KITCHEN101",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-101-KITCHEN101",
+      "order": 2
+    }
+  ]
+}

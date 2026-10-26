@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:82b522f93cc80f55",
+  "lessonIds": [
+    "ZH-C103-yong",
+    "ZH-W103-yong",
+    "ZH-C103-na",
+    "ZH-C103-reng",
+    "ZH-C103-xiu",
+    "ZH-C103-huai"
+  ],
+  "tex": "chinese/book/chapters/ch103-using-things.tex"
+}

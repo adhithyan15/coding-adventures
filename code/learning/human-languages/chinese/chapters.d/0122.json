@@ -1,0 +1,21 @@
+{
+  "chapter": 122,
+  "title": "Opening Hours",
+  "label": "ch:zh-opening-hours",
+  "canDo": "I can say open for business, start, finish, discount and timetable.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ZH-R122-review-final-122",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 122: I can say open for business, start, finish, discount and timetable.",
+    "assesses": [
+      "ZH-LEX-C122-HOURS122-01",
+      "ZH-LEX-C122-HOURS122-02",
+      "ZH-LEX-C122-HOURS122-03",
+      "ZH-LEX-C122-HOURS122-04",
+      "ZH-LEX-C122-HOURS122-05"
+    ]
+  }
+}

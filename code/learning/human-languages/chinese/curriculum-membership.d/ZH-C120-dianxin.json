@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C120-dianxin",
+  "pathSegment": "ZH-PATH-120-TAKEAWAY120",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-120-TAKEAWAY120",
+      "order": 4
+    }
+  ]
+}

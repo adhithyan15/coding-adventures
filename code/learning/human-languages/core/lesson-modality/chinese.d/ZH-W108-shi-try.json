@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W108-shi-try",
+    "language": "chinese",
+    "chapter": 108,
+    "sequence": 8465,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d33f2bf0b61bc378",
+    "detachableSegments": [
+      "Script — the speech piece, then a slanting hook"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

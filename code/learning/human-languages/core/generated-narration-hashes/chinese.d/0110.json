@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:d8b6f680454b5308",
+  "lessonIds": [
+    "ZH-C110-waiyu",
+    "ZH-W110-wai",
+    "ZH-C110-gangqin",
+    "ZH-C110-tan",
+    "ZH-C110-huahua",
+    "ZH-C110-tiaowu",
+    "ZH-R110-review-105-110"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch110.txt",
+  "json": "chinese/narration/ch110.json",
+  "textHash": "fnv1a64:967d0ee577ebff62",
+  "jsonHash": "fnv1a64:6a5e7a4bc8218d78",
+  "findings": []
+}

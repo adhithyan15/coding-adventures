@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C102-kele",
+  "pathSegment": "ZH-PATH-102-DRINK102",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-102-DRINK102",
+      "order": 2
+    }
+  ]
+}

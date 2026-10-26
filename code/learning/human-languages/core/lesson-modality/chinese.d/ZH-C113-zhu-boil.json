@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C113-zhu-boil",
+    "language": "chinese",
+    "chapter": 113,
+    "sequence": 8730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:438efbd5be230ac2"
+  },
+  "findings": []
+}

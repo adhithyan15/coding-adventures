@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C121-huida",
+    "language": "chinese",
+    "chapter": 121,
+    "sequence": 9150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e681dae9c54c353d"
+  },
+  "findings": []
+}
