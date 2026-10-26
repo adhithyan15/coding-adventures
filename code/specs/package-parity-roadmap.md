@@ -18153,8 +18153,8 @@ selection base on branch
 `codex/parity-kotlin-micro-qr-build-front-20261026`. The tranche adds the
 Gradle package definition, fail-closed Unix and Windows BUILD fronts, empty
 capability declaration, and documentation; it does not change encoder source
-or behavior. The last mainline advance was an unrelated Rust System/360
-gate-routing change and has no path overlap. Neither live PR touches this
+or behavior. The intervening mainline advances are unrelated System/360,
+TaskApp, and LANG84 changes with no path overlap. Neither live PR touches this
 Kotlin package. PR #18324 removes a different `code/BUILD-EXEMPTIONS` record,
 so later reconciliation must preserve both removals and both append-only
 lifecycle receipts.
