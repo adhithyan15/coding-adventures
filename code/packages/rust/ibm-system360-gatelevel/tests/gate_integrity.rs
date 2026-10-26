@@ -219,34 +219,40 @@ fn require_exact_arm(
     }
 }
 
-fn require_exact_opcode_match_tail(
+fn require_exact_opcode_match_shell(
     source: &str,
     function: &str,
-    expected: &str,
+    expected_prefix: &str,
+    expected_tail: &str,
 ) -> Result<(), String> {
     let body = function_body(&rust_tokens(source), function)?;
     let mut curly_depth = 0;
+    let mut match_start = None;
     let mut match_open = None;
     for index in 0..body.len().saturating_sub(2) {
         match body[index].as_str() {
             "{" => curly_depth += 1,
             "}" => curly_depth -= 1,
             "match" if curly_depth == 0 && body[index + 1] == "opcode" => {
+                match_start = Some(index);
                 match_open = (index + 2..body.len()).find(|&next| body[next] == "{");
                 break;
             }
             _ => {}
         }
     }
+    let start = match_start.ok_or_else(|| format!("{function} has no top-level match opcode"))?;
     let open = match_open.ok_or_else(|| format!("{function} has no top-level match opcode"))?;
     let close = matching_delimiter(&body, open, "{", "}")?;
-    let actual = &body[close + 1..];
-    let expected = rust_tokens(expected);
-    if actual == expected {
+    let actual_prefix = &body[..start];
+    let actual_tail = &body[close + 1..];
+    let expected_prefix = rust_tokens(expected_prefix);
+    let expected_tail = rust_tokens(expected_tail);
+    if actual_prefix == expected_prefix && actual_tail == expected_tail {
         Ok(())
     } else {
         Err(format!(
-            "{function} has unapproved control flow after opcode dispatch\nactual: {actual:?}\nexpected: {expected:?}"
+            "{function} has unapproved control flow around opcode dispatch\nactual prefix: {actual_prefix:?}\nexpected prefix: {expected_prefix:?}\nactual tail: {actual_tail:?}\nexpected tail: {expected_tail:?}"
         ))
     }
 }
@@ -405,9 +411,141 @@ fn verify_branch_structure(networks: &str, executor: &str, validator: &str) -> R
          }
          Ok(next)",
     )?;
-    require_exact_opcode_match_tail(executor, "execute_rr", "Ok(())")?;
-    require_exact_opcode_match_tail(executor, "execute_rx", "Ok(())")?;
-    require_exact_opcode_match_tail(executor, "execute_rs", "Ok(())")?;
+    require_exact_body(
+        executor,
+        "execute_four",
+        "match raw[0]{
+            0x91..=0x97=>execute_si(before,next,raw),
+            0x86..=0x90|0x98=>execute_rs(before,next,raw),
+            _=>execute_rx(before,next,raw),
+         }",
+    )?;
+    require_exact_opcode_match_shell(
+        executor,
+        "execute_rr",
+        "let opcode=raw[0];
+         let r1=usize::from(raw[1]>>4);
+         let r2=usize::from(raw[1]&15);
+         let a=before.gprs[r1];
+         let b=before.gprs[r2];",
+        "Ok(())",
+    )?;
+    require_exact_opcode_match_shell(
+        executor,
+        "execute_rx",
+        "let opcode=raw[0];
+         let register=usize::from(raw[1]>>4);
+         let address=effective_address_rx(raw,before)as usize;
+         let a=before.gprs[register];
+         if matches!(opcode,0x60..=0x7f){return execute_float_rx(before,next,opcode,register,address);}
+         let word=||read_be32(&before.memory,address);
+         let half=||i32::from(read_be16(&before.memory,address)as i16)as u32;",
+        "Ok(())",
+    )?;
+    require_exact_opcode_match_shell(
+        executor,
+        "execute_rs",
+        "let opcode=raw[0];
+         let r1=usize::from(raw[1]>>4);
+         let r3=usize::from(raw[1]&15);
+         let address=effective_address_base(raw,2,before)as usize;
+         let count=(address as u32)&63;
+         let source=before.gprs[r1];",
+        "Ok(())",
+    )?;
+    require_exact_opcode_match_shell(
+        validator,
+        "validate_control_transition",
+        "let opcode=trace.raw[0];let expected=",
+        ";if expected.is_some_and(|pc|next.pc!=(pc&0x00ff_ffff)){
+             return gate_disagrees(\"reason\");
+         }
+         Ok(())",
+    )?;
+    require_exact_body(
+        validator,
+        "validate_gate_transition",
+        r#"let sequential_pc=gates::add_24(before.pc,u32::from(trace.width));
+        let opcode=trace.raw[0];
+        let decode=gates::decode_byte(opcode);
+        if decode[usize::from(opcode)]!=1||decode.into_iter().map(u16::from).sum::<u16>()!=1{
+            return gate_disagrees("reason");
+        }
+        if matches!(opcode,0x10..=0x1f){
+            let r1=usize::from(trace.raw[1]>>4);
+            let r2=usize::from(trace.raw[1]&15);
+            let a=before.gprs[r1];
+            let b=before.gprs[r2];
+            let expected=match opcode{
+                0x10=>Some(if b&0x8000_0000==0{b}else{gates::negate_32(b).0}),
+                0x11=>Some(if b&0x8000_0000==0&&b!=0{gates::negate_32(b).0}else{b}),
+                0x12|0x18=>Some(b),
+                0x13=>Some(gates::negate_32(b).0),
+                0x14=>Some(gates::bit_and_32(a,b)),
+                0x16=>Some(gates::bit_or_32(a,b)),
+                0x17=>Some(gates::bit_xor_32(a,b)),
+                0x1a|0x1e=>Some(gates::add_32(a,b,0).0),
+                0x1b|0x1f=>Some(gates::add_32(a,gates::bit_not_32(b),1).0),
+                _=>None,
+            };
+            if expected.is_some_and(|value|next.gprs[r1]!=value){
+                return Err(System360Error::Specification{reason:"reason"});
+            }
+            let expected_cc=match opcode{
+                0x10..=0x13|0x1a|0x1b=>expected.map(gates::signed_condition_code),
+                0x14=>expected.map(gates::logical_condition_code),
+                0x15=>Some(gates::unsigned_compare_condition_code(a,b)),
+                0x16|0x17=>expected.map(gates::logical_condition_code),
+                0x19=>Some(gates::signed_compare_condition_code(a,b)),
+                0x1e=>expected.map(|value|{
+                    let carry=gates::add_32(a,b,0).1;
+                    (carry<<1)|gates::logical_condition_code(value)
+                }),
+                0x1f=>expected.map(|value|{
+                    let carry=gates::add_32(a,gates::bit_not_32(b),1).1;
+                    (carry<<1)|gates::logical_condition_code(value)
+                }),
+                _=>None,
+            };
+            if expected_cc.is_some_and(|condition_code|next.condition_code!=condition_code){
+                return Err(System360Error::Specification{reason:"reason"});
+            }
+            if opcode==0x1c{
+                let product=gates::multiply_signed_32(before.gprs[r1+1],b);
+                if next.gprs[r1]!=(product>>32)as u32||next.gprs[r1+1]!=product as u32{
+                    return gate_disagrees("reason");
+                }
+            }
+            if opcode==0x1d{
+                let dividend=(u64::from(before.gprs[r1])<<32)|u64::from(before.gprs[r1+1]);
+                let(remainder,quotient)=gates::divide_signed_64_by_32(dividend,b).ok_or(
+                    System360Error::Specification{reason:"reason"},
+                )?;
+                if next.gprs[r1]!=remainder||next.gprs[r1+1]!=quotient{
+                    return gate_disagrees("reason");
+                }
+            }
+        }
+        if matches!(opcode,0x20..=0x3f){
+            validate_float_rr_transition(before,next,trace)?;
+        }
+        if trace.raw.len()==4{
+            if matches!(opcode,0x91..=0x97){
+                validate_si_transition(before,next,trace)?;
+            }else if matches!(opcode,0x86..=0x90|0x98){
+                validate_rs_transition(before,next,trace)?;
+            }else{
+                validate_rx_transition(before,next,trace)?;
+            }
+        }else if trace.raw.len()==6{
+            validate_ss_transition(before,next,trace)?;
+        }
+        validate_control_transition(before,next,trace,sequential_pc)?;
+        if !matches!(opcode,0x05..=0x07|0x45..=0x47|0x86|0x87)&&next.pc!=sequential_pc{
+            return Err(System360Error::Specification{reason:"reason"});
+        }
+        Ok(())"#,
+    )?;
 
     require_exact_arm(
         executor,
@@ -647,4 +785,30 @@ fn structural_verifier_rejects_adversarial_host_shortcuts_and_dead_anchors() {
         1,
     );
     assert!(verify_branch_structure(networks, &rs_post_match_overwrite, validator).is_err());
+
+    let dead_four_byte_dispatch = executor.replacen(
+        "    match raw[0] {",
+        "    if false { return match raw[0] {",
+        1,
+    )
+        .replacen(
+            "        _ => execute_rx(before, next, raw),\n    }\n}\n\nfn execute_rx",
+            "        _ => execute_rx(before, next, raw),\n        }; }\n    Ok(())\n}\n\nfn execute_rx",
+            1,
+        );
+    assert!(verify_branch_structure(networks, &dead_four_byte_dispatch, validator).is_err());
+
+    let shadowed_expected = validator.replacen(
+        "        _ => None,\n    };\n    if expected.is_some_and(|pc| next.pc != (pc & 0x00ff_ffff)) {",
+        "        _ => None,\n    };\n    let expected: Option<u32> = None;\n    if expected.is_some_and(|pc| next.pc != (pc & 0x00ff_ffff)) {",
+        1,
+    );
+    assert!(verify_branch_structure(networks, executor, &shadowed_expected).is_err());
+
+    let dead_validator_dispatch = validator.replacen(
+        "    validate_control_transition(before, next, trace, sequential_pc)?;",
+        "    if false { validate_control_transition(before, next, trace, sequential_pc)?; }",
+        1,
+    );
+    assert!(verify_branch_structure(networks, executor, &dead_validator_dispatch).is_err());
 }
