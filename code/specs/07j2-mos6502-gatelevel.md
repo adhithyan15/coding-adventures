@@ -110,8 +110,10 @@ Completion requires:
 7. clean formatting, Clippy with warnings denied, and rustdoc with warnings
    denied.
 
-The completion audit records 81 unit, 5 integration, and 7 documentation tests
-with 96.60% core line coverage (994/1,029).
+The HALT-authority completion audit records 83 unit, 7 integration, and 7
+documentation tests with 98.75% package-source line coverage (1,834/1,857).
+It includes five compiler-checked hostile full-crate variants and preserves the
+complete 256-opcode functional differential.
 
 ## Dependencies
 
