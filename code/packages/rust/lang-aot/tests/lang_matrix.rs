@@ -28954,8 +28954,9 @@ fn python_rows_agree_with_the_host_python_oracle() {
 /// ungated `const`/`ret`. No wrapping `add`/`sub`/`mul`/`neg` survives.
 /// Since phase 7c slice 3 a `py-float-print` row may also hold the PR6c
 /// `f64_*` ops, `int_to_real`, `write_f64_py` and `trap`; BEAM refuses
-/// exactly the rows with `f64_*` arithmetic (which do not list it), and the
-/// generic JIT leaves `int_to_real` to its interpreter tier.
+/// exactly the rows with `f64_*` arithmetic (which do not list it). The
+/// generic JIT lowers every op here, `int_to_real` included, since jit-core
+/// gained the LANG83 conversions.
 #[test]
 fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
     let mut checked_ops = 0;
@@ -29020,18 +29021,6 @@ fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
                         panic!("{:?}: lists BEAM = {lists_beam} but BEAM's op check gave {checked:?}", program.case)
                     }
                 },
-                // The generic JIT compiles no `int_to_real`: a function using
-                // it runs on the vm-core interpreter tier, as every printing
-                // function's JIT cell does today (`execute_with_jit`).
-                lang_aot::op_check::Backend::Jit => {
-                    if let Err(refusal) = checked {
-                        assert!(
-                            refusal.refusals.iter().all(|r| r.op == "int_to_real"),
-                            "{:?}: the JIT refused more than int_to_real: {refusal}",
-                            program.case
-                        );
-                    }
-                }
                 _ => {
                     checked.unwrap_or_else(|e| panic!("{:?} refused on {}: {e}", program.src, backend.name()));
                 }
