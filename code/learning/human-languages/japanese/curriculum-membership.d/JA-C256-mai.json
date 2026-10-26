@@ -1,0 +1,11 @@
+{
+  "id": "JA-C256-mai",
+  "pathSegment": "JA-PATH-256-TRAVEL256",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-256-TRAVEL256",
+      "order": 1
+    }
+  ]
+}

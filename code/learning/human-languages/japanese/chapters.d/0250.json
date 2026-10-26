@@ -1,0 +1,20 @@
+{
+  "chapter": 250,
+  "title": "What I Did Yesterday",
+  "label": "ch:ja-what-i-did-yesterday",
+  "canDo": "I can say what I did, to a friend, with the plain past: mita, tabeta, shita, kita, and katta, nonda, kaita, itta.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "JA-R250-what-i-did-yesterday",
+    "kind": "production",
+    "summary": "Complete JA-R250-what-i-did-yesterday: tell a friend what you did yesterday, in the plain past.",
+    "assesses": [
+      "JA-GRAMMAR-C250-PAST-01",
+      "JA-GRAMMAR-C250-TA-SOUND-01",
+      "JA-GRAMMAR-C250-PAST-02",
+      "JA-GRAMMAR-C250-TA-SOUND-02"
+    ]
+  }
+}

@@ -1,0 +1,787 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 261,
+  "title": "It Depends, and What Would Happen",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:79d5d12fd8d959a6",
+  "lessons": [
+    {
+      "id": "JA-C261-ni-yorimasu",
+      "sequence": 15570,
+      "title": "〜に よります (ni yorimasu) — it depends on",
+      "headword": "〜に よります",
+      "romanization": "ni yorimasu",
+      "gloss": "it depends on — X ni yorimasu, and asking what it depends on",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4d20c8ec1782017",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if it is fine tomorrow, I will go to the mountains\". (moshi ashita haretara, yama ni ikimasu.) Then \"the weather\". (tenki.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 〜に よります",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てんきに よります。 tenki ni yorimasu. — \"It depends on the weather.\""
+            },
+            {
+              "kind": "speech",
+              "text": "What it depends on takes に, and よります (yorimasu) follows. This よる is \"to depend on\", a different verb from the よる of よります \"to drop in\", though the two sound the same; both are godan verbs."
+            },
+            {
+              "kind": "speech",
+              "text": "それは じかんに よります。 sore wa jikan ni yorimasu. — \"That depends on the time.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: なにに よりますか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To ask, put なに (nani), \"what\", before に:"
+            },
+            {
+              "kind": "speech",
+              "text": "なにに よりますか。 nani ni yorimasu ka. — \"What does it depend on?\""
+            },
+            {
+              "kind": "speech",
+              "text": "The answer often goes on with -たら:"
+            },
+            {
+              "kind": "speech",
+              "text": "てんきに よります。 tenki ni yorimasu. — \"It depends on the weather.\""
+            },
+            {
+              "kind": "speech",
+              "text": "はれたら、いきます。 haretara, ikimasu. — \"If it is fine, I will go.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It depends on the weather\" — tenki ni yorimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It depends on the weather\" — *tenki ni yorimasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It depends on the time\" — jikan ni yorimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It depends on the time\" — *jikan ni yorimasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It depends on the money\" — okane ni yorimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It depends on the money\" — *okane ni yorimasu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C261-ni-yorimasu-say",
+              "prompt": "Say that it depends on the weather.",
+              "assesses": [
+                "JA-GRAMMAR-C261-DEPENDS-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "tenki ni yorimasu",
+                "てんきに よります。",
+                "てんきに よります"
+              ],
+              "feedback": {
+                "correct": "tenki ni yorimasu: what it depends on takes ni.",
+                "incorrect": "Tenki ni, then yorimasu."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It depends on the weather\"? (てんきに よります.) \"What does it depend on?\" (なにに よりますか.) Which particle marks what it depends on? (に.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C261-baai",
+      "sequence": 15580,
+      "title": "ばあい (baai) — a case; an occasion",
+      "headword": "ばあい",
+      "romanization": "baai",
+      "gloss": "a case; an occasion",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82718f4ee3858b8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: ask \"what does it depend on?\" (nani ni yorimasu ka.) Answer \"it depends on the weather\". (tenki ni yorimasu.) Then say \"calling off\". (chūshi.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ばあい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ばあい — baai — \"a case\", \"an occasion\": what is done when something happens. A noun before it takes の:"
+            },
+            {
+              "kind": "speech",
+              "text": "あめの ばあいは、ちゅうしです。 ame no baai wa, chūshi desu. — \"In case of rain, it is called off.\""
+            },
+            {
+              "kind": "speech",
+              "text": "あめの ばあいは、まつりは ちゅうしです。 ame no baai wa, matsuri wa chūshi desu. — \"In case of rain, the festival is called off.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ばあい (baai) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict writes it with two kanji that KANJIDIC2 reads the native way: ば, \"place\", and あい, a reading of a kanji KANJIDIC2 glosses \"fit, suit, join\". JMdict glosses the word \"case; occasion; situation\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In case of rain, it is called off\" — ame no baai wa, chūshi desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In case of rain, it is called off\" — *ame no baai wa, chūshi desu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In case of snow, it is called off\" — yuki no baai wa, chūshi desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In case of snow, it is called off\" — *yuki no baai wa, chūshi desu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C261-baai-say",
+              "prompt": "Say 'in case of rain, it is called off'.",
+              "assesses": [
+                "JA-LEX-C261-BAAI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ame no baai wa, chūshi desu",
+                "あめの ばあいは、ちゅうしです。",
+                "ame no baai wa chuushi desu"
+              ],
+              "feedback": {
+                "correct": "Right: ame no baai wa, then what is done.",
+                "incorrect": "A noun, no baai wa, then what happens: ame no baai wa, chūshi desu."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"A case\"? (ばあい, baai.) \"In case of rain\"? (あめの ばあいは.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C261-kau-deshou",
+      "sequence": 15590,
+      "title": "〜たら … でしょう (tara … deshō) — what would happen",
+      "headword": "〜たら … でしょう",
+      "romanization": "tara … deshō",
+      "gloss": "would — -tara … deshō and -tara … to omoimasu, for what would happen",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23cffe59d2740fc0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if I have time, I will see a film\". (jikan ga attara, eiga o mimasu.) Then \"it will probably rain tomorrow\". (ashita ame ga furu deshō.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -たら … でしょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おかねが あったら、ちちは かうでしょう。 okane ga attara, chichi wa kau deshō. — \"If he had the money, my father would buy it.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Japanese has no separate form for \"would\". The -たら clause supposes, and でしょう makes the result a guess: \"if there were money, he would probably buy it\". The same sentence, said about a real plan, is \"if he has the money, he will buy it\"; the situation tells you which."
+            },
+            {
+              "kind": "speech",
+              "text": "じかんが あったら、ははは くるでしょう。 jikan ga attara, haha wa kuru deshō. — \"If she had time, my mother would come.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: -たら … と おもいます",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For yourself, と おもいます does the same job:"
+            },
+            {
+              "kind": "speech",
+              "text": "じかんが あったら、いくと おもいます。 jikan ga attara, iku to omoimasu. — \"If I had time, I think I would go.\""
+            },
+            {
+              "kind": "speech",
+              "text": "おかねが あったら、かうと おもいます。 okane ga attara, kau to omoimasu. — \"If I had the money, I think I would buy it.\""
+            },
+            {
+              "kind": "speech",
+              "text": "What would have happened in the past, said with regret, needs other forms, which come later."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If I had time, I think I would go\" — jikan ga attara, iku to omoimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If I had time, I think I would go\" — *jikan ga attara, iku to omoimasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If I had time, I think I would rest\" — jikan ga attara, yasumu to omoimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If I had time, I think I would rest\" — *jikan ga attara, yasumu to omoimasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If I had time, I think I would swim\" — jikan ga attara, oyogu to omoimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If I had time, I think I would swim\" — *jikan ga attara, oyogu to omoimasu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C261-kau-deshou-say",
+              "prompt": "Say that if you had the money, you think you would buy it.",
+              "assesses": [
+                "JA-GRAMMAR-C261-WOULD-02"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "okane ga attara, kau to omoimasu",
+                "おかねが あったら、かうと おもいます。",
+                "okane ga attara kau to omoimasu"
+              ],
+              "feedback": {
+                "correct": "attara supposes; kau to omoimasu is what would follow.",
+                "incorrect": "Okane ga attara, then kau to omoimasu."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"He would buy it\", with the condition? (おかねが あったら、かうでしょう.) For yourself? (かうと おもいます.) Is there a separate \"would\" form? (No: -たら and a guess.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W261-six-lines",
+      "sequence": 15600,
+      "title": "Six lines, one trip",
+      "headword": "(six lines)",
+      "romanization": "",
+      "gloss": "six connected lines about a trip: when and where, what happened, a problem, why, how it felt, and what you would do next time",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:ed810559c3ef2fe1",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four lines once held together by time words and by the person you left out. Six lines can hold together by the joints you now own: -て, それから, から and ので, -たら."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The day at the river was thirteen lines of this kind. Pick one ともだち who will read about a trip you took."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Each line has a job, and a frame to hang it on:"
+            },
+            {
+              "kind": "speech",
+              "text": "When and where, and what was going on: きのう or きょねん, a place, and -ていました (あめが ふっていました)."
+            },
+            {
+              "kind": "speech",
+              "text": "The first thing that happened: -て, or それから at the start."
+            },
+            {
+              "kind": "speech",
+              "text": "A problem: のりおくれました, なくしました, or こわれました."
+            },
+            {
+              "kind": "speech",
+              "text": "Why: a reason with から or ので."
+            },
+            {
+              "kind": "speech",
+              "text": "How it felt: -かったです, or でした after a na-adjective; いちばん if one thing stood out."
+            },
+            {
+              "kind": "speech",
+              "text": "What you would do next time: もし … -たら … と おもいます."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Use at least two of the six kanji you have copied: 月日, 年じゅう, 言い出す, 日本人, 日本中, 今まで. Every other word goes in hiragana, spaced as the book spaces it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — connected composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write six lines to the ともだち you picked, one job a line, in that order. There is no model to copy: the frames are the whole of the help. Count your signs when you finish; about one hundred is a good length."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "End every line with 。. A line may open with それから or そして, and then 、 follows it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read your fourth line alone. Does it say why, with から or ので? Does your third line say what went wrong? If each line does its one job, the six lean on each other, and that is what connected means."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-W261-six-lines-would",
+              "prompt": "Give the frame for your sixth line: what you think you would do if you went again.",
+              "assesses": [
+                "JA-GRAMMAR-C261-WOULD-02"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "moshi ... tara, ... to omoimasu",
+                "もし ... たら、... と おもいます",
+                "moshi tara to omoimasu",
+                "-tara ... to omoimasu"
+              ],
+              "feedback": {
+                "correct": "Right: moshi opens it, -tara closes the condition, to omoimasu ends the line.",
+                "incorrect": "The sixth line is moshi … -tara, then … to omoimasu."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R261-it-depends",
+      "sequence": 15610,
+      "title": "Review — it depends, and what would happen",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what a plan depends on, and what would happen if",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63dfd8d69177a52f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"it depends on the weather\". (tenki ni yorimasu.) Then \"in case of rain, it is called off\". (ame no baai wa, chūshi desu.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "That depends on the time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: That depends on the time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In case of snow, the festival is called off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: In case of snow, the festival is called off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If I had time, I think I would go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If I had time, I think I would go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If she had time, my mother would come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If she had time, my mother would come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If it is fine, I will go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If it is fine, I will go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If it snows, what will you do?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If it snows, what will you do?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It depends on the time. I work from nine to five.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It depends on the time. I work from nine to five.]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R261-it-depends-say",
+              "prompt": "Ask what it depends on, then say that if he had the money, your father would buy it.",
+              "assesses": [
+                "JA-GRAMMAR-C261-DEPENDS-02",
+                "JA-GRAMMAR-C261-WOULD-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "nani ni yorimasu ka; okane ga attara, chichi wa kau deshō",
+                "なにに よりますか。おかねが あったら、ちちは かうでしょう。",
+                "nani ni yorimasu ka, okane ga attara chichi wa kau deshō"
+              ],
+              "feedback": {
+                "correct": "nani ni yorimasu ka asks; attara … deshō is what would happen.",
+                "incorrect": "Ask with nani ni yorimasu ka; then okane ga attara, kau deshō."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It depends on\"? (〜に よります (ni yorimasu).) \"A case\"? (ばあい (baai).) \"He would buy it\"? (かうでしょう.) \"I think I would go\"? (いくと おもいます.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
