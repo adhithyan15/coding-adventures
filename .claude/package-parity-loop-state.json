@@ -23070,7 +23070,6 @@
         ],
         "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
       },
-      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18183",
       "recovery_original_head": "231de32b81482caebbdf484387263d86b13b2602",
       "recovery_base": "9000beddee61a136cf5c0c6c5787f81d3d717834",
       "recovery_note": "Sole serial recovery after externally verified18174merge. Original delivery fields remain historical. ExactGHC9.4.8/Cabal3.10.3.0 globalcoverage failure reproduced; package-scoped coverage repair passesnative13tests/all359records and productionHPC447/447expressions61/61alternatives. Source review80a01PASS; finaldocsdelta and freshhostedCI required.",
@@ -26173,8 +26172,7 @@
       "recovery_source_revision": "23e5bd02f04f8da7b462630b939006af03c39eca",
       "recovery_validation_receipt": "code/specs/fixtures/commonmark-0.31.2/VALIDATION.md",
       "recovery_notes": "Serially recover existing PR18174 after verified18147merge: reviewed net-tree rebase onto d6ce, Node/npm setup admission for Venture-only plans, exact source and real generatedReact/Electron validation. Historical three-PR selection and prior validation notes remain history; current operator ceiling is one. Native reader migration stays separate.",
-      "merge_commit": "bd533925647b7fbac74eba35e611a8ba3930757f",
-      "merged_at": "2026-10-25T19:23:19Z"
+      "merge_commit": "bd533925647b7fbac74eba35e611a8ba3930757f"
     },
     {
       "id": "commonmark-language-neutral-reader-migrations",
