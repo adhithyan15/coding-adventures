@@ -7,7 +7,7 @@
   chaining, typed atomic lifecycle, deterministic traces, and encoding helpers.
 - Cover every implemented destination form and signed condition selector,
   arithmetic edges, single-word `IDIV`, control/stack paths, complete-state
-  validation, and atomic lifecycle failures with 91.53% line coverage.
+  validation, and atomic lifecycle failures with 91.52% line coverage.
 - Correct immediate magnitude flag behavior, AC0 self-form destinations,
   full-word pushdown-pointer arithmetic and overflow state, and the exact
   64-link indirection boundary.
