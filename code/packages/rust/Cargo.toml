@@ -228,6 +228,7 @@ members = [
     "intel8080-gatelevel",
     "z80-gatelevel",
     "z80-simulator",
+    "zipcpu-simulator",
     "z80-encoder",
     "z80-backend",
     "intel8086-gatelevel",

@@ -1,8 +1,9 @@
 # Layer 07be — ZipCPU Functional Simulator
 
-**Status:** proposed spec-only `RCPU-085`; implementation is blocked until a
-different reviewer accepts the exact clean spec commit. `RCPU-086`, the
-dependent gate-level cell, begins only after the functional cell merges.
+**Status:** `RCPU-085` is complete locally from the independently accepted
+spec-only predecessor; publication awaits exact-clean-head implementation
+review. `RCPU-086`, the dependent gate-level cell, begins only after the
+functional cell merges.
 
 ## 1. Authority, provenance, and bounded profile
 

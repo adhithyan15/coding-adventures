@@ -92,7 +92,7 @@ merged, while Cortex-M33 is already in review.
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
 | 15 | RCA CDP1802 (`RCPU-081` / `RCPU-082`) | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: all documented encodings except unassigned 0x68, complete COSMAC state, and explicit I/O/DMA/interrupt transaction seams; independent implementation review is next. |
 | 16 | LatticeMico32 (`RCPU-083` / `RCPU-084`) | official LatticeMico32 Processor Reference Manual 3.8 plus vendor-origin open RTL at `84b3e3ca0ad9535acaef201c1482342871358b08` | Functional implementation is in progress from an independently reviewed configuration-pinned spec; the dependent gate cell remains blocked on functional merge. |
-| 17 | ZipCPU (`RCPU-085` / `RCPU-086`) | official ZipCPU Specification revision 3.0 plus open RTL at `42606d2d6ef55df313772232977621b2d72f0159` | `RCPU-085` is a proposed fixed-width, two-bank functional profile; `RCPU-086` gate remains blocked until the functional oracle merges. |
+| 17 | ZipCPU (`RCPU-085` / `RCPU-086`) | official ZipCPU Specification revision 3.0 plus open RTL at `42606d2d6ef55df313772232977621b2d72f0159` | `RCPU-085` is complete locally from its independently reviewed spec-only predecessor: fixed-width big-endian execution, two complete register banks, CC/PC/interrupt/image state, exact transactions, typed atomic lifecycle, 31 completion tests, two corpus consumers over 3,970 checked-in upstream rows, one doctest, and 92.67% release line coverage (1,265/1,365). Exact-clean-head review is next; `RCPU-086` remains blocked until the functional oracle merges. |
 
 CDP1802 is complete locally from its independently reviewed specification.
 The functional cell covers the complete register matrix, instruction table,
@@ -107,12 +107,11 @@ relations, strict Clippy/rustdoc, lessons validation, affected BUILD, and
 87.76% line coverage (832/948).
 
 LatticeMico32 remains immediately ahead of ZipCPU because its independently
-reviewed spec and implementation work were already active when the ZipCPU
-duplicate audit completed. ZipCPU is otherwise ready: a fresh search found no
-package, spec, branch, worktree, open pull request, merged pull request, or
-repository history for it. The official revision-3 ISA, independently written
-upstream C++ simulator, and immutable open RTL provide stronger functional and
-future educational-gate evidence than evidence-blocked Itanium or LoongArch.
+reviewed implementation work was already active when the ZipCPU duplicate
+audit completed. ZipCPU `RCPU-085` is now complete locally and awaits a
+different reviewer's exact-head PASS. Its official revision-3 ISA,
+independently written upstream C++ simulator, and immutable open RTL provide
+the bounded functional evidence and the later educational-gate boundary.
 Both cells are configuration-pinned CPU cores; neither may claim a complete
 SoC, physical FPGA realization, transistor topology, or timing accuracy.
 
