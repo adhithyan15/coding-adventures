@@ -7,7 +7,8 @@ This specification defines a checked instruction-level model of the original
 **MSP430F2274**. It is intentionally not an MSP430X, MSP430Xv2, or complete
 MSP430F2274 microcontroller model.
 
-**Status:** independently reviewed specification; implementation authorized.
+**Status:** bounded functional implementation complete locally; mandatory
+independent exact-head implementation review and publication remain pending.
 The exact reviewed spec-only head was
 `4e750ba3abfc7e3a2dc794c7fc2aefe81bc0554f`.
 

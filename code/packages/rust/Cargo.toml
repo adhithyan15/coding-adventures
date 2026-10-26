@@ -1044,6 +1044,7 @@ members = [
     "mips-r2000-simulator",
     "mips-r2000-encoder",
     "mips-r2000-backend",
+    "msp430-simulator",
     "intel8051-simulator",
     "intel8051-encoder",
     "intel8051-backend",
