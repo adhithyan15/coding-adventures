@@ -34,6 +34,10 @@
 - Exact-lock every decoder, relation, mux, and commit helper, including
   compile-valid hostile helper-replacement, dead-decoder, and caller-overwrite
   fixtures.
-- Pass all 24 gate-package test functions, all 239 differential vectors,
+- Exact-lock the complete `execute_raw` and `execute_x31` dispatcher ASTs,
+  reject nested local-item shadows and post-helper field or whole-state writes,
+  and compile hostile preserving-call shadow and `*state` overwrite fixtures
+  with `rustc` before exercising the structural validator.
+- Pass all 25 gate-package test functions, all 239 differential vectors,
   strict formatting/Clippy/rustdoc, and 95.38% package-source line coverage
   (1,052/1,103), with `status.rs` at 100% (125/125).

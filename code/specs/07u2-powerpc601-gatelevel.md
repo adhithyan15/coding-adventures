@@ -202,7 +202,10 @@ Completion requires:
    legacy Python implementation;
 9. a `syn`-parsed hostile structural suite verifies the one external,
    unattributed status-module binding and the complete decoder-to-relation-to-
-   mux-to-commit chain. Compile-valid adversarial fixtures must reject host
+   mux-to-commit chain. The complete affected `execute_raw` and `execute_x31`
+   dispatcher bodies are exact AST locks. Adversarial nested-shadow and
+   whole-state-overwrite fixtures must first compile with `rustc`, preserve the
+   approved helper call, and then be rejected. The suite must also reject host
    comparisons or Boolean decisions, direct mask/shift updates, dead gate
    anchors, helper shadowing, post-helper CR/XER overwrite, functional-oracle
    substitution, inline/path/cfg/duplicate/macro-generated module rerouting,
@@ -215,7 +218,7 @@ The completed conditional-branch repair passes three gate/topology suites,
 three lifecycle suites, the aggregate 239-vector differential, strict checks,
 and 94.58% package line coverage (838/886).
 
-The completed CR/XER authority cell passes 24 gate-package and 13
+The completed CR/XER authority cell passes 25 gate-package and 13
 functional-package test functions, the corrected 239-vector differential,
 strict formatting/Clippy/rustdoc, affected builds, lessons validation, and
 95.38% gate-package line coverage (1,052/1,103). The status network is at 100%

@@ -12,4 +12,4 @@ powerpc601-simulator = { path = "../powerpc601-simulator" }
 
 [dev-dependencies]
 quote = "1"
-syn = { version = "2", features = ["full"] }
+syn = { version = "2", features = ["full", "visit"] }

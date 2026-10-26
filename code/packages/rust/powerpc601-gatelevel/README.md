@@ -54,6 +54,9 @@ vectors from the functional package. One frozen legacy `sraw` vector was
 source-corrected from clamp-to-31 CA behavior; the remaining 238 hashes are
 unchanged. Primary-source edge tests independently cover relation, CR/CR0,
 CA, `mtcrf`, modifier, producer-to-branch, snapshot/trace/rollback, and hostile
-AST anti-bypass behavior. The normative completion contract is Spec 07u2.
+AST anti-bypass behavior. The complete affected dispatcher bodies are exact
+AST locks, and preserving-call nested-shadow and whole-state-overwrite fixtures
+must compile with `rustc` before the guard rejects them. The normative
+completion contract is Spec 07u2.
 The completed status cell has 95.38% package-source line coverage
 (1,052/1,103), including 100% of `status.rs` (125/125).

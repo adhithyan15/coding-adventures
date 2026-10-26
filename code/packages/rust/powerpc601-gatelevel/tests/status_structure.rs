@@ -1,5 +1,12 @@
 use quote::ToTokens;
-use syn::{Item, ItemFn, ItemMod};
+use std::io::Write;
+use std::process::{Command, Stdio};
+use std::sync::atomic::{AtomicUsize, Ordering};
+use syn::visit::{self, Visit};
+use syn::{Expr, ExprAssign, ExprCall, Item, ItemFn, ItemMod};
+
+const EXECUTE_RAW_AST_HASH: u64 = 0xf3be_0974_d1ac_4a66;
+const EXECUTE_X31_AST_HASH: u64 = 0x8f48_602a_2f06_2968;
 
 const RELATION_FROM_SUBTRACT: &str = r#"
 fn relation_from_subtract(zero: u8, less: u8) -> RelationWires {
@@ -273,6 +280,14 @@ fn canonical(node: &impl ToTokens) -> String {
     node.to_token_stream().to_string()
 }
 
+fn canonical_hash(node: &impl ToTokens) -> u64 {
+    canonical(node)
+        .bytes()
+        .fold(0xcbf2_9ce4_8422_2325_u64, |hash, byte| {
+            (hash ^ u64::from(byte)).wrapping_mul(0x0000_0100_0000_01b3)
+        })
+}
+
 fn unique_function<'a>(file: &'a syn::File, name: &str) -> Result<&'a ItemFn, String> {
     let functions: Vec<_> = file
         .items
@@ -312,6 +327,171 @@ fn exact_function(source: &str, name: &str, expected: &str) -> Result<(), String
         ));
     }
     Ok(())
+}
+
+fn exact_function_hash(source: &str, name: &str, expected: u64) -> Result<(), String> {
+    let file = syn::parse_file(source).map_err(|error| error.to_string())?;
+    let actual = unique_function(&file, name)?;
+    let found = canonical_hash(actual);
+    if found != expected {
+        return Err(format!(
+            "{name} full dispatcher AST changed: expected {expected:#018x}, found {found:#018x}"
+        ));
+    }
+    Ok(())
+}
+
+#[derive(Default)]
+struct NestedHelperShadows {
+    forbidden: Vec<String>,
+    found: Vec<String>,
+}
+
+impl<'ast> Visit<'ast> for NestedHelperShadows {
+    fn visit_item_fn(&mut self, function: &'ast ItemFn) {
+        let name = function.sig.ident.to_string();
+        if self.forbidden.contains(&name) {
+            self.found.push(name);
+        }
+        visit::visit_item_fn(self, function);
+    }
+}
+
+fn reject_nested_helper_shadows(
+    source: &str,
+    function: &str,
+    forbidden: &[&str],
+) -> Result<(), String> {
+    let file = syn::parse_file(source).map_err(|error| error.to_string())?;
+    let function = unique_function(&file, function)?;
+    let mut shadows = NestedHelperShadows {
+        forbidden: forbidden.iter().map(|name| (*name).to_owned()).collect(),
+        found: Vec::new(),
+    };
+    shadows.visit_block(&function.block);
+    if shadows.found.is_empty() {
+        Ok(())
+    } else {
+        Err(format!("nested helper shadows found: {:?}", shadows.found))
+    }
+}
+
+fn called_name(call: &ExprCall) -> Option<String> {
+    let Expr::Path(path) = &*call.func else {
+        return None;
+    };
+    path.path
+        .segments
+        .last()
+        .map(|segment| segment.ident.to_string())
+}
+
+fn writes_state(left: &Expr) -> bool {
+    let target = canonical(left).replace(' ', "");
+    target == "state"
+        || target == "*state"
+        || target.starts_with("state.")
+        || target.starts_with("state[")
+        || target.starts_with("(*state).")
+}
+
+struct PostHelperWrites {
+    helpers: Vec<String>,
+    helper_seen: bool,
+    write_seen: bool,
+}
+
+impl<'ast> Visit<'ast> for PostHelperWrites {
+    fn visit_expr_call(&mut self, call: &'ast ExprCall) {
+        visit::visit_expr_call(self, call);
+        if called_name(call).is_some_and(|name| self.helpers.contains(&name)) {
+            self.helper_seen = true;
+        }
+    }
+
+    fn visit_expr_assign(&mut self, assignment: &'ast ExprAssign) {
+        if self.helper_seen && writes_state(&assignment.left) {
+            self.write_seen = true;
+        }
+        visit::visit_expr_assign(self, assignment);
+    }
+}
+
+struct DispatcherArmSafety {
+    helpers: Vec<String>,
+    post_helper_write: bool,
+}
+
+impl<'ast> Visit<'ast> for DispatcherArmSafety {
+    fn visit_arm(&mut self, arm: &'ast syn::Arm) {
+        let mut writes = PostHelperWrites {
+            helpers: self.helpers.clone(),
+            helper_seen: false,
+            write_seen: false,
+        };
+        writes.visit_expr(&arm.body);
+        self.post_helper_write |= writes.write_seen;
+        visit::visit_arm(self, arm);
+    }
+}
+
+fn reject_post_helper_state_writes(
+    source: &str,
+    function: &str,
+    helpers: &[&str],
+) -> Result<(), String> {
+    let file = syn::parse_file(source).map_err(|error| error.to_string())?;
+    let function_name = function;
+    let function = unique_function(&file, function_name)?;
+    let mut safety = DispatcherArmSafety {
+        helpers: helpers.iter().map(|name| (*name).to_owned()).collect(),
+        post_helper_write: false,
+    };
+    safety.visit_block(&function.block);
+    if safety.post_helper_write {
+        Err(format!(
+            "{function_name} writes whole state or a state field after an approved helper"
+        ))
+    } else {
+        Ok(())
+    }
+}
+
+fn assert_rustc_accepts(source: &str) {
+    static FIXTURE_ID: AtomicUsize = AtomicUsize::new(0);
+    let id = FIXTURE_ID.fetch_add(1, Ordering::Relaxed);
+    let output_path = std::env::temp_dir().join(format!(
+        "powerpc601-status-hostile-{}-{id}.rmeta",
+        std::process::id()
+    ));
+    let rustc = std::env::var_os("RUSTC").unwrap_or_else(|| "rustc".into());
+    let mut child = Command::new(rustc)
+        .args([
+            "--edition=2021",
+            "--crate-type=lib",
+            "--emit=metadata",
+            "-o",
+        ])
+        .arg(&output_path)
+        .arg("-")
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("rustc must start for compile-checked hostile fixtures");
+    child
+        .stdin
+        .take()
+        .expect("rustc stdin")
+        .write_all(source.as_bytes())
+        .expect("write hostile fixture to rustc");
+    let output = child.wait_with_output().expect("rustc must finish");
+    let _ = std::fs::remove_file(&output_path);
+    assert!(
+        output.status.success(),
+        "hostile fixture must compile, stderr: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
 }
 
 fn exact_status_module(source: &str) -> Result<(), String> {
@@ -372,6 +552,20 @@ fn validate_consumers(source: &str) -> Result<(), String> {
     ] {
         exact_function(source, name, expected)?;
     }
+    exact_function_hash(source, "execute_raw", EXECUTE_RAW_AST_HASH)?;
+    exact_function_hash(source, "execute_x31", EXECUTE_X31_AST_HASH)?;
+    reject_nested_helper_shadows(source, "execute_raw", &["execute_compare_immediate"])?;
+    reject_nested_helper_shadows(
+        source,
+        "execute_x31",
+        &["execute_compare_register", "execute_mtcrf"],
+    )?;
+    reject_post_helper_state_writes(source, "execute_raw", &["execute_compare_immediate"])?;
+    reject_post_helper_state_writes(
+        source,
+        "execute_x31",
+        &["execute_compare_register", "execute_mtcrf"],
+    )?;
     let syntax = syn::parse_file(source).map_err(|error| error.to_string())?;
     let execute_raw = canonical(unique_function(&syntax, "execute_raw")?);
     let execute_x31 = canonical(unique_function(&syntax, "execute_x31")?);
@@ -515,6 +709,61 @@ fn hostile_ast_rejects_helper_replacement_and_caller_post_helper_overwrite() {
     syn::parse_file(&caller_post_overwrite)
         .expect("caller-overwrite fixture is compile-valid Rust syntax");
     assert!(validate_consumers(&caller_post_overwrite).is_err());
+}
+
+#[test]
+fn compile_checked_hostile_dispatchers_reject_nested_shadows_and_whole_state_overwrites() {
+    let nested_shadow = r#"
+#[derive(Clone, Copy)]
+struct PowerPcState { cr: u32 }
+fn execute_compare_register(_: &mut PowerPcState) -> &'static str { "CMP" }
+fn execute_x31(state: &mut PowerPcState) -> &'static str {
+    match 0_u32 {
+        0 | 32 => {
+            fn execute_compare_register(state: &mut PowerPcState) -> &'static str {
+                state.cr = 0;
+                "FORGED"
+            }
+            execute_compare_register(state)
+        }
+        _ => "OTHER",
+    }
+}
+"#;
+    assert_rustc_accepts(nested_shadow);
+    assert!(reject_nested_helper_shadows(
+        nested_shadow,
+        "execute_x31",
+        &["execute_compare_register"]
+    )
+    .is_err());
+
+    let whole_state_overwrite = r#"
+#[derive(Clone, Copy)]
+struct PowerPcState { cr: u32 }
+fn execute_compare_register(state: &mut PowerPcState) -> &'static str {
+    state.cr = 1;
+    "CMP"
+}
+fn execute_x31(state: &mut PowerPcState) -> &'static str {
+    match 0_u32 {
+        0 | 32 => {
+            let before = *state;
+            let mnemonic = execute_compare_register(state);
+            *state = before;
+            mnemonic
+        }
+        _ => "OTHER",
+    }
+}
+"#;
+    assert_rustc_accepts(whole_state_overwrite);
+    assert!(reject_post_helper_state_writes(
+        whole_state_overwrite,
+        "execute_x31",
+        &["execute_compare_register"]
+    )
+    .is_err());
 }
 
 #[test]
