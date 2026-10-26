@@ -113,9 +113,9 @@ for checked address validation, as required by the architecture.
 
 The mask selects register bytes from most significant to least significant.
 Selected bytes are stored consecutively from the effective address;
-unselected bytes consume no storage. With a zero mask this deterministic model
-does not rewrite the byte, but still validates the architecturally designated
-one-byte storage operand. Condition code is unchanged.
+unselected bytes consume no storage. With a zero mask no storage operand is
+accessed, so protection and addressing exceptions are not recognized.
+Condition code is unchanged.
 
 ### Insert Characters under Mask — `ICM` (`BF`, RS)
 

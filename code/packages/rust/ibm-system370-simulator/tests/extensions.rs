@@ -257,7 +257,7 @@ fn extension_faults_are_typed_and_atomic() {
     ));
     assert_eq!(masked.get_state(), before);
 
-    for opcode in [0xbd, 0xbe, 0xbf] {
+    for opcode in [0xbd, 0xbf] {
         let mut instruction = rs(opcode, 2, 0, 0);
         instruction[2] = 0x10; // Base register 1, displacement zero.
         let mut zero_mask = loaded(&instruction);
@@ -278,4 +278,19 @@ fn extension_faults_are_typed_and_atomic() {
         );
         assert_eq!(zero_mask.get_state(), before, "opcode {opcode:#04x}");
     }
+
+    let mut instruction = rs(0xbe, 2, 0, 0);
+    instruction[2] = 0x10; // Base register 1, displacement zero.
+    let mut zero_mask_stcm = loaded(&instruction);
+    zero_mask_stcm.write_gpr(1, MEMORY_BYTES as u32).unwrap();
+    zero_mask_stcm.write_gpr(2, 0x1122_3344).unwrap();
+    let mut expected = zero_mask_stcm.get_state();
+    expected.condition_code = 3;
+    expected.memory[0x100] = 0xa5;
+    zero_mask_stcm.restore(expected.clone()).unwrap();
+    expected.pc = 4;
+    let trace = zero_mask_stcm.step().unwrap();
+    assert_eq!(trace.mnemonic, "STCM");
+    assert_eq!(trace.raw, instruction);
+    assert_eq!(zero_mask_stcm.get_state(), expected);
 }

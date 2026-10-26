@@ -473,9 +473,7 @@ impl System370Simulator {
             .filter(|byte_index| mask & (8 >> byte_index) != 0)
             .map(|byte_index| (self.state.gprs[register] >> (24 - byte_index * 8)) as u8)
             .collect();
-        if bytes.is_empty() {
-            Self::range(address, 1)?;
-        } else {
+        if !bytes.is_empty() {
             let range = Self::range(address, bytes.len())?;
             self.state.memory[range].copy_from_slice(&bytes);
         }

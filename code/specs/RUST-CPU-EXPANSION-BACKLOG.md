@@ -72,7 +72,7 @@ architecture/core introduction era, not a claim about a particular chip.
 | 4 | Arm Cortex-M33 | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
 | 5 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
 | 6 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
-| 7 | IBM System/370 | published Principles of Operation | Local functional cell complete: owned checked state and lifecycle, the complete modeled System/360 surface through a private adapter, and source-backed MVCL/CLCL/CLM/STCM/ICM semantics, including zero-mask storage-operand validation. Fourteen tests, strict checks, and 98.78% line coverage (568/575) are green; gate partner follows only after merge. |
+| 7 | IBM System/370 | published Principles of Operation | Local functional cell complete: owned checked state and lifecycle, the complete modeled System/360 surface through a private adapter, and source-backed MVCL/CLCL/CLM/STCM/ICM semantics, including one-byte zero-mask validation for CLM/ICM and the architecturally exception-free zero-mask STCM. Fourteen tests, strict checks, and 98.78% line coverage (568/575) are green; gate partner follows only after merge. |
 | 8 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
 | 9 | PA-RISC 1.1 | published architecture manuals | Checked integer core and delayed-control boundary. |
 | 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
