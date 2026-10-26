@@ -1141,3 +1141,225 @@ describe("Chinese 来 — seven cited strokes, six lifts", () => {
     ).toBe(penPathD(letter.strokes[6], 1));
   });
 });
+
+// 这 (chapter 37): seven strokes, every one lifted, and none of them turns in a
+// second segment, so the strip is seven movements. The last frame must still
+// draw the exact Noto Sans SC character behind the last stroke.
+describe("Chinese 这 — seven cited strokes, six lifts", () => {
+  const letter = ductusFor("这", "chinese")!;
+  const outline = chineseOutline("这");
+  const steps = ductusSteps(letter);
+  const strip = ductusFilmstrip(letter, outline);
+
+  it("lifts before every stroke but the first", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([
+      0, 1, 2, 3, 4, 5, 6,
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+    ]);
+    expect(strip.frames).toHaveLength(7);
+    expect(strip.penLifts).toBe(6);
+    expect(strip.summary).toBe("7 strokes · 6 pen lifts · 7 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind the last stroke", () => {
+    const paths = byTag(strip.frames[6], "path");
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d,
+    ).toBe(outline.path);
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
+    ).toBe(penPathD(letter.strokes[6], 1));
+  });
+});
+
+// 那 (chapter 37): six strokes, every one lifted, and none of them turns in a
+// second segment, so the strip is six movements. The last frame must still draw
+// the exact Noto Sans SC character behind the last stroke.
+describe("Chinese 那 — six cited strokes, five lifts", () => {
+  const letter = ductusFor("那", "chinese")!;
+  const outline = chineseOutline("那");
+  const steps = ductusSteps(letter);
+  const strip = ductusFilmstrip(letter, outline);
+
+  it("lifts before every stroke but the first", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 3, 4, 5]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+    ]);
+    expect(strip.frames).toHaveLength(6);
+    expect(strip.penLifts).toBe(5);
+    expect(strip.summary).toBe("6 strokes · 5 pen lifts · 6 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind the last stroke", () => {
+    const paths = byTag(strip.frames[5], "path");
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d,
+    ).toBe(outline.path);
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
+    ).toBe(penPathD(letter.strokes[5], 1));
+  });
+});
+
+// 吃 (chapter 38): six strokes, every one lifted, and none of them turns in a
+// second segment, so the strip is six movements. The last frame must still draw
+// the exact Noto Sans SC character behind the last stroke.
+describe("Chinese 吃 — six cited strokes, five lifts", () => {
+  const letter = ductusFor("吃", "chinese")!;
+  const outline = chineseOutline("吃");
+  const steps = ductusSteps(letter);
+  const strip = ductusFilmstrip(letter, outline);
+
+  it("lifts before every stroke but the first", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 3, 4, 5]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+    ]);
+    expect(strip.frames).toHaveLength(6);
+    expect(strip.penLifts).toBe(5);
+    expect(strip.summary).toBe("6 strokes · 5 pen lifts · 6 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind the last stroke", () => {
+    const paths = byTag(strip.frames[5], "path");
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d,
+    ).toBe(outline.path);
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
+    ).toBe(penPathD(letter.strokes[5], 1));
+  });
+});
+
+// 饭 (chapter 38): seven strokes, every one lifted, and none of them turns in a
+// second segment, so the strip is seven movements. The last frame must still
+// draw the exact Noto Sans SC character behind the last stroke.
+describe("Chinese 饭 — seven cited strokes, six lifts", () => {
+  const letter = ductusFor("饭", "chinese")!;
+  const outline = chineseOutline("饭");
+  const steps = ductusSteps(letter);
+  const strip = ductusFilmstrip(letter, outline);
+
+  it("lifts before every stroke but the first", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([
+      0, 1, 2, 3, 4, 5, 6,
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+    ]);
+    expect(strip.frames).toHaveLength(7);
+    expect(strip.penLifts).toBe(6);
+    expect(strip.summary).toBe("7 strokes · 6 pen lifts · 7 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind the last stroke", () => {
+    const paths = byTag(strip.frames[6], "path");
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d,
+    ).toBe(outline.path);
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
+    ).toBe(penPathD(letter.strokes[6], 1));
+  });
+});
+
+// 喝 (chapter 39): twelve strokes, every one lifted, and none of them turns in a
+// second segment, so the strip is twelve movements. The last frame must still
+// draw the exact Noto Sans SC character behind the last stroke.
+describe("Chinese 喝 — twelve cited strokes, eleven lifts", () => {
+  const letter = ductusFor("喝", "chinese")!;
+  const outline = chineseOutline("喝");
+  const steps = ductusSteps(letter);
+  const strip = ductusFilmstrip(letter, outline);
+
+  it("lifts before every stroke but the first", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+    ]);
+    expect(strip.frames).toHaveLength(12);
+    expect(strip.penLifts).toBe(11);
+    expect(strip.summary).toBe("12 strokes · 11 pen lifts · 12 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind the last stroke", () => {
+    const paths = byTag(strip.frames[11], "path");
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d,
+    ).toBe(outline.path);
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
+    ).toBe(penPathD(letter.strokes[11], 1));
+  });
+});
+
+// 水 (chapter 39): four strokes, every one lifted, and none of them turns in a
+// second segment, so the strip is four movements. The last frame must still
+// draw the exact Noto Sans SC character behind the last stroke.
+describe("Chinese 水 — four cited strokes, three lifts", () => {
+  const letter = ductusFor("水", "chinese")!;
+  const outline = chineseOutline("水");
+  const steps = ductusSteps(letter);
+  const strip = ductusFilmstrip(letter, outline);
+
+  it("lifts before every stroke but the first", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 3]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      true,
+      true,
+      true,
+    ]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 4 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind the last stroke", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d,
+    ).toBe(outline.path);
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
+    ).toBe(penPathD(letter.strokes[3], 1));
+  });
+});
