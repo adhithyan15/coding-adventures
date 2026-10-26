@@ -244,7 +244,7 @@ impl CortexM23GateLevel {
     fn commit_transition(&mut self, next: &CortexM23State) {
         for (address, &value) in next.memory.iter().enumerate() {
             let current = self.memory.read(address);
-            if current != value && gates::byte_changed(current, value) == 1 {
+            if gates::byte_changed(current, value) == 1 {
                 self.memory.write(address, value);
             }
         }

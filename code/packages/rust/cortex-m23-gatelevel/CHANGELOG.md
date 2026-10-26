@@ -9,6 +9,10 @@
   deterministic allocation-failure seams, and exact functional-oracle
   differential coverage for every implemented instruction subfamily.
 - Add AST-based topology and module-routing checks with hostile native-host,
-  oracle-substitution, direct-Q-write, macro, string, and attribute confusers.
-- Reach 91.83% combined Rust line coverage (1,674 of 1,823 lines) across 30
+  oracle-substitution, helper-indirection, post-dispatch overwrite,
+  direct-Q-write, macro, string, and attribute confusers, plus exact locks for
+  every critical decode-to-commit body.
+- Exercise every condition and shift-boundary outcome, arithmetic and
+  multiply edges, and the register/immediate memory-addressing overlap matrix.
+- Reach 93.64% combined Rust line coverage (1,825 of 1,949 lines) across 34
   release tests.

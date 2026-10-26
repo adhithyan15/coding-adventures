@@ -97,7 +97,7 @@ fn assert_state_eq(gate: &GateState, functional: &FunctionalState, label: &str) 
     assert_eq!(gate.loaded_len, functional.loaded_len, "{label}: length");
 }
 
-fn compare_transition(label: &str, words: &[u16], configure: impl Fn(&mut GateState)) {
+fn compare_transition(label: &str, words: &[u16], configure: impl Fn(&mut GateState)) -> GateState {
     let program = encoding::program(words);
     let mut gate = CortexM23GateLevel::new();
     let mut functional = Functional::new(FunctionalExtension::Disabled);
@@ -175,6 +175,7 @@ fn compare_transition(label: &str, words: &[u16], configure: impl Fn(&mut GateSt
                 &functional.try_get_state().unwrap(),
                 label,
             );
+            gate.get_state()
         }
         (Err(gate_error), Err(functional_error)) => {
             assert_eq!(
@@ -187,6 +188,7 @@ fn compare_transition(label: &str, words: &[u16], configure: impl Fn(&mut GateSt
                 &functional.try_get_state().unwrap(),
                 label,
             );
+            gate.get_state()
         }
         (gate_result, functional_result) => {
             panic!("{label} diverged: gate={gate_result:?}, functional={functional_result:?}")
@@ -195,7 +197,9 @@ fn compare_transition(label: &str, words: &[u16], configure: impl Fn(&mut GateSt
 }
 
 fn seeded(state: &mut GateState) {
-    state.registers = [0; 13];
+    state.registers = std::array::from_fn(|index| {
+        0x1111_0001_u32.wrapping_add((index as u32).wrapping_mul(0x0101_0101))
+    });
     state.registers[0] = 0x8000_0001;
     state.registers[1] = 0x201;
     state.registers[2] = 4;
@@ -205,6 +209,11 @@ fn seeded(state: &mut GateState) {
     state.psp_non_secure = 0x500;
     state.lr = 0x105;
     state.apsr = 0x3000_0000;
+    state.ipsr = 7;
+    state.primask_non_secure = true;
+    state.control_non_secure = 3;
+    state.handler_mode = true;
+    state.event_registered = true;
     state.memory[0x200..0x208].copy_from_slice(&[0x80, 0xff, 0x34, 0x12, 7, 0, 0, 0]);
 }
 
@@ -395,6 +404,174 @@ fn branch_outcomes_privilege_and_process_stack_match() {
             state.handler_mode = handler_mode;
             state.ipsr = ipsr;
         });
+    }
+}
+
+#[test]
+fn every_condition_and_shift_boundary_matches_full_state() {
+    for flags in 0_u32..16 {
+        let apsr = flags << 28;
+        for condition in 0_u16..14 {
+            compare_transition(
+                &format!("condition-{condition}-flags-{flags:04b}"),
+                &[0xd000 | (condition << 8)],
+                |state| {
+                    seeded(state);
+                    state.apsr = apsr;
+                },
+            );
+        }
+    }
+
+    for kind in 0_u16..3 {
+        for encoded in [0_u16, 1, 31] {
+            for (value, carry) in [
+                (0_u32, false),
+                (1, true),
+                (0x8000_0001, false),
+                (u32::MAX, true),
+            ] {
+                let raw = (kind << 11) | (encoded << 6) | (1 << 3);
+                compare_transition(
+                    &format!("shift-immediate-{kind}-{encoded}-{value:08x}-{carry}"),
+                    &[raw],
+                    |state| {
+                        seeded(state);
+                        state.registers[1] = value;
+                        state.apsr = if carry { 1 << 29 } else { 0 };
+                    },
+                );
+            }
+        }
+    }
+
+    for (operation, name) in [(2_u16, "lsl"), (3, "lsr"), (4, "asr"), (7, "ror")] {
+        for amount in [0_u32, 1, 31, 32, 33, 63, 64, 255] {
+            for (value, carry) in [(1_u32, false), (0x8000_0001, true), (u32::MAX, false)] {
+                let raw = 0x4000 | (operation << 6) | (1 << 3);
+                compare_transition(
+                    &format!("shift-register-{name}-{amount}-{value:08x}-{carry}"),
+                    &[raw],
+                    |state| {
+                        seeded(state);
+                        state.registers[0] = value;
+                        state.registers[1] = amount;
+                        state.apsr = if carry { 1 << 29 } else { 0 };
+                    },
+                );
+            }
+        }
+    }
+}
+
+#[test]
+fn arithmetic_flag_and_multiply_edges_match_full_state() {
+    let mut observed_nzcv = std::collections::BTreeSet::new();
+    for (operation, left, right, carry) in [
+        (5_u16, 0_u32, 0_u32, false),
+        (5, u32::MAX, 1, false),
+        (5, 0x7fff_ffff, 1, false),
+        (5, 0x8000_0000, 0x8000_0000, false),
+        (5, u32::MAX, 0, true),
+        (6, 0, 1, true),
+        (6, 1, 1, true),
+        (6, 0x8000_0000, 1, true),
+        (6, 0x7fff_ffff, u32::MAX, true),
+        (10, 0, 0, false),
+        (10, 0, 1, false),
+        (11, 0x7fff_ffff, 1, false),
+    ] {
+        let raw = 0x4000 | (operation << 6) | (1 << 3);
+        let final_state = compare_transition(
+            &format!("flags-{operation}-{left:08x}-{right:08x}-{carry}"),
+            &[raw],
+            |state| {
+                seeded(state);
+                state.registers[0] = left;
+                state.registers[1] = right;
+                state.apsr = if carry { 1 << 29 } else { 0 };
+            },
+        );
+        observed_nzcv.insert(final_state.apsr >> 28);
+    }
+    for bit in 0..4 {
+        assert!(
+            observed_nzcv.iter().any(|flags| flags & (1 << bit) == 0),
+            "flag bit {bit} never cleared: {observed_nzcv:?}"
+        );
+        assert!(
+            observed_nzcv.iter().any(|flags| flags & (1 << bit) != 0),
+            "flag bit {bit} never set: {observed_nzcv:?}"
+        );
+    }
+
+    for left in [0_u32, 1, 2, 0x7fff_ffff, 0x8000_0000, u32::MAX] {
+        for right in [0_u32, 1, 3, 0x8000_0000, u32::MAX] {
+            let raw = 0x4000 | (13 << 6) | (1 << 3);
+            compare_transition(
+                &format!("multiply-{left:08x}-{right:08x}"),
+                &[raw],
+                |state| {
+                    seeded(state);
+                    state.registers[0] = left;
+                    state.registers[1] = right;
+                },
+            );
+        }
+    }
+}
+
+#[test]
+fn memory_addressing_and_overlap_matrix_matches_full_state() {
+    for operation in 0_u16..8 {
+        for (rt, rn, rm) in [(0_u16, 1_u16, 2_u16), (1, 1, 2), (2, 1, 2), (1, 1, 1)] {
+            let raw = 0x5000 | (operation << 9) | (rm << 6) | (rn << 3) | rt;
+            compare_transition(
+                &format!("register-memory-{operation}-rt{rt}-rn{rn}-rm{rm}"),
+                &[raw],
+                |state| {
+                    seeded(state);
+                    state.registers[rn as usize] = 0x100;
+                    state.registers[rm as usize] = 0x100;
+                    state.memory[0x200..0x204].copy_from_slice(&[0x80, 0xff, 0x34, 0x12]);
+                },
+            );
+        }
+    }
+
+    for opcode in [0b01100_u16, 0b01101, 0b01110, 0b01111, 0b10000, 0b10001] {
+        for immediate in [0_u16, 1, 31] {
+            for (rt, rn) in [(0_u16, 1_u16), (1, 1)] {
+                let raw = (opcode << 11) | (immediate << 6) | (rn << 3) | rt;
+                compare_transition(
+                    &format!("immediate-memory-{opcode:05b}-{immediate}-rt{rt}-rn{rn}"),
+                    &[raw],
+                    |state| {
+                        seeded(state);
+                        state.registers[rn as usize] = 0x200;
+                    },
+                );
+            }
+        }
+    }
+
+    for rn in 0_u16..8 {
+        for mask in [0_u16, 1 << rn, 1, 0x55, 0xff] {
+            for load in [false, true] {
+                let raw = 0xc000 | (u16::from(load) << 11) | (rn << 8) | mask;
+                compare_transition(
+                    &format!(
+                        "multiple-{}-rn{rn}-mask{mask:02x}",
+                        if load { "load" } else { "store" }
+                    ),
+                    &[raw],
+                    |state| {
+                        seeded(state);
+                        state.registers[rn as usize] = 0x200;
+                    },
+                );
+            }
+        }
     }
 }
 

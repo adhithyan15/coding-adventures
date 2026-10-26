@@ -202,6 +202,47 @@ pub fn select_32(d0: u32, d1: u32, select: u8) -> u32 {
     }))
 }
 
+/// Select one bit from a word through a 32-line one-hot decoder.
+///
+/// An out-of-range index asserts no line and therefore returns zero.  This is
+/// useful for shift networks, where the architectural boundary logic chooses
+/// separately between the decoded bit and the zero/sign-fill cases.
+#[must_use]
+pub fn select_bit_32(value: u32, index: u32) -> u8 {
+    let bits = u32_to_bits(value);
+    (0..32).fold(0, |output, bit| {
+        or_gate(output, and_gate(bits[bit], selected(index, bit as u32, 5)))
+    })
+}
+
+/// OR together independently decoded one-bit control lines.
+#[must_use]
+pub fn any_line<const N: usize>(lines: [u8; N]) -> u8 {
+    lines.into_iter().fold(0, or_gate)
+}
+
+/// Select one 32-bit candidate from settled one-hot control lines.
+#[must_use]
+pub fn select_one_hot_32<const N: usize>(values: [u32; N], lines: [u8; N]) -> u32 {
+    values
+        .into_iter()
+        .zip(lines)
+        .fold(0, |output, (value, line)| {
+            bit_or_32(output, select_32(0, value, line))
+        })
+}
+
+/// Select one one-bit candidate from settled one-hot control lines.
+#[must_use]
+pub fn select_one_hot_bit<const N: usize>(values: [u8; N], lines: [u8; N]) -> u8 {
+    values
+        .into_iter()
+        .zip(lines)
+        .fold(0, |output, (value, line)| {
+            or_gate(output, and_gate(value, line))
+        })
+}
+
 #[must_use]
 pub fn byte_changed(left: u8, right: u8) -> u8 {
     let left = u8_to_bits(left);
@@ -278,6 +319,100 @@ pub fn rotate_right_32(mut value: u32, amount: u32) -> u32 {
         value = select_32(value, shifted, u32_to_bits(amount)[stage]);
     }
     value
+}
+
+/// Thumb immediate-shift result and carry from one-hot kind/boundary networks.
+///
+/// `kind` is 0=LSL, 1=LSR, and 2=ASR.  An encoded zero preserves carry for
+/// LSL but denotes an architectural shift by 32 for LSR/ASR.
+#[must_use]
+pub fn shift_immediate_network(value: u32, kind: u8, encoded: u32, carry: u8) -> (u32, u8) {
+    let kind_lines = [
+        selected(u32::from(kind), 0, 2),
+        selected(u32::from(kind), 1, 2),
+        selected(u32::from(kind), 2, 2),
+    ];
+    let encoded_zero = selected(encoded, 0, 5);
+    let encoded_nonzero = not_gate(encoded_zero);
+    let amount = select_32(encoded, 32, encoded_zero);
+    let amount_is_32 = selected(amount, 32, 6);
+    let low_amount = field(amount, 0, 5);
+    let sign = u32_to_bits(value)[31];
+    let sign_fill = select_32(0, u32::MAX, sign);
+
+    let lsl_result = select_32(value, shift_left_32(value, encoded), encoded_nonzero);
+    let lsl_bit = select_bit_32(value, sub_32(32, encoded, 0).0);
+    let lsl_carry = mux2(carry, lsl_bit, encoded_nonzero);
+
+    let lsr_result = select_32(shift_right_32(value, low_amount), 0, amount_is_32);
+    let right_bit = select_bit_32(value, sub_32(amount, 1, 0).0);
+
+    let asr_result = select_32(
+        shift_arithmetic_right_32(value, low_amount),
+        sign_fill,
+        amount_is_32,
+    );
+
+    (
+        select_one_hot_32([lsl_result, lsr_result, asr_result], kind_lines),
+        select_one_hot_bit([lsl_carry, right_bit, right_bit], kind_lines),
+    )
+}
+
+/// Thumb register-shift result and carry from one-hot kind/boundary networks.
+///
+/// `kind` is 0=LSL, 1=LSR, 2=ASR, and 3=ROR.  The full low byte of the
+/// register supplies the architectural amount; the barrel network itself uses
+/// its low five bits only after zero/32/greater-than-32 lines have settled.
+#[must_use]
+pub fn shift_register_network(value: u32, kind: u8, amount: u32, carry: u8) -> (u32, u8) {
+    let kind_lines = [
+        selected(u32::from(kind), 0, 2),
+        selected(u32::from(kind), 1, 2),
+        selected(u32::from(kind), 2, 2),
+        selected(u32::from(kind), 3, 2),
+    ];
+    let amount = field(amount, 0, 8);
+    let amount_zero = selected(amount, 0, 8);
+    let amount_nonzero = not_gate(amount_zero);
+    let amount_lt_32 = less_than_unsigned_32(amount, 32);
+    let amount_eq_32 = equal_32(amount, 32);
+    let within_word = and_gate(amount_nonzero, amount_lt_32);
+    let at_least_32 = not_gate(amount_lt_32);
+    let low_amount = field(amount, 0, 5);
+    let sign = u32_to_bits(value)[31];
+    let sign_fill = select_32(0, u32::MAX, sign);
+    let right_index = sub_32(amount, 1, 0).0;
+
+    let lsl_result = select_32(0, shift_left_32(value, low_amount), within_word);
+    let lsl_within_carry = select_bit_32(value, sub_32(32, amount, 0).0);
+    let lsl_carry = select_one_hot_bit(
+        [lsl_within_carry, u32_to_bits(value)[0]],
+        [within_word, amount_eq_32],
+    );
+
+    let lsr_result = select_32(0, shift_right_32(value, low_amount), within_word);
+    let lsr_within_carry = select_bit_32(value, right_index);
+    let lsr_carry = select_one_hot_bit([lsr_within_carry, sign], [within_word, amount_eq_32]);
+
+    let asr_result = select_32(
+        shift_arithmetic_right_32(value, low_amount),
+        sign_fill,
+        at_least_32,
+    );
+    let asr_carry = mux2(select_bit_32(value, right_index), sign, at_least_32);
+
+    let ror_result = rotate_right_32(value, low_amount);
+    let ror_carry = u32_to_bits(ror_result)[31];
+    let selected_result =
+        select_one_hot_32([lsl_result, lsr_result, asr_result, ror_result], kind_lines);
+    let selected_carry =
+        select_one_hot_bit([lsl_carry, lsr_carry, asr_carry, ror_carry], kind_lines);
+
+    (
+        select_32(selected_result, value, amount_zero),
+        mux2(selected_carry, carry, amount_zero),
+    )
 }
 
 #[must_use]

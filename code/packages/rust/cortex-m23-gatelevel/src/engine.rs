@@ -696,77 +696,42 @@ fn subtract(state: &mut CortexM23State, left: u32, right: u32, borrow: bool) -> 
 }
 
 fn shift_immediate(value: u32, kind: u8, encoded: u32, carry: bool) -> (u32, bool) {
-    match kind {
-        0 if encoded == 0 => (value, carry),
-        0 => (
-            gates::shift_left_32(value, encoded),
-            gates::u32_to_bits(value)[(32 - encoded) as usize] == 1,
-        ),
-        1 => {
-            let amount = if encoded == 0 { 32 } else { encoded };
-            (
-                if amount == 32 {
-                    0
-                } else {
-                    gates::shift_right_32(value, amount)
-                },
-                gates::u32_to_bits(value)[(amount - 1) as usize] == 1,
-            )
-        }
-        _ => {
-            let amount = if encoded == 0 { 32 } else { encoded };
-            let result = if amount >= 32 {
-                gates::select_32(0, u32::MAX, gates::u32_to_bits(value)[31])
-            } else {
-                gates::shift_arithmetic_right_32(value, amount)
-            };
-            (
-                result,
-                gates::u32_to_bits(value)[(amount.min(32) - 1) as usize] == 1,
-            )
-        }
-    }
+    let (result, carry_out) = gates::shift_immediate_network(value, kind, encoded, u8::from(carry));
+    (result, carry_out == 1)
 }
 
 fn shift_register(value: u32, kind: u8, amount: u32, carry: bool) -> (u32, bool) {
-    if amount == 0 {
-        return (value, carry);
-    }
-    match kind {
-        0 if amount < 32 => (
-            gates::shift_left_32(value, amount),
-            gates::u32_to_bits(value)[(32 - amount) as usize] == 1,
-        ),
-        0 if amount == 32 => (0, gates::u32_to_bits(value)[0] == 1),
-        0 => (0, false),
-        1 if amount < 32 => (
-            gates::shift_right_32(value, amount),
-            gates::u32_to_bits(value)[(amount - 1) as usize] == 1,
-        ),
-        1 if amount == 32 => (0, gates::u32_to_bits(value)[31] == 1),
-        1 => (0, false),
-        2 => {
-            let result = if amount >= 32 {
-                gates::select_32(0, u32::MAX, gates::u32_to_bits(value)[31])
-            } else {
-                gates::shift_arithmetic_right_32(value, amount)
-            };
-            (
-                result,
-                gates::u32_to_bits(value)[(amount.min(32) - 1) as usize] == 1,
-            )
-        }
-        _ => {
-            let rotation = gates::bit_and_32(amount, 31);
-            let result = gates::rotate_right_32(value, rotation);
-            (result, gates::u32_to_bits(result)[31] == 1)
-        }
-    }
+    let (result, carry_out) = gates::shift_register_network(value, kind, amount, u8::from(carry));
+    (result, carry_out == 1)
+}
+
+fn add_or_subtract(state: &mut CortexM23State, left: u32, right: u32, subtract_line: u8) -> u32 {
+    let added = gates::add_32(left, right, 0);
+    let subtracted = gates::sub_32(left, right, 0);
+    let result = gates::select_32(added.0, subtracted.0, subtract_line);
+    let carry = gates::select_one_hot_bit(
+        [added.1, not_gate(subtracted.1)],
+        [not_gate(subtract_line), subtract_line],
+    );
+    let overflow = gates::select_one_hot_bit(
+        [added.2, subtracted.2],
+        [not_gate(subtract_line), subtract_line],
+    );
+    set_nz(state, result);
+    set_flag(state, APSR_C, carry == 1);
+    set_flag(state, APSR_V, overflow == 1);
+    result
 }
 
 fn execute_shift_add_sub(state: &mut CortexM23State, raw: u16) -> Result<&'static str, CoreError> {
     let operation = field16(raw, 11, 2);
-    if operation < 3 {
+    let shift_lines = [
+        line16(operation, 0, 2, 0),
+        line16(operation, 0, 2, 1),
+        line16(operation, 0, 2, 2),
+    ];
+    let shift_family = gates::any_line(shift_lines);
+    if shift_family == 1 {
         let amount = u32::from(field16(raw, 6, 5));
         let rm = field16(raw, 3, 3) as usize;
         let rd = field16(raw, 0, 3) as usize;
@@ -779,24 +744,34 @@ fn execute_shift_add_sub(state: &mut CortexM23State, raw: u16) -> Result<&'stati
         state.registers[rd] = result;
         set_nz(state, result);
         set_flag(state, APSR_C, carry);
-        return Ok(["lsls", "lsrs", "asrs"][operation as usize]);
+        if shift_lines[0] == 1 {
+            return Ok("lsls");
+        }
+        if shift_lines[1] == 1 {
+            return Ok("lsrs");
+        }
+        return Ok("asrs");
     }
     let op = field16(raw, 9, 2);
     let operand = field16(raw, 6, 3) as usize;
     let rn = field16(raw, 3, 3) as usize;
     let rd = field16(raw, 0, 3) as usize;
-    let right = if op < 2 {
-        state.registers[operand]
-    } else {
-        operand as u32
-    };
-    let result = if op & 1 == 0 {
-        add_with_carry(state, state.registers[rn], right, false)
-    } else {
-        subtract(state, state.registers[rn], right, false)
-    };
+    let op_lines = [
+        line16(op, 0, 2, 0),
+        line16(op, 0, 2, 1),
+        line16(op, 0, 2, 2),
+        line16(op, 0, 2, 3),
+    ];
+    let immediate_line = or_gate(op_lines[2], op_lines[3]);
+    let subtract_line = or_gate(op_lines[1], op_lines[3]);
+    let right = gates::select_32(state.registers[operand], operand as u32, immediate_line);
+    let result = add_or_subtract(state, state.registers[rn], right, subtract_line);
     state.registers[rd] = result;
-    Ok(if op & 1 == 0 { "adds" } else { "subs" })
+    if subtract_line == 1 {
+        Ok("subs")
+    } else {
+        Ok("adds")
+    }
 }
 
 fn execute_immediate(state: &mut CortexM23State, raw: u16) -> Result<&'static str, CoreError> {
@@ -847,12 +822,13 @@ fn execute_data_processing(
             "eors"
         }
         2..=4 | 7 => {
-            let kind = match operation {
-                2 => 0,
-                3 => 1,
-                4 => 2,
-                _ => 3,
-            };
+            let kind_lines = [
+                gates::selected(u32::from(operation), 2, 4),
+                gates::selected(u32::from(operation), 3, 4),
+                gates::selected(u32::from(operation), 4, 4),
+                gates::selected(u32::from(operation), 7, 4),
+            ];
+            let kind = gates::select_one_hot_32([0, 1, 2, 3], kind_lines) as u8;
             let (result, carry) = shift_register(
                 left,
                 kind,
@@ -1291,22 +1267,25 @@ fn condition_holds(state: &CortexM23State, condition: u8) -> bool {
     let z = u8::from(flag(state, APSR_Z));
     let c = u8::from(flag(state, APSR_C));
     let v = u8::from(flag(state, APSR_V));
-    let signal = match condition {
-        0 => z,
-        1 => not_gate(z),
-        2 => c,
-        3 => not_gate(c),
-        4 => n,
-        5 => not_gate(n),
-        6 => v,
-        7 => not_gate(v),
-        8 => and_gate(c, not_gate(z)),
-        9 => or_gate(not_gate(c), z),
-        10 => not_gate(xor_gate(n, v)),
-        11 => xor_gate(n, v),
-        12 => and_gate(not_gate(z), not_gate(xor_gate(n, v))),
-        _ => or_gate(z, xor_gate(n, v)),
-    };
+    let n_xor_v = xor_gate(n, v);
+    let predicates = [
+        z,
+        not_gate(z),
+        c,
+        not_gate(c),
+        n,
+        not_gate(n),
+        v,
+        not_gate(v),
+        and_gate(c, not_gate(z)),
+        or_gate(not_gate(c), z),
+        not_gate(n_xor_v),
+        n_xor_v,
+        and_gate(not_gate(z), not_gate(n_xor_v)),
+        or_gate(z, n_xor_v),
+    ];
+    let lines = std::array::from_fn(|index| gates::selected(u32::from(condition), index as u32, 4));
+    let signal = gates::select_one_hot_bit(predicates, lines);
     signal == 1
 }
 
@@ -1379,28 +1358,41 @@ fn execute_bl(
 }
 
 fn execute_barrier(second: u16) -> Result<&'static str, CoreError> {
-    Ok(match second {
-        0x8f4f => "dsb",
-        0x8f5f => "dmb",
-        _ => "isb",
-    })
+    let dsb = line16(second, 0, 16, 0x8f4f);
+    let dmb = line16(second, 0, 16, 0x8f5f);
+    if dsb == 1 {
+        return Ok("dsb");
+    }
+    if dmb == 1 {
+        return Ok("dmb");
+    }
+    Ok("isb")
 }
 
-fn read_special(state: &CortexM23State, sysm: u8) -> Option<u32> {
-    match sysm {
-        0 => Some(state.apsr),
-        1 => Some(gates::bit_or_32(state.apsr, u32::from(state.ipsr))),
-        2 => Some(state.apsr),
-        3 => Some(gates::bit_or_32(state.apsr, u32::from(state.ipsr))),
-        5 => Some(u32::from(state.ipsr)),
-        6 => Some(0),
-        7 => Some(u32::from(state.ipsr)),
-        8 => Some(state.msp_non_secure),
-        9 => Some(state.psp_non_secure),
-        16 => Some(u32::from(state.primask_non_secure)),
-        20 => Some(u32::from(state.control_non_secure)),
-        _ => None,
-    }
+fn special_lines(sysm: u8) -> [u8; 11] {
+    [0_u32, 1, 2, 3, 5, 6, 7, 8, 9, 16, 20].map(|value| gates::selected(u32::from(sysm), value, 8))
+}
+
+fn read_special(state: &CortexM23State, sysm: u8) -> (u32, u8) {
+    let lines = special_lines(sysm);
+    let xpsr = gates::bit_or_32(state.apsr, u32::from(state.ipsr));
+    let value = gates::select_one_hot_32(
+        [
+            state.apsr,
+            xpsr,
+            state.apsr,
+            xpsr,
+            u32::from(state.ipsr),
+            0,
+            u32::from(state.ipsr),
+            state.msp_non_secure,
+            state.psp_non_secure,
+            u32::from(state.primask_non_secure),
+            u32::from(state.control_non_secure),
+        ],
+        lines,
+    );
+    (value, gates::any_line(lines))
 }
 
 fn execute_special_register(
@@ -1410,29 +1402,37 @@ fn execute_special_register(
     pc: u32,
 ) -> Result<&'static str, CoreError> {
     let sysm = field16(second, 0, 8) as u8;
-    if first == 0xf3ef {
+    let lines = special_lines(sysm);
+    let mrs_line = line16(first, 0, 16, 0xf3ef);
+    if mrs_line == 1 {
         let rd = field16(second, 8, 4) as u8;
-        if rd > 12 {
+        let rd_valid = gates::less_or_equal_unsigned_32(u32::from(rd), 12);
+        if rd_valid == 0 {
             return Err(CoreError::UnknownInstruction32 { first, second, pc });
         }
-        let Some(mut value) = read_special(state, sysm) else {
+        let (mut value, special_valid) = read_special(state, sysm);
+        if special_valid == 0 {
             return Err(CoreError::UnknownInstruction32 { first, second, pc });
-        };
+        }
         let unprivileged = and_gate(
             gates::u32_to_bits(u32::from(state.control_non_secure))[0],
             not_gate(u8::from(state.handler_mode)),
         );
-        let unprivileged_value = if matches!(sysm, 0 | 20) { value } else { 0 };
+        let unprivileged_visible = or_gate(lines[0], lines[10]);
+        let unprivileged_value = gates::select_32(0, value, unprivileged_visible);
         value = gates::select_32(value, unprivileged_value, unprivileged);
         state.registers[rd as usize] = value;
         return Ok("mrs");
     }
     let rn = field16(first, 0, 4) as u8;
-    if rn > 12 || !matches!(sysm, 0..=3 | 5..=9 | 16 | 20) {
+    let rn_valid = gates::less_or_equal_unsigned_32(u32::from(rn), 12);
+    let special_valid = gates::any_line(lines);
+    if and_gate(rn_valid, special_valid) == 0 {
         return Err(CoreError::UnknownInstruction32 { first, second, pc });
     }
     let value = state.registers[rn as usize];
-    if matches!(sysm, 0..=3) {
+    let apsr_write = gates::any_line([lines[0], lines[1], lines[2], lines[3]]);
+    if apsr_write == 1 {
         state.apsr = gates::bit_and_32(value, APSR_MASK);
         return Ok("msr");
     }
@@ -1440,25 +1440,31 @@ fn execute_special_register(
         gates::u32_to_bits(u32::from(state.control_non_secure))[0],
         not_gate(u8::from(state.handler_mode)),
     );
-    if matches!(sysm, 5..=7) || unprivileged == 1 {
+    let read_only = gates::any_line([lines[4], lines[5], lines[6]]);
+    if or_gate(read_only, unprivileged) == 1 {
         return Ok("msr");
     }
-    match sysm {
-        8 => state.msp_non_secure = gates::bit_and_32(value, gates::bit_not_32(3)),
-        9 => state.psp_non_secure = gates::bit_and_32(value, gates::bit_not_32(3)),
-        16 => state.primask_non_secure = gates::bit_and_32(value, 1) != 0,
-        _ => {
-            let requested = gates::bit_and_32(value, 3) as u8;
-            let handler_value = gates::bit_or_32(
-                gates::bit_and_32(u32::from(state.control_non_secure), 2),
-                gates::bit_and_32(u32::from(requested), 1),
-            );
-            state.control_non_secure = gates::select_32(
-                u32::from(requested),
-                handler_value,
-                u8::from(state.handler_mode),
-            ) as u8;
-        }
+    let aligned = gates::bit_and_32(value, gates::bit_not_32(3));
+    if lines[7] == 1 {
+        state.msp_non_secure = aligned;
+    }
+    if lines[8] == 1 {
+        state.psp_non_secure = aligned;
+    }
+    if lines[9] == 1 {
+        state.primask_non_secure = gates::u32_to_bits(value)[0] == 1;
+    }
+    if lines[10] == 1 {
+        let requested = gates::field(value, 0, 2) as u8;
+        let handler_value = gates::bit_or_32(
+            gates::bit_and_32(u32::from(state.control_non_secure), 2),
+            gates::bit_and_32(u32::from(requested), 1),
+        );
+        state.control_non_secure = gates::select_32(
+            u32::from(requested),
+            handler_value,
+            u8::from(state.handler_mode),
+        ) as u8;
     }
     Ok("msr")
 }

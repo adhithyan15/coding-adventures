@@ -30,11 +30,13 @@ assert_eq!(result.final_state.registers[0], 7);
 
 The package retains complete before/after state traces under a fixed 8 MiB
 budget, uses typed atomic faults, and validates complete state on restore.
-Thirty release tests cover exhaustive 16-bit decode plus representative
-32-bit second-half decode, every implemented execution family, complete-state
-differentials, allocation rollback, concrete DFF topology, and hostile
-structural-confuser rejection. The completion baseline is 91.83% combined
-Rust line coverage (1,674/1,823).
+Thirty-four release tests cover exhaustive 16-bit decode plus representative
+32-bit second-half decode, every implemented execution family, all condition
+and shift-boundary outcomes, arithmetic and multiply edges, memory-addressing
+overlaps, complete-state differentials, allocation rollback, concrete DFF
+topology, exact critical-body locks, and hostile structural-confuser
+rejection. The completion baseline is 93.64% combined Rust line coverage
+(1,825/1,949).
 
 ```sh
 cargo test -p cortex-m23-gatelevel --release --no-fail-fast

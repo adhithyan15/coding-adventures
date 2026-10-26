@@ -2,8 +2,8 @@ use quote::ToTokens;
 use std::collections::{BTreeMap, BTreeSet};
 use syn::visit::{self, Visit};
 use syn::{
-    BinOp, Expr, ExprAssign, ExprBinary, ExprCall, ExprIf, ExprMethodCall, File, ImplItem, Item,
-    ItemFn, Lit, PatIdent,
+    BinOp, Expr, ExprAssign, ExprBinary, ExprCall, ExprIf, ExprMatch, ExprMethodCall, File,
+    ImplItem, Item, ItemFn, Lit, PatIdent,
 };
 
 const LIB: &str = include_str!("../src/lib.rs");
@@ -19,6 +19,7 @@ struct BodyFacts {
     paths: BTreeSet<String>,
     local_names: BTreeSet<String>,
     dead_control: bool,
+    match_count: usize,
 }
 
 impl<'ast> Visit<'ast> for BodyFacts {
@@ -62,6 +63,11 @@ impl<'ast> Visit<'ast> for BodyFacts {
             self.dead_control = true;
         }
         visit::visit_expr_if(self, node);
+    }
+
+    fn visit_expr_match(&mut self, node: &'ast ExprMatch) {
+        self.match_count += 1;
+        visit::visit_expr_match(self, node);
     }
 
     fn visit_item_fn(&mut self, node: &'ast ItemFn) {
@@ -145,6 +151,31 @@ fn audit_function(
         }
     }
     Ok(())
+}
+
+fn assert_no_host_match(source: &str, function: &str) -> Result<(), String> {
+    let body = function_body(source, function)?;
+    let mut facts = BodyFacts::default();
+    facts.visit_block(&body);
+    if facts.match_count == 0 {
+        Ok(())
+    } else {
+        Err(format!(
+            "{function} contains {} host match expression(s)",
+            facts.match_count
+        ))
+    }
+}
+
+fn function_fingerprint(source: &str, function: &str) -> Result<u64, String> {
+    let body = function_body(source, function)?;
+    let normalized = body.to_token_stream().to_string();
+    Ok(normalized
+        .as_bytes()
+        .iter()
+        .fold(0xcbf2_9ce4_8422_2325_u64, |hash, byte| {
+            (hash ^ u64::from(*byte)).wrapping_mul(0x0000_0100_0000_01b3)
+        }))
 }
 
 #[derive(Default)]
@@ -342,6 +373,34 @@ fn production_routing_storage_and_gate_authority_are_structural() {
     )
     .unwrap();
     audit_function(
+        GATES,
+        "shift_immediate_network",
+        &[
+            "selected",
+            "select_bit_32",
+            "select_one_hot_32",
+            "select_one_hot_bit",
+        ],
+        &["add", "sub", "mul", "shl", "shr", "and", "or"],
+    )
+    .unwrap();
+    audit_function(
+        GATES,
+        "shift_register_network",
+        &[
+            "selected",
+            "less_than_unsigned_32",
+            "equal_32",
+            "select_bit_32",
+            "select_one_hot_32",
+            "select_one_hot_bit",
+        ],
+        &["add", "sub", "mul", "shl", "shr", "and", "or"],
+    )
+    .unwrap();
+    assert_no_host_match(GATES, "shift_immediate_network").unwrap();
+    assert_no_host_match(GATES, "shift_register_network").unwrap();
+    audit_function(
         ENGINE,
         "classify_at",
         &["line16", "and_gate", "or_gate"],
@@ -351,10 +410,117 @@ fn production_routing_storage_and_gate_authority_are_structural() {
     audit_function(
         ENGINE,
         "condition_holds",
-        &["and_gate", "or_gate", "xor_gate", "not_gate"],
+        &[
+            "and_gate",
+            "or_gate",
+            "xor_gate",
+            "not_gate",
+            "selected",
+            "select_one_hot_bit",
+        ],
         &["and", "or"],
     )
     .unwrap();
+    assert_no_host_match(ENGINE, "condition_holds").unwrap();
+    audit_function(
+        ENGINE,
+        "shift_immediate",
+        &["shift_immediate_network"],
+        &["add", "sub", "mul", "shl", "shr", "and", "or"],
+    )
+    .unwrap();
+    audit_function(
+        ENGINE,
+        "shift_register",
+        &["shift_register_network"],
+        &["add", "sub", "mul", "shl", "shr", "and", "or"],
+    )
+    .unwrap();
+    audit_function(
+        ENGINE,
+        "add_or_subtract",
+        &["add_32", "sub_32", "select_32", "select_one_hot_bit"],
+        &["add", "sub", "mul", "shl", "shr", "and", "or"],
+    )
+    .unwrap();
+    audit_function(
+        ENGINE,
+        "execute_shift_add_sub",
+        &["line16", "any_line", "shift_immediate", "add_or_subtract"],
+        &["add", "sub", "mul", "shl", "shr", "and", "or"],
+    )
+    .unwrap();
+    for function in [
+        "shift_immediate",
+        "shift_register",
+        "add_or_subtract",
+        "execute_shift_add_sub",
+    ] {
+        assert_no_host_match(ENGINE, function).unwrap();
+    }
+    audit_function(
+        ENGINE,
+        "execute_decoded",
+        &[
+            "execute_shift_add_sub",
+            "execute_immediate",
+            "execute_data_processing",
+            "execute_special",
+            "execute_literal_load",
+            "execute_register_memory",
+            "execute_immediate_memory",
+            "execute_stack_memory",
+            "execute_address_generation",
+            "execute_miscellaneous",
+            "execute_multiple_memory",
+            "execute_conditional",
+            "execute_unconditional",
+            "execute_bl",
+            "execute_barrier",
+            "execute_special_register",
+        ],
+        &["add", "sub", "mul", "shl", "shr", "and", "or"],
+    )
+    .unwrap();
+    audit_function(
+        ENGINE,
+        "execute_barrier",
+        &["line16"],
+        &["add", "sub", "mul", "shl", "shr", "and", "or"],
+    )
+    .unwrap();
+    audit_function(
+        ENGINE,
+        "read_special",
+        &[
+            "special_lines",
+            "bit_or_32",
+            "select_one_hot_32",
+            "any_line",
+        ],
+        &["add", "sub", "mul", "shl", "shr", "and", "or"],
+    )
+    .unwrap();
+    audit_function(
+        ENGINE,
+        "execute_special_register",
+        &[
+            "special_lines",
+            "read_special",
+            "less_or_equal_unsigned_32",
+            "any_line",
+            "select_32",
+        ],
+        &["add", "sub", "mul", "shl", "shr", "and", "or"],
+    )
+    .unwrap();
+    for function in [
+        "execute_barrier",
+        "read_special",
+        "execute_special_register",
+    ] {
+        assert_no_host_match(ENGINE, function).unwrap();
+    }
     audit_function(
         ENGINE,
         "checked_range",
@@ -387,13 +553,52 @@ fn production_routing_storage_and_gate_authority_are_structural() {
     audit_function(
         LIB,
         "commit_transition",
-        &["read", "write", "restore_registers_and_control"],
-        &[],
+        &[
+            "read",
+            "byte_changed",
+            "write",
+            "restore_registers_and_control",
+        ],
+        &["and", "or"],
     )
     .unwrap();
     audit_function(STATE, "clock_bits", &["register"], &[]).unwrap();
     audit_function(STATE, "clock_bit", &["register"], &[]).unwrap();
     audit_function(STATE, "write", &["register"], &[]).unwrap();
+}
+
+#[test]
+fn critical_decode_to_commit_bodies_are_exactly_locked() {
+    let locks = [
+        (ENGINE, "execute_decoded", 0xeb7c_dd02_569f_e628_u64),
+        (ENGINE, "shift_immediate", 0x2d43_114a_5ad1_47f3),
+        (ENGINE, "shift_register", 0x8c18_0772_fe45_bbb7),
+        (ENGINE, "add_or_subtract", 0x8672_d184_e60d_64d9),
+        (ENGINE, "execute_shift_add_sub", 0xc750_8f25_cb63_1262),
+        (ENGINE, "condition_holds", 0x03e2_586d_93bd_6379),
+        (ENGINE, "execute_barrier", 0xa8cf_2b3c_a5a6_d271),
+        (ENGINE, "special_lines", 0xe00f_d341_22e6_cce0),
+        (ENGINE, "read_special", 0xe8d0_16c8_6dbc_85f7),
+        (ENGINE, "execute_special_register", 0x4ce9_bae6_c912_1fe7),
+        (ENGINE, "step_state", 0x4a27_89b6_2615_be22),
+        (GATES, "shift_immediate_network", 0xbb7f_b93c_6f3e_98f0),
+        (GATES, "shift_register_network", 0x14d7_a3c8_0d88_8e6e),
+        (LIB, "commit_transition", 0x2ee8_e471_8637_5eea),
+    ];
+    let actual = locks
+        .into_iter()
+        .map(|(source, function, expected)| {
+            (
+                function,
+                expected,
+                function_fingerprint(source, function).unwrap(),
+            )
+        })
+        .collect::<Vec<_>>();
+    assert!(
+        actual.iter().all(|(_, expected, found)| expected == found),
+        "review and update exact body locks: {actual:#x?}"
+    );
 }
 
 #[test]
@@ -446,5 +651,20 @@ fn structural_guard_rejects_hostile_backends_and_confusers() {
     let post_dispatch = "fn step_state(mut state:State){execute_decoded(&mut state);state.pc=0;}";
     assert!(
         assert_no_state_write_after_call(post_dispatch, "step_state", "execute_decoded").is_err()
+    );
+
+    let direct = "fn shift_immediate()->u32{shift_immediate_network()}";
+    let indirect = "fn shift_immediate()->u32{fn helper()->u32{host_shift()} helper()}";
+    assert_ne!(
+        function_fingerprint(direct, "shift_immediate").unwrap(),
+        function_fingerprint(indirect, "shift_immediate").unwrap()
+    );
+
+    let committed = "fn commit_transition(){read();write();restore_registers_and_control();}";
+    let overwritten =
+        "fn commit_transition(){read();write();restore_registers_and_control();state.pc=0;}";
+    assert_ne!(
+        function_fingerprint(committed, "commit_transition").unwrap(),
+        function_fingerprint(overwritten, "commit_transition").unwrap()
     );
 }
