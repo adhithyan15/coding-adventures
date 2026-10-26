@@ -71,6 +71,13 @@ architecture/core introduction era, not a claim about a particular chip.
 
 ## Discovered follow-up work
 
+### Gate-integrity audit queue
+
+| Priority | Target | Finding / next action |
+|---:|---|---|
+| P0 in progress | SPARC V8 gate HALT storage | The allocated HALT Q bit is not authoritative: snapshots, execution control, results, and one trap path read or write the adjacent public host boolean. Make Q the sole authority, retain the public field only as a synchronized compatibility observer, cover restore and fault rollback under deliberate divergence, and replace the tautological topology assertion with an inventory derived from owned storage. |
+| P1 audit | Remaining completed gate packages with public halt fields | Audit each package before changing it. A public observation field is acceptable only when execution, snapshots, restore, and faults are driven by DFF Q; otherwise add one bounded repair cell and a non-tautological storage inventory. |
+
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,
   bitfield, saturation, dual-register, byte/halfword exclusive, and remaining
   wide Thumb-2 encodings. This is non-blocking for the core lifecycle and SoC
