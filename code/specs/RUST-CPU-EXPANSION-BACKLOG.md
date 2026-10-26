@@ -80,6 +80,14 @@ architecture/core introduction era, not a claim about a particular chip.
 | 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
+| 15 | RCA CDP1802 | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete COSMAC core with sixteen 16-bit registers, all documented instruction encodings, and explicit I/O/DMA/interrupt transaction seams. |
+
+CDP1802 is an independent cell queued behind the already active work. FN1441
+publicly defines its complete register matrix, instruction table, reset,
+flags, ports, DMA, and interrupt response. Its explicit bus operations make it
+a high-value bridge from CPU execution toward the requested SoC data-movement
+simulations. Functional, educational-gate, and source-backed SoC compositions
+remain separate bounded cells.
 
 ## Discovered follow-up work
 
