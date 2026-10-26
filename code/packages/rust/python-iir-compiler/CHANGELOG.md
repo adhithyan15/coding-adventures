@@ -24,14 +24,19 @@ Python's float layout out of every backend and puts it in the module, as
   `py2-int-print` module) is exactly `main`, byte-identical to 0.3.0.
   Python 2 and 3.0a1 (`py2`, `py30`) never print a float (their profile is
   `Floats::None`), so nothing changes for them.
-- **The release runner's step budget is derived from the limits**
-  (`MAX_VM_STEPS = MAX_IIR_INSTRUCTIONS × (1 + 1,024 / 4)`, 257M; it was
+- **The release runner's step budget is derived from the module it runs**
+  (`len(main) + 1 + (calls of __py_write_float in main) × 1,024`, capped
+  at `MAX_IIR_INSTRUCTIONS × (1 + 1,024 / 4)`, 257M; it was a flat
   `MAX_IIR_INSTRUCTIONS`, 1M). A float print now runs the helper, up to
   700 VM steps (`-1.7976931348623157e+308`) instead of one builtin call,
   so the old budget refused valid programs: the 2,048-line, 64 KiB
   `print(-1.2345678901234567e-308)` program the default frontend budgets
   accept needs 1,423,362 steps. `MAX_STEPS_PER_FLOAT_PRINT` (1,024) bounds
-  one print, and a print costs `main` at least four instructions.
+  one print, and the compiler's `main` is straight-line, so the per-module
+  bound is sound for its output. A hand-built looping module gets only
+  its own size's worth (`label L; jmp L` stops after 3 steps); a flat
+  257M ceiling would have let it spin for about 26 s in a release build
+  (security review).
 - `run_module` registers only `print_i64` and `putchar`.
 - `code/grammars/python/release_classes.csv` is regenerated: the 77
   `py-float-print` rows have new digests. The classes partition the

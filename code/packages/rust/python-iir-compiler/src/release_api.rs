@@ -52,28 +52,59 @@ const MAX_OUTPUT_BYTES: usize = 1_000_000;
 /// of `__py_write_float`, and the newline's `const` and `putchar`.
 const MIN_MAIN_INSTRUCTIONS_PER_FLOAT_PRINT: u64 = 4;
 
-/// The VM step budget [`run_module`] gives a program.
-///
-/// `main` is straight-line (the subsets have no loops and no user
-/// functions), so it executes each of its at most [`MAX_IIR_INSTRUCTIONS`]
-/// instructions once. Until LANG83 PR7c-py that was the whole budget,
-/// because a float print was one `call_builtin write_f64_py` step. Now each
-/// float print also runs the module's own `__py_write_float`, up to
-/// [`MAX_STEPS_PER_FLOAT_PRINT`] steps, and a print costs `main` at least
-/// [`MIN_MAIN_INSTRUCTIONS_PER_FLOAT_PRINT`] instructions, so
+/// The ceiling on any module's step budget (see [`step_budget`]): what the
+/// largest module the instruction limit admits could need,
 ///
 /// ```text
-///   steps ≤ instructions + prints × 1,024
-///         ≤ MAX_IIR_INSTRUCTIONS × (1 + 1,024 / 4)       = 257,000,000
+///   MAX_IIR_INSTRUCTIONS × (1 + 1,024 / 4)       = 257,000,000
 /// ```
 ///
-/// covers the largest module the instruction limit admits, whatever its
-/// prints. The flat 1,000,000 refused valid programs: the 2,048-line,
-/// 64 KiB `print(-1.2345678901234567e-308)` program, which the default
-/// frontend budgets accept, needs about 1.4 million steps. The budget still
-/// bounds a hand-built module given to [`run_module`].
+/// since a float print costs `main` at least
+/// [`MIN_MAIN_INSTRUCTIONS_PER_FLOAT_PRINT`] instructions. A module only
+/// gets this much when its own size says it needs it.
 const MAX_VM_STEPS: u64 = MAX_IIR_INSTRUCTIONS as u64
     * (1 + MAX_STEPS_PER_FLOAT_PRINT / MIN_MAIN_INSTRUCTIONS_PER_FLOAT_PRINT);
+
+/// The VM step budget [`run_module`] gives `module`, derived from the
+/// module itself.
+///
+/// The compiler's `main` is straight-line (the subsets have no loops and no
+/// user functions), so it executes each of its instructions at most once.
+/// Until LANG83 PR7c-py that was the whole budget, because a float print was
+/// one `call_builtin write_f64_py` step. Now each float print is one
+/// `call __py_write_float` in `main`, and its run takes at most
+/// [`MAX_STEPS_PER_FLOAT_PRINT`] steps, so
+///
+/// ```text
+///   steps ≤ len(main) + calls of __py_write_float × 1,024   (+1 for the
+///                                                          check after `ret`)
+/// ```
+///
+/// That bound is exact enough to stop a hand-built looping module in a few
+/// steps (`label L; jmp L` gets its own length plus one), where the flat
+/// ceiling [`MAX_VM_STEPS`] would let it spin for 257 million (about 26 s in
+/// a release build, minutes in a debug one; security review of PR7c-py).
+/// The flat 1,000,000 that preceded PR7c-py refused valid programs: the
+/// 2,048-line, 64 KiB `print(-1.2345678901234567e-308)` program, which the
+/// default frontend budgets accept, needs about 1.4 million steps.
+fn step_budget(module: &IIRModule) -> u64 {
+    let Some(main) = module.get_function("main") else {
+        // `execute` refuses a module with no `main` before running anything.
+        return 1;
+    };
+    let prints = main
+        .instructions
+        .iter()
+        .filter(|instruction| {
+            instruction.op == "call"
+                && instruction.srcs.first().and_then(Operand::as_var) == Some(float_repr::WRITE_FLOAT)
+        })
+        .count() as u64;
+    (main.instructions.len() as u64)
+        .saturating_add(1)
+        .saturating_add(prints.saturating_mul(MAX_STEPS_PER_FLOAT_PRINT))
+        .min(MAX_VM_STEPS)
+}
 
 /// Lex, parse and compile `source` against exactly one CPython release.
 ///
@@ -281,7 +312,7 @@ pub fn run_source_at(source: &str, release: Option<&str>) -> Result<RunOutput, R
 pub fn run_module(mut module: IIRModule) -> Result<RunOutput, RunError> {
     let output = Arc::new(Mutex::new(Vec::<u8>::new()));
     let mut vm = VMCore::new();
-    vm.max_instructions = Some(MAX_VM_STEPS);
+    vm.max_instructions = Some(step_budget(&module));
     let sink = Arc::clone(&output);
     vm.builtins_mut().register("print_i64", move |args| {
         let [Value::Int(number)] = args else {
@@ -479,9 +510,10 @@ mod tests {
         let ran = run_source_at(&lines(fits), None).unwrap_or_else(|e| panic!("{fits} lines: {e}"));
         assert_eq!(ran.stdout, "-1.2345678901234567e-308\n".repeat(fits));
         let module = compile(&lines(fits));
+        let budget = step_budget(&module);
         let needed = steps(module);
         assert!(needed > MAX_IIR_INSTRUCTIONS as u64, "{fits} lines took only {needed} steps");
-        assert!(needed <= MAX_VM_STEPS);
+        assert!(needed <= budget && budget <= MAX_VM_STEPS, "{needed} {budget}");
 
         // The trusted maximum a caller may ask for: 1 MiB of source and
         // 256 Ki tokens, run through `run_module`. Here the binding limit is
@@ -503,8 +535,55 @@ mod tests {
         let count = (vm_core::frame::VMFrame::MAX_FRAME_REGISTERS - 2) / per_line;
         let module = compile_source_at(&lines(count), None, "t", &trusted).unwrap();
         assert!(registers(&module) <= vm_core::frame::VMFrame::MAX_FRAME_REGISTERS);
+        assert!(step_budget(&module) < MAX_VM_STEPS);
         let ran = run_module(module).unwrap_or_else(|e| panic!("{count} lines: {e}"));
         assert_eq!(ran.stdout.lines().count(), count);
         eprintln!("default budgets: {fits} lines, {needed} steps; trusted: {count} lines");
+    }
+
+    /// A hand-built module that loops is stopped by a budget sized from its
+    /// own length, not the 257-million-step ceiling (security review of
+    /// PR7c-py): `label L; jmp L` in `main`, and a `main` that calls
+    /// `__py_digit_count` in a loop, each fail with the step-limit error.
+    #[test]
+    fn a_looping_module_gets_a_budget_from_its_own_size() {
+        use interpreter_ir::IIRInstr;
+        let var = |name: &str| Operand::Var(name.to_string());
+        let looping = |body: Vec<IIRInstr>| {
+            let mut module = compile("print(1.5)\n");
+            module.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+            module
+        };
+        let spin = looping(vec![
+            IIRInstr::new("label", None, vec![var("again")], "void"),
+            IIRInstr::new("jmp", None, vec![var("again")], "void"),
+        ]);
+        assert_eq!(step_budget(&spin), 3);
+        let calls = looping(vec![
+            IIRInstr::new("const", Some("d".into()), vec![Operand::Int(12345)], "i64"),
+            IIRInstr::new("label", None, vec![var("again")], "void"),
+            IIRInstr::new("call", Some("n".into()), vec![var(float_repr::DIGIT_COUNT), var("d")], "i64"),
+            IIRInstr::new("jmp", None, vec![var("again")], "void"),
+        ]);
+        assert_eq!(step_budget(&calls), 5);
+        // A loop around the float helper itself gets one print's worth per call site.
+        let prints = looping(vec![
+            IIRInstr::new("const", Some("x".into()), vec![Operand::Float(1.5)], "f64"),
+            IIRInstr::new("label", None, vec![var("again")], "void"),
+            IIRInstr::new("call", Some("r".into()), vec![var(float_repr::WRITE_FLOAT), var("x")], "i64"),
+            IIRInstr::new("jmp", None, vec![var("again")], "void"),
+        ]);
+        assert_eq!(step_budget(&prints), 5 + MAX_STEPS_PER_FLOAT_PRINT);
+        for module in [spin, calls, prints] {
+            match run_module(module) {
+                Err(RunError::Vm(message)) => assert!(message.contains("step limit"), "{message}"),
+                other => panic!("a looping module ran to {other:?}"),
+            }
+        }
+        // Compiler output gets exactly its own size's worth, and runs.
+        let module = compile("print(1)\nprint(-1.7976931348623157e308)\n");
+        let main_len = module.get_function("main").unwrap().instructions.len() as u64;
+        assert_eq!(step_budget(&module), main_len + 1 + MAX_STEPS_PER_FLOAT_PRINT);
+        assert_eq!(run_module(module).unwrap().stdout, "1\n-1.7976931348623157e+308\n");
     }
 }

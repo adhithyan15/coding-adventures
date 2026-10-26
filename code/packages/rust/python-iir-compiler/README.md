@@ -142,9 +142,11 @@ leading digit). The rest is integer code and `putchar`: `nan`, `inf`,
 float carries none of them. Up to 0.3.0 the `write_f64_py` builtin did this,
 so each of the nine backends carried a copy of Python's layout.
 
-A print now costs the VM up to 700 steps instead of one, so `run_module`'s
-step budget is derived from the IIR limit and the measured per-print bound
-(`MAX_IIR_INSTRUCTIONS × (1 + 1,024 / 4)`).
+A print now costs the VM up to 700 steps instead of one, so `run_module`
+derives each module's step budget from the module: `main`'s length plus
+1,024 (the measured per-print bound, with headroom) per
+`call __py_write_float`, capped at `MAX_IIR_INSTRUCTIONS × (1 + 1,024 / 4)`.
+A hand-built module that loops is stopped after its own size's worth.
 
 ## LANG79's float pilot
 

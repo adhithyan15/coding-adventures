@@ -1297,13 +1297,19 @@ PR6a `python_repr` and with host `python3` byte for byte.
   flat budget of `MAX_IIR_INSTRUCTIONS` (1M), sized when a print was one
   step, would have refused the 2,048-line 64 KiB program of
   `print(-1.2345678901234567e-308)` that the default frontend budgets
-  accept (1,423,362 steps). The budget is now
-  `MAX_IIR_INSTRUCTIONS × (1 + 1,024 / 4)`: `main` is straight-line, a
-  float print costs `main` at least four instructions, and
-  `MAX_STEPS_PER_FLOAT_PRINT` (1,024) bounds the helper. A test measures
-  the dearest print over the sweep and pins it between half the bound and
+  accept (1,423,362 steps). The budget is now derived from the module
+  run: `len(main) + 1 + (calls of __py_write_float in main) × 1,024`,
+  capped at `MAX_IIR_INSTRUCTIONS × (1 + 1,024 / 4)`. It is sound for
+  the compiler's output because `main` is straight-line and
+  `MAX_STEPS_PER_FLOAT_PRINT` (1,024) bounds one print. The security
+  review rejected the first version, a flat 257M ceiling: a hand-built
+  `label L; jmp L` handed to the public `run_module` spun for about 26 s
+  in a release build. Now it stops after 3 steps. A test measures the
+  dearest print over the sweep and pins it between half the bound and
   the bound; another runs the largest program the default budgets accept,
-  and a trusted-budget one at vm-core's register limit.
+  and a trusted-budget one at vm-core's register limit; a third hands
+  `run_module` looping modules and requires the step-limit error from a
+  budget of their own size.
 - *Which rows BEAM runs did not change.* The five literal-only float rows
   still list all eight columns and lower on BEAM, helpers included; the 33
   others are refused at compile time naming only the five `f64_*`

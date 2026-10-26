@@ -20,3 +20,10 @@ Whenever a PR moves a builtin's work into emitted IIR (PR7c-py, PR7e, PR7f
 do the same for Python floats and Lisp `dyn_*` semantics), grep every
 `max_instructions` / step / fuel budget on the runners that execute that
 IIR and re-derive it from the input limits.
+
+PR7c-py's first fix overshot the other way: a flat ceiling sized for the
+largest *possible* module (257M steps) let a hand-built `label L; jmp L`
+handed to the public runner spin for ~26 s. Where the runner can see the
+module, derive the budget from that module (its straight-line length plus
+the per-helper-call bound per call site) and keep the global figure only
+as a cap.
