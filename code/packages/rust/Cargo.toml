@@ -1308,6 +1308,7 @@ members = [
   "ge225-gatelevel",
   "cdc6600-simulator",
   "cdc6600-gatelevel",
+  "data-general-nova-simulator",
   "pdp11-simulator",
   "pdp11-gatelevel",
   "pdp8-simulator",

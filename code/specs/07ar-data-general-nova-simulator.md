@@ -70,10 +70,11 @@ The common instruction set implements `JMP`, `JSR`, `ISZ`, `DSZ`, all four
 already-incremented return PC in AC3. `ISZ` and `DSZ` wrap at 16 bits and skip
 one additional word exactly when the stored result is zero.
 
-The four direct addressing modes are page-zero, signed PC-relative, signed
-AC2-relative, and signed AC3-relative. The indirect bit applies the same first
-address calculation and then follows memory words whose high bit requests
-another level. Locations octal `00020`–`00027` increment before supplying their
+The four direct addressing modes are page-zero, signed PC-relative using the
+already-incremented next-instruction PC, signed AC2-relative, and signed
+AC3-relative. The indirect bit applies the same first address calculation and
+then follows memory words whose high bit requests another level. Locations
+octal `00020`–`00027` increment before supplying their
 address; locations `00030`–`00037` decrement before supplying it. Whether an
 additional level is required is taken from the auto-index word before its
 increment/decrement, as documented. The model bounds an indirect chain at
