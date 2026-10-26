@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:1a91d0ba7c8342c6",
+  "lessonIds": [
+    "PA-C206-go-return",
+    "PA-C206-gae",
+    "PA-C206-e",
+    "PA-C206-gae-review",
+    "PA-C206-they-went",
+    "PA-C206-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch206-they-went.tex"
+}

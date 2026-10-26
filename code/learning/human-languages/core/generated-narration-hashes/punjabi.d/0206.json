@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:a0f093ffec26205a",
+  "lessonIds": [
+    "PA-C206-go-return",
+    "PA-C206-gae",
+    "PA-C206-e",
+    "PA-C206-gae-review",
+    "PA-C206-they-went",
+    "PA-C206-payoff"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch206.txt",
+  "json": "punjabi/narration/ch206.json",
+  "textHash": "fnv1a64:2f5043442c592522",
+  "jsonHash": "fnv1a64:2dcbfcbf280b3830",
+  "findings": []
+}
