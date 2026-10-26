@@ -76,7 +76,7 @@ architecture/core introduction era, not a claim about a particular chip.
 | 4 | Arm Cortex-M33 | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
 | 5 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
 | 6 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
-| 7 | IBM System/370 | published Principles of Operation | System/360-compatible extension boundary. |
+| 7 | IBM System/370 | published Principles of Operation | Local functional cell complete: owned checked state and lifecycle, the complete modeled System/360 surface through a private adapter, and source-backed MVCL/CLCL/CLM/STCM/ICM semantics, including one-byte zero-mask validation for CLM/ICM and the architecturally exception-free zero-mask STCM. Fourteen tests, strict checks, and 98.78% line coverage (568/575) are green; gate partner follows only after merge. |
 | 8 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
 | 9 | PA-RISC 1.1 | published architecture manuals | Checked integer core and delayed-control boundary. |
 | 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
@@ -92,6 +92,7 @@ architecture/core introduction era, not a claim about a particular chip.
 
 | Priority | Target | Finding / next action |
 |---:|---|---|
+| P1 merged | AArch64 gate 32-bit carry authority | Repair PR #18317 landed. The 32-bit ADD/SUB flag path takes carry and overflow directly from exact-width ripple networks; host sum comparisons are gone. Follow-up audits still need to cost host decode and fetch assembly separately. |
 | P1 merged | PowerPC 601 conditional-branch authority | Repair PR #18319 landed. The host-language BO/CTR/CR predicate is replaced by explicit gate ALU, 32:1 CR mux, polarity, bypass-mux, and final-AND networks; the counted storage banks remain private stable-Q authority. |
 | P1 queued | PowerPC 601 CR/XER update authority | Replace host `Ordering`/Boolean control in CR-field, CR0, CA, and SO propagation with explicit relation wires, masks, muxes, and gates while preserving the public lifecycle. |
 | P1 queued | PowerPC 601 shift/count/divide authority | Replace host slice moves, iterator leading-zero counting, and conditional restoring-divide selection with fixed gate/mux networks, then audit multiply accumulation and record-form updates as one bounded datapath family at a time. |
