@@ -85,13 +85,22 @@ Opcodes are written in the architecture's conventional octal notation.
 - Fixed-point arithmetic: `ADD`, `ADDI`, `ADDM`, `ADDB`, `SUB`, `SUBI`,
   `SUBM`, `SUBB`, `IMUL`, `IMULI`, `IMULM`, `IMULB`, `IDIV`, `IDIVI`,
   `IDIVM`, and `IDIVB`. Overflow, both carry flags, and divide check are
-  deterministic architectural outputs. Divide-by-zero and quotient overflow
-  are typed atomic failures.
+  deterministic sticky architectural outputs. `IDIV` is the KA10 single-word
+  signed divide: AC is the dividend and the selected operand is the divisor.
+  The accumulator and immediate forms (octal 230/231) place quotient and
+  remainder in AC/AC+1; `IDIVM` (232) writes only the quotient to memory;
+  `IDIVB` (233) writes the quotient to both AC and memory and the remainder to
+  AC+1. The separate double-word `DIV` family is outside this bounded cell.
+  Divide-by-zero and quotient overflow are typed atomic failures.
 - Boolean operations: accumulator/immediate/memory/both variants of `AND`,
   `IOR`, `XOR`, and `EQV`, plus `SETZ`, `SETZM`, `SETO`, and `SETOM`.
 - Comparison and control: all signed conditions for `CAI`, `CAM`, `JUMP`,
-  `AOJ`, and `SOJ`; `AOBJN`, `AOBJP`, `JRST`, `PUSHJ`, `PUSH`, `POP`, and
-  `POPJ`. The documented `JRST` halt form sets the halt latch.
+  `AOJ`, and `SOJ`; `AOBJP` (octal 252), `AOBJN` (253), `JRST`, `PUSHJ`,
+  `PUSH`, `POP`, and `POPJ`. `AOBJP` branches when the incremented 36-bit
+  accumulator is nonnegative; `AOBJN` branches when it is negative. `PUSHJ`
+  stores the modeled arithmetic flags in the saved word's left half and the
+  return PC in its right half. The documented `JRST` halt form sets the PC to
+  its effective address and sets the halt latch.
 
 Condition suffixes use the KA10 signed comparison result: never, less, equal,
 less-or-equal, always, greater-or-equal, not-equal, and greater. A skipped

@@ -1,0 +1,11 @@
+[package]
+name = "pdp10-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "DEC PDP-10 KA10 functional simulator"
+license = "MIT"
+
+[lib]
+name = "pdp10_simulator"
+path = "src/lib.rs"
+

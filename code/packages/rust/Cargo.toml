@@ -62,6 +62,7 @@ members = [
     "xls-writer",
     "doc-writer",
     "ppt-writer",
+    "pdp10-simulator",
     "binary-search-tree",
     "avl-tree",
     "red-black-tree",
