@@ -711,15 +711,26 @@ const IEEE_EDGES: &[(&str, &[f64], bool)] = &[
 
 /// `(class, digits, exp10)` of `x`, computed on the host and independently
 /// of vm-core: the class from `f64::classify`; the digits and exponent from
-/// the fewest significant digits whose correctly rounded spelling
-/// (`{:.*e}`) reads back as `x` (`3.0000000000000004e-1` is digits
+/// the shortest spelling that reads back as `x`, choosing among the
+/// spellings of that length the one nearest `x`, ties to even, as Python's
+/// `repr` and the PR7b ops do (`3.0000000000000004e-1` is digits
 /// `30000000000000004`, exp10 `-1`). 0 for both unless the class is 1
-/// (finite, non-zero), as the PR7b ops define.
+/// (finite, non-zero).
 ///
-/// Not Rust's shortest `{:e}`: when two shortest spellings are equally near
-/// `x`, that one rounds the tie up, while the PR7b digits (and Python's
-/// `repr`) take the correctly rounded one, half to even. `2⁻²⁵` is the
-/// table's case: `{:e}` gives `…695313e-8`, `repr` `…695312e-8`.
+/// Two halves, because neither Rust formatter is the oracle alone:
+///
+/// | spelling | length | which digits of that length |
+/// | --- | --- | --- |
+/// | shortest `{:e}` | right | breaks an exact tie *up* (`2⁻²⁵`: `…695313e-8`, `repr` `…695312e-8`) |
+/// | `{:.*e}` at that length | given | the correctly rounded one, half to even, but it may not round-trip |
+///
+/// So the length comes from `{:e}`, and the digits from `{:.*e}` at that
+/// length when they read back as `x`, else from `{:e}` itself. The fallback
+/// is the power-of-two case: at `2^k` the round-trip interval is lopsided,
+/// so the nearest 16-digit spelling of `0x0060000000000000` misses while
+/// `{:e}`'s `7.120236347223045e-307` (also `repr`'s) reads back. Searching
+/// for the fewest correctly rounded digits that round-trip, as a first
+/// draft did, gives 17 digits there.
 fn host_float_parts(x: f64) -> (i64, i64, i64) {
     use std::num::FpCategory;
     match x.classify() {
@@ -727,12 +738,20 @@ fn host_float_parts(x: f64) -> (i64, i64, i64) {
         FpCategory::Infinite => (2, 0, 0),
         FpCategory::Nan => (3, 0, 0),
         FpCategory::Normal | FpCategory::Subnormal => {
-            let spelled = (0..17)
-                .map(|decimals| format!("{:.*e}", decimals, x.abs()))
-                .find(|s| s.parse::<f64>() == Ok(x.abs()))
-                .expect("17 significant digits always round-trip");
+            let ax = x.abs();
+            let shortest = format!("{ax:e}");
+            let length = shortest
+                .split_once('e')
+                .expect("`{:e}` has an exponent")
+                .0
+                .chars()
+                .filter(char::is_ascii_digit)
+                .count();
+            let nearest = format!("{:.*e}", length - 1, ax);
+            let spelled = if nearest.parse::<f64>() == Ok(ax) { nearest } else { shortest };
             let (mantissa, exp10) = spelled.split_once('e').expect("`{:e}` has an exponent");
             let digits: String = mantissa.chars().filter(|c| *c != '.').collect();
+            let digits = digits.trim_end_matches('0');
             (1, digits.parse().expect("digits"), exp10.parse().expect("exp10"))
         }
     }
@@ -1979,12 +1998,46 @@ fn execute_everywhere(case: &Case) -> Vec<&'static str> {
 /// and with the PR6c edge results it describes: `+Infinity` is `2 0 0 0`,
 /// `-0` is `0 0 0 1`, a NaN row has no sign, and `0.1 + 0.2` is digits
 /// `30000000000000004` at exp10 `-1`.
+/// Every power of two, `2⁻¹⁰⁷⁴ ..= 2¹⁰²³`, where the round-trip interval
+/// is lopsided, against host `python3`'s `repr` digits (skipped when
+/// `python3` is absent). A first draft of [`host_float_parts`] disagreed
+/// with `repr` at 46 of them.
+#[test]
+fn the_host_float_oracle_matches_python_at_every_power_of_two() {
+    let script = "import math\nfrom decimal import Decimal\n\
+        for k in range(-1074, 1024):\n\
+        \x20   t = Decimal(repr(math.ldexp(1.0, k))).normalize().as_tuple()\n\
+        \x20   print(k, int(''.join(map(str, t.digits))), t.exponent + len(t.digits) - 1)\n";
+    let Ok(out) = std::process::Command::new("python3").args(["-I", "-c", script]).output() else {
+        eprintln!("SKIP: python3 not found");
+        return;
+    };
+    assert!(out.status.success(), "{}", String::from_utf8_lossy(&out.stderr));
+    let text = String::from_utf8(out.stdout).expect("utf-8");
+    let mut checked = 0;
+    for line in text.lines() {
+        let f: Vec<i64> = line.split(' ').map(|w| w.parse().expect("number")).collect();
+        // Built from bits: `powi` would round 2⁻¹⁰⁷⁴ to 0 through 1/2¹⁰⁷⁴.
+        let k = f[0];
+        let bits = if k >= -1022 { ((k + 1023) as u64) << 52 } else { 1u64 << (k + 1074) };
+        let x = f64::from_bits(bits);
+        assert_eq!(host_float_parts(x), (1, f[1], f[2]), "2^{}", f[0]);
+        checked += 1;
+    }
+    assert_eq!(checked, 2098);
+}
+
 #[test]
 fn the_host_float_oracle_matches_the_digits_table() {
     for &(bits, class, digits, exp10) in FLOAT_DIGITS_TABLE {
         let x = f64::from_bits(bits);
         assert_eq!(host_float_parts(x), (class, digits, exp10), "{x:e}");
     }
+    // The power-of-two case the shortest-length rule exists for.
+    assert_eq!(
+        host_float_parts(f64::from_bits(0x0060_0000_0000_0000)),
+        (1, 7_120_236_347_223_045, -307)
+    );
     let rows: Vec<String> = ieee_edges_expect().lines().map(str::to_owned).collect();
     assert_eq!(rows.len(), IEEE_EDGES.len());
     assert_eq!(rows[0], "2 0 0 0");

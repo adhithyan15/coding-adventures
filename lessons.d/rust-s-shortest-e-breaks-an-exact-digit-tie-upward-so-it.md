@@ -13,13 +13,21 @@ value `2.98023223876953125e-8` lies exactly halfway between the two shortest
 `…695312e-8`, half to even. Both round-trip, so a round-trip check cannot
 tell them apart.
 
-Fix: take the fewest significant digits whose *correctly rounded* spelling
-round-trips, i.e. `(0..17).map(|d| format!("{:.*e}", d, x)).find(|s|
-s.parse() == Ok(x))`. Rust's fixed-precision formatting is exact and rounds
-half to even, and if any p-digit spelling round-trips the nearest one does,
-so this matches `repr` digit for digit.
+Fix, second attempt: the *length* comes from Rust's shortest `{:e}`, which
+is right about length. The *digits* come from `format!("{:.*e}", n - 1, x)`,
+which is correctly rounded and half to even, when that spelling reads back as
+`x`; otherwise they come from `{:e}` itself. The first fix searched for the
+fewest correctly rounded digits that round-trip
+(`(0..17).map(|d| format!("{:.*e}", d, x)).find(..)`). It rested on the claim
+"if any p-digit spelling round-trips, the nearest one does", and that claim is
+false at exact powers of two. There the round-trip interval is lopsided, so
+the nearest 16-digit spelling of `0x0060000000000000` misses while
+`7.120236347223045e-307` reads back. A review found 46 such powers of two that
+disagreed with `repr`. A test now checks all 2,098 powers of two against host
+`python3`.
 
 Do differently: when a hand-written float oracle replaces typed expectations,
 check it against an independently generated table first (here the
 python3-generated `FLOAT_DIGITS_TABLE`), and make sure that table holds an
-exact tie.
+exact tie *and* an exact power of two (the lopsided interval). Sweep every
+power of two against the host when you can.
