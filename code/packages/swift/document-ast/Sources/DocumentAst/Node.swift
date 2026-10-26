@@ -30,7 +30,8 @@
 //     document           — root of the entire document
 //     heading            — h1–h6
 //     paragraph          — flow of inline content
-//     codeBlock          — fenced or indented code
+//     codeBlock          — ordinary or indented code
+//     fencedBlock        — source-preserving fence with inert metadata
 //     blockquote         — nested quoted content
 //     list               — ordered or unordered list
 //     listItem           — one item in a list
@@ -136,8 +137,9 @@ public struct ParagraphNode: Equatable, Sendable {
 
 /// A block of preformatted (monospace) code.
 ///
-/// Produced by fenced code blocks (` ```lang ... ``` `) and indented code
-/// blocks (4+ leading spaces). The `value` always ends with a newline.
+/// Produced by indented code blocks (4+ leading spaces) and callers that do
+/// not need source-preserving fence metadata. The `value` always ends with a
+/// newline when non-empty.
 ///
 ///     let code = CodeBlockNode(language: "swift", value: "let x = 1\n")
 public struct CodeBlockNode: Equatable, Sendable {

@@ -13,6 +13,7 @@
 // - `rawBlock` / `rawInline` nodes with an unknown format are silently skipped.
 // - Tight lists suppress `<p>` wrappers around single-paragraph list items.
 // - `codeBlock` content is HTML-escaped and always ends with a newline.
+// - `fencedBlock` uses only escaped name metadata and never executes a payload.
 // - Heading levels are expected to be 1–6 (guaranteed by the parser).
 //
 // # HTML Escaping
