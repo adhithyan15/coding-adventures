@@ -1586,6 +1586,29 @@ validate certificates, select trust roots, check revocation, perform I/O, open
 a socket, authorize HTTP or OAuth transport, or replace `tls-platform`.
 Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-record-nonce` prerequisite now specifies record
+sequence consumption and nonce derivation for one TLS 1.3 traffic key in one
+direction. A caller-selected policy fixes the exact static-IV length from 8
+through 255 bytes and a per-key record ceiling from 1 through `u64::MAX`.
+Fresh state starts at sequence zero and has no reset operation. Each successful
+reservation left-pads the current 64-bit network-order sequence to the selected
+IV length, XORs it with the caller-borrowed static IV into caller-owned output,
+and consumes that sequence before returning. Static-IV and output lengths are
+validated before either output or sequence state changes; exhaustion also
+leaves both untouched. The largest policy ceiling conservatively stops after
+sequence `u64::MAX - 1`, before an increment could wrap. Callers must own
+separate read and write state, create fresh state after each key change, and
+select the lower cipher-suite-specific cryptographic usage limit.
+
+The package's 255-byte IV ceiling is an explicit work bound, not permission for
+an AEAD to use an unsupported nonce length. It stores no static IV, key, nonce,
+plaintext, or ciphertext bytes, and stable failures retain no caller lengths or
+bytes. It does not select or invoke an AEAD, encrypt, decrypt, authenticate,
+derive traffic keys or IVs, negotiate a cipher suite, perform key updates,
+process handshake or alert messages, validate certificates, select trust
+roots, check revocation, perform I/O, open a socket, authorize HTTP or OAuth
+transport, or replace `tls-platform`. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
