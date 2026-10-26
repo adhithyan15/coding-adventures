@@ -1,0 +1,11 @@
+{
+  "id": "JA-C257-noriokureru",
+  "pathSegment": "JA-PATH-257-TRAVEL257",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-257-TRAVEL257",
+      "order": 1
+    }
+  ]
+}

@@ -268,7 +268,11 @@ conservative. Independently, when the complete magnitude is below a static
 divisor, `div` proves an exact zero quotient and `mod` is an identity that
 retains the existing common divisor. Those range-dominated reductions also
 compose across multiplied roots and later exact `/`; zero and dynamic divisors
-remain excluded. A checked variable-free integer
+remain excluded. Independently, when a static `mod` divisor divides the
+operand's conservative common divisor, every possible remainder is exactly
+zero. That zero proof composes through multiplied roots and later exact `/`
+without requiring a stable three-value operand shape. Zero and dynamic modulo
+divisors remain excluded. A checked variable-free integer
 prefix may likewise use `*`, exact `/`, `div`, and `mod` before the first root
 when multiplication connects the folded result to that root. Zero divisors,
 inexact divisions, dynamic divisors, and rooted divisors remain conservative.

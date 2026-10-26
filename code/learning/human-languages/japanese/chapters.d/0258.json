@@ -1,0 +1,25 @@
+{
+  "chapter": 258,
+  "title": "How It Felt, and What I Hope For",
+  "label": "ch:ja-how-it-felt-and-what-i-hope-for",
+  "canDo": "I can say how something felt (tanoshikatta desu; omoshirokunakatta desu), what I want to become (isha ni naritai desu), what I have done before (itta koto ga arimasu), and that I never have until now (imamade ichido mo).",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-R258-how-it-felt",
+    "kind": "production",
+    "summary": "Complete JA-R258-how-it-felt: say how a trip felt, what you hope to become and what you have done before.",
+    "assesses": [
+      "JA-GRAMMAR-C258-FEELING-01",
+      "JA-GRAMMAR-C258-AMBITION-01",
+      "JA-GRAMMAR-C258-FEELING-02",
+      "JA-LEX-C258-SHOURAI-01",
+      "JA-GRAMMAR-C258-AMBITION-02",
+      "JA-GRAMMAR-C258-TA-KOTO-01",
+      "JA-GRAMMAR-C258-TA-KOTO-02",
+      "JA-LEX-C258-IMAMADE-01",
+      "JA-SCRIPT-KANJI-IMA-01"
+    ]
+  }
+}

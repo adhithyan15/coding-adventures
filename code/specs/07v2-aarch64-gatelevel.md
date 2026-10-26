@@ -44,6 +44,9 @@ shift, bitmask, size, and operation combinations fail closed.
 Repository Boolean gates implement decode predicates, muxes, bitwise ALU
 operations, equality, extension, and selection. Ripple-carry networks implement
 PC sequencing, targets, effective addresses, ADD/SUB, comparison, and NZCV.
+For both 32-bit and 64-bit ADD/SUB operations, the selected-width ripple
+network's carry output is the architectural C flag. A host-integer comparison
+of an already assembled sum is not a valid substitute for that carry wire.
 Fixed gate barrel networks implement 32/64-bit shifts, rotates, and replicated
 logical bitmasks. Fixed-width shift-add multiplication and restoring division
 networks implement low and high products, signed/unsigned division, division by
@@ -81,4 +84,5 @@ The completed package passes seven topology/datapath unit tests, six lifecycle
 and fault suites, and all 836 Python full-state transitions in complete
 trace/state lockstep with the functional oracle. The historical Python
 AArch64 gate package's 256 tests also pass. Strict formatting, Clippy, and
-rustdoc pass. Package line coverage is 97.45% (763/783).
+rustdoc pass. The exact-width carry repair is covered by 32-bit carry and
+signed-overflow boundaries; package line coverage is 97.79% (1,105/1,130).

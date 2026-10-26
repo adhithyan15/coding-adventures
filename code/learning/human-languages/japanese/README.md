@@ -11,6 +11,26 @@ before asking learners to decode a word containing it. A structural practice
 mock is not a claim of exam readiness; qualified review and learner validation
 are separate steps.
 
+## Progress
+
+The opening slice described here has since grown: chapters 13-145 take the track
+through A1 (the A1 writing stages close at chapter 145), chapters 146-249 add the
+A2 vocabulary, and the track attains A2 on the level gate.
+
+**The B1 core, chapters 250-261**, holds the track's first grammar lessons, one
+new form at a time in the polite frame: the plain past -た and its sound
+changes, the future as the non-past with a time word, the plain negative
+-ない / -なかった, -て and -てから, -ています / -ていました, と おもいます, から /
+ので, -た ほうが いい, travel with -て ください, the i-adjective past -かった, -た
+ことが ある, より / いちばん, もし … -たら, に よります, and "would" as -たら …
+でしょう. It realizes all five B1 spine nodes, and it has a reading (a day at the
+river) and a six-line writing task. It also adds six copy-only kanji, each copied
+right after the word that holds it: 月 (月日), 年 (年じゅう), 出 (言い出す), 人
+(日本人), 中 (日本中) and 今 (今まで), with one reading each. Still untaught: the
+potential, passive, causative, volitional, imperative, -ば, -ながら, -たり,
+-なくて, -なければ, -ては / -ても, keigo beyond -ます / です, and every katakana
+but コ, ヒ and ー. The B1 vocabulary comes next.
+
 ## The opening runway
 
 The first seven chapters separate what used to be one crowded doorway lesson

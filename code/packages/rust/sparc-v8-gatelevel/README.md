@@ -23,6 +23,13 @@ The exact persistent topology is **526,185 D flip-flops**: 524,288 memory
 bits, 1,792 physical-register bits, 64 PC/nPC bits, 32 Y bits, four PSR bits,
 two CWP bits, two window-depth bits, and one halt latch.
 
+The HALT DFF's Q output is authoritative. `halted()` reads Q directly; the
+historical public `halted` boolean remains only as a synchronized observation
+mirror for source compatibility, and assigning that mirror cannot alter the
+machine. `physical_storage_inventory()` derives the memory, register-file,
+and HALT counts from the concrete owned storage so callers can independently
+verify their sum against `FLIP_FLOP_COUNT`.
+
 ## Implemented SPARC V8 surface
 
 - CALL, SETHI, all 16 Bicc predicates, NOP, JMPL, and `ta 0`
@@ -66,7 +73,7 @@ existing callers. Programs halt on `ta 0` (`0x91D0_2000`).
 cargo test --package coding-adventures-sparc-v8-gatelevel
 ```
 
-The suite includes the original 42 unit tests, six lifecycle suites, and a
+The suite includes the original 42 unit tests, eight lifecycle suites, and a
 248-vector Python/functional full-state differential. Strict formatting,
 Clippy, rustdoc, and at least 80% total line coverage are completion gates.
 The normative contract is Spec 07r2.
