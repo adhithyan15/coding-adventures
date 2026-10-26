@@ -25,6 +25,22 @@ must flow through explicit gate networks. Hexadecimal floating-point uses
 fixed-width sign/exponent/fraction networks; host integers may only transport
 the settled bit vectors.
 
+### Branch predicate authority
+
+Every modeled branch clocks the instruction address from a gate-derived select
+wire. `BCR` and `BC` select the condition-code mask bit with a gate mux tree.
+`BALR` suppresses a zero target-register field with an OR reduction, while
+`BCTR` and `BCT` combine that field predicate where applicable with a gate
+zero reduction of the decremented count. `BXH` and `BXLE` consume the
+gate-comparator condition code and the one-hot opcode decode to distinguish
+high from not-high. The settled select wire is then applied by the 24/32-bit
+gate mux; host equality, ordering, Boolean short-circuit operators, and dynamic
+mask shifts must not reconstruct any architectural branch decision.
+
+Completion evidence exhausts every four-bit branch mask, both condition-code
+bits, every target-register field, zero/nonzero count boundaries, and both
+index-branch opcodes, with a structural guard over the production executor.
+
 Channel I/O, interruption controls, protection keys, interval timers, model-
 specific microcode, analog delay, package pins, and storage technology are
 outside this CPU cell. They belong to later SoC/interconnect and lower-level

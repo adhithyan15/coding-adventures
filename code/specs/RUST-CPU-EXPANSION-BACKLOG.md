@@ -1,7 +1,7 @@
 # Rust CPU Expansion Backlog
 
 **Status:** active
-**Last reprioritized:** 2026-10-25
+**Last reprioritized:** 2026-10-26
 
 This is the live expansion queue after the original 07-series architecture
 matrix. The older `RUST-CPU-SIMULATOR-BACKLOG.md` remains the audit record for
@@ -46,6 +46,20 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | OpenSPARC T1 | merged | in progress | Gate specification descends from public OpenSPARC T1 RTL. |
 | P0 | Arm Cortex-M0 | merged | ready | Independent Armv6-M gate cell can start now. |
 | P0 | Arm Cortex-M3 | merged | ready | Independent Armv7-M gate cell can start now. |
+
+## Gate-integrity audit queue
+
+Completed gate packages are re-audited one bounded architectural decision at a
+time. A public gate claim implemented by host comparisons or host state is a
+correctness defect and outranks new completeness work.
+
+| Priority | Target | Finding / next action |
+|---:|---|---|
+| P1 active | IBM System/360 branch predicates | `BCR`/`BC`, `BALR`, `BCTR`/`BCT`, and `BXH`/`BXLE` clock a gate-muxed instruction address, but the executor and independent validator reconstruct mask selection, zero/nonzero count/target tests, and signed compare polarity with host shifts, equality, and Boolean short-circuit logic. Make the select wires gate-authoritative and add exhaustive plus structural witnesses. |
+| P1 queued | IBM System/360 decode authority | The independent executor dispatches architectural orders with host `match` ranges while the one-hot gate decoder is only checked afterward. Bound a separate repair that makes decoded gate lines authoritative without conflating instruction semantics. |
+| P1 queued | IBM System/360 divide qualification | The restoring divider uses gate subtraction per round but host equality detects zero and host `quotient > limit` decides the architectural divide fault. Replace both with exact-width gate reductions/comparison and pin signed fit boundaries. |
+| P1 queued | IBM System/360 DFF transition discipline | Register banks are private stable-Q authority, but main-storage reset and snapshot restore write the packed Q bytes directly despite Spec 07ad2 promising sequential primitives. Decide and enforce a scalable clocked-restore boundary without weakening the topology claim. |
+| P2 queued | IBM System/360 shifts and hexadecimal floating control | Shift movement/count bounds and substantial HFP zero/sign/exponent/normalization control still use host comparisons and native shifts. Split these broad surfaces into independently reviewable gate-network cells. |
 
 ## Independent functional queue
 
