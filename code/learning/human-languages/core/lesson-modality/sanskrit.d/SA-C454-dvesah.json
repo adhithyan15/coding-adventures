@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C454-dvesah",
+    "language": "sanskrit",
+    "chapter": 454,
+    "sequence": 26320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:186bc8d3579b9526"
+  },
+  "findings": []
+}

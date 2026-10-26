@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C458-adambarah",
+    "language": "sanskrit",
+    "chapter": 458,
+    "sequence": 26530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a4763b65fc0cc87d"
+  },
+  "findings": []
+}

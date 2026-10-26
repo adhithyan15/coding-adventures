@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 380,
+  "output": "sanskrit/book/chapters/ch380-how-much.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

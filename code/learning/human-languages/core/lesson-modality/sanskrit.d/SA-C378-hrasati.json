@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C378-hrasati",
+    "language": "sanskrit",
+    "chapter": 378,
+    "sequence": 21980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b325bfbe21bb35ea"
+  },
+  "findings": []
+}

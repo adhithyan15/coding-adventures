@@ -1,0 +1,19 @@
+{
+  "chapter": 381,
+  "title": "Usually and Especially",
+  "label": "ch:sa-usually-and-especially",
+  "canDo": "I can say what usually happens and what happens especially.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C381-sanksipati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 381: I can say what usually happens and what happens especially.",
+    "assesses": [
+      "SA-LEX-C381-VISHESHATAH381-03",
+      "SA-LEX-C381-VISHESHATAH381-04",
+      "SA-LEX-C381-VISHESHATAH381-05"
+    ]
+  }
+}

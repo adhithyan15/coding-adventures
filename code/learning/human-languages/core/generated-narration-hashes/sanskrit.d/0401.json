@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:f60790b261df7a7a",
+  "lessonIds": [
+    "SA-C401-bhiksuh",
+    "SA-C401-viharah",
+    "SA-C401-bhiksa",
+    "SA-C401-upasakah",
+    "SA-C401-caityam",
+    "SA-R401-review-394-401"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch401.txt",
+  "json": "sanskrit/narration/ch401.json",
+  "textHash": "fnv1a64:07528f1ac01e031a",
+  "jsonHash": "fnv1a64:3285a4df0929837a",
+  "findings": []
+}

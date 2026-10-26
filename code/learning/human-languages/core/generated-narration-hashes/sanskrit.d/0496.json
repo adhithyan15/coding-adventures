@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:5a926960dc793b57",
+  "lessonIds": [
+    "SA-C496-mangalasutram",
+    "SA-C496-vadhuh",
+    "SA-C496-parinayati",
+    "SA-C496-mandapah",
+    "SA-C496-saptapadi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch496.txt",
+  "json": "sanskrit/narration/ch496.json",
+  "textHash": "fnv1a64:b7789c44b26021fa",
+  "jsonHash": "fnv1a64:646a7d1e7ed5a19b",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C391-nikrstah",
+    "language": "sanskrit",
+    "chapter": 391,
+    "sequence": 22620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1aa30d3afd26975"
+  },
+  "findings": []
+}

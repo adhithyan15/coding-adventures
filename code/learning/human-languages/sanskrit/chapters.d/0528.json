@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "Making a Plan",
+  "label": "ch:sa-making-a-plan",
+  "canDo": "I can say what I will organise if things work out.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C528-pancangam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can say what I will organise if things work out.",
+    "assesses": [
+      "SA-LEX-C528-AYOJAYATI528-03",
+      "SA-LEX-C528-AYOJAYATI528-04",
+      "SA-LEX-C528-AYOJAYATI528-05"
+    ]
+  }
+}

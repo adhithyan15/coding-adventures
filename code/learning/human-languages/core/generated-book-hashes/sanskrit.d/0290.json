@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:50673d02fa4622e3",
+  "lessonIds": [
+    "SA-C290-dasyuh",
+    "SA-C290-lunthati",
+    "SA-C290-akramati",
+    "SA-C290-abharanam",
+    "SA-C290-balat"
+  ],
+  "tex": "sanskrit/book/chapters/ch290-robbers-on-the-road.tex"
+}

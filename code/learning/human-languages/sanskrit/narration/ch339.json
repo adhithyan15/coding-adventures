@@ -1,0 +1,919 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 339,
+  "title": "The Prince's Choice",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:315d4fd2d737e514",
+  "lessons": [
+    {
+      "id": "SA-C339-yuvarajah",
+      "sequence": 19710,
+      "title": "युवराजः (yuvarājaḥ) — a crown prince",
+      "headword": "युवराजः",
+      "romanization": "yuvarājaḥ",
+      "gloss": "a crown prince",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5b0bc1948bd3ea9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for hell, then the Sanskrit for reaps."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: युवराजः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "युवराजः — yuvarājaḥ — \"a crown prince\"."
+            },
+            {
+              "kind": "speech",
+              "text": "युवराजः अश्वेन नगरम् आगच्छति। yuvarājaḥ aśvena nagaram āgacchati. The crown prince comes to the city on horseback."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "युवराजः (yuvarājaḥ) is built from yuvan, \"young\", and rājan, \"a king\"; MW gives yuvarāja as a young king, an heir-apparent, a crown prince (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuvarājaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuvarājaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuvarājaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuvarājaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuvarājaḥ aśvena nagaram āgacchati. — The crown prince comes to the city on horseback.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuvarājaḥ aśvena nagaram āgacchati.* — The crown prince comes to the city on horseback.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for hell, then the Sanskrit for reaps, then say yuvarājaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for hell, then the Sanskrit for reaps, then say *yuvarājaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does युवराजः (yuvarājaḥ) mean? (\"A crown prince\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C339-svayamvarah",
+      "sequence": 19720,
+      "title": "स्वयंवरः (svayaṃvaraḥ) — a bride's choice of a husband",
+      "headword": "स्वयंवरः",
+      "romanization": "svayaṃvaraḥ",
+      "gloss": "a bride's choice of a husband",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b996719b69fd3a6b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for reaps, then the Sanskrit for a crown prince."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्वयंवरः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्वयंवरः — svayaṃvaraḥ — \"a bride's choice of a husband\"."
+            },
+            {
+              "kind": "speech",
+              "text": "श्वः प्रासादे स्वयंवरः भविष्यति। śvaḥ prāsāde svayaṃvaraḥ bhaviṣyati. Tomorrow a princess will choose her husband at the palace."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्वयंवरः (svayaṃvaraḥ) is built from svayam, \"self\", and vara, \"choosing\", from the root √vṛ; MW gives svayaṃvara as self-choice, the choosing of a husband by a princess at an assembly of suitors (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svayaṃvaraḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svayaṃvaraḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svayaṃvaraḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svayaṃvaraḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śvaḥ prāsāde svayaṃvaraḥ bhaviṣyati. — Tomorrow a princess will choose her husband at the palace.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śvaḥ prāsāde svayaṃvaraḥ bhaviṣyati.* — Tomorrow a princess will choose her husband at the palace.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for reaps, then the Sanskrit for a crown prince, then say svayaṃvaraḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for reaps, then the Sanskrit for a crown prince, then say *svayaṃvaraḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्वयंवरः (svayaṃvaraḥ) mean? (\"A bride's choice of a husband\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C339-vrnite",
+      "sequence": 19730,
+      "title": "वृणीते (vṛṇīte) — chooses",
+      "headword": "वृणीते",
+      "romanization": "vṛṇīte",
+      "gloss": "chooses",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d745f038fc4b7def",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a crown prince, then the Sanskrit for a bride's choice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वृणीते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वृणीते — vṛṇīte — \"chooses\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कुमारी युवराजं वृणीते। kumārī yuvarājaṃ vṛṇīte. The maiden chooses the crown prince."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): सा युवराजं वृतवती, sā yuvarājaṃ vṛtavatī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वृणीते (vṛṇīte) comes from the root √vṛ, \"to choose\" (MW's second √vṛ), the root of vara too; MW gives vṛta as chosen, selected (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vṛṇīte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vṛṇīte*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vṛṇīte, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vṛṇīte*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumārī yuvarājaṃ vṛṇīte. — The maiden chooses the crown prince.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumārī yuvarājaṃ vṛṇīte.* — The maiden chooses the crown prince.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a crown prince, then the Sanskrit for a bride's choice, then say vṛṇīte again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a crown prince, then the Sanskrit for a bride's choice, then say *vṛṇīte* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वृणीते (vṛṇīte) mean? (\"Chooses\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C339-pracchannah",
+      "sequence": 19740,
+      "title": "प्रच्छन्नः (pracchannaḥ) — disguised; hidden",
+      "headword": "प्रच्छन्नः",
+      "romanization": "pracchannaḥ",
+      "gloss": "disguised; hidden",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93a6c42318c32310",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a bride's choice, then the Sanskrit for chooses."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रच्छन्नः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रच्छन्नः — pracchannaḥ — \"disguised; hidden\"."
+            },
+            {
+              "kind": "speech",
+              "text": "युवराजः प्रच्छन्नः नगरे भ्रमति। yuvarājaḥ pracchannaḥ nagare bhramati. The crown prince wanders the city in disguise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रच्छन्नः (pracchannaḥ) is built from pra and channa, \"covered\", from the root √chad, \"to cover\"; MW gives pracchanna as covered, hidden, secret, disguised (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pracchannaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pracchannaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pracchannaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pracchannaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuvarājaḥ pracchannaḥ nagare bhramati. — The crown prince wanders the city in disguise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuvarājaḥ pracchannaḥ nagare bhramati.* — The crown prince wanders the city in disguise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a bride's choice, then the Sanskrit for chooses, then say pracchannaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a bride's choice, then the Sanskrit for chooses, then say *pracchannaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रच्छन्नः (pracchannaḥ) mean? (\"Disguised; hidden\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C339-nyayah",
+      "sequence": 19750,
+      "title": "न्यायः (nyāyaḥ) — justice; fairness",
+      "headword": "न्यायः",
+      "romanization": "nyāyaḥ",
+      "gloss": "justice; fairness",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:599d18b2a65f62d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for chooses, then the Sanskrit for disguised."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: न्यायः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "न्यायः — nyāyaḥ — \"justice; fairness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "युवराजः न्यायेन राज्यं शास्ति। yuvarājaḥ nyāyena rājyaṃ śāsti. The crown prince rules the kingdom with justice."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "न्यायः (nyāyaḥ) is built from ni and the root √i, \"to go\": MW gives nyāya as a rule or method, a right or fit manner, propriety, and a lawsuit or judicial sentence, and justice is its everyday modern sense (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyāyaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyāyaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyāyaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyāyaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuvarājaḥ nyāyena rājyaṃ śāsti. — The crown prince rules the kingdom with justice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuvarājaḥ nyāyena rājyaṃ śāsti.* — The crown prince rules the kingdom with justice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for chooses, then the Sanskrit for disguised, then say nyāyaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for chooses, then the Sanskrit for disguised, then say *nyāyaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does न्यायः (nyāyaḥ) mean? (\"Justice; fairness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R339-review-333-339",
+      "sequence": 19760,
+      "title": "Looking back: from The Curse and the Boon to The Prince's Choice",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from The Curse and the Boon to The Prince's Choice",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b283a2f9a6b63df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for a curse and a god."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a curse, a god, a boon, shows favour, immortal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a curse, a god, a boon, shows favour, immortal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a demon, an enemy of the gods, the slaying, kills, swallows",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a demon, an enemy of the gods, the slaying, kills, swallows]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "illusion, a disguise, a trick, bewilders, attracts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: illusion, a disguise, a trick, bewilders, attracts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wise conduct, greed, a sea monster, bewildered, tempts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wise conduct, greed, a sea monster, bewildered, tempts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "life in the forest, a promise, a sandal, promises, hunting",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: life in the forest, a promise, a sandal, promises, hunting]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merit, a sin, heaven, hell, reaps",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: merit, a sin, heaven, hell, reaps]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a crown prince, a bride's choice, chooses, disguised, justice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a crown prince, a bride's choice, chooses, disguised, justice]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A curse? (शापः, śāpaḥ.) A god? (देवः, devaḥ.) A boon? (वरः, varaḥ.) Shows favour? (प्रसीदति, prasīdati.) Immortal? (अमरः, amaraḥ.) A demon? (राक्षसः, rākṣasaḥ.) An enemy of the gods? (असुरः, asuraḥ.) The slaying? (वधः, vadhaḥ.) Kills? (हन्ति, hanti.) Swallows? (निगिरति, nigirati.) Illusion? (माया, māyā.) A disguise? (वेषः, veṣaḥ.) A trick? (छलम्, chalam.) Bewilders? (मोहयति, mohayati.) Attracts? (आकर्षति, ākarṣati.) Wise conduct? (नीतिः, nītiḥ.) Greed? (लोभः, lobhaḥ.) A sea monster? (मकरः, makaraḥ.) Bewildered? (मूढः, mūḍhaḥ.) Tempts? (लोभयति, lobhayati.) Life in the forest? (वनवासः, vanavāsaḥ.) A promise? (प्रतिज्ञा, pratijñā.) A sandal? (पादुका, pādukā.) Promises? (प्रतिजानीते, pratijānīte.) Hunting? (मृगया, mṛgayā.) Merit? (पुण्यम्, puṇyam.) A sin? (पापम्, pāpam.) Heaven? (स्वर्गः, svargaḥ.) Hell? (नरकः, narakaḥ.) Reaps? (भुंक्ते, bhuṅkte.) A crown prince? (युवराजः, yuvarājaḥ.) A bride's choice? (स्वयंवरः, svayaṃvaraḥ.) Chooses? (वृणीते, vṛṇīte.) Disguised? (प्रच्छन्नः, pracchannaḥ.) Justice? (न्यायः, nyāyaḥ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R339-review-final-339",
+      "sequence": 19770,
+      "title": "The Prince's Choice — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3db5543e26e10b37",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for a crown prince and a bride's choice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a crown prince, a bride's choice, chooses, disguised, justice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a crown prince, a bride's choice, chooses, disguised, justice]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A crown prince? (युवराजः, yuvarājaḥ.) A bride's choice? (स्वयंवरः, svayaṃvaraḥ.) Chooses? (वृणीते, vṛṇīte.) Disguised? (प्रच्छन्नः, pracchannaḥ.) Justice? (न्यायः, nyāyaḥ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

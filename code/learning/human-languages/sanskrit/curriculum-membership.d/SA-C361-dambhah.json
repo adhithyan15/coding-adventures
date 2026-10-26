@@ -1,0 +1,11 @@
+{
+  "id": "SA-C361-dambhah",
+  "pathSegment": "SA-PATH-361-SHRADDHA361",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-361-SHRADDHA361",
+      "order": 2
+    }
+  ]
+}

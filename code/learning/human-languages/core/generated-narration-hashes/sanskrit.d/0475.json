@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:784ac521c367b34d",
+  "lessonIds": [
+    "SA-C475-svidyati",
+    "SA-C475-jrmbhate",
+    "SA-C475-ksauti",
+    "SA-C475-kanduyati",
+    "SA-C475-hikka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch475.txt",
+  "json": "sanskrit/narration/ch475.json",
+  "textHash": "fnv1a64:5663eb77841b1d6f",
+  "jsonHash": "fnv1a64:7adf3d67eedf1d2b",
+  "findings": []
+}

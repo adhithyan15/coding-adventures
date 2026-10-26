@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:01d46a8c84354636",
+  "lessonIds": [
+    "SA-C291-dhurtah",
+    "SA-C291-vancayati",
+    "SA-C291-utkocah",
+    "SA-C291-kapatam",
+    "SA-C291-krtrimah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch291.txt",
+  "json": "sanskrit/narration/ch291.json",
+  "textHash": "fnv1a64:8cdb20a57c6eb8e4",
+  "jsonHash": "fnv1a64:13e8d4d7ab124006",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C409-vartma",
+  "pathSegment": "SA-PATH-409-CAKRA409",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-409-CAKRA409",
+      "order": 4
+    }
+  ]
+}

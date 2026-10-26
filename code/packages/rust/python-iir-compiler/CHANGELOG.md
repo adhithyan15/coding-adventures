@@ -1,5 +1,43 @@
 # Changelog
 
+## Unreleased — LANG84 phase 7c, slice 3: `py-float-print`
+
+### Added
+- **Floats on the release path.** A new `ReleaseProfile` field, `floats`
+  (`Floats::Repr` or `Floats::None`), and a new profile, `py30`, for 3.0a1,
+  whose `str(float)` is `%.12g` (`PREC_STR`). `py3` (3.5.10 and later)
+  gets `Floats::Repr`: `print` writes `repr`, `float_repr` being `tp_str`
+  since 3.2. Under it the walker types every value `int` or `float` and
+  lowers floats to LANG83 ops: a `FLOAT` token to an `f64` `const`, an
+  `int` operand to `int_to_real`, `+ - * /` to the PR6c `f64_add`/
+  `f64_sub`/`f64_mul`/`f64_div`, unary minus to `f64_neg`, and
+  `print(float)` to `write_f64_py` plus `putchar 10`. `/` is true division.
+  A divisor known to be `±0` emits `trap "Trap.DivZero"` before the
+  division, as CPython raises ZeroDivisionError.
+- **Refusals** (`Unsupported`): float `//` and `%`, `int / int` with an
+  operand above 2^53, a literal that overflows to `inf`, and (under `py30`
+  and `py2`) any float or true `/`. `decode_float_text` re-checks a
+  caller-supplied `FLOAT` token against the Python 3 float grammar, so
+  only digits, `.`, an exponent and its sign reach Rust's parser.
+- `ReleaseProfile::subsets` (a list, narrowest first) replaces `subset`;
+  `py3` claims `py-int-print` and `py-float-print`. `subset()` names the
+  widest. `PROFILE_TOKENS` (`py3` adds `FLOAT`) joins `PROFILE_RULES`.
+- `run_module` captures `write_f64_py` (the VM's own `python_repr`) in the
+  same ordered output buffer as `print_i64` and `putchar`.
+- **Corpus.** `corpus/py-float-print/` has 24 cases (13 positive, five of
+  which trap; 11 refusals), each checked against host CPython 3.11.17,
+  3.12.3 and 3.13.16; `float_underscores` has `.reject@3.5.10`.
+  `py-int-print`'s `reject_float` and `reject_true_division` left that
+  corpus, since six of its seven releases now compile them; 3.0a1's
+  refusal is pinned by `release_3_0a1_refuses_floats_and_true_division`.
+- **Tests.** Stage I and IIR identity for `py-float-print` on its six
+  releases; the sweep's two float classes ({3.6.0, 3.12.3, 3.13.16,
+  3.11.17, 3.16.0a1} and {3.5.10}); the oracle over both Python 3
+  corpora; IIR-shape tests (`write_f64_py` and the newline, `int_to_real`,
+  the IEEE ops, `f64_neg`, the trap before a zero divisor, the 2^53 rule,
+  forged `FLOAT` tokens); `cst_contract` checks `FLOAT` exists in exactly
+  the `py3` releases.
+
 ## Unreleased — LANG84 phase 7c, slice 2: Python 2 literals; 2.4, 2.6, 3.5.10, 3.6.0
 
 ### Added

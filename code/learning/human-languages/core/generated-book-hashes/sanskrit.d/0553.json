@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 553,
+  "sourceHash": "fnv1a64:95caae92e199934b",
+  "lessonIds": [
+    "SA-C553-skhalanam",
+    "SA-C553-hanta",
+    "SA-C553-pariraksati",
+    "SA-C553-viparyayah",
+    "SA-C553-upalambhah"
+  ],
+  "tex": "sanskrit/book/chapters/ch553-if-only.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C330-ritih",
+  "pathSegment": "SA-PATH-330-PARAMPARA330",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-330-PARAMPARA330",
+      "order": 1
+    }
+  ]
+}

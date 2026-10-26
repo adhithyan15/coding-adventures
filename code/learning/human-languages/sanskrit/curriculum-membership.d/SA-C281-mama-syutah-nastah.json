@@ -1,0 +1,11 @@
+{
+  "id": "SA-C281-mama-syutah-nastah",
+  "pathSegment": "SA-PATH-281-TRAVEL281",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-281-TRAVEL281",
+      "order": 2
+    }
+  ]
+}

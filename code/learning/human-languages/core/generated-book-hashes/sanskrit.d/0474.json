@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:e6569a2c4e58bf7b",
+  "lessonIds": [
+    "SA-C474-sira",
+    "SA-C474-snayuh",
+    "SA-C474-pesi",
+    "SA-C474-mamsam",
+    "SA-C474-spandate"
+  ],
+  "tex": "sanskrit/book/chapters/ch474-veins-and-muscles.tex"
+}

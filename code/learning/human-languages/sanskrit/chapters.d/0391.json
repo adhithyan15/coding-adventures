@@ -1,0 +1,19 @@
+{
+  "chapter": 391,
+  "title": "Better and Worse",
+  "label": "ch:sa-better-and-worse",
+  "canDo": "I can say whether things will get better or worse.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C391-dusayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can say whether things will get better or worse.",
+    "assesses": [
+      "SA-LEX-C391-PARAMA391-03",
+      "SA-LEX-C391-PARAMA391-04",
+      "SA-LEX-C391-PARAMA391-05"
+    ]
+  }
+}

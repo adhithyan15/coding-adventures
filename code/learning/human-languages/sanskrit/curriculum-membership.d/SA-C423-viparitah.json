@@ -1,0 +1,11 @@
+{
+  "id": "SA-C423-viparitah",
+  "pathSegment": "SA-PATH-423-PRAVESHA423",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-423-PRAVESHA423",
+      "order": 2
+    }
+  ]
+}

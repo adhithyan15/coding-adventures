@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:2e2a128069e9fc26",
+  "lessonIds": [
+    "SA-C460-svabhavah",
+    "SA-C460-sabhyah",
+    "SA-C460-pravartate",
+    "SA-C460-gunah",
+    "SA-C460-dustah"
+  ],
+  "tex": "sanskrit/book/chapters/ch460-character-and-conduct.tex"
+}

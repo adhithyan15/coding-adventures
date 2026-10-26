@@ -4,6 +4,14 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Fixed
+
+- Preserve Qt timeline labels' authored 150-pixel non-shrinking width (#18305),
+  without changing shared styles or claiming general flex support.
+
+Entries added after `task-app-v0.5.12` accumulate here until the next version is
+cut.
+
 ### Changed
 
 - Run the release upgrade and corrupt-recovery gate's generic checks through
@@ -16,9 +24,9 @@ All notable changes to the `task-app` web program are documented here.
   Windows its trailing newline is now LF rather than CRLF.
 - Run `test_taskapp_release.py` and the shared gate's tests in the release
   lane's validate job; no workflow ran them before.
-
-Entries added after `task-app-v0.5.12` accumulate here until the next version is
-cut.
+- The `mosaic-pkg-toolkit` dependency pin moves from 0.15.0 to 0.16.0, the
+  toolkit's current version (Journal already pins it). 0.16.0 only adds
+  `RecordList`; nothing TaskApp uses changed, so no source or output changes.
 
 ## [0.5.12] - 2026-10-25
 

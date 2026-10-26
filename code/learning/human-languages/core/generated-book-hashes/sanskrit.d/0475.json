@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:74477d86f513d756",
+  "lessonIds": [
+    "SA-C475-svidyati",
+    "SA-C475-jrmbhate",
+    "SA-C475-ksauti",
+    "SA-C475-kanduyati",
+    "SA-C475-hikka"
+  ],
+  "tex": "sanskrit/book/chapters/ch475-sweat-yawns-and-sneezes.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C295-sibika",
+  "pathSegment": "SA-PATH-295-CETANA295",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-295-CETANA295",
+      "order": 2
+    }
+  ]
+}

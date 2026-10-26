@@ -1,0 +1,11 @@
+{
+  "id": "SA-C327-kunkumam",
+  "pathSegment": "SA-PATH-327-HOLIKA327",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-327-HOLIKA327",
+      "order": 1
+    }
+  ]
+}

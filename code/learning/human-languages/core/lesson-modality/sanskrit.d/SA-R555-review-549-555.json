@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R555-review-549-555",
+    "language": "sanskrit",
+    "chapter": 555,
+    "sequence": 31760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f96f6549c6fd041e"
+  },
+  "findings": []
+}

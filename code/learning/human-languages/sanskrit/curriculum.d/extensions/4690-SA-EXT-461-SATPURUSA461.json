@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-461-SATPURUSA461",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether someone is good-hearted or wicked.",
+  "prerequisites": []
+}

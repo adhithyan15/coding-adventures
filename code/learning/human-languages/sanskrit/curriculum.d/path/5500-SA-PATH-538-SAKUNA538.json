@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-538-SAKUNA538",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "SA-EXT-538-SAKUNA538"
+  ],
+  "after": []
+}

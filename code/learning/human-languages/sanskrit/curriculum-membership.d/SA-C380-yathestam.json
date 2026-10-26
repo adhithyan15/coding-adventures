@@ -1,0 +1,11 @@
+{
+  "id": "SA-C380-yathestam",
+  "pathSegment": "SA-PATH-380-MATRA380",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-380-MATRA380",
+      "order": 3
+    }
+  ]
+}

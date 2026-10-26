@@ -1,0 +1,11 @@
+{
+  "id": "SA-C305-avatarayati",
+  "pathSegment": "SA-PATH-305-UDDHARANA305",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-305-UDDHARANA305",
+      "order": 3
+    }
+  ]
+}

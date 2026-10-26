@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-550-AMSA550",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "SA-EXT-550-AMSA550"
+  ],
+  "after": []
+}

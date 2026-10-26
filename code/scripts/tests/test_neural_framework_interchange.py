@@ -1,4 +1,4 @@
-"""NN46 orchestration regressions; real runtime evidence is a separate command."""
+"""NN49 orchestration regressions; real runtime evidence is a separate command."""
 
 import copy
 import importlib.util
@@ -31,24 +31,43 @@ def receipt(step=3000):
 
 
 class InterchangeTests(unittest.TestCase):
-    def test_all_twenty_directed_pairs_and_native_baselines_execute(self):
+    def setUp(self):
+        # These tests mock the child, not evidence of an actual C executable.
+        self.file_patch = patch.object(Path, "is_file", return_value=True)
+        self.access_patch = patch.object(MODULE.os, "access", return_value=True)
+        self.file_patch.start()
+        self.access_patch.start()
+        self.addCleanup(self.file_patch.stop)
+        self.addCleanup(self.access_patch.stop)
+
+    def test_all_thirty_directed_pairs_and_native_baselines_execute(self):
         calls = []
 
         def execute(lane, checkpoint=None, **kwargs):
             calls.append((lane, None if checkpoint is None else checkpoint["step"]))
+            self.assertEqual(
+                kwargs,
+                {
+                    "manifest": Path("trusted/Cargo.toml"),
+                    "c_executable": Path("trusted/native-xor"),
+                },
+            )
             return receipt(3000 if checkpoint is None else checkpoint["step"] + 1)
 
         with patch.object(MODULE, "execute", side_effect=execute):
-            result = MODULE.validate()
-        self.assertEqual(len(calls), 55)  # 5 train + 10 native + 40 cross-runtime.
-        self.assertEqual(result["contract"], "NN46")
-        self.assertEqual(result["checkpoint_exchange"], "passed-all-twenty-directions")
+            result = MODULE.validate(
+                Path("trusted/Cargo.toml"), Path("trusted/native-xor")
+            )
+        self.assertEqual(len(calls), 78)  # 6 train + 12 native + 60 cross-runtime.
+        self.assertEqual(result["child_processes"], 78)
+        self.assertEqual(result["contract"], "NN49")
+        self.assertEqual(result["checkpoint_exchange"], "passed-all-thirty-directions")
         self.assertEqual(result["binding_lanes"], [])
         self.assertEqual(
-            result["native_lanes"], ["python", "typescript", "rust", "go", "ruby"]
+            result["native_lanes"], ["python", "typescript", "rust", "go", "ruby", "c"]
         )
-        self.assertEqual(len(result["exchanges"]), 20)
-        self.assertEqual([step for lane, step in calls[:5]], [None] * 5)
+        self.assertEqual(len(result["exchanges"]), 30)
+        self.assertEqual([step for lane, step in calls[:6]], [None] * 6)
         self.assertEqual(
             set(result["exchanges"]),
             {f"{a}->{b}" for a in MODULE.LANES for b in MODULE.LANES if a != b},
@@ -72,7 +91,10 @@ class InterchangeTests(unittest.TestCase):
                         ) as run,
                     ):
                         MODULE.execute(
-                            lane, checkpoint, manifest=Path("trusted path/Cargo.toml")
+                            lane,
+                            checkpoint,
+                            manifest=Path("trusted path/Cargo.toml"),
+                            c_executable=Path("trusted path/native-xor"),
                         )
                     argv = run.call_args.args[0]
                     options = run.call_args.kwargs
@@ -82,7 +104,9 @@ class InterchangeTests(unittest.TestCase):
                     self.assertEqual(options["encoding"], "utf-8")
                     self.assertEqual(
                         options["cwd"],
-                        {"go": MODULE.GO, "ruby": MODULE.RUBY}.get(lane, MODULE.ROOT),
+                        {"go": MODULE.GO, "ruby": MODULE.RUBY, "c": MODULE.C}.get(
+                            lane, MODULE.ROOT
+                        ),
                     )
                     self.assertEqual(
                         options["input"], json.dumps(checkpoint) if resume else None
@@ -112,6 +136,40 @@ class InterchangeTests(unittest.TestCase):
                             ]
                             + (["--resume"] if resume else []),
                         )
+
+                    if lane == "c":
+                        self.assertEqual(
+                            argv,
+                            [str(Path("trusted path/native-xor").resolve())]
+                            + (["--resume"] if resume else []),
+                        )
+
+    def test_c_executable_is_required_and_never_selected_by_checkpoint(self):
+        for is_file, accessible in ((False, True), (True, False)):
+            with (
+                patch.object(Path, "is_file", return_value=is_file),
+                patch.object(MODULE.os, "access", return_value=accessible),
+                patch.object(MODULE.subprocess, "run") as run,
+                self.assertRaises(ValueError),
+            ):
+                MODULE.execute("c", c_executable=Path("absent-native-xor"))
+            run.assert_not_called()
+        checkpoint = receipt()["checkpoint"]
+        checkpoint.update(executable="untrusted", argv=["--baseline-3002"], cwd="bad")
+        with patch.object(
+            MODULE.subprocess,
+            "run",
+            return_value=subprocess.CompletedProcess([], 0, json.dumps(receipt(3001))),
+        ) as run:
+            MODULE.execute(
+                "c", checkpoint, c_executable=Path("trusted path/native-xor")
+            )
+        self.assertEqual(
+            run.call_args.args[0],
+            [str(Path("trusted path/native-xor").resolve()), "--resume"],
+        )
+        self.assertEqual(run.call_args.kwargs["cwd"], MODULE.C)
+        self.assertEqual(json.loads(run.call_args.kwargs["input"]), checkpoint)
 
     def test_unknown_lane_missing_tools_and_process_errors_fail(self):
         with self.assertRaises(ValueError):
@@ -144,6 +202,7 @@ class InterchangeTests(unittest.TestCase):
             ("checkpoint", []),
             ("checkpoint", {"step": 3001}),
             ("checkpoint", {"step": True}),
+            ("checkpoint", {"step": 3000.0}),
             ("predictions", []),
             ("predictions", [[True]] * 4),
             ("predictions", [[None]] * 4),
@@ -154,7 +213,7 @@ class InterchangeTests(unittest.TestCase):
             document[field] = value
             bad.append(document)
         for document in bad:
-            for lane in ("python", "ruby"):
+            for lane in ("python", "ruby", "c"):
                 with (
                     self.subTest(document=document, lane=lane),
                     patch.object(MODULE.shutil, "which", return_value="trusted tool"),
@@ -188,7 +247,7 @@ class InterchangeTests(unittest.TestCase):
                 value = copy.deepcopy(
                     receipt(3000 if checkpoint is None else checkpoint["step"] + 1)
                 )
-                if count == {"initial": 2, "baseline": 6, "exchange": 16}[failure]:
+                if count == {"initial": 2, "baseline": 7, "exchange": 19}[failure]:
                     value["checkpoint"]["layers"][0]["weights"][0][0] += 0.01
                 return value
 
@@ -211,9 +270,8 @@ class InterchangeTests(unittest.TestCase):
 
     def test_go_fresh_baseline_destination_and_return_drift_fail(self):
         # Call positions pin each boundary independently of the lane registry:
-        # Go fresh=4; native resumes=12/13; Python->Go=20; Go->Python=21.
-        # Go as the original source also executes its own return at call 41.
-        for damaged in (4, 12, 13, 20, 21, 41):
+        # Go fresh=4; native=13/14; Python->Go=23/24; Go->Python=49/50.
+        for damaged in (4, 13, 14, 23, 24, 49, 50):
             calls = 0
 
             def execute(lane, checkpoint=None, damaged=damaged, **kwargs):
@@ -232,9 +290,8 @@ class InterchangeTests(unittest.TestCase):
                 MODULE.validate()
 
     def test_ruby_fresh_baseline_destination_and_return_drift_fail(self):
-        # Ruby fresh=5; native resumes=14/15; Python->Ruby=22 and return=23.
-        # Ruby->Python's destination=48; its actual Ruby return execution=49.
-        for damaged in (5, 14, 15, 22, 23, 48, 49):
+        # Ruby fresh=5; native=15/16; Python->Ruby=25/26; Ruby->Python=59/60.
+        for damaged in (5, 15, 16, 25, 26, 59, 60):
             calls = 0
 
             def execute(lane, checkpoint=None, damaged=damaged, **kwargs):
@@ -242,8 +299,30 @@ class InterchangeTests(unittest.TestCase):
                 calls += 1
                 value = receipt(3000 if checkpoint is None else checkpoint["step"] + 1)
                 if calls == damaged:
-                    if damaged in (5, 14, 15, 22, 49):
+                    if damaged in (5, 15, 16, 25, 60):
                         self.assertEqual(lane, "ruby")
+                    value["checkpoint"]["layers"][0]["biases"][0] += 0.01
+                return value
+
+            with (
+                self.subTest(damaged=damaged),
+                patch.object(MODULE, "execute", side_effect=execute),
+                self.assertRaises(ValueError),
+            ):
+                MODULE.validate()
+
+    def test_c_fresh_baseline_destination_and_return_drift_fail(self):
+        # C fresh=6; native=17/18; Python->C=27/28; C->Python=69/70.
+        for damaged in (6, 17, 18, 27, 28, 69, 70):
+            calls = 0
+
+            def execute(lane, checkpoint=None, damaged=damaged, **kwargs):
+                nonlocal calls
+                calls += 1
+                value = receipt(3000 if checkpoint is None else checkpoint["step"] + 1)
+                if calls == damaged:
+                    if damaged in (6, 17, 18, 27, 70):
+                        self.assertEqual(lane, "c")
                     value["checkpoint"]["layers"][0]["biases"][0] += 0.01
                 return value
 

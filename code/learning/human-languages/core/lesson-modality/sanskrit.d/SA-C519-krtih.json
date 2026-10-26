@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C519-krtih",
+    "language": "sanskrit",
+    "chapter": 519,
+    "sequence": 29900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f513ee16e1c79cf5"
+  },
+  "findings": []
+}

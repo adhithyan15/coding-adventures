@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C517-prahelika",
+    "language": "sanskrit",
+    "chapter": 517,
+    "sequence": 29770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0ccaab1774a7a6e"
+  },
+  "findings": []
+}

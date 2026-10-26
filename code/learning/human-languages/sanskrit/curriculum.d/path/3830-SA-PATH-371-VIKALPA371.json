@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-371-VIKALPA371",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "SA-EXT-371-VIKALPA371"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C389-yatharthah",
+    "language": "sanskrit",
+    "chapter": 389,
+    "sequence": 22550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c75f2f707c318ee"
+  },
+  "findings": []
+}

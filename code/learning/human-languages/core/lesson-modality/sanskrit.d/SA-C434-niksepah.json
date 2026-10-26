@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C434-niksepah",
+    "language": "sanskrit",
+    "chapter": 434,
+    "sequence": 25080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:033d6c3b90b854ce"
+  },
+  "findings": []
+}

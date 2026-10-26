@@ -1,0 +1,11 @@
+{
+  "id": "SA-C410-ksarati",
+  "pathSegment": "SA-PATH-410-CHIDRA410",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-410-CHIDRA410",
+      "order": 1
+    }
+  ]
+}

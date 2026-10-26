@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C480-visam",
+    "language": "sanskrit",
+    "chapter": 480,
+    "sequence": 27650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf1b91530e12df2b"
+  },
+  "findings": []
+}

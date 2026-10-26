@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-455-ANURAGA455",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what someone is fond of.",
+  "prerequisites": []
+}

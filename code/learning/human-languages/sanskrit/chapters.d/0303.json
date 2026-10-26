@@ -1,0 +1,19 @@
+{
+  "chapter": 303,
+  "title": "Famine and Sickness",
+  "label": "ch:sa-famine-and-sickness",
+  "canDo": "I can tell how hunger and disease spread.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C303-mlayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can tell how hunger and disease spread.",
+    "assesses": [
+      "SA-LEX-C303-DURBHIKSHA303-03",
+      "SA-LEX-C303-DURBHIKSHA303-04",
+      "SA-LEX-C303-DURBHIKSHA303-05"
+    ]
+  }
+}

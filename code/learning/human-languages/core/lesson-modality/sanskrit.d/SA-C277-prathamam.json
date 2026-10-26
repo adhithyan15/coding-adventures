@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C277-prathamam",
+    "language": "sanskrit",
+    "chapter": 277,
+    "sequence": 16290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8571be616444fa7"
+  },
+  "findings": []
+}

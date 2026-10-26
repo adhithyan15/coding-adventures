@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-278-REASONS278",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can give an opinion (mama matena …, ahaṃ manye yat …) and a reason for it (yataḥ …, varṣākāraṇāt …).",
+  "prerequisites": [
+    "SA-EXT-277-NARRATE277"
+  ]
+}

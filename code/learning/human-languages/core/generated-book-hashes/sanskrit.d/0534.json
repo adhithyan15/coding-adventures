@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:ba6db3c3628d2c92",
+  "lessonIds": [
+    "SA-C534-madhyasthah",
+    "SA-C534-samvid",
+    "SA-C534-angikaroti",
+    "SA-C534-pratyakhyati",
+    "SA-C534-sammatih"
+  ],
+  "tex": "sanskrit/book/chapters/ch534-coming-to-terms.tex"
+}

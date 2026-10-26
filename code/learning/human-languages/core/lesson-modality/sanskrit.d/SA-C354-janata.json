@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C354-janata",
+    "language": "sanskrit",
+    "chapter": 354,
+    "sequence": 20720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc4376360d3989b6"
+  },
+  "findings": []
+}

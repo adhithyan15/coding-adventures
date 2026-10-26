@@ -1,0 +1,19 @@
+{
+  "chapter": 376,
+  "title": "Who Can Do It",
+  "label": "ch:sa-who-can-do-it",
+  "canDo": "I can say who is fit for a task and who keeps it under control.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C376-asrayate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can say who is fit for a task and who keeps it under control.",
+    "assesses": [
+      "SA-LEX-C376-YOGYA376-03",
+      "SA-LEX-C376-YOGYA376-04",
+      "SA-LEX-C376-YOGYA376-05"
+    ]
+  }
+}

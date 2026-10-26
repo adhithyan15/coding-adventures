@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 384,
+  "output": "sanskrit/book/chapters/ch384-effort.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

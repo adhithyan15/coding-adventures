@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C549-samihate",
+    "language": "sanskrit",
+    "chapter": 549,
+    "sequence": 31450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d91cb126f885ea51"
+  },
+  "findings": []
+}

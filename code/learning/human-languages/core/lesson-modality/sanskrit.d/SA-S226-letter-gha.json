@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S226-letter-gha",
+    "language": "sanskrit",
+    "chapter": 276,
+    "sequence": 16260,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:606b25e0c04afcfb",
+    "detachableSegments": [
+      "Script you'll notice: घ",
+      "Writing: घ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
