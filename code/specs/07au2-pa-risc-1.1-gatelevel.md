@@ -3,8 +3,9 @@
 ## 1. Status, source, and evidence boundary
 
 This specification defines the educational gate-level companion to the merged
-`pa-risc11-simulator` and Spec 07au. It is specification-only until a different
-reviewer accepts this commit; no package implementation is part of this cell.
+`pa-risc11-simulator` and Spec 07au. Its independently accepted specification
+now has a complete local implementation awaiting independent implementation
+review and publication.
 
 The normative public architecture source is Hewlett-Packard's
 [*PA-RISC 1.1 Architecture and Instruction Set Reference Manual*, third
@@ -371,3 +372,9 @@ Implementation is complete only when all of the following are true:
    after measurement in README, changelog, Spec 07au2, and the live backlog.
 
 Independent security/correctness review is mandatory before publication.
+
+The completed local package has 17 release tests and measured all-target line
+coverage of 96.83% (978/1,010 lines). The recorded evidence includes the exact
+inventory, full classification and condition matrices, complete-state
+differentials, lifecycle/allocation rollback, stable-Q divergence, and
+compiler-checked hostile full-crate mutations required above.
