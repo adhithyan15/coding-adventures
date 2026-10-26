@@ -13,8 +13,8 @@
   coordinates, external names and self-references never create edges;
   multi-line values are tracked by bracket depth (`internal/resolver/mosaic.go`).
 - The Mosaic reader fails closed (`MosaicManifestError`), because a dropped
-  edge silently skips a dependent's tests on every later PR: a root-level
-  `dependencies` key or inline table, a multi-line string, any backslash
+  edge silently skips a dependent's tests on every later PR: any root-level
+  key or inline table (`package.name = ...`, `dependencies = { ... }`), a multi-line string, any backslash
   escape (keys, headers and `[package].name` alike), a manifest that is not a
   regular file or exceeds 1 MiB, and two Mosaic packages claiming one name —
   including a library taking an app's name (`checkMosaicNameCollisions`) — all

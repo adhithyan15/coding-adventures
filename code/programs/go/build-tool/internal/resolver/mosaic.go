@@ -54,8 +54,9 @@ package resolver
 // *MosaicManifestError, which stops the whole plan instead of dropping edges.
 // Those shapes are
 //
-//	dependencies = { mosaic-pkg-toolkit = "0.16.0" }   # root inline table
-//	dependencies.mosaic-pkg-toolkit = "0.16.0"         # root dotted key
+//	dependencies = { mosaic-pkg-toolkit = "0.16.0" }   # any root-level key:
+//	dependencies.mosaic-pkg-toolkit = "0.16.0"         #   inline table or
+//	package.name = "mosaic-pkg-toolkit"                #   dotted key
 //	description = """…"""                              # multi-line string
 //	["dependenci\u0065s"]                              # any backslash escape
 //
@@ -228,8 +229,11 @@ func readMosaicManifestTables(pkgPath string) (keys map[string][]string, values 
 		if len(path) == 0 {
 			continue
 		}
-		if table == "" && path[0] == "dependencies" {
-			return refuse("declares dependencies as a root-level key or inline table")
+		if table == "" {
+			// Every manifest field is a table, so no valid manifest needs a
+			// root-level key. Spelled at the root (`package.name = ...`,
+			// `dependencies = { ... }`), a field would be invisible here.
+			return refuse("declares a root-level key or inline table")
 		}
 		keys[table] = append(keys[table], path[0])
 		if len(path) == 1 {

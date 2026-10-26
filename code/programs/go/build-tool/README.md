@@ -539,8 +539,8 @@ within the Mosaic scope, by directory basename or `[package].name`. Editing
 or bumping `mosaic-pkg-toolkit` therefore re-runs every Mosaic package and app
 that requires it. Requirement strings, `[components]` exports and unrelated
 tables such as `[host_assets].dependencies` never create edges. The reader
-fails closed: a manifest shape it does not model (a root-level
-`dependencies` key or inline table, a multi-line string, any backslash
+fails closed: a manifest shape it does not model (any root-level key or
+inline table, such as `package.name = ...`; a multi-line string, any backslash
 escape), a symlinked or oversized manifest, and two Mosaic packages claiming
 one name stop the plan with an error rather than dropping edges.
 

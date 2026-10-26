@@ -155,8 +155,8 @@ candidates; the requirement string is version data. Lookup is scoped to
 Mosaic packages, and
 self-references are dropped. Because a
 missed edge silently skips a dependent's tests, the reader fails closed: a
-manifest in a valid TOML shape it does not model (a root-level
-`dependencies` key or inline table, a multi-line string, any backslash
+manifest in a valid TOML shape it does not model (any root-level key or
+inline table, such as `package.name = ...` or `dependencies = { ... }`; a multi-line string, any backslash
 escape), a manifest that is not a regular file or exceeds 1 MiB, and two Mosaic
 packages (libraries or apps) claiming one name are errors that stop the plan.
 A leading UTF-8 byte-order mark is stripped, as TOML allows. The resolver builds a directed graph where an edge from A to B means "B depends on A" (A must build before B).

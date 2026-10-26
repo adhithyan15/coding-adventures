@@ -187,6 +187,8 @@ func TestParseMosaicDepsFailsClosedOnShapesItDoesNotModel(t *testing.T) {
 		{"escaped key", "[package]\nname = \"task-app\"\n[dependencies]\n\"mosaic-pkg-\\u0073heet\" = \"0.1.0\"\n", "escape"},
 		{"escaped header", "[package]\nname = \"task-app\"\n[\"dependenci\\u0065s\"]\nmosaic-pkg-sheet = \"0.1.0\"\n", "escape"},
 		{"escaped package name", "[package]\nname = \"task-\\u0061pp\"\n[dependencies]\nmosaic-pkg-sheet = \"0.1.0\"\n", "escape"},
+		{"root dotted package name", "package.name = \"task-app\"\n[dependencies]\nmosaic-pkg-sheet = \"0.1.0\"\n", "root-level"},
+		{"root inline package table", "package = { name = \"task-app\", version = \"0.1.0\" }\n[dependencies]\nmosaic-pkg-sheet = \"0.1.0\"\n", "root-level"},
 		{"BOM before a root inline table", "\xEF\xBB\xBFdependencies = { mosaic-pkg-sheet = \"0.1.0\" }\n[package]\nname = \"task-app\"\n", "root-level"},
 	}
 	for index, tc := range cases {
