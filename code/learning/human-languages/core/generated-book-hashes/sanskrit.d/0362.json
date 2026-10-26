@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:f8d8eb3fcca2730c",
+  "lessonIds": [
+    "SA-C362-anusandhanam",
+    "SA-C362-prayogah",
+    "SA-C362-anvesanam",
+    "SA-C362-aveksate",
+    "SA-C362-udbhavayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch362-research.tex"
+}

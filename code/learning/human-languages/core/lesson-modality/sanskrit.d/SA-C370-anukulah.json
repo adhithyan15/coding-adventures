@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C370-anukulah",
+    "language": "sanskrit",
+    "chapter": 370,
+    "sequence": 21560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0355a6662156a52"
+  },
+  "findings": []
+}

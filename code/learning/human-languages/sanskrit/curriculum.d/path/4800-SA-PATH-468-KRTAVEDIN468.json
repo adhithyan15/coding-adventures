@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-468-KRTAVEDIN468",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "SA-EXT-468-KRTAVEDIN468"
+  ],
+  "after": []
+}

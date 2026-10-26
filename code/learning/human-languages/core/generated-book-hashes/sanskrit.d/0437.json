@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:d1f6936b88198a4c",
+  "lessonIds": [
+    "SA-C437-pravrt",
+    "SA-C437-asarah",
+    "SA-C437-sikarah",
+    "SA-C437-binduh",
+    "SA-C437-galati"
+  ],
+  "tex": "sanskrit/book/chapters/ch437-the-rainy-season.tex"
+}

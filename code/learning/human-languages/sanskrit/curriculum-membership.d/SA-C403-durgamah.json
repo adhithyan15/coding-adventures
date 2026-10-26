@@ -1,0 +1,11 @@
+{
+  "id": "SA-C403-durgamah",
+  "pathSegment": "SA-PATH-403-PANTHA403",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-403-PANTHA403",
+      "order": 2
+    }
+  ]
+}

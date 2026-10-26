@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "Fair and Unfair",
+  "label": "ch:sa-fair-and-unfair",
+  "canDo": "I can say whether people are treated fairly.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C348-ullanghayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can say whether people are treated fairly.",
+    "assesses": [
+      "SA-LEX-C348-AUCITYA348-03",
+      "SA-LEX-C348-AUCITYA348-04",
+      "SA-LEX-C348-AUCITYA348-05"
+    ]
+  }
+}

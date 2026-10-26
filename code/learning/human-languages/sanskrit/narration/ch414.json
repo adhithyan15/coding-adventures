@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 414,
+  "title": "Losing the Way",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1a76fe2b568bb9aa",
+  "lessons": [
+    {
+      "id": "SA-C414-digbhramah",
+      "sequence": 24020,
+      "title": "दिग्भ्रमः (digbhramaḥ) — losing one's bearings",
+      "headword": "दिग्भ्रमः",
+      "romanization": "digbhramaḥ",
+      "gloss": "losing one's bearings",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a3bd7354a086d41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for delivers, then the Sanskrit for arranges."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दिग्भ्रमः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दिग्भ्रमः — digbhramaḥ — \"losing one's bearings\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वने पथिकस्य दिग्भ्रमः भवति। vane pathikasya digbhramaḥ bhavati. In the forest the wayfarer loses his bearings."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दिग्भ्रमः (digbhramaḥ) is built from diś, \"a direction\", and bhrama, \"wandering, confusion\", from the root √bhram, \"to wander\"; MW gives the compound as confusion about the quarters of the compass, mistaking the way (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "digbhramaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *digbhramaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "digbhramaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *digbhramaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vane pathikasya digbhramaḥ bhavati. — In the forest the wayfarer loses his bearings.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vane pathikasya digbhramaḥ bhavati.* — In the forest the wayfarer loses his bearings.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for delivers, then the Sanskrit for arranges, then say digbhramaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for delivers, then the Sanskrit for arranges, then say *digbhramaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दिग्भ्रमः (digbhramaḥ) mean? (\"Losing one's bearings\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C414-bhrantah",
+      "sequence": 24030,
+      "title": "भ्रान्तः (bhrāntaḥ) — astray; wandering",
+      "headword": "भ्रान्तः",
+      "romanization": "bhrāntaḥ",
+      "gloss": "astray; wandering",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6706295d3d198241",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for arranges, then the Sanskrit for losing one's bearings."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भ्रान्तः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भ्रान्तः — bhrāntaḥ — \"astray; wandering\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भ्रान्तः पथिकः ग्रामं न प्राप्नोति। bhrāntaḥ pathikaḥ grāmaṃ na prāpnoti. The wayfarer who has gone astray does not reach the village."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भ्रान्तः (bhrāntaḥ) comes from the root √bhram, \"to wander\", which also gives bhramati, \"wanders\": it is the participle, \"having wandered\", and MW gives bhrānta as roaming about and as confused (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhrāntaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhrāntaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhrāntaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhrāntaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhrāntaḥ pathikaḥ grāmaṃ na prāpnoti. — The wayfarer who has gone astray does not reach the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhrāntaḥ pathikaḥ grāmaṃ na prāpnoti.* — The wayfarer who has gone astray does not reach the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for arranges, then the Sanskrit for losing one's bearings, then say bhrāntaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for arranges, then the Sanskrit for losing one's bearings, then say *bhrāntaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भ्रान्तः (bhrāntaḥ) mean? (\"Astray; wandering\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C414-pratipadyate",
+      "sequence": 24040,
+      "title": "प्रतिपद्यते (pratipadyate) — finds the way; reaches",
+      "headword": "प्रतिपद्यते",
+      "romanization": "pratipadyate",
+      "gloss": "finds the way; reaches",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4ab7c8c11fc33fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for losing one's bearings, then the Sanskrit for astray."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रतिपद्यते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिपद्यते — pratipadyate — \"finds the way; reaches\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पथिकः शनैः मार्गं प्रतिपद्यते। pathikaḥ śanaiḥ mārgaṃ pratipadyate. Slowly the wayfarer finds the road."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः मार्गं प्रतिपन्नवान्, saḥ mārgaṃ pratipannavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिपद्यते (pratipadyate) is built from prati, \"towards\", and the root √pad, \"to go, to step\"; MW gives prati-pad as to set foot upon, arrive at, reach, with the participle pratipanna, \"arrived, found\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratipadyate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratipadyate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratipadyate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratipadyate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pathikaḥ śanaiḥ mārgaṃ pratipadyate. — Slowly the wayfarer finds the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pathikaḥ śanaiḥ mārgaṃ pratipadyate.* — Slowly the wayfarer finds the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for losing one's bearings, then the Sanskrit for astray, then say pratipadyate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for losing one's bearings, then the Sanskrit for astray, then say *pratipadyate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रतिपद्यते (pratipadyate) mean? (\"Finds the way; reaches\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C414-aparicitah",
+      "sequence": 24050,
+      "title": "अपरिचितः (aparicitaḥ) — unfamiliar; strange",
+      "headword": "अपरिचितः",
+      "romanization": "aparicitaḥ",
+      "gloss": "unfamiliar; strange",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f45de4af778815dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for astray, then the Sanskrit for finds the way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अपरिचितः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अपरिचितः — aparicitaḥ — \"unfamiliar; strange\"."
+            },
+            {
+              "kind": "speech",
+              "text": "एतत् नगरं मम अपरिचितम् अस्ति। etat nagaraṃ mama aparicitam asti. This city is unfamiliar to me."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अपरिचितः (aparicitaḥ) is built from a, \"not\", and paricita, \"known, familiar\", from pari and the root √ci, \"to gather\"; MW gives aparicita as unacquainted, unknown (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aparicitaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aparicitaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aparicitaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aparicitaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "etat nagaraṃ mama aparicitam asti. — This city is unfamiliar to me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *etat nagaraṃ mama aparicitam asti.* — This city is unfamiliar to me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for astray, then the Sanskrit for finds the way, then say aparicitaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for astray, then the Sanskrit for finds the way, then say *aparicitaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अपरिचितः (aparicitaḥ) mean? (\"Unfamiliar; strange\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C414-agantukah",
+      "sequence": 24060,
+      "title": "आगन्तुकः (āgantukaḥ) — a newcomer; a stranger",
+      "headword": "आगन्तुकः",
+      "romanization": "āgantukaḥ",
+      "gloss": "a newcomer; a stranger",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:26d0bc295cf74f2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for finds the way, then the Sanskrit for unfamiliar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आगन्तुकः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आगन्तुकः — āgantukaḥ — \"a newcomer; a stranger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आगन्तुकः जनान् मार्गं पृच्छति। āgantukaḥ janān mārgaṃ pṛcchati. The newcomer asks people the way."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आगन्तुकः (āgantukaḥ) is built from ā, \"towards\", and the root √gam, \"to go\": one who has come; MW gives āgantuka as a new comer, a stranger, a guest (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgantukaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgantukaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgantukaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgantukaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgantukaḥ janān mārgaṃ pṛcchati. — The newcomer asks people the way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgantukaḥ janān mārgaṃ pṛcchati.* — The newcomer asks people the way.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for finds the way, then the Sanskrit for unfamiliar, then say āgantukaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for finds the way, then the Sanskrit for unfamiliar, then say *āgantukaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आगन्तुकः (āgantukaḥ) mean? (\"A newcomer; a stranger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

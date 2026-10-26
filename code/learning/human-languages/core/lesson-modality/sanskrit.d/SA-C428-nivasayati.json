@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C428-nivasayati",
+    "language": "sanskrit",
+    "chapter": 428,
+    "sequence": 24760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0014ac57a7b80e41"
+  },
+  "findings": []
+}

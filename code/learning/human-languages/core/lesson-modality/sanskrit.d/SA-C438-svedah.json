@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C438-svedah",
+    "language": "sanskrit",
+    "chapter": 438,
+    "sequence": 25280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49c56e1ef9290049"
+  },
+  "findings": []
+}

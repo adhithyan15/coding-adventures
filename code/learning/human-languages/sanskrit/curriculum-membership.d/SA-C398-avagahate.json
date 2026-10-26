@@ -1,0 +1,11 @@
+{
+  "id": "SA-C398-avagahate",
+  "pathSegment": "SA-PATH-398-GHATTA398",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-398-GHATTA398",
+      "order": 1
+    }
+  ]
+}

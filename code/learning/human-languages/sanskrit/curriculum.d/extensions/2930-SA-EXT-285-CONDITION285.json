@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-285-CONDITION285",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what something depends on (tat samayādhīnam) and what would have happened (yadi samayaḥ abhaviṣyat, tarhi aham āgamiṣyam), and tell a short trip in six connected lines.",
+  "prerequisites": [
+    "SA-EXT-284-CONDITION284"
+  ]
+}

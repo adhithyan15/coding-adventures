@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "Rest Houses",
+  "label": "ch:sa-rest-houses",
+  "canDo": "I can find a place to rest and sleep on the way.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C402-padyam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can find a place to rest and sleep on the way.",
+    "assesses": [
+      "SA-LEX-C402-DHARMASHALA402-03",
+      "SA-LEX-C402-DHARMASHALA402-04",
+      "SA-LEX-C402-DHARMASHALA402-05"
+    ]
+  }
+}

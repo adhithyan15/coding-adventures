@@ -1,0 +1,19 @@
+{
+  "chapter": 400,
+  "title": "Round the Shrine",
+  "label": "ch:sa-round-the-shrine",
+  "canDo": "I can say how pilgrims go round a shrine and what they bring.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C400-aharati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 400: I can say how pilgrims go round a shrine and what they bring.",
+    "assesses": [
+      "SA-LEX-C400-PARIKRAMA400-03",
+      "SA-LEX-C400-PARIKRAMA400-04",
+      "SA-LEX-C400-PARIKRAMA400-05"
+    ]
+  }
+}

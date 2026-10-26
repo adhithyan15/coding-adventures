@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:c7d468fe5b2982fb",
+  "lessonIds": [
+    "SA-C420-prapa",
+    "SA-C420-payayati",
+    "SA-C420-mrgatrsna",
+    "SA-C420-asadayati",
+    "SA-C420-tarpayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch420-water-for-the-traveller.tex"
+}

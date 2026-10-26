@@ -1,0 +1,11 @@
+{
+  "id": "SA-C301-cakravatah",
+  "pathSegment": "SA-PATH-301-CAKRAVATA301",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-301-CAKRAVATA301",
+      "order": 1
+    }
+  ]
+}

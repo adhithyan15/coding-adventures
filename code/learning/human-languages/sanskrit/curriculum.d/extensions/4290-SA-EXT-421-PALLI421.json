@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-421-PALLI421",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say where I live and chat with people there.",
+  "prerequisites": []
+}

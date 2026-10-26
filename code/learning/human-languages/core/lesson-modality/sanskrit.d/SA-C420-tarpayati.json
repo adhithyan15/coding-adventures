@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C420-tarpayati",
+    "language": "sanskrit",
+    "chapter": 420,
+    "sequence": 24370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9118d11b02262e23"
+  },
+  "findings": []
+}

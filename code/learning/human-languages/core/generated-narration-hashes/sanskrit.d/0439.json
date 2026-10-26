@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:9e9cea18c787a804",
+  "lessonIds": [
+    "SA-C439-pavanah",
+    "SA-C439-prabhanjanah",
+    "SA-C439-prabalah",
+    "SA-C439-andolayati",
+    "SA-C439-mandanilah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch439.txt",
+  "json": "sanskrit/narration/ch439.json",
+  "textHash": "fnv1a64:52e79d002a770b60",
+  "jsonHash": "fnv1a64:fe98629f0b236442",
+  "findings": []
+}

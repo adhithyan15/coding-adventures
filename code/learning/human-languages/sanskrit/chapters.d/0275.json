@@ -1,0 +1,20 @@
+{
+  "chapter": 275,
+  "title": "What Everyone Will Do",
+  "label": "ch:sa-what-everyone-will-do",
+  "canDo": "I can say what anyone will do, in every person and number (kariṣyāmi, kariṣyati, kariṣyanti), with each verb's own future stem (paṭhiṣyati, drakṣyati, dāsyati).",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "SA-R275-what-everyone-will-do",
+    "kind": "production",
+    "summary": "Complete SA-R275-what-everyone-will-do: say what you, your friends and everyone else will do.",
+    "assesses": [
+      "SA-GRAMMAR-C275-FUTURE-01",
+      "SA-GRAMMAR-C275-FUTURE-STEM-01",
+      "SA-GRAMMAR-C275-FUTURE-02",
+      "SA-GRAMMAR-C275-FUTURE-STEM-02"
+    ]
+  }
+}

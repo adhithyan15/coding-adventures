@@ -1,0 +1,287 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 280,
+  "title": "Which Way to the Station?",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:7d7c6d8a2eb92452",
+  "lessons": [
+    {
+      "id": "SA-C280-sthanakam-kutra",
+      "sequence": 16430,
+      "title": "स्थानकं कुत्र अस्ति? (sthānakaṃ kutra asti?) — asking the way",
+      "headword": "स्थानकं कुत्र अस्ति?",
+      "romanization": "sthānakaṃ kutra asti?",
+      "gloss": "where is the station? — asking the way, and the polite -tu of the answer",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c090d2f10bef626a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"where?\" and \"please\". (kutra, kṛpayā.) You are in a town you do not know, and you need the station."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: where, how, how far",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्थानकं कुत्र अस्ति? sthānakaṃ kutra asti? — \"Where is the station?\""
+            },
+            {
+              "kind": "speech",
+              "text": "कियत् दूरम् अस्ति? kiyat dūram asti? — \"How far is it?\""
+            },
+            {
+              "kind": "speech",
+              "text": "कियत् (kiyat), \"how much\", with दूरम् (dūram), \"far\", asks the distance, and कथं गच्छामि? (kathaṃ gacchāmi?) asks \"how do I get there?\" The answer:"
+            },
+            {
+              "kind": "speech",
+              "text": "बहु दूरं न अस्ति। bahu dūraṃ na asti. — \"It is not very far.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: left, right, straight on",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वामतः (vāmataḥ), \"on the left\", is वामः, \"left\", with -taḥ; दक्षिणतः (dakṣiṇataḥ), \"on the right\", is दक्षिणः with it. ऋजु (ṛju), \"straight\", is ऋजुः said as an adverb. What to do takes -तु, the polite ending of ददातु (dadātu): गच्छतु (gacchatu), \"please go\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ऋजु गच्छतु। ṛju gacchatu. — \"Go straight on.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ततः वामतः गच्छतु। tataḥ vāmataḥ gacchatu. — \"Then turn left.\""
+            },
+            {
+              "kind": "speech",
+              "text": "स्थानकं दक्षिणतः अस्ति। sthānakaṃ dakṣiṇataḥ asti. — \"The station is on the right.\""
+            },
+            {
+              "kind": "speech",
+              "text": "-तु speaks to भवान्, or to भवती (bhavatī), a woman:"
+            },
+            {
+              "kind": "speech",
+              "text": "भवती अत्र तिष्ठतु। bhavatī atra tiṣṭhatu. — \"Please wait here.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Please go left\" — kṛpayā vāmataḥ gacchatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Please go left\" — *kṛpayā vāmataḥ gacchatu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Please go right\" — kṛpayā dakṣiṇataḥ gacchatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Please go right\" — *kṛpayā dakṣiṇataḥ gacchatu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Please go straight on\" — kṛpayā ṛju gacchatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Please go straight on\" — *kṛpayā ṛju gacchatu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "SA-C280-sthanakam-kutra-r1",
+              "prompt": "Ask politely where the station is, then answer that it is on the right: go straight on, then right.",
+              "assesses": [
+                "SA-GRAMMAR-C280-DIRECTION-01",
+                "SA-GRAMMAR-C280-DIRECTION-02"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "kṛpayā, sthānakaṃ kutra asti? ṛju gacchatu, tataḥ dakṣiṇataḥ gacchatu",
+                "कृपया, स्थानकं कुत्र अस्ति? ऋजु गच्छतु, ततः दक्षिणतः गच्छतु।"
+              ],
+              "feedback": {
+                "correct": "kutra asks the place; gacchatu tells the way, politely.",
+                "incorrect": "Ask with kutra; answer with ṛju, vāmataḥ or dakṣiṇataḥ and gacchatu."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Where is the station?\" (स्थानकं कुत्र अस्ति? (sthānakaṃ kutra asti?)) \"How far is it?\" (कियत् दूरम् अस्ति?) \"On the left\"? (वामतः.) \"Please go\"? (गच्छतु.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R280-asking-the-way",
+      "sequence": 16440,
+      "title": "Review — asking the way",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "asking the way and following the answer",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6e25a7e2c66daab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"you should read every day\", to a friend. (tvaṃ pratidinaṃ paṭheḥ.) Then \"therefore she is staying at home\". (tasmāt sā gṛhe tiṣṭhati.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Please, where is the shop?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Please, where is the shop?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "How do I get to the school?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: How do I get to the school?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "How far is the station? It is quite near.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: How far is the station? It is quite near.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Go straight on, then turn left.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Go straight on, then turn left.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "The station is on the right. Please wait here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: The station is on the right. Please wait here.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "वामतः or दक्षिणतः, for \"on the right\"? (दक्षिणतः.) Which ending makes a request polite? (-तु: गच्छतु, तिष्ठतु.) Now the other way round: what does कथं गच्छामि? ask? (\"How do I get there?\")"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

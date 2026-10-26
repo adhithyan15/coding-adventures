@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-324-PURA324",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell what happened long ago and how it is remembered.",
+  "prerequisites": []
+}

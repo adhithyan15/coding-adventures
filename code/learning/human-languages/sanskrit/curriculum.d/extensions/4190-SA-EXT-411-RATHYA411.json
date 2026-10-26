@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-411-RATHYA411",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how traffic gets round a blockage.",
+  "prerequisites": []
+}

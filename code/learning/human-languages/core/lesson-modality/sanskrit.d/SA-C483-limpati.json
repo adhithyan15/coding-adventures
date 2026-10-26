@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C483-limpati",
+    "language": "sanskrit",
+    "chapter": 483,
+    "sequence": 27830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d04013cbb25d5c3c"
+  },
+  "findings": []
+}

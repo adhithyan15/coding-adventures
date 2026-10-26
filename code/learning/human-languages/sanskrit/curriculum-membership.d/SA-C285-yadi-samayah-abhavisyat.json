@@ -1,0 +1,11 @@
+{
+  "id": "SA-C285-yadi-samayah-abhavisyat",
+  "pathSegment": "SA-PATH-285-CONDITION285",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-285-CONDITION285",
+      "order": 2
+    }
+  ]
+}

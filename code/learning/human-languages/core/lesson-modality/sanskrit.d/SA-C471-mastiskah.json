@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C471-mastiskah",
+    "language": "sanskrit",
+    "chapter": 471,
+    "sequence": 27170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:066b7c4d5cff580a"
+  },
+  "findings": []
+}

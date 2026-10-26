@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:7c907c57d3b3d98c",
+  "lessonIds": [
+    "SA-C385-spardhate",
+    "SA-C385-pratidvandvi",
+    "SA-C385-jeta",
+    "SA-C385-puraskaroti",
+    "SA-C385-utkarsah"
+  ],
+  "tex": "sanskrit/book/chapters/ch385-competing.tex"
+}

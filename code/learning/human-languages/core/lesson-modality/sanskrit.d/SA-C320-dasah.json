@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C320-dasah",
+    "language": "sanskrit",
+    "chapter": 320,
+    "sequence": 18750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7529df6f24d5c2b"
+  },
+  "findings": []
+}

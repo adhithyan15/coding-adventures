@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:368a8a0d30153165",
+  "lessonIds": [
+    "SA-C480-dasati",
+    "SA-C480-visam",
+    "SA-C480-ksatam",
+    "SA-C480-asthibhangah",
+    "SA-C480-sravati"
+  ],
+  "tex": "sanskrit/book/chapters/ch480-bites-and-wounds.tex"
+}

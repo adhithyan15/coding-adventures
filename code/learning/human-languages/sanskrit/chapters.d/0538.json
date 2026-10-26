@@ -1,0 +1,19 @@
+{
+  "chapter": 538,
+  "title": "Fate and Omens",
+  "label": "ch:sa-fate-and-omens",
+  "canDo": "I can talk about omens and what they promise.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C538-upatisthate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 538: I can talk about omens and what they promise.",
+    "assesses": [
+      "SA-LEX-C538-SAKUNA538-03",
+      "SA-LEX-C538-SAKUNA538-04",
+      "SA-LEX-C538-SAKUNA538-05"
+    ]
+  }
+}

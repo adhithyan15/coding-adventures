@@ -1,0 +1,11 @@
+{
+  "id": "SA-C400-rathayatra",
+  "pathSegment": "SA-PATH-400-PARIKRAMA400",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-400-PARIKRAMA400",
+      "order": 3
+    }
+  ]
+}

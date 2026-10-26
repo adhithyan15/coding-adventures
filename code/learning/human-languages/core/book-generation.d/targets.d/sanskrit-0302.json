@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 302,
+  "output": "sanskrit/book/chapters/ch302-the-water-rose.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

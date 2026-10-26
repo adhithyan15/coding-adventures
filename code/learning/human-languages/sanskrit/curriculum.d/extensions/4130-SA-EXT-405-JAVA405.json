@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-405-JAVA405",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say who is in a hurry and who arrives last.",
+  "prerequisites": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-510-AVAKARA510",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "SA-EXT-510-AVAKARA510"
+  ],
+  "after": []
+}

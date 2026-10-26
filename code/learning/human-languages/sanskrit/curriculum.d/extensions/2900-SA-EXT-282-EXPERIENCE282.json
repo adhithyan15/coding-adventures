@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-282-EXPERIENCE282",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say how I feel, with the adjective agreeing with me (ahaṃ prasannaḥ / prasannā asmi), and what I want to become (ahaṃ vaidyaḥ bhavitum icchāmi; mama svapnaḥ asti …).",
+  "prerequisites": [
+    "SA-EXT-281-TRAVEL281"
+  ]
+}

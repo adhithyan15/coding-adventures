@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-276-NARRATE276",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what someone did, with the past that follows the doer (saḥ gatavān, sā gatavatī), and what was going on at the time (saḥ paṭhati sma; yadā … tadā …).",
+  "prerequisites": [
+    "SA-EXT-275-FUTURE275"
+  ]
+}

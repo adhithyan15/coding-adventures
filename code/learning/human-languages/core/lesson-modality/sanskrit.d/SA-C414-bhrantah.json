@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C414-bhrantah",
+    "language": "sanskrit",
+    "chapter": 414,
+    "sequence": 24030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6706295d3d198241"
+  },
+  "findings": []
+}

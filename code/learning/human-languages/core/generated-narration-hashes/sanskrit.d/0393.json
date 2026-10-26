@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:f271277062ca8381",
+  "lessonIds": [
+    "SA-C393-vijayate",
+    "SA-C393-avicalah",
+    "SA-C393-nirantaram",
+    "SA-C393-tatparah",
+    "SA-C393-krtakrtyah",
+    "SA-R393-review-387-393",
+    "SA-R393-review-final-393"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch393.txt",
+  "json": "sanskrit/narration/ch393.json",
+  "textHash": "fnv1a64:f03e77777cfc391c",
+  "jsonHash": "fnv1a64:a59c72d3bd2b1f6c",
+  "findings": []
+}

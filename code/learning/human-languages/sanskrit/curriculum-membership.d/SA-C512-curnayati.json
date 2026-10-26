@@ -1,0 +1,11 @@
+{
+  "id": "SA-C512-curnayati",
+  "pathSegment": "SA-PATH-512-CHURIKA512",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-512-CHURIKA512",
+      "order": 2
+    }
+  ]
+}

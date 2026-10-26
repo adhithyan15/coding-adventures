@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:c8db70b9bdbfa8d9",
+  "lessonIds": [
+    "SA-C335-maya",
+    "SA-C335-vesah",
+    "SA-C335-chalam",
+    "SA-C335-mohayati",
+    "SA-C335-akarsati"
+  ],
+  "tex": "sanskrit/book/chapters/ch335-magic-and-disguise.tex"
+}

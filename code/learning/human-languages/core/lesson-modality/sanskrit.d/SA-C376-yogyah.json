@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C376-yogyah",
+    "language": "sanskrit",
+    "chapter": 376,
+    "sequence": 21840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b69c848259667879"
+  },
+  "findings": []
+}

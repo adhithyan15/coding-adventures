@@ -1,0 +1,11 @@
+{
+  "id": "SA-C487-paridadhati",
+  "pathSegment": "SA-PATH-487-PRASADHANA487",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-487-PRASADHANA487",
+      "order": 4
+    }
+  ]
+}

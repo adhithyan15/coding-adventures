@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-529-PARIVARTANA529",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "SA-EXT-529-PARIVARTANA529"
+  ],
+  "after": []
+}

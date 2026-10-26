@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:e1fe03f4f063d1a6",
+  "lessonIds": [
+    "SA-C391-paramah",
+    "SA-C391-nikrstah",
+    "SA-C391-anurupah",
+    "SA-C391-upayuktah",
+    "SA-C391-dusayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch391.txt",
+  "json": "sanskrit/narration/ch391.json",
+  "textHash": "fnv1a64:8f68d6b4fb52d7e6",
+  "jsonHash": "fnv1a64:d538ce3a63051080",
+  "findings": []
+}

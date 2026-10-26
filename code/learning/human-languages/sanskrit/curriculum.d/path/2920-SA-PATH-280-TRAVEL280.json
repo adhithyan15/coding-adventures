@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-280-TRAVEL280",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "SA-EXT-280-TRAVEL280"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:f03b6a4593f7cf2d",
+  "lessonIds": [
+    "SA-C464-vacalah",
+    "SA-C464-mitabhasi",
+    "SA-C464-sambodhayati",
+    "SA-C464-akrosati",
+    "SA-C464-pralapah"
+  ],
+  "tex": "sanskrit/book/chapters/ch464-talkers-and-quiet-ones.tex"
+}

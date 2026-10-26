@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C453-pravasati",
+    "language": "sanskrit",
+    "chapter": 453,
+    "sequence": 26270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c2fb14b2792f267"
+  },
+  "findings": []
+}

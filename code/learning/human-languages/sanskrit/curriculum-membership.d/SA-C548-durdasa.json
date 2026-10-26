@@ -1,0 +1,11 @@
+{
+  "id": "SA-C548-durdasa",
+  "pathSegment": "SA-PATH-548-SANTVANA548",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-548-SANTVANA548",
+      "order": 1
+    }
+  ]
+}

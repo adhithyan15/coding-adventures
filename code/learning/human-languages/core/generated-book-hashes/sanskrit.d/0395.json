@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:97b8b67e44abb51d",
+  "lessonIds": [
+    "SA-C395-sarthah",
+    "SA-C395-sarthavahah",
+    "SA-C395-anuyati",
+    "SA-C395-aprcchate",
+    "SA-C395-parivrajakah"
+  ],
+  "tex": "sanskrit/book/chapters/ch395-caravans-and-companions.tex"
+}

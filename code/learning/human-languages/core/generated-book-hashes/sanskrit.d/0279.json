@@ -1,0 +1,12 @@
+{
+  "language": "sanskrit",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:29923ec5bf668dcc",
+  "lessonIds": [
+    "SA-C279-bhavan-gacchet",
+    "SA-C279-atah-tasmat",
+    "SA-C279-upadesah",
+    "SA-R279-advice-and-what-follows"
+  ],
+  "tex": "sanskrit/book/chapters/ch279-advice-and-what-follows.tex"
+}

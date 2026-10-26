@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 552,
+  "sourceHash": "fnv1a64:ba8fe8d251ce8fed",
+  "lessonIds": [
+    "SA-C552-parisilayati",
+    "SA-C552-dinacarya",
+    "SA-C552-prayasah",
+    "SA-C552-prayunkte",
+    "SA-C552-upakarakah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch552.txt",
+  "json": "sanskrit/narration/ch552.json",
+  "textHash": "fnv1a64:eff3d993b2415cfc",
+  "jsonHash": "fnv1a64:cf2b561b083fa527",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C506-tantuh",
+  "pathSegment": "SA-PATH-506-VAYATI506",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-506-VAYATI506",
+      "order": 1
+    }
+  ]
+}

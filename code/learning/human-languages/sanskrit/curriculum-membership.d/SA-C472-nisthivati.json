@@ -1,0 +1,11 @@
+{
+  "id": "SA-C472-nisthivati",
+  "pathSegment": "SA-PATH-472-TALU472",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-472-TALU472",
+      "order": 3
+    }
+  ]
+}

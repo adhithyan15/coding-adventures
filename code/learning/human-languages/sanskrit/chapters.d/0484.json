@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "Ayurveda",
+  "label": "ch:sa-ayurveda",
+  "canDo": "I can name the three humours of Ayurveda.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C484-pathyam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can name the three humours of Ayurveda.",
+    "assesses": [
+      "SA-LEX-C484-AYURVEDA484-03",
+      "SA-LEX-C484-AYURVEDA484-04",
+      "SA-LEX-C484-AYURVEDA484-05"
+    ]
+  }
+}

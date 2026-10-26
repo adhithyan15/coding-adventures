@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:9b4bc0dfc2682dd4",
+  "lessonIds": [
+    "SA-C468-lolupah",
+    "SA-C468-pratyupakarah",
+    "SA-C468-apakarah",
+    "SA-C468-smarayati",
+    "SA-C468-krtavedi"
+  ],
+  "tex": "sanskrit/book/chapters/ch468-gratitude-and-greed.tex"
+}
