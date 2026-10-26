@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 301,
+  "title": "The Storm",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3c9b194e7763485c",
+  "lessons": [
+    {
+      "id": "SA-C301-meghah",
+      "sequence": 17760,
+      "title": "मेघः (meghaḥ) — a cloud",
+      "headword": "मेघः",
+      "romanization": "meghaḥ",
+      "gloss": "a cloud",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07b9aa974c82bf4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for cracks open, then the Sanskrit for a pit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मेघः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेघः — meghaḥ — \"a cloud\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आकाशे कृष्णाः मेघाः सन्ति। ākāśe kṛṣṇāḥ meghāḥ santi. There are dark clouds in the sky."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेघः (meghaḥ) comes from the root √mih (MW writes it √migh here), \"to sprinkle\": MW explains megha as the sprinkler, a cloud (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meghaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meghaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meghaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meghaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākāśe kṛṣṇāḥ meghāḥ santi. — There are dark clouds in the sky.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākāśe kṛṣṇāḥ meghāḥ santi.* — There are dark clouds in the sky.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for cracks open, then the Sanskrit for a pit, then say meghaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for cracks open, then the Sanskrit for a pit, then say *meghaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मेघः (meghaḥ) mean? (\"A cloud\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C301-cakravatah",
+      "sequence": 17770,
+      "title": "चक्रवातः (cakravātaḥ) — a whirlwind",
+      "headword": "चक्रवातः",
+      "romanization": "cakravātaḥ",
+      "gloss": "a whirlwind",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4502e7af61ddfbb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a pit, then the Sanskrit for a cloud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चक्रवातः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चक्रवातः — cakravātaḥ — \"a whirlwind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "समुद्रात् चक्रवातः आगच्छति। samudrāt cakravātaḥ āgacchati. A whirlwind is coming from the sea."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चक्रवातः (cakravātaḥ) is built from cakra, \"a wheel\", and vāta, \"wind\"; MW gives cakravāta as a whirlwind, and a cyclone is its modern use (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cakravātaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cakravātaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cakravātaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cakravātaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samudrāt cakravātaḥ āgacchati. — A whirlwind is coming from the sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samudrāt cakravātaḥ āgacchati.* — A whirlwind is coming from the sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a pit, then the Sanskrit for a cloud, then say cakravātaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a pit, then the Sanskrit for a cloud, then say *cakravātaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चक्रवातः (cakravātaḥ) mean? (\"A whirlwind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C301-ghurnate",
+      "sequence": 17780,
+      "title": "घूर्णते (ghūrṇate) — whirls; spins round",
+      "headword": "घूर्णते",
+      "romanization": "ghūrṇate",
+      "gloss": "whirls; spins round",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35ff79ada34eabe2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a cloud, then the Sanskrit for a whirlwind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घूर्णते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घूर्णते — ghūrṇate — \"whirls; spins round\"."
+            },
+            {
+              "kind": "speech",
+              "text": "चक्रवातः वेगेन घूर्णते। cakravātaḥ vegena ghūrṇate. The whirlwind spins fast."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वायुः वेगेन घूर्णितवान्, vāyuḥ vegena ghūrṇitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घूर्णते (ghūrṇate) comes from the root √ghūrṇ, \"to move to and fro, roll about\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghūrṇate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghūrṇate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghūrṇate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghūrṇate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cakravātaḥ vegena ghūrṇate. — The whirlwind spins fast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cakravātaḥ vegena ghūrṇate.* — The whirlwind spins fast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a cloud, then the Sanskrit for a whirlwind, then say ghūrṇate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a cloud, then the Sanskrit for a whirlwind, then say *ghūrṇate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घूर्णते (ghūrṇate) mean? (\"Whirls; spins round\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C301-sphurati",
+      "sequence": 17790,
+      "title": "स्फुरति (sphurati) — flashes; flickers",
+      "headword": "स्फुरति",
+      "romanization": "sphurati",
+      "gloss": "flashes; flickers",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76362822af9ef4a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a whirlwind, then the Sanskrit for whirls."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्फुरति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्फुरति — sphurati — \"flashes; flickers\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेघेषु विद्युत् स्फुरति। megheṣu vidyut sphurati. Lightning flashes in the clouds."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): विद्युत् स्फुरितवती, vidyut sphuritavatī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्फुरति (sphurati) comes from the root √sphur, \"to dart, quiver, flash\"; MW compares English spur and spurn (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sphurati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sphurati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sphurati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sphurati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "megheṣu vidyut sphurati. — Lightning flashes in the clouds.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *megheṣu vidyut sphurati.* — Lightning flashes in the clouds.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a whirlwind, then the Sanskrit for whirls, then say sphurati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a whirlwind, then the Sanskrit for whirls, then say *sphurati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्फुरति (sphurati) mean? (\"Flashes; flickers\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C301-unmulayati",
+      "sequence": 17800,
+      "title": "उन्मूलयति (unmūlayati) — uproots",
+      "headword": "उन्मूलयति",
+      "romanization": "unmūlayati",
+      "gloss": "uproots",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc963bdc4d2f152b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for whirls, then the Sanskrit for flashes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उन्मूलयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उन्मूलयति — unmūlayati — \"uproots\"."
+            },
+            {
+              "kind": "speech",
+              "text": "चक्रवातः वृक्षान् उन्मूलयति। cakravātaḥ vṛkṣān unmūlayati. The whirlwind uproots trees."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वायुः वृक्षान् उन्मूलितवान्, vāyuḥ vṛkṣān unmūlitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उन्मूलयति (unmūlayati) is built from ud, \"out\", and mūla, \"a root\"; MW gives unmūlayati as to pull up by the roots (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unmūlayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unmūlayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unmūlayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unmūlayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cakravātaḥ vṛkṣān unmūlayati. — The whirlwind uproots trees.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cakravātaḥ vṛkṣān unmūlayati.* — The whirlwind uproots trees.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for whirls, then the Sanskrit for flashes, then say unmūlayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for whirls, then the Sanskrit for flashes, then say *unmūlayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उन्मूलयति (unmūlayati) mean? (\"Uproots\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R301-review-294-301",
+      "sequence": 17810,
+      "title": "Looking back: from A Crash on the Road to The Storm",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from A Crash on the Road to The Storm",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71662b9cfd8b6cee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for a collision and a blow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a collision, a blow, stumbles, injured, faints",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a collision, a blow, stumbles, injured, faints]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "consciousness, lifts up, a litter, an emergency, leans on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: consciousness, lifts up, a litter, an emergency, leans on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a forest fire, blazes up, a spark, dense, spreads",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a forest fire, blazes up, a spark, dense, spreads]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuel, a water jar, a stream of water, puts out a fire, dies down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fuel, a water jar, a stream of water, puts out a fire, dies down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "damage, destroys, broken, a citizen, what is left",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: damage, destroys, broken, a citizen, what is left]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "announces, danger, careful, keeps away, a misfortune",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: announces, danger, careful, keeps away, a misfortune]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an earthquake, shakes, slightly, cracks open, a pit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an earthquake, shakes, slightly, cracks open, a pit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cloud, a whirlwind, whirls, flashes, uproots",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cloud, a whirlwind, whirls, flashes, uproots]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A collision? (संघट्टः, saṅghaṭṭaḥ.) A blow? (घातः, ghātaḥ.) Stumbles? (स्खलति, skhalati.) Injured? (आहतः, āhataḥ.) Faints? (मूर्छति, mūrchati.) Consciousness? (चेतना, cetanā.) Lifts up? (उत्थापयति, utthāpayati.) A litter? (शिबिका, śibikā.) An emergency? (आपत्कालः, āpatkālaḥ.) Leans on? (अवलम्बते, avalambate.) A forest fire? (दावाग्निः, dāvāgniḥ.) Blazes up? (प्रज्वलति, prajvalati.) A spark? (स्फुलिंगः, sphuliṅgaḥ.) Dense? (गाढः, gāḍhaḥ.) Spreads? (प्रसरति, prasarati.) Fuel? (इन्धनम्, indhanam.) A water jar? (घटः, ghaṭaḥ.) A stream of water? (धारा, dhārā.) Puts out a fire? (निर्वापयति, nirvāpayati.) Dies down? (शाम्यति, śāmyati.) Damage? (क्षतिः, kṣatiḥ.) Destroys? (नाशयति, nāśayati.) Broken? (भग्नः, bhagnaḥ.) A citizen? (पौरः, pauraḥ.) What is left? (शेषः, śeṣaḥ.) Announces? (घोषयति, ghoṣayati.) Danger? (संकटम्, saṅkaṭam.) Careful? (सावधानः, sāvadhānaḥ.) Keeps away? (निवारयति, nivārayati.) A misfortune? (आपत्तिः, āpattiḥ.) An earthquake? (भूकम्पः, bhūkampaḥ.) Shakes? (कम्पते, kampate.) Slightly? (ईषत्, īṣat.) Cracks open? (स्फुटति, sphuṭati.) A pit? (गर्तः, gartaḥ.) A cloud? (मेघः, meghaḥ.) A whirlwind? (चक्रवातः, cakravātaḥ.) Whirls? (घूर्णते, ghūrṇate.) Flashes? (स्फुरति, sphurati.) Uproots? (उन्मूलयति, unmūlayati.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:1414af23f35615d1",
+  "lessonIds": [
+    "SA-C427-vasatih",
+    "SA-C427-patamandapah",
+    "SA-C427-nivesah",
+    "SA-C427-astrnati",
+    "SA-C427-prabudhyate"
+  ],
+  "tex": "sanskrit/book/chapters/ch427-a-night-s-lodging.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C538-sakunah",
+    "language": "sanskrit",
+    "chapter": 538,
+    "sequence": 30840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15643fa9818def8e"
+  },
+  "findings": []
+}

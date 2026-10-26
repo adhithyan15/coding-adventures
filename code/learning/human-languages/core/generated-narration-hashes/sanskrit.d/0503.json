@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:c24ee640027b289f",
+  "lessonIds": [
+    "SA-C503-sahakari",
+    "SA-C503-daksah",
+    "SA-C503-parisramah",
+    "SA-C503-niyokta",
+    "SA-C503-niyunkte"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch503.txt",
+  "json": "sanskrit/narration/ch503.json",
+  "textHash": "fnv1a64:bfa12cf1bc05210f",
+  "jsonHash": "fnv1a64:e6f1ab54165ed9f6",
+  "findings": []
+}

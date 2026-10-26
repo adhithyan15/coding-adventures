@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:6e253925f5ace298",
+  "lessonIds": [
+    "SA-C350-bandhanam",
+    "SA-C350-muktih",
+    "SA-C350-nirdharayati",
+    "SA-C350-pratyarpayati",
+    "SA-C350-prayascittam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch350.txt",
+  "json": "sanskrit/narration/ch350.json",
+  "textHash": "fnv1a64:33a219aa68b55c45",
+  "jsonHash": "fnv1a64:afc0e7554a8381d2",
+  "findings": []
+}

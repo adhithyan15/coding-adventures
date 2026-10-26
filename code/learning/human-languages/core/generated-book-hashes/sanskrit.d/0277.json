@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:205b003a0020be15",
+  "lessonIds": [
+    "SA-C277-agatya",
+    "SA-C277-prathamam",
+    "SA-C277-sighram",
+    "SA-C277-mira-nagaram-gatavati",
+    "SA-R277-a-day-in-order"
+  ],
+  "tex": "sanskrit/book/chapters/ch277-one-thing-then-the-next.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "Luck and Fate",
+  "label": "ch:sa-luck-and-fate",
+  "canDo": "I can say what luck or fate might bring.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C369-sambhavana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can say what luck or fate might bring.",
+    "assesses": [
+      "SA-LEX-C369-BHAGYA369-03",
+      "SA-LEX-C369-BHAGYA369-04",
+      "SA-LEX-C369-BHAGYA369-05"
+    ]
+  }
+}

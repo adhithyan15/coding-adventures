@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:aae6a186157d3429",
+  "lessonIds": [
+    "SA-C394-tirthayatra",
+    "SA-C394-pratisthate",
+    "SA-C394-patheyam",
+    "SA-C394-yati",
+    "SA-C394-kamandaluh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch394.txt",
+  "json": "sanskrit/narration/ch394.json",
+  "textHash": "fnv1a64:261e8e55beef4aa9",
+  "jsonHash": "fnv1a64:9d28124025140de3",
+  "findings": []
+}

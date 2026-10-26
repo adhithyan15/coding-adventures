@@ -1,0 +1,11 @@
+{
+  "id": "SA-C367-sambhavayati",
+  "pathSegment": "SA-PATH-367-SAMBHAVA367",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-367-SAMBHAVA367",
+      "order": 1
+    }
+  ]
+}

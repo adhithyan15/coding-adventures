@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 542,
+  "title": "Making Up One's Mind",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:08cc5689fe761adc",
+  "lessons": [
+    {
+      "id": "SA-C542-svikarah",
+      "sequence": 31050,
+      "title": "स्वीकारः (svīkāraḥ) — acceptance",
+      "headword": "स्वीकारः",
+      "romanization": "svīkāraḥ",
+      "gloss": "acceptance",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f23473ce128a3a6a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for the other one, then the Sanskrit for different."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्वीकारः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्वीकारः — svīkāraḥ — \"acceptance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि भवतः स्वीकारः अस्ति, तर्हि वयं कार्यम् आरभामहे। yadi bhavataḥ svīkāraḥ asti, tarhi vayaṃ kāryam ārabhāmahe. If you accept, we will begin the work."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्वीकारः (svīkāraḥ) is built from sva, \"one's own\", in the form svī, and kāra, \"making\", from the root √kṛ; MW gives svīkāra as making one's own, and reception (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svīkāraḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svīkāraḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svīkāraḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svīkāraḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bhavataḥ svīkāraḥ asti, tarhi vayaṃ kāryam ārabhāmahe. — If you accept, we will begin the work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bhavataḥ svīkāraḥ asti, tarhi vayaṃ kāryam ārabhāmahe.* — If you accept, we will begin the work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for the other one, then the Sanskrit for different, then say svīkāraḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for the other one, then the Sanskrit for different, then say *svīkāraḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्वीकारः (svīkāraḥ) mean? (\"Acceptance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C542-avadharayati",
+      "sequence": 31060,
+      "title": "अवधारयति (avadhārayati) — makes sure",
+      "headword": "अवधारयति",
+      "romanization": "avadhārayati",
+      "gloss": "makes sure",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da6a0e30fd6de20d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for different, then the Sanskrit for acceptance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अवधारयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवधारयति — avadhārayati — \"makes sure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि भवान् मार्गं न जानाति, तर्हि पूर्वम् अवधारयतु। yadi bhavān mārgaṃ na jānāti, tarhi pūrvam avadhārayatu. If you don't know the way, make sure of it first."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः मार्गम् अवधारितवान्, saḥ mārgam avadhāritavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवधारयति (avadhārayati) is built on ava, \"down\", and the causative of the root √dhṛ, \"to hold\", which also gives dhārayati; MW gives avadhārayati as to consider, to ascertain, to determine accurately (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avadhārayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avadhārayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avadhārayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avadhārayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bhavān mārgaṃ na jānāti, tarhi pūrvam avadhārayatu. — If you don't know the way, make sure of it first.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bhavān mārgaṃ na jānāti, tarhi pūrvam avadhārayatu.* — If you don't know the way, make sure of it first.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for different, then the Sanskrit for acceptance, then say avadhārayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for different, then the Sanskrit for acceptance, then say *avadhārayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अवधारयति (avadhārayati) mean? (\"Makes sure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C542-utkrstah",
+      "sequence": 31070,
+      "title": "उत्कृष्टः (utkṛṣṭaḥ) — excellent",
+      "headword": "उत्कृष्टः",
+      "romanization": "utkṛṣṭaḥ",
+      "gloss": "excellent",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe26d50a723a4dcf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for acceptance, then the Sanskrit for makes sure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उत्कृष्टः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उत्कृष्टः — utkṛṣṭaḥ — \"excellent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि एतत् वस्त्रम् उत्कृष्टम् अस्ति, तर्हि अहं तत् क्रीणामि। yadi etat vastram utkṛṣṭam asti, tarhi ahaṃ tat krīṇāmi. If this cloth is excellent, I'll buy it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उत्कृष्टः (utkṛṣṭaḥ) is built on ud, \"up\", and the root √kṛṣ, \"to draw\", which also gives karṣati, as its past participle: drawn up high; MW gives utkṛṣṭa as excellent, eminent (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utkṛṣṭaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utkṛṣṭaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utkṛṣṭaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utkṛṣṭaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi etat vastram utkṛṣṭam asti, tarhi ahaṃ tat krīṇāmi. — If this cloth is excellent, I'll buy it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi etat vastram utkṛṣṭam asti, tarhi ahaṃ tat krīṇāmi.* — If this cloth is excellent, I'll buy it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for acceptance, then the Sanskrit for makes sure, then say utkṛṣṭaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for acceptance, then the Sanskrit for makes sure, then say *utkṛṣṭaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उत्कृष्टः (utkṛṣṭaḥ) mean? (\"Excellent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C542-rucirah",
+      "sequence": 31080,
+      "title": "रुचिरः (ruciraḥ) — pleasing; lovely",
+      "headword": "रुचिरः",
+      "romanization": "ruciraḥ",
+      "gloss": "pleasing; lovely",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d3dd7d76f3b8aac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for makes sure, then the Sanskrit for excellent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रुचिरः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रुचिरः — ruciraḥ — \"pleasing; lovely\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि एतत् पुष्पं रुचिरम् अस्ति, तर्हि अहं तत् चिनोमि। yadi etat puṣpaṃ ruciram asti, tarhi ahaṃ tat cinomi. If this flower is lovely, I'll pick it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रुचिरः (ruciraḥ) comes from the root √ruc, \"to shine, to please\", which also gives rocate; MW gives rucira as bright, beautiful, and pleasant, liked by someone (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ruciraḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ruciraḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ruciraḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ruciraḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi etat puṣpaṃ ruciram asti, tarhi ahaṃ tat cinomi. — If this flower is lovely, I'll pick it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi etat puṣpaṃ ruciram asti, tarhi ahaṃ tat cinomi.* — If this flower is lovely, I'll pick it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for makes sure, then the Sanskrit for excellent, then say ruciraḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for makes sure, then the Sanskrit for excellent, then say *ruciraḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रुचिरः (ruciraḥ) mean? (\"Pleasing; lovely\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C542-tatasthah",
+      "sequence": 31090,
+      "title": "तटस्थः (taṭasthaḥ) — neutral",
+      "headword": "तटस्थः",
+      "romanization": "taṭasthaḥ",
+      "gloss": "neutral",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:608c491cacee2dd4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for excellent, then the Sanskrit for pleasing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तटस्थः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तटस्थः — taṭasthaḥ — \"neutral\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि भवान् तटस्थः अस्ति, तर्हि भवान् निर्णयं करोतु। yadi bhavān taṭasthaḥ asti, tarhi bhavān nirṇayaṃ karotu. If you are neutral, you decide."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तटस्थः (taṭasthaḥ) is built from taṭa, \"a bank, a slope\", and stha, \"standing\": standing on the bank, out of the stream; MW gives taṭastha also as an indifferent person, neither friend nor foe (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭasthaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭasthaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭasthaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭasthaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bhavān taṭasthaḥ asti, tarhi bhavān nirṇayaṃ karotu. — If you are neutral, you decide.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bhavān taṭasthaḥ asti, tarhi bhavān nirṇayaṃ karotu.* — If you are neutral, you decide.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for excellent, then the Sanskrit for pleasing, then say taṭasthaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for excellent, then the Sanskrit for pleasing, then say *taṭasthaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तटस्थः (taṭasthaḥ) mean? (\"Neutral\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

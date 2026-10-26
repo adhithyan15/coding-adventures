@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C413-sannahyati",
+    "language": "sanskrit",
+    "chapter": 413,
+    "sequence": 23980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1892e7ab6c1a3878"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C331-candanam",
+    "language": "sanskrit",
+    "chapter": 331,
+    "sequence": 19310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73a305c5cb15b7cb"
+  },
+  "findings": []
+}

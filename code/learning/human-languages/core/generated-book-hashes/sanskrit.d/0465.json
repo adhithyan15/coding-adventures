@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:02357cd9e8ae7fdd",
+  "lessonIds": [
+    "SA-C465-cancalah",
+    "SA-C465-udasinah",
+    "SA-C465-pramadyati",
+    "SA-C465-avadhanam",
+    "SA-C465-udyami"
+  ],
+  "tex": "sanskrit/book/chapters/ch465-steady-and-careless.tex"
+}

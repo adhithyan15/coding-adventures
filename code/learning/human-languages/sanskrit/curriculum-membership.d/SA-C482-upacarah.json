@@ -1,0 +1,11 @@
+{
+  "id": "SA-C482-upacarah",
+  "pathSegment": "SA-PATH-482-CIKITSA482",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-482-CIKITSA482",
+      "order": 3
+    }
+  ]
+}

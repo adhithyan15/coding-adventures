@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C383-sankalpah",
+    "language": "sanskrit",
+    "chapter": 383,
+    "sequence": 22200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b853456f48ac1c0a"
+  },
+  "findings": []
+}

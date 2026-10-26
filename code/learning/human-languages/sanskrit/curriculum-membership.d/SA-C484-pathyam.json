@@ -1,0 +1,11 @@
+{
+  "id": "SA-C484-pathyam",
+  "pathSegment": "SA-PATH-484-AYURVEDA484",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-484-AYURVEDA484",
+      "order": 4
+    }
+  ]
+}

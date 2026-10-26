@@ -1,0 +1,11 @@
+{
+  "id": "SA-C363-abhyasyati",
+  "pathSegment": "SA-PATH-363-ADHYAYANA363",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-363-ADHYAYANA363",
+      "order": 4
+    }
+  ]
+}

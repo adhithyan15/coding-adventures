@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C544-mithah",
+    "language": "sanskrit",
+    "chapter": 544,
+    "sequence": 31170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:693d57d16a9f2c07"
+  },
+  "findings": []
+}

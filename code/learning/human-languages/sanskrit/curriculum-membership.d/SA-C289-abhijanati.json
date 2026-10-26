@@ -1,0 +1,11 @@
+{
+  "id": "SA-C289-abhijanati",
+  "pathSegment": "SA-PATH-289-SAKSHYA289",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-289-SAKSHYA289",
+      "order": 0
+    }
+  ]
+}

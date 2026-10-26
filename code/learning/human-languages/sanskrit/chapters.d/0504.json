@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "Looking for Work",
+  "label": "ch:sa-looking-for-work",
+  "canDo": "I can apply for a job and say what I am good at.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C504-pravinah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can apply for a job and say what I am good at.",
+    "assesses": [
+      "SA-LEX-C504-AVEDANA504-03",
+      "SA-LEX-C504-AVEDANA504-04",
+      "SA-LEX-C504-AVEDANA504-05"
+    ]
+  }
+}

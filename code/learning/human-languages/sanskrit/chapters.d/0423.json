@@ -1,0 +1,19 @@
+{
+  "chapter": 423,
+  "title": "Ways In and Out",
+  "label": "ch:sa-ways-in-and-out",
+  "canDo": "I can find the way in, the way out and the gap between.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C423-dvarapalah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can find the way in, the way out and the gap between.",
+    "assesses": [
+      "SA-LEX-C423-PRAVESHA423-03",
+      "SA-LEX-C423-PRAVESHA423-04",
+      "SA-LEX-C423-PRAVESHA423-05"
+    ]
+  }
+}

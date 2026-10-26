@@ -1,0 +1,11 @@
+{
+  "id": "SA-C513-ghrtam",
+  "pathSegment": "SA-PATH-513-MATHNATI513",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-513-MATHNATI513",
+      "order": 2
+    }
+  ]
+}

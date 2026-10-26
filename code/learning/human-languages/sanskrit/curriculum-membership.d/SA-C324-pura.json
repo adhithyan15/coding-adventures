@@ -1,0 +1,11 @@
+{
+  "id": "SA-C324-pura",
+  "pathSegment": "SA-PATH-324-PURA324",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-324-PURA324",
+      "order": 0
+    }
+  ]
+}

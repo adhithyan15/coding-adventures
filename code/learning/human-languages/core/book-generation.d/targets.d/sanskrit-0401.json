@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 401,
+  "output": "sanskrit/book/chapters/ch401-monks-and-monasteries.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

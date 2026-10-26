@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C531-vanchati",
+    "language": "sanskrit",
+    "chapter": 531,
+    "sequence": 30480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00f3debbaffeec8c"
+  },
+  "findings": []
+}

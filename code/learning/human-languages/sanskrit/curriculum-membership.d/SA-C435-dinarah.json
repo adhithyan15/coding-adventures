@@ -1,0 +1,11 @@
+{
+  "id": "SA-C435-dinarah",
+  "pathSegment": "SA-PATH-435-DINARA435",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-435-DINARA435",
+      "order": 2
+    }
+  ]
+}

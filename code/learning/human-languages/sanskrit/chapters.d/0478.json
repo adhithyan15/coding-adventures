@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "Aches and Pains",
+  "label": "ch:sa-aches-and-pains",
+  "canDo": "I can say where it hurts and how badly.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C478-asahyah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can say where it hurts and how badly.",
+    "assesses": [
+      "SA-LEX-C478-VEDANA478-03",
+      "SA-LEX-C478-VEDANA478-04",
+      "SA-LEX-C478-VEDANA478-05"
+    ]
+  }
+}

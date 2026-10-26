@@ -1,0 +1,19 @@
+{
+  "chapter": 329,
+  "title": "At the Temple",
+  "label": "ch:sa-at-the-temple",
+  "canDo": "I can say what people do at the temple.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C329-prarthayate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can say what people do at the temple.",
+    "assesses": [
+      "SA-LEX-C329-PUJA329-03",
+      "SA-LEX-C329-PUJA329-04",
+      "SA-LEX-C329-PUJA329-05"
+    ]
+  }
+}

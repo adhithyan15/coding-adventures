@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:846dc32bf9fe1174",
+  "lessonIds": [
+    "SA-C291-dhurtah",
+    "SA-C291-vancayati",
+    "SA-C291-utkocah",
+    "SA-C291-kapatam",
+    "SA-C291-krtrimah"
+  ],
+  "tex": "sanskrit/book/chapters/ch291-cheats.tex"
+}

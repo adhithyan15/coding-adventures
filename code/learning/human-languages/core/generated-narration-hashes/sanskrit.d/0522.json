@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:94853b98ce809774",
+  "lessonIds": [
+    "SA-C522-padanyasah",
+    "SA-C522-avartate",
+    "SA-C522-kinkini",
+    "SA-C522-anukaroti",
+    "SA-C522-karatalika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch522.txt",
+  "json": "sanskrit/narration/ch522.json",
+  "textHash": "fnv1a64:7041360874d0be35",
+  "jsonHash": "fnv1a64:a401875266453577",
+  "findings": []
+}

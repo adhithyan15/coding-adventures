@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:6b141d8d20a658ee",
+  "lessonIds": [
+    "SA-C459-avajna",
+    "SA-C459-avamanyate",
+    "SA-C459-tiraskaroti",
+    "SA-C459-adarah",
+    "SA-C459-manah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch459.txt",
+  "json": "sanskrit/narration/ch459.json",
+  "textHash": "fnv1a64:52e34dadb0f54b76",
+  "jsonHash": "fnv1a64:240842b190356dac",
+  "findings": []
+}

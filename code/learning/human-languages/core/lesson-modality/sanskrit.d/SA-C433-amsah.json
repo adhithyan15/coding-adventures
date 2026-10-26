@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C433-amsah",
+    "language": "sanskrit",
+    "chapter": 433,
+    "sequence": 25010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1cf40493a0ee73d"
+  },
+  "findings": []
+}

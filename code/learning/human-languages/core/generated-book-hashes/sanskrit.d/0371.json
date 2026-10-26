@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:76c221c8dc766703",
+  "lessonIds": [
+    "SA-C371-vikalpah",
+    "SA-C371-pratyavartate",
+    "SA-C371-vilambate",
+    "SA-C371-avadhih",
+    "SA-C371-upakramate",
+    "SA-R371-review-364-371"
+  ],
+  "tex": "sanskrit/book/chapters/ch371-other-options.tex"
+}

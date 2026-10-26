@@ -1,0 +1,11 @@
+{
+  "id": "SA-C501-grhasthah",
+  "pathSegment": "SA-PATH-501-SAMBANDHA501",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-501-SAMBANDHA501",
+      "order": 0
+    }
+  ]
+}

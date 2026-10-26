@@ -1,0 +1,11 @@
+{
+  "id": "SA-C349-prativadi",
+  "pathSegment": "SA-PATH-349-NYAYALAYA349",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-349-NYAYALAYA349",
+      "order": 1
+    }
+  ]
+}

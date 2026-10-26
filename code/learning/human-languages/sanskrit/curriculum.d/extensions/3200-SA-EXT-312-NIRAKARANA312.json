@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-312-NIRAKARANA312",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report what someone claimed and how it was denied.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C417-phenah",
+  "pathSegment": "SA-PATH-417-PULINA417",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-417-PULINA417",
+      "order": 1
+    }
+  ]
+}

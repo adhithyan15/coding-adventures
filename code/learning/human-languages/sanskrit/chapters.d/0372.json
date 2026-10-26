@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "What Stands in the Way",
+  "label": "ch:sa-what-stands-in-the-way",
+  "canDo": "I can say what might get in the way and how to clear it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C372-apanayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can say what might get in the way and how to clear it.",
+    "assesses": [
+      "SA-LEX-C372-VIGHNA372-03",
+      "SA-LEX-C372-VIGHNA372-04",
+      "SA-LEX-C372-VIGHNA372-05"
+    ]
+  }
+}

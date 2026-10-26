@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:86367fe0f583a64e",
+  "lessonIds": [
+    "SA-C409-aksah",
+    "SA-C409-nemih",
+    "SA-C409-arah",
+    "SA-C409-bhramayati",
+    "SA-C409-vartma",
+    "SA-R409-review-402-409"
+  ],
+  "tex": "sanskrit/book/chapters/ch409-wheels-and-tracks.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:92104376812f0bde",
+  "lessonIds": [
+    "SA-C497-kanyadanam",
+    "SA-C497-panigrahanam",
+    "SA-C497-vedi",
+    "SA-C497-juhoti",
+    "SA-C497-saubhagyam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch497.txt",
+  "json": "sanskrit/narration/ch497.json",
+  "textHash": "fnv1a64:3db7540503dd71a4",
+  "jsonHash": "fnv1a64:bdda842ac24c230d",
+  "findings": []
+}

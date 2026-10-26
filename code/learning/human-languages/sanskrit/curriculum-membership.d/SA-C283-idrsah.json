@@ -1,0 +1,11 @@
+{
+  "id": "SA-C283-idrsah",
+  "pathSegment": "SA-PATH-283-EXPERIENCE283",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-283-EXPERIENCE283",
+      "order": 2
+    }
+  ]
+}

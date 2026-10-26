@@ -1,0 +1,11 @@
+{
+  "id": "SA-C371-vilambate",
+  "pathSegment": "SA-PATH-371-VIKALPA371",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-371-VIKALPA371",
+      "order": 2
+    }
+  ]
+}

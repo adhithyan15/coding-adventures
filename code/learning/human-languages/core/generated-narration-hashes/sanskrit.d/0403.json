@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:918cf48ca470e2a8",
+  "lessonIds": [
+    "SA-C403-panthah",
+    "SA-C403-dirghah",
+    "SA-C403-durgamah",
+    "SA-C403-padatih",
+    "SA-C403-vicarati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch403.txt",
+  "json": "sanskrit/narration/ch403.json",
+  "textHash": "fnv1a64:e594d9dd8b9971b2",
+  "jsonHash": "fnv1a64:ff0c9fc82513ac53",
+  "findings": []
+}

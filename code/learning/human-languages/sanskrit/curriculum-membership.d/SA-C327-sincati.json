@@ -1,0 +1,11 @@
+{
+  "id": "SA-C327-sincati",
+  "pathSegment": "SA-PATH-327-HOLIKA327",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-327-HOLIKA327",
+      "order": 2
+    }
+  ]
+}

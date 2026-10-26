@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:cf6eb84a2c27810a",
+  "lessonIds": [
+    "SA-C418-jalam",
+    "SA-C418-badisam",
+    "SA-C418-suktih",
+    "SA-C418-mauktikam",
+    "SA-C418-pravalam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch418.txt",
+  "json": "sanskrit/narration/ch418.json",
+  "textHash": "fnv1a64:030e37aecfd2637f",
+  "jsonHash": "fnv1a64:22e2588743849791",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:486575b5a00dff42",
+  "lessonIds": [
+    "SA-C378-lesah",
+    "SA-C378-manak",
+    "SA-C378-ardham",
+    "SA-C378-nyunah",
+    "SA-C378-hrasati"
+  ],
+  "tex": "sanskrit/book/chapters/ch378-a-little.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:04dd8645d86a73d8",
+  "lessonIds": [
+    "SA-C532-upayanam",
+    "SA-C532-gucchah",
+    "SA-C532-dukulam",
+    "SA-C532-mekhala",
+    "SA-C532-upaharati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch532.txt",
+  "json": "sanskrit/narration/ch532.json",
+  "textHash": "fnv1a64:5b9b6bf34f5b38a5",
+  "jsonHash": "fnv1a64:2b652f7e15f59113",
+  "findings": []
+}

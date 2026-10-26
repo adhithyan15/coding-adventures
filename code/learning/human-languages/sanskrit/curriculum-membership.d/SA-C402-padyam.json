@@ -1,0 +1,11 @@
+{
+  "id": "SA-C402-padyam",
+  "pathSegment": "SA-PATH-402-DHARMASHALA402",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-402-DHARMASHALA402",
+      "order": 4
+    }
+  ]
+}

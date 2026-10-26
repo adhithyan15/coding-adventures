@@ -1,0 +1,19 @@
+{
+  "chapter": 312,
+  "title": "Claims and Denials",
+  "label": "ch:sa-claims-and-denials",
+  "canDo": "I can report what someone claimed and how it was denied.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C312-sandigdhah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: I can report what someone claimed and how it was denied.",
+    "assesses": [
+      "SA-LEX-C312-NIRAKARANA312-03",
+      "SA-LEX-C312-NIRAKARANA312-04",
+      "SA-LEX-C312-NIRAKARANA312-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 519,
+  "title": "Craft and Carving",
+  "label": "ch:sa-craft-and-carving",
+  "canDo": "I can talk about statues, carving and works of art.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C519-nirmati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can talk about statues, carving and works of art.",
+    "assesses": [
+      "SA-LEX-C519-MURTI519-03",
+      "SA-LEX-C519-MURTI519-04",
+      "SA-LEX-C519-MURTI519-05"
+    ]
+  }
+}
