@@ -908,6 +908,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      actions: read
     outputs:
       pages: ${{ steps.check.outputs.pages }}
       release: ${{ steps.check.outputs.release }}
@@ -933,6 +934,7 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           COMMIT_SHA: ${{ github.sha }}
           RUN_NUMBER: ${{ github.run_number }}
+          RUN_ID: ${{ github.run_id }}
         run: python3 code/scripts/check_human_language_book_publication.py
 
   # The only job that holds a write-scoped token runs no repository code at

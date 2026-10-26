@@ -59,6 +59,34 @@ class PublicationDecisionTests(unittest.TestCase):
             "human-languages-v2026.10.26.12126",
         )
 
+    def test_run_creation_date_survives_midnight_and_checks_identity(self) -> None:
+        class Reader(publication.GitHubReader):
+            def get(self, path: str, *, missing_ok: bool = False) -> object:
+                self.path = path
+                return {
+                    "head_sha": NEWER,
+                    "run_number": 12126,
+                    "created_at": "2026-10-25T23:59:00Z",
+                }
+
+        reader = Reader("owner/repo", "read-token")
+        self.assertEqual(reader.run_date(42, 12126, NEWER), "2026.10.25")
+        self.assertEqual(reader.path, "actions/runs/42")
+        with self.assertRaisesRegex(publication.PublicationError, "identity"):
+            reader.run_date(42, 12127, NEWER)
+
+    def test_tag_target_peels_annotated_tags(self) -> None:
+        class Reader(publication.GitHubReader):
+            def get(self, path: str, *, missing_ok: bool = False) -> object:
+                if path.startswith("git/ref/tags/"):
+                    return {"object": {"type": "tag", "sha": OLDER}}
+                self.path = path
+                return {"object": {"type": "commit", "sha": NEWER}}
+
+        reader = Reader("owner/repo", "read-token")
+        self.assertEqual(reader.tag_target("human-languages-v2026.10.25.12126"), NEWER)
+        self.assertEqual(reader.path, f"git/tags/{OLDER}")
+
     def test_exact_immutable_release_replay_skips_upload(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             pdf = Path(directory) / "punjabi.pdf"
@@ -79,12 +107,15 @@ class PublicationDecisionTests(unittest.TestCase):
                 ],
             }
             self.assertFalse(
-                publication.release_should_create(release, tag, NEWER, [pdf])
+                publication.release_should_create(release, tag, NEWER, [pdf], NEWER)
             )
 
             release["assets"][0]["digest"] = "sha256:" + "0" * 64
             with self.assertRaisesRegex(publication.PublicationError, "digest"):
-                publication.release_should_create(release, tag, NEWER, [pdf])
+                publication.release_should_create(release, tag, NEWER, [pdf], NEWER)
+
+            with self.assertRaisesRegex(publication.PublicationError, "tag ref"):
+                publication.release_should_create(release, tag, NEWER, [pdf], OLDER)
 
     def test_release_target_or_asset_set_mismatch_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -98,10 +129,17 @@ class PublicationDecisionTests(unittest.TestCase):
                 "assets": [],
             }
             with self.assertRaisesRegex(publication.PublicationError, "target"):
-                publication.release_should_create(release, tag, NEWER, [pdf])
+                publication.release_should_create(release, tag, NEWER, [pdf], NEWER)
             release["target_commitish"] = NEWER
             with self.assertRaisesRegex(publication.PublicationError, "asset"):
-                publication.release_should_create(release, tag, NEWER, [pdf])
+                publication.release_should_create(release, tag, NEWER, [pdf], NEWER)
+            with self.assertRaisesRegex(
+                publication.PublicationError, "without a release"
+            ):
+                publication.release_should_create(None, tag, NEWER, [pdf], OLDER)
+            self.assertTrue(
+                publication.release_should_create(None, tag, NEWER, [pdf], None)
+            )
 
     def test_workflow_keeps_repo_code_out_of_write_token_job(self) -> None:
         workflow = (
@@ -115,6 +153,7 @@ class PublicationDecisionTests(unittest.TestCase):
             line for line in preflight.splitlines() if not line.lstrip().startswith("#")
         )
         self.assertIn("contents: read", preflight)
+        self.assertIn("actions: read", preflight)
         self.assertNotIn("contents: write", preflight_code)
         self.assertIn("contents: write", publish)
         self.assertNotIn("uses: actions/checkout@", publish)

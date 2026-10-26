@@ -83,7 +83,11 @@ def select_release_tag(
 
 
 def release_should_create(
-    release: dict[str, Any] | None, tag: str, source: str, pdfs: list[Path]
+    release: dict[str, Any] | None,
+    tag: str,
+    source: str,
+    pdfs: list[Path],
+    tag_target: str | None,
 ) -> bool:
     """A replay is a no-op only for byte-for-byte identical immutable assets."""
 
@@ -100,7 +104,11 @@ def release_should_create(
     ):
         raise PublicationError("Publication bundle must contain distinct PDF files")
     if release is None:
+        if tag_target is not None:
+            raise PublicationError("Book release tag already exists without a release")
         return True
+    if tag_target != source:
+        raise PublicationError("Existing release tag ref does not target this source")
     if release.get("tag_name") != tag:
         raise PublicationError("Existing release tag mismatch")
     if release.get("target_commitish") != source:
@@ -206,14 +214,48 @@ class GitHubReader:
             "Release inventory exceeded 20 pages; refusing partial search"
         )
 
-    def tag_exists(self, tag: str) -> bool:
+    def run_date(self, run_id: int, run_number: int, source: str) -> str:
+        if run_id <= 0 or run_number <= 0 or not SHA.fullmatch(source):
+            raise PublicationError("Invalid workflow run identity")
+        run = self.get(f"actions/runs/{run_id}")
+        if run.get("head_sha") != source or run.get("run_number") != run_number:
+            raise PublicationError("Workflow run identity does not match this source")
+        created = run.get("created_at")
+        if not isinstance(created, str):
+            raise PublicationError("Workflow run has no creation time")
+        try:
+            timestamp = datetime.fromisoformat(created.replace("Z", "+00:00"))
+        except ValueError as error:
+            raise PublicationError("Workflow run creation time is malformed") from error
+        if timestamp.tzinfo is None:
+            raise PublicationError("Workflow run creation time has no timezone")
+        return timestamp.astimezone(timezone.utc).strftime("%Y.%m.%d")
+
+    def tag_target(self, tag: str) -> str | None:
+        if not RELEASE_TAG.fullmatch(tag):
+            raise PublicationError("Invalid book release tag")
         result = self.get(f"git/ref/tags/{quote(tag, safe='')}", missing_ok=True)
-        return result is not None
+        if result is None:
+            return None
+        obj = result.get("object") if isinstance(result, dict) else None
+        for _ in range(4):
+            if not isinstance(obj, dict) or not isinstance(obj.get("sha"), str):
+                raise PublicationError("Book release tag ref is malformed")
+            if obj.get("type") == "commit":
+                if not SHA.fullmatch(obj["sha"]):
+                    raise PublicationError("Book release tag target is malformed")
+                return obj["sha"]
+            if obj.get("type") != "tag" or not SHA.fullmatch(obj["sha"]):
+                raise PublicationError("Book release tag target is not a commit")
+            annotated = self.get(f"git/tags/{obj['sha']}")
+            obj = annotated.get("object") if isinstance(annotated, dict) else None
+        raise PublicationError("Book release annotated tag chain is too deep")
 
 
 def main() -> int:
     source = os.environ.get("COMMIT_SHA", "")
     run_number = int(os.environ.get("RUN_NUMBER", "0"))
+    run_id = int(os.environ.get("RUN_ID", "0"))
     directory = Path(os.environ.get("BOOK_BUNDLE", "dist/human-languages/books"))
     pdfs = sorted(directory.glob("*.pdf"))
     if (
@@ -229,13 +271,13 @@ def main() -> int:
     publish_pages = pages_should_publish(source, current, comparison)
     releases = api.releases()
     tag = select_release_tag(
-        releases, run_number, datetime.now(timezone.utc).strftime("%Y.%m.%d")
+        releases, run_number, api.run_date(run_id, run_number, source)
     )
     matching = [release for release in releases if release.get("tag_name") == tag]
     release = matching[0] if matching else None
-    publish_release = release_should_create(release, tag, source, pdfs)
-    if publish_release and api.tag_exists(tag):
-        raise PublicationError("Book release tag already exists without a release")
+    publish_release = release_should_create(
+        release, tag, source, pdfs, api.tag_target(tag)
+    )
     output = Path(os.environ["GITHUB_OUTPUT"])
     with output.open("a", encoding="utf-8") as stream:
         stream.write(f"pages={'true' if publish_pages else 'false'}\n")
