@@ -1686,16 +1686,19 @@ HKDF, TLS transcript or key scheduling, record protection, handshake
 processing, certificate validation, trust, revocation, I/O, HTTP, OAuth
 transport, or any network effect. Concrete HTTPS remains unavailable.
 
-The existing generic Rust `hmac` verifier now delegates equal-length tag
-comparison to the repository-owned `ct-compare` primitive instead of an
-external executable dependency. Tag lengths remain public: a length mismatch
-is rejected directly, while equal-length inputs are compared without a
-data-dependent early exit. This dependency-boundary change does not make the
-generic HMAC computation fixed-memory, add HMAC-SHA-384, review its hash
-selection for TLS, or implement HKDF, a TLS key schedule, record protection,
-handshake processing, certificate validation, trust, revocation, I/O, HTTP,
-OAuth transport, or any network effect. Reviewed fixed-output HMAC-SHA-256 and
-HMAC-SHA-384 remain prerequisites, and concrete HTTPS remains unavailable.
+The repository-owned Rust `ct-compare` primitive is now hardened as a future
+HMAC-verification prerequisite. Equal-length comparisons retain an observable
+volatile accumulator operation for every byte, so an optimizing compiler may
+not replace the full scan with a data-dependent early exit. An optimized
+LLVM-IR regression gate verifies that the volatile operations survive release
+optimization. Length remains public and mismatched lengths are rejected
+directly. This hardening does not migrate the existing generic `hmac` verifier
+away from its external dependency, make generic HMAC fixed-memory, add
+HMAC-SHA-384, review hash selection for TLS, or implement HKDF, a TLS key
+schedule, record protection, handshake processing, certificate validation,
+trust, revocation, I/O, HTTP, OAuth transport, or any network effect. Reviewed
+fixed-output HMAC-SHA-256 and HMAC-SHA-384 remain prerequisites, and concrete
+HTTPS remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
