@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Replaced the external `subtle` tag-comparison dependency with the
+  repository-owned `ct-compare` primitive while preserving the public API and
+  public-length behavior.
+
 ### Fixed
 
 - **Key-derived intermediates are now wiped.** `hmac()` built `key_prime`,

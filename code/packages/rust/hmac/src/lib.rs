@@ -53,12 +53,12 @@
 //! );
 //! ```
 
+use coding_adventures_ct_compare::ct_eq;
 use coding_adventures_md5::sum_md5;
 use coding_adventures_sha1::sum1;
 use coding_adventures_sha256::sha256;
 use coding_adventures_sha512::sum512;
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
-use subtle::ConstantTimeEq;
 
 // ─── ipad and opad constants (RFC 2104 §2) ───────────────────────────────────
 //
@@ -266,9 +266,10 @@ pub fn hmac_sha512_hex(key: &[u8], message: &[u8]) -> String {
 /// an attacker can exploit these timing side-channels to reconstruct the
 /// expected tag byte by byte — a **timing attack**.
 ///
-/// `verify` uses a bitwise OR accumulator that processes all bytes regardless
-/// of where the first difference occurs, producing a result in time that is
-/// proportional to `min(expected.len(), actual.len())`.
+/// `verify` delegates equal-length inputs to the repository-owned
+/// `coding_adventures_ct_compare` primitive, which processes every byte
+/// regardless of where the first difference occurs. Tag lengths are public;
+/// a length mismatch returns `false` directly.
 ///
 /// Returns `true` iff `expected` and `actual` are byte-for-byte identical.
 ///
@@ -282,16 +283,10 @@ pub fn hmac_sha512_hex(key: &[u8], message: &[u8]) -> String {
 /// assert!(!verify(&tag, &[0u8; 32]));
 /// ```
 pub fn verify(expected: &[u8], actual: &[u8]) -> bool {
-    // A hand-rolled XOR accumulator is not safe under LLVM's optimizer: release
-    // builds with -O2 can short-circuit the fold once the accumulator is provably
-    // non-zero, because the pure functional expression has no observable side
-    // effects. `subtle::ConstantTimeEq` prevents this via compiler barriers.
-    //
-    // Returns false in constant time even when the lengths differ.
-    if expected.len() != actual.len() {
-        return false;
-    }
-    bool::from(expected.ct_eq(actual))
+    // Keep the optimiser barrier and fixed-iteration comparison in one audited,
+    // repository-owned primitive rather than duplicating cryptographic control
+    // flow here or depending on external executable code.
+    ct_eq(expected, actual)
 }
 
 // ─── Private helpers ──────────────────────────────────────────────────────────
@@ -493,6 +488,14 @@ mod tests {
     }
 
     #[test]
+    fn empty_key_error_display_is_stable_and_payload_free() {
+        assert_eq!(
+            HmacError::EmptyKey.to_string(),
+            "HMAC key must not be empty"
+        );
+    }
+
+    #[test]
     fn empty_message_is_allowed() {
         assert_eq!(hmac_sha256(b"key", b"").unwrap().len(), 32);
         assert_eq!(hmac_sha512(b"key", b"").unwrap().len(), 64);
@@ -539,5 +542,38 @@ mod tests {
         let tag = hmac_sha256(b"k", b"m").unwrap();
         let hex = hmac_sha256_hex(b"k", b"m");
         assert_eq!(hex, bytes_to_hex(&tag));
+    }
+
+    // Constant-time verification boundary
+
+    #[test]
+    fn verify_accepts_equal_tags_and_empty_tags() {
+        let tag = hmac_sha256(b"key", b"message").unwrap();
+        assert!(verify(&tag, &tag));
+        assert!(verify(&[], &[]));
+    }
+
+    #[test]
+    fn verify_rejects_every_differing_tag_position() {
+        let tag = hmac_sha256(b"key", b"message").unwrap();
+        for byte_index in 0..tag.len() {
+            for bit_index in 0..8 {
+                let mut different = tag;
+                different[byte_index] ^= 1 << bit_index;
+                assert!(
+                    !verify(&tag, &different),
+                    "accepted difference at byte {byte_index}, bit {bit_index}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn verify_rejects_public_length_mismatches() {
+        let tag = hmac_sha256(b"key", b"message").unwrap();
+        assert!(!verify(&tag, &tag[..tag.len() - 1]));
+        assert!(!verify(&tag[..tag.len() - 1], &tag));
+        assert!(!verify(&tag, &[]));
+        assert!(!verify(&[], &tag));
     }
 }
