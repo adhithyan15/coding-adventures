@@ -75,7 +75,7 @@ architecture/core introduction era, not a claim about a particular chip.
 
 | Priority | Target | Finding / next action |
 |---:|---|---|
-| P0 | MIPS R2000 gate HALT storage | In progress: the claimed HALT DFF is currently fed from and shadowed by a public host boolean that remains the real execution/snapshot authority, while the topology test only restates `FLIP_FLOP_COUNT`. Make HALT Q authoritative, retain the boolean only as a safely synchronized compatibility projection, publish an inventory derived from the physical storage containers, and add deliberate mirror-divergence plus restore/fault tests. |
+| P0 complete locally | MIPS R2000 gate HALT storage | HALT DFF Q is now the sole architectural halt authority; the public boolean remains only as a source-compatible observation mirror and is repaired by simulator mutations. The published storage inventory derives 524,288 memory bits, 1,120 register bits, and one HALT bit from the owned physical containers. Deliberate mirror-divergence, restore, and typed-fault atomicity tests pass alongside 33 unit tests, the 218-vector differential suite, nine lifecycle/integrity tests, and 20 doctests. Strict Clippy/rustdoc, the six-package affected build, and 94.50% line coverage (1,581/1,673) are green. |
 | P1 audit | Remaining completed gate packages with public halt fields | Audit each package before changing it. A public observation field is acceptable only when execution, snapshots, restore, and faults are driven by DFF Q; otherwise add one bounded repair cell and a non-tautological storage inventory. Candidate packages discovered by source scan include ARM1, SPARC V8, Motorola 68000, Intel 8051, Intel 8086, and OpenRISC 1000. |
 
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,
