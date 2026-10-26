@@ -650,6 +650,7 @@ internal static class Driver
                 break;
             case "props-profile-validate":
                 var counts = new Dictionary<string, int>();
+                var labels = new HashSet<string>();
                 foreach (var line in System.IO.File.ReadAllLines(Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH")!))
                 {
                     using var document = System.Text.Json.JsonDocument.Parse(line);
@@ -660,14 +661,22 @@ internal static class Driver
                         && sample.GetProperty("bytes").GetInt64() >= 0, "nonnegative profiling measurement");
                     var fields = 0;
                     foreach (var property in sample.EnumerateObject()) fields++;
-                    Check(fields == 3, "no names or values in profiling record");
+                    if (phase == "apply-props-convert" || phase == "apply-props-set")
+                    {
+                        Check(fields == 4 && sample.GetProperty("property").GetString() is "Count" or "AwaitedEffects" or "Status",
+                            "detailed scope identifies the reflected property, without values");
+                        labels.Add(sample.GetProperty("property").GetString()!);
+                    }
+                    else Check(fields == 3, "aggregate record shape remains compatible");
                 }
-                Check(counts.GetValueOrDefault("apply-props-convert") == 4, "conversion attempts include failure");
-                Check(counts.GetValueOrDefault("apply-props-set") == 3, "setter attempts include failure");
-                Check(counts.GetValueOrDefault("apply-props-notify") == 4, "every batch releases notifications");
-                Check(counts.GetValueOrDefault("apply-props") == 4, "aggregate covers every attempt");
+                Check(labels.SetEquals(new[] { "Count", "AwaitedEffects", "Status" }), "distinct properties remain distinguishable");
+                Check(counts.GetValueOrDefault("apply-props-convert") == 7, "conversion attempts include failure");
+                Check(counts.GetValueOrDefault("apply-props-set") == 6, "setter attempts include failure");
+                Check(counts.GetValueOrDefault("apply-props-notify") == 5, "every batch releases notifications");
+                Check(counts.GetValueOrDefault("apply-props") == 5, "aggregate covers every attempt");
                 break;
             case "props-batch":
+                MosaicRuntimeHost.ApplyProps(new EffectComponent());
                 var batched = new BatchComponent();
                 MosaicRuntimeHost.ApplyProps(batched);
                 Check(batched.Observed == 0 && batched.Begins == 1 && batched.Ends == 1 && batched.Depth == 0,

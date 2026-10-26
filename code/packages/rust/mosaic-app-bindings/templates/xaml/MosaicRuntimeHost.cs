@@ -25,6 +25,11 @@ public static class MosaicRuntimeHost
     private static readonly System.Collections.Concurrent.ConcurrentQueue<string> ProfileSamples = new();
     private static int ProfileSampleCount;
     public static IDisposable? BeginProfile(string phase, object? component = null)
+        => BeginProfile(phase, component, null);
+
+    // PropertyInfo comes from the generated component schema, never runtime
+    // JSON keys or values. Keep label extraction behind the opt-in filters.
+    private static IDisposable? BeginProfile(string phase, object? component, PropertyInfo? property)
     {
         if (string.IsNullOrWhiteSpace(ProfilePath)) return null;
         // Detailed conversion/setter phases can exhaust the shared budget before
@@ -39,13 +44,14 @@ public static class MosaicRuntimeHost
             var count = System.Threading.Volatile.Read(ref ProfileSampleCount);
             if (count >= 4096) return null;
             if (System.Threading.Interlocked.CompareExchange(ref ProfileSampleCount, count + 1, count) == count)
-                return new ProfileScope(phase, component);
+                return new ProfileScope(phase, component, property);
         }
     }
 
     private sealed class ProfileScope : IDisposable
     {
         private readonly string phase;
+        private readonly string? property;
         private readonly long started = Stopwatch.GetTimestamp();
         private readonly long allocated = GC.GetAllocatedBytesForCurrentThread();
         private int disposed;
@@ -54,9 +60,11 @@ public static class MosaicRuntimeHost
         private readonly PropertyInfo? realizationProperty;
         private readonly (long, long)? realizationStart;
         private readonly (long, long, long, long)? projectionStart;
-        internal ProfileScope(string phase, object? component)
+        internal ProfileScope(string phase, object? component, PropertyInfo? metadata)
         {
             this.phase = phase;
+            var name = metadata?.Name;
+            property = name is { Length: > 128 } ? name.Substring(0, 128) : name;
             this.component = component;
             // The optional diagnostic contract keeps standalone controls independent
             // of this host. Never inspect application properties or enumerate rows.
@@ -94,6 +102,11 @@ public static class MosaicRuntimeHost
             if (System.Threading.Interlocked.Exchange(ref disposed, 1) != 0) return;
             var milliseconds = (Stopwatch.GetTimestamp() - started) * 1000.0 / Stopwatch.Frequency;
             var bytes = GC.GetAllocatedBytesForCurrentThread() - allocated;
+            if (property is not null)
+            {
+                ProfileSamples.Enqueue(JsonSerializer.Serialize(new { phase, milliseconds, bytes, property }));
+                return;
+            }
             // Intervals may overlap: these deltas describe work during this scope,
             // not exclusive attribution to an event or native element realization.
             var realizedEnd = ReadRealization();
@@ -1369,7 +1382,7 @@ public static class MosaicRuntimeHost
                         // Fixed phase names avoid leaking property names or values.
                         // Repeated scopes separate conversion from synchronous setters.
                         (bool converted, object? value) converted;
-                        using (BeginProfile("apply-props-convert"))
+                        using (BeginProfile("apply-props-convert", null, property))
                             converted = ConvertValue(value, property.PropertyType);
                         if (!converted.converted)
                         {
@@ -1378,7 +1391,7 @@ public static class MosaicRuntimeHost
                                     $"Mosaic runtime prop '{property.Name}' is not valid for {property.PropertyType.Name}");
                             continue;
                         }
-                        using (BeginProfile("apply-props-set"))
+                        using (BeginProfile("apply-props-set", null, property))
                             property.SetValue(component, ReuseEquivalentList(component, property, converted.value));
                     }
                 }
