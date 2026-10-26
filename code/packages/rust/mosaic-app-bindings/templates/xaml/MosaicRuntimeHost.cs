@@ -476,6 +476,18 @@ public static class MosaicRuntimeHost
         private JsonElement latestUpdate;
         private string? persistenceWarning;
         /// <summary>
+        /// Set when a state file the runtime rejected could not be moved aside
+        /// (see <see cref="QuarantinePersistedState"/>), so it still sits at
+        /// the live path. Every save is skipped from then on, because the
+        /// next one would write over it.
+        /// </summary>
+        /// <remarks>
+        /// Sticky for this runtime, unlike <see cref="persistenceWarning"/>,
+        /// which a successful write clears: here no write is attempted, so the
+        /// warning that explains why stays showing.
+        /// </remarks>
+        private bool persistenceDisabled;
+        /// <summary>
         /// The revision the state file was last saved at by an answer, so an
         /// answer at that same revision skips the write. Null until the first
         /// save: the first answer after launch always writes, so a fresh
@@ -1369,7 +1381,7 @@ public static class MosaicRuntimeHost
             }
         }
 
-        private static (JsonElement? Snapshot, string? Warning) LoadPersistedSnapshot()
+        private (JsonElement? Snapshot, string? Warning) LoadPersistedSnapshot()
         {
             var path = StatePath();
             if (path is null || !File.Exists(path)) return (null, null);
@@ -1388,29 +1400,83 @@ public static class MosaicRuntimeHost
             }
         }
 
-        private static string QuarantinePersistedState(string reason)
+        /// <summary>How many names a rejected state file can be moved to.</summary>
+        private const int MaxQuarantinedStates = 10;
+
+        /// <summary>
+        /// Move a state file the runtime rejected out of the way, without
+        /// ever replacing an earlier one.
+        /// </summary>
+        /// <remarks>
+        /// A rejected file may be the user's only copy of their data, and so
+        /// may the file an earlier rejection moved aside: startup rejects the
+        /// real state, then a later rejection (the next launch, say) must not
+        /// destroy it. Each rejection takes the first free name:
+        ///
+        /// <code>
+        ///   rejection   moved to
+        ///   ---------   -----------------------------------
+        ///   first       mosaic-state.v1.json.corrupt     (the name release gates compare)
+        ///   second      mosaic-state.v1.json.corrupt.1
+        ///   ...         ...
+        ///   tenth       mosaic-state.v1.json.corrupt.9
+        /// </code>
+        ///
+        /// A name is skipped when anything is there, file or directory, and
+        /// <c>File.Move(..., overwrite: false)</c> throws rather than replace
+        /// one that appears after that check. Nothing is deleted first, so a
+        /// move that fails halfway loses nothing either.
+        ///
+        /// If the move fails, or all ten names are taken, the rejected file is
+        /// still at the live path, and the next save would write over it. So
+        /// saving is switched off for the rest of this runtime, and the
+        /// warning says so: an unsaved session is recoverable, an overwritten
+        /// file is not.
+        /// </remarks>
+        private string QuarantinePersistedState(string reason)
         {
             var path = StatePath();
             if (path is null) return reason;
-            var corrupt = path + ".corrupt";
-            try
-            {
-                if (File.Exists(corrupt)) File.Delete(corrupt);
-                if (File.Exists(path)) File.Move(path, corrupt);
-            }
-            catch (Exception moveError)
-            {
-                Debug.WriteLine($"Could not quarantine invalid Mosaic state: {moveError.Message}");
-            }
             var warning = $"{reason} ({path})";
+            if (File.Exists(path) && MovePersistedStateAside(path) is { } failure)
+            {
+                persistenceDisabled = true;
+                warning += $". {failure}. This session will not be saved.";
+            }
             Debug.WriteLine(warning);
             Console.Error.WriteLine(warning);
             return warning;
         }
 
+        /// <summary>
+        /// Move <paramref name="path"/> to its first free quarantine name.
+        /// Null when it moved; otherwise why it did not.
+        /// </summary>
+        private static string? MovePersistedStateAside(string path)
+        {
+            for (var index = 0; index < MaxQuarantinedStates; index++)
+            {
+                var candidate = index == 0 ? path + ".corrupt" : $"{path}.corrupt.{index}";
+                if (File.Exists(candidate) || Directory.Exists(candidate)) continue;
+                try
+                {
+                    File.Move(path, candidate, overwrite: false);
+                    return null;
+                }
+                catch (Exception moveError)
+                {
+                    return $"Could not move it aside to {candidate}: {moveError.Message}";
+                }
+            }
+            return $"All {MaxQuarantinedStates} quarantine names beside it are taken; move them away to save again";
+        }
+
         private void PersistSnapshot()
         {
             using var profile = BeginProfile("persist-snapshot");
+            // The rejected file is still at the live path: writing, or
+            // deleting it for a null snapshot, would destroy it.
+            if (persistenceDisabled) return;
             var path = StatePath();
             if (path is null) return;
             if (app == IntPtr.Zero || library == IntPtr.Zero) return;

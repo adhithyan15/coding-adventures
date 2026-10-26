@@ -1002,6 +1002,51 @@ QVariant MosaicHost::loadPersistedSnapshot()
     return QVariant();
 }
 
+namespace {
+// How many names a rejected state file can be moved to.
+constexpr int MaxQuarantinedStates = 10;
+
+// Move `path` to its first free quarantine name. An empty string when it
+// moved; otherwise why it did not.
+//
+//   rejection   moved to
+//   ---------   -----------------------------------
+//   first       mosaic-state.v1.json.corrupt     (the name release gates compare)
+//   second      mosaic-state.v1.json.corrupt.1
+//   ...         ...
+//   tenth       mosaic-state.v1.json.corrupt.9
+//
+// A name is skipped when anything is there: a file, a directory, or a
+// symbolic link, even a dangling one (which QFileInfo::exists reports as
+// absent, hence isSymLink). QFile::rename refuses an existing target rather
+// than replace it, so one that appears after the check is not replaced either.
+QString moveStateAside(const QString &path)
+{
+    for (int index = 0; index < MaxQuarantinedStates; ++index) {
+        const auto candidate = index == 0
+            ? path + QStringLiteral(".corrupt")
+            : path + QStringLiteral(".corrupt.%1").arg(index);
+        const QFileInfo existing(candidate);
+        if (existing.exists() || existing.isSymLink()) continue;
+        QFile file(path);
+        if (file.rename(candidate)) return {};
+        return QStringLiteral("Could not move it aside to %1: %2").arg(candidate, file.errorString());
+    }
+    return QStringLiteral("All %1 quarantine names beside it are taken; move them away to save again")
+        .arg(MaxQuarantinedStates);
+}
+}
+
+// A rejected state file may be the user's only copy of their data, and so may
+// the file an earlier rejection moved aside: startup rejects the real state,
+// then a later rejection (the next launch, say) must not destroy it. So the
+// move never replaces an earlier quarantine (moveStateAside), and nothing is
+// deleted first, so a move that fails halfway loses nothing either.
+//
+// If the move fails, or all ten names are taken, the rejected file is still at
+// the live path, and the next save would write over it. So saving is switched
+// off for the rest of this host, and the warning says so: an unsaved session is
+// recoverable, an overwritten file is not.
 void MosaicHost::quarantinePersistedState(const QString &reason)
 {
     const auto path = statePath();
@@ -1009,15 +1054,22 @@ void MosaicHost::quarantinePersistedState(const QString &reason)
         persistenceWarning_ = reason;
         return;
     }
-    const auto corrupt = path + QStringLiteral(".corrupt");
-    QFile::remove(corrupt);
-    if (QFile::exists(path)) QFile::rename(path, corrupt);
     persistenceWarning_ = QStringLiteral("%1 (%2)").arg(reason, path);
+    if (QFile::exists(path)) {
+        const auto failure = moveStateAside(path);
+        if (!failure.isEmpty()) {
+            persistenceDisabled_ = true;
+            persistenceWarning_ += QStringLiteral(". %1. This session will not be saved.").arg(failure);
+        }
+    }
     qWarning().noquote() << persistenceWarning_;
 }
 
 void MosaicHost::persistSnapshot()
 {
+    // The rejected file is still at the live path: writing, or removing it for
+    // a null snapshot, would destroy it.
+    if (persistenceDisabled_) return;
     const auto path = statePath();
     if (path.isEmpty()) return;
     Buffer output{};

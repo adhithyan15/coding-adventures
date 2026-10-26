@@ -2194,6 +2194,186 @@ mod tests {
         assert!(bindings[4].0.contains("#include <QDateTime>"));
     }
 
+    /// A state file the runtime rejects may be someone's only copy of their
+    /// data, and so may the one an earlier rejection moved aside. Every host
+    /// moves a rejected file to the FIRST FREE name -- `<state>.corrupt`, then
+    /// `.corrupt.1` to `.corrupt.9` -- with a move that refuses to replace,
+    /// never deletes an earlier quarantine first, and stops saving for the
+    /// session when the file could not be moved (it is still at the live
+    /// path, and the next save would write over it).
+    ///
+    /// | host    | refuses an existing target                     |
+    /// |---------|------------------------------------------------|
+    /// | Compose | `Files.move` without `REPLACE_EXISTING`        |
+    /// | SwiftUI | `FileManager.moveItem`                         |
+    /// | XAML    | `File.Move(..., overwrite: false)`             |
+    /// | Flutter | `createSync(exclusive: true)` claims the name  |
+    /// | Qt      | `QFile::rename`                                |
+    #[test]
+    fn emitted_native_bindings_never_replace_a_quarantined_state_file() {
+        let application_id = "com.example.tasks";
+        let qt = qt_runtime_binding_for_application(application_id);
+        struct Quarantine {
+            host: &'static str,
+            source: String,
+            /// The first name, the numbered ones, and the ten-name limit.
+            names: [&'static str; 3],
+            /// Skip a name when anything is there.
+            skip: &'static str,
+            /// The move that refuses to replace.
+            no_replace: &'static str,
+            /// A failed move switches saving off...
+            disable: &'static str,
+            /// ...and the save checks that first.
+            guard: [&'static str; 2],
+            /// What the single-slot quarantine did: delete, then move.
+            retired: [&'static str; 2],
+        }
+        let hosts = [
+            Quarantine {
+                host: "compose",
+                source: compose_jna_binding_for_application(application_id),
+                names: [
+                    "if (index == 0) \".corrupt\" else \".corrupt.$index\"",
+                    "File(file.path + suffix).toPath()",
+                    "private const val MOSAIC_MAX_QUARANTINED_STATES = 10",
+                ],
+                skip: "if (Files.exists(candidate, LinkOption.NOFOLLOW_LINKS)) continue",
+                no_replace: "Files.move(file.toPath(), candidate)\n",
+                disable: "persistenceDisabled = true",
+                guard: [
+                    "private fun persistSnapshot() {",
+                    "if (persistenceDisabled) return",
+                ],
+                retired: [
+                    "if (corrupt.exists()) corrupt.delete()",
+                    "Files.move(file.toPath(), corrupt.toPath(), StandardCopyOption.REPLACE_EXISTING)",
+                ],
+            },
+            Quarantine {
+                host: "swiftui",
+                source: swift_runtime_binding_for_application(application_id).host_swift,
+                names: [
+                    "url.lastPathComponent + (index == 0 ? \".corrupt\" : \".corrupt.\\(index)\")",
+                    "for index in 0..<maxQuarantinedStates",
+                    "private static let maxQuarantinedStates = 10",
+                ],
+                skip: "if (try? manager.attributesOfItem(atPath: candidate.path)) != nil { continue }",
+                no_replace: "try manager.moveItem(at: url, to: candidate)",
+                disable: "persistenceDisabled = true",
+                guard: [
+                    "private func persistSnapshot() {",
+                    "guard !persistenceDisabled else { return }",
+                ],
+                retired: [
+                    "try? FileManager.default.removeItem(at: corrupt)",
+                    "moveItem(at: url, to: corrupt)",
+                ],
+            },
+            Quarantine {
+                host: "xaml",
+                source: xaml_runtime_binding_for_application("Example.Tasks", application_id),
+                names: [
+                    "index == 0 ? path + \".corrupt\" : $\"{path}.corrupt.{index}\"",
+                    "for (var index = 0; index < MaxQuarantinedStates; index++)",
+                    "private const int MaxQuarantinedStates = 10;",
+                ],
+                skip: "if (File.Exists(candidate) || Directory.Exists(candidate)) continue;",
+                no_replace: "File.Move(path, candidate, overwrite: false);",
+                disable: "persistenceDisabled = true;",
+                guard: [
+                    "private void PersistSnapshot()",
+                    "if (persistenceDisabled) return;",
+                ],
+                retired: [
+                    "if (File.Exists(corrupt)) File.Delete(corrupt);",
+                    "File.Move(path, corrupt)",
+                ],
+            },
+            Quarantine {
+                host: "flutter",
+                source: flutter_runtime_binding_for_application(application_id, true),
+                names: [
+                    "index == 0 ? '$path.corrupt' : '$path.corrupt.$index'",
+                    "for (var index = 0; index < _maxQuarantinedStates; index++)",
+                    "static const int _maxQuarantinedStates = 10;",
+                ],
+                skip: "FileSystemEntity.typeSync(candidate.path, followLinks: false)",
+                no_replace: "candidate.createSync(exclusive: true);",
+                disable: "_persistenceDisabled = true;",
+                guard: [
+                    "void _persistSnapshot() {",
+                    "if (_persistenceDisabled) return;",
+                ],
+                retired: [
+                    "if (corrupt.existsSync()) corrupt.deleteSync();",
+                    "file.renameSync(corrupt.path)",
+                ],
+            },
+            Quarantine {
+                host: "qt",
+                source: format!("{}\n{}", qt.header, qt.source),
+                names: [
+                    "? path + QStringLiteral(\".corrupt\")",
+                    ": path + QStringLiteral(\".corrupt.%1\").arg(index);",
+                    "constexpr int MaxQuarantinedStates = 10;",
+                ],
+                skip: "if (existing.exists() || existing.isSymLink()) continue;",
+                no_replace: "if (file.rename(candidate)) return {};",
+                disable: "persistenceDisabled_ = true;",
+                guard: [
+                    "void MosaicHost::persistSnapshot()",
+                    "if (persistenceDisabled_) return;",
+                ],
+                retired: [
+                    "QFile::remove(corrupt);",
+                    "QFile::rename(path, corrupt)",
+                ],
+            },
+        ];
+        for quarantine in &hosts {
+            let Quarantine { host, source, .. } = quarantine;
+            for marker in quarantine.names.iter().chain([
+                &quarantine.skip,
+                &quarantine.no_replace,
+                &quarantine.disable,
+            ]) {
+                assert!(source.contains(marker), "{host}: missing {marker}");
+            }
+            // The skip comes before the move inside the one candidate loop.
+            let skip = source.find(quarantine.skip).unwrap();
+            let moved = source.find(quarantine.no_replace).unwrap();
+            assert!(
+                skip < moved,
+                "{host}: a taken name must be skipped before moving"
+            );
+            // The guard is the save's first decision, before any snapshot or
+            // write: a null snapshot would otherwise DELETE the rejected file.
+            let [save, guard] = quarantine.guard;
+            let save = source
+                .find(save)
+                .unwrap_or_else(|| panic!("{host}: missing {save}"));
+            let guarded = source[save..]
+                .find(guard)
+                .unwrap_or_else(|| panic!("{host}: missing {guard}"));
+            let state = ["statePath()", "StatePath()", "stateURL()", "stateFile()"]
+                .iter()
+                .filter_map(|name| source[save..].find(name))
+                .min();
+            assert!(
+                state.is_some_and(|state| guarded < state),
+                "{host}: the save must check persistenceDisabled before finding the file"
+            );
+            for retired in quarantine.retired {
+                assert!(!source.contains(retired), "{host}: still has {retired}");
+            }
+            assert!(
+                source.contains("This session will not be saved."),
+                "{host}: a disabled save must say so in the warning"
+            );
+        }
+    }
+
     /// UI89 §2.1: a static runtime is a linked binary target the loader
     /// depends on, with the macro that selects the direct-call path.
     #[test]

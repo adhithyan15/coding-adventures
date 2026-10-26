@@ -22,6 +22,7 @@ import kotlinx.serialization.json.longOrNull
 import kotlinx.serialization.json.put
 import java.io.File
 import java.nio.file.Files
+import java.nio.file.LinkOption
 import java.nio.file.StandardCopyOption
 import java.util.Locale
 
@@ -30,6 +31,8 @@ private const val MOSAIC_STATUS_OK = 0
 private const val MOSAIC_PERSISTENCE_ENABLED = __MOSAIC_PERSISTENCE_ENABLED__
 private const val MOSAIC_APPLICATION_ID = "__MOSAIC_APPLICATION_ID__"
 private const val MOSAIC_STATE_FILE = "mosaic-state.v1.json"
+/** How many names a rejected state file can be moved to (see `moveStateAside`). */
+private const val MOSAIC_MAX_QUARANTINED_STATES = 10
 /**
  * How the runtime's refusal of an invalid environment begins
  * (`mosaic-app-runtime`'s `INVALID_ENVIRONMENT_DIAGNOSTIC`). No other failure
@@ -182,6 +185,14 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) :
     private var settling = 0
     private var effectWarning: String? = null
     private var persistenceWarning: String? = null
+    /**
+     * Set when a state file the runtime rejected could not be moved aside (see
+     * [quarantinePersistedState]), so it still sits at the live path. Every
+     * save is skipped from then on, because the next one would write over it.
+     * Sticky, unlike [persistenceWarning], which a successful write clears:
+     * here no write is attempted, so the warning saying why stays showing.
+     */
+    private var persistenceDisabled = false
     /**
      * The revision the state file was last saved at by an answer, so an answer
      * at that same revision skips the write. Null until the first save: the
@@ -680,19 +691,75 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) :
         }
     }
 
+    /**
+     * Move a state file the runtime rejected out of the way, without ever
+     * replacing an earlier one.
+     *
+     * A rejected file may be the user's only copy of their data, and so may
+     * the file an earlier rejection moved aside: startup rejects the real
+     * state, then a later rejection (the next launch, say) must not destroy
+     * it. Each rejection takes the first free name ([moveStateAside]), and
+     * nothing is deleted first, so a move that fails halfway loses nothing
+     * either.
+     *
+     * If the move fails, or all ten names are taken, the rejected file is
+     * still at the live path, and the next save would write over it. So
+     * saving is switched off for the rest of this host, and the warning says
+     * so: an unsaved session is recoverable, an overwritten file is not.
+     */
     private fun quarantinePersistedState(reason: String) {
         val file = stateFile() ?: return
-        val corrupt = File(file.parentFile, "$MOSAIC_STATE_FILE.corrupt")
-        runCatching {
-            if (corrupt.exists()) corrupt.delete()
-            if (file.exists()) {
-                Files.move(file.toPath(), corrupt.toPath(), StandardCopyOption.REPLACE_EXISTING)
+        var warning = "$reason (${file.absolutePath})"
+        if (file.exists()) {
+            moveStateAside(file)?.let { failure ->
+                persistenceDisabled = true
+                warning += ". $failure. This session will not be saved."
             }
         }
-        recordPersistenceWarning("$reason (${file.absolutePath})")
+        recordPersistenceWarning(warning)
+    }
+
+    /**
+     * Move [file] to its first free quarantine name: null when it moved,
+     * otherwise why it did not.
+     *
+     * ```
+     * rejection   moved to
+     * ---------   -----------------------------------
+     * first       mosaic-state.v1.json.corrupt     (the name release gates compare)
+     * second      mosaic-state.v1.json.corrupt.1
+     * ...         ...
+     * tenth       mosaic-state.v1.json.corrupt.9
+     * ```
+     *
+     * Named after the state file itself, so an explicit
+     * `MOSAIC_APP_STATE_PATH` quarantines beside its own name as every other
+     * host does. A name is skipped when anything is there: with
+     * `NOFOLLOW_LINKS` that includes a symbolic link, even a dangling one.
+     * `Files.move` without `REPLACE_EXISTING` throws
+     * `FileAlreadyExistsException` rather than replace a target, so one that
+     * appears after the check is not replaced either.
+     */
+    private fun moveStateAside(file: File): String? {
+        for (index in 0 until MOSAIC_MAX_QUARANTINED_STATES) {
+            val suffix = if (index == 0) ".corrupt" else ".corrupt.$index"
+            val candidate = File(file.path + suffix).toPath()
+            if (Files.exists(candidate, LinkOption.NOFOLLOW_LINKS)) continue
+            return try {
+                Files.move(file.toPath(), candidate)
+                null
+            } catch (error: Exception) {
+                "Could not move it aside to $candidate: ${error.message}"
+            }
+        }
+        return "All $MOSAIC_MAX_QUARANTINED_STATES quarantine names beside it are taken; " +
+            "move them away to save again"
     }
 
     private fun persistSnapshot() {
+        // The rejected file is still at the live path: writing, or deleting it
+        // for a null snapshot, would destroy it.
+        if (persistenceDisabled) return
         val file = stateFile() ?: return
         try {
             val value = invoke { output ->
