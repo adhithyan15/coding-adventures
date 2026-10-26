@@ -1,21 +1,23 @@
 # coding_adventures_ct_compare
 
-Constant-time byte-slice equality for Rust, implemented from scratch
-— no external dependencies.
+Compiler-preserved full-scan byte-slice equality for Rust, implemented from
+scratch — no external dependencies.
 
 ## What It Does
 
-Provides data-independent equality primitives so MAC-tag, session-key,
-and password-hash comparisons can't be broken by timing side-channels:
+Provides equality primitives whose compiled scans retain every input read,
+closing the ordinary early-exit prefix leak for MAC tags, session keys, and
+password hashes. This is a compiler-level guarantee, not a claim of general
+timing-side-channel resistance:
 
-1. `ct_eq(a: &[u8], b: &[u8]) -> bool` — constant-time equality on
-   byte slices.
+1. `ct_eq(a: &[u8], b: &[u8]) -> bool` — compiler-preserved full-scan
+   equality on byte slices.
 2. `ct_eq_fixed::<N>(a: &[u8; N], b: &[u8; N]) -> bool` — type-safe
    fixed-length variant.
-3. `ct_select_bytes(a, b, choice) -> Vec<u8>` — branchless select
-   between two same-length slices.
-4. `ct_eq_u64(a: u64, b: u64) -> bool` — constant-time 64-bit equality
-   for counters and lease IDs.
+3. `ct_select_bytes(a, b, choice) -> Vec<u8>` — source-level branchless
+   select between two same-length slices.
+4. `ct_eq_u64(a: u64, b: u64) -> bool` — source-level branchless 64-bit
+   equality for counters and lease IDs.
 
 ## Why A Naive `==` Isn't Enough
 
@@ -35,13 +37,18 @@ This crate replaces the early exit with an XOR accumulator:
 
 ```rust
 let mut acc = 0u8;
-for i in 0..a.len() { acc |= a[i] ^ b[i]; }
-black_box(acc) == 0
+for i in 0..a.len() {
+    // The implementation performs volatile reads of both bytes and `acc`,
+    // followed by a volatile write of the combined difference.
+    accumulate_volatile(&mut acc, &a[i], &b[i]);
+}
+read_accumulator(&acc) == 0
 ```
 
-Every iteration does the same work regardless of which byte differs,
-and `black_box` stops the optimiser from reasoning about the loop and
-folding it back into an early-exit equivalent.
+Every iteration retains observable input reads and an accumulator write
+regardless of which byte differs. A release-optimized LLVM-IR regression gate
+rejects builds where a loop cycle bypasses the volatile operations or a loop
+exit depends on their values.
 
 ## What It Does NOT Do
 
@@ -74,21 +81,27 @@ let picked = ct_select_bytes(&option_a, &option_b, predicate);
 
 ## How It Fits
 
-Part of the D18 Chief-of-Staff Vault crypto stack. Used by Poly1305
-AEAD decryption, HMAC verification, Argon2id password verification,
-and Vault unlock-key comparison.
+Part of the D18 Chief-of-Staff Vault crypto stack. Used by Poly1305 AEAD
+decryption, Argon2id password verification, and Vault unlock-key comparison.
+It is a future prerequisite for HMAC verification; the generic HMAC crate has
+not yet migrated to it.
 
-Self-contained: no runtime dependencies. `#![deny(unsafe_code)]`.
+Self-contained: no runtime dependencies. Two private safe wrappers contain the
+audited volatile-pointer operations; public callers never handle pointers or
+invoke `unsafe`.
 
 ## Implementation Notes
 
 - `#[inline(never)]` on the public functions. Inlining them into
   callers could let the optimiser specialise per-caller in ways that
   reintroduce data-dependent behaviour.
-- `black_box` is used on every boolean result. It is the
-  standard-library primitive for "treat this value as opaque to the
-  optimiser" — without it, a sufficiently aggressive pass could in
-  principle detect that the loop is equivalent to a short-circuit.
+- `ct_eq` and `ct_eq_fixed` use volatile reads for both input bytes and their
+  accumulator plus a volatile accumulator write on every iteration. This is a
+  compiler-observability boundary, not a claim to defeat cache, speculative,
+  power-analysis, or other hardware side channels.
+- An integration test compiles the crate at optimization level 3, reconstructs
+  the optimized LLVM-IR control-flow graph, verifies every cycle crosses the
+  volatile equality block, and rejects volatile-data-dependent loop exits.
 - `ct_select_bytes` builds a byte mask `0u8.wrapping_sub(choice as u8)`
   (`0xFF` or `0x00`) and applies `b ^ ((a ^ b) & mask)` per byte. No
   conditional branches, no early exits.

@@ -1,0 +1,11 @@
+{
+  "id": "JA-R253-what-was-going-on",
+  "pathSegment": "JA-PATH-253-NARRATE253",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-253-NARRATE253",
+      "order": 5
+    }
+  ]
+}

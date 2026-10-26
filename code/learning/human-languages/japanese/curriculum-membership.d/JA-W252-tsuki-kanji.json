@@ -1,0 +1,11 @@
+{
+  "id": "JA-W252-tsuki-kanji",
+  "pathSegment": "JA-PATH-252-NARRATE252",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-252-NARRATE252",
+      "order": 5
+    }
+  ]
+}
