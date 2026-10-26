@@ -2,6 +2,14 @@
 
 All notable changes to this crate are documented here.
 
+## Unreleased — frame-pointer requirement documented as enforced
+
+- The `current_fp()` comment in `stack_scan.rs` no longer claims that frame
+  pointers "hold under Rust's current x86-64-host defaults". A `--release`
+  build omits them, and `rbp` then holds the caller's frame pointer or any
+  value. `twig-aot` now builds this crate with `-Cforce-frame-pointers=yes`,
+  and any embedder that registers stack maps must do the same.
+
 ## 0.25.0 - 2026-08-11 — `__gc_collect_minor_compacting`: the moving-minor C ABI entry (AOT00-T9 §5, PR-5)
 
 - **New `__gc_collect_minor_compacting()`** — a minor (young-generation-only)

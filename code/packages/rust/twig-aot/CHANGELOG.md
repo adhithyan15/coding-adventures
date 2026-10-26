@@ -1,4 +1,24 @@
 # Changelog — `twig-aot`
+## Unreleased — precise GC: build the embedded collector with frame pointers
+
+- **`build.rs` compiles the embedded `gc-core-capi` archive with
+  `-Cforce-frame-pointers=yes`.** The flag is appended to the outer build's
+  `CARGO_ENCODED_RUSTFLAGS`.
+- **Why.** The precise collector anchors its stack walk at `rbp` inside
+  `__gc_collect_precise`. A `--release` build without frame pointers never
+  sets `rbp`, so with rustc 1.97 the walk started at the *mutator's* frame
+  pointer. The innermost Twig frame's stack map was then never consulted:
+  that frame fell into the conservative `[sp, start_fp)` region, and precise
+  collection silently degraded to conservative on x86-64 Linux.
+  `gc_stress_live_bytes_differential_on_linux` and
+  `gc_recursive_frame_live_bytes_differential_on_linux` failed (precise kept 64
+  bytes), and `gc-core-capi`'s own docs call an untrusted anchor unsafe once
+  stack maps are registered. With frame pointers, the archive's
+  `__gc_collect_precise` starts `push rbp; mov rbp, rsp`, the walk reaches the
+  Twig frame's safepoint, and both tests pass.
+- Whether the old build happened to pass depended on the rustc version, which
+  is why CI (latest stable) and a host on 1.97 disagreed.
+
 ## [0.57.0] — 2026-10-20 (LANG83 PR6a — native runtime float writers)
 
 - **`__twig_write_f64_py(int64_t bits)` / `__twig_write_f64_js(int64_t bits)`**
