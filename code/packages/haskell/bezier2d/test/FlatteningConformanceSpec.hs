@@ -89,6 +89,11 @@ spec = beforeAll loadFixture $ do
                 _ -> expectationFailure "expected exactly one budget case"
 
     describe "fail-closed numeric boundaries" $ do
+        it "rejects nonfinite tolerances before subdivision" $ \_ -> do
+            let straight = QuadraticBezier (Point 0.0 0.0) (Point 0.5 0.0) (Point 1.0 0.0)
+            toPolylineQuadratic straight (0.0 / 0.0) `shouldBe` Left InvalidTolerance
+            toPolylineQuadratic straight (1.0 / 0.0) `shouldBe` Left InvalidTolerance
+
         it "rejects nonfinite controls before subdivision" $ \_ -> do
             let origin = Point 0.0 0.0
             toPolylineQuadratic
@@ -108,6 +113,11 @@ spec = beforeAll loadFixture $ do
             toPolylineCubic
                 (CubicBezier negative (Point 0.0 1.0) (Point 0.0 (-1.0)) positive)
                 0.1 `shouldBe` Left NonFiniteGeometry
+
+        it "does not underflow tiny curved geometry into a chord" $ \_ -> do
+            let tiny = 1e-200
+                curve = QuadraticBezier (Point 0.0 0.0) (Point 0.0 tiny) (Point tiny 0.0)
+            toPolylineQuadratic curve 5e-324 `shouldBe` Left FlatteningBudgetExceeded
 
 flatten :: FixtureCase -> [Point] -> Either FlatteningError [Point]
 flatten testCase controls = case (caseDegree testCase, controls) of

@@ -78,6 +78,15 @@ final class FlatteningConformanceTests: XCTestCase {
         }
     }
 
+    func testNonfiniteTolerancesFailBeforeSubdivision() {
+        let curve = QuadraticBezier(Point(0, 0), Point(0.5, 0), Point(1, 0))
+        for tolerance in [Double.nan, .infinity] {
+            XCTAssertThrowsError(try curve.polyline(tolerance: tolerance)) { error in
+                XCTAssertEqual(error as? FlatteningError, .invalidTolerance)
+            }
+        }
+    }
+
     func testFiniteInputsThatOverflowDerivedGeometryFailClosed() {
         let negative = Point(-Double.greatestFiniteMagnitude, 0)
         let positive = Point(Double.greatestFiniteMagnitude, 0)
@@ -98,6 +107,14 @@ final class FlatteningConformanceTests: XCTestCase {
             XCTAssertEqual(error as? FlatteningError, .budgetExceeded)
         }
         XCTAssertThrowsError(try cubic.polyline(tolerance: .leastNonzeroMagnitude)) { error in
+            XCTAssertEqual(error as? FlatteningError, .budgetExceeded)
+        }
+    }
+
+    func testSubnormalGeometryCannotUnderflowIntoAChord() {
+        let tiny = 1e-200
+        let curve = QuadraticBezier(Point(0, 0), Point(0, tiny), Point(tiny, 0))
+        XCTAssertThrowsError(try curve.polyline(tolerance: .leastNonzeroMagnitude)) { error in
             XCTAssertEqual(error as? FlatteningError, .budgetExceeded)
         }
     }
