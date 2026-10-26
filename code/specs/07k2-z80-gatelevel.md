@@ -108,8 +108,9 @@ Completion requires:
 7. clean formatting, Clippy with warnings denied, and rustdoc with warnings
    denied.
 
-The completion audit records 58 unit, 4 integration, and 8 documentation tests
-with 97.64% core line coverage (1,489/1,525).
+The completion audit records 60 unit, 6 integration, and 8 documentation tests
+with 98.16% core line coverage (2,621/2,670). It includes the complete 1,160-row
+differential and five compiler-checked hostile full-crate fixtures.
 
 ## Dependencies
 
