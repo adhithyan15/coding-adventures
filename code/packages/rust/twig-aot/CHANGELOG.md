@@ -1,4 +1,15 @@
 # Changelog — `twig-aot`
+## Unreleased — LANG83 PR7d — `Trap.Unbound`
+
+- `__twig_trap`'s kind table (`TWIG_TRAP_KINDS`) renames id 7 from
+  `"Trap.ReferenceError"` to `"Trap.Unbound"`: the kind names the condition
+  (a name is unbound), not JavaScript's exception class. The id is unchanged,
+  so compiled code is unaffected; a native program that stops on it now
+  prints `trap: Trap.Unbound`. The comment no longer reserves ids from 1000
+  for language kinds, which LANG83 PR7d retired.
+- `runtime_trap_kind_table_matches_exception_kind` drops its
+  `LANGUAGE_TRAP_KINDS` check (the table is gone) and pins id 7's new name.
+
 ## Unreleased — LANG83 PR7b — native runtime digit helpers
 
 - **`__twig_f64_digits(int64_t bits)` / `__twig_f64_exp10(int64_t bits)`** in

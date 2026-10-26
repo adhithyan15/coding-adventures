@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased - ReferenceError traps `Trap.Unbound` (LANG83 PR7d)
+
+### Changed
+
+- **An undeclared or temporal-dead-zone read now lowers to
+  `trap "Trap.Unbound"`** (was `trap "Trap.ReferenceError"`). LANG83 PR7d
+  renamed the kind, keeping its stable id 7: a trap kind names the
+  condition (the name is unbound), not JavaScript's exception class. The
+  constant `REFERENCE_ERROR_TRAP` is now `UNBOUND_TRAP`
+  (`interpreter_ir::exception_kind::TRAP_UNBOUND`).
+- `run_module` alone reports `trap: Trap.Unbound`. `run_source` still
+  reports V8's wording (`ReferenceError: z is not defined`,
+  `ReferenceError: Cannot access 'a' before initialization`): that message,
+  and the word `ReferenceError` in it, are this compiler's knowledge, and
+  `run_compiled` maps the neutral trap back onto them.
+- The `es-number-log` corpus has no failing case, so no release-sweep
+  module changes and `release_classes.csv` is unchanged.
+
 ## 0.7.0 - Unreleased - the compiler writes `String(x)` (LANG83 PR7c-js)
 
 LANG83 PR7 says the IIR names no source language. This release takes

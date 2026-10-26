@@ -1,5 +1,13 @@
 # Changelog — iir-to-wasm
 
+## Unreleased — LANG83 PR7d — `Trap.Unbound`
+
+- The validator checks a `trap` kind with `exception_kind::is_trap_kind`
+  (LANG83 PR7d removed `is_registered_trap_kind` with the empty
+  `LANGUAGE_TRAP_KINDS` table); the accepted set is unchanged. The emitted
+  module is byte-identical: `env.__trap` still receives id 7, which the host
+  now names `Trap.Unbound` (was `Trap.ReferenceError`).
+
 ## Unreleased — LANG83 PR7b — the language-neutral float primitives
 
 - The in-module float helpers are two groups: helpers 0–9 compute (big

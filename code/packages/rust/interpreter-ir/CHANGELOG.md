@@ -1,5 +1,27 @@
 # Changelog — interpreter-ir
 
+## Unreleased — LANG83 PR7d — `Trap.Unbound`, and no language trap kinds
+
+- **Breaking:** `exception_kind::TRAP_REFERENCE_ERROR` (`"Trap.ReferenceError"`)
+  is renamed **`TRAP_UNBOUND`** (`"Trap.Unbound"`) and keeps the stable id 7.
+  A trap kind names a condition (the name is unbound), never one language's
+  exception class; JavaScript's `ReferenceError`, Python's `NameError` and a
+  Lisp's unbound variable all map onto it (LANG83 "PR7 — language
+  neutrality"). `"Trap.ReferenceError"` is no longer a kind.
+- **Breaking:** `LANGUAGE_TRAP_KINDS`, `LANGUAGE_TRAP_KIND_ID_BASE` and
+  `is_registered_trap_kind` are removed. The table was always empty;
+  `is_trap_kind` (the seven built-in leaves) is now the whole closed table
+  and the only trap-kind validation, so a `Ruby.ZeroDivisionError`-style kind
+  is refused, and `trap_kind_name` returns `None` for every id outside 1–7.
+  Callers in vm-core and the five backends that asked
+  `is_registered_trap_kind` now ask `is_trap_kind`; their behaviour is
+  unchanged, since the two functions accepted the same set.
+- Tests: `unbound_is_id_seven_and_its_old_name_is_not_a_kind` and
+  `language_namespaced_kinds_are_refused` replace
+  `language_kinds_stay_out_of_the_trap_namespace_and_id_range`; doctests on
+  `is_trap_kind` and `trap_kind_name`. The module docs gain a "Every kind is
+  language-neutral" section with the language-to-kind mapping.
+
 ## Unreleased — LANG83 PR7b — the language-neutral float primitives
 
 - **Registry:** three new type-first Ops, `introduced_by: "LANG83 PR7b"`

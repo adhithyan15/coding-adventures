@@ -1,5 +1,14 @@
 # Changelog — vm-core
 
+## Unreleased — LANG83 PR7d — `Trap.Unbound`
+
+- The `trap` handler validates its kind with
+  `interpreter_ir::exception_kind::is_trap_kind`, since LANG83 PR7d removed
+  `is_registered_trap_kind` with the (always empty) `LANGUAGE_TRAP_KINDS`
+  table. Same accepted set: the seven built-in `Trap.*` leaves.
+- Kind 7 is now `Trap.Unbound` (was `Trap.ReferenceError`), so a program
+  that stops on it returns `VMError::Trap { kind: "Trap.Unbound" }`.
+
 ## Unreleased — LANG83 PR7b — the language-neutral float primitives
 
 - **`float_format::shortest_digits(x) -> (u64, i32)`** now returns the

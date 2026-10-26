@@ -1,4 +1,11 @@
 # Changelog — iir-to-llvm
+## Unreleased — LANG83 PR7d — `Trap.Unbound`
+
+- No code change: the trap message comes from
+  `exception_kind::trap_kind_name`, so kind 7's module-local
+  `@__iir_trap_msg.7` now holds `trap: Trap.Unbound\n` (was
+  `trap: Trap.ReferenceError\n`) after LANG83 PR7d renamed the kind.
+
 ## Unreleased — LANG83 PR7b — the language-neutral float primitives
 
 - The module-local float IR is now two constants: `LANG83_F64_DIGITS_LL`

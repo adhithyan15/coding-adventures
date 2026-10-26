@@ -62,8 +62,11 @@ Exception kind names (`exception_kind` module) are dotted paths, e.g. `"Trap.Bou
 `catch "Trap"` catches any `Trap.*`, and `"*"` catches anything. The closed table a
 LANG83 `trap` may name is the seven built-in leaves (`Trap.Bounds`, `Trap.Null`,
 `Trap.DivZero`, `Trap.ConvRange`, `Trap.Overflow`, `Trap.User`,
-`Trap.ReferenceError`) plus
-`LANGUAGE_TRAP_KINDS`; `trap_kind_id` gives each a stable, append-only integer id.
+`Trap.Unbound`), and nothing else; `trap_kind_id` gives each a stable, append-only
+integer id (1–7). Every kind names a condition, not a language's exception class:
+a compiler maps JavaScript's `ReferenceError` or Python's `NameError` onto
+`Trap.Unbound` (id 7, called `Trap.ReferenceError` before LANG83 PR7d, which also
+retired the never-used `LANGUAGE_TRAP_KINDS` table).
 
 ## The standard operation registry (LANG83)
 

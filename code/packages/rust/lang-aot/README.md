@@ -1464,7 +1464,7 @@ generic `GrammarLexer`/`GrammarParser` build from one edition's
 | `a + b`, `a - b`, `a * b`, `a / b`, `-a` | `f64_add`, `f64_sub`, `f64_mul`, `f64_div`, `f64_neg` (PR6c, IEEE, never a trap) |
 | `console.log(a, b)` | `call __js_write_number, a`, `putchar 32`, `call __js_write_number, b`, `putchar 10` |
 | `-0` | `putchar 45` behind `cmp_gt (f64_signbit x) (f64_class x)` |
-| reading an undeclared name, or a `let` before its declaration | `trap "Trap.ReferenceError"` |
+| reading an undeclared name, or a `let` before its declaration | `trap "Trap.Unbound"` (the neutral kind for an unbound name; LANG83 PR7d) |
 
 No backend has JavaScript code. Since LANG83 PR7c-js, `String(x)` is a
 function the compiler writes into the module, `__js_write_number`. It is built

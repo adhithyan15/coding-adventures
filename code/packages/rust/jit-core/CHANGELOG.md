@@ -5,6 +5,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Unreleased — LANG83 PR7d — `Trap.Unbound`
+
+- No code change: `TRAP 7` reports its kind through
+  `exception_kind::trap_kind_name`, so the error slot now reads
+  `trap: Trap.Unbound` (was `trap: Trap.ReferenceError`) after LANG83 PR7d
+  renamed the kind.
+
 ## Unreleased — LANG83 PR7b — the language-neutral float primitives
 
 - **New bytecodes `CLASS_F64` (0x5D), `DIGITS_F64` (0x5E), `EXP10_F64`

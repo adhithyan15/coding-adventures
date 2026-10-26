@@ -1,5 +1,12 @@
 # Changelog — iir-to-cil-bytecode
 
+## Unreleased — LANG83 PR7d — `Trap.Unbound`
+
+- `trap` validates its kind with `exception_kind::is_trap_kind` (LANG83 PR7d
+  removed `is_registered_trap_kind` with the empty `LANGUAGE_TRAP_KINDS`
+  table); the accepted set is unchanged. Kind 7 is now `Trap.Unbound`, so its
+  `System.Exception` message is `Trap.Unbound` (was `Trap.ReferenceError`).
+
 ## Unreleased — LANG83 PR7b — the language-neutral float primitives
 
 - The PR6a `"R"` digit parse is its own IL method,

@@ -163,7 +163,7 @@ The module uses LANG83 registry operations only:
 | `a + b`, `a - b`, `a * b`, `a / b`, `-a` | `f64_add`, `f64_sub`, `f64_mul`, `f64_div`, `f64_neg` (IEEE, never a trap) |
 | `console.log(a, b)` | evaluate `a` and `b`, then `call __js_write_number, a`, `putchar 32`, `call __js_write_number, b`, `putchar 10` |
 | `-0` | `putchar 45` when `f64_signbit x` > `f64_class x` |
-| ReferenceError | `trap "Trap.ReferenceError"` |
+| ReferenceError | `trap "Trap.Unbound"` (the neutral kind; LANG83 PR7d) |
 
 ### Printing a number: the compiler writes `String(x)` (LANG83 PR7c-js)
 
@@ -201,7 +201,9 @@ runs there.
 
 `run_module` registers `putchar` into one bounded buffer; it is the
 module's only output builtin.
-A `Trap.ReferenceError` ends the program (the compiler emits nothing after
-it); `run_source` reports it with V8's message, which the compiler recorded,
-since the IIR does not name the binding, while `run_module` on its own reports
-`trap: Trap.ReferenceError`.
+A `Trap.Unbound` ends the program (the compiler emits nothing after
+it); `run_source` reports it with V8's message (`ReferenceError: z is not
+defined`), which the compiler recorded, since the IIR names neither the
+binding nor JavaScript's error class, while `run_module` on its own reports
+`trap: Trap.Unbound`. The kind was `Trap.ReferenceError` until LANG83 PR7d
+renamed it for language neutrality (same id, 7).
