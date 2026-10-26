@@ -18264,3 +18264,34 @@ is to audit the used `containers` API and reconcile all four constraints for
 GHC 9.14.1/`containers-0.8` while retaining GHC 9.6.7 compatibility and exact
 package behavior. It does not depend on, modify, or become selected with the
 Windows-front mechanics.
+
+### Separate DT03 existing-lane reconciliation follow-up
+
+A read-only audit at exact origin/main
+`8ab207d151b72e4f6248a09b2fe1d36105a8de41` confirmed that structural package
+presence is not complete DT03 behavior evidence. The authoritative DT03
+contract defines empty height as `-1` and includes full, complete, and perfect
+shape predicates, child access, depth, traversal, and positional array
+semantics. The existing Haskell `binary-tree` package instead defines empty
+height as `0` and exports no shape predicates, child/depth accessors, or array
+conversion.
+
+The same source audit found that the Rust, Python, and TypeScript positional
+constructors stop when an ancestor slot is absent and silently discard any
+later orphan values. Mutable established-lane nodes can admit cycles or reuse
+one node under multiple parents, while recursive traversal, height, size, and
+shape algorithms have no node or depth budget. Rust-compatible array
+projection also allocates `2^(height+1)-1` slots without a checked output
+ceiling, so a narrow deep tree can trigger exponential work or overflow.
+
+Record `binary-tree-existing-lanes-dt03-contract-reconciliation` as a separate
+pending, unselected owner. DT03 itself is the neutral baseline and has no
+registered state owner, so this item has no artificial dependency. Its scope
+is to reconcile the established lanes' empty-height, node-identity and
+duplicate-value access, tagged payload-versus-absence, positional sparse-array
+and orphan/trailing-gap, proper-tree cycle/shared-reference, ownership, checked
+arithmetic, and explicit node/depth/output resource semantics. Decompose
+lane-sized repairs before implementation if necessary. This follow-up does not
+block truthful Dart/Swift slot delivery through
+`binary-tree-dart-swift-lane-parity` and does not authorize any Dart or Swift
+package change.

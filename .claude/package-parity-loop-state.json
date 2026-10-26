@@ -15095,6 +15095,18 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "binary-tree-existing-lanes-dt03-contract-reconciliation",
+      "title": "Reconcile existing binary-tree lanes with the DT03 contract",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "discovered_at": "2026-10-26T19:17:51Z",
+      "discovery_revision": "8ab207d151b72e4f6248a09b2fe1d36105a8de41",
+      "discovery_notes": "A read-only exact-main DT03 audit found a concrete unowned existing-lane gap. Haskell binary-tree defines empty height as 0 instead of DT03's -1 and exports no full, complete, or perfect predicates, child/depth accessors, or positional array conversion. Rust, Python, and TypeScript positional constructors stop at an absent ancestor and silently discard later orphan values; mutable established-lane nodes can admit cycles or repeated/shared references; recursive traversal, height, size, and shape operations have no work or depth ceiling; and Rust-compatible projection allocates 2^(height+1)-1 slots without checked bounded arithmetic. Earlier documentary preparation identified the ambiguity but registered no existing-lane reconciliation owner.",
+      "notes": "Use the authoritative DT03 spec as the neutral baseline; no separate DT03 baseline owner exists in the graph. Audit and reconcile the established binary-tree lanes for empty height, node identity and duplicate-value access, tagged payload-versus-absence handling, positional sparse-array and orphan/trailing-gap semantics, proper-tree cycle/shared-reference behavior, traversal and projection ownership, checked index/power arithmetic, and explicit node/depth/output work ceilings. Decompose lane repairs before implementation if needed. Keep this pending owner independent from binary-tree-dart-swift-lane-parity: it neither blocks truthful Dart/Swift slot delivery nor authorizes changes to those missing-lane packages."
+    },
+    {
       "id": "avl-tree-language-neutral-conformance",
       "title": "Define language-neutral DT08 AVL-tree conformance",
       "status": "pending",
