@@ -12,11 +12,12 @@ use core::fmt;
 #[cfg(test)]
 use core::cell::Cell;
 
+use cortex_m3_simulator::CortexM3Simulator;
 pub use cortex_m3_simulator::{
-    encoding as core_encoding, CortexM3Error, CortexM3State, LR, MAX_RETAINED_BYTES,
-    MAX_RETAINED_STEPS, MEMORY_SIZE, PC, SP,
+    encoding as core_encoding, CortexM3Error, CortexM3State,
+    InstructionClass as CortexM3InstructionClass, LR, MAX_RETAINED_BYTES, MAX_RETAINED_STEPS,
+    MEMORY_SIZE, PC, SP,
 };
-use cortex_m3_simulator::{CortexM3Simulator, InstructionClass as CortexM3InstructionClass};
 
 const APSR_N: u32 = 1 << 31;
 const APSR_Z: u32 = 1 << 30;

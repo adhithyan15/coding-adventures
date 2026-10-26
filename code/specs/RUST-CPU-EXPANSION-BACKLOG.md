@@ -1,7 +1,7 @@
 # Rust CPU Expansion Backlog
 
 **Status:** active
-**Last reprioritized:** 2026-10-25
+**Last reprioritized:** 2026-10-26
 
 This is the live expansion queue after the original 07-series architecture
 matrix. The older `RUST-CPU-SIMULATOR-BACKLOG.md` remains the audit record for
@@ -52,22 +52,29 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 This queue is re-costed after every merge or discovery. Dates indicate the
 architecture/core introduction era, not a claim about a particular chip.
 
+Cortex-M4 is complete locally and awaiting publication. Its checked Armv7E-M
+boundary explicitly classifies all 20 inherited Cortex-M3 instruction
+families, differentially witnesses inherited integer, privilege, IT, memory,
+exclusive, branch, power, and lifecycle state, and covers the bounded DSP and
+optional FPv4-SP extension. All 30 release tests, strict Clippy/rustdoc, and
+92.81% line coverage (994/1071) are green. Cortex-M7 is therefore the next
+independent functional cell.
+
 | Order | Target | Public basis | Planned boundary |
 |---:|---|---|---|
-| 1 | Arm Cortex-M4 | Armv7E-M manuals | Cortex-M3 integer base plus documented DSP/FPU boundary. |
-| 2 | Arm Cortex-M7 | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
-| 3 | Arm Cortex-M23 | Armv8-M manuals | Baseline profile and security-state boundary. |
-| 4 | Arm Cortex-M33 | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
-| 5 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
-| 6 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
-| 7 | IBM System/370 | published Principles of Operation | System/360-compatible extension boundary. |
-| 8 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
-| 9 | PA-RISC 1.1 | published architecture manuals | Checked integer core and delayed-control boundary. |
-| 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
-| 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
-| 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
-| 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
-| 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
+| 1 | Arm Cortex-M7 | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
+| 2 | Arm Cortex-M23 | Armv8-M manuals | Baseline profile and security-state boundary. |
+| 3 | Arm Cortex-M33 | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
+| 4 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
+| 5 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
+| 6 | IBM System/370 | published Principles of Operation | System/360-compatible extension boundary. |
+| 7 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
+| 8 | PA-RISC 1.1 | published architecture manuals | Checked integer core and delayed-control boundary. |
+| 9 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
+| 10 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
+| 11 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
+| 12 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
+| 13 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
 
 ## Discovered follow-up work
 

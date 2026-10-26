@@ -1,9 +1,12 @@
+use cortex_m3_simulator::CortexM3Simulator;
 use cortex_m4_simulator::{
     classify,
-    core_encoding::{bkpt, it, movs, mrs, msr, nop, program},
+    core_encoding::{
+        adds_imm, bkpt, branch, it, ldr_imm, ldrex, movs, mrs, msr, nop, program, str_imm, strex,
+    },
     encoding::*,
-    CortexM3Error, CortexM4Error, CortexM4Simulator, CortexM4State, InstructionClass,
-    MAX_RETAINED_STEPS, MEMORY_SIZE,
+    CortexM3Error, CortexM3InstructionClass, CortexM4Error, CortexM4Simulator, CortexM4State,
+    InstructionClass, MAX_RETAINED_STEPS, MEMORY_SIZE,
 };
 
 const ORIGIN: u32 = 0x100;
@@ -21,6 +24,48 @@ fn loaded(halfwords: &[u16]) -> CortexM4Simulator {
 fn loaded_fpu(halfwords: &[u16]) -> CortexM4Simulator {
     let mut simulator = loaded(halfwords);
     simulator.set_fpu_enabled(true);
+    simulator
+}
+
+fn loaded_core(halfwords: &[u16]) -> CortexM3Simulator {
+    let mut simulator = CortexM3Simulator::new();
+    simulator.load(&program(halfwords), ORIGIN).unwrap();
+    simulator
+}
+
+fn assert_inherited_sequence_matches(
+    mut core: CortexM3Simulator,
+    steps: usize,
+) -> CortexM4Simulator {
+    let mut simulator = CortexM4Simulator::new();
+    let mut initial = CortexM4State {
+        core: core.get_state(),
+        ge: 0b1010,
+        fpu_enabled: true,
+        ..CortexM4State::default()
+    };
+    initial.s_registers[31] = 1.5_f32.to_bits();
+    initial.fpscr = 1 << 29;
+    simulator.restore(initial).unwrap();
+
+    for _ in 0..steps {
+        let expected = core.step().unwrap();
+        let actual = simulator.step().unwrap();
+        assert_eq!(actual.pc_before, expected.pc_before);
+        assert_eq!(actual.pc_after, expected.pc_after);
+        assert_eq!(actual.raw, expected.raw);
+        assert_eq!(actual.width, expected.width);
+        assert_eq!(actual.mnemonic, expected.mnemonic);
+        assert_eq!(actual.state_before.core, expected.state_before);
+        assert_eq!(actual.state_after.core, expected.state_after);
+        for state in [&actual.state_before, &actual.state_after] {
+            assert_eq!(state.ge, 0b1010);
+            assert!(state.fpu_enabled);
+            assert_eq!(state.s_registers[31], 1.5_f32.to_bits());
+            assert_eq!(state.fpscr, 1 << 29);
+        }
+    }
+    assert_eq!(simulator.get_state().core, core.get_state());
     simulator
 }
 
@@ -55,7 +100,7 @@ fn lr_extension_cases() -> Vec<([u16; 2], &'static str)> {
 }
 
 #[test]
-fn decode_families_are_explicit_and_inherited() {
+fn every_extension_and_inherited_decode_family_is_explicit() {
     let cases = [
         (qadd(0, 1, 2), InstructionClass::Saturating),
         (ssat(0, 8, 1), InstructionClass::Saturating),
@@ -69,16 +114,111 @@ fn decode_families_are_explicit_and_inherited() {
     for ([first, second], expected) in cases {
         assert_eq!(classify(first, Some(second)), Ok(expected));
     }
-    assert!(matches!(
-        classify(movs(0, 1), None),
-        Ok(InstructionClass::Core(_))
-    ));
+
+    let bl = cortex_m4_simulator::core_encoding::bl(0);
+    let inherited = [
+        (0x0000, None, CortexM3InstructionClass::ShiftAddSubtract),
+        (0x2000, None, CortexM3InstructionClass::Immediate),
+        (0x4000, None, CortexM3InstructionClass::DataProcessing),
+        (0x4400, None, CortexM3InstructionClass::SpecialData),
+        (0x4800, None, CortexM3InstructionClass::LiteralLoad),
+        (0x5000, None, CortexM3InstructionClass::RegisterMemory),
+        (0x6000, None, CortexM3InstructionClass::ImmediateMemory),
+        (0x9000, None, CortexM3InstructionClass::StackMemory),
+        (0xa000, None, CortexM3InstructionClass::AddressGeneration),
+        (0xb000, None, CortexM3InstructionClass::Miscellaneous),
+        (0xc000, None, CortexM3InstructionClass::MultipleMemory),
+        (0xd000, None, CortexM3InstructionClass::ConditionalBranch),
+        (0xe000, None, CortexM3InstructionClass::UnconditionalBranch),
+        (bl[0], Some(bl[1]), CortexM3InstructionClass::BranchLink),
+        (0xf3bf, Some(0x8f5f), CortexM3InstructionClass::Barrier),
+        (
+            0xf3ef,
+            Some(0x8000),
+            CortexM3InstructionClass::SpecialRegister,
+        ),
+        (0xf240, Some(0), CortexM3InstructionClass::Thumb2Data),
+        (0xf8c0, Some(0), CortexM3InstructionClass::Thumb2Memory),
+        (0xe850, Some(0x0f00), CortexM3InstructionClass::Exclusive),
+        (0xe8d0, Some(0xf000), CortexM3InstructionClass::TableBranch),
+    ];
+    for (first, second, expected) in inherited {
+        assert_eq!(
+            classify(first, second),
+            Ok(InstructionClass::Core(expected)),
+            "inherited classification for {first:#06x}"
+        );
+    }
     assert!(matches!(
         classify(0xf000, Some(0)),
         Err(CortexM4Error::Core(
             CortexM3Error::UnknownInstruction32 { .. }
         ))
     ));
+}
+
+#[test]
+fn inherited_behavior_matches_complete_core_state_without_extension_interception() {
+    // Integer state and flags.
+    assert_inherited_sequence_matches(loaded_core(&[movs(0, 7), adds_imm(0, 1)]), 2);
+
+    // Privilege state: an unprivileged write to PRIMASK remains ignored.
+    let write_primask = msr(0, 16);
+    let mut privilege = loaded_core(&write_primask);
+    let mut privilege_state = privilege.get_state();
+    privilege_state.control = 1;
+    privilege_state.registers[0] = 1;
+    privilege.restore(privilege_state).unwrap();
+    let privileged = assert_inherited_sequence_matches(privilege, 1);
+    assert!(!privileged.get_state().core.primask);
+
+    // IT state and a condition-failed instruction.
+    let skipped =
+        assert_inherited_sequence_matches(loaded_core(&[movs(0, 1), it(0, 8), adds_imm(1, 1)]), 3);
+    assert_eq!(skipped.get_state().core.registers[1], 0);
+    assert_eq!(skipped.get_state().core.itstate, 0);
+
+    // Ordinary memory transfers.
+    let mut memory = loaded_core(&[str_imm(0, 1, 0), ldr_imm(2, 1, 0)]);
+    memory.write_register(0, 0x4433_2211).unwrap();
+    memory.write_register(1, 0x200).unwrap();
+    let memory = assert_inherited_sequence_matches(memory, 2);
+    assert_eq!(memory.get_state().core.registers[2], 0x4433_2211);
+
+    // The exclusive monitor and its successful store.
+    let exclusive_code = words(&[ldrex(0, 1, 0), strex(2, 0, 1, 0)]);
+    let mut exclusive = loaded_core(&exclusive_code);
+    exclusive.write_register(1, 0x200).unwrap();
+    exclusive.write_memory(0x200, 4, 0xaabb_ccdd).unwrap();
+    let exclusive = assert_inherited_sequence_matches(exclusive, 2);
+    assert_eq!(exclusive.get_state().core.registers[2], 0);
+    assert_eq!(exclusive.get_state().core.exclusive_address, None);
+
+    // Inherited control flow.
+    let branch = assert_inherited_sequence_matches(loaded_core(&[branch(0), nop(), nop()]), 1);
+    assert_eq!(branch.get_state().core.pc, ORIGIN + 4);
+
+    // WFI power state remains an inherited lifecycle boundary.
+    let sleeping = assert_inherited_sequence_matches(loaded_core(&[0xbf30]), 1);
+    assert!(sleeping.get_state().core.sleeping);
+    let before_sleep_error = sleeping.get_state();
+    let mut sleeping = sleeping;
+    assert_eq!(
+        sleeping.step(),
+        Err(CortexM4Error::Core(CortexM3Error::Sleeping))
+    );
+    assert_eq!(sleeping.get_state(), before_sleep_error);
+
+    // BKPT halt state and the typed post-halt error are also inherited.
+    let halted = assert_inherited_sequence_matches(loaded_core(&[bkpt(0)]), 1);
+    assert!(halted.get_state().core.halted);
+    let before_halt_error = halted.get_state();
+    let mut halted = halted;
+    assert_eq!(
+        halted.step(),
+        Err(CortexM4Error::Core(CortexM3Error::Halted))
+    );
+    assert_eq!(halted.get_state(), before_halt_error);
 }
 
 #[test]

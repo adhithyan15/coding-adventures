@@ -5,8 +5,11 @@
 - Add a checked Armv7E-M Cortex-M4 functional boundary over the complete
   Cortex-M3 oracle, with DSP saturation, parallel-byte and dual-halfword
   arithmetic, optional FPv4-SP state and scalar operations, complete traces,
-  typed atomic faults, bounded transactional execution, 29 release tests, and
-  92.62 percent line coverage (992/1071).
+  typed atomic faults, bounded transactional execution, 30 release tests, and
+  92.81 percent line coverage (994/1071).
+- Differentially classify all 20 inherited Cortex-M3 decode families and
+  compare complete inherited integer, privilege, IT, memory, exclusive,
+  branch, power, and lifecycle state against the Cortex-M3 oracle.
 - Make successful-run final-state allocation failure transactional, distinguish
   quiet and signaling NaNs in VCMP invalid status, and derive binary32
   inexact/underflow status from exact dyadic remainders across exponent gaps.
