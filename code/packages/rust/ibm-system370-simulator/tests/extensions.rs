@@ -1,4 +1,4 @@
-use ibm_system370_simulator::{System370Error, System370Simulator};
+use ibm_system370_simulator::{System370Error, System370Simulator, MEMORY_BYTES};
 
 fn loaded(instruction: &[u8]) -> System370Simulator {
     let mut cpu = System370Simulator::new();
@@ -256,4 +256,26 @@ fn extension_faults_are_typed_and_atomic() {
         Err(System370Error::MemoryOutOfRange { .. })
     ));
     assert_eq!(masked.get_state(), before);
+
+    for opcode in [0xbd, 0xbe, 0xbf] {
+        let mut instruction = rs(opcode, 2, 0, 0);
+        instruction[2] = 0x10; // Base register 1, displacement zero.
+        let mut zero_mask = loaded(&instruction);
+        zero_mask.write_gpr(1, MEMORY_BYTES as u32).unwrap();
+        zero_mask.write_gpr(2, 0x1122_3344).unwrap();
+        let mut state = zero_mask.get_state();
+        state.condition_code = 3;
+        state.memory[0x100] = 0xa5;
+        zero_mask.restore(state).unwrap();
+        let before = zero_mask.get_state();
+        assert_eq!(
+            zero_mask.step(),
+            Err(System370Error::MemoryOutOfRange {
+                address: MEMORY_BYTES as u32,
+                bytes: 1,
+            }),
+            "opcode {opcode:#04x}"
+        );
+        assert_eq!(zero_mask.get_state(), before, "opcode {opcode:#04x}");
+    }
 }

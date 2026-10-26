@@ -446,6 +446,9 @@ impl System370Simulator {
         let address = self.effective_address(raw);
         let mut consumed = 0_u32;
         let mut condition_code = 0;
+        if mask == 0 {
+            Self::range(address, 1)?;
+        }
         for byte_index in 0..4 {
             if mask & (8 >> byte_index) == 0 {
                 continue;
@@ -470,7 +473,9 @@ impl System370Simulator {
             .filter(|byte_index| mask & (8 >> byte_index) != 0)
             .map(|byte_index| (self.state.gprs[register] >> (24 - byte_index * 8)) as u8)
             .collect();
-        if !bytes.is_empty() {
+        if bytes.is_empty() {
+            Self::range(address, 1)?;
+        } else {
             let range = Self::range(address, bytes.len())?;
             self.state.memory[range].copy_from_slice(&bytes);
         }
@@ -482,6 +487,7 @@ impl System370Simulator {
         let mask = raw[1] & 0x0f;
         let address = self.effective_address(raw);
         if mask == 0 {
+            Self::range(address, 1)?;
             self.state.condition_code = 0;
             return Ok(("ICM", format!("ICM R{register},0,{address:#08x}")));
         }

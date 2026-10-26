@@ -10,7 +10,9 @@ All notable changes to this package will be documented in this file.
   checked adapter without exposing predecessor state, trace, or error types.
 - Add `MVCL`, `CLCL`, `CLM`, `STCM`, and `ICM`, including long-operation
   overlap, padding, register-progress, masked-byte, and condition-code rules.
+- Validate the architecturally designated one-byte storage operand for
+  zero-mask `CLM`, `STCM`, and `ICM` without changing data.
 - Cover complete-state transport, inherited differential behavior, every new
   condition-code class, storage boundaries, and typed atomic failures.
 - Verify all inherited first-byte classifications across fourteen tests, with
-  100% function coverage and 98.77% line coverage (564/571 lines).
+  100% function coverage and 98.78% line coverage (568/575 lines).

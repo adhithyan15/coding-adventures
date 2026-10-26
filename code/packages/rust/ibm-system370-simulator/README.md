@@ -40,4 +40,4 @@ cargo llvm-cov -p ibm-system370-simulator --all-targets --summary-only
 
 The package has fourteen focused tests. They include an exhaustive first-byte
 classification witness for every inherited opcode and produce 100% function
-coverage and 98.77% line coverage (564/571 lines).
+coverage and 98.78% line coverage (568/575 lines).
