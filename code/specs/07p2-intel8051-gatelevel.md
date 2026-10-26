@@ -38,6 +38,20 @@ state. Every simulator-owned write reconstructs that state and clocks both
 phases through `logic_gates::sequential::register`. PC and halt use explicit
 state registers.
 
+The halt state register's stable Q output is the sole architectural authority.
+The legacy public `halted: bool` field remains source-compatible, but it is
+only a synchronized observer: simulator-owned state changes clock the halt DFF
+first and then refresh the observer from Q. Snapshots, restore, checked and
+legacy execution control, bounded-run results, and typed-fault rollback must
+read or restore Q rather than accepting the host boolean as independent state.
+An external write to the compatibility field cannot change architectural halt
+state and is repaired at the next mutating execution boundary.
+
+The implementation must also publish a physical-storage inventory whose bank
+counts are computed from the concrete code, XDATA, IRAM/SFR, PC, and halt
+storage containers. The inventory total must equal the independently stated
+`FLIP_FLOP_COUNT`; tests that merely restate the constant are insufficient.
+
 Installed-program origin and length are lifecycle metadata, not silicon state,
 and are therefore excluded from the hardware DFF total.
 
@@ -85,6 +99,10 @@ The required conformance boundary is:
    metadata, and complete before/after snapshots.
 4. Test invalid state sizes, load overflow, truncation, halted stepping,
    deterministic clearing, exact topology, and bounded result traces.
+   Deliberate divergence of the public halt observer from Q must additionally
+   prove that snapshots, steps, runs, results, restore, and fault rollback
+   remain Q-driven and re-synchronize the observer where a mutating boundary
+   is entered.
 5. Pass formatting, Clippy with warnings denied, rustdoc with warnings denied,
    and at least 80% package line coverage.
 
