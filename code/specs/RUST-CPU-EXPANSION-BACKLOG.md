@@ -75,7 +75,9 @@ architecture/core introduction era, not a claim about a particular chip.
 
 | Priority | Target | Finding / next action |
 |---:|---|---|
-| P1 active | PowerPC 601 conditional-branch authority | Replace the host-language BO/CTR/CR predicate with an explicit gate network. Preserve CTR update semantics, cover all BO and CR selector combinations against an independent truth table, and retain full lifecycle/differential conformance. The counted GPR/LR/CTR/XER/CR/CIA, memory, and HALT storage banks are already private stable-Q authority with no public host-state mirrors. |
+| P1 complete locally | PowerPC 601 conditional-branch authority | The host-language BO/CTR/CR predicate is replaced by explicit gate ALU, 32:1 CR mux, polarity, bypass-mux, and final-AND networks. Exhaustive tests cover every BO value and CR selector, both selected-bit polarities, and CTR zero/nonzero boundaries against an independent truth table. Three gate/topology suites, three lifecycle suites, all 239 differential vectors, strict checks, and 94.58% line coverage pass. The counted GPR/LR/CTR/XER/CR/CIA, memory, and HALT storage banks remain private stable-Q authority with no public host-state mirrors. |
+| P1 queued | PowerPC 601 CR/XER update authority | Replace host `Ordering`/Boolean control in CR-field, CR0, CA, and SO propagation with explicit relation wires, masks, muxes, and gates while preserving the public lifecycle. |
+| P1 queued | PowerPC 601 shift/count/divide authority | Replace host slice moves, iterator leading-zero counting, and conditional restoring-divide selection with fixed gate/mux networks, then audit multiply accumulation and record-form updates as one bounded datapath family at a time. |
 
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,
   bitfield, saturation, dual-register, byte/halfword exclusive, and remaining

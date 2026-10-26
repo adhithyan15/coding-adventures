@@ -70,3 +70,7 @@ Completion requires:
 3. differential equality for all 239 reproducible Python full-state vectors;
 4. strict Rust formatting, Clippy, and rustdoc checks; and
 5. at least 80% package line coverage.
+
+The completed conditional-branch repair passes three gate/topology suites,
+three lifecycle suites, the aggregate 239-vector differential, strict checks,
+and 94.58% package line coverage (838/886).
