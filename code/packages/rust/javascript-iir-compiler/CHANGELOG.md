@@ -1,5 +1,52 @@
 # Changelog
 
+## 0.7.0 - Unreleased - the compiler writes `String(x)` (LANG83 PR7c-js)
+
+LANG83 PR7 says the IIR names no source language. This release takes
+JavaScript's number layout out of every backend and puts it in the module.
+
+### Changed
+
+- **`write_f64_js` is no longer emitted.** A module that prints a number
+  carries four functions this compiler writes (new `number_to_string`
+  module): `__js_write_number(x)` is `Number::toString(x)`, built from the
+  LANG83 PR7b primitives `f64_class`, `f64_signbit`, `f64_digits` and
+  `f64_exp10`, and it calls `__js_digit_count`, `__js_write_digits` and
+  `__js_write_uint`, which are integer code (`add`/`sub`/`mul`/`div` on
+  non-negative values with power-of-ten divisors, `cmp_*`, branches,
+  `putchar`). Every `console.log` argument is one `call __js_write_number`;
+  the layout is never inlined. A module that prints no number (only
+  `console.log()`, or a ReferenceError before the first print) gets none of
+  them. The helpers are marked fully typed, like Dartmouth BASIC's.
+- **The `-0` test is the class test.** A print site writes `-` when
+  `f64_signbit x > f64_class x`, which holds exactly for a zero with its sign
+  bit set (the spec's `f64_class x == 0 and f64_signbit x == 1`, as one
+  compare). The 0.6.0 test, `f64_signbit x > f64_signbit (x + 0)`, needed
+  `f64_add`, which BEAM refuses, and relied on `f64_add` keeping a NaN
+  operand's sign. Now only the arithmetic a program does keeps it off BEAM.
+  Literals still skip the test.
+- `run_module` registers only `putchar`: the module writes every number
+  itself.
+- Every module's IIR changed, so
+  `code/grammars/ecmascript/release_classes.csv` is regenerated. The classes
+  partition the editions exactly as before (es2016–es2020, es2021–es2025).
+
+### Output
+
+Byte-identical. A new test runs 1,200 values (every layout boundary, the
+extremes, and a deterministic sweep of bit patterns, each positive and
+negative) through `run_source` and compares each line with vm-core's PR6a
+formatter, the text `write_f64_js` wrote. All 38 `lang_matrix` rows print
+what they printed before on every column.
+
+### Divergences from the LANG83 pseudo-code
+
+- A digit is `q − (q div 10) × 10`, not `q mod 10` (the same value for
+  `q ≥ 0`), so the generic JIT, which has no `mod` bytecode, compiles
+  `__js_write_digits`.
+- The `(-e-1) × '0'` run after `0.` is `write_digits(D, n, n, n − e − 1)`:
+  positions past `D`'s end are zeros, so no separate loop is needed.
+
 ## 0.6.0 - Unreleased - JavaScript on every backend (LANG84 6e)
 
 ### Fixed (6e security review)

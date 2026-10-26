@@ -161,19 +161,46 @@ The module uses LANG83 registry operations only:
 | --- | --- |
 | number literal | `const` (`f64`) |
 | `a + b`, `a - b`, `a * b`, `a / b`, `-a` | `f64_add`, `f64_sub`, `f64_mul`, `f64_div`, `f64_neg` (IEEE, never a trap) |
-| `console.log(a, b)` | evaluate `a` and `b`, then `write_f64_js a`, `putchar 32`, `write_f64_js b`, `putchar 10` |
-| `-0` | `putchar 45` when `f64_signbit x` > `f64_signbit (x + 0)` |
+| `console.log(a, b)` | evaluate `a` and `b`, then `call __js_write_number, a`, `putchar 32`, `call __js_write_number, b`, `putchar 10` |
+| `-0` | `putchar 45` when `f64_signbit x` > `f64_class x` |
 | ReferenceError | `trap "Trap.ReferenceError"` |
 
-`write_f64_js` is `String(x)`, which prints `-0` as `0`, while
-`console.log` prints `-0`. Adding `+0` turns `-0` into `+0` and leaves every
-other non-NaN value alone, so the sign bits of `x` and `x + 0` differ for
-`-0` only. A literal can never be `-0`, so printing a literal (or a binding of
-one) skips that test: `console.log(42)` has no arithmetic at all, and even
-BEAM, whose floats cannot hold an infinity and which refuses the `f64_*` ops
-at compile time, runs it.
+### Printing a number: the compiler writes `String(x)` (LANG83 PR7c-js)
 
-`run_module` registers `write_f64_js` and `putchar` into one bounded buffer.
+No backend knows JavaScript's number layout. A module that prints a number
+carries four functions this compiler writes into it, and every
+`console.log` argument calls the first:
+
+| Helper | Does |
+| --- | --- |
+| `__js_write_number(x)` | `String(x)`: `NaN`, `±Infinity`, `0`, fixed notation for `-7 < e < 21`, else `d.ddde±x` |
+| `__js_digit_count(D)` | the number of decimal digits of `D` |
+| `__js_write_digits(D, n, from, to)` | digit positions `from..to` of `D`, `'0'` past its end |
+| `__js_write_uint(u)` | the exponent's digits (Dartmouth BASIC's `__basic_print_uint`) |
+
+They use only the neutral LANG83 float primitives `f64_class`,
+`f64_signbit`, `f64_digits` (the shortest round-trip digits) and `f64_exp10`
+(the leading digit's power of ten), integer `add`/`sub`/`mul`/`div` on
+non-negative values with power-of-ten divisors, compares, branches, `call`
+and `putchar`. So the layout is JavaScript's and lives here, while the
+digit search, which has one universal definition, stays a registry op. Up
+to 0.6.0 this was the `write_f64_js` builtin that every backend implemented.
+On the generic JIT the two call-free helpers compile; `main`,
+`__js_write_number` and `__js_write_uint` contain a `call`, which that JIT
+has no bytecode for, so they run on its interpreter tier.
+
+`String(x)` prints `-0` as `0`, while `console.log` prints `-0`. So each
+print site writes `-` itself when the value is a zero (`f64_class x == 0`)
+with its sign bit set; since `f64_signbit` is 0 or 1 and `f64_class` is 0
+to 3, that is the single compare `f64_signbit x > f64_class x`. A literal can
+never be `-0`, so printing a literal (or a binding of one) skips that test.
+The test needs no arithmetic (the 0.6.0 one added `x + 0`), so only the
+`f64_*` arithmetic a program does keeps it off BEAM, whose floats cannot hold
+an infinity and which refuses those ops at compile time: `console.log(42)`
+runs there.
+
+`run_module` registers `putchar` into one bounded buffer; it is the
+module's only output builtin.
 A `Trap.ReferenceError` ends the program (the compiler emits nothing after
 it); `run_source` reports it with V8's message, which the compiler recorded,
 since the IIR does not name the binding, while `run_module` on its own reports
