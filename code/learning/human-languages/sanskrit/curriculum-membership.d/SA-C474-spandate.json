@@ -1,0 +1,11 @@
+{
+  "id": "SA-C474-spandate",
+  "pathSegment": "SA-PATH-474-SIRA474",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-474-SIRA474",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:2b844e0ec5bdecdb",
+  "lessonIds": [
+    "SA-C353-sasanam",
+    "SA-C353-adhitisthati",
+    "SA-C353-rastram",
+    "SA-C353-sasakah",
+    "SA-C353-adesah"
+  ],
+  "tex": "sanskrit/book/chapters/ch353-who-governs.tex"
+}

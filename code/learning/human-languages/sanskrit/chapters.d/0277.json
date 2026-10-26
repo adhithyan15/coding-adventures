@@ -1,0 +1,22 @@
+{
+  "chapter": 277,
+  "title": "One Thing, Then the Next",
+  "label": "ch:sa-one-thing-then-the-next",
+  "canDo": "I can tell events in order, with -tvā and -ya (gatvā, āgatya) and first, then, in the end (prathamam, tataḥ, ante), and follow a short story told that way.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-R277-a-day-in-order",
+    "kind": "production",
+    "summary": "Complete SA-R277-a-day-in-order: tell a short day in order, one event after another.",
+    "assesses": [
+      "SA-GRAMMAR-C277-SEQUENCE-01",
+      "SA-GRAMMAR-C277-SEQUENCE-02",
+      "SA-GRAMMAR-C277-THEN-01",
+      "SA-GRAMMAR-C277-THEN-02",
+      "SA-LEX-C277-SIGHRAM-01",
+      "SA-SKILL-C277-READ-STORY-01"
+    ]
+  }
+}

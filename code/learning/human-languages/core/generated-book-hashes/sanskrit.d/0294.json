@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:fc21ea752b37a9db",
+  "lessonIds": [
+    "SA-C294-sanghattah",
+    "SA-C294-ghatah",
+    "SA-C294-skhalati",
+    "SA-C294-ahatah",
+    "SA-C294-murchati"
+  ],
+  "tex": "sanskrit/book/chapters/ch294-a-crash-on-the-road.tex"
+}

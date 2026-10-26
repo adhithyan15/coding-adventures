@@ -2,6 +2,39 @@
 
 ## Unreleased
 
+### Added — dependency versions are checked (mosaic-package-publishing-v1 §7.4, Phase 1)
+
+A `[dependencies]` version used to be read into `(dep_name, _ver)` and
+ignored, so requirement strings drifted (the toolkit was required at
+`0.11.0` while 0.16.0 was on disk). Now both locators compare the
+requirement with the `[package].version` of the package they found, using
+`mosaic_package_manifest::VersionReq` (caret for a bare version, exact for
+`=version`), and fail with a typed error:
+
+- New `VersionMismatch` struct naming the dependent, its manifest path (the
+  file to fix), the dependency, the requirement, the found version and
+  where it was found. Its `Display` renders the requirement as a range.
+- New `ResolveError::VersionMismatch` from `build()`, which now also walks
+  dependencies in name order so the first error is stable across runs.
+- New `LayoutResolveError::VersionMismatch`. `LayoutPackageResolver` checks
+  the `[dependencies]` of every package it inlines from (once per package),
+  and the new `check_dependencies(&MosaicPackage, &Path)` checks a
+  consumer the inliner never sees. A declared dependency that is not on
+  the search path is skipped there, as before; a reference to it still
+  fails with `PackageNotFound`.
+- Both error variants box the struct, so `Result`s stay small.
+- `LayoutPackageResolver` memoises name → directory, since each version
+  check is one more lookup and a lookup re-parses every manifest on the
+  search path.
+
+**Tests:** caret-compatible, caret-incompatible (older, newer, across a
+major), exact mismatch, unrequested pre-release, and missing-dependency
+cases for `build()`; the consumer check and the transitive check for the
+layout inliner; and `every_repository_requirement_is_satisfied`, which
+walks every `mosaic-package.toml` under `code/` and runs both locators'
+checks. It failed on exactly the three stale toolkit pins before they were
+bumped.
+
 ### Added — a component can be mounted more than once (UI34 §5 step 4)
 
 - The resolver counts mounts per `(package, component)` across the whole

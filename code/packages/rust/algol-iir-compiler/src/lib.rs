@@ -12819,12 +12819,15 @@ where
     Some(value as u32)
 }
 
-/// Reduce a sign-rooted integer bound through truncating division. When the
-/// magnitude equals the common divisor, every possible value is `-m`, zero,
-/// or `m`, so the quotient retains the exact reduced common divisor.
+/// Reduce a sign-rooted integer bound through truncating division. A divisor
+/// above the complete magnitude proves the quotient is zero. When magnitude
+/// instead equals the common divisor, every possible value is `-m`, zero, or
+/// `m`, so the quotient retains the exact reduced common divisor.
 fn exact_integer_sign_div_bounds(magnitude: u64, value_gcd: u64, divisor: u64) -> (u64, u64) {
     let reduced_magnitude = magnitude / divisor;
-    let reduced_gcd = if magnitude == value_gcd {
+    let reduced_gcd = if reduced_magnitude == 0 {
+        0
+    } else if magnitude == value_gcd {
         reduced_magnitude
     } else if value_gcd.is_multiple_of(divisor) {
         value_gcd / divisor
@@ -12834,12 +12837,19 @@ fn exact_integer_sign_div_bounds(magnitude: u64, value_gcd: u64, divisor: u64) -
     (reduced_magnitude, reduced_gcd)
 }
 
-/// Reduce the same stable three-value shape through integer remainder. The
-/// exact nonzero magnitude becomes `m mod divisor`; wider value sets retain
-/// the existing conservative common-divisor bound.
+/// Reduce through integer remainder. A divisor of the common divisor proves
+/// every possible remainder is zero. A divisor above the complete magnitude
+/// instead makes remainder an identity and preserves the existing common
+/// divisor. For the stable three-value shape, the exact nonzero magnitude
+/// becomes `m mod divisor`; wider value sets retain the conservative fallback.
 fn exact_integer_sign_mod_bounds(magnitude: u64, value_gcd: u64, divisor: u64) -> (u64, u64) {
+    if value_gcd.is_multiple_of(divisor) {
+        return (0, 0);
+    }
     let reduced_magnitude = magnitude.min(divisor - 1);
-    let reduced_gcd = if magnitude == value_gcd {
+    let reduced_gcd = if magnitude < divisor {
+        value_gcd
+    } else if magnitude == value_gcd {
         magnitude % divisor
     } else {
         integer_gcd(value_gcd, divisor)
@@ -15888,6 +15898,9 @@ mod tests {
             "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(19 * sign(left()) mod 5 * sign(right()) * 3); output(result) end",
             "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(12 * sign(left()) div 5 * sign(right()) / 2); output(result) end",
             "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(12 * sign(left()) mod 5 * sign(right()) / 2); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(((2 * sign(left()) + 2) div 5) * sign(right()) / 7); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(((2 * sign(left()) + 2) mod 5) * sign(right()) / 2); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(((6 * sign(left()) + 6) mod 3) * sign(right()) / 7); output(result) end",
             "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(((12 div 5 * sign(left()) * 15 div 5 * sign(right())) mod 5) ^ 2); output(result) end",
         ] {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
@@ -16076,6 +16089,8 @@ mod tests {
             "begin real procedure pick; pick := -2.25; real result; result := entier(((12 * sign(pick())) div 5) / 2); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier(((12 * sign(pick())) mod 5) / 2); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) div 2) / 7); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(((2 * sign(pick()) + 2) div 5) / 7); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(((2 * sign(pick()) + 2) mod 5) / 2); output(result) end",
         ] {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
                 panic!(
@@ -16608,6 +16623,7 @@ mod tests {
             "begin real procedure pick; pick := -2.25; real x; x := entier((sign(pick()) + 2) mod 2); output(x) end",
             "begin real procedure pick; pick := 3.5; real result; result := entier(((2 * sign(pick()) + 2) mod 3) ^ 2); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier((((6 * sign(pick())) + 6) mod 4) / 2); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((((6 * sign(pick())) + 6) mod 3) / 7); output(result) end",
         ] {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
                 panic!(

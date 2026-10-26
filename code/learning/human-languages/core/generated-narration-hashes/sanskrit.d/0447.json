@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:53507c90e0dd4200",
+  "lessonIds": [
+    "SA-C447-kedarah",
+    "SA-C447-sasyam",
+    "SA-C447-urvara",
+    "SA-C447-lunati",
+    "SA-C447-avacinoti",
+    "SA-R447-review-441-447",
+    "SA-R447-review-final-447"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch447.txt",
+  "json": "sanskrit/narration/ch447.json",
+  "textHash": "fnv1a64:7b38245982fef312",
+  "jsonHash": "fnv1a64:281dbf94ebd6fa31",
+  "findings": []
+}

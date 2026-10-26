@@ -1,0 +1,11 @@
+{
+  "id": "SA-C444-amavasya",
+  "pathSegment": "SA-PATH-444-CANDRA444",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-444-CANDRA444",
+      "order": 1
+    }
+  ]
+}

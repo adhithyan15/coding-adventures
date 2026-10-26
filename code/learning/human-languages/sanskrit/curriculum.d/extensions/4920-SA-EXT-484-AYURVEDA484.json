@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-484-AYURVEDA484",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the three humours of Ayurveda.",
+  "prerequisites": []
+}

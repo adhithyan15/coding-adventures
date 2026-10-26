@@ -1,0 +1,11 @@
+{
+  "id": "SA-C321-purohitah",
+  "pathSegment": "SA-PATH-321-ABHISHEKA321",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-321-ABHISHEKA321",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C484-pittam",
+  "pathSegment": "SA-PATH-484-AYURVEDA484",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-484-AYURVEDA484",
+      "order": 2
+    }
+  ]
+}

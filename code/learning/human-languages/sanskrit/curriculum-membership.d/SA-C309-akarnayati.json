@@ -1,0 +1,11 @@
+{
+  "id": "SA-C309-akarnayati",
+  "pathSegment": "SA-PATH-309-VRITTANTA309",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-309-VRITTANTA309",
+      "order": 2
+    }
+  ]
+}

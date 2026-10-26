@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:d4bb210382022f5f",
+  "lessonIds": [
+    "SA-C513-mathnati",
+    "SA-C513-manthah",
+    "SA-C513-ghrtam",
+    "SA-C513-galayati",
+    "SA-C513-snigdhah"
+  ],
+  "tex": "sanskrit/book/chapters/ch513-milk-and-butter.tex"
+}

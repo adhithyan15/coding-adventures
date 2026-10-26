@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 368,
+  "title": "Doubts and Hopes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:613e7e7b45c01415",
+  "lessons": [
+    {
+      "id": "SA-C368-sanka",
+      "sequence": 21430,
+      "title": "शंका (śaṅkā) — a misgiving; a fear",
+      "headword": "शंका",
+      "romanization": "śaṅkā",
+      "gloss": "a misgiving; a fear",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eff6b4fd0ff74342",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for swiftly, then the Sanskrit for expects."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शंका",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शंका — śaṅkā — \"a misgiving; a fear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि शंका अस्ति, तर्हि प्रश्नं पृच्छतु। yadi śaṅkā asti, tarhi praśnaṃ pṛcchatu. If you have a misgiving, ask a question."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शंका (śaṅkā) comes from the root √śaṅk, \"to doubt, to fear\"; MW gives śaṅkā \"apprehension, fear, distrust\" and \"doubt, hesitation\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śaṅkā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śaṅkā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śaṅkā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śaṅkā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi śaṅkā asti, tarhi praśnaṃ pṛcchatu. — If you have a misgiving, ask a question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi śaṅkā asti, tarhi praśnaṃ pṛcchatu.* — If you have a misgiving, ask a question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for swiftly, then the Sanskrit for expects, then say śaṅkā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for swiftly, then the Sanskrit for expects, then say *śaṅkā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शंका (śaṅkā) mean? (\"A misgiving; a fear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C368-tarkayati",
+      "sequence": 21440,
+      "title": "तर्कयति (tarkayati) — conjectures; guesses",
+      "headword": "तर्कयति",
+      "romanization": "tarkayati",
+      "gloss": "conjectures; guesses",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:988233cab38a92a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for expects, then the Sanskrit for a misgiving."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तर्कयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तर्कयति — tarkayati — \"conjectures; guesses\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि दीपः न ज्वलति, तर्हि तर्कयामि यत् सः गतः। yadi dīpaḥ na jvalati, tarhi tarkayāmi yat saḥ gataḥ. If no lamp is burning, I guess that he has gone."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः कारणं तर्कितवान्, saḥ kāraṇaṃ tarkitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तर्कयति (tarkayati) is built on tarka, \"conjecture, reasoning\"; MW gives √tark \"to conjecture, to guess, to suspect, to infer\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarkayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarkayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarkayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarkayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi dīpaḥ na jvalati, tarhi tarkayāmi yat saḥ gataḥ. — If no lamp is burning, I guess that he has gone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi dīpaḥ na jvalati, tarhi tarkayāmi yat saḥ gataḥ.* — If no lamp is burning, I guess that he has gone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for expects, then the Sanskrit for a misgiving, then say tarkayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for expects, then the Sanskrit for a misgiving, then say *tarkayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तर्कयति (tarkayati) mean? (\"Conjectures; guesses\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C368-asamsate",
+      "sequence": 21450,
+      "title": "आशंसते (āśaṃsate) — hopes for",
+      "headword": "आशंसते",
+      "romanization": "āśaṃsate",
+      "gloss": "hopes for",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb70f7e59ca53575",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a misgiving, then the Sanskrit for conjectures."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आशंसते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आशंसते — āśaṃsate — \"hopes for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि सः प्रयत्नं करोति, तर्हि सफलताम् आशंसते। yadi saḥ prayatnaṃ karoti, tarhi saphalatām āśaṃsate. If he makes an effort, he hopes for success."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः सफलताम् आशंसितवान्, saḥ saphalatām āśaṃsitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आशंसते (āśaṃsate) is built on ā and the root √śaṃs, \"to declare, to praise\"; MW gives ā-√śaṃs \"to hope for, to expect, to wish to attain\" and ā-śaṃsita \"hoped, expected\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśaṃsate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśaṃsate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśaṃsate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśaṃsate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi saḥ prayatnaṃ karoti, tarhi saphalatām āśaṃsate. — If he makes an effort, he hopes for success.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi saḥ prayatnaṃ karoti, tarhi saphalatām āśaṃsate.* — If he makes an effort, he hopes for success.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a misgiving, then the Sanskrit for conjectures, then say āśaṃsate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a misgiving, then the Sanskrit for conjectures, then say *āśaṃsate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आशंसते (āśaṃsate) mean? (\"Hopes for\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C368-anumanam",
+      "sequence": 21460,
+      "title": "अनुमानम् (anumānam) — an inference; a guess",
+      "headword": "अनुमानम्",
+      "romanization": "anumānam",
+      "gloss": "an inference; a guess",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88ed2495de9e6ba7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for conjectures, then the Sanskrit for hopes for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अनुमानम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुमानम् — anumānam — \"an inference; a guess\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि मम अनुमानं सत्यम्, तर्हि सः श्वः गमिष्यति। yadi mama anumānaṃ satyam, tarhi saḥ śvaḥ gamiṣyati. If my guess is right, he will go tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुमानम् (anumānam) is built on anu, \"after\", and the root √mā, \"to measure\"; MW gives anu-māna \"inference, consideration\" and \"guess, conjecture\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anumānam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anumānam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anumānam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anumānam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi mama anumānaṃ satyam, tarhi saḥ śvaḥ gamiṣyati. — If my guess is right, he will go tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi mama anumānaṃ satyam, tarhi saḥ śvaḥ gamiṣyati.* — If my guess is right, he will go tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for conjectures, then the Sanskrit for hopes for, then say anumānam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for conjectures, then the Sanskrit for hopes for, then say *anumānam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अनुमानम् (anumānam) mean? (\"An inference; a guess\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C368-kila",
+      "sequence": 21470,
+      "title": "किल (kila) — so they say; indeed",
+      "headword": "किल",
+      "romanization": "kila",
+      "gloss": "so they say; indeed",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1efecf6c02c9448",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for hopes for, then the Sanskrit for an inference."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: किल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किल — kila — \"so they say; indeed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सः किल रुग्णः; यदि एवम्, तर्हि अहं गमिष्यामि। saḥ kila rugṇaḥ; yadi evam, tarhi ahaṃ gamiṣyāmi. He is ill, so they say; if so, I will go."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किल (kila) MW gives kila as a particle of emphasis, \"indeed, verily\", and \"so said, so reported\"; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kila",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kila*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kila, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kila*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saḥ kila rugṇaḥ; yadi evam, tarhi ahaṃ gamiṣyāmi. — He is ill, so they say; if so, I will go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saḥ kila rugṇaḥ; yadi evam, tarhi ahaṃ gamiṣyāmi.* — He is ill, so they say; if so, I will go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for hopes for, then the Sanskrit for an inference, then say kila again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for hopes for, then the Sanskrit for an inference, then say *kila* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does किल (kila) mean? (\"So they say; indeed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

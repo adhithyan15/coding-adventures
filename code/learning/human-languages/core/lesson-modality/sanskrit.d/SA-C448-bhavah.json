@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C448-bhavah",
+    "language": "sanskrit",
+    "chapter": 448,
+    "sequence": 26000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:717d46111f27489c"
+  },
+  "findings": []
+}

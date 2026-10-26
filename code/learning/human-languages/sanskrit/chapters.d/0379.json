@@ -1,0 +1,21 @@
+{
+  "chapter": 379,
+  "title": "More Than Enough",
+  "label": "ch:sa-more-than-enough",
+  "canDo": "I can say how much will be enough if things go to plan.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-R379-review-372-379",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can say how much will be enough if things go to plan.",
+    "assesses": [
+      "SA-LEX-C379-ADHIKA379-01",
+      "SA-LEX-C379-ADHIKA379-02",
+      "SA-LEX-C379-ADHIKA379-03",
+      "SA-LEX-C379-ADHIKA379-04",
+      "SA-LEX-C379-ADHIKA379-05"
+    ]
+  }
+}

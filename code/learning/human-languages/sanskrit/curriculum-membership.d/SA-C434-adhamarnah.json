@@ -1,0 +1,11 @@
+{
+  "id": "SA-C434-adhamarnah",
+  "pathSegment": "SA-PATH-434-RNA434",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-434-RNA434",
+      "order": 1
+    }
+  ]
+}

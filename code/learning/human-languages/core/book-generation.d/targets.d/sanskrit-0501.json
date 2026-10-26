@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 501,
+  "output": "sanskrit/book/chapters/ch501-getting-along.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 421,
+  "title": "Hamlets and Suburbs",
+  "label": "ch:sa-hamlets-and-suburbs",
+  "canDo": "I can say where I live and chat with people there.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C421-sambhasate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can say where I live and chat with people there.",
+    "assesses": [
+      "SA-LEX-C421-PALLI421-03",
+      "SA-LEX-C421-PALLI421-04",
+      "SA-LEX-C421-PALLI421-05"
+    ]
+  }
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 514,
+  "title": "Serving the Meal",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:43cf02d6e7413632",
+  "lessons": [
+    {
+      "id": "SA-C514-parivesayati",
+      "sequence": 29610,
+      "title": "परिवेषयति (pariveṣayati) — serves food",
+      "headword": "परिवेषयति",
+      "romanization": "pariveṣayati",
+      "gloss": "serves food",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3841dc76cab9e9d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for strains, then the Sanskrit for oily."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: परिवेषयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिवेषयति — pariveṣayati — \"serves food\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माता अतिथये भोजनं परिवेषयति। mātā atithaye bhojanaṃ pariveṣayati. Mother serves food to the guest."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): सा ओदनं परिवेषितवती, sā odanaṃ pariveṣitavatī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिवेषयति (pariveṣayati) is built on pari, \"around\", and the root √viṣ, \"to be active, to work\"; MW gives pariviṣ as to serve, to wait on, to offer or dress food (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pariveṣayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pariveṣayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pariveṣayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pariveṣayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātā atithaye bhojanaṃ pariveṣayati. — Mother serves food to the guest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātā atithaye bhojanaṃ pariveṣayati.* — Mother serves food to the guest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for strains, then the Sanskrit for oily, then say pariveṣayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for strains, then the Sanskrit for oily, then say *pariveṣayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does परिवेषयति (pariveṣayati) mean? (\"Serves food\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C514-bhojayati",
+      "sequence": 29620,
+      "title": "भोजयति (bhojayati) — feeds",
+      "headword": "भोजयति",
+      "romanization": "bhojayati",
+      "gloss": "feeds",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4463de99b7af599",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for oily, then the Sanskrit for serves food."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भोजयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भोजयति — bhojayati — \"feeds\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सा शिशुं भोजयति। sā śiśuṃ bhojayati. She feeds the baby."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): सा बालं भोजितवती, sā bālaṃ bhojitavatī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भोजयति (bhojayati) comes from the causative of the root √bhuj, \"to enjoy, to eat\": to make someone eat, to feed (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhojayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhojayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhojayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhojayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sā śiśuṃ bhojayati. — She feeds the baby.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sā śiśuṃ bhojayati.* — She feeds the baby.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for oily, then the Sanskrit for serves food, then say bhojayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for oily, then the Sanskrit for serves food, then say *bhojayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भोजयति (bhojayati) mean? (\"Feeds\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C514-asnati",
+      "sequence": 29630,
+      "title": "अश्नाति (aśnāti) — dines",
+      "headword": "अश्नाति",
+      "romanization": "aśnāti",
+      "gloss": "dines",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36ea9c72404c675a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for serves food, then the Sanskrit for feeds."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अश्नाति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अश्नाति — aśnāti — \"dines\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पिता सायं भोजनम् अश्नाति। pitā sāyaṃ bhojanam aśnāti. Father has his meal in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः भोजनम् अशितवान्, saḥ bhojanam aśitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अश्नाति (aśnāti) comes from the root √aś, \"to eat, to consume\", whose present is aśnāti; its past participle is aśita (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aśnāti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aśnāti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aśnāti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aśnāti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pitā sāyaṃ bhojanam aśnāti. — Father has his meal in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pitā sāyaṃ bhojanam aśnāti.* — Father has his meal in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for serves food, then the Sanskrit for feeds, then say aśnāti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for serves food, then the Sanskrit for feeds, then say *aśnāti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अश्नाति (aśnāti) mean? (\"Dines\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C514-ucchistam",
+      "sequence": 29640,
+      "title": "उच्छिष्टम् (ucchiṣṭam) — leftovers",
+      "headword": "उच्छिष्टम्",
+      "romanization": "ucchiṣṭam",
+      "gloss": "leftovers",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5fe9678baed0f511",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for feeds, then the Sanskrit for dines."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उच्छिष्टम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उच्छिष्टम् — ucchiṣṭam — \"leftovers\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उच्छिष्टं धेनवे ददातु। ucchiṣṭaṃ dhenave dadātu. Please give the leftovers to the cow."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उच्छिष्टम् (ucchiṣṭam) is built on ud, \"out, over\", and the root √śiṣ, \"to leave\", as its past participle; MW gives ucchiṣṭa as left over, and the remnants of food (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ucchiṣṭam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ucchiṣṭam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ucchiṣṭam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ucchiṣṭam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ucchiṣṭaṃ dhenave dadātu. — Please give the leftovers to the cow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ucchiṣṭaṃ dhenave dadātu.* — Please give the leftovers to the cow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for feeds, then the Sanskrit for dines, then say ucchiṣṭam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for feeds, then the Sanskrit for dines, then say *ucchiṣṭam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उच्छिष्टम् (ucchiṣṭam) mean? (\"Leftovers\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C514-pidhanam",
+      "sequence": 29650,
+      "title": "पिधानम् (pidhānam) — a lid",
+      "headword": "पिधानम्",
+      "romanization": "pidhānam",
+      "gloss": "a lid",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1f17e4143854de2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for dines, then the Sanskrit for leftovers."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पिधानम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पिधानम् — pidhānam — \"a lid\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पात्रस्य पिधानं कुत्र अस्ति? pātrasya pidhānaṃ kutra asti? Where is the lid of the pot?"
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पिधानम् (pidhānam) is built on pi, a short form of api, \"on\", and the root √dhā, \"to put\"; MW gives pidhāna as a covering, and a cover or lid (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pidhānam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pidhānam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pidhānam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pidhānam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātrasya pidhānaṃ kutra asti? — Where is the lid of the pot?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātrasya pidhānaṃ kutra asti?* — Where is the lid of the pot?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for dines, then the Sanskrit for leftovers, then say pidhānam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for dines, then the Sanskrit for leftovers, then say *pidhānam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पिधानम् (pidhānam) mean? (\"A lid\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

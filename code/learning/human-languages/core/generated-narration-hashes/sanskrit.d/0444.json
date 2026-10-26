@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:87cea32273284653",
+  "lessonIds": [
+    "SA-C444-purnima",
+    "SA-C444-amavasya",
+    "SA-C444-suklapaksah",
+    "SA-C444-krsnapaksah",
+    "SA-C444-rajate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch444.txt",
+  "json": "sanskrit/narration/ch444.json",
+  "textHash": "fnv1a64:5373f943a6e7f373",
+  "jsonHash": "fnv1a64:593e39c7a6ba54f2",
+  "findings": []
+}

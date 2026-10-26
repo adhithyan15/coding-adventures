@@ -1,0 +1,11 @@
+{
+  "id": "SA-C394-pratisthate",
+  "pathSegment": "SA-PATH-394-TIRTHA394",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-394-TIRTHA394",
+      "order": 1
+    }
+  ]
+}

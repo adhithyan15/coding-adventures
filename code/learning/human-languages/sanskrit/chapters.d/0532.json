@@ -1,0 +1,19 @@
+{
+  "chapter": 532,
+  "title": "Choosing a Gift",
+  "label": "ch:sa-choosing-a-gift",
+  "canDo": "I can choose a gift and say what I will buy if it is right.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C532-upaharati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can choose a gift and say what I will buy if it is right.",
+    "assesses": [
+      "SA-LEX-C532-UPAYANA532-03",
+      "SA-LEX-C532-UPAYANA532-04",
+      "SA-LEX-C532-UPAYANA532-05"
+    ]
+  }
+}

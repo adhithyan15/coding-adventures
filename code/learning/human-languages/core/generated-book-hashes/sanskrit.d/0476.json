@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:d022818b101216e2",
+  "lessonIds": [
+    "SA-C476-saktih",
+    "SA-C476-pramsuh",
+    "SA-C476-pustah",
+    "SA-C476-akrtih",
+    "SA-C476-posayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch476-strength-and-build.tex"
+}

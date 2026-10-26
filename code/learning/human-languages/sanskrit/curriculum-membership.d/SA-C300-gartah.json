@@ -1,0 +1,11 @@
+{
+  "id": "SA-C300-gartah",
+  "pathSegment": "SA-PATH-300-BHUKAMPA300",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-300-BHUKAMPA300",
+      "order": 4
+    }
+  ]
+}

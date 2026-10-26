@@ -1,0 +1,19 @@
+{
+  "chapter": 411,
+  "title": "Streets and Blockages",
+  "label": "ch:sa-streets-and-blockages",
+  "canDo": "I can say how traffic gets round a blockage.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C411-varjayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can say how traffic gets round a blockage.",
+    "assesses": [
+      "SA-LEX-C411-RATHYA411-03",
+      "SA-LEX-C411-RATHYA411-04",
+      "SA-LEX-C411-RATHYA411-05"
+    ]
+  }
+}

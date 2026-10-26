@@ -1,0 +1,19 @@
+{
+  "chapter": 388,
+  "title": "Dealing with People",
+  "label": "ch:sa-dealing-with-people",
+  "canDo": "I can say how someone will be treated if they behave well or badly.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C388-adarsah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 388: I can say how someone will be treated if they behave well or badly.",
+    "assesses": [
+      "SA-LEX-C388-VYAVAHARA388-03",
+      "SA-LEX-C388-VYAVAHARA388-04",
+      "SA-LEX-C388-VYAVAHARA388-05"
+    ]
+  }
+}

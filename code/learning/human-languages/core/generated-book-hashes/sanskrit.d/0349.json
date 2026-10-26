@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:74da2e7463f9355b",
+  "lessonIds": [
+    "SA-C349-nyayalayah",
+    "SA-C349-prativadi",
+    "SA-C349-aparadhyati",
+    "SA-C349-nigrhnati",
+    "SA-C349-sapathah"
+  ],
+  "tex": "sanskrit/book/chapters/ch349-in-court.tex"
+}

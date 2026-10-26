@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "JA-W258-ima-kanji",
+    "language": "japanese",
+    "chapter": 258,
+    "sequence": 15460,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:16f00bd1ee0b52b0",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

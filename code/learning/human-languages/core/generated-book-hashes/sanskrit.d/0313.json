@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:915d5167a6287065",
+  "lessonIds": [
+    "SA-C313-upadravah",
+    "SA-C313-kalahah",
+    "SA-C313-ksobhah",
+    "SA-C313-vestayati",
+    "SA-C313-samayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch313-trouble-in-the-town.tex"
+}

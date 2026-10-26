@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C401-caityam",
+    "language": "sanskrit",
+    "chapter": 401,
+    "sequence": 23390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c63a23ad065e406d"
+  },
+  "findings": []
+}

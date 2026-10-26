@@ -1,0 +1,11 @@
+{
+  "id": "SA-C532-mekhala",
+  "pathSegment": "SA-PATH-532-UPAYANA532",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-532-UPAYANA532",
+      "order": 3
+    }
+  ]
+}

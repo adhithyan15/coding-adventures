@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C465-udyami",
+    "language": "sanskrit",
+    "chapter": 465,
+    "sequence": 26910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:722349202899636c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C504-avedanam",
+    "language": "sanskrit",
+    "chapter": 504,
+    "sequence": 29100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d4ead1252f35c84"
+  },
+  "findings": []
+}

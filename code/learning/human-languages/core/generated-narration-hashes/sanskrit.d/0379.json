@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:88e2b273079af7a5",
+  "lessonIds": [
+    "SA-C379-adhikah",
+    "SA-C379-paryaptah",
+    "SA-C379-pracurah",
+    "SA-C379-vipulah",
+    "SA-C379-vardhayati",
+    "SA-R379-review-372-379"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch379.txt",
+  "json": "sanskrit/narration/ch379.json",
+  "textHash": "fnv1a64:11d0055532eb671e",
+  "jsonHash": "fnv1a64:fc2e355c1371d9d6",
+  "findings": []
+}

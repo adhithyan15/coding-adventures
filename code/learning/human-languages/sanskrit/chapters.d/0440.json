@@ -1,0 +1,21 @@
+{
+  "chapter": 440,
+  "title": "Snow and Cold",
+  "label": "ch:sa-snow-and-cold",
+  "canDo": "I can talk about snowfall, melting snow and keeping warm.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-R440-review-434-440",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can talk about snowfall, melting snow and keeping warm.",
+    "assesses": [
+      "SA-LEX-C440-HIMA440-01",
+      "SA-LEX-C440-HIMA440-02",
+      "SA-LEX-C440-HIMA440-03",
+      "SA-LEX-C440-HIMA440-04",
+      "SA-LEX-C440-HIMA440-05"
+    ]
+  }
+}

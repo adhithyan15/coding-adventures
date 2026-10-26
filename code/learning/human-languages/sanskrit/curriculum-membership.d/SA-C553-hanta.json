@@ -1,0 +1,11 @@
+{
+  "id": "SA-C553-hanta",
+  "pathSegment": "SA-PATH-553-SKHALANA553",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-553-SKHALANA553",
+      "order": 1
+    }
+  ]
+}

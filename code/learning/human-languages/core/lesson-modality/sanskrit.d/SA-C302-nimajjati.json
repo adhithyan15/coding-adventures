@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C302-nimajjati",
+    "language": "sanskrit",
+    "chapter": 302,
+    "sequence": 17850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76959669b5939d97"
+  },
+  "findings": []
+}

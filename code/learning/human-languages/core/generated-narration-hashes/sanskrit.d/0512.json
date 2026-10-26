@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:ce56612d3699f1bb",
+  "lessonIds": [
+    "SA-C512-churika",
+    "SA-C512-krntati",
+    "SA-C512-curnayati",
+    "SA-C512-surpam",
+    "SA-C512-samyojayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch512.txt",
+  "json": "sanskrit/narration/ch512.json",
+  "textHash": "fnv1a64:1d7c4b6807609963",
+  "jsonHash": "fnv1a64:2d0e5f489789d5ff",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C445-diva",
+  "pathSegment": "SA-PATH-445-ULKA445",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-445-ULKA445",
+      "order": 3
+    }
+  ]
+}

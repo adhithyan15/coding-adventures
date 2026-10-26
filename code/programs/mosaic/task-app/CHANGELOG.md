@@ -4,8 +4,31 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.5.12` accumulate here until the next version is
+Entries added after `task-app-v0.5.13` accumulate here until the next version is
 cut.
+
+## [0.5.13] - 2026-10-26
+
+### Fixed
+
+- Preserve Qt timeline labels' authored 150-pixel non-shrinking width (#18305),
+  without changing shared styles or claiming general flex support.
+
+### Changed
+
+- Run the release upgrade and corrupt-recovery gate's generic checks through
+  the shared `code/scripts/mosaic_release_state_gate.py`
+  (`mosaic-release-state-gate-v1`), which Engram and the other Mosaic apps can
+  adopt. `taskapp_release.py` keeps its `materialize-upgrade-fixture` and
+  `verify-upgrade-state` subcommands, reads the v0.1.0 fixture through an
+  adapter rather than converting it, and keeps the TaskApp-only expected-task
+  check. The materialized state is byte-identical on Linux and macOS; on
+  Windows its trailing newline is now LF rather than CRLF.
+- Run `test_taskapp_release.py` and the shared gate's tests in the release
+  lane's validate job; no workflow ran them before.
+- The `mosaic-pkg-toolkit` dependency pin moves from 0.15.0 to 0.16.0, the
+  toolkit's current version (Journal already pins it). 0.16.0 only adds
+  `RecordList`; nothing TaskApp uses changed, so no source or output changes.
 
 ## [0.5.12] - 2026-10-25
 

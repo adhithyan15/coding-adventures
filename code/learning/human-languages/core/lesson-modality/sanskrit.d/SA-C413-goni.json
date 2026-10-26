@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C413-goni",
+    "language": "sanskrit",
+    "chapter": 413,
+    "sequence": 23990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49fe07dc94bbc46a"
+  },
+  "findings": []
+}

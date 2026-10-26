@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "Taking Sides",
+  "label": "ch:sa-taking-sides",
+  "canDo": "I can say who supports a view and who opposes it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C344-nanu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can say who supports a view and who opposes it.",
+    "assesses": [
+      "SA-LEX-C344-PAKSHA344-03",
+      "SA-LEX-C344-PAKSHA344-04",
+      "SA-LEX-C344-PAKSHA344-05"
+    ]
+  }
+}

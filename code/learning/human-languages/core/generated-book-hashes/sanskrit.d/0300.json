@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:eb8af5ebdd595bc2",
+  "lessonIds": [
+    "SA-C300-bhukampah",
+    "SA-C300-kampate",
+    "SA-C300-isat",
+    "SA-C300-sphutati",
+    "SA-C300-gartah"
+  ],
+  "tex": "sanskrit/book/chapters/ch300-when-the-ground-shook.tex"
+}

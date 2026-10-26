@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C408-asvasala",
+    "language": "sanskrit",
+    "chapter": 408,
+    "sequence": 23750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8f313bf6e75a3e7"
+  },
+  "findings": []
+}

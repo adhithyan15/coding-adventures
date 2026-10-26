@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 320,
+  "output": "sanskrit/book/chapters/ch320-rebellion.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

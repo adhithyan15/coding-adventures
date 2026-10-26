@@ -1,0 +1,9 @@
+[package]
+name = "cortex-m7-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked Armv7E-M Cortex-M7 functional simulator"
+license = "MIT"
+
+[dependencies]
+cortex-m3-simulator = { path = "../cortex-m3-simulator" }

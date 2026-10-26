@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "Losing the Way",
+  "label": "ch:sa-losing-the-way",
+  "canDo": "I can say I am lost and find the way again.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C414-agantukah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can say I am lost and find the way again.",
+    "assesses": [
+      "SA-LEX-C414-DIGBHRAMA414-03",
+      "SA-LEX-C414-DIGBHRAMA414-04",
+      "SA-LEX-C414-DIGBHRAMA414-05"
+    ]
+  }
+}

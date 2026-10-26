@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C478-asahyah",
+    "language": "sanskrit",
+    "chapter": 478,
+    "sequence": 27570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e2fccdc140c07e9d"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C256-nihonjin",
+    "language": "japanese",
+    "chapter": 256,
+    "sequence": 15330,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3d85f48ce3c86aa9"
+  },
+  "findings": []
+}
