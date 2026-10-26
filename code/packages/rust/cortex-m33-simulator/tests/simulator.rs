@@ -365,10 +365,11 @@ fn direct_nonsecure_access_rejects_secure_and_nsc_memory() {
 fn stack_limits_and_restore_fail_atomically() {
     let mut round_trip = CortexM33Simulator::new(false);
     round_trip.load(&bytes(&[0xb081, 0xbe00]), 0).unwrap(); // sub sp,#4
-    round_trip.write_register(13, 0x108).unwrap();
+    round_trip.write_register(13, 0x104).unwrap();
     let direct_snapshot = round_trip.get_state().unwrap();
     round_trip.restore(direct_snapshot.clone()).unwrap();
     assert_eq!(round_trip.get_state().unwrap(), direct_snapshot);
+    round_trip.write_register(13, 0x108).unwrap();
     round_trip.step().unwrap();
     assert_eq!(round_trip.read_register(13).unwrap(), 0x104);
     let stepped_snapshot = round_trip.get_state().unwrap();
