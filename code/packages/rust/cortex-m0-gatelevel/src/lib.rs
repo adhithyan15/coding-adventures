@@ -205,13 +205,47 @@ impl CortexM0GateLevel {
     }
 
     pub fn read_register(&self, index: u8) -> Result<u32, CortexM0Error> {
-        engine::read_register(&self.get_state(), index)
+        match index {
+            0..=12 => Ok(read_bits(&self.registers[index as usize]) as u32),
+            SP => {
+                let select = logic_gates::gates::and_gate(
+                    logic_gates::gates::not_gate(self.handler_mode),
+                    self.control[1],
+                );
+                Ok(gates::select_32(
+                    read_bits(&self.msp) as u32,
+                    read_bits(&self.psp) as u32,
+                    select,
+                ))
+            }
+            LR => Ok(read_bits(&self.lr) as u32),
+            PC => Ok(read_bits(&self.pc) as u32),
+            _ => Err(CortexM0Error::InvalidRegister { index }),
+        }
     }
 
     pub fn write_register(&mut self, index: u8, value: u32) -> Result<(), CortexM0Error> {
-        let mut state = self.get_state();
-        engine::write_register(&mut state, index, value)?;
-        self.restore_registers_and_control(&state);
+        match index {
+            0..=12 => clock_bits(&mut self.registers[index as usize], u64::from(value)),
+            SP => {
+                let value = gates::bit_and_32(value, gates::bit_not_32(3));
+                let select = logic_gates::gates::and_gate(
+                    logic_gates::gates::not_gate(self.handler_mode),
+                    self.control[1],
+                );
+                if select == 1 {
+                    clock_bits(&mut self.psp, u64::from(value));
+                } else {
+                    clock_bits(&mut self.msp, u64::from(value));
+                }
+            }
+            LR => clock_bits(&mut self.lr, u64::from(value)),
+            PC => clock_bits(
+                &mut self.pc,
+                u64::from(gates::bit_and_32(value, gates::bit_not_32(1))),
+            ),
+            _ => return Err(CortexM0Error::InvalidRegister { index }),
+        }
         Ok(())
     }
 
