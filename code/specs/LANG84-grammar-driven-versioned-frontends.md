@@ -1326,14 +1326,32 @@ details:
   already a lexer error. 0.49 and 0.50 are unaffected: their `?` is always a
   character literal (no ternary token, no state test), so no mode can
   disagree.
+  - **F2, the other direction (second review).** Where our mode reads `?`
+    as a character literal but Ruby is in EXPR_END (after a local `x`, or
+    after a value inside a `def` parameter list), Ruby's ternary `?` is
+    followed by a character that itself opens something: `??` (a
+    character literal), `?%` (a `%`-literal), `?/` (a regexp) and `?<` (a
+    `<<` heredoc). Five programs, all parse-rejected today, made ruby
+    3.3.6 print a line our tokens treated as a comment or as data after
+    `__END__`. The general rule: **a CHAR spelling whose second character
+    opens a string, comment, literal or heredoc under the other reading of
+    `?` is refused, in both directions of mode disagreement.** Those four
+    are now out of every CHAR class too, and `QUESTION_OPENER` is
+    `/\?["'`#?%\/<]/`. The characters CHAR keeps (`! $ & ( ) * + , - . : ;
+    = > @ [ ] ^ { | } ~`) open nothing under the ternary reading (checked
+    with Ripper on 3.3.6): `:` is a symbol start whose quoted form needs a
+    quote (a lexer error), `$`/`@` start a variable, the rest are
+    operators or brackets.
   - **R6 note:** keywords used as method names after `.`/`::` still switch
-    to `default` (EXPR_END) where Ruby is in EXPR_ARG. With strings
-    unlexed, the regexp, `%` and heredoc openers refused, and
-    `QUESTION_OPENER` refused, no remaining token can hide code because of
-    it. But a slice that adds strings, symbols or `?:` ternaries must model
-    EXPR_DOT, either a `dot` mode entered on `DOT`/`SAFE_NAVIGATION`/
-    `COLON_COLON` whose identifiers and keywords go to `arg`, or a review
-    showing why it is not needed.
+    to `default` (EXPR_END) where Ruby is in EXPR_ARG, and a local `x`
+    leaves us in `arg` where Ruby is in EXPR_END. Neither can hide code
+    today: strings are unlexed, the regexp, `%` and heredoc openers are
+    refused, and `QUESTION_OPENER` refuses every `?` spelling whose two
+    readings differ in what they open. But a slice that adds strings,
+    symbols or `?:` ternaries must model EXPR_DOT (a `dot` mode entered on
+    `DOT`/`SAFE_NAVIGATION`/`COLON_COLON` whose identifiers and keywords
+    go to `arg`) and locals (R6), or show in a review why it is not
+    needed.
 
 **Status (3.2, R0, 2026-10-20).** Five rows have pairs and claim `partial`,
 stage `P`, subset `rb-int-puts`: the start of the inventory (`0.49`, `0.50`,

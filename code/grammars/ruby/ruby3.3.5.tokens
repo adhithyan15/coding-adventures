@@ -88,16 +88,30 @@ HEREDOC_OPEN = /<<[-~]?(?:[A-Za-z0-9_"'`]|[^\x00-\x7F])/
 # `=begin` at a line start whose `=end` the EMBDOC skip pattern could not
 # find: Ruby's "embedded document meets end of file".
 EMBDOC_UNTERMINATED = /=begin(?:[\t\n\v\f\r \x00\x04\x1a]|$)/ @line_start
-# A `?` written straight before `"`, `'`, `` ` `` or `#`. Where Ruby reads `?`
-# as a character literal (EXPR_BEG/ARG/FNAME) these are `?"`, `?'`, `` ?` ``
-# and `?#`; where it reads a ternary `?` (EXPR_END) the second character
-# opens a string, a command string or a comment. Our flat modes only
-# approximate Ruby's state (after `.end`, after a local `x`), so if this
-# were lexed as `?` plus a quote or comment, a mode error could let a
-# string or comment boundary differ from Ruby's and hide code around a
-# line-start `=begin`/`__END__`. The CHAR classes leave these four out, and
-# this opener refuses all four in every mode (R1b security review, F1).
-QUESTION_OPENER = /\?["'`#]/
+# A `?` written straight before a character that opens something under
+# the OTHER reading of `?`. Ruby reads `?` as a character literal in
+# EXPR_BEG/ARG/FNAME and as a ternary in EXPR_END; our flat modes only
+# approximate that state (after `.end`, after a local `x`, after a value in
+# a `def` parameter list), so either reading can be the wrong one:
+#
+# | after `?` | as a character literal | as a ternary `?`            |
+# |-----------|------------------------|-----------------------------|
+# | `"` `'` `` ` `` | `?"` …          | opens a string / command    |
+# | `#`       | `?#`                   | opens a comment             |
+# | `?`       | `??`                   | opens a character literal   |
+# | `%`       | `?%`                   | opens a `%`-literal         |
+# | `/`       | `?/`                   | opens a regexp              |
+# | `<`       | `?<`                   | can open a `<<` heredoc     |
+#
+# Each of those can swallow a line on one side only, so a string, comment,
+# literal or heredoc boundary would differ from Ruby's and could hide code
+# around a line-start `=begin`/`__END__`. The CHAR classes leave all nine
+# out, and this opener refuses them in every mode (R1b security review, F1
+# for the first four, F2 for the rest). The characters CHAR still accepts
+# open nothing under the ternary reading: `:` is a symbol start (`:"` would
+# need a quote, which is a lexer error), `$`/`@` start a variable, and the
+# rest are operators or brackets.
+QUESTION_OPENER = /\?["'`#?%\/<]/
 
 # --- operators, longest spelling first --------------------------------------
 STAR_STAR_EQUALS   = "**="
@@ -194,7 +208,7 @@ RBRACE             = "}"
 start_mode: beg
 
 group beg:
-  CHAR                            = /\?(?:[A-Za-z0-9_]\b|[!$%&(-\/:-@\[\]^{|}~])/
+  CHAR                            = /\?(?:[A-Za-z0-9_]\b|[!$&(-.:;=>@\[\]^{|}~])/
   SYMBEG                          = /:\b/
   PLUS_HEX_INTEGER                = /\+0[xX][0-9a-fA-F]+(?:_[0-9a-fA-F]+)*\b/ -> HEX_INTEGER
   PLUS_BINARY_INTEGER             = /\+0[bB][01]+(?:_[01]+)*\b/ -> BINARY_INTEGER
@@ -204,15 +218,15 @@ group beg:
   PLUS_NUMBER                     = /\+(?:0|[1-9][0-9]*(?:_[0-9]+)*)\b/ -> NUMBER
 
 group arg:
-  ARG_CHAR   = /\?(?:[A-Za-z0-9_]\b|[!$%&(-\/:-@\[\]^{|}~])/ -> CHAR
+  ARG_CHAR   = /\?(?:[A-Za-z0-9_]\b|[!$&(-.:;=>@\[\]^{|}~])/ -> CHAR
   ARG_SYMBEG = /:\b/ -> SYMBEG
 
 group fname:
-  FNAME_CHAR   = /\?(?:[A-Za-z0-9_]\b|[!$%&(-\/:-@\[\]^{|}~])/ -> CHAR
+  FNAME_CHAR   = /\?(?:[A-Za-z0-9_]\b|[!$&(-.:;=>@\[\]^{|}~])/ -> CHAR
   FNAME_SYMBEG = /:\b/ -> SYMBEG
 
 group deffname:
-  DEFFNAME_CHAR   = /\?(?:[A-Za-z0-9_]\b|[!$%&(-\/:-@\[\]^{|}~])/ -> CHAR
+  DEFFNAME_CHAR   = /\?(?:[A-Za-z0-9_]\b|[!$&(-.:;=>@\[\]^{|}~])/ -> CHAR
   DEFFNAME_SYMBEG = /:\b/ -> SYMBEG
 
 # EXPR_ENDFN reads `?` and `:` as `default` does. A flat mode needs at least
@@ -222,7 +236,7 @@ group defn:
 
 # A parameter default (`a = ?x`, `b = :y`) is read in EXPR_BEG.
 group defparams:
-  DEFPARAMS_CHAR   = /\?(?:[A-Za-z0-9_]\b|[!$%&(-\/:-@\[\]^{|}~])/ -> CHAR
+  DEFPARAMS_CHAR   = /\?(?:[A-Za-z0-9_]\b|[!$&(-.:;=>@\[\]^{|}~])/ -> CHAR
   DEFPARAMS_SYMBEG = /:\b/ -> SYMBEG
 
 # --- line-start constructs (R1b) --------------------------------------------
@@ -244,8 +258,10 @@ group defparams:
 # Ruby's line start, as long as Ruby is not inside a multi-line literal.
 # Strings are not lexed (a bare quote or backtick is a lexer error), every
 # other literal opener is refused (see `transitions:`), and no CHAR
-# spelling contains a quote, a backtick or `#`: `?` before one of those is
-# QUESTION_OPENER, which is refused. So Ruby never is.
+# spelling contains a character that opens a string, comment, literal or
+# heredoc under the other reading of `?` (`"` `'` `` ` `` `#` `?` `%` `/`
+# `<`): `?` before one of those is QUESTION_OPENER, which is refused. So
+# Ruby never is.
 skip:
   EMBDOC            = /=begin(?:[\t\v\f\r \x00\x04\x1a][^\n]*)?\n(?:[^\n]*\n)*?=end(?:[\t\v\f\r \x00\x04\x1a][^\n]*)?(?:\n|$)/ @line_start
   DATA_END          = /__END__(?:\r?\n[\s\S]*)?$/ @line_start

@@ -9,8 +9,13 @@ All notable changes to the `coding-adventures-ruby-parser` crate will be documen
 - **Security review (F1).** `a_question_mark_before_a_quote_or_hash_is_refused_in_every_mode`
   pins the new `QUESTION_OPENER` refusal on the review's two programs and on
   `?"`, `?'`, `` ?` `` and `?#` in every mode. It also checks that `?a`, `?1`,
-  `?$`, `?(` and `?/` still lex as CHAR, and that a bare quote or backtick
-  is still a lexer error.
+  `?$` and `?(` still lex as CHAR, and that a bare quote or backtick is
+  still a lexer error.
+- **Security review (F2).** `a_question_mark_before_another_literal_opener_is_refused_in_every_mode`
+  pins the refusal of `??`, `?%`, `?/` and `?<` on the second review's five
+  programs (each makes ruby 3.3.6 print a line we would have read as a
+  comment or as data after `__END__`) and in beg, arg and default. `?:`,
+  `?=`, `?-` and `?&` still lex as CHAR.
 - `tokenize_ruby_at`/`parse_ruby_at` on 3.3.5, 3.3.6 and 3.3.7 skip `=begin`
   … `=end` embedded documents and stop at a `__END__` line, both only at a
   line start. This follows parse.y's `word_match_p`/`whole_match_p` and was

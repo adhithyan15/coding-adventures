@@ -326,10 +326,37 @@ fn a_question_mark_before_a_quote_or_hash_is_refused_in_every_mode() {
         // backtick is still a lexer error (strings are not lexed).
         assert_eq!(stream(r, "puts ?a"), "NAME:puts CHAR:?a");
         assert_eq!(stream(r, "x = ?1"), "NAME:x EQUALS:= CHAR:?1");
-        assert_eq!(stream(r, "p ?$, ?(, ?/"), "NAME:p CHAR:?$ COMMA:, CHAR:?( COMMA:, CHAR:?/");
+        assert_eq!(stream(r, "p ?$, ?("), "NAME:p CHAR:?$ COMMA:, CHAR:?(");
         for source in ["puts \"a\"", "puts 'a'", "puts `a`"] {
             assert!(lex(r, source).is_err(), "{r} {source:?}");
         }
+    }
+}
+
+/// F2 of the same review: the other direction. Where our mode reads `?` as
+/// a character literal but Ruby is in EXPR_END (after a local `x`, after a
+/// value inside a `def` parameter list), Ruby's ternary `?` is followed by
+/// a second character that itself opens something: `?` (a character
+/// literal), `%` (a `%`-literal), `/` (a regexp) or `<` (a `<<` heredoc).
+/// Each of these five programs makes ruby 3.3.6 print the HIDDEN or 999
+/// line, which our token stream would have treated as a comment or as data
+/// after `__END__`. All of them are refused in every mode now.
+#[test]
+fn a_question_mark_before_another_literal_opener_is_refused_in_every_mode() {
+    for r in MODERN {
+        for source in [
+            "x = nil\nx ??# : (puts 999)\nputs 1\n",
+            "x = nil\nx ?%;\n__END__\n; : (puts \"HIDDEN-B\")\n",
+            "x = nil\nx ?/\n__END__\n/ : (puts \"HIDDEN-C\")\n",
+            "x = nil\nx ?<<E : 0\n__END__\nE\nputs \"HIDDEN-D\"\n",
+            "def f(y, a = y ??# : (puts \"HIDDEN-E\"))",
+            // the same spellings in beg, arg and default
+            "??", "puts ?%", "puts ?/", "x = 1 ?<", "puts(1) ??",
+        ] {
+            assert!(refused(r, source).contains("QUESTION_OPENER"), "{r} {source:?}");
+        }
+        // The spellings CHAR keeps open nothing under the ternary reading.
+        assert_eq!(stream(r, "p ?:, ?=, ?-, ?&"), "NAME:p CHAR:?: COMMA:, CHAR:?= COMMA:, CHAR:?- COMMA:, CHAR:?&");
     }
 }
 

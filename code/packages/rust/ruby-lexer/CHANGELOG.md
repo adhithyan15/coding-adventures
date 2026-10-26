@@ -12,6 +12,13 @@ All notable changes to the `coding-adventures-ruby-lexer` crate will be document
   `.end`, after a local) cannot turn a quote or `#` into a string or comment
   boundary Ruby does not have. 0.49 and 0.50 are unchanged: their `?` is
   always a character literal.
+- **Security review (F2).** The other direction of mode disagreement: where
+  we read a character literal but Ruby reads a ternary `?` (after a local,
+  after a value in a `def` parameter list), `??`, `?%`, `?/` and `?<` open a
+  character literal, `%`-literal, regexp or heredoc on Ruby's side only.
+  Those four characters are out of every CHAR class too, and
+  `QUESTION_OPENER` is now `/\?["'`#?%\/<]/`. The CHAR class is
+  `[!$&(-.:;=>@\[\]^{|}~]`.
 - `src/_grammar.rs` is regenerated from the R1b pairs. The three 3.3.x token
   grammars (still one deduplicated class) gain the following.
   - **Skip patterns.** `EMBDOC` (`=begin` … `=end`) and `DATA_END` (a
