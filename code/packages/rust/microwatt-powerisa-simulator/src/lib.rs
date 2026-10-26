@@ -292,6 +292,53 @@ struct Outcome {
     memory_access: Option<MemoryAccess>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum AllocationSite {
+    Mnemonic,
+    GprEffects,
+    SpecialEffects,
+    TraceConstruction,
+    TraceRetention,
+    TruncatedBytes,
+}
+
+#[cfg(not(test))]
+fn allocation_seam(_site: AllocationSite) -> Result<(), Error> {
+    Ok(())
+}
+
+#[cfg(test)]
+thread_local! {
+    static FAIL_ALLOCATION: std::cell::Cell<Option<(AllocationSite, usize)>> = const {
+        std::cell::Cell::new(None)
+    };
+}
+
+#[cfg(test)]
+fn allocation_seam(site: AllocationSite) -> Result<(), Error> {
+    FAIL_ALLOCATION.with(|failure| match failure.get() {
+        Some((expected, 0)) if expected == site => {
+            failure.set(None);
+            Err(Error::AllocationFailed)
+        }
+        Some((expected, remaining)) if expected == site => {
+            failure.set(Some((expected, remaining - 1)));
+            Ok(())
+        }
+        _ => Ok(()),
+    })
+}
+
+#[cfg(test)]
+fn fail_allocation_after(site: AllocationSite, successful_hits: usize) {
+    FAIL_ALLOCATION.with(|failure| {
+        assert!(
+            failure.replace(Some((site, successful_hits))).is_none(),
+            "an allocation failure is already armed"
+        );
+    });
+}
+
 impl MicrowattPowerIsaSimulator {
     pub fn new() -> Self {
         Self::default()
@@ -426,6 +473,7 @@ impl MicrowattPowerIsaSimulator {
         let outcome = execute(&mut candidate, raw)?;
         let after = candidate.clone();
         let (gpr_writes, special_writes) = effects(&before, &after)?;
+        allocation_seam(AllocationSite::TraceConstruction)?;
         let trace = StepTrace {
             cia_before: cia,
             cia_after: after.cia,
@@ -455,6 +503,7 @@ impl MicrowattPowerIsaSimulator {
             .min(MAX_RETAINED_TRACES)
             .min(TRACE_BUDGET_BYTES / per_trace);
         let mut traces = Vec::new();
+        allocation_seam(AllocationSite::TraceRetention)?;
         traces
             .try_reserve_exact(retained)
             .map_err(|_| Error::AllocationFailed)?;
@@ -518,6 +567,7 @@ impl MicrowattPowerIsaSimulator {
         if available < 4 {
             let index = cia as usize;
             let mut bytes = Vec::new();
+            allocation_seam(AllocationSite::TruncatedBytes)?;
             bytes
                 .try_reserve_exact(available)
                 .map_err(|_| Error::AllocationFailed)?;
@@ -777,7 +827,7 @@ fn execute(state: &mut State, raw: u32) -> Result<Outcome, Error> {
     if raw == encoding::attn() {
         state.halted = true;
         state.cia = cia + 4;
-        return Ok(simple_outcome("attn"));
+        return simple_outcome("attn");
     }
     let op = raw >> 26;
     let rt = ((raw >> 21) & 31) as usize;
@@ -790,7 +840,7 @@ fn execute(state: &mut State, raw: u32) -> Result<Outcome, Error> {
     match op {
         7 => {
             state.gpr[rt] = (state.gpr[ra] as i64).wrapping_mul(ui as i16 as i64) as u64;
-            outcome.mnemonic = "mulli".into();
+            outcome.mnemonic = try_name("mulli")?;
         }
         8 => {
             let a = state.gpr[ra];
@@ -798,7 +848,7 @@ fn execute(state: &mut State, raw: u32) -> Result<Outcome, Error> {
             state.gpr[rt] = value;
             state.xer.ca = ca;
             state.xer.ca32 = ca32;
-            outcome.mnemonic = "subfic".into();
+            outcome.mnemonic = try_name("subfic")?;
         }
         10 | 11 => {
             let field = ((raw >> 23) & 7) as usize;
@@ -815,13 +865,12 @@ fn execute(state: &mut State, raw: u32) -> Result<Outcome, Error> {
                 (state.gpr[ra] as u32).cmp(&u32::from(ui))
             };
             set_cr_field(state, field, relation);
-            outcome.mnemonic = match (op, is_64) {
+            outcome.mnemonic = try_name(match (op, is_64) {
                 (11, false) => "cmpwi",
                 (11, true) => "cmpdi",
                 (10, false) => "cmplwi",
                 _ => "cmpldi",
-            }
-            .into();
+            })?;
         }
         12 | 13 => {
             let (value, ca, ca32) = add_carries(state.gpr[ra], si, false);
@@ -831,13 +880,13 @@ fn execute(state: &mut State, raw: u32) -> Result<Outcome, Error> {
             if op == 13 {
                 update_cr0(state, value);
             }
-            outcome.mnemonic = if op == 13 { "addic." } else { "addic" }.into();
+            outcome.mnemonic = try_name(if op == 13 { "addic." } else { "addic" })?;
         }
         14 | 15 => {
             let base = ra_or_zero(state, ra);
             let immediate = if op == 15 { si << 16 } else { si };
             state.gpr[rt] = base.wrapping_add(immediate);
-            outcome.mnemonic = if op == 14 { "addi" } else { "addis" }.into();
+            outcome.mnemonic = try_name(if op == 14 { "addi" } else { "addis" })?;
         }
         16 => return execute_bc(state, raw),
         18 => return execute_b(state, raw),
@@ -895,7 +944,7 @@ fn execute(state: &mut State, raw: u32) -> Result<Outcome, Error> {
             if matches!(op, 28 | 29) {
                 update_cr0(state, value);
             }
-            outcome.mnemonic = match op {
+            outcome.mnemonic = try_name(match op {
                 24 if raw == 0x6000_0000 => "nop",
                 24 => "ori",
                 25 => "oris",
@@ -903,8 +952,7 @@ fn execute(state: &mut State, raw: u32) -> Result<Outcome, Error> {
                 27 => "xoris",
                 28 => "andi.",
                 _ => "andis.",
-            }
-            .into();
+            })?;
         }
         30 => return execute_30(state, raw),
         31 => return execute_31(state, raw),
@@ -982,7 +1030,7 @@ fn execute_19(state: &mut State, raw: u32) -> Result<Outcome, Error> {
             let bfa = ba >> 2;
             let source = (state.cr >> (28 - bfa * 4)) & 0xf;
             state.cr = (state.cr & !(0xf << (28 - bf * 4))) | (source << (28 - bf * 4));
-            outcome.mnemonic = "mcrf".into();
+            outcome.mnemonic = try_name("mcrf")?;
             state.cia = cia + 4;
         }
         16 | 528 => {
@@ -1003,7 +1051,7 @@ fn execute_19(state: &mut State, raw: u32) -> Result<Outcome, Error> {
             outcome.branch_target = taken.then_some(source_target);
         }
         150 => {
-            outcome.mnemonic = "isync".into();
+            outcome.mnemonic = try_name("isync")?;
             state.cia = cia + 4;
         }
         33 | 129 | 193 | 225 | 257 | 289 | 417 | 449 => {
@@ -1020,7 +1068,7 @@ fn execute_19(state: &mut State, raw: u32) -> Result<Outcome, Error> {
                 _ => a | b,
             };
             set_cr_bit(&mut state.cr, bt, value);
-            outcome.mnemonic = match xo {
+            outcome.mnemonic = try_name(match xo {
                 33 => "crnor",
                 129 => "crandc",
                 193 => "crxor",
@@ -1029,8 +1077,7 @@ fn execute_19(state: &mut State, raw: u32) -> Result<Outcome, Error> {
                 289 => "creqv",
                 417 => "crorc",
                 _ => "cror",
-            }
-            .into();
+            })?;
             state.cia = cia + 4;
         }
         _ => return Err(Error::IllegalInstruction { cia, raw }),
@@ -1120,13 +1167,12 @@ fn execute_31(state: &mut State, raw: u32) -> Result<Outcome, Error> {
                 (state.gpr[ra] as u32).cmp(&(state.gpr[rb] as u32))
             };
             set_cr_field(state, field, relation);
-            outcome.mnemonic = match (xo10, is_64) {
+            outcome.mnemonic = try_name(match (xo10, is_64) {
                 (0, false) => "cmpw",
                 (0, true) => "cmpd",
                 (32, false) => "cmplw",
                 _ => "cmpld",
-            }
-            .into();
+            })?;
         }
         9 | 11 | 73 | 75 | 521 | 523 | 585 | 587 => {
             let a32 = state.gpr[ra] as u32;
@@ -1160,7 +1206,7 @@ fn execute_31(state: &mut State, raw: u32) -> Result<Outcome, Error> {
         }
         19 => {
             state.gpr[rs] = u64::from(state.cr);
-            outcome.mnemonic = "mfcr".into();
+            outcome.mnemonic = try_name("mfcr")?;
         }
         21 | 23 | 53 | 55 | 87 | 119 | 149 | 151 | 181 | 183 | 215 | 247 | 279 | 311 | 341
         | 343 | 373 | 375 | 407 | 439 | 532 | 534 | 660 | 662 | 790 | 918 => {
@@ -1304,7 +1350,7 @@ fn execute_31(state: &mut State, raw: u32) -> Result<Outcome, Error> {
                         (state.cr & !(0xf << shift)) | ((state.gpr[rs] as u32) & (0xf << shift));
                 }
             }
-            outcome.mnemonic = "mtcrf".into();
+            outcome.mnemonic = try_name("mtcrf")?;
         }
         339 => {
             let spr = decode_spr(raw);
@@ -1314,7 +1360,7 @@ fn execute_31(state: &mut State, raw: u32) -> Result<Outcome, Error> {
                 9 => state.ctr,
                 _ => return Err(Error::UnsupportedSpecialRegister { cia, spr }),
             };
-            outcome.mnemonic = "mfspr".into();
+            outcome.mnemonic = try_name("mfspr")?;
         }
         824 | 826 | 827 => {
             let immediate = if xo10 == 824 {
@@ -1352,17 +1398,16 @@ fn execute_31(state: &mut State, raw: u32) -> Result<Outcome, Error> {
                 9 => state.ctr = state.gpr[rs],
                 _ => return Err(Error::UnsupportedSpecialRegister { cia, spr }),
             }
-            outcome.mnemonic = "mtspr".into();
+            outcome.mnemonic = try_name("mtspr")?;
         }
         598 => {
-            outcome.mnemonic = if (raw >> 21) & 3 == 0 {
+            outcome.mnemonic = try_name(if (raw >> 21) & 3 == 0 {
                 "sync"
             } else {
                 "lwsync"
-            }
-            .into();
+            })?;
         }
-        854 => outcome.mnemonic = "eieio".into(),
+        854 => outcome.mnemonic = try_name("eieio")?,
         _ => return Err(Error::IllegalInstruction { cia, raw }),
     }
     state.cia = cia + 4;
@@ -1596,6 +1641,7 @@ fn effects(before: &State, after: &State) -> Result<Effects, Error> {
         .filter(|(left, right)| left != right)
         .count();
     let mut gpr = Vec::new();
+    allocation_seam(AllocationSite::GprEffects)?;
     gpr.try_reserve_exact(register_count)
         .map_err(|_| Error::AllocationFailed)?;
     for index in 0..32 {
@@ -1608,6 +1654,7 @@ fn effects(before: &State, after: &State) -> Result<Effects, Error> {
         + usize::from(before.cr != after.cr)
         + usize::from(before.xer != after.xer);
     let mut special = Vec::new();
+    allocation_seam(AllocationSite::SpecialEffects)?;
     special
         .try_reserve_exact(special_count)
         .map_err(|_| Error::AllocationFailed)?;
@@ -1638,11 +1685,21 @@ fn effects(before: &State, after: &State) -> Result<Effects, Error> {
     Ok((gpr, special))
 }
 
-fn simple_outcome(mnemonic: &str) -> Outcome {
-    Outcome {
-        mnemonic: mnemonic.into(),
+fn try_name(name: &str) -> Result<String, Error> {
+    allocation_seam(AllocationSite::Mnemonic)?;
+    let mut owned = String::new();
+    owned
+        .try_reserve_exact(name.len())
+        .map_err(|_| Error::AllocationFailed)?;
+    owned.push_str(name);
+    Ok(owned)
+}
+
+fn simple_outcome(mnemonic: &str) -> Result<Outcome, Error> {
+    Ok(Outcome {
+        mnemonic: try_name(mnemonic)?,
         ..Outcome::default()
-    }
+    })
 }
 
 fn ra_or_zero(state: &State, ra: usize) -> u64 {
@@ -1708,6 +1765,7 @@ fn mask64(mb: u32, me: u32) -> u64 {
 }
 
 fn record_name(base: &str, overflow: bool, record: bool) -> Result<String, Error> {
+    allocation_seam(AllocationSite::Mnemonic)?;
     let extra = usize::from(overflow) + usize::from(record);
     let mut name = String::new();
     name.try_reserve_exact(base.len() + extra)
@@ -1742,6 +1800,7 @@ fn validate_branch(state: &State, cia: u64, target: u64) -> Result<(), Error> {
 }
 
 fn branch_name(base: &str, absolute: bool, link: bool) -> Result<String, Error> {
+    allocation_seam(AllocationSite::Mnemonic)?;
     let mut name = String::new();
     name.try_reserve_exact(base.len() + usize::from(absolute) + usize::from(link))
         .map_err(|_| Error::AllocationFailed)?;
@@ -1923,7 +1982,7 @@ fn execute_displacement_memory(state: &mut State, raw: u32) -> Result<Outcome, E
     }
     state.cia = cia + 4;
     Ok(Outcome {
-        mnemonic: name.into(),
+        mnemonic: try_name(name)?,
         memory_access: Some(MemoryAccess {
             kind: if load {
                 MemoryKind::Load
@@ -2041,7 +2100,7 @@ fn execute_indexed_memory(state: &mut State, raw: u32, xo: u32) -> Result<Outcom
     }
     state.cia = cia + 4;
     Ok(Outcome {
-        mnemonic: name.into(),
+        mnemonic: try_name(name)?,
         memory_access: Some(MemoryAccess {
             kind: if load {
                 MemoryKind::Load
@@ -2067,5 +2126,68 @@ fn width_mask(width: usize) -> u64 {
         4 => 0xffff_ffff,
         8 => u64::MAX,
         _ => unreachable!(),
+    }
+}
+
+#[cfg(test)]
+mod allocation_tests {
+    use super::*;
+    use crate::encoding::{assemble, attn, d_form};
+
+    fn loaded(words: &[u32]) -> MicrowattPowerIsaSimulator {
+        let mut cpu = MicrowattPowerIsaSimulator::new();
+        cpu.load_program(&assemble(words), 0x100).unwrap();
+        cpu
+    }
+
+    fn assert_step_allocation_is_atomic(word: u32, site: AllocationSite) {
+        let mut cpu = loaded(&[word]);
+        cpu.write_register(3, 1).unwrap();
+        let before = cpu.get_state();
+        fail_allocation_after(site, 0);
+        assert_eq!(cpu.step(), Err(Error::AllocationFailed), "site: {site:?}");
+        assert_eq!(cpu.get_state(), before, "site: {site:?}");
+    }
+
+    #[test]
+    fn each_step_artifact_allocation_has_a_deterministic_atomic_failure() {
+        assert_step_allocation_is_atomic(attn(), AllocationSite::Mnemonic);
+        assert_step_allocation_is_atomic(d_form(14, 3, 3, 1), AllocationSite::GprEffects);
+        assert_step_allocation_is_atomic(d_form(11, 0, 3, 0), AllocationSite::SpecialEffects);
+        assert_step_allocation_is_atomic(d_form(14, 3, 3, 1), AllocationSite::TraceConstruction);
+
+        let mut truncated = MicrowattPowerIsaSimulator::new();
+        truncated.load_program(&[0xaa, 0xbb], 0x100).unwrap();
+        let before = truncated.get_state();
+        fail_allocation_after(AllocationSite::TruncatedBytes, 0);
+        assert_eq!(truncated.step(), Err(Error::AllocationFailed));
+        assert_eq!(truncated.get_state(), before);
+    }
+
+    #[test]
+    fn run_and_execute_restore_call_entry_state_after_allocation_failure() {
+        let program = [d_form(14, 3, 3, 1), d_form(14, 3, 3, 1), attn()];
+
+        let mut run_cpu = loaded(&program);
+        run_cpu.write_register(3, 41).unwrap();
+        let run_before = run_cpu.get_state();
+        fail_allocation_after(AllocationSite::TraceRetention, 0);
+        assert_eq!(run_cpu.run(3), Err(Error::AllocationFailed));
+        assert_eq!(run_cpu.get_state(), run_before);
+
+        fail_allocation_after(AllocationSite::TraceConstruction, 1);
+        assert_eq!(run_cpu.run(3), Err(Error::AllocationFailed));
+        assert_eq!(run_cpu.get_state(), run_before);
+
+        let mut execute_cpu = MicrowattPowerIsaSimulator::new();
+        execute_cpu.write_register(7, 0xfeed_face).unwrap();
+        execute_cpu.write_byte(0x20, 0xa5).unwrap();
+        let execute_before = execute_cpu.get_state();
+        fail_allocation_after(AllocationSite::TraceConstruction, 1);
+        assert_eq!(
+            execute_cpu.execute(&assemble(&program), 0x100, 3),
+            Err(Error::AllocationFailed)
+        );
+        assert_eq!(execute_cpu.get_state(), execute_before);
     }
 }

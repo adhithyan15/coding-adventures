@@ -93,7 +93,7 @@ merged, while Cortex-M33 is already in review.
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
 | 15 | RCA CDP1802 | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: all documented encodings except unassigned 0x68, complete COSMAC state, and explicit I/O/DMA/interrupt transaction seams; independent implementation review is next. |
-| 16 | Microwatt / Power ISA (RCPU-077 / RCPU-078) | Power ISA Version 3.0C plus pinned Microwatt VHDL | Spec 07bd functional implementation is complete locally with checked state, typed rollback, exact Microwatt word-result and slash-field rules, exhaustive selector tests, and an executed pinned 173-row full-core GHDL corpus with two independent Rust consumers. The separately scoped source-backed gate cell remains next. |
+| 16 | Microwatt / Power ISA (RCPU-077 / RCPU-078) | Power ISA Version 3.0C plus pinned Microwatt VHDL | Spec 07bd functional implementation is complete locally with checked state, typed rollback, deterministic allocation-failure preflights, exact Microwatt word-result and slash-field rules, 36 release tests, 90.43% line coverage (1,465/1,620), and an executed pinned 173-row full-core GHDL corpus with two independent Rust consumers. The separately scoped source-backed gate cell remains next. |
 
 CDP1802 is complete locally from its independently reviewed specification.
 The functional cell covers the complete register matrix, instruction table,

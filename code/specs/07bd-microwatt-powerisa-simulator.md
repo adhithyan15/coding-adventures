@@ -2,9 +2,9 @@
 
 ## 1. Status, purpose, and evidence lock
 
-**Status:** independently reviewed specification; implementation authorized.
-The exact reviewed spec-only head is
-`7bbb725e059c97c75bbdfb1d026a25828f163968`.
+**Status:** independently reviewed specification; implementation complete
+locally and awaiting independent exact-head review. The exact reviewed
+spec-only head is `7bbb725e059c97c75bbdfb1d026a25828f163968`.
 
 This cell specifies one bounded, checked functional simulator for the scalar
 fixed-point execution surface shared by Power ISA Version 3.0C and the
@@ -401,6 +401,14 @@ Every public mutation is checked and atomic:
 5. build the complete trace; and
 6. commit once.
 
+The implementation preflights every allocation used to construct mnemonic
+text, GPR and special-register effect lists, the complete trace, retained run
+traces, and truncated-fetch evidence. Deterministic test-only failure seams
+exist at those six sites and are inert in non-test builds. Boundary tests
+force every site, including a second-step failure after a first successful
+candidate transition, and require exact rollback for `step`, `run`, and
+`execute`.
+
 An error leaves all public state, memory, image metadata, halt state, and
 private validation state byte-for-byte unchanged. Direct register and memory
 APIs use the same range/alignment rules. `step` after `attn` returns `Halted`
@@ -489,6 +497,9 @@ The implementation is complete only when it also has:
 5. relevant repository lessons and backlog updated; and
 6. an independent security/correctness review of the exact clean implementation
    head before publication.
+
+The local completion evidence is 36 passing release tests and 90.43% line
+coverage (1,465/1,620), including the allocation and rollback paths above.
 
 ## 12. Follow-on boundary
 

@@ -30,6 +30,12 @@ and atomic; failed runs restore the whole pre-call state. Successful traces own
 exact fetched little-endian bytes, raw word, canonical mnemonic, effects, and
 complete before/after state.
 
+Fallible mnemonic, effect-list, trace-construction, trace-retention, and
+truncated-fetch allocations are preflighted before architectural commit.
+Deterministic test-only seams exercise each boundary, including failures after
+one successful instruction, and prove that `step`, `run`, and `execute` return
+`AllocationFailed` with exact call-entry state restored.
+
 `sync`, `lwsync`, `eieio`, and `isync` are trace-visible no-ops in this
 single-agent model. Valid `ptesync` is recognized but returns
 `UnsupportedInstruction` because the MMU/page-table facility is excluded.
@@ -57,3 +63,7 @@ functional behavior is covered independently. Network and GHDL access are not
 needed for normal tests. The exact tool/source pins,
 reproduction command, and evidence boundary are in
 [`tests/README.md`](tests/README.md).
+
+The release suite has 36 passing tests (including the two allocation-contract
+unit tests). `cargo llvm-cov -p microwatt-powerisa-simulator --release
+--summary-only` reports 90.43% line coverage (1,465/1,620).
