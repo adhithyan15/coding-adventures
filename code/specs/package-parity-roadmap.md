@@ -18264,3 +18264,50 @@ is to audit the used `containers` API and reconcile all four constraints for
 GHC 9.14.1/`containers-0.8` while retaining GHC 9.6.7 compatibility and exact
 package behavior. It does not depend on, modify, or become selected with the
 Windows-front mechanics.
+
+## October 26, 2026: Swift hash-map local preparation
+
+The follow-up prioritization confirms `swift-hash-map-lane-parity` as the
+highest-leverage independent item after the prepared GFM fenced-block and
+selected Haskell ITF Windows-front work. Its Swift hash-functions prerequisite
+merged in #18312, and this single package carries six unfinished descendants,
+including Swift hash-set and the in-memory-store chain. The broader binary-tree
+Dart/Swift owner carries seven descendants but spans two complete packages and
+still has wider null, sparse-array, identity, cycle, and resource decisions.
+The two newly recorded ITF follow-ups have no descendants and remain separate
+pending maintenance items.
+
+Prepare the package locally on branch `codex/parity-swift-hash-map-20261026`
+from exact origin/main `d096a82430b2aa67f768361c65001e8d13dcb2dd`.
+Implementation head `cc87e38ad95b9e6076abbf307ebe69ce66e5a49d`
+contains the complete package, tests, docs, capability declaration, build
+fronts, and changelogs. The owner remains `pending`: the Haskell Windows-front
+owner is already the sole local `in_progress` selection, and hosted slots are
+occupied by #18293 at `c7b1e98687d3c762a98a9beed61ad71f586ca484`,
+#18355 at `f27058ffa18abe1fb7a7167237eb0b761414162f`, and #18367 at
+`365f455bbaa57c41b1ff825f85fbca883d0cfb92`. Do not publish a fourth PR or
+claim independent final review.
+
+The bounded Swift contract uses a closed byte-or-UTF-8 key representation and
+closed DT17 FNV-1a, Murmur3, or explicitly keyed SipHash configuration. It
+implements separate chaining and linear probing without Swift's randomized
+Hasher, caller callbacks, host coercion, or ambient entropy. Updates are
+persistent values; keys and structural exports are copied while reference-
+typed values are truthfully documented as shallow. Chaining grows only above
+load 1.0, probing grows only above load 0.75, capacity growth is checked and
+bounded, probes are finite, tombstones preserve lookup chains, and optional
+nil membership is distinct from absence. Iteration is deterministic physical
+storage order only for an identical strategy, hash, capacity, and operation
+history; it does not claim insertion order.
+
+Swift 6.3.1 passes all 15 focused tests, a deterministic 300-operation semantic
+trace under both strategies, the native BUILD front, release compilation, and
+a separate release-mode consumer that imports only `HashMap`. Production
+`HashMap.swift` coverage is 96.71% of 304 lines and 95.54% of 157 regions.
+Swift format lint, the empty capability schema, strict JSON, root changelog
+heading digest, 1,602 lesson shards, and the 1,549-owner unique, dependency-
+complete, acyclic state graph with no merged-to-unfinished edges pass. Across
+all 167 Swift packages, the real planner selects only changed `swift/hash-map`
+plus prerequisite-only `swift/hash-functions`. The Windows command front
+exactly follows the merged hash-functions front, requires Swift, and propagates
+test and release failures; actual Windows execution remains a hosted-CI gate.
