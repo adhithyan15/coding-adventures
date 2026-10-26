@@ -352,6 +352,29 @@ fn every_arithmetic_subfamily_and_multiplier_variant_decodes() {
 }
 
 #[test]
+fn fractional_multiply_carry_uses_the_unshifted_product() {
+    for (word, left, right, result, carry) in [
+        (0x0309, 0x80, 0x80, 0x8000, false), // FMUL
+        (0x0309, 0xff, 0xff, 0xfc02, true),  // FMUL
+        (0x0381, 0x80, 0x80, 0x8000, false), // FMULS
+        (0x0389, 0x80, 0x80, 0x8000, true),  // FMULSU
+    ] {
+        let mut cpu = one(word);
+        cpu.set_register(16, left).unwrap();
+        cpu.set_register(17, right).unwrap();
+        cpu.set_data(SREG_ADDR as u16, FLAG_I | FLAG_Z | FLAG_C)
+            .unwrap();
+        cpu.step().unwrap();
+        let actual = u16::from(cpu.state().register(0).unwrap())
+            | (u16::from(cpu.state().register(1).unwrap()) << 8);
+        assert_eq!(actual, result, "word {word:04x}");
+        assert_eq!(cpu.state().sreg() & FLAG_C != 0, carry, "word {word:04x}");
+        assert_eq!(cpu.state().sreg() & FLAG_Z, 0, "word {word:04x}");
+        assert_ne!(cpu.state().sreg() & FLAG_I, 0, "word {word:04x}");
+    }
+}
+
+#[test]
 fn all_pointer_update_families_and_displacements_execute_legally() {
     let forms = [
         (0x900d, 26, true),

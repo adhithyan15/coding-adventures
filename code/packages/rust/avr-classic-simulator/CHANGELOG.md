@@ -1,5 +1,8 @@
 # Changelog
 
+- Correct fractional multiply carry to use bit 15 of the unshifted product,
+  while zero continues to describe the shifted R1:R0 result.
+
 ## 0.1.0
 
 - Add a checked ATmega328P/`avr5` classic AVR integer simulator.

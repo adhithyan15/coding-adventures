@@ -946,7 +946,9 @@ fn execute_one(
             };
             (aa, bb, frac, name)
         };
-        let mut product = (a as i32 * b as i32) as u16;
+        let raw_product = (a as i32 * b as i32) as u16;
+        let carry = raw_product & 0x8000 != 0;
+        let mut product = raw_product;
         if fractional {
             product = product.wrapping_shl(1);
         }
@@ -955,7 +957,7 @@ fn execute_one(
         set_flags(
             state,
             FLAG_Z | FLAG_C,
-            flag(product == 0, FLAG_Z) | flag(product & 0x8000 != 0, FLAG_C),
+            flag(product == 0, FLAG_Z) | flag(carry, FLAG_C),
         );
         return Ok(transition(name, 1));
     }
