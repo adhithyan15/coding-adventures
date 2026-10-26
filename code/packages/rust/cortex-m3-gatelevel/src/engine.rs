@@ -331,9 +331,9 @@ pub(crate) fn step_state_preallocated(
         execute_decoded(&mut state, first, second, class, pc)?
     };
     let mut raw = [0; 4];
-    raw[..2].copy_from_slice(&first.to_le_bytes());
+    raw[..2].copy_from_slice(&gates::split_le_u16(first));
     if let Some(second) = second {
-        raw[2..].copy_from_slice(&second.to_le_bytes());
+        raw[2..].copy_from_slice(&gates::split_le_u16(second));
     }
     Ok(StepTrace {
         pc_before: pc,
@@ -616,7 +616,7 @@ pub(crate) fn read_memory(
     let range = checked_range(address, width)?;
     let mut bytes = [0; 4];
     bytes[..width].copy_from_slice(&state.memory[range]);
-    Ok(u32::from_le_bytes(bytes))
+    Ok(gates::assemble_le_u32(bytes))
 }
 
 pub(crate) fn write_memory(
@@ -626,7 +626,7 @@ pub(crate) fn write_memory(
     value: u32,
 ) -> Result<(), CortexM3Error> {
     let range = checked_range(address, width)?;
-    state.memory[range].copy_from_slice(&value.to_le_bytes()[..width]);
+    state.memory[range].copy_from_slice(&gates::split_le_u32(value)[..width]);
     state.exclusive_address = None;
     Ok(())
 }
@@ -643,7 +643,7 @@ fn fetch16(state: &CortexM3State, pc: u32) -> Result<u16, CortexM3Error> {
         return Err(CortexM3Error::FetchOutsideProgram { pc, width: 2 });
     }
     let start = pc as usize;
-    Ok(u16::from_le_bytes([
+    Ok(gates::assemble_le_u16([
         state.memory[start],
         state.memory[start + 1],
     ]))
@@ -1083,7 +1083,11 @@ fn branch_exchange(state: &mut CortexM3State, target: u32) -> Result<(), CortexM
 }
 
 fn bx_write_pc(state: &mut CortexM3State, target: u32) -> Result<(), CortexM3Error> {
-    if state.handler_mode && gates::selected(gates::field(target, 28, 4), 0xf, 4) == 1 {
+    let exception_return = and_gate(
+        u8::from(state.handler_mode),
+        gates::selected(gates::field(target, 28, 4), 0xf, 4),
+    );
+    if exception_return == 1 {
         return Err(CortexM3Error::UnsupportedExceptionReturn { target });
     }
     branch_exchange(state, target)
@@ -1411,7 +1415,11 @@ fn execute_miscellaneous(
             if line16(raw, 1, 1, 1) == 1 {
                 state.primask = disabled == 1;
             }
-            if line16(raw, 0, 1, 1) == 1 && (disabled == 0 || can_raise_faultmask(state)) {
+            let faultmask_enable = and_gate(
+                line16(raw, 0, 1, 1),
+                or_gate(not_gate(disabled), can_raise_faultmask(state)),
+            );
+            if faultmask_enable == 1 {
                 state.faultmask = disabled == 1;
             }
         }
@@ -1446,12 +1454,12 @@ fn execute_miscellaneous(
             0x0 => Ok("nop"),
             0x1 => Ok("yield"),
             0x2 => {
-                if state.event_registered {
-                    state.event_registered = false;
-                } else {
-                    state.sleeping = true;
-                    state.waiting_for_event = true;
-                }
+                let event = u8::from(state.event_registered);
+                let no_event = not_gate(event);
+                state.sleeping = or_gate(and_gate(event, u8::from(state.sleeping)), no_event) == 1;
+                state.waiting_for_event =
+                    or_gate(and_gate(event, u8::from(state.waiting_for_event)), no_event) == 1;
+                state.event_registered = false;
                 Ok("wfe")
             }
             0x3 => {
@@ -1888,17 +1896,24 @@ fn read_special(state: &CortexM3State, sysm: u8) -> Option<u32> {
         16 => Some(u32::from(state.primask)),
         17 | 18 => Some(u32::from(state.basepri)),
         19 => Some(u32::from(state.faultmask)),
-        20 => Some(u32::from(if state.handler_mode {
-            gates::bit_and_32(u32::from(state.control), gates::bit_not_32(2)) as u8
-        } else {
-            state.control
-        })),
+        20 => Some(gates::select_32(
+            u32::from(state.control),
+            gates::bit_and_32(u32::from(state.control), gates::bit_not_32(2)),
+            u8::from(state.handler_mode),
+        )),
         _ => None,
     }
 }
 
-fn can_raise_faultmask(state: &CortexM3State) -> bool {
-    !state.handler_mode || !matches!(state.ipsr, 2 | 3)
+fn can_raise_faultmask(state: &CortexM3State) -> u8 {
+    let nonmaskable_handler = and_gate(
+        u8::from(state.handler_mode),
+        or_gate(
+            gates::selected(u32::from(state.ipsr), 2, 8),
+            gates::selected(u32::from(state.ipsr), 3, 8),
+        ),
+    );
+    not_gate(nonmaskable_handler)
 }
 
 fn execute_special_register(
@@ -1916,13 +1931,16 @@ fn execute_special_register(
         let Some(mut value) = read_special(state, sysm) else {
             return Err(CortexM3Error::UnknownInstruction32 { first, second, pc });
         };
-        if gates::bit_and_32(u32::from(state.control), 1) != 0 && !state.handler_mode {
-            value = match sysm {
-                0..=3 => state.apsr,
-                20 => value,
-                _ => 0,
-            };
-        }
+        let unprivileged = and_gate(
+            gates::u32_to_bits(u32::from(state.control))[0],
+            not_gate(u8::from(state.handler_mode)),
+        );
+        let unprivileged_value = match sysm {
+            0..=3 => state.apsr,
+            20 => value,
+            _ => 0,
+        };
+        value = gates::select_32(value, unprivileged_value, unprivileged);
         state.registers[rd as usize] = value;
         return Ok("mrs");
     }
@@ -1935,9 +1953,11 @@ fn execute_special_register(
         state.apsr = gates::bit_and_32(value, APSR_MASK);
         return Ok("msr");
     }
-    if matches!(sysm, 5..=7)
-        || (gates::bit_and_32(u32::from(state.control), 1) != 0 && !state.handler_mode)
-    {
+    let unprivileged = and_gate(
+        gates::u32_to_bits(u32::from(state.control))[0],
+        not_gate(u8::from(state.handler_mode)),
+    );
+    if matches!(sysm, 5..=7) || unprivileged == 1 {
         return Ok("msr");
     }
     match sysm {
@@ -1947,26 +1967,29 @@ fn execute_special_register(
         17 => state.basepri = value as u8,
         18 => {
             let requested = value as u8;
-            if requested != 0
-                && (state.basepri == 0
-                    || gates::unsigned_less_32(u32::from(requested), u32::from(state.basepri)) != 0)
-            {
-                state.basepri = requested;
-            }
+            let update = and_gate(
+                not_gate(gates::is_zero_8(requested)),
+                or_gate(
+                    gates::is_zero_8(state.basepri),
+                    gates::unsigned_less_32(u32::from(requested), u32::from(state.basepri)),
+                ),
+            );
+            state.basepri =
+                gates::select_32(u32::from(state.basepri), u32::from(requested), update) as u8;
         }
         19 => {
-            let requested = gates::bit_and_32(value, 1) != 0;
-            if !requested || can_raise_faultmask(state) {
-                state.faultmask = requested;
-            }
+            let requested = gates::u32_to_bits(value)[0];
+            let update = or_gate(not_gate(requested), can_raise_faultmask(state));
+            state.faultmask =
+                gates::select_32(u32::from(state.faultmask), u32::from(requested), update) != 0;
         }
         _ => {
             let requested = gates::bit_and_32(value, 3) as u8;
-            state.control = if state.handler_mode {
-                gates::bit_and_32(u32::from(requested), 1) as u8
-            } else {
-                requested
-            };
+            state.control = gates::select_32(
+                u32::from(requested),
+                gates::bit_and_32(u32::from(requested), 1),
+                u8::from(state.handler_mode),
+            ) as u8;
         }
     }
     Ok("msr")

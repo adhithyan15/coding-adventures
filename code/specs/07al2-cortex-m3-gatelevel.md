@@ -30,14 +30,15 @@ no architectural storage.
 |---|---:|
 | 65,536-byte memory | 524,288 |
 | R0-R12 | 416 |
-| MSP, PSP, LR, PC, APSR | 160 |
+| MSP, PSP, LR, PC | 128 |
+| APSR flags | 5 |
 | IPSR and ITSTATE | 16 |
-| PRIMASK, BASEPRI, FAULTMASK, CONTROL, Handler mode | 19 |
+| PRIMASK, BASEPRI, FAULTMASK, CONTROL, Handler mode | 13 |
 | Halt, sleep, WFE cause, and event latches | 4 |
 | Exclusive monitor address and valid latch | 33 |
 | Installed-image origin | 32 |
 | Installed-image length, including 65,536 | 17 |
-| **Total** | **524,985** |
+| **Total** | **524,952** |
 
 The reset state, two stack pointers, complete status surface, power/event
 state, exclusive monitor, full 64 KiB memory, and exact installed-image
@@ -83,7 +84,7 @@ step, run, and execute APIs preserve the functional contract.
 
 The cell is complete only when it:
 
-1. pins the topology to exactly 524,985 DFFs;
+1. pins the topology to exactly 524,952 DFFs;
 2. proves production independence from `cortex-m3-simulator`;
 3. exercises every primary 16-bit and 32-bit decode family and implemented
    arithmetic, flag, memory, control, IT, special-register, power, and

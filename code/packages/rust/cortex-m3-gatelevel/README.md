@@ -6,7 +6,7 @@ This package is the DFF-backed architectural gate companion to
 gate transition engine. Production code does not depend on the functional
 simulator; that package is a differential-test oracle only.
 
-All 524,985 persistent bits — 64 KiB memory, integer and special registers,
+All 524,952 persistent bits — 64 KiB memory, integer and special registers,
 mode, halt/sleep/event state, the exclusive monitor, and installed-image
 metadata — are clocked through repository D flip-flops. Gate-built decoders,
 ripple arithmetic, Boolean logic, staged shifters and dividers, branch

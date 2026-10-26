@@ -13,11 +13,12 @@ pub use engine::{
     LR, MAX_RETAINED_BYTES, MAX_RETAINED_STEPS, MEMORY_SIZE, PC, SP,
 };
 
+use logic_gates::gates::{and_gate, not_gate};
 use state::{clock_bit, clock_bits, read_bits, DffMemory};
 
 /// Exact number of mutable persistent architectural D flip-flops.
 pub const FLIP_FLOP_COUNT: usize =
-    MEMORY_SIZE * 8 + 13 * 32 + 5 * 32 + 2 * 8 + 1 + 8 + 1 + 8 + 1 + 4 + 33 + 32 + 17;
+    MEMORY_SIZE * 8 + 13 * 32 + 4 * 32 + 5 + 2 * 8 + 1 + 8 + 1 + 2 + 1 + 4 + 33 + 32 + 17;
 /// Six primitive gates per master/slave DFF plus a finite combinational budget.
 pub const ESTIMATED_GATE_COUNT: usize = FLIP_FLOP_COUNT * 6 + 131_072;
 
@@ -271,7 +272,7 @@ impl CortexM3GateLevel {
         for (target, index) in bytes.iter_mut().zip(range) {
             *target = self.memory.read(index);
         }
-        Ok(u32::from_le_bytes(bytes))
+        Ok(gates::assemble_le_u32(bytes))
     }
 
     pub fn write_memory(
@@ -281,7 +282,7 @@ impl CortexM3GateLevel {
         value: u32,
     ) -> Result<(), CortexM3Error> {
         let range = engine::checked_range(address, width)?;
-        for (index, byte) in range.zip(value.to_le_bytes()) {
+        for (index, byte) in range.zip(gates::split_le_u32(value)) {
             self.memory.write(index, byte);
         }
         clock_bit(&mut self.exclusive_valid, false);
@@ -290,13 +291,14 @@ impl CortexM3GateLevel {
 
     /// Register an event and wake a sleeping core through DFF inputs.
     pub fn signal_event(&mut self) {
-        if self.sleeping == 1 && self.waiting_for_event == 1 {
-            clock_bit(&mut self.sleeping, false);
-            clock_bit(&mut self.waiting_for_event, false);
-            clock_bit(&mut self.event_registered, false);
-        } else {
-            clock_bit(&mut self.event_registered, true);
-        }
+        let wake = and_gate(self.sleeping, self.waiting_for_event);
+        let retain_sleep = not_gate(wake);
+        let next_sleeping = and_gate(self.sleeping, retain_sleep);
+        let next_waiting_for_event = and_gate(self.waiting_for_event, retain_sleep);
+        let next_event_registered = not_gate(wake);
+        clock_bit(&mut self.sleeping, next_sleeping == 1);
+        clock_bit(&mut self.waiting_for_event, next_waiting_for_event == 1);
+        clock_bit(&mut self.event_registered, next_event_registered == 1);
     }
 
     /// Wake either architectural sleep form after interrupt acceptance.

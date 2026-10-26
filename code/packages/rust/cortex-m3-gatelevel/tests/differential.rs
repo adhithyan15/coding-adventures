@@ -193,8 +193,8 @@ fn seeded(state: &mut GateState) {
 #[test]
 fn topology_and_combinational_networks_are_exact() {
     let cpu = CortexM3GateLevel::new();
-    assert_eq!(FLIP_FLOP_COUNT, 524_985);
-    assert_eq!(cpu.flip_flop_count(), 524_985);
+    assert_eq!(FLIP_FLOP_COUNT, 524_952);
+    assert_eq!(cpu.flip_flop_count(), 524_952);
     assert!(cpu.gate_count() > FLIP_FLOP_COUNT * 6);
     assert_eq!(cpu.get_state().memory.len(), MEMORY_SIZE);
 
@@ -234,6 +234,13 @@ fn topology_and_combinational_networks_are_exact() {
     assert_eq!(gates::bits_to_u8(&[1; 64]), u8::MAX);
     assert_eq!(gates::bits_to_u16(&[1; 64]), u16::MAX);
     assert_eq!(gates::bits_to_u32(&[1; 64]), u32::MAX);
+    assert_eq!(gates::assemble_le_u16([0x34, 0x12]), 0x1234);
+    assert_eq!(
+        gates::assemble_le_u32([0x78, 0x56, 0x34, 0x12]),
+        0x1234_5678
+    );
+    assert_eq!(gates::split_le_u16(0x1234), [0x34, 0x12]);
+    assert_eq!(gates::split_le_u32(0x1234_5678), [0x78, 0x56, 0x34, 0x12]);
     assert_eq!(gates::reverse_bits_32(1), 0x8000_0000);
     assert_eq!(gates::leading_zeros_32(0x0010_0000), 11);
     assert_eq!(gates::reverse_bytes(0x1122_3344), 0x4433_2211);
