@@ -524,4 +524,23 @@ mod allocation_regressions {
             assert_eq!(cpu.get_state(), before);
         }
     }
+
+    #[test]
+    fn execute_allocation_boundaries_restore_the_preexisting_machine() {
+        let _guard = ALLOCATION_TEST_LOCK.lock().unwrap();
+        let replacement = program(&[encoding::bkpt(0)]);
+        // execute snapshot, run snapshot, trace reserve, step snapshot,
+        // candidate clone, result construction, and final-state snapshot.
+        for checkpoint in 0..=6 {
+            let mut cpu = loaded();
+            cpu.write_register(0, 0xfeed_beef).unwrap();
+            let before = cpu.get_state();
+            cpu.fail_allocation_after(checkpoint);
+            assert_eq!(
+                cpu.execute(&replacement, 0x200, 1),
+                Err(CortexM23Error::AllocationFailed)
+            );
+            assert_eq!(cpu.get_state(), before);
+        }
+    }
 }

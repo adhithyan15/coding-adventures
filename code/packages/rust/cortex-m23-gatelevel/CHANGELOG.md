@@ -10,5 +10,5 @@
   differential coverage for every implemented instruction subfamily.
 - Add AST-based topology and module-routing checks with hostile native-host,
   oracle-substitution, direct-Q-write, macro, string, and attribute confusers.
-- Reach 91.44% combined Rust line coverage (1,656 of 1,811 lines) across 29
+- Reach 91.83% combined Rust line coverage (1,674 of 1,823 lines) across 30
   release tests.
