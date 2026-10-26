@@ -2034,6 +2034,20 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_title_line_break_variants() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\ntitle \"Domain<br>Model<br/>Across<br />Lines\"\nENTITY\n",
+        );
+        let title_values: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.value.contains("<br"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(title_values, ["Domain<br>Model<br/>Across<br />Lines"]);
+    }
+
+    #[test]
     fn tokenizes_er_unicode_symbol_identifiers() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\n_**testẽζ➕Ø😀㌕ぼ**_\nperson[😀]\nperson ||--o| a : __hẽ😀__\n",

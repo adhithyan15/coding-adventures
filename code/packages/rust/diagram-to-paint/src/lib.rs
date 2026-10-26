@@ -7229,13 +7229,16 @@ where
     let ls = lf.size;
 
     if let Some(title) = &diagram.title {
+        let mut title_font = options.title_font.clone();
+        let title_height = title.split('\n').count() as f64 * title_font.size * 1.4;
+        title_font.line_height = 1.4;
         text_children.push(text_node(
             title,
             8.0,
             6.0,
             diagram.width - 16.0,
-            30.0,
-            options.title_font.clone(),
+            title_height,
+            title_font,
             Color {
                 r: 15,
                 g: 23,
