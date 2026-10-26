@@ -164,7 +164,15 @@ fn compare_arm(raw: u32, label: &str) {
             assert_state_eq(&g.state_before, &f.state_before, label);
             assert_state_eq(&g.state_after, &f.state_after, label);
         }
-        (Err(g), Err(f)) => assert_eq!(format!("{g:?}"), format!("{f:?}"), "{label}: error"),
+        (Err(g), Err(f)) => {
+            assert_eq!(format!("{g:?}"), format!("{f:?}"), "{label}: error");
+            assert_eq!(gate.get_state(), before_gate, "{label}: gate atomicity");
+            assert_eq!(
+                functional.get_state(),
+                before_functional,
+                "{label}: functional atomicity"
+            );
+        }
         (g, f) => panic!("{label}: differential result mismatch gate={g:?} functional={f:?}"),
     }
     assert_state_eq(&gate.get_state(), &functional.get_state(), label);
@@ -172,6 +180,8 @@ fn compare_arm(raw: u32, label: &str) {
 
 fn compare_thumb(raw: u16, label: &str) {
     let (mut gate, mut functional) = seed_pair_thumb(raw);
+    let before_gate = gate.get_state();
+    let before_functional = functional.get_state();
     match (gate.step(), functional.step()) {
         (Ok(g), Ok(f)) => {
             assert_eq!(g.pc_before, f.pc_before, "{label}: pc before");
@@ -184,7 +194,15 @@ fn compare_thumb(raw: u16, label: &str) {
             assert_state_eq(&g.state_before, &f.state_before, label);
             assert_state_eq(&g.state_after, &f.state_after, label);
         }
-        (Err(g), Err(f)) => assert_eq!(format!("{g:?}"), format!("{f:?}"), "{label}: error"),
+        (Err(g), Err(f)) => {
+            assert_eq!(format!("{g:?}"), format!("{f:?}"), "{label}: error");
+            assert_eq!(gate.get_state(), before_gate, "{label}: gate atomicity");
+            assert_eq!(
+                functional.get_state(),
+                before_functional,
+                "{label}: functional atomicity"
+            );
+        }
         (g, f) => panic!("{label}: differential result mismatch gate={g:?} functional={f:?}"),
     }
     assert_state_eq(&gate.get_state(), &functional.get_state(), label);
@@ -316,16 +334,62 @@ fn every_reachable_typed_fault_is_atomic_and_matches_the_oracle() {
     let mut functional_invalid = functional.get_state();
     gate_invalid.memory.pop();
     functional_invalid.memory.pop();
+    let gate_before = gate.get_state();
+    let functional_before = functional.get_state();
     assert_same_error(
         gate.restore(gate_invalid),
         functional.restore(functional_invalid),
         "invalid state",
+    );
+    assert_eq!(
+        gate.get_state(),
+        gate_before,
+        "invalid state: gate atomicity"
+    );
+    assert_eq!(
+        functional.get_state(),
+        functional_before,
+        "invalid state: functional atomicity"
     );
     assert_same_error(
         gate.read_register(16),
         functional.read_register(16),
         "invalid register",
     );
+    assert_eq!(
+        gate.get_state(),
+        gate_before,
+        "invalid register: gate state"
+    );
+    assert_eq!(
+        functional.get_state(),
+        functional_before,
+        "invalid register: functional state"
+    );
+
+    let mut gate_reserved = gate.get_state();
+    let mut functional_reserved = functional.get_state();
+    gate_reserved.cpsr = 0;
+    functional_reserved.cpsr = 0;
+    assert_same_error(
+        gate.restore(gate_reserved),
+        functional.restore(functional_reserved),
+        "reserved mode",
+    );
+    assert_eq!(
+        gate.get_state(),
+        gate_before,
+        "reserved mode: gate atomicity"
+    );
+    assert_eq!(
+        functional.get_state(),
+        functional_before,
+        "reserved mode: functional atomicity"
+    );
+
+    // ADD HIGH with neither high-register selector set is architecturally
+    // unpredictable in this bounded profile and must roll back atomically.
+    compare_thumb(0x4408, "unpredictable Thumb high-register form");
 
     let (mut gate, mut functional) = seed_pair_arm(0xe14f_0000); // MRS r0,SPSR in User mode.
     let mut gate_user = gate.get_state();
@@ -394,148 +458,96 @@ fn every_reachable_typed_fault_is_atomic_and_matches_the_oracle() {
         .unwrap();
     gate.step().unwrap();
     functional.step().unwrap();
+    let gate_before = gate.get_state();
+    let functional_before = functional.get_state();
     assert_same_error(gate.step(), functional.step(), "fetch outside program");
+    assert_eq!(gate.get_state(), gate_before, "fetch: gate atomicity");
+    assert_eq!(
+        functional.get_state(),
+        functional_before,
+        "fetch: functional atomicity"
+    );
 
     let (mut gate, mut functional) = seed_pair_arm(0xef00_0000);
     gate.step().unwrap();
     functional.step().unwrap();
+    let gate_before = gate.get_state();
+    let functional_before = functional.get_state();
     assert_same_error(gate.step(), functional.step(), "halted");
+    assert_eq!(gate.get_state(), gate_before, "halted: gate atomicity");
+    assert_eq!(
+        functional.get_state(),
+        functional_before,
+        "halted: functional atomicity"
+    );
 
     let (mut gate, mut functional) = seed_pair_arm(0xe1a0_0000);
+    let gate_before = gate.get_state();
+    let functional_before = functional.get_state();
     assert_same_error(gate.run(1), functional.run(1), "step limit");
+    assert_eq!(gate.get_state(), gate_before, "step limit: gate atomicity");
+    assert_eq!(
+        functional.get_state(),
+        functional_before,
+        "step limit: functional atomicity"
+    );
     assert_same_error(
         gate.run(MAX_RETAINED_STEPS + 1),
         functional.run(MAX_RETAINED_STEPS + 1),
         "retention limit",
     );
+    assert_eq!(gate.get_state(), gate_before, "retention: gate atomicity");
+    assert_eq!(
+        functional.get_state(),
+        functional_before,
+        "retention: functional atomicity"
+    );
 }
 
 #[test]
-fn every_declared_fault_shape_matches_the_functional_contract() {
-    let gate = [
-        GateError::EmptyProgram,
-        GateError::MisalignedProgram {
-            origin: 2,
-            alignment: 4,
-        },
-        GateError::ProgramOutOfRange {
-            origin: 0xfffc,
-            length: 8,
-        },
-        GateError::InvalidState { reason: "test" },
-        GateError::InvalidRegister { register: 16 },
-        GateError::ReservedMode { mode: 0 },
-        GateError::UnavailableSavedStatus {
-            mode: GateMode::User,
-        },
-        GateError::PrivilegedInstruction { raw: 0, pc: 0 },
-        GateError::UnpredictableInstruction { raw: 0, pc: 0 },
-        GateError::UnknownInstruction {
-            raw: 0,
-            width: 4,
-            pc: 0,
-        },
-        GateError::UnsupportedInstruction {
-            raw: 0,
-            width: 4,
-            pc: 0,
-        },
-        GateError::UnsupportedException {
-            immediate: 1,
-            pc: 0,
-        },
-        GateError::MisalignedFetch {
-            pc: 2,
-            alignment: 4,
-        },
-        GateError::FetchOutsideProgram { pc: 4, width: 4 },
-        GateError::MisalignedData {
-            address: 1,
-            width: 4,
-        },
-        GateError::DataOutOfRange {
-            address: 0x1_0000,
-            width: 4,
-        },
-        GateError::MisalignedTarget {
-            target: 2,
-            instruction_set: GateSet::Arm,
-        },
-        GateError::TargetOutOfRange {
-            target: 0x1_0000,
-            instruction_set: GateSet::Arm,
-        },
-        GateError::Halted,
-        GateError::RetentionLimitExceeded {
-            requested: 65,
-            limit: 64,
-        },
-        GateError::StepLimitExceeded { limit: 1 },
-    ];
-    let functional = [
-        FunctionalError::EmptyProgram,
-        FunctionalError::MisalignedProgram {
-            origin: 2,
-            alignment: 4,
-        },
-        FunctionalError::ProgramOutOfRange {
-            origin: 0xfffc,
-            length: 8,
-        },
-        FunctionalError::InvalidState { reason: "test" },
-        FunctionalError::InvalidRegister { register: 16 },
-        FunctionalError::ReservedMode { mode: 0 },
-        FunctionalError::UnavailableSavedStatus {
-            mode: FunctionalMode::User,
-        },
-        FunctionalError::PrivilegedInstruction { raw: 0, pc: 0 },
-        FunctionalError::UnpredictableInstruction { raw: 0, pc: 0 },
-        FunctionalError::UnknownInstruction {
-            raw: 0,
-            width: 4,
-            pc: 0,
-        },
-        FunctionalError::UnsupportedInstruction {
-            raw: 0,
-            width: 4,
-            pc: 0,
-        },
-        FunctionalError::UnsupportedException {
-            immediate: 1,
-            pc: 0,
-        },
-        FunctionalError::MisalignedFetch {
-            pc: 2,
-            alignment: 4,
-        },
-        FunctionalError::FetchOutsideProgram { pc: 4, width: 4 },
-        FunctionalError::MisalignedData {
-            address: 1,
-            width: 4,
-        },
-        FunctionalError::DataOutOfRange {
-            address: 0x1_0000,
-            width: 4,
-        },
-        FunctionalError::MisalignedTarget {
-            target: 2,
-            instruction_set: FunctionalSet::Arm,
-        },
-        FunctionalError::TargetOutOfRange {
-            target: 0x1_0000,
-            instruction_set: FunctionalSet::Arm,
-        },
-        FunctionalError::Halted,
-        FunctionalError::RetentionLimitExceeded {
-            requested: 65,
-            limit: 64,
-        },
-        FunctionalError::StepLimitExceeded { limit: 1 },
-    ];
-    for (gate, functional) in gate.into_iter().zip(functional) {
-        assert_eq!(format!("{gate:?}"), format!("{functional:?}"));
-        assert_eq!(gate.to_string(), functional.to_string());
-    }
+fn compatibility_only_faults_are_narrowed_and_shape_locked() {
+    // Every publicly reachable functional fault is executed above.  These two
+    // variants remain for API parity but cannot escape a public gate call:
+    // PrivilegedInstruction has no production constructor in this bounded
+    // profile, while public restore rejects a misaligned PC as InvalidState
+    // before the private fetch boundary can observe it.
+    let privileged_gate = GateError::PrivilegedInstruction { raw: 0, pc: 0 };
+    let privileged_functional = FunctionalError::PrivilegedInstruction { raw: 0, pc: 0 };
+    assert_eq!(
+        format!("{privileged_gate:?}"),
+        format!("{privileged_functional:?}")
+    );
+    assert_eq!(
+        privileged_gate.to_string(),
+        privileged_functional.to_string()
+    );
+
+    let fetch_gate = GateError::MisalignedFetch {
+        pc: 2,
+        alignment: 4,
+    };
+    let fetch_functional = FunctionalError::MisalignedFetch {
+        pc: 2,
+        alignment: 4,
+    };
+    assert_eq!(format!("{fetch_gate:?}"), format!("{fetch_functional:?}"));
+    assert_eq!(fetch_gate.to_string(), fetch_functional.to_string());
+
+    let (mut gate, mut functional) = seed_pair_arm(0xe1a0_0000);
+    let gate_before = gate.get_state();
+    let functional_before = functional.get_state();
+    let mut bad_gate = gate_before.clone();
+    let mut bad_functional = functional_before.clone();
+    bad_gate.registers.pc = 2;
+    bad_functional.registers.pc = 2;
+    assert_same_error(
+        gate.restore(bad_gate),
+        functional.restore(bad_functional),
+        "misaligned public restore is InvalidState, not MisalignedFetch",
+    );
+    assert_eq!(gate.get_state(), gate_before);
+    assert_eq!(functional.get_state(), functional_before);
+
     assert!(!GateError::CommitFailed.to_string().is_empty());
 }
 

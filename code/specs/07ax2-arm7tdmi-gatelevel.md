@@ -105,8 +105,11 @@ model do not expose a portable, typed, deterministic failure boundary.
 Completion requires all of the following:
 
 1. full-state and exact-trace differential execution against
-   `arm7tdmi-simulator` for every admitted ARM and Thumb family and every typed
-   fault class, including the functional completion matrix;
+   `arm7tdmi-simulator` for every admitted ARM and Thumb family and every
+   publicly reachable typed functional fault class, including the functional
+   completion matrix; compatibility-only declared variants require exact
+   shape locks plus explicit source and public-invariant evidence proving why
+   they cannot escape a public call;
 2. all ARM condition outcomes, shifter boundaries, add/sub carry/overflow,
    multiply edges, status masks, every bank/mode/SPSR path, ARM/Thumb exchange,
    pipeline-visible PC cases, every memory width/addressing mode, multiple
@@ -118,9 +121,11 @@ Completion requires all of the following:
    observer/candidate copy without changing Q, and deliberately change Q
    without updating an observer, proving Q wins in both directions;
 5. parsed-token exact locks for the complete source-to-sink chains: decoder to
-   one-hot family/operation wires, condition/shifter/ALU/flags, bank/status/PC
-   muxes, memory/control routing, stable-Q reads, DFF clocks, commit, rollback,
-   and public step/run/execute entry points;
+   one-hot family/operation wires (including every Thumb ALU, high/BX,
+   transfer, stack/multiple, conditional, destination-enable, and mnemonic
+   route), condition/shifter/ALU/flags, bank/status/PC muxes, memory/control
+   routing, stable-Q reads, DFF clocks, commit, rollback, and public
+   step/run/execute entry points;
 6. anchored, compile-valid hostile full-source mutations for direct Q writes,
    direct host arithmetic/condition/decode authority, oracle substitution,
    helper indirection, dead gate anchors, post-gate overwrite, and post-commit

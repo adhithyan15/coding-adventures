@@ -6,8 +6,12 @@
   525,522-DFF stable-Q inventory, independent ARM/Thumb transition engine,
   gate-derived datapaths/control, complete-state differential verification,
   typed transactional lifecycle, and structural anti-bypass checks. Parsed
-  source-to-sink locks and compiler-valid hostile full-crate mutations now
-  cover every specified decode, datapath, bank, memory, stable-Q, control, and
-  lifecycle route, while two-way candidate divergence and the full typed-fault
-  completion matrix prove stable-Q authority. The final 57-test suite measures
-  90.91% release line coverage (2,090/2,299).
+  whole-file plus focused source-to-sink locks and compiler-valid hostile
+  full-crate mutations now cover every specified ARM and Thumb decode,
+  fixed-bit/suboperation selector, destination enable, mnemonic/trace,
+  datapath, bank, memory, BX, stable-Q, control, and lifecycle route. Two-way
+  candidate divergence and real public executions of every reachable typed
+  functional fault prove complete rollback; compatibility-only unreachable
+  variants are separately narrowed by source and public-invariant evidence.
+  The final 58-test suite measures 91.67% release line coverage
+  (2,168/2,365).

@@ -9,6 +9,7 @@
 
 use core::fmt;
 use core::ops::Range;
+use logic_gates::gates::{and_gate, not_gate, or_gate};
 
 use crate::gates;
 
@@ -777,17 +778,20 @@ fn write_pc_preserve(state: &mut Arm7TdmiState, value: u32) -> Result<(), Arm7Td
 }
 
 fn bx(state: &mut Arm7TdmiState, target: u32, raw: u32, pc: u32) -> Result<(), Arm7TdmiError> {
-    if target & 3 == 2 {
+    let low_bits = gates::field(target, 0, 2);
+    let unpredictable_target = gates::selected(low_bits, 2, 2);
+    let thumb_selected = gates::selected(gates::field(target, 0, 1), 1, 1);
+    if unpredictable_target == 1 {
         return Err(Arm7TdmiError::UnpredictableInstruction { raw, pc });
     }
-    if target & 1 != 0 {
+    if thumb_selected == 1 {
         let exchanged = target & !1;
         checked_target(exchanged, InstructionSet::Thumb)?;
-        state.cpsr |= CPSR_T;
+        state.cpsr = gates::bit_or_32(state.cpsr, CPSR_T);
         state.registers.pc = exchanged;
     } else {
         checked_target(target, InstructionSet::Arm)?;
-        state.cpsr &= !CPSR_T;
+        state.cpsr = gates::bit_and_32(state.cpsr, gates::bit_not_32(CPSR_T));
         state.registers.pc = target;
     }
     Ok(())
@@ -909,7 +913,7 @@ fn execute_data_processing(
     let rn = ((raw >> 16) & 0xf) as usize;
     let rd = ((raw >> 12) & 0xf) as usize;
     let test_operation = (8..=11).fold(0, |line, operation| {
-        logic_gates::gates::or_gate(line, gates::selected(opcode, operation, 4))
+        or_gate(line, gates::selected(opcode, operation, 4))
     });
     if test_operation == 1 && (!set_flags || rd != 0) {
         return Err(Arm7TdmiError::UnpredictableInstruction { raw, pc });
@@ -1390,6 +1394,15 @@ fn execute_thumb(
         });
     }
     let family = gates::field(word, 13, 3);
+    let condition = gates::field(word, 8, 4);
+    let conditional_family = gates::masked_eq_16(raw, 0xf000, 0xd000);
+    let ordinary_condition = and_gate(
+        not_gate(gates::selected(condition, 0xe, 4)),
+        not_gate(gates::selected(condition, 0xf, 4)),
+    );
+    let conditional_branch = and_gate(conditional_family, ordinary_condition);
+    let condition_selected = u8::from(condition_passed(state.cpsr, condition as u8));
+    let executed = or_gate(not_gate(conditional_branch), condition_selected);
     let mnemonic = if gates::selected(family, 0, 3) == 1 {
         execute_thumb_shift_add(state, raw, pc)?
     } else if gates::selected(family, 1, 3) == 1 {
@@ -1399,7 +1412,8 @@ fn execute_thumb(
     } else if gates::selected(family, 3, 3) == 1 {
         execute_thumb_immediate_transfer(state, raw, false)?
     } else if gates::selected(family, 4, 3) == 1 {
-        if raw & 0x1000 == 0 {
+        let sp_relative = gates::selected(gates::field(word, 12, 1), 1, 1);
+        if sp_relative == 0 {
             execute_thumb_immediate_transfer(state, raw, true)?
         } else {
             execute_thumb_sp_transfer(state, raw)?
@@ -1417,18 +1431,22 @@ fn execute_thumb(
             pc,
         });
     };
-    Ok((mnemonic, mnemonic != "CONDITION_FAILED"))
+    Ok((mnemonic, executed == 1))
 }
 
 fn execute_thumb_shift_add(
     state: &mut Arm7TdmiState,
     raw: u16,
-    _pc: u32,
+    pc: u32,
 ) -> Result<&'static str, Arm7TdmiError> {
+    let word = u32::from(raw);
     let rd = (raw & 7) as usize;
     let rs = ((raw >> 3) & 7) as usize;
     if gates::masked_eq_16(raw, 0x1800, 0x1800) == 0 {
-        let kind = ((raw >> 11) & 3) as u32;
+        let kind = gates::field(word, 11, 2);
+        let lsl = gates::selected(kind, 0, 2);
+        let lsr = gates::selected(kind, 1, 2);
+        let asr = gates::selected(kind, 2, 2);
         let amount = ((raw >> 6) & 0x1f) as u32;
         let (result, carry) = shifted(
             read_register(state, rs)?,
@@ -1439,63 +1457,64 @@ fn execute_thumb_shift_add(
         );
         write_register(state, rd, result)?;
         set_nzc(state, result, carry);
-        return Ok(match kind {
-            0 => "LSL",
-            1 => "LSR",
-            2 => "ASR",
-            _ => unreachable!(),
-        });
+        return if lsl == 1 {
+            Ok("LSL")
+        } else if lsr == 1 {
+            Ok("LSR")
+        } else if asr == 1 {
+            Ok("ASR")
+        } else {
+            Err(Arm7TdmiError::UnknownInstruction {
+                raw: word,
+                width: 2,
+                pc,
+            })
+        };
     }
-    let immediate = raw & (1 << 10) != 0;
-    let subtract = raw & (1 << 9) != 0;
-    let right = if immediate {
+    let immediate = gates::selected(gates::field(word, 10, 1), 1, 1);
+    let subtract = gates::selected(gates::field(word, 9, 1), 1, 1);
+    let right = if immediate == 1 {
         ((raw >> 6) & 7) as u32
     } else {
         read_register(state, ((raw >> 6) & 7) as usize)?
     };
     let left = read_register(state, rs)?;
-    let (result, carry, overflow) = if subtract {
+    let (result, carry, overflow) = if subtract == 1 {
         add_with_carry(left, gates::bit_not_32(right), true)
     } else {
         add_with_carry(left, right, false)
     };
     write_register(state, rd, result)?;
     set_nzcv(state, result, carry, overflow);
-    Ok(if subtract { "SUB" } else { "ADD" })
+    Ok(if subtract == 1 { "SUB" } else { "ADD" })
 }
 
 fn execute_thumb_immediate(
     state: &mut Arm7TdmiState,
     raw: u16,
 ) -> Result<&'static str, Arm7TdmiError> {
-    let operation = (raw >> 11) & 3;
+    let operation = gates::field(u32::from(raw), 11, 2);
     let rd = ((raw >> 8) & 7) as usize;
     let immediate = (raw & 0xff) as u32;
     let left = read_register(state, rd)?;
-    match operation {
-        0 => {
-            write_register(state, rd, immediate)?;
-            set_nz(state, immediate);
-            Ok("MOV")
-        }
-        1 => {
-            let (result, c, v) = add_with_carry(left, !immediate, true);
-            set_nzcv(state, result, c, v);
-            Ok("CMP")
-        }
-        2 => {
-            let (result, c, v) = add_with_carry(left, immediate, false);
-            write_register(state, rd, result)?;
-            set_nzcv(state, result, c, v);
-            Ok("ADD")
-        }
-        3 => {
-            let (result, c, v) = add_with_carry(left, !immediate, true);
-            write_register(state, rd, result)?;
-            set_nzcv(state, result, c, v);
-            Ok("SUB")
-        }
-        _ => unreachable!(),
+    if gates::selected(operation, 0, 2) == 1 {
+        write_register(state, rd, immediate)?;
+        set_nz(state, immediate);
+        Ok("MOV")
+    } else if gates::selected(operation, 1, 2) == 1 {
+        let (result, c, v) = add_with_carry(left, gates::bit_not_32(immediate), true);
+        set_nzcv(state, result, c, v);
+        Ok("CMP")
+    } else if gates::selected(operation, 2, 2) == 1 {
+        let (result, c, v) = add_with_carry(left, immediate, false);
+        write_register(state, rd, result)?;
+        set_nzcv(state, result, c, v);
+        Ok("ADD")
+    } else {
+        let (result, c, v) = add_with_carry(left, gates::bit_not_32(immediate), true);
+        write_register(state, rd, result)?;
+        set_nzcv(state, result, c, v);
+        Ok("SUB")
     }
 }
 
@@ -1528,101 +1547,88 @@ fn execute_thumb_data_or_register_transfer(
 }
 
 fn execute_thumb_alu(state: &mut Arm7TdmiState, raw: u16) -> Result<&'static str, Arm7TdmiError> {
-    let opcode = (raw >> 6) & 0xf;
+    let opcode = gates::field(u32::from(raw), 6, 4);
     let rs = ((raw >> 3) & 7) as usize;
     let rd = (raw & 7) as usize;
     let left = read_register(state, rd)?;
     let right = read_register(state, rs)?;
     let carry = state.cpsr & CPSR_C != 0;
-    match opcode {
-        0x0 => {
-            let r = gates::bit_and_32(left, right);
-            write_register(state, rd, r)?;
-            set_nz(state, r);
-            Ok("AND")
-        }
-        0x1 => {
-            let r = gates::bit_xor_32(left, right);
-            write_register(state, rd, r)?;
-            set_nz(state, r);
-            Ok("EOR")
-        }
-        0x2..=0x4 | 0x7 => {
-            let kind = match opcode {
-                2 => 0,
-                3 => 1,
-                4 => 2,
-                7 => 3,
-                _ => unreachable!(),
-            };
-            let (r, c) = shifted(left, kind, right & 0xff, false, carry);
-            write_register(state, rd, r)?;
-            set_nzc(state, r, c);
-            Ok(match opcode {
-                2 => "LSL",
-                3 => "LSR",
-                4 => "ASR",
-                7 => "ROR",
-                _ => unreachable!(),
-            })
-        }
-        0x5 => {
-            let (r, c, v) = add_with_carry(left, right, carry);
-            write_register(state, rd, r)?;
-            set_nzcv(state, r, c, v);
-            Ok("ADC")
-        }
-        0x6 => {
-            let (r, c, v) = add_with_carry(left, gates::bit_not_32(right), carry);
-            write_register(state, rd, r)?;
-            set_nzcv(state, r, c, v);
-            Ok("SBC")
-        }
-        0x8 => {
-            set_nz(state, gates::bit_and_32(left, right));
-            Ok("TST")
-        }
-        0x9 => {
-            let (r, c, v) = add_with_carry(0, gates::bit_not_32(right), true);
-            write_register(state, rd, r)?;
-            set_nzcv(state, r, c, v);
-            Ok("NEG")
-        }
-        0xa => {
-            let (r, c, v) = add_with_carry(left, gates::bit_not_32(right), true);
-            set_nzcv(state, r, c, v);
-            Ok("CMP")
-        }
-        0xb => {
-            let (r, c, v) = add_with_carry(left, right, false);
-            set_nzcv(state, r, c, v);
-            Ok("CMN")
-        }
-        0xc => {
-            let r = gates::bit_or_32(left, right);
-            write_register(state, rd, r)?;
-            set_nz(state, r);
-            Ok("ORR")
-        }
-        0xd => {
-            let r = gates::multiply_32(left, right);
-            write_register(state, rd, r)?;
-            set_nz(state, r);
-            Ok("MUL")
-        }
-        0xe => {
-            let r = gates::bit_and_32(left, gates::bit_not_32(right));
-            write_register(state, rd, r)?;
-            set_nz(state, r);
-            Ok("BIC")
-        }
-        0xf => {
-            let r = gates::bit_not_32(right);
-            write_register(state, rd, r)?;
-            set_nz(state, r);
-            Ok("MVN")
-        }
-        _ => unreachable!(),
+    if gates::selected(opcode, 0x0, 4) == 1 {
+        let result = gates::bit_and_32(left, right);
+        write_register(state, rd, result)?;
+        set_nz(state, result);
+        Ok("AND")
+    } else if gates::selected(opcode, 0x1, 4) == 1 {
+        let result = gates::bit_xor_32(left, right);
+        write_register(state, rd, result)?;
+        set_nz(state, result);
+        Ok("EOR")
+    } else if gates::selected(opcode, 0x2, 4) == 1 {
+        let (result, shift_carry) = shifted(left, 0, right & 0xff, false, carry);
+        write_register(state, rd, result)?;
+        set_nzc(state, result, shift_carry);
+        Ok("LSL")
+    } else if gates::selected(opcode, 0x3, 4) == 1 {
+        let (result, shift_carry) = shifted(left, 1, right & 0xff, false, carry);
+        write_register(state, rd, result)?;
+        set_nzc(state, result, shift_carry);
+        Ok("LSR")
+    } else if gates::selected(opcode, 0x4, 4) == 1 {
+        let (result, shift_carry) = shifted(left, 2, right & 0xff, false, carry);
+        write_register(state, rd, result)?;
+        set_nzc(state, result, shift_carry);
+        Ok("ASR")
+    } else if gates::selected(opcode, 0x5, 4) == 1 {
+        let (result, carry, overflow) = add_with_carry(left, right, carry);
+        write_register(state, rd, result)?;
+        set_nzcv(state, result, carry, overflow);
+        Ok("ADC")
+    } else if gates::selected(opcode, 0x6, 4) == 1 {
+        let (result, carry, overflow) = add_with_carry(left, gates::bit_not_32(right), carry);
+        write_register(state, rd, result)?;
+        set_nzcv(state, result, carry, overflow);
+        Ok("SBC")
+    } else if gates::selected(opcode, 0x7, 4) == 1 {
+        let (result, shift_carry) = shifted(left, 3, right & 0xff, false, carry);
+        write_register(state, rd, result)?;
+        set_nzc(state, result, shift_carry);
+        Ok("ROR")
+    } else if gates::selected(opcode, 0x8, 4) == 1 {
+        set_nz(state, gates::bit_and_32(left, right));
+        Ok("TST")
+    } else if gates::selected(opcode, 0x9, 4) == 1 {
+        let (result, carry, overflow) = add_with_carry(0, gates::bit_not_32(right), true);
+        write_register(state, rd, result)?;
+        set_nzcv(state, result, carry, overflow);
+        Ok("NEG")
+    } else if gates::selected(opcode, 0xa, 4) == 1 {
+        let (result, carry, overflow) = add_with_carry(left, gates::bit_not_32(right), true);
+        set_nzcv(state, result, carry, overflow);
+        Ok("CMP")
+    } else if gates::selected(opcode, 0xb, 4) == 1 {
+        let (result, carry, overflow) = add_with_carry(left, right, false);
+        set_nzcv(state, result, carry, overflow);
+        Ok("CMN")
+    } else if gates::selected(opcode, 0xc, 4) == 1 {
+        let result = gates::bit_or_32(left, right);
+        write_register(state, rd, result)?;
+        set_nz(state, result);
+        Ok("ORR")
+    } else if gates::selected(opcode, 0xd, 4) == 1 {
+        let result = gates::multiply_32(left, right);
+        write_register(state, rd, result)?;
+        set_nz(state, result);
+        Ok("MUL")
+    } else if gates::selected(opcode, 0xe, 4) == 1 {
+        let result = gates::bit_and_32(left, gates::bit_not_32(right));
+        write_register(state, rd, result)?;
+        set_nz(state, result);
+        Ok("BIC")
+    } else {
+        let result = gates::bit_not_32(right);
+        write_register(state, rd, result)?;
+        set_nz(state, result);
+        Ok("MVN")
     }
 }
 
@@ -1631,8 +1637,10 @@ fn execute_thumb_high(
     raw: u16,
     pc: u32,
 ) -> Result<&'static str, Arm7TdmiError> {
-    let operation = (raw >> 8) & 3;
-    if operation != 3 && raw & 0x00c0 == 0 {
+    let operation = gates::field(u32::from(raw), 8, 2);
+    let bx_selected = gates::selected(operation, 3, 2);
+    let no_high_register = gates::masked_eq_16(raw, 0x00c0, 0);
+    if and_gate(not_gate(bx_selected), no_high_register) == 1 {
         return Err(Arm7TdmiError::UnpredictableInstruction {
             raw: raw as u32,
             pc,
@@ -1642,41 +1650,36 @@ fn execute_thumb_high(
     let rs = (((raw >> 3) & 7) | ((raw >> 3) & 8)) as usize;
     let left = thumb_operand(state, rd, pc);
     let right = thumb_operand(state, rs, pc);
-    match operation {
-        0 => {
-            let result = gates::add_32(left, right, 0).0;
-            if rd == 15 {
-                write_pc_preserve(state, result)?;
-            } else {
-                write_register(state, rd, result)?;
-            }
-            Ok("ADD HIGH")
+    let destination_is_pc = gates::selected(rd as u32, 15, 4);
+    if gates::selected(operation, 0, 2) == 1 {
+        let result = gates::add_32(left, right, 0).0;
+        if destination_is_pc == 1 {
+            write_pc_preserve(state, result)?;
+        } else {
+            write_register(state, rd, result)?;
         }
-        1 => {
-            let (r, c, v) = add_with_carry(left, gates::bit_not_32(right), true);
-            set_nzcv(state, r, c, v);
-            Ok("CMP HIGH")
+        Ok("ADD HIGH")
+    } else if gates::selected(operation, 1, 2) == 1 {
+        let (result, carry, overflow) = add_with_carry(left, gates::bit_not_32(right), true);
+        set_nzcv(state, result, carry, overflow);
+        Ok("CMP HIGH")
+    } else if gates::selected(operation, 2, 2) == 1 {
+        if destination_is_pc == 1 {
+            write_pc_preserve(state, right)?;
+        } else {
+            write_register(state, rd, right)?;
         }
-        2 => {
-            if rd == 15 {
-                write_pc_preserve(state, right)?;
-            } else {
-                write_register(state, rd, right)?;
-            }
-            Ok("MOV HIGH")
+        Ok("MOV HIGH")
+    } else {
+        if gates::masked_eq_16(raw, 0x0087, 0) == 0 {
+            return Err(Arm7TdmiError::UnknownInstruction {
+                raw: raw as u32,
+                width: 2,
+                pc,
+            });
         }
-        3 => {
-            if raw & 0x0087 != 0 {
-                return Err(Arm7TdmiError::UnknownInstruction {
-                    raw: raw as u32,
-                    width: 2,
-                    pc,
-                });
-            }
-            bx(state, right, raw as u32, pc)?;
-            Ok("BX")
-        }
-        _ => unreachable!(),
+        bx(state, right, raw as u32, pc)?;
+        Ok("BX")
     }
 }
 
@@ -1684,50 +1687,40 @@ fn execute_thumb_register_transfer(
     state: &mut Arm7TdmiState,
     raw: u16,
 ) -> Result<&'static str, Arm7TdmiError> {
-    let operation = (raw >> 9) & 7;
+    let operation = gates::field(u32::from(raw), 9, 3);
     let rm = ((raw >> 6) & 7) as usize;
     let rn = ((raw >> 3) & 7) as usize;
     let rd = (raw & 7) as usize;
     let address = read_register(state, rn)?.wrapping_add(read_register(state, rm)?);
-    match operation {
-        0 => {
-            write_mem(state, address, 4, read_register(state, rd)?)?;
-            Ok("STR")
-        }
-        1 => {
-            write_mem(state, address, 2, read_register(state, rd)?)?;
-            Ok("STRH")
-        }
-        2 => {
-            write_mem(state, address, 1, read_register(state, rd)?)?;
-            Ok("STRB")
-        }
-        3 => {
-            let v = sign_extend(read_mem(state, address, 1)?, 8);
-            write_register(state, rd, v)?;
-            Ok("LDRSB")
-        }
-        4 => {
-            let v = read_mem(state, address, 4)?;
-            write_register(state, rd, v)?;
-            Ok("LDR")
-        }
-        5 => {
-            let v = read_mem(state, address, 2)?;
-            write_register(state, rd, v)?;
-            Ok("LDRH")
-        }
-        6 => {
-            let v = read_mem(state, address, 1)?;
-            write_register(state, rd, v)?;
-            Ok("LDRB")
-        }
-        7 => {
-            let v = sign_extend(read_mem(state, address, 2)?, 16);
-            write_register(state, rd, v)?;
-            Ok("LDRSH")
-        }
-        _ => unreachable!(),
+    if gates::selected(operation, 0, 3) == 1 {
+        write_mem(state, address, 4, read_register(state, rd)?)?;
+        Ok("STR")
+    } else if gates::selected(operation, 1, 3) == 1 {
+        write_mem(state, address, 2, read_register(state, rd)?)?;
+        Ok("STRH")
+    } else if gates::selected(operation, 2, 3) == 1 {
+        write_mem(state, address, 1, read_register(state, rd)?)?;
+        Ok("STRB")
+    } else if gates::selected(operation, 3, 3) == 1 {
+        let value = sign_extend(read_mem(state, address, 1)?, 8);
+        write_register(state, rd, value)?;
+        Ok("LDRSB")
+    } else if gates::selected(operation, 4, 3) == 1 {
+        let value = read_mem(state, address, 4)?;
+        write_register(state, rd, value)?;
+        Ok("LDR")
+    } else if gates::selected(operation, 5, 3) == 1 {
+        let value = read_mem(state, address, 2)?;
+        write_register(state, rd, value)?;
+        Ok("LDRH")
+    } else if gates::selected(operation, 6, 3) == 1 {
+        let value = read_mem(state, address, 1)?;
+        write_register(state, rd, value)?;
+        Ok("LDRB")
+    } else {
+        let value = sign_extend(read_mem(state, address, 2)?, 16);
+        write_register(state, rd, value)?;
+        Ok("LDRSH")
     }
 }
 
@@ -1736,39 +1729,48 @@ fn execute_thumb_immediate_transfer(
     raw: u16,
     halfword: bool,
 ) -> Result<&'static str, Arm7TdmiError> {
-    let load = raw & (1 << 11) != 0;
-    let byte = !halfword && raw & (1 << 12) != 0;
+    let word = u32::from(raw);
+    let load = gates::selected(gates::field(word, 11, 1), 1, 1);
+    let halfword_line = u8::from(halfword);
+    let byte = and_gate(
+        not_gate(halfword_line),
+        gates::selected(gates::field(word, 12, 1), 1, 1),
+    );
     let rn = ((raw >> 3) & 7) as usize;
     let rd = (raw & 7) as usize;
-    let shift = if halfword {
+    let shift = if halfword_line == 1 {
         1
-    } else if byte {
+    } else if byte == 1 {
         0
     } else {
         2
     };
     let address = read_register(state, rn)?.wrapping_add((((raw >> 6) & 0x1f) as u32) << shift);
-    let width = if byte {
+    let width = if byte == 1 {
         1
-    } else if halfword {
+    } else if halfword_line == 1 {
         2
     } else {
         4
     };
-    if load {
+    if load == 1 {
         let v = read_mem(state, address, width)?;
         write_register(state, rd, v)?;
     } else {
         write_mem(state, address, width, read_register(state, rd)?)?;
     }
-    Ok(match (load, width) {
-        (true, 1) => "LDRB",
-        (false, 1) => "STRB",
-        (true, 2) => "LDRH",
-        (false, 2) => "STRH",
-        (true, 4) => "LDR",
-        (false, 4) => "STR",
-        _ => unreachable!(),
+    Ok(if load == 1 && byte == 1 {
+        "LDRB"
+    } else if byte == 1 {
+        "STRB"
+    } else if load == 1 && halfword_line == 1 {
+        "LDRH"
+    } else if halfword_line == 1 {
+        "STRH"
+    } else if load == 1 {
+        "LDR"
+    } else {
+        "STR"
     })
 }
 
@@ -1776,16 +1778,16 @@ fn execute_thumb_sp_transfer(
     state: &mut Arm7TdmiState,
     raw: u16,
 ) -> Result<&'static str, Arm7TdmiError> {
-    let load = raw & (1 << 11) != 0;
+    let load = gates::selected(gates::field(u32::from(raw), 11, 1), 1, 1);
     let rd = ((raw >> 8) & 7) as usize;
     let address = read_register(state, 13)?.wrapping_add(((raw & 0xff) as u32) << 2);
-    if load {
+    if load == 1 {
         let v = read_mem(state, address, 4)?;
         write_register(state, rd, v)?;
     } else {
         write_mem(state, address, 4, read_register(state, rd)?)?;
     }
-    Ok(if load { "LDR SP" } else { "STR SP" })
+    Ok(if load == 1 { "LDR SP" } else { "STR SP" })
 }
 
 fn execute_thumb_misc(
@@ -1794,32 +1796,30 @@ fn execute_thumb_misc(
     pc: u32,
 ) -> Result<&'static str, Arm7TdmiError> {
     if gates::masked_eq_16(raw, 0xf000, 0xa000) == 1 {
+        let use_sp = gates::selected(gates::field(u32::from(raw), 11, 1), 1, 1);
         let rd = ((raw >> 8) & 7) as usize;
-        let base = if raw & (1 << 11) != 0 {
+        let base = if use_sp == 1 {
             read_register(state, 13)?
         } else {
             pc.wrapping_add(4) & !3
         };
         write_register(state, rd, base.wrapping_add(((raw & 0xff) as u32) << 2))?;
-        return Ok(if raw & (1 << 11) != 0 {
-            "ADD SP"
-        } else {
-            "ADD PC"
-        });
+        return Ok(if use_sp == 1 { "ADD SP" } else { "ADD PC" });
     }
     if gates::masked_eq_16(raw, 0xff00, 0xb000) == 1 {
+        let subtract = gates::selected(gates::field(u32::from(raw), 7, 1), 1, 1);
         let offset = ((raw & 0x7f) as u32) << 2;
         let sp = read_register(state, 13)?;
         write_register(
             state,
             13,
-            if raw & 0x80 != 0 {
+            if subtract == 1 {
                 sp.wrapping_sub(offset)
             } else {
                 sp.wrapping_add(offset)
             },
         )?;
-        return Ok(if raw & 0x80 != 0 { "SUB SP" } else { "ADD SP" });
+        return Ok(if subtract == 1 { "SUB SP" } else { "ADD SP" });
     }
     if gates::masked_eq_16(raw, 0xf600, 0xb400) == 1 {
         return execute_thumb_push_pop(state, raw, pc);
@@ -1836,47 +1836,55 @@ fn execute_thumb_push_pop(
     raw: u16,
     pc: u32,
 ) -> Result<&'static str, Arm7TdmiError> {
-    let pop = raw & (1 << 11) != 0;
-    let extension = raw & (1 << 8) != 0;
+    let word = u32::from(raw);
+    let pop = gates::selected(gates::field(word, 11, 1), 1, 1);
+    let extension = gates::selected(gates::field(word, 8, 1), 1, 1);
     let list = (raw & 0xff) as u32;
-    let count = list.count_ones() + u32::from(extension);
-    if count == 0 {
+    let count = gates::add_32(gates::popcount_8(list as u8), u32::from(extension), 0).0;
+    if gates::is_zero_8(count as u8) == 1 {
         return Err(Arm7TdmiError::UnpredictableInstruction {
             raw: raw as u32,
             pc,
         });
     }
     let sp = read_register(state, 13)?;
-    let start = if pop { sp } else { sp.wrapping_sub(count * 4) };
+    let start = if pop == 1 {
+        sp
+    } else {
+        sp.wrapping_sub(count * 4)
+    };
     checked_range(start, (count * 4) as usize)?;
     check_alignment(start, 4)?;
     let mut values = [0_u32; 9];
     let mut index = 0_usize;
-    if pop {
+    if pop == 1 {
         for register in 0..8 {
-            if list & (1 << register) != 0 {
+            let selected_register = gates::selected(gates::field(list, register, 1), 1, 1);
+            if selected_register == 1 {
                 values[index] = read_mem(state, start + index as u32 * 4, 4)?;
                 index += 1;
             }
         }
-        if extension {
+        if extension == 1 {
             values[index] = read_mem(state, start + index as u32 * 4, 4)?;
         }
         index = 0;
         for register in 0..8 {
-            if list & (1 << register) != 0 {
+            let selected_register = gates::selected(gates::field(list, register, 1), 1, 1);
+            if selected_register == 1 {
                 write_register(state, register, values[index])?;
                 index += 1;
             }
         }
-        if extension {
+        if extension == 1 {
             write_pc_preserve(state, values[index])?;
         }
         write_register(state, 13, sp.wrapping_add(count * 4))?;
         Ok("POP")
     } else {
         for register in 0..8 {
-            if list & (1 << register) != 0 {
+            let selected_register = gates::selected(gates::field(list, register, 1), 1, 1);
+            if selected_register == 1 {
                 write_mem(
                     state,
                     start + index as u32 * 4,
@@ -1886,7 +1894,7 @@ fn execute_thumb_push_pop(
                 index += 1;
             }
         }
-        if extension {
+        if extension == 1 {
             write_mem(
                 state,
                 start + index as u32 * 4,
@@ -1905,38 +1913,44 @@ fn execute_thumb_multiple_or_conditional(
     pc: u32,
 ) -> Result<&'static str, Arm7TdmiError> {
     if gates::masked_eq_16(raw, 0xf000, 0xc000) == 1 {
-        let load = raw & (1 << 11) != 0;
+        let word = u32::from(raw);
+        let load = gates::selected(gates::field(word, 11, 1), 1, 1);
         let rn = ((raw >> 8) & 7) as usize;
         let list = (raw & 0xff) as u32;
-        if list == 0 || load && list & (1 << rn) != 0 {
+        let empty_list = gates::is_zero_8(list as u8);
+        let base_in_list = gates::selected(gates::field(list, rn, 1), 1, 1);
+        if or_gate(empty_list, and_gate(load, base_in_list)) == 1 {
             return Err(Arm7TdmiError::UnpredictableInstruction {
                 raw: raw as u32,
                 pc,
             });
         }
         let base = read_register(state, rn)?;
-        let count = list.count_ones();
+        let count = gates::popcount_8(list as u8);
         checked_range(base, (count * 4) as usize)?;
         check_alignment(base, 4)?;
         let mut values = [0_u32; 8];
         let mut index = 0;
-        if load {
+        if load == 1 {
             for register in 0..8 {
-                if list & (1 << register) != 0 {
+                let selected_register = gates::selected(gates::field(list, register, 1), 1, 1);
+                if selected_register == 1 {
                     values[index] = read_mem(state, base + index as u32 * 4, 4)?;
                     index += 1;
                 }
             }
             index = 0;
             for register in 0..8 {
-                if list & (1 << register) != 0 {
+                let selected_register = gates::selected(gates::field(list, register, 1), 1, 1);
+                if selected_register == 1 {
                     write_register(state, register, values[index])?;
                     index += 1;
                 }
             }
         } else {
             for register in 0..8 {
-                if list & (1 << register) != 0 {
+                let selected_register = gates::selected(gates::field(list, register, 1), 1, 1);
+                if selected_register == 1 {
                     write_mem(
                         state,
                         base + index as u32 * 4,
@@ -1948,12 +1962,14 @@ fn execute_thumb_multiple_or_conditional(
             }
         }
         write_register(state, rn, base.wrapping_add(count * 4))?;
-        return Ok(if load { "LDMIA" } else { "STMIA" });
+        return Ok(if load == 1 { "LDMIA" } else { "STMIA" });
     }
     if gates::masked_eq_16(raw, 0xf000, 0xd000) == 1 {
-        let condition = ((raw >> 8) & 0xf) as u8;
-        if condition == 0xf {
-            if raw == 0xdf00 {
+        let condition = gates::field(u32::from(raw), 8, 4) as u8;
+        let software_interrupt = gates::selected(u32::from(condition), 0xf, 4);
+        let reserved_condition = gates::selected(u32::from(condition), 0xe, 4);
+        if software_interrupt == 1 {
+            if gates::masked_eq_16(raw, u16::MAX, 0xdf00) == 1 {
                 state.halted = true;
                 return Ok("SWI 0");
             }
@@ -1962,7 +1978,7 @@ fn execute_thumb_multiple_or_conditional(
                 pc,
             });
         }
-        if condition == 0xe {
+        if reserved_condition == 1 {
             return Err(Arm7TdmiError::UnknownInstruction {
                 raw: raw as u32,
                 width: 2,
