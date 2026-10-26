@@ -99,3 +99,28 @@ schema rejection or resumable training. Keep null a distinct JSON kind.
 Preserve unrelated work and the archived NN49 evidence. Disk space is variable:
 recheck before builds. The old NN49 residual directory remains preserved after
 an execution-policy rejection; do not bypass that rejection to remove it.
+
+## Confirmed integration repair and local evidence
+
+The actual production CI planner, supplied `cpp/bounded-json` in its affected
+closure, initially omitted Windows even with C++ toolchain detection. Add only
+this package's conservative dependency-aware Windows requirement, using the
+existing runner, MSVC bootstrap, shared ISO scheduler and required BUILD_RESULT.
+Six executable production-planner/ownership tests pass, along with all eleven
+existing C parser/native-training planner tests. Actual C++ package metadata
+also preserves macOS selection. Missing/malformed Windows closure fails closed;
+unrelated C++ packages retain their existing scheduling policy.
+
+Reviewing that owned planner change yields OCAML03 planner identity
+`47b158c4f1e49d8200821b050421c7447f2ecb051503fb896942e4eea3344d6e`.
+The existing 55 OCaml contract tests and repository CLI pass (two symlink tests
+skip on Windows); no OCaml toolchain/bootstrap pins or mutation checks change.
+
+GCC and Clang local POSIX-front suites pass 474 and 498 checks respectively;
+allocation growth strategies explain their different fault-injection counts.
+GCC gcov reports 98.71% of 232 library lines, 100% branches executed and 93.68%
+taken. Clang ASan passes 498 checks. Actual CMake install and independent
+find_package consumer compile/link/run pass. MSVC's installed `yvals.h` cannot
+find the missing local SDK `crtdbg.h`, before compiling the parser; actual native
+Windows package evidence must still come from a complete SDK/CI runner. Do not
+fake that system header or weaken warnings. UBSan and exact-head CI are pending.

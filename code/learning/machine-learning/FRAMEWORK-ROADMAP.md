@@ -216,6 +216,10 @@ SGD training, inspection, and portable save/reload/resume.
 - [ ] C++ bounded JSON prerequisite (NN50): native owned, strict, resource-bounded
   parser above the shared ISO harness, before native C++ checkpoint loading.
   Specification committed before implementation; not training or a C binding.
+  Native parser passes local GCC/Clang, Clang ASan, 98.71% library line coverage
+  and an actual installed CMake consumer. Scoped Windows scheduling and existing
+  OCaml contract regressions pass; local MSVC is blocked by a missing SDK header.
+  Independent security review and exact-head CI/merge remain pending.
 - [ ] C++ native framework.
 - [ ] C# native framework.
 - [ ] F# native framework.
