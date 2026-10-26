@@ -18084,6 +18084,66 @@ shared-shape `Double.Epsilon` regression reaches the bounded failure instead
 of failing open. The same review reconciled release metadata by keeping the
 existing public package version and labeling these changes Unreleased.
 
+## October 25, 2026: Python gradient-descent front preparation
+
+After the local Swift hash-functions tranche reached an exact-head independent
+PASS, the dependency-ready backlog was reprioritized without waiting for the
+full hosted queue. `python-gradient-descent-build-front-coverage` ranks next:
+it has no unfinished dependency, retires one exact orphan exemption, and
+unblocks two recorded descendants. The independent Swift paint-vm-ascii
+capability-only repair has narrower downstream leverage and remains pending.
+
+Preparation starts from exact origin/main
+`27dc687739ac74e8f5bbab70916a03d62a609743` on branch
+`codex/parity-python-gradient-descent-front-20261025`. The bounded owner adds
+truthful Unix and Windows BUILD fronts, production-only coverage, Ruff checks,
+ML02 behavior and immutability tests, publishable metadata, package README and
+changelog, and removes only the exact gradient-descent exemption. The public
+`sgd(weights, gradients, learning_rate)` API and its pure update semantics stay
+unchanged. Training loops, random sampling, convergence claims, native
+runtimes, and new filesystem, process, network, environment, clock, entropy,
+credential, or other host authority remain out of scope.
+
+## October 26, 2026: Python front queue reconciliation
+
+PR #18260 merged through guarded squash auto-merge as
+`fd5ee771aa2ae14e9bd639eba25e7b41baf8a4dc`, and its completed worktree was
+removed. The Python branch rebased without conflict onto that exact main.
+Post-merge prioritization correctly assigned the open hosted slot to the
+higher-leverage Swift hash-functions package, now ready PR #18312 at exact
+reviewed head `e60a15a73ed7ed2d090b996b0b184454e811b947`.
+
+The three hosted parity slots are therefore #18183, #18293, and #18312. This
+Python tranche remains local-only, independently reviewed, and next among
+dependency-ready owners. It must be revalidated and independently reviewed
+again at its exact post-rebase head before a future publication. The prepared
+Bezier successors remain blocked on #18293; no fourth parity PR may open.
+
+## October 26, 2026: Haskell merge and Python publication selection
+
+Haskell Starlark provider PR #18183 completed every exact-head check and merged
+through guarded squash auto-merge as
+`ab25faef874fdc7788b37eabc19b87b7c1c79835`. Its reviewed worktree and local
+branch were removed after the merge receipt was verified in current main.
+
+The freed hosted slot was reprioritized before publication. The reviewed Python
+gradient-descent front remains the highest-leverage bounded ready item: it
+removes one exact orphan exemption and unlocks two recorded descendants. The
+reviewed Swift PaintVmAscii capability profile and Kotlin micro-qr build front
+remain compact local preparations. Bezier successor tranches remain blocked on
+PR #18293. The Python branch is rebased onto exact current main
+`263e05f201003afd0395e82e6b810fe25a1260b4` and must pass fresh native,
+metadata, state, planner, and exact-head independent review before publication.
+
+## October 26, 2026: Python gradient-descent publication
+
+The reconciled Python front passed exact-head independent review at
+`773fb4cafe0033da22128682b3b14ae19a6cb4d2` and opened as draft PR #18324.
+GitHub reported the reviewed implementation head mergeable. The draft exists
+only to record the durable PR identity while this lifecycle receipt receives
+independent delta review; it must not be marked ready until that review passes,
+and guarded auto-merge remains disabled until every exact-head hosted check is
+terminal acceptable. The hosted parity queue is now at its three-PR ceiling.
 ## October 25, 2026: Swift hash-functions preparation
 
 The dependency-ready backlog was reprioritized while the three hosted parity
@@ -18174,3 +18234,33 @@ tests, state and lesson validation, JSON and diff hygiene, and independent
 exact-head review before publishing the merge commit. Existing auto-merge may
 remain enabled, but only replacement checks for the final exact head may allow
 GitHub to merge it.
+## October 26, 2026: Swift hash merge and Python conflict reconciliation
+
+Swift hash-functions PR #18312 completed every exact-head check at
+`b804a122612f4ae64d967efbff454af771bf6130` and merged through the guarded
+squash operation as `0be03745d775ffa9ee8c66ffda1700baa76ba58f`. The receipt is
+present on current origin/main, and the clean completed worktree and local branch
+were removed.
+
+That base advance conflicted with the Python lifecycle receipt after all of
+PR #18324's checks had already passed. Preserve both tranches by merging exact
+current main into the Python branch without rewriting its published history,
+then rerun exact-head independent review and hosted checks before re-enabling
+guarded auto-merge.
+
+## October 26, 2026: Python merge and .NET Bezier conflict reconciliation
+
+Python gradient-descent PR #18324 completed its guarded lifecycle and merged as
+`1bb58a0d7ed8d818d622e69890234d96b6e26b3a`. That exact receipt is present on
+current origin/main. PR #18293's published
+`038a3cea63d20e86bcc96bca367466dd653470f4` head then became conflicting.
+Preserve both tranches and the published .NET history by merging exact current
+main normally, retaining the Python merge receipt and the bounded .NET owner.
+Kotlin micro-qr PR #18355 is the other live parity owner at exact published head
+`2687144fb38e534dc6d308864ef0eb6b1fb97a63`; its lifecycle exists only on its
+published branch, so retain its active slot and URL while this branch reconciles
+main. The live publication set is therefore {#18293, #18355}.
+Re-run the native Bezier2D and dependent Arc2D suites, exact G2D02 selector and
+atomic-plan checks, state/lesson/JSON/diff hygiene, and independent exact-head
+review. Existing guarded auto-merge may remain enabled, but only replacement
+checks on the final exact head may permit the merge.
