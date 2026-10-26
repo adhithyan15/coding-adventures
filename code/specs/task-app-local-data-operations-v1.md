@@ -149,3 +149,10 @@ task remains. The same matrix seeds invalid bytes, launches the real bundle
 again, and requires byte-preserving `.corrupt` quarantine. Windows retains its
 separate UI Automation lifecycle; macOS retains replacement-runtime conformance;
 Linux retains its one-time pre-upgrade backup comparison.
+
+The app-agnostic half of this gate — the persistence envelope, the `.corrupt`
+checks, and the schema, version and byte validation — now lives in the shared
+[Mosaic release state gate](mosaic-release-state-gate-v1.md), which Engram and
+the other Mosaic apps adopt with their own fixtures. TaskApp's v0.1.0 fixture
+keeps its original schema and is read through an adapter in
+`taskapp_release.py`; the `expectedTask` check remains TaskApp's own.
