@@ -162,6 +162,8 @@ entity aliases apply the same normalization with multiline header geometry. ER
 titles reserve line-aware vertical geometry after semantic normalization. ER
 `useMaxWidth` configuration is preserved as structural render policy through
 layout and lowers to PaintScene metadata without changing intrinsic geometry.
+The shared `flowchart.htmlLabels` policy follows the same pipeline for ER edge
+labels while native backends continue to receive portable shaped text.
 ER remains partial while the rest of the pinned upstream syntax and visual corpus
 is incomplete.
 
