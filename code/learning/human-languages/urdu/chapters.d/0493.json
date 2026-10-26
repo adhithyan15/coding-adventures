@@ -1,0 +1,21 @@
+{
+  "chapter": 493,
+  "title": "Mourning",
+  "label": "ch:ur-mourning",
+  "canDo": "I can talk about a death in the family.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-R493-review-final-493",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can talk about a death in the family.",
+    "assesses": [
+      "UR-LEX-C493-MOURNING493-01",
+      "UR-LEX-C493-MOURNING493-02",
+      "UR-LEX-C493-MOURNING493-03",
+      "UR-LEX-C493-MOURNING493-04",
+      "UR-LEX-C493-MOURNING493-05"
+    ]
+  }
+}

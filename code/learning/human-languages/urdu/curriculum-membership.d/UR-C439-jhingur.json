@@ -1,0 +1,11 @@
+{
+  "id": "UR-C439-jhingur",
+  "pathSegment": "UR-PATH-439-GIDAR439",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-439-GIDAR439",
+      "order": 1
+    }
+  ]
+}

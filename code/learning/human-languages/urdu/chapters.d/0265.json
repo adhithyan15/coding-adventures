@@ -1,0 +1,22 @@
+{
+  "chapter": 265,
+  "title": "Who Did It, and What Will Happen",
+  "label": "ch:ur-who-did-it-and-what-will-happen",
+  "canDo": "I can say who did something, with ne and a verb that follows the thing (us ne roṭī khāī), and what will happen, for every person (karūṅ gā, kare gā, kareṅ ge).",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST",
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "UR-R265-who-did-it",
+    "kind": "production",
+    "summary": "Complete UR-R265-who-did-it: say who did something, and what will happen.",
+    "assesses": [
+      "UR-GRAMMAR-C265-ERGATIVE-01",
+      "UR-GRAMMAR-C265-ERGATIVE-02",
+      "UR-GRAMMAR-C265-FUTURE-01",
+      "UR-GRAMMAR-C265-FUTURE-02",
+      "UR-SCRIPT-C265-WAW-HAMZA-01"
+    ]
+  }
+}

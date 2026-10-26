@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C482-mundna",
+    "language": "urdu",
+    "chapter": 482,
+    "sequence": 28160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00c6ab6a1d2813c6"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 346,
+  "title": "Serving Others",
+  "label": "ch:ur-serving-others",
+  "canDo": "I can talk about selfless and selfish acts.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-R346-review-339-346",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can talk about selfless and selfish acts.",
+    "assesses": [
+      "UR-LEX-C346-KHIDMAT346-01",
+      "UR-LEX-C346-KHIDMAT346-02",
+      "UR-LEX-C346-KHIDMAT346-03",
+      "UR-LEX-C346-KHIDMAT346-04",
+      "UR-LEX-C346-KHIDMAT346-05"
+    ]
+  }
+}

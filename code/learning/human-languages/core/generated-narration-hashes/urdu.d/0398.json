@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:a6ab9038c28de703",
+  "lessonIds": [
+    "UR-C398-parvaz",
+    "UR-C398-tayyara",
+    "UR-C398-nashist",
+    "UR-C398-kasna",
+    "UR-C398-multavi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch398.txt",
+  "json": "urdu/narration/ch398.json",
+  "textHash": "fnv1a64:cc3c451206c8d1fc",
+  "jsonHash": "fnv1a64:bfe4ba49a9ec1c0e",
+  "findings": []
+}

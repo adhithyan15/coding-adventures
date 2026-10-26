@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C398-multavi",
+    "language": "urdu",
+    "chapter": 398,
+    "sequence": 23650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27c2b9c2d06be0ed"
+  },
+  "findings": []
+}

@@ -117,7 +117,7 @@ use lexer::token::Token;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 use crate::frontend_error::FrontendError;
-use crate::profiles::{ReleaseProfile, Slash};
+use crate::profiles::{IntLiterals, ReleaseProfile, Slash};
 
 /// LANG84 C5: most IIR instructions one module may hold.
 pub const MAX_IIR_INSTRUCTIONS: usize = 1_000_000;
@@ -719,52 +719,28 @@ impl<'a> Lowering<'a> {
     }
 
     /// Decode one `INT` token's value (LANG84 C1.4 allows decoding a single
-    /// token; it never splits one).
+    /// token; it never splits one). The profile's [`IntLiterals`] says which
+    /// spellings exist; a caller-supplied tree is not bound by the lexer, so
+    /// the spelling is checked again here against the *profile*, and a value
+    /// above `i64::MAX` is refused (CPython would keep it as a bigger int or a
+    /// long, which no integer subset has yet).
     ///
-    /// The release tokens spell a decimal integer as a non-zero digit and
-    /// more digits, or as zeros, with single `_` separators between digits
-    /// (PEP 515, where the release lexes them). A caller-supplied tree is not
-    /// bound by the lexer, so the spelling is checked again here:
-    ///
-    /// | token value   | value   | why                                       |
-    /// |---------------|---------|-------------------------------------------|
-    /// | `42`          | 42      |                                           |
-    /// | `1_000`       | 1000    | `_` separates digits                      |
-    /// | `00`, `0_0`   | 0       | Python allows any number of zeros         |
-    /// | `012`         | refused | Python 3: SyntaxError; Python 2: octal 10  |
-    /// | `1__0`, `_1`, `1_` | refused | not a Python integer                |
-    /// | `-1`, `+1`    | refused | a sign is a separate token in Python      |
+    /// The check is per profile, not per release: lowering never branches on
+    /// the release ID (LANG84 C2). Spellings that only some releases of a
+    /// profile lex (PEP 3127's `0o`/`0b` from 2.6, PEP 515's `_` from 3.6)
+    /// are refused by that release's own lexer; a forged `compile_cst` tree
+    /// claiming 2.2 with `0o17` decodes to 15, the value every release that
+    /// can spell it gives. No input a release's lexer can produce decodes to
+    /// a wrong value.
     fn decode_integer(&self, atom: &GrammarASTNode, token: &Token) -> Result<i64, FrontendError> {
         let text = token.value.as_str();
-        let well_formed = !text.is_empty()
-            && text
-                .split('_')
-                .all(|group| !group.is_empty() && group.bytes().all(|b| b.is_ascii_digit()));
-        if !well_formed {
-            return Err(self.unsupported_token(atom, token, format!("{} is not a decimal integer", shown(text))));
-        }
-        let digits: String = text.chars().filter(|c| *c != '_').collect();
-        if digits.len() > 1 && digits.starts_with('0') && digits.bytes().any(|b| b != b'0') {
-            return Err(self.unsupported_token(
-                atom,
-                token,
-                "leading zeros in a non-zero integer: a SyntaxError in Python 3 and an octal \
-                 literal in Python 2, which no integer subset has",
-            ));
-        }
-        // Leading zeros are all zeros by now; strip them so the length test
-        // below measures the significant digits. 19 digits always fit in
-        // i128; more than 19 never fit in i64.
-        let significant = digits.trim_start_matches('0');
-        let value = if significant.is_empty() {
-            Some(0)
-        } else if significant.len() > 19 {
-            None
-        } else {
-            significant.parse::<i128>().ok().and_then(|v| i64::try_from(v).ok())
+        let decoded = match self.profile.int_literals {
+            IntLiterals::Decimal => decode_decimal(text),
+            IntLiterals::Python2 => decode_python2(text),
         };
-        value.ok_or_else(|| {
-            self.unsupported_token(
+        match decoded {
+            Ok(Some(value)) => Ok(value),
+            Ok(None) => Err(self.unsupported_token(
                 atom,
                 token,
                 format!(
@@ -773,8 +749,9 @@ impl<'a> Lowering<'a> {
                     shown(text),
                     self.profile.subset
                 ),
-            )
-        })
+            )),
+            Err(why) => Err(self.unsupported_token(atom, token, why)),
+        }
     }
 
     /// The single child of `parent`, which must be a node named `rule`.
@@ -823,6 +800,81 @@ impl<'a> Lowering<'a> {
             message: message.into(),
         }
     }
+}
+
+/// Why a literal's spelling is refused (`Err`), or its value: `Some` when
+/// it fits `i64`, `None` when it does not.
+type Decoded = Result<Option<i64>, String>;
+
+/// `py3` literals ([`IntLiterals::Decimal`]): a non-zero digit and more
+/// digits, or zeros, with single `_` separators between digits (PEP 515,
+/// where the release lexes them).
+///
+/// | token value        | value   | why                                       |
+/// |--------------------|---------|-------------------------------------------|
+/// | `42`               | 42      |                                           |
+/// | `1_000`            | 1000    | `_` separates digits                      |
+/// | `00`, `0_0`        | 0       | Python 3 allows any number of zeros       |
+/// | `012`              | refused | a SyntaxError in every Python 3           |
+/// | `1__0`, `_1`, `1_` | refused | not a Python integer                      |
+/// | `0x1F`, `-1`, `+1` | refused | not in the subset; a sign is its own token |
+fn decode_decimal(text: &str) -> Decoded {
+    let well_formed = !text.is_empty()
+        && text
+            .split('_')
+            .all(|group| !group.is_empty() && group.bytes().all(|b| b.is_ascii_digit()));
+    if !well_formed {
+        return Err(format!("{} is not a decimal integer", shown(text)));
+    }
+    let digits: String = text.chars().filter(|c| *c != '_').collect();
+    if digits.len() > 1 && digits.starts_with('0') && digits.bytes().any(|b| b != b'0') {
+        return Err("leading zeros in a non-zero integer are a SyntaxError in Python 3 \
+                    (Python 2 read them as octal)"
+            .to_string());
+    }
+    Ok(digits_value(&digits, 10))
+}
+
+/// `py2` literals ([`IntLiterals::Python2`]), as `tok_get` lexes them and
+/// `parsenumber` reads them (see the `py2` profile in `profiles.rs`):
+///
+/// | token value          | value   | why                                    |
+/// |----------------------|---------|----------------------------------------|
+/// | `42`, `42L`, `42l`   | 42      | `L` makes a long; `str()` drops it      |
+/// | `0`, `00`, `0L`      | 0       | a lone `0` and `00` are octal zero      |
+/// | `010`                | 8       | a leading `0` means octal              |
+/// | `0x1F`, `0X1fL`      | 31      | hex                                    |
+/// | `0o17`, `0O17`       | 15      | octal, PEP 3127 (2.6 and later lex it) |
+/// | `0b101`, `0B101L`    | 5       | binary, PEP 3127 (2.6 and later)       |
+/// | `08`, `0x`, `0b2`    | refused | not a Python 2 integer                 |
+/// | `1_000`, `1LL`       | refused | no `_` in Python 2; one suffix         |
+///
+/// The prefix and suffix letters are ASCII, so slicing after them is safe.
+fn decode_python2(text: &str) -> Decoded {
+    let body = text.strip_suffix(['l', 'L']).unwrap_or(text);
+    let refused = || Err(format!("{} is not a Python 2 integer literal", shown(text)));
+    let (digits, radix) = match body.as_bytes() {
+        [b'0', b'x' | b'X', ..] => (&body[2..], 16),
+        [b'0', b'o' | b'O', ..] => (&body[2..], 8),
+        [b'0', b'b' | b'B', ..] => (&body[2..], 2),
+        [b'0', ..] => (body, 8),
+        [b'1'..=b'9', ..] => (body, 10),
+        _ => return refused(),
+    };
+    if digits.is_empty() || !digits.chars().all(|c| c.is_digit(radix)) {
+        return refused();
+    }
+    Ok(digits_value(digits, radix))
+}
+
+/// The value of a run of digits already checked to be in `radix`: `Some`
+/// when it fits `i64`, `None` when it does not. Checked accumulation keeps
+/// any number of leading zeros harmless.
+fn digits_value(digits: &str, radix: u32) -> Option<i64> {
+    digits.chars().try_fold(0_i64, |value, c| {
+        let digit = i64::from(c.to_digit(radix)?);
+        value.checked_mul(i64::from(radix))?.checked_add(digit)
+    })
 }
 
 fn fits_i64(value: i128) -> bool {

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:3dc9951c0a60c890",
+  "lessonIds": [
+    "UR-C389-savar",
+    "UR-C389-gathri",
+    "UR-C389-sarkana",
+    "UR-C389-jamahi",
+    "UR-C389-unghna"
+  ],
+  "tex": "urdu/book/chapters/ch389-dozing-on-the-train.tex"
+}

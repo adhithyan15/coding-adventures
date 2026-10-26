@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:8285a51022f8100a",
+  "lessonIds": [
+    "UR-C528-barkat",
+    "UR-C528-savab",
+    "UR-C528-taviz",
+    "UR-C528-nazrana",
+    "UR-C528-navazna"
+  ],
+  "tex": "urdu/book/chapters/ch528-offerings-and-blessings.tex"
+}

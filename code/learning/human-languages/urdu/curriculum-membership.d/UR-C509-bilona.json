@@ -1,0 +1,11 @@
+{
+  "id": "UR-C509-bilona",
+  "pathSegment": "UR-PATH-509-CHHACHH509",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-509-CHHACHH509",
+      "order": 1
+    }
+  ]
+}

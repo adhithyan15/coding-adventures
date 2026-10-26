@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:27953a24a692bcd0",
+  "lessonIds": [
+    "UR-C444-ghussa",
+    "UR-C444-chirna",
+    "UR-C444-barham",
+    "UR-C444-khafa",
+    "UR-C444-taish"
+  ],
+  "tex": "urdu/book/chapters/ch444-losing-one-s-temper.tex"
+}

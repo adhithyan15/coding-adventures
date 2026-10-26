@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C351-parakhna",
+    "language": "urdu",
+    "chapter": 351,
+    "sequence": 21060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ee347897340ac66"
+  },
+  "findings": []
+}

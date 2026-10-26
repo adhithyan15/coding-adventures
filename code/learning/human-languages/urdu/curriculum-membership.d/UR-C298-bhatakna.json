@@ -1,0 +1,11 @@
+{
+  "id": "UR-C298-bhatakna",
+  "pathSegment": "UR-PATH-298-BICHHAR298",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-298-BICHHAR298",
+      "order": 1
+    }
+  ]
+}

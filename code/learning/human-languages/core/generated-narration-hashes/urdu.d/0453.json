@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:83cb982b6a28cb24",
+  "lessonIds": [
+    "UR-C453-hasana",
+    "UR-C453-rulana",
+    "UR-C453-qahqaha",
+    "UR-C453-sisakna",
+    "UR-C453-mazaq"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch453.txt",
+  "json": "urdu/narration/ch453.json",
+  "textHash": "fnv1a64:e978cb101c9bb357",
+  "jsonHash": "fnv1a64:a503e408f8a6f294",
+  "findings": []
+}

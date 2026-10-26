@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:59b91ffcc5567c72",
+  "lessonIds": [
+    "UR-C298-bichharna",
+    "UR-C298-bhatakna",
+    "UR-C298-gumshuda",
+    "UR-C298-tasalli",
+    "UR-C298-milap"
+  ],
+  "tex": "urdu/book/chapters/ch298-lost-and-found.tex"
+}

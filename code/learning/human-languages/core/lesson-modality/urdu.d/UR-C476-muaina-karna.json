@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C476-muaina-karna",
+    "language": "urdu",
+    "chapter": 476,
+    "sequence": 27840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58819442e8e14179"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C504-plag",
+    "language": "urdu",
+    "chapter": 504,
+    "sequence": 29520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22f4e9969672772b"
+  },
+  "findings": []
+}

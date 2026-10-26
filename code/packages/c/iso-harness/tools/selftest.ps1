@@ -19,6 +19,8 @@ Set-Location $selfDir
 
 $env:ISO_INCLUDE = 'include'
 . (Join-Path $selfDir 'lib\iso-lib.ps1')
+& (Join-Path $selfDir 'selftest\compiler-count.ps1')
+& (Join-Path $selfDir 'selftest\compiler-flags.ps1')
 
 Write-Host 'iso-harness self-test (Windows/MSVC)'
 Write-Host "  C   compilers: $((Iso-Compilers -Lang c)   -join ' ')"

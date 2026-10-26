@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:536e8940468b4ee4",
+  "lessonIds": [
+    "UR-C449-mamta",
+    "UR-C449-shafqat",
+    "UR-C449-chumna",
+    "UR-C449-chimatna",
+    "UR-C449-ishq"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch449.txt",
+  "json": "urdu/narration/ch449.json",
+  "textHash": "fnv1a64:9419ed6bb2bf8123",
+  "jsonHash": "fnv1a64:eb73ec8602e5c62a",
+  "findings": []
+}

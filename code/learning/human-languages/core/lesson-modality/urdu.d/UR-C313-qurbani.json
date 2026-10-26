@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C313-qurbani",
+    "language": "urdu",
+    "chapter": 313,
+    "sequence": 18920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e26324d7e4b8ee65"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 324,
+  "title": "A Tale of Long Ago",
+  "label": "ch:ur-a-tale-of-long-ago",
+  "canDo": "I can begin and tell a traditional tale.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C324-kahavat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can begin and tell a traditional tale.",
+    "assesses": [
+      "UR-LEX-C324-DASTAN324-03",
+      "UR-LEX-C324-DASTAN324-04",
+      "UR-LEX-C324-DASTAN324-05"
+    ]
+  }
+}

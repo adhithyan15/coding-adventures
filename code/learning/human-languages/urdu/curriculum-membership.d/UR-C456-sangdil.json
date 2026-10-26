@@ -1,0 +1,11 @@
+{
+  "id": "UR-C456-sangdil",
+  "pathSegment": "UR-PATH-456-KIND456",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-456-KIND456",
+      "order": 1
+    }
+  ]
+}

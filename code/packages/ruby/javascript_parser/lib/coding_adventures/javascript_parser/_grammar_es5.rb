@@ -129,6 +129,10 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
     GT::GrammarRule.new(
       name: "expression_statement",
       body: GT::Sequence.new(elements: [
+        GT::NegativeLookahead.new(element: GT::Group.new(element: GT::Alternation.new(choices: [
+              GT::RuleReference.new(name: "LBRACE", is_token: true),
+              GT::Literal.new(value: "function"),
+            ]))),
         GT::RuleReference.new(name: "expression", is_token: false),
         GT::RuleReference.new(name: "SEMICOLON", is_token: true),
       ]),

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:36ecf17095dac48e",
+  "lessonIds": [
+    "UR-C319-basant",
+    "UR-C319-dor",
+    "UR-C319-charkhi",
+    "UR-C319-urana",
+    "UR-C319-katna-cut-loose"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch319.txt",
+  "json": "urdu/narration/ch319.json",
+  "textHash": "fnv1a64:58b1287d8ecb4108",
+  "jsonHash": "fnv1a64:7de7605151acc1cc",
+  "findings": []
+}

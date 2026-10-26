@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C202-yatri-review",
+    "language": "punjabi",
+    "chapter": 202,
+    "sequence": 10990,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:109804814f8d2293"
+  },
+  "findings": []
+}

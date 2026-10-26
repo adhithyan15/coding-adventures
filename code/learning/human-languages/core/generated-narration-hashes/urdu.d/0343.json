@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:9a7fdf5d04efe4ed",
+  "lessonIds": [
+    "UR-C343-mahkama",
+    "UR-C343-darkhast",
+    "UR-C343-uhda",
+    "UR-C343-hidayat",
+    "UR-C343-sujhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch343.txt",
+  "json": "urdu/narration/ch343.json",
+  "textHash": "fnv1a64:e5aebc4b88198b06",
+  "jsonHash": "fnv1a64:01b3a77b7317abf9",
+  "findings": []
+}

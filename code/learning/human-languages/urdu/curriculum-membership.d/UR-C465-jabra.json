@@ -1,0 +1,11 @@
+{
+  "id": "UR-C465-jabra",
+  "pathSegment": "UR-PATH-465-BONE465",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-465-BONE465",
+      "order": 4
+    }
+  ]
+}

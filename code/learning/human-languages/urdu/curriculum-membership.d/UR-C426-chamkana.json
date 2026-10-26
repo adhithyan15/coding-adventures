@@ -1,0 +1,11 @@
+{
+  "id": "UR-C426-chamkana",
+  "pathSegment": "UR-PATH-426-KHALIS426",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-426-KHALIS426",
+      "order": 4
+    }
+  ]
+}

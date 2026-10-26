@@ -1,0 +1,11 @@
+{
+  "id": "UR-C467-chatna",
+  "pathSegment": "UR-PATH-467-MOUTH467",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-467-MOUTH467",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C337-qabul-karna",
+  "pathSegment": "UR-PATH-337-TASDIQ337",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-337-TASDIQ337",
+      "order": 3
+    }
+  ]
+}

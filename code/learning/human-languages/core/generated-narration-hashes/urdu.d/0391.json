@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:3d8cb5783aeef1d0",
+  "lessonIds": [
+    "UR-C391-buking",
+    "UR-C391-qatar",
+    "UR-C391-kauntar",
+    "UR-C391-rash",
+    "UR-C391-ghusna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch391.txt",
+  "json": "urdu/narration/ch391.json",
+  "textHash": "fnv1a64:4a0a1bb2a63609d6",
+  "jsonHash": "fnv1a64:6ee2cf5431ca5435",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C413-ahata",
+  "pathSegment": "UR-PATH-413-KOTHI413",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-413-KOTHI413",
+      "order": 2
+    }
+  ]
+}

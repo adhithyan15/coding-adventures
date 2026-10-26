@@ -1,0 +1,11 @@
+{
+  "id": "UR-C393-rukvana",
+  "pathSegment": "UR-PATH-393-JAM393",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-393-JAM393",
+      "order": 4
+    }
+  ]
+}

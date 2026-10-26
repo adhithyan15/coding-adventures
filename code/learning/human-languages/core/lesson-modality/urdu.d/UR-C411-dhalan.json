@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C411-dhalan",
+    "language": "urdu",
+    "chapter": 411,
+    "sequence": 24280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:990935e145e187a8"
+  },
+  "findings": []
+}

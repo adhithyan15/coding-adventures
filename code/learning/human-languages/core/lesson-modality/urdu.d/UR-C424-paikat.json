@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C424-paikat",
+    "language": "urdu",
+    "chapter": 424,
+    "sequence": 24970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8540f067ba9d87f7"
+  },
+  "findings": []
+}

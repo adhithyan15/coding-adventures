@@ -1,0 +1,21 @@
+{
+  "chapter": 269,
+  "title": "Should, Must, and So",
+  "label": "ch:ur-should-must-and-so",
+  "canDo": "I can say what someone should do (āp ko jānā chāhiye), what I have to do (mujhe jānā paṛe gā), and what follows from a reason (is liye, to, chunāṅche).",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-R269-advice-and-reasons",
+    "kind": "production",
+    "summary": "Complete UR-R269-advice-and-reasons: give advice, say what you have to do, and say what follows.",
+    "assesses": [
+      "UR-GRAMMAR-C269-SHOULD-01",
+      "UR-GRAMMAR-C269-SHOULD-02",
+      "UR-LEX-C269-CHUNANCHE-01",
+      "UR-GRAMMAR-C269-SO-01",
+      "UR-GRAMMAR-C269-SO-02"
+    ]
+  }
+}

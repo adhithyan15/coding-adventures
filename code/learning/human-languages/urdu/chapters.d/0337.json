@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Denial and Confession",
+  "label": "ch:ur-denial-and-confession",
+  "canDo": "I can say who denied something and who owned up.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C337-ghalat-fahmi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can say who denied something and who owned up.",
+    "assesses": [
+      "UR-LEX-C337-TASDIQ337-03",
+      "UR-LEX-C337-TASDIQ337-04",
+      "UR-LEX-C337-TASDIQ337-05"
+    ]
+  }
+}

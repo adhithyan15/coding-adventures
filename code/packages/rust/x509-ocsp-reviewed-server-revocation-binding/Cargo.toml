@@ -1,0 +1,38 @@
+[package]
+name = "x509-ocsp-reviewed-server-revocation-binding"
+version = "0.1.0"
+edition = "2021"
+description = "Exact OCSP revocation binding for one constructed reviewed server path"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-certificate = { path = "../x509-certificate" }
+x509-certificate-policy = { path = "../x509-certificate-policy" }
+x509-name-constraints = { path = "../x509-name-constraints" }
+x509-ocsp-authenticated-target-revocation = { path = "../x509-ocsp-authenticated-target-revocation" }
+x509-rsa-sha256-reviewed-server-link = { path = "../x509-rsa-sha256-reviewed-server-link" }
+x509-subject-alt-name = { path = "../x509-subject-alt-name" }
+
+[dev-dependencies]
+rsa-public-operation = { path = "../rsa-public-operation" }
+sha1 = { package = "coding_adventures_sha1", path = "../sha1" }
+sha256 = { package = "coding_adventures_sha256", path = "../sha256" }
+tls-server-identity = { path = "../tls-server-identity" }
+x509-certificate-path-construction = { path = "../x509-certificate-path-construction" }
+x509-certificate-path-length-policy = { path = "../x509-certificate-path-length-policy" }
+x509-certificate-policy = { path = "../x509-certificate-policy" }
+x509-intermediate-certificate-policy = { path = "../x509-intermediate-certificate-policy" }
+x509-ocsp-authenticated-responder = { path = "../x509-ocsp-authenticated-responder" }
+x509-ocsp-basic-response = { path = "../x509-ocsp-basic-response" }
+x509-ocsp-cert-id-binding = { path = "../x509-ocsp-cert-id-binding" }
+x509-ocsp-issuer-bound-responder = { path = "../x509-ocsp-issuer-bound-responder" }
+x509-ocsp-responder-certificate-policy = { path = "../x509-ocsp-responder-certificate-policy" }
+x509-ocsp-responder-id-binding = { path = "../x509-ocsp-responder-id-binding" }
+x509-ocsp-response = { path = "../x509-ocsp-response" }
+x509-ocsp-revocation-policy = { path = "../x509-ocsp-revocation-policy" }
+x509-rsa-public-key = { path = "../x509-rsa-public-key" }
+x509-rsa-sha256-issuer-link = { path = "../x509-rsa-sha256-issuer-link" }
+x509-rsa-sha256-reviewed-anchor-link = { path = "../x509-rsa-sha256-reviewed-anchor-link" }
+x509-server-certificate-policy = { path = "../x509-server-certificate-policy" }
+x509-time = { path = "../x509-time" }
+x509-webpki-root-anchor-selection = { path = "../x509-webpki-root-anchor-selection" }

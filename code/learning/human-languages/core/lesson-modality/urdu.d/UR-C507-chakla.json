@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C507-chakla",
+    "language": "urdu",
+    "chapter": 507,
+    "sequence": 29660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8b8be1d150fca0f"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C439-jotna",
+  "pathSegment": "UR-PATH-439-GIDAR439",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-439-GIDAR439",
+      "order": 4
+    }
+  ]
+}

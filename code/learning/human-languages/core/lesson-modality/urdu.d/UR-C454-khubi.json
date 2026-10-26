@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C454-khubi",
+    "language": "urdu",
+    "chapter": 454,
+    "sequence": 26740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee8fa6e7383cea4c"
+  },
+  "findings": []
+}

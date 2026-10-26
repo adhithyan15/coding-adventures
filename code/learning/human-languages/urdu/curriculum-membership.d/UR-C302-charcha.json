@@ -1,0 +1,11 @@
+{
+  "id": "UR-C302-charcha",
+  "pathSegment": "UR-PATH-302-AFWAH302",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-302-AFWAH302",
+      "order": 1
+    }
+  ]
+}

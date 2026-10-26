@@ -1,0 +1,11 @@
+{
+  "id": "UR-W270-zal",
+  "pathSegment": "UR-PATH-270-WAY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-270-WAY",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C457-vada",
+  "pathSegment": "UR-PATH-457-TRUST457",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-457-TRUST457",
+      "order": 4
+    }
+  ]
+}

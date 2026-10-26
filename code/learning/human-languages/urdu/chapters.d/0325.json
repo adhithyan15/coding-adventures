@@ -1,0 +1,19 @@
+{
+  "chapter": 325,
+  "title": "Giants and Fairies",
+  "label": "ch:ur-giants-and-fairies",
+  "canDo": "I can tell a story with magic in it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C325-dain",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can tell a story with magic in it.",
+    "assesses": [
+      "UR-LEX-C325-DEV325-03",
+      "UR-LEX-C325-DEV325-04",
+      "UR-LEX-C325-DEV325-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C346-khidmat",
+    "language": "urdu",
+    "chapter": 346,
+    "sequence": 20760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea386425c2f805e0"
+  },
+  "findings": []
+}

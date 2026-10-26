@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## Unreleased - an ExpressionStatement never starts with `{` or `function` (F12 phase 0)
+
+### Fixed
+
+- The ES grammars now enforce ECMA-262's ExpressionStatement lookahead:
+  `!( LBRACE | "function" )` in ES1/ES3/ES5, plus `"class"` and `"let" LBRACKET`
+  from ES2015 and `"async" "function"` from ES2017. Before, a block whose last
+  statement had no `;` fell through to `expression_statement` (ASI runs only
+  after the whole parse fails), so `{ a }⏎/foo/g.exec(s)` parsed as
+  `({a})/foo/g.exec(s)` and `if (x) function f(){}` as an expression. Both are
+  now refused, which is what Closure does with the second; the first will
+  compile once F12 phase 3 lets the parser re-lex the `/`. Regenerated
+  `src/_grammar.rs` (rustfmt). The explanation sits at the end of each
+  grammar file so the compiled rules keep their line numbers.
+- Divergences, all fail closed: `async⏎function f(){}` is refused (no grammar
+  port has a no-newline predicate everywhere yet), and an ES5 `{ function f(){} }`
+  is refused instead of reading the declaration as an expression.
+- Tests: `tests/expression_statement_lookahead.rs`.
+
+### Added
+
+- `asi::restricted_insertion_points(tokens)`: the restricted-production `;`s
+  (`return⏎`, `break⏎`, `continue⏎`, `throw⏎`, `yield⏎`, newline-led
+  `++`/`--`), computed without parsing. These are the ASI points that change
+  what a program means. When `asi_insertion_points` fails, closurec's
+  WHITESPACE_ONLY keeps the source's line break at these points, so a program
+  the grammar can't parse no longer loses them.
+
 ## 0.66.0 - Unreleased - LANG84 phase 6d: release probes
 
 ### Added

@@ -1,0 +1,19 @@
+{
+  "chapter": 505,
+  "title": "Up in the Loft",
+  "label": "ch:ur-up-in-the-loft",
+  "canDo": "I can talk about clearing out old things.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C505-rakhvana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can talk about clearing out old things.",
+    "assesses": [
+      "UR-LEX-C505-ATARI505-03",
+      "UR-LEX-C505-ATARI505-04",
+      "UR-LEX-C505-ATARI505-05"
+    ]
+  }
+}

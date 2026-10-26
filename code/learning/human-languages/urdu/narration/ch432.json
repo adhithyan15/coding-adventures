@@ -1,0 +1,849 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 432,
+  "title": "Sunrise and Sunset",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:030158bcc7aa1f80",
+  "lessons": [
+    {
+      "id": "UR-C432-tulu",
+      "sequence": 25350,
+      "title": "طلوع (tulū) — the rising (of the sun)",
+      "headword": "طلوع",
+      "romanization": "tulū",
+      "gloss": "the rising (of the sun)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75a5fe718813ee36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for mist, then the Urdu for to let up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: طلوع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "طلوع — tulū — \"the rising (of the sun)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سورج چھ بجے طلوع ہوتا ہے۔ sūraj chhe baje tulū hotā hai. The sun rises at six."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "طلوع (tulū) is usually traced, through Persian, to Arabic ṭulūʿ, \"rising\"; with ہونا it means the sun comes up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tulū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tulū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tulū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tulū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūraj chhe baje tulū hotā hai. — The sun rises at six.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūraj chhe baje tulū hotā hai.* — The sun rises at six.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for mist, then the Urdu for to let up, then say tulū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for mist, then the Urdu for to let up, then say *tulū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does طلوع (tulū) mean? (\"The rising (of the sun)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C432-ghurub",
+      "sequence": 25360,
+      "title": "غروب (ghurūb) — the setting (of the sun)",
+      "headword": "غروب",
+      "romanization": "ghurūb",
+      "gloss": "the setting (of the sun)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6147667cf80d573",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to let up, then the Urdu for the rising (of the sun)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: غروب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غروب — ghurūb — \"the setting (of the sun)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سورج شام سات بجے غروب ہوا۔ sūraj shām sāt baje ghurūb huā. The sun set at seven in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غروب (ghurūb) is usually traced, through Persian, to Arabic ghurūb, \"setting\"; it shares its letters with مغرب, \"the west\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghurūb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghurūb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghurūb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghurūb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūraj shām sāt baje ghurūb huā. — The sun set at seven in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūraj shām sāt baje ghurūb huā.* — The sun set at seven in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to let up, then the Urdu for the rising (of the sun), then say ghurūb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to let up, then the Urdu for the rising (of the sun), then say *ghurūb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does غروب (ghurūb) mean? (\"The setting (of the sun)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C432-ufuq",
+      "sequence": 25370,
+      "title": "افق (ufuq) — the horizon",
+      "headword": "افق",
+      "romanization": "ufuq",
+      "gloss": "the horizon",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79e38f1d7ddb0a7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for the rising (of the sun), then the Urdu for the setting (of the sun)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: افق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "افق — ufuq — \"the horizon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سمندر کے افق پر سورج غروب ہوا۔ samandar ke ufuq par sūraj ghurūb huā. The sun went down on the sea's horizon."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "افق (ufuq) is usually traced, through Persian, to Arabic ufuq, \"the horizon\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ufuq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ufuq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ufuq, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ufuq*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samandar ke ufuq par sūraj ghurūb huā. — The sun went down on the sea's horizon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samandar ke ufuq par sūraj ghurūb huā.* — The sun went down on the sea's horizon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for the rising (of the sun), then the Urdu for the setting (of the sun), then say ufuq again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for the rising (of the sun), then the Urdu for the setting (of the sun), then say *ufuq* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does افق (ufuq) mean? (\"The horizon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C432-shafaq",
+      "sequence": 25380,
+      "title": "شفق (shafaq) — the glow of sunset; twilight",
+      "headword": "شفق",
+      "romanization": "shafaq",
+      "gloss": "the glow of sunset; twilight",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6be60a0dfeb88dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for the setting (of the sun), then the Urdu for the horizon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شفق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شفق — shafaq — \"the glow of sunset; twilight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "غروب کے بعد آسمان پر شفق تھی۔ ghurūb ke bād āsmān par shafaq thī. After sunset the sky glowed red."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شفق (shafaq) is usually traced, through Persian, to Arabic shafaq, \"the red of twilight\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shafaq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shafaq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shafaq, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shafaq*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghurūb ke bād āsmān par shafaq thī. — After sunset the sky glowed red.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghurūb ke bād āsmān par shafaq thī.* — After sunset the sky glowed red.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for the setting (of the sun), then the Urdu for the horizon, then say shafaq again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for the setting (of the sun), then the Urdu for the horizon, then say *shafaq* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شفق (shafaq) mean? (\"The glow of sunset; twilight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C432-ujala",
+      "sequence": 25390,
+      "title": "اجالا (ujālā) — daylight; the first light",
+      "headword": "اجالا",
+      "romanization": "ujālā",
+      "gloss": "daylight; the first light",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17e762c8ee090d12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for the horizon, then the Urdu for the glow of sunset."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اجالا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اجالا — ujālā — \"daylight; the first light\"."
+            },
+            {
+              "kind": "speech",
+              "text": "صبح چھ بجے اجالا ہوتا ہے۔ subah chhe baje ujālā hotā hai. It gets light at six in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اجالا (ujālā) is inherited: CDIAL lists the Hindi cousin ujālā, \"bright\", under ujjvālaka, a form it reconstructs (CDIAL 1673)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ujālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ujālā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ujālā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ujālā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "subah chhe baje ujālā hotā hai. — It gets light at six in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *subah chhe baje ujālā hotā hai.* — It gets light at six in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for the horizon, then the Urdu for the glow of sunset, then say ujālā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for the horizon, then the Urdu for the glow of sunset, then say *ujālā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اجالا (ujālā) mean? (\"Daylight; the first light\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R432-review-426-432",
+      "sequence": 25400,
+      "title": "Looking back: from Pure and Genuine to Sunrise and Sunset",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Pure and Genuine to Sunrise and Sunset",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca38576b1504dffd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for unmixed and authentic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unmixed, authentic, adulteration, to rub, to polish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: unmixed, authentic, adulteration, to rub, to polish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a size, loose, an outfit, a handkerchief, to look good (on someone)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a size, loose, an outfit, a handkerchief, to look good (on someone)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a drop, to pour (of rain), a spell of rain, steam, to gather (of clouds)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a drop, to pour (of rain), a spell of rain, steam, to gather (of clouds)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moisture, a chill, the cold season, to shrink, to go stiff",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: moisture, a chill, the cold season, to shrink, to go stiff]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the temperature (in everyday talk), a degree (of temperature), to be burning hot, airless heat, to fan (someone)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the temperature (in everyday talk), a degree (of temperature), to be burning hot, airless heat, to fan (someone)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rain cloud, to be surrounded, to spread over, mist, to let up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rain cloud, to be surrounded, to spread over, mist, to let up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rising (of the sun), the setting (of the sun), the horizon, the glow of sunset, daylight",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rising (of the sun), the setting (of the sun), the horizon, the glow of sunset, daylight]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Unmixed? (خالص, khālis.) Authentic? (اصلی, aslī.) Adulteration? (ملاوٹ, milāvaṭ.) To rub? (رگڑنا, ragaṛnā.) To polish? (چمکانا, chamkānā.) A size? (سائز, sāiz.) Loose? (ڈھیلا, ḍhīlā.) An outfit? (پوشاک, poshāk.) A handkerchief? (رومال, rūmāl.) To look good (on someone)? (سجنا, sajnā.) A drop? (بوند, būṅd.) To pour (of rain)? (برسنا, barasnā.) A spell of rain? (جھڑی, jhaṛī.) Steam? (بھاپ, bhāp.) To gather (of clouds)? (امڈنا, umaḍnā.) Moisture? (نمی, namī.) A chill? (ٹھنڈ, ṭhanḍ.) The cold season? (جاڑا, jāṛā.) To shrink? (سکڑنا, sikuṛnā.) To go stiff? (اکڑنا, akaṛnā.) The temperature (in everyday talk)? (پارہ, pārā.) A degree (of temperature)? (ڈگری, ḍigrī.) To be burning hot? (تپنا, tapnā.) Airless heat? (حبس, habs.) To fan (someone)? (جھلنا, jhalnā.) A rain cloud? (ابر, abr.) To be surrounded? (گھرنا, ghirnā.) To spread over? (چھانا, chhānā.) Mist? (دھند, dhund.) To let up? (تھمنا, thamnā.) The rising (of the sun)? (طلوع, tulū.) The setting (of the sun)? (غروب, ghurūb.) The horizon? (افق, ufuq.) The glow of sunset? (شفق, shafaq.) Daylight? (اجالا, ujālā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

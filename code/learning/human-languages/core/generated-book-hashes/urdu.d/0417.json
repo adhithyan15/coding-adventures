@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:f49455be6eb69567",
+  "lessonIds": [
+    "UR-C417-akaunt",
+    "UR-C417-raqam",
+    "UR-C417-naqd",
+    "UR-C417-chek",
+    "UR-C417-nikalvana",
+    "UR-R417-review-410-417"
+  ],
+  "tex": "urdu/book/chapters/ch417-accounts-and-cash.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C203-baare-review",
+    "language": "punjabi",
+    "chapter": 203,
+    "sequence": 11040,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0f997d08c613b5e8"
+  },
+  "findings": []
+}

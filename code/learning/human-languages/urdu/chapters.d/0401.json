@@ -1,0 +1,21 @@
+{
+  "chapter": 401,
+  "title": "Meeting the Plane",
+  "label": "ch:ur-meeting-the-plane",
+  "canDo": "I can meet someone off a flight and welcome them.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-R401-review-394-401",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can meet someone off a flight and welcome them.",
+    "assesses": [
+      "UR-LEX-C401-ISTIQBAL401-01",
+      "UR-LEX-C401-ISTIQBAL401-02",
+      "UR-LEX-C401-ISTIQBAL401-03",
+      "UR-LEX-C401-ISTIQBAL401-04",
+      "UR-LEX-C401-ISTIQBAL401-05"
+    ]
+  }
+}

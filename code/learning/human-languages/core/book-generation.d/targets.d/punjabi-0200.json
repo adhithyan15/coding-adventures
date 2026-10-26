@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 200,
+  "output": "punjabi/book/chapters/ch200-this-is-a-vegetable.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

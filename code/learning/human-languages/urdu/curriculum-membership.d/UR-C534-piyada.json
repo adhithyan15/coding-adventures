@@ -1,0 +1,11 @@
+{
+  "id": "UR-C534-piyada",
+  "pathSegment": "UR-PATH-534-BISAT534",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-534-BISAT534",
+      "order": 2
+    }
+  ]
+}

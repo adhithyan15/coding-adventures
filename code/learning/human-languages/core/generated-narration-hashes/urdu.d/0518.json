@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:10199ddd3ebd4e3f",
+  "lessonIds": [
+    "UR-C518-avaz",
+    "UR-C518-surila",
+    "UR-C518-rag",
+    "UR-C518-riyaz",
+    "UR-C518-gungunana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch518.txt",
+  "json": "urdu/narration/ch518.json",
+  "textHash": "fnv1a64:f43146560d32c042",
+  "jsonHash": "fnv1a64:3b4310c515e67a1f",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C499-katna-spin",
+    "language": "urdu",
+    "chapter": 499,
+    "sequence": 29280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64252565202912c8"
+  },
+  "findings": []
+}

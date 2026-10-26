@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:5ff6c98ecc1341a1",
+  "lessonIds": [
+    "UR-C433-tila",
+    "UR-C433-dher",
+    "UR-C433-ghar",
+    "UR-C433-tinka",
+    "UR-C433-ukharna"
+  ],
+  "tex": "urdu/book/chapters/ch433-mounds-heaps-and-caves.tex"
+}

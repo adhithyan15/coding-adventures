@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:8628c58a652f078b",
+  "lessonIds": [
+    "UR-C293-gaon",
+    "UR-C293-bahna",
+    "UR-C293-dubna",
+    "UR-C293-lahar",
+    "UR-C293-bhanvar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch293.txt",
+  "json": "urdu/narration/ch293.json",
+  "textHash": "fnv1a64:b5b9fd14d876f771",
+  "jsonHash": "fnv1a64:585c49ebd81e3efc",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 475,
+  "title": "Long Illnesses",
+  "label": "ch:ur-long-illnesses",
+  "canDo": "I can talk about an illness that lasts.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C475-mubtala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can talk about an illness that lasts.",
+    "assesses": [
+      "UR-LEX-C475-LONG475-03",
+      "UR-LEX-C475-LONG475-04",
+      "UR-LEX-C475-LONG475-05"
+    ]
+  }
+}

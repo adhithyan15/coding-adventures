@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:3faa5404f2e57c59",
+  "lessonIds": [
+    "UR-C454-fitrat",
+    "UR-C454-tabiat",
+    "UR-C454-adat",
+    "UR-C454-khubi",
+    "UR-C454-shakhsiyat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch454.txt",
+  "json": "urdu/narration/ch454.json",
+  "textHash": "fnv1a64:9e9100a6cfd9819e",
+  "jsonHash": "fnv1a64:8ae1380aae87d899",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C344-zulm",
+  "pathSegment": "UR-PATH-344-BARABAR344",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-344-BARABAR344",
+      "order": 3
+    }
+  ]
+}

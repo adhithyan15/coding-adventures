@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-200-A2-SABZI",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can recognise and use the noun for a vegetable or cooked vegetable dish in one bounded identity frame.",
+  "prerequisites": [
+    "PA-EXT-199-A2-SUCHNA"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C396-naka",
+    "language": "urdu",
+    "chapter": 396,
+    "sequence": 23530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1faf924de2bb06ec"
+  },
+  "findings": []
+}

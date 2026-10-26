@@ -1,0 +1,512 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 203,
+  "title": "About the Book",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:ae07c88a79233221",
+  "lessons": [
+    {
+      "id": "PA-C203-book-return",
+      "sequence": 11020,
+      "title": "Return to the familiar book noun",
+      "headword": "ਕਿਤਾਬ",
+      "romanization": "kitaab",
+      "gloss": "retrieve the familiar noun for a book",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f645a56fcd9d0e69",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "kitāb; YOU SAY: ਕਿਤਾਬ (kitaab)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *kitāb*; YOU SAY: **ਕਿਤਾਬ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep this familiar noun ready. A new relationship word will follow it only after the next lesson owns that word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "book; YOU SAY: ਕਿਤਾਬ (kitaab)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *book*; YOU SAY: **ਕਿਤਾਬ**]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the familiar noun once, then leave a silent space after it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the familiar noun from meaning. This opener owns no new word."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C203-baare",
+      "sequence": 11030,
+      "title": "One postposition for about",
+      "headword": "ਬਾਰੇ",
+      "romanization": "baare",
+      "gloss": "about or concerning",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:218baa2025862c20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the familiar noun for a book, then leave a silent space after it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: direct owner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬਾਰੇ (baare) — bāre — about; concerning."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear and say the whole word before reading it. Keep it as one whole postposition. Punjabi places a postposition after its noun; the next lesson will retrieve this new word before the familiar noun returns."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — where the trail runs out",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Punjabi University Patiala explains the after-the-noun position. A dictionary entry records the “about / concerning” meaning and cites Bhai Maya Singh's 1895 dictionary. Punjab School Education Board Class 5 material independently uses the word in ordinary school prompts. Sources: Punjabi University Patiala, dictionary entry, and PSEB Class 5."
+            },
+            {
+              "kind": "speech",
+              "text": "The exact historical derivation of modern written ਬਾਰੇ (baare) remains unknown in the cited sources. Its origin remains unknown here. This lesson therefore makes no etymological claim. Keep the present-day word whole."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "bāre; YOU SAY: ਬਾਰੇ (baare)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *bāre*; YOU SAY: **ਬਾਰੇ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਬਾਰੇ (baare)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਬਾਰੇ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਬਾਰੇ (baare) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਬਾਰੇ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the postposition for “about / concerning” without looking."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C203-baare-review",
+      "sequence": 11040,
+      "title": "Retrieve the new postposition on its own",
+      "headword": "ਬਾਰੇ",
+      "romanization": "baare",
+      "gloss": "retrieve about by sound, meaning, and script",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:0f997d08c613b5e8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "bāre; YOU SAY: ਬਾਰੇ (baare)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *bāre*; YOU SAY: **ਬਾਰੇ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "about or concerning; YOU SAY: ਬਾਰੇ (baare)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *about or concerning*; YOU SAY: **ਬਾਰੇ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਬਾਰੇ (baare)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਬਾਰੇ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਬਾਰੇ (baare)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਬਾਰੇ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep one whole postposition and one bounded meaning here. A familiar noun will return only after this separate retrieval."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say and then write the word once from memory."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C203-about-the-book",
+      "sequence": 11050,
+      "title": "Put the postposition after one familiar noun",
+      "headword": "ਕਿਤਾਬ ਬਾਰੇ",
+      "romanization": "kitaab baare",
+      "gloss": "about the book",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a722da1aaddc109",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the familiar book noun, then the new postposition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਿਤਾਬ ਬਾਰੇ (kitaab baare) — kitāb bāre — about the book."
+            },
+            {
+              "kind": "speech",
+              "text": "Punjabi puts this postposition after the familiar noun: book first, then “about.” This chapter owns only that relationship word in this one gentle frame; the book noun remains old."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "kitāb bāre; YOU SAY: ਕਿਤਾਬ ਬਾਰੇ (kitaab baare)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *kitāb bāre*; YOU SAY: **ਕਿਤਾਬ ਬਾਰੇ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕਿਤਾਬ ਬਾਰੇ (kitaab baare)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕਿਤਾਬ ਬਾਰੇ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਕਿਤਾਬ ਬਾਰੇ (kitaab baare)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਕਿਤਾਬ ਬਾਰੇ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the complete “about the book” frame."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C203-payoff",
+      "sequence": 11060,
+      "title": "A bounded about-postposition payoff",
+      "headword": "ਕਿਤਾਬ ਬਾਰੇ",
+      "romanization": "kitaab baare",
+      "gloss": "recognise and produce one about-the-book frame",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf847690e8414406",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the new postposition alone before rebuilding its familiar noun frame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "kitāb bāre; YOU SAY: ਕਿਤਾਬ ਬਾਰੇ (kitaab baare)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *kitāb bāre*; YOU SAY: **ਕਿਤਾਬ ਬਾਰੇ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕਿਤਾਬ ਬਾਰੇ (kitaab baare)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕਿਤਾਬ ਬਾਰੇ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write ਕਿਤਾਬ ਬਾਰੇ (kitaab baare)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write **ਕਿਤਾਬ ਬਾਰੇ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the new postposition, then produce the complete familiar-noun frame."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the twenty-sixth prerequisite tranche exposed by Punjabi A2 mock drafting. It does not unblock Punjabi A2 mock 1 by itself. It is not an A2 mock, not A2 readiness or attainment, and not external or human validation."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

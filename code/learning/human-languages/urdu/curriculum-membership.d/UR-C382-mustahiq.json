@@ -1,0 +1,11 @@
+{
+  "id": "UR-C382-mustahiq",
+  "pathSegment": "UR-PATH-382-INAM382",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-382-INAM382",
+      "order": 3
+    }
+  ]
+}

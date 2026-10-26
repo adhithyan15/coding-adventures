@@ -1,0 +1,11 @@
+{
+  "id": "UR-C396-mahsul",
+  "pathSegment": "UR-PATH-396-SHAHRAH396",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-396-SHAHRAH396",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 318,
+  "title": "Eid Morning",
+  "label": "ch:ur-eid-morning",
+  "canDo": "I can tell how a family spent a festival morning.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C318-lipatna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 318: I can tell how a family spent a festival morning.",
+    "assesses": [
+      "UR-LEX-C318-EIDMORNING318-03",
+      "UR-LEX-C318-EIDMORNING318-04",
+      "UR-LEX-C318-EIDMORNING318-05"
+    ]
+  }
+}

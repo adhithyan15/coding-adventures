@@ -1,0 +1,11 @@
+{
+  "id": "UR-C315-basna",
+  "pathSegment": "UR-PATH-315-AJDAD315",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-315-AJDAD315",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:2d3efd30885103f0",
+  "lessonIds": [
+    "UR-C303-inkar-karna",
+    "UR-C303-iqrar",
+    "UR-C303-ttaalna",
+    "UR-C303-malumat",
+    "UR-C303-haqiqat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch303.txt",
+  "json": "urdu/narration/ch303.json",
+  "textHash": "fnv1a64:e6d18653705a81e5",
+  "jsonHash": "fnv1a64:88f482b6bf52d001",
+  "findings": []
+}

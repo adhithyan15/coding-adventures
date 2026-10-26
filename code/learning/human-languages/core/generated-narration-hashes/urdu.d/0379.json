@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:5c3e16858338e26f",
+  "lessonIds": [
+    "UR-C379-mehnat",
+    "UR-C379-josh",
+    "UR-C379-lagan",
+    "UR-C379-musalsal",
+    "UR-C379-dohrana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch379.txt",
+  "json": "urdu/narration/ch379.json",
+  "textHash": "fnv1a64:80d7680573771504",
+  "jsonHash": "fnv1a64:7c49cdf124260341",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:ea8680d19749ea60",
+  "lessonIds": [
+    "UR-C404-ghusl-khana",
+    "UR-C404-sabun",
+    "UR-C404-gizar",
+    "UR-C404-tapakna",
+    "UR-C404-sahulat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch404.txt",
+  "json": "urdu/narration/ch404.json",
+  "textHash": "fnv1a64:825037351a311837",
+  "jsonHash": "fnv1a64:96093149fd79c5b4",
+  "findings": []
+}

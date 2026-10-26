@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:1179c1b990e8ed3a",
+  "lessonIds": [
+    "UR-C523-istediyam",
+    "UR-C523-ampayar",
+    "UR-C523-iskor",
+    "UR-C523-nara",
+    "UR-C523-phandna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch523.txt",
+  "json": "urdu/narration/ch523.json",
+  "textHash": "fnv1a64:d08083b606c40f9c",
+  "jsonHash": "fnv1a64:c2eec91ec956bfd5",
+  "findings": []
+}

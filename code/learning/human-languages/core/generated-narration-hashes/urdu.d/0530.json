@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:3f21e570b785f1ec",
+  "lessonIds": [
+    "UR-C530-marzi",
+    "UR-C530-razi",
+    "UR-C530-ikhtilaf",
+    "UR-C530-mustarad",
+    "UR-C530-palatna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch530.txt",
+  "json": "urdu/narration/ch530.json",
+  "textHash": "fnv1a64:07af84efb54023eb",
+  "jsonHash": "fnv1a64:02b18d21764075d0",
+  "findings": []
+}

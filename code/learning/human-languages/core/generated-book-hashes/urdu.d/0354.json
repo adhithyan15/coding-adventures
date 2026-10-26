@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:1b6ca3649c21cca9",
+  "lessonIds": [
+    "UR-C354-maqul",
+    "UR-C354-vajib",
+    "UR-C354-jaiz",
+    "UR-C354-vahm",
+    "UR-C354-be-ja",
+    "UR-R354-review-347-354"
+  ],
+  "tex": "urdu/book/chapters/ch354-reasonable-or-not.tex"
+}

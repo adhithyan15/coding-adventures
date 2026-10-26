@@ -293,6 +293,8 @@ class CIGateRegistryTests(unittest.TestCase):
         self.assertIn("        run: |\n", step)
         self.assertNotRegex(step.split("        run: |\n", 1)[0], r"(?m)^        if:")
         commands = (
+            "python3 code/scripts/commonmark_conformance.py",
+            "python3 -m unittest discover -s code/scripts/tests -p 'test_commonmark_conformance.py'",
             "python3 code/scripts/geometry2d_conformance.py",
             "python3 -m unittest discover -s code/scripts/tests -p 'test_geometry2d_conformance.py'",
             "python3 code/scripts/bezier2d_flattening_conformance.py",

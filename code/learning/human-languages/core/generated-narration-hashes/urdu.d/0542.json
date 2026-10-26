@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:58a08637fbb49cf7",
+  "lessonIds": [
+    "UR-C542-baharhal",
+    "UR-C542-khair",
+    "UR-C542-bilkhusus",
+    "UR-C542-nukta",
+    "UR-C542-khulasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch542.txt",
+  "json": "urdu/narration/ch542.json",
+  "textHash": "fnv1a64:588743684fdc627a",
+  "jsonHash": "fnv1a64:db924e39b1278e28",
+  "findings": []
+}

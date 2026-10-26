@@ -1,0 +1,11 @@
+{
+  "id": "UR-C377-bigarna-worsen",
+  "pathSegment": "UR-PATH-377-BADTAR377",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-377-BADTAR377",
+      "order": 3
+    }
+  ]
+}

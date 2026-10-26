@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:8c744145a8b235c3",
+  "lessonIds": [
+    "UR-C387-quli",
+    "UR-C387-sanduq",
+    "UR-C387-ladna",
+    "UR-C387-dhhona",
+    "UR-C387-bithana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch387.txt",
+  "json": "urdu/narration/ch387.json",
+  "textHash": "fnv1a64:632c80b61deb477b",
+  "jsonHash": "fnv1a64:a080433d700b0234",
+  "findings": []
+}

@@ -23,6 +23,53 @@ structure helps.
 Implementation progress and the commit-sized delivery queue live in the
 [neural learning delivery roadmap](./ROADMAP.md).
 
+The [neural framework roadmap](./FRAMEWORK-ROADMAP.md) extends those teaching
+labs into reusable native libraries across every language. NN37 starts with
+Python and TypeScript dense frameworks: configurable layer widths, seeded
+construction, full-network gradients, exact-count SGD, and portable checkpoints
+that resume training across languages. Completion of a teaching lab does not
+imply general framework support for that architecture.
+
+NN38 adds [native Rust dense training](./native-rust-dense-framework.md) above
+the Rust matrix foundation, with the same paper oracle, full-network gradient
+checks, and native checkpoint save/reload/resume. Three-language interchange is
+tracked separately from that native implementation. NN39's required conformance
+executes six directed checkpoint exchanges across Rust, Python, and TypeScript,
+comparing full resumed models rather than counting registered runtimes.
+
+NN41 adds [independent native Go dense training](./native-go-dense-framework.md),
+with the same paper oracle and shared rejection corpus. Native save/reload/resume
+is evidence for that library, separate from NN42's four-language interchange.
+NN42 extends the required reusable gate to all twelve directed native pairs,
+comparing full states at steps 3000/3001/3002 with zero binding lanes.
+
+NN43 extends the shared rejection corpus with six literal null weight/bias
+coordinates in single, mixed and later-layer positions. All four native suites
+must reject absence rather than silently turn it into a valid zero parameter.
+
+NN44 makes the existing Ruby matrix foundation package-buildable before Ruby
+neural training begins. A gem-install arithmetic receipt is library-build
+evidence, not a training framework or cross-language checkpoint result.
+
+NN45 adds [independent native Ruby dense training](./native-ruby-dense-framework.md)
+above that matrix gem. Its analytical gradients, owned checkpoints, 55-case
+rejection corpus and native resume through step 3002 are tested directly.
+NN46's [five-native conformance lesson](./five-native-dense-conformance.md)
+separately connects Ruby to required interchange: twenty
+directed native pairs with full baselines and return trips through step 3002.
+This is actual process execution, not a packaging or static registry claim.
+
+NN47 builds the [bounded C JSON prerequisite](./bounded-c-json-foundation.md)
+before native C dense training: typed values, explicit ownership and resource
+envelopes. Parsing JSON is not checkpoint-schema acceptance or training evidence.
+
+NN48 adds [independent native C dense training](./native-c-dense-framework.md):
+opaque ownership, full-network gradients and atomic candidate updates above the
+native matrix/math foundations. Its public typed checkpoint loader rejects all
+shared invalid cases, and native serialized resumes match complete uninterrupted
+baselines through 3002. Native training and installed-library evidence do not
+imply six-native interchange; that integration remains a separate tranche.
+
 Every model family below starts with the smallest example that needs its new
 idea.
 

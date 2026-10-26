@@ -269,8 +269,16 @@ fn the_emitted_xaml_host_answers_effects() {
         ("projection-profile", project.join("projection.jsonl")),
         ("projection-validate", project.join("projection.jsonl")),
         ("profile-bounded", profile_path.clone()),
-        ("profile-bounded", project.join("missing").join("profile.jsonl")),
+        (
+            "profile-bounded",
+            project.join("missing").join("profile.jsonl"),
+        ),
         ("profile-validate", profile_path.clone()),
+        ("profile-interactions", project.join("interactions.jsonl")),
+        (
+            "profile-interactions-validate",
+            project.join("interactions.jsonl"),
+        ),
     ] {
         let output = run(
             Command::new("dotnet")
@@ -279,7 +287,18 @@ fn the_emitted_xaml_host_answers_effects() {
                 .env("MOSAIC_APP_LIBRARY", &runtime)
                 .env("MOSAIC_PROBE_CASE", case)
                 .env("MOSAIC_PROFILE_PATH", path)
-                .env("MOSAIC_APP_STATE_PATH", project.join("profiling-state.json")),
+                .env(
+                    "MOSAIC_PROFILE_INTERACTIONS_ONLY",
+                    if case.starts_with("profile-interactions") {
+                        "1"
+                    } else {
+                        "0"
+                    },
+                )
+                .env(
+                    "MOSAIC_APP_STATE_PATH",
+                    project.join("profiling-state.json"),
+                ),
             "XAML profiling acceptance",
         );
         assert!(output.contains("case passed"));
@@ -291,8 +310,12 @@ fn the_emitted_xaml_host_answers_effects() {
             .args(["run", "--no-build"])
             .env("MOSAIC_APP_LIBRARY", &runtime)
             .env("MOSAIC_PROBE_CASE", "props-batch")
+            .env("MOSAIC_PROFILE_INTERACTIONS_ONLY", "0")
             .env("MOSAIC_PROFILE_PATH", &props_profile)
-            .env("MOSAIC_APP_STATE_PATH", project.join("props-profile-state.json")),
+            .env(
+                "MOSAIC_APP_STATE_PATH",
+                project.join("props-profile-state.json"),
+            ),
         "profiled props success and failure paths",
     );
     assert!(output.contains("case passed"));

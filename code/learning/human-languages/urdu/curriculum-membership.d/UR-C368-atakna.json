@@ -1,0 +1,11 @@
+{
+  "id": "UR-C368-atakna",
+  "pathSegment": "UR-PATH-368-HAL368",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-368-HAL368",
+      "order": 3
+    }
+  ]
+}

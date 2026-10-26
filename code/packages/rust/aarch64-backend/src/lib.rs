@@ -1179,6 +1179,31 @@ fn emit_instr(
         return emit_shift(asm, alloc, instr, kind, ty);
     }
 
+    // ---- neg_f64 dest = -src  (flip the IEEE-754 sign bit) --------------
+    //
+    // An f64 sits in its stack slot as raw bits, so a two's-complement `NEG`
+    // would corrupt it: 2.5 (0x4004…) would become 0xBFFC… = −1.75, and
+    // +0.0 would stay +0.0 instead of becoming −0.0. IEEE negation flips only
+    // bit 63: `LDR X0,[src]; MOV X1,#1<<63; EOR X0,X0,X1; STR X0,[dst]`.
+    // X0/X1 are the same scratch registers the integer arms borrow.
+    if op == "neg_f64" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        match src {
+            // A folded float constant: materialise its bits directly.
+            CIROperand::Float(f) => asm.mov_imm64(Reg::X0, f.to_bits()),
+            CIROperand::Var(_) => load_operand(asm, alloc, Reg::X0, src)?,
+            other => return Err(BackendError::MalformedInstr(format!(
+                "neg_f64 operand must be a Var or Float, got {other:?}"))),
+        }
+        asm.mov_imm64(Reg::X1, 1u64 << 63);
+        asm.eor(Reg::X0, Reg::X0, Reg::X1);
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, slot)?;
+        return Ok(());
+    }
+
     // ---- neg_<ty> dest = -src  (two's-complement negate) -----------------
     if let Some(ty) = op.strip_prefix("neg_") {
         let dest = require_dest(instr)?;
@@ -3338,6 +3363,30 @@ mod tests {
         ];
         let bytes = compile(&ctx("fneg", &params, "i64"), &cir).expect("neg_i64");
         assert!(!bytes.is_empty() && bytes.len().is_multiple_of(4));
+    }
+
+    /// `neg_f64` flips bit 63 with `EOR X0, X0, X1` (X1 = 1<<63) and must
+    /// never emit the integer `NEG X0, X0`, which turns 2.5 into −1.75.
+    #[test]
+    fn neg_f64_flips_the_sign_bit_not_twos_complement() {
+        let params = vec![("x".into(), "f64".into())];
+        let cir = vec![
+            make_unop_cir("neg_f64", "v0", "x", "f64"),
+            CIRInstr { op: "ret_f64".into(), dest: None,
+                srcs: vec![CIROperand::Var("v0".into())], ty: "f64".into(), deopt_to: None },
+        ];
+        let bytes = compile(&ctx("nf", &params, "f64"), &cir).expect("neg_f64");
+        let words: Vec<u32> = bytes.chunks(4).map(|c| u32::from_le_bytes([c[0], c[1], c[2], c[3]])).collect();
+        let encode = |f: &dyn Fn(&mut Assembler)| {
+            let mut a = Assembler::new();
+            f(&mut a);
+            a.finish().unwrap()
+        };
+        let word_of = |b: Vec<u8>| u32::from_le_bytes([b[0], b[1], b[2], b[3]]);
+        let eor = word_of(encode(&|a: &mut Assembler| a.eor(Reg::X0, Reg::X0, Reg::X1)));
+        let neg = word_of(encode(&|a: &mut Assembler| a.neg_(Reg::X0, Reg::X0)));
+        assert!(words.contains(&eor), "EOR X0, X0, X1 missing");
+        assert!(!words.contains(&neg), "neg_f64 must not emit NEG X0, X0");
     }
 
     #[test]

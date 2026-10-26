@@ -1,0 +1,18 @@
+{
+  "chapter": 201,
+  "title": "This Is a Class",
+  "label": "ch:pa-a2-class",
+  "canDo": "I can recognise and use the school noun for a class or grade in one bounded identity frame.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C201-payoff",
+    "kind": "production",
+    "summary": "Recognise and produce the school-class noun in one bounded identity frame through listening, speaking, reading, and writing.",
+    "assesses": [
+      "PA-LEX-CLASS-201"
+    ],
+    "note": "This twenty-fourth Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}

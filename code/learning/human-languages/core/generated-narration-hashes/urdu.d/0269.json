@@ -1,0 +1,18 @@
+{
+  "language": "urdu",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:41d470ac497df958",
+  "lessonIds": [
+    "UR-C269-jana-chahiye",
+    "UR-C269-chunanche",
+    "UR-C269-is-liye",
+    "UR-R269-advice-and-reasons"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "urdu/narration/ch269.txt",
+  "json": "urdu/narration/ch269.json",
+  "textHash": "fnv1a64:0112b603cfaa8351",
+  "jsonHash": "fnv1a64:f44791c985f9222d",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "Heat",
+  "label": "ch:ur-heat",
+  "canDo": "I can talk about a hot day: the temperature, the airless heat and keeping cool.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C430-jhalna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can talk about a hot day: the temperature, the airless heat and keeping cool.",
+    "assesses": [
+      "UR-LEX-C430-PARA430-03",
+      "UR-LEX-C430-PARA430-04",
+      "UR-LEX-C430-PARA430-05"
+    ]
+  }
+}

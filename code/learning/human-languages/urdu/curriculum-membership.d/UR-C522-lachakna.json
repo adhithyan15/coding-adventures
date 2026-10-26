@@ -1,0 +1,11 @@
+{
+  "id": "UR-C522-lachakna",
+  "pathSegment": "UR-PATH-522-PHURTI522",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-522-PHURTI522",
+      "order": 1
+    }
+  ]
+}

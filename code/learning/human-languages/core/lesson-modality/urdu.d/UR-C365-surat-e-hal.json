@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C365-surat-e-hal",
+    "language": "urdu",
+    "chapter": 365,
+    "sequence": 21750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1df21f65f03693d9"
+  },
+  "findings": []
+}

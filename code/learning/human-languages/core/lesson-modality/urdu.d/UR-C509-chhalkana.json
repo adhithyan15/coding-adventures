@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C509-chhalkana",
+    "language": "urdu",
+    "chapter": 509,
+    "sequence": 29800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5a90afe3449e940"
+  },
+  "findings": []
+}

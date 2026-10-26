@@ -1,0 +1,11 @@
+{
+  "id": "UR-C379-dohrana",
+  "pathSegment": "UR-PATH-379-MEHNAT379",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-379-MEHNAT379",
+      "order": 4
+    }
+  ]
+}

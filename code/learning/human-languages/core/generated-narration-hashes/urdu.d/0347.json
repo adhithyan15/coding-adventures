@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:2700bdacc9f2f53d",
+  "lessonIds": [
+    "UR-C347-muamala",
+    "UR-C347-samjhauta",
+    "UR-C347-tanaza",
+    "UR-C347-ulajhna",
+    "UR-C347-chherna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch347.txt",
+  "json": "urdu/narration/ch347.json",
+  "textHash": "fnv1a64:298bab341efd513e",
+  "jsonHash": "fnv1a64:d279be5e4da3c20d",
+  "findings": []
+}

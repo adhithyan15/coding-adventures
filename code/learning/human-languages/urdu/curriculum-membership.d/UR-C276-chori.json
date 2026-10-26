@@ -1,0 +1,11 @@
+{
+  "id": "UR-C276-chori",
+  "pathSegment": "UR-PATH-276-CHORI276",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-276-CHORI276",
+      "order": 1
+    }
+  ]
+}

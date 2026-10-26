@@ -1,0 +1,19 @@
+{
+  "chapter": 311,
+  "title": "Victory and Defeat",
+  "label": "ch:ur-victory-and-defeat",
+  "canDo": "I can say who won a battle and how it ended.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C311-sulah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can say who won a battle and how it ended.",
+    "assesses": [
+      "UR-LEX-C311-FATEH311-03",
+      "UR-LEX-C311-FATEH311-04",
+      "UR-LEX-C311-FATEH311-05"
+    ]
+  }
+}

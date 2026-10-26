@@ -1,0 +1,11 @@
+{
+  "id": "UR-C336-khara",
+  "pathSegment": "UR-PATH-336-SABIT336",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-336-SABIT336",
+      "order": 4
+    }
+  ]
+}
