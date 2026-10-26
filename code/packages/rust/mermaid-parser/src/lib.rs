@@ -14151,12 +14151,17 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                         "C4 relationship requires source, target, and label",
                     ));
                 }
+                let (start_arrow, end_arrow) = match macro_token.value.as_str() {
+                    "BiRel" => (true, true),
+                    "Rel_Back" => (true, false),
+                    _ => (false, true),
+                };
                 relationships.push(StructuralRelationship {
                     from: args[0].clone(),
                     to: args[1].clone(),
                     kind: RelKind::Association,
-                    start_arrow: false,
-                    end_arrow: true,
+                    start_arrow,
+                    end_arrow,
                     from_group: false,
                     to_group: false,
                     from_port: None,
