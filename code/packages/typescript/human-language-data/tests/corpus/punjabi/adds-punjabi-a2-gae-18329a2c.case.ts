@@ -77,6 +77,10 @@ it("adds a slow Punjabi A2 went-form prerequisite without mock credit", () => {
     .toMatch(/model visible.*not writing from memory|not writing from memory.*model visible/is);
   expect(scriptCopy)
     .toMatch(/no stroke order.*verified source|verified source.*no stroke order/is);
+  expect(chapterLessons[3]?.frontmatter["practises.knowledge"])
+    .toContain("PA-SCRIPT-RECOG-E-206");
+  expect(chapterLessons[3]?.blocks.map((block) => block.markdown).join("\n"))
+    .toMatch(/point to.*ਏ|ਏ.*point to/is);
 
   for (const lesson of chapterLessons) {
     expect(Number(lesson?.frontmatter["duration.max_seconds"]))
