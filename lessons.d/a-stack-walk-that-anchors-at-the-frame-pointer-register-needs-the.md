@@ -29,3 +29,9 @@ produces the code, and check it in the disassembly of the artifact actually
 linked. Never rely on compiler defaults; they change between rustc versions
 and profiles. A test that passes in CI and fails locally on another
 toolchain is evidence of an unenforced property, not a flaky host.
+
+**Caveat (security review).** The flag fixes SysV x86-64 and AArch64 only.
+On Windows x64, LLVM anchors `rbp` with `lea rbp, [rsp+N]` even under
+`-Cforce-frame-pointers=yes`. A walk that needs a classic `[rbp]` record on
+every ABI should get it from a small frame-building trampoline on the collect
+entry points, not from a compiler flag.

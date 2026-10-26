@@ -18,6 +18,11 @@
   Twig frame's safepoint, and both tests pass.
 - Whether the old build happened to pass depended on the rustc version, which
   is why CI (latest stable) and a host on 1.97 disagreed.
+- **Windows x64 is not fixed by the flag.** LLVM sets `rbp` with
+  `lea rbp, [rsp+N]` there even under `-Cforce-frame-pointers=yes`, so
+  the Windows precise-GC smoke tests stay skipped. The nested build
+  now keeps the outer rustflags as an `OsString`, so a non-UTF-8 flag no
+  longer drops all of them (security review).
 
 ## [0.57.0] — 2026-10-20 (LANG83 PR6a — native runtime float writers)
 

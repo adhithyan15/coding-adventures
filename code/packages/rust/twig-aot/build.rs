@@ -171,15 +171,21 @@ fn main() {
         // `rbp` may be any value, which `stack_scan.rs` documents as unsafe once
         // maps are registered. `-Cforce-frame-pointers=yes` makes every function
         // in the archive keep the classic chain on SysV x86-64 and AArch64.
+        // It is NOT enough on Windows x64: there LLVM sets the frame pointer
+        // with `lea rbp, [rsp+N]` even under this flag, so `[rbp]` is not a
+        // saved-rbp record (see `windows_x86_64_smoke.rs`, whose precise-GC
+        // tests stay skipped for that reason).
         //
         // The flag is appended to the outer build's own encoded rustflags (cargo
         // hands them to build scripts as `CARGO_ENCODED_RUSTFLAGS`, separated by
-        // 0x1f), so a caller's flags still reach the nested build.
-        let mut rustflags = std::env::var("CARGO_ENCODED_RUSTFLAGS").unwrap_or_default();
+        // 0x1f), so a caller's flags still reach the nested build. They are kept
+        // as an `OsString`: a non-UTF-8 flag (a path) must pass through, not
+        // make `env::var` fail and drop every outer flag.
+        let mut rustflags = std::env::var_os("CARGO_ENCODED_RUSTFLAGS").unwrap_or_default();
         if !rustflags.is_empty() {
-            rustflags.push('\x1f');
+            rustflags.push("\x1f");
         }
-        rustflags.push_str("-Cforce-frame-pointers=yes");
+        rustflags.push("-Cforce-frame-pointers=yes");
         let status = std::process::Command::new(&cargo)
             .args(["build", "--release", "-p", "gc-core-capi", "--target-dir"])
             .arg(&gc_target)

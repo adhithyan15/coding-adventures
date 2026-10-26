@@ -9,6 +9,9 @@ All notable changes to this crate are documented here.
   build omits them, and `rbp` then holds the caller's frame pointer or any
   value. `twig-aot` now builds this crate with `-Cforce-frame-pointers=yes`,
   and any embedder that registers stack maps must do the same.
+  That is enough on SysV x86-64 and AArch64 only. On Windows x64, LLVM
+  sets `rbp` with `lea rbp, [rsp+N]` even under the flag, so the precise
+  walk is still unreliable there.
 
 ## 0.25.0 - 2026-08-11 — `__gc_collect_minor_compacting`: the moving-minor C ABI entry (AOT00-T9 §5, PR-5)
 

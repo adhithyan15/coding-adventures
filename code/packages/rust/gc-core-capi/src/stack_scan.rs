@@ -208,7 +208,11 @@ unsafe fn spill_and_sp(buf: *mut usize) -> usize {
 // frame pointer, and `rbp` then still holds the *caller's* frame pointer (rustc
 // 1.97), or any value at all. `twig-aot`'s build therefore compiles the embedded
 // archive with `-Cforce-frame-pointers=yes`; any other embedder that registers
-// stack maps must do the same. While **no stack maps are registered** a bogus
+// stack maps must do the same. That is enough on SysV x86-64 and AArch64
+// only: on Windows x64 LLVM sets `rbp` with `lea rbp, [rsp+N]` even under
+// the flag, so `[rbp]` is not a saved-rbp record and the precise walk stays
+// unreliable there (the Windows precise-GC smoke tests remain skipped). A
+// frame-building trampoline on the collect entries would fix every ABI. While **no stack maps are registered** a bogus
 // anchor is still safe: `build_precise_roots` then classifies every frame
 // conservatively and its regions tile all of `[sp, base)`, so precise collection
 // degrades to exactly `__gc_collect`. Once maps ARE registered, a valid frame
