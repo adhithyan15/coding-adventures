@@ -45,7 +45,7 @@ fn delegated_trace_is_non_committing_until_candidate_commit() {
     assert_eq!(core.get_state(), authoritative);
 
     let candidate = integration::settle(trace.state_after).unwrap();
-    integration::commit(&mut core, candidate);
+    integration::commit(&mut core, &candidate);
     assert_eq!(core.read_register(0).unwrap(), 7);
 }
 
@@ -68,6 +68,13 @@ fn candidate_divergence_and_failures_cannot_mutate_q() {
     controller.fail_after(0);
     assert_eq!(
         integration::snapshot_into(&core, Vec::with_capacity(MEMORY_SIZE), &controller),
+        Err(CortexM3Error::AllocationFailed)
+    );
+    assert_eq!(core.get_state(), before);
+
+    controller.clear_failure();
+    assert_eq!(
+        integration::snapshot_into(&core, Vec::new(), &controller),
         Err(CortexM3Error::AllocationFailed)
     );
     assert_eq!(core.get_state(), before);

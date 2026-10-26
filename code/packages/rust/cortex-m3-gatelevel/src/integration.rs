@@ -142,7 +142,9 @@ pub fn snapshot_into(
     controller: &AllocationController,
 ) -> Result<CortexM3State, CortexM3Error> {
     controller.checkpoint()?;
-    debug_assert!(memory.capacity() >= MEMORY_SIZE);
+    if memory.capacity() < MEMORY_SIZE {
+        return Err(CortexM3Error::AllocationFailed);
+    }
     Ok(core.state_in_preallocated(memory))
 }
 
@@ -153,7 +155,9 @@ pub fn clone_into(
     controller: &AllocationController,
 ) -> Result<CortexM3State, CortexM3Error> {
     controller.checkpoint()?;
-    debug_assert!(memory.capacity() >= MEMORY_SIZE);
+    if memory.capacity() < MEMORY_SIZE {
+        return Err(CortexM3Error::AllocationFailed);
+    }
     Ok(engine::clone_state_into(state, memory))
 }
 
@@ -172,11 +176,28 @@ pub fn delegated_step(
     controller: &AllocationController,
 ) -> Result<StepTrace, CortexM3Error> {
     controller.checkpoint()?;
+    if state_memory.capacity() < MEMORY_SIZE {
+        return Err(CortexM3Error::AllocationFailed);
+    }
     let state = core.state_in_preallocated(state_memory);
+    delegated_step_from(state, before_memory, validation_memory, controller)
+}
+
+/// Derive a transition from an already preallocated Q snapshot.
+pub fn delegated_step_from(
+    state: CortexM3State,
+    before_memory: Vec<u8>,
+    validation_memory: &mut Vec<u8>,
+    controller: &AllocationController,
+) -> Result<StepTrace, CortexM3Error> {
+    controller.checkpoint()?;
+    if before_memory.capacity() < MEMORY_SIZE || validation_memory.capacity() < MEMORY_SIZE {
+        return Err(CortexM3Error::AllocationFailed);
+    }
     engine::step_state_preallocated(state, before_memory, validation_memory)
 }
 
 /// Clock a previously validated candidate into authoritative DFF storage.
-pub fn commit(core: &mut CortexM3GateLevel, candidate: Candidate) {
+pub fn commit(core: &mut CortexM3GateLevel, candidate: &Candidate) {
     core.commit_transition(&candidate.0);
 }
