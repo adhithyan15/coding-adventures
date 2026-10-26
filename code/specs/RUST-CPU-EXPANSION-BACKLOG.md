@@ -57,7 +57,7 @@ claim unsound even when ISA differentials remain green.
 
 | Priority | Target | Status | Required boundary |
 |---:|---|---|---|
-| P0 | Motorola 68000 gate | in progress | Make all 560 register/PC/SR DFF Q outputs and the HALT DFF Q output authoritative; retain public fields only as synchronized observers; prove topology from concrete storage and deliberate observer divergence. |
+| P0 | Motorola 68000 gate | local complete | All 560 register/PC/SR DFF Q outputs and the HALT DFF Q output are authoritative; public fields are synchronized observers. Concrete inventory, deliberate observer-divergence lifecycle regressions, 71 unit tests, all 82 differential vectors, 6 lifecycle tests, 7 doctests, strict checks, lessons, and 83.39% combined line coverage are green. |
 
 ## Independent functional queue
 
