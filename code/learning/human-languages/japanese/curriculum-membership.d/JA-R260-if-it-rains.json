@@ -1,0 +1,11 @@
+{
+  "id": "JA-R260-if-it-rains",
+  "pathSegment": "JA-PATH-260-CONDITION260",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-260-CONDITION260",
+      "order": 3
+    }
+  ]
+}
