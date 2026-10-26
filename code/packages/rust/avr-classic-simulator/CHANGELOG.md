@@ -7,5 +7,9 @@
   control flow, exact fetched-byte traces, and typed transactional lifecycle.
 - Reject every manual-defined updating-pointer overlap, including `LPM Z+`,
   atomically while preserving legal non-updating and displacement forms.
-- Validate the completed boundary with 30 release tests, exhaustive addition/
-  subtraction flag oracles, and 97.11% package line coverage (940/968).
+- Preserve restorable terminal NOP/BREAK post-states while validating every PC
+  against the device's 14-bit range, and preflight both return-address bytes
+  before CALL, RCALL, or ICALL mutates the candidate stack.
+- Validate the completed boundary with 32 release tests and exhaustive
+  addition/subtraction flag oracles, reaching 97.32% package line coverage
+  (944/970).

@@ -421,8 +421,14 @@ fn validate_state(state: &AvrState) -> Result<(), AvrError> {
     if !(0x0100..=RAM_END).contains(&sp) {
         return Err(AvrError::InvalidStackPointer { sp });
     }
-    if state.loaded_len != 0 {
-        validate_target(state, state.pc)?;
+    // The architectural PC is a 14-bit word address on this avr5 profile.
+    // A successfully executed terminal instruction may leave it immediately
+    // beyond the installed image; that complete post-state must remain
+    // restorable so the next step can report FetchOutsideProgram (or Halted).
+    if state.pc > 0x3fff {
+        return Err(AvrError::InvalidState {
+            reason: "PC exceeds the 14-bit avr5 program counter",
+        });
     }
     Ok(())
 }
@@ -607,7 +613,10 @@ fn pop_byte(state: &mut AvrState) -> Result<u8, AvrError> {
 
 fn push_return(state: &mut AvrState, address: u16) -> Result<(), AvrError> {
     let sp = state.sp();
-    if !(0x0101..=RAM_END).contains(&sp) {
+    // Preflight the complete two-byte write before either byte is touched.
+    // push_byte writes at SP and then decrements, so SP=0x0101 would leave the
+    // second byte targeting the reserved boundary at 0x0100.
+    if !(0x0102..=RAM_END).contains(&sp) {
         return Err(AvrError::StackOutOfRange { sp, width: 2 });
     }
     let [lo, hi] = address.to_le_bytes();

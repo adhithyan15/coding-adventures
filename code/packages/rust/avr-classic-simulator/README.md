@@ -13,6 +13,9 @@ let mut cpu = AvrClassicSimulator::new();
 cpu.load(&[0x00, 0x00, 0x98, 0x95], 0)?; // NOP; BREAK
 let result = cpu.run(2)?;
 assert!(result.halted);
+let final_state = result.final_state.clone();
+cpu.restore(final_state.clone())?;
+assert_eq!(cpu.state(), &final_state);
 # Ok::<(), avr_classic_simulator::AvrError>(())
 ```
 
@@ -20,6 +23,7 @@ assert!(result.halted);
 not a complete microcontroller: peripherals, interrupts, EEPROM protocol,
 timing, pins, watchdog, sleep, and self-programming remain excluded.
 
-The release completion suite exercises 30 lifecycle, exhaustive flag, and
-instruction-family tests and reaches 97.11% line coverage (940/968) in the
-package library.
+The release completion suite exercises 32 lifecycle, exhaustive flag, and
+instruction-family tests. It includes terminal-state restore round trips and
+whole-span call-stack preflight at the lower SRAM boundary, and reaches 97.32%
+line coverage (944/970) in the package library.

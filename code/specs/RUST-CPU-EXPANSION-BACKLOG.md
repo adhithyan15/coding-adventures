@@ -78,7 +78,7 @@ architecture/core introduction era, not a claim about a particular chip.
 | 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
 | 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
 | 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
-| 13 | AVR classic | published instruction-set manual | Complete locally: ATmega328P/`avr5` Harvard core, mapped register/I/O/data state, checked stack/control flow, all 26 typed undefined-overlap refusals, transactional traces/lifecycle, 30 release tests with exhaustive add/subtract flag oracles, and 97.11% line coverage (940/968). Gate partner remains queued. |
+| 13 | AVR classic | published instruction-set manual | Complete locally: ATmega328P/`avr5` Harvard core, mapped register/I/O/data state, checked stack/control flow, all 26 typed undefined-overlap refusals, transactional traces/lifecycle, terminal-state restore round trips, whole-span two-byte call preflight, 32 release tests with exhaustive add/subtract flag oracles, and 97.32% line coverage (944/970). Gate partner remains queued. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
 
 ## Discovered follow-up work

@@ -71,11 +71,31 @@ fn restore_validates_all_owned_storage_and_pc() {
         Err(AvrError::InvalidState { .. })
     ));
     let mut bad = before.clone();
-    bad.pc = 4;
+    bad.pc = 0x4000;
     assert!(matches!(
         cpu.restore(bad),
-        Err(AvrError::FetchOutsideProgram { .. })
+        Err(AvrError::InvalidState { .. })
     ));
+}
+
+#[test]
+fn terminal_post_states_round_trip_through_restore() {
+    let mut nop = one(0x0000);
+    let nop_trace = nop.step().unwrap();
+    assert_eq!(nop_trace.state_after.pc, 1);
+    let nop_state = nop_trace.state_after.clone();
+    nop.restore(nop_state.clone()).unwrap();
+    assert_eq!(nop.state(), &nop_state);
+    assert_eq!(nop.step(), Err(AvrError::FetchOutsideProgram { pc: 1 }));
+
+    let mut halted = one(0x9598);
+    let break_trace = halted.step().unwrap();
+    assert!(break_trace.state_after.halted);
+    assert_eq!(break_trace.state_after.pc, 1);
+    let break_state = break_trace.state_after.clone();
+    halted.restore(break_state.clone()).unwrap();
+    assert_eq!(halted.state(), &break_state);
+    assert_eq!(halted.step(), Err(AvrError::Halted));
 }
 
 #[test]
@@ -538,6 +558,35 @@ fn stack_faults_and_data_faults_roll_back() {
         Err(AvrError::DataOutOfRange { address: 0xffff })
     );
     assert_eq!(cpu.state(), &before);
+}
+
+#[test]
+fn calls_preflight_the_whole_two_byte_return_address() {
+    let cases = [
+        (image(&[0xd000, 0x9598]), None),
+        (image(&[0x940e, 2, 0x9598]), None),
+        (image(&[0x9509, 0x9598]), Some(1_u16)),
+    ];
+
+    for (program, indirect_target) in cases {
+        let mut cpu = AvrClassicSimulator::new();
+        cpu.load(&program, 0).unwrap();
+        if let Some(target) = indirect_target {
+            cpu.set_register(30, target as u8).unwrap();
+            cpu.set_register(31, (target >> 8) as u8).unwrap();
+        }
+        cpu.set_data(0x5d, 0x01).unwrap();
+        cpu.set_data(0x5e, 0x01).unwrap();
+        let before = cpu.state().clone();
+        assert_eq!(
+            cpu.step(),
+            Err(AvrError::StackOutOfRange {
+                sp: 0x0101,
+                width: 2,
+            })
+        );
+        assert_eq!(cpu.state(), &before);
+    }
 }
 
 #[test]
