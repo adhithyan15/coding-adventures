@@ -1,0 +1,11 @@
+{
+  "id": "UR-C476-test",
+  "pathSegment": "UR-PATH-476-DOCTOR476",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-476-DOCTOR476",
+      "order": 1
+    }
+  ]
+}

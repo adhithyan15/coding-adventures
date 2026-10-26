@@ -4,7 +4,8 @@
 all nine backends (PR1b, see "PR1b — what landed") and the overflow-checked
 arithmetic family (PR4, see "PR4 — the overflow family") and Python/JavaScript
 shortest round-trip float output (PR6a, see "PR6a — shortest round-trip float
-output") under LANG78.
+output") and non-trapping IEEE `f64` arithmetic with `f64_signbit` (PR6c, see
+"PR6c — IEEE f64 arithmetic and the sign bit") under LANG78.
 
 ## Why this exists
 
@@ -83,7 +84,9 @@ family that prefix dispatches.
 (`introduced_by: "LANG83 PR1b"`; the shared `NOT_YET_LOWERED_PR1B` reason is
 no longer used by any backend). `PR4` = registered *and* lowered by every
 backend in the same slice (`introduced_by: "LANG83 PR4"`). `PR6a` = the same,
-for the float-output slice (`introduced_by: "LANG83 PR6a"`). `Later` = planned; enters the
+for the float-output slice (`introduced_by: "LANG83 PR6a"`). `PR6c` = registered in one
+slice and lowered by every backend whose floats are IEEE-754 binary64; BEAM
+declares the arithmetic `Refused` (see "PR6c"). `Later` = planned; enters the
 registry before any frontend emits it. `Unregistered` = exists in IIR today but
 is not yet in the registry (it keeps working exactly as before; the registry
 does not gate it).
@@ -102,6 +105,9 @@ does not gate it).
 | Comparison | `cmp_eq` `cmp_ne` `cmp_lt` `cmp_le` `cmp_gt` `cmp_ge` | Op | Exists | 0/1 (or `bool`) result. |
 | Float | `f64_sqrt` `f64_sin` `f64_cos` `f64_ln` `f64_exp` `f64_atan` `f64_tan` | Op | Exists | IEEE / libm. |
 | | `f64_pow` | Op | Exists | libm `pow`. |
+| | `f64_add` `f64_sub` `f64_mul` `f64_div` | Op | PR6c | IEEE-754 binary64 `+ - × ÷` with round-to-nearest-even. **Never traps**: `1/0` is `+Infinity`, `-1/0` is `-Infinity`, `0/0` and `Infinity - Infinity` are `NaN`, an overflowing result is `±Infinity`, and the sign of a zero result follows IEEE (`-1 × 0` is `-0`). Type-first twins of the classic `add`/`sub`/`mul`/`div` on `f64`, whose zero-divisor edge is backend-dependent (see "Legacy edge behaviour"). BEAM: `Refused`. |
+| | `f64_neg` | Op | PR6c | IEEE negation: flips the sign bit only, so `f64_neg 0` is `-0` and `f64_neg -0` is `0` (unlike `0 - x`). BEAM: `Refused`. |
+| | `f64_signbit` | Op | PR6c | The sign bit of an `f64` as an integer `0`/`1`: `1` for `-0`, `-Infinity` and every negative value; `0` for `0`, `+Infinity` and every positive value. The only way to tell `-0` from `0` without dividing by it. Lowered on all nine backends. |
 | | `f64_div_floor` `f64_mod_floor` `f64_is_nan` | Op | Later | Python float `//` `%` (`fmod`, then a sign fix-up; `b == 0` → `Trap.DivZero`). Deferred to PR6b: WASM has no `fmod` instruction, so it needs its own exact remainder routine. |
 | Conversions | `int_to_real` | Op | Exists | Exact `i64 → f64`. |
 | | `real_to_int_trunc` `real_to_int_floor` | Op | Exists | Non-finite or out-of-range → `Trap.ConvRange`. |
@@ -402,6 +408,10 @@ fail. This was checked by mutation.
   **PR6b** (`f64_div_floor`, `f64_mod_floor`, `f64_is_nan`, `i64_to_str` and
   the `f64_to_str_*` string-producing family, which needs PR5's runtime
   strings on every backend).
+- **PR6c — IEEE `f64` arithmetic and the sign bit** (`f64_add`, `f64_sub`,
+  `f64_mul`, `f64_div`, `f64_neg`, `f64_signbit`), the prerequisite for
+  LANG84 JavaScript 6e (`console.log(-0)` prints `-0`; `1/0` prints
+  `Infinity`). See "PR6c — IEEE f64 arithmetic and the sign bit".
 
 ## PR1b — what landed
 
@@ -788,6 +798,132 @@ these builtins (LANG83 PR2 for Python).
 - *Table size.* The plan named 40 random values. The table has 60: 40 bit
   patterns and 20 short decimals, because short decimals exercise the fixed
   layouts that random bit patterns rarely reach.
+
+## PR6c — IEEE f64 arithmetic and the sign bit
+
+JavaScript numbers are IEEE-754 binary64, and a JavaScript program observes
+every IEEE edge: `console.log(1 / 0, -1 / 0, 0 / 0)` prints
+`Infinity -Infinity NaN`, and `console.log(-0, 0 * -1)` prints `-0 -0`
+(`console.log` formats with `util.inspect`, which keeps the sign of zero;
+`String(-0)` is `"0"`). The classic `add`/`sub`/`mul`/`div` cannot carry that
+contract: `div` is registered `DIV_ZERO_ONLY` and its zero-divisor edge differs
+by backend (see "Legacy edge behaviour"). And nothing in the registry exposes
+the sign of a zero: `write_f64_js` is `String(x)` and prints `-0` as `0`, and
+the textbook `1 / x < 0` test divides by zero. PR6c adds six type-first ops
+whose edges are IEEE's and identical everywhere.
+
+| Op | Operands → result | Semantics |
+| --- | --- | --- |
+| `f64_add a, b` | `f64, f64 → f64` | IEEE `a + b`, round to nearest, ties to even |
+| `f64_sub a, b` | `f64, f64 → f64` | IEEE `a - b` |
+| `f64_mul a, b` | `f64, f64 → f64` | IEEE `a × b` |
+| `f64_div a, b` | `f64, f64 → f64` | IEEE `a ÷ b`; a zero divisor gives `±Infinity` or `NaN`, never a trap |
+| `f64_neg a` | `f64 → f64` | flip the sign bit (so `-0` ↔ `0`, and `-NaN` is a NaN) |
+| `f64_signbit a` | `f64 → int` | the sign bit as `0`/`1` |
+
+None of them traps (`may_trap: []`), so they are pure and dead-code
+elimination may remove one whose result is unused.
+
+**The IEEE edges every lowering must reproduce:**
+
+| Expression | Result | `f64_signbit` of it |
+| --- | --- | --- |
+| `f64_div 1, 0` / `f64_div -1, 0` | `+Infinity` / `-Infinity` | `0` / `1` |
+| `f64_div 1, -0` | `-Infinity` | `1` |
+| `f64_div 0, 0`, `f64_sub inf, inf`, `f64_mul 0, inf` | `NaN` | not specified |
+| `f64_add 1e308, 1e308` | `+Infinity` (overflow) | `0` |
+| `f64_mul -1, 0` / `f64_mul -1, -0` | `-0` / `0` | `1` / `0` |
+| `f64_add -0, -0` / `f64_add -0, 0` | `-0` / `0` | `1` / `0` |
+| `f64_sub 0, 0` | `0` | `0` |
+| `f64_neg 0` / `f64_neg -0` | `-0` / `0` | `1` / `0` |
+| `f64_add 0.1, 0.2` | `0.30000000000000004` | `0` |
+
+**NaN payloads and the sign of a NaN are not observable.** IEEE leaves the
+sign of `0/0` to the implementation (x86 SSE produces the "default NaN" with
+the sign bit *set*; AArch64 and WASM produce it clear), so `f64_signbit` of a
+NaN is unspecified, and every writer prints any NaN as `NaN`. A frontend that
+must print a NaN's sign (no current language does) has to test for NaN first.
+
+### Per-backend lowering
+
+| Backend | `f64_add`/`sub`/`mul`/`div` | `f64_neg` | `f64_signbit` |
+| --- | --- | --- | --- |
+| x86-64 | SSE2 `addsd`/`subsd`/`mulsd`/`divsd` (the existing `f64` binop) | load the bits into `rax`, `xor` with `0x8000_0000_0000_0000` | load the bits into `rax`, `shr rax, 63` |
+| AArch64 | `fadd`/`fsub`/`fmul`/`fdiv d0, d0, d1` (the existing `f64` binop) | load the bits into `x0`, `eor` with `0x8000_0000_0000_0000` | load the bits into `x0`, `lsr` by 63 |
+| LLVM | `fadd`/`fsub`/`fmul`/`fdiv double` | `fneg double` | `bitcast double to i64`, `lshr i64 …, 63` |
+| WASM | `f64.add`/`sub`/`mul`/`div` | `f64.neg` | `i64.reinterpret_f64`, `i64.const 63`, `i64.shr_u` |
+| JVM | `dadd`/`dsub`/`dmul`/`ddiv` | `dneg` | `Double.doubleToRawLongBits(D)J`, `bipush 63`, `lushr` |
+| CLR (textual) | `add`/`sub`/`mul`/`div` on `float64` | `neg` | `BitConverter::DoubleToInt64Bits(float64)`, `ldc.i4.s 63`, `shr.un` |
+| BEAM | **`Refused`** (below) | **`Refused`** | `is_lt x, 0.0` → `1`; else `is_eq_exact x, -0.0` → `1`; else `0` |
+| VM | Rust `f64` `+ - * /` on `Value::Float` | Rust `-x` | `x.is_sign_negative()` |
+| JIT | `ADD_F64`/`SUB_F64`/`MUL_F64`/`DIV_F64` bytecodes on the registers' bit patterns | `NEG_F64` (`xor` of bit 63) | `SIGNBIT_F64` (`bits >> 63`, unsigned) |
+
+Every operand is read before the destination is written, so a destination
+that aliases an operand (`x = f64_add x, y`) is safe everywhere.
+
+**BEAM refuses the arithmetic.** An Erlang float is always finite: `'+'/2`,
+`'-'/2`, `'*'/2` and `'/'/2` raise `badarith` instead of producing an
+infinity or a NaN, and `0.0 / 0.0` does the same. There is no float term to
+hold the result. So BEAM declares the five arithmetic ops
+`Refused("BEAM floats have no ±Infinity or NaN …")`, and `lang-aot` rejects a
+module that uses them with `UnsupportedOps` *at compile time*, which LANG84's
+stage B allows. It does **not** lower them to the classic BIFs and accept a
+`badarith` on the edges, because B counts a run-time failure as a failure.
+`f64_signbit` needs no non-finite value, so BEAM lowers it with two
+comparisons against literal-table floats. It relies on OTP 27, where `-0.0`
+and `0.0` are distinct terms (`0.0 =:= -0.0` is `false`); CI runs OTP 27, and
+PR6a's `-0.0` output already depends on it.
+
+**The JIT carries floats as bit patterns.** PR6a let one float shape through
+the i64-only register file: a `const_f64` or `f64` parameter consumed by a
+float writer. PR6c widens that set to the destinations of the five arithmetic
+ops: an `f64` register is any `const_f64` destination, `f64` parameter or
+`f64_*` arithmetic destination, and it holds the value's bits. The new
+bytecodes reinterpret those bits, compute in Rust `f64`, and store the
+result's bits back. A float literal that constant propagation folded into an
+operand is materialised into a fresh register first, as PR6a does for the
+writers. Any other use of an `f64` register still refuses the function, so
+integer code can never read float bits as an integer. `f64_signbit` writes an
+ordinary integer register. One more bytecode came with it: `RET_F64` returns a
+float register as `Value::Float`, so `ret_f64` of a float register compiles
+too (before PR6c every function returning an `f64` fell back to the
+interpreter, and the JIT's declaration test — one function per registry op
+that returns the op's result — could not have compiled `f64_add` without it).
+
+Two smaller implementation notes. On native x86-64 and AArch64, `f64_neg` and
+`f64_signbit` also accept a float literal that constant propagation folded
+into the operand (it is materialised as its `to_bits()` immediate); an
+integer literal is refused rather than read as float bits. On BEAM, the five
+refused ops are also listed in `validate_for_beam`'s `UNSUPPORTED_OPS`, so a
+direct `iir-to-beam` caller that skips `lang-aot` gets the same refusal.
+
+### Conformance cases
+
+`op_conformance` gains three cases:
+
+- **Edges.** Every row of the edge table above (plus `f64_neg -inf`), each
+  result printed with `write_f64_js` and — except for the NaN rows, whose
+  sign is unspecified — its sign with `write_i64`: on the eight IEEE columns
+  this checks `Infinity`, `-Infinity`, `NaN`, signed zeros and overflow. BEAM
+  is covered by `refused_ops_are_rejected_at_compile_time`.
+- **Sign bit.** `f64_signbit` of `-0`, `0`, `-2.5`, `2.5`, the smallest
+  subnormals of both signs and `±1.7976931348623157e308`, built from constants
+  only, so the case is lowered on all nine backends (BEAM included).
+- **Aliasing.** `x = f64_add x, x`, then `f64_mul`, `f64_sub`, `f64_neg` and
+  `f64_div` all with `x` as both destination and operand, so a lowering that
+  writes the destination before reading an operand fails.
+
+The gate `pr6c_ops_follow_the_ieee_contract` pins the support matrix (all six
+lowered on the eight IEEE backends; the five arithmetic ops refused and
+`f64_signbit` lowered on BEAM), requires all three cases to pass on every
+executable column whose toolchain is present, and checks the BEAM compile
+entry point: the two arithmetic cases are refused with `UnsupportedOps`, the
+sign-bit case compiles.
+
+Local evidence and its limits are those of PR6a: native x86-64, LLVM (clang),
+WASM, JVM (JDK 21), VM and JIT execute every case; CLR, BEAM and AArch64 are
+structural here (pinned IL text, BEAM instruction streams and AArch64 words)
+and execute in CI once LANG84 6e's JavaScript rows emit these ops.
 
 ## What PR1a deliberately does not do
 

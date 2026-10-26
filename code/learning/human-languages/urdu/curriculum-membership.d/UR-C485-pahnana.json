@@ -1,0 +1,11 @@
+{
+  "id": "UR-C485-pahnana",
+  "pathSegment": "UR-PATH-485-CHILDHOOD485",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-485-CHILDHOOD485",
+      "order": 4
+    }
+  ]
+}

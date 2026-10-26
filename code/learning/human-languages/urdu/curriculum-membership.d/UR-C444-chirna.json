@@ -1,0 +1,11 @@
+{
+  "id": "UR-C444-chirna",
+  "pathSegment": "UR-PATH-444-ANGER444",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-444-ANGER444",
+      "order": 1
+    }
+  ]
+}

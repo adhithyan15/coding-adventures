@@ -1,0 +1,1 @@
+| 266 | [`UR-C266-parh-raha-tha`](./lessons/UR-C266-parh-raha-tha.md) → [`UR-C266-dauran`](./lessons/UR-C266-dauran.md) → [`UR-R266-what-was-going-on`](./lessons/UR-R266-what-was-going-on.md) | `UR-R266-what-was-going-on` | say what was going on in the past (voh paṛh rahī thī), set a scene with jab … to, and say during with daurān |

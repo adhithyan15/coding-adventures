@@ -1,0 +1,11 @@
+{
+  "id": "UR-C457-diyanat",
+  "pathSegment": "UR-PATH-457-TRUST457",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-457-TRUST457",
+      "order": 3
+    }
+  ]
+}

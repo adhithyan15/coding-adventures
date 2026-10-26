@@ -1,0 +1,19 @@
+{
+  "chapter": 498,
+  "title": "The Bride Leaves Home",
+  "label": "ch:gu-the-bride-leaves-home",
+  "canDo": "I can talk about a bride's farewell.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C498-chutacheda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 498: I can talk about a bride's farewell.",
+    "assesses": [
+      "GU-LEX-C498-VIDAY498-03",
+      "GU-LEX-C498-VIDAY498-04",
+      "GU-LEX-C498-VIDAY498-05"
+    ]
+  }
+}

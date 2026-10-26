@@ -173,10 +173,9 @@ decorator and the HTML renderer:
                                                     HTML renderer + sidebar
 ```
 
-Next DOC00 v0 packages: `forme-doc-sidebar-builder`,
-`forme-doc-page-shell`, `forme-doc-search-tokenizer`,
-`forme-doc-search-index-builder`, `forme-doc-search-client-js`,
-`forme-doc-site-emitter`.
+The complete DOC00 v0 cluster now ships. Downstream page and site
+stages consume this package's stable span contract; grammar-backed
+colouring remains the v1 roadmap below.
 
 ## v1 roadmap
 

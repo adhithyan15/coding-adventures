@@ -241,8 +241,20 @@ macro_rules! python2_case {
     };
 }
 
+/// The source of one `py-float-print` corpus case (LANG84 phase 7c slice 3).
+macro_rules! python_float_case {
+    ($name:literal) => {
+        include_str!(concat!("../../../../grammars/python/corpus/py-float-print/", $name, ".py"))
+    };
+}
+
 /// Every executable column, for rows that run on all of them.
 const EVERY_COLUMN: &[Backend] = &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam];
+
+/// The seven columns whose floats are IEEE-754 binary64 (LANG84 phase 6e):
+/// every executable column but BEAM, whose floats have no `±Infinity` or
+/// `NaN` and which refuses the LANG83 PR6c `f64_*` arithmetic at compile time.
+const IEEE_COLUMNS: &[Backend] = &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit];
 
 use Backend::{Beam, Clr, Jit, Jvm, Llvm, NativeAot, Vm, Wasm};
 
@@ -6650,6 +6662,83 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // ALGOL 60 - a zero-valued checked static normalizer proves the complete
+    // sign-rooted power is exactly one.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure rightvalue; rightvalue := -3.5; real result; result := entier(sign(rightvalue()) ^ entier(0.75)); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ALGOL 60 - independently bounded dynamic sign roots remain exact when
+    // checked multiplication keeps their complete product within 2^53.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real result; result := entier(3 * sign(leftvalue()) * sign(rightvalue()) * 2); output(result) end",
+        expect: Expect::Stdout("-6"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ALGOL 60 - independently bounded dynamic sign roots remain exact when
+    // checked addition keeps their complete sum within 2^53.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real result; result := entier(3 * sign(leftvalue()) - 2 * sign(rightvalue()) + 45); output(result) end",
+        expect: Expect::Stdout("40"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ALGOL 60 - a multiple-sign product remains exact through ordered static
+    // integer reductions and a later bounded power.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real result; result := entier(((12 * sign(leftvalue()) * sign(rightvalue()) div 5) mod 3) ^ 2); output(result) end",
+        expect: Expect::Stdout("4"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ALGOL 60 - a checked static integer reduction may precede the first of
+    // multiple sign roots when multiplication connects the folded prefix.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real result; result := entier(((20 div 3 * sign(leftvalue()) * sign(rightvalue())) mod 5) ^ 2); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ALGOL 60 - checked static reductions may occur between dynamic sign
+    // roots when each later root enters the ordered product by multiplication.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real result; result := entier(((12 div 5 * sign(leftvalue()) * 15 div 5 * sign(rightvalue())) mod 5) ^ 2); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ALGOL 60 - a stable sign-product reduction retains its exact common
+    // divisor through div and mod, proving a later real quotient integral.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real result; result := entier(((12 * sign(leftvalue()) div 5 * sign(rightvalue()) mod 3) / 2) ^ 2); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -9152,6 +9241,21 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // Dartmouth BASIC — negating a non-literal real. `ABS(-42)` above
+    // cannot catch a broken `neg`(f64): it negates twice, and a two's-
+    // complement negate of the raw f64 bits is its own inverse, so the wrong
+    // encoding round-trips to the right answer. 2.5 is asymmetric: an integer
+    // negate of its bits (0x4004…) gives 0xBFFC…, i.e. −1.75, not −2.5. The
+    // native backends lowered `neg_f64` that way until it flipped the sign bit.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET X = 2.5\n20 PRINT -X\n30 END\n",
+        expect: Expect::Stdout("-2.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
+    },
     // Dartmouth BASIC — `SGN` (signum) built-in (LANG-FULL BA-builtins).
     // SGN(X) = 1.0 if X > 0, −1.0 if X < 0, 0.0 if X = 0.  Lowered
     // inline as a 3-way conditional.  SGN(-5) → −1.0, printed as `-1`.
@@ -11137,10 +11241,11 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Python, ext: "py", src: "print(-(-9223372036854775807 - 1))\n", expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: Some("3.13.16"), case: Some("py-int-print/overflow_neg_min") },
     // `MIN // -1` is folded to `-MIN`, which traps `Trap.Overflow` (CPython: 2^63).
     Prog { lang: Language::Python, ext: "py", src: "print(0)\nprint((-9223372036854775807 - 1) // -1)\n", expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: Some("3.13.16"), case: Some("py-int-print/overflow_min_floordiv_minus_one") },
-    // 3.0a1 — representative (and only member) of the IIR-identity class that
-    // refuses `int_underscores` (`int_underscores.reject@3.0a1`: PEP 515's `_`
-    // separators arrived in 3.6), so it has every other case (LANG84 phase 7b
-    // slice 2, `code/grammars/python/release_classes.csv`).
+    // 3.0a1 — representative of the IIR-identity class that refuses
+    // `int_underscores` (`int_underscores.reject@3.0a1` and `@3.5.10`: PEP 515's
+    // `_` separators arrived in 3.6), so it has every other case (LANG84 phase 7b
+    // slice 2, `code/grammars/python/release_classes.csv`); 3.5.10 is the class's
+    // other member since phase 7c slice 2.
     Prog { lang: Language::Python, ext: "py", src: python_case!("precedence"), expect: Expect::Stdout("3\n5\n9\n5"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/precedence") },
     Prog { lang: Language::Python, ext: "py", src: python_case!("floor_div_signs"), expect: Expect::Stdout("3\n-4\n-4\n3"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/floor_div_signs") },
     Prog { lang: Language::Python, ext: "py", src: python_case!("mod_signs"), expect: Expect::Stdout("1\n2\n-2\n-1"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/mod_signs") },
@@ -11158,33 +11263,36 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_mul"), expect: Expect::StdoutThenTrap("5", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/overflow_mul") },
     Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_neg_min"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/overflow_neg_min") },
     Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_min_floordiv_minus_one"), expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.0a1"), case: Some("py-int-print/overflow_min_floordiv_minus_one") },
-    // 3.12.3 — representative of the class of the four releases that accept the
-    // whole corpus (3.12.3, 3.13.16, 3.11.17, 3.16.0a1). It is the class's first
-    // release in `releases.csv` order (date order), so its rows, not the default's,
-    // stand for 3.11.17 and 3.16.0a1 in `release_inventory.py check --matrix`.
-    Prog { lang: Language::Python, ext: "py", src: python_case!("precedence"), expect: Expect::Stdout("3\n5\n9\n5"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/precedence") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("floor_div_signs"), expect: Expect::Stdout("3\n-4\n-4\n3"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/floor_div_signs") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("mod_signs"), expect: Expect::Stdout("1\n2\n-2\n-1"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/mod_signs") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("unary"), expect: Expect::Stdout("5\n7\n-24\n7\n-3"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/unary") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("int_underscores"), expect: Expect::Stdout("3000000\n0"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/int_underscores") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("print_forms"), expect: Expect::Stdout("1\n\n2\n3\n4"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/print_forms") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("layout"), expect: Expect::Stdout("3\n3\n-1"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/layout") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("i64_bounds"), expect: Expect::Stdout("9223372036854775807\n-9223372036854775808\n4611307862899360000\n-9223372036854775808"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/i64_bounds") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("minus_one_divisor"), expect: Expect::Stdout("-7\n0\n-9223372036854775807\n0"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/minus_one_divisor") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("div_zero_after_output"), expect: Expect::StdoutThenTrap("1", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/div_zero_after_output") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("mod_zero"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/mod_zero") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("div_zero_computed"), expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/div_zero_computed") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("zero_divisor_inside_argument"), expect: Expect::StdoutThenTrap("2", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/zero_divisor_inside_argument") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_add"), expect: Expect::StdoutThenTrap("1", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/overflow_add") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_sub"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/overflow_sub") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_mul"), expect: Expect::StdoutThenTrap("5", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/overflow_mul") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_neg_min"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/overflow_neg_min") },
-    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_min_floordiv_minus_one"), expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.12.3"), case: Some("py-int-print/overflow_min_floordiv_minus_one") },
-    // Python 2 — LANG84 phase 7c slice 1: the `py2-int-print` subset, the
-    // print *statement* and classic `/` (floor division on ints, lowered
-    // exactly like `//`). 2.2 and 2.7.18 are one IIR-identity class
-    // (`release_classes.csv`), and 2.2, its first release in `releases.csv`,
-    // represents it, so these rows prove stage B for both. Each source is a
+    // 3.6.0 — representative of the class of the five releases that accept the
+    // whole corpus (3.6.0, 3.12.3, 3.13.16, 3.11.17, 3.16.0a1). It is the class's
+    // first release in `releases.csv` order (date order), so its rows, not the
+    // default's, stand for 3.12.3, 3.11.17 and 3.16.0a1 in
+    // `release_inventory.py check --matrix`. (3.12.3 represented the class until
+    // phase 7c slice 2 added 3.6.0, the first release with PEP 515 separators;
+    // 3.5.10, the last without them, joined 3.0a1's class.)
+    Prog { lang: Language::Python, ext: "py", src: python_case!("precedence"), expect: Expect::Stdout("3\n5\n9\n5"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/precedence") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("floor_div_signs"), expect: Expect::Stdout("3\n-4\n-4\n3"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/floor_div_signs") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("mod_signs"), expect: Expect::Stdout("1\n2\n-2\n-1"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/mod_signs") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("unary"), expect: Expect::Stdout("5\n7\n-24\n7\n-3"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/unary") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("int_underscores"), expect: Expect::Stdout("3000000\n0"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/int_underscores") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("print_forms"), expect: Expect::Stdout("1\n\n2\n3\n4"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/print_forms") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("layout"), expect: Expect::Stdout("3\n3\n-1"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/layout") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("i64_bounds"), expect: Expect::Stdout("9223372036854775807\n-9223372036854775808\n4611307862899360000\n-9223372036854775808"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/i64_bounds") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("minus_one_divisor"), expect: Expect::Stdout("-7\n0\n-9223372036854775807\n0"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/minus_one_divisor") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("div_zero_after_output"), expect: Expect::StdoutThenTrap("1", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/div_zero_after_output") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("mod_zero"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/mod_zero") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("div_zero_computed"), expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/div_zero_computed") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("zero_divisor_inside_argument"), expect: Expect::StdoutThenTrap("2", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/zero_divisor_inside_argument") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_add"), expect: Expect::StdoutThenTrap("1", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/overflow_add") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_sub"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/overflow_sub") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_mul"), expect: Expect::StdoutThenTrap("5", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/overflow_mul") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_neg_min"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/overflow_neg_min") },
+    Prog { lang: Language::Python, ext: "py", src: python_case!("overflow_min_floordiv_minus_one"), expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-int-print/overflow_min_floordiv_minus_one") },
+    // Python 2 — LANG84 phase 7c: the `py2-int-print` subset, the print
+    // *statement*, classic `/` (floor division on ints, lowered exactly like
+    // `//`) and, since slice 2, octal, hex and `L` literals. 2.2 and 2.4 are one
+    // IIR-identity class (`release_classes.csv`), and 2.2, its first release in
+    // `releases.csv`, represents it, so these rows prove stage B for both. Each source is a
     // case of `code/grammars/python/corpus/py2-int-print/` verbatim; the
     // expectations rest on the tags' pinned source (no host python2) and are
     // cross-checked by translating each case to Python 3 in
@@ -11208,6 +11316,90 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_mul"), expect: Expect::StdoutThenTrap("5", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/overflow_mul") },
     Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_neg_min"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/overflow_neg_min") },
     Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_min_classic_div_minus_one"), expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/overflow_min_classic_div_minus_one") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("octal_literals"), expect: Expect::Stdout("8\n511\n0\n-15\n2"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/octal_literals") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("long_suffix"), expect: Expect::Stdout("1\n3\n-4\n0\n9223372036854775807\n7"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/long_suffix") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("hex_literals"), expect: Expect::Stdout("31\n256\n9223372036854775807\n128\n-3"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/hex_literals") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_long_literal"), expect: Expect::StdoutThenTrap("1", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.2"), case: Some("py2-int-print/overflow_long_literal") },
+    // 2.6 — representative of the second Python 2 class (2.6, 2.7.18): PEP 3127's
+    // `0o`/`0b` literals (phase 7c slice 2) are lexed from 2.6 on, so
+    // `pep3127_literals` is `rejected` on 2.2 and 2.4 (`.reject@2.2`, `@2.4`) and the
+    // two pairs of releases have different outcome vectors. 2.6 runs the whole
+    // corpus; 2.2 above stands for 2.4.
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("print_forms"), expect: Expect::Stdout("1\n\n2\n3\n4"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/print_forms") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("precedence"), expect: Expect::Stdout("3\n5\n9\n5"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/precedence") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("classic_div_signs"), expect: Expect::Stdout("3\n-4\n-4\n3"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/classic_div_signs") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("classic_div_chain"), expect: Expect::Stdout("7\n33\n6"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/classic_div_chain") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("floor_div_signs"), expect: Expect::Stdout("3\n-4\n-4\n3"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/floor_div_signs") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("mod_signs"), expect: Expect::Stdout("1\n2\n-2\n-1"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/mod_signs") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("unary"), expect: Expect::Stdout("5\n7\n-24\n7\n-3"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/unary") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("layout"), expect: Expect::Stdout("3\n3\n-1"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/layout") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("i64_bounds"), expect: Expect::Stdout("9223372036854775807\n-9223372036854775808\n4611307862899360000\n-9223372036854775808"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/i64_bounds") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("minus_one_divisor"), expect: Expect::Stdout("-7\n0\n-9223372036854775807\n0\n-7"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/minus_one_divisor") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("div_zero_after_output"), expect: Expect::StdoutThenTrap("1", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/div_zero_after_output") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("mod_zero"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/mod_zero") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("floor_div_zero_computed"), expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/floor_div_zero_computed") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("zero_divisor_inside_item"), expect: Expect::StdoutThenTrap("2", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/zero_divisor_inside_item") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_add"), expect: Expect::StdoutThenTrap("1", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/overflow_add") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_sub"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/overflow_sub") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_mul"), expect: Expect::StdoutThenTrap("5", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/overflow_mul") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_neg_min"), expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/overflow_neg_min") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_min_classic_div_minus_one"), expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/overflow_min_classic_div_minus_one") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("octal_literals"), expect: Expect::Stdout("8\n511\n0\n-15\n2"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/octal_literals") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("long_suffix"), expect: Expect::Stdout("1\n3\n-4\n0\n9223372036854775807\n7"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/long_suffix") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("hex_literals"), expect: Expect::Stdout("31\n256\n9223372036854775807\n128\n-3"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/hex_literals") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("pep3127_literals"), expect: Expect::Stdout("15\n20\n24\n0"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/pep3127_literals") },
+    Prog { lang: Language::Python, ext: "py", src: python2_case!("overflow_long_literal"), expect: Expect::StdoutThenTrap("1", "Trap.Overflow"), backends: EVERY_COLUMN, release: Some("2.6"), case: Some("py2-int-print/overflow_long_literal") },
+    // Python floats — LANG84 phase 7c slice 3: the `py-float-print` subset
+    // (`py-int-print` plus float literals, true `/`, int/float mixing, a float
+    // printed as `repr`) on the default 3.13.16 and on the representatives of
+    // its two IIR-identity classes, 3.6.0 (3.6.0, 3.12.3, 3.13.16, 3.11.17,
+    // 3.16.0a1) and 3.5.10 (alone: it refuses `float_underscores`, PEP 515).
+    // Each source is a case of `code/grammars/python/corpus/py-float-print/`
+    // verbatim, checked against host CPython 3.13 by
+    // `python_rows_agree_with_the_host_python_oracle`. The two literal-only
+    // rows (`const`, `write_f64_py`, `putchar`) run on all eight columns; the
+    // rest use the LANG83 PR6c `f64_*` ops, which BEAM refuses at compile time
+    // (`UnsupportedOps`, which stage B allows), so they declare `IEEE_COLUMNS`.
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("literals"), expect: Expect::Stdout("1.5\n0.5\n1.0\n0.25\n1000.0\n0.0025\n1e+16\n1000000000000000.0\n1e-05\n0.0001\n0.0\n0.1\n1.2345678901234568e+17\n1.7976931348623157e+308\n5e-324"), backends: EVERY_COLUMN, release: Some("3.13.16"), case: Some("py-float-print/literals") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("float_underscores"), expect: Expect::Stdout("1000.5\n10000000000.0\n0.01\n1.001"), backends: EVERY_COLUMN, release: Some("3.13.16"), case: Some("py-float-print/float_underscores") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("true_division"), expect: Expect::Stdout("3.5\n-3.5\n0.3333333333333333\n2.0\n-0.0\n0.0\n2.0\n3002399751580330.5\n-9007199254740992.0"), backends: IEEE_COLUMNS, release: Some("3.13.16"), case: Some("py-float-print/true_division") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("mixed_arithmetic"), expect: Expect::Stdout("1.5\n1.5\n0.30000000000000004\n0.30000000000000004\n0.0\n9007199254740992.0\n9.223372036854776e+18\n-9.223372036854776e+18\n4.5\n0.5"), backends: IEEE_COLUMNS, release: Some("3.13.16"), case: Some("py-float-print/mixed_arithmetic") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("signed_zero"), expect: Expect::Stdout("-0.0\n-0.0\n-0.0\n-0.0\n0.0\n-0.0\n0.0\n0.0\n0.0"), backends: IEEE_COLUMNS, release: Some("3.13.16"), case: Some("py-float-print/signed_zero") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("inf_and_nan"), expect: Expect::Stdout("inf\n-inf\nnan\nnan\n0.0\n-0.0\ninf\nnan"), backends: IEEE_COLUMNS, release: Some("3.13.16"), case: Some("py-float-print/inf_and_nan") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("repr_layout"), expect: Expect::Stdout("1e+22\n1.5e-07\n123.456\n4.35\n100.0\n1000000000000000.2\n0.30000000000000004\n0.14285714285714285\n0.0001\n-1e-300"), backends: IEEE_COLUMNS, release: Some("3.13.16"), case: Some("py-float-print/repr_layout") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("int_results_stay_int"), expect: Expect::Stdout("3\n6\n2.0\n-2.0\n-5"), backends: IEEE_COLUMNS, release: Some("3.13.16"), case: Some("py-float-print/int_results_stay_int") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("float_div_zero_after_output"), expect: Expect::StdoutThenTrap("1.5", "Trap.DivZero"), backends: IEEE_COLUMNS, release: Some("3.13.16"), case: Some("py-float-print/float_div_zero_after_output") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("int_true_div_zero"), expect: Expect::StdoutThenTrap("2", "Trap.DivZero"), backends: IEEE_COLUMNS, release: Some("3.13.16"), case: Some("py-float-print/int_true_div_zero") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("negative_zero_divisor"), expect: Expect::StdoutThenTrap("0.25", "Trap.DivZero"), backends: IEEE_COLUMNS, release: Some("3.13.16"), case: Some("py-float-print/negative_zero_divisor") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("div_zero_inside_argument"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: IEEE_COLUMNS, release: Some("3.13.16"), case: Some("py-float-print/div_zero_inside_argument") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("overflow_inside_float"), expect: Expect::StdoutThenTrap("1.5", "Trap.Overflow"), backends: IEEE_COLUMNS, release: Some("3.13.16"), case: Some("py-float-print/overflow_inside_float") },
+    // 3.6.0: representative of the five-release float class.
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("literals"), expect: Expect::Stdout("1.5\n0.5\n1.0\n0.25\n1000.0\n0.0025\n1e+16\n1000000000000000.0\n1e-05\n0.0001\n0.0\n0.1\n1.2345678901234568e+17\n1.7976931348623157e+308\n5e-324"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-float-print/literals") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("float_underscores"), expect: Expect::Stdout("1000.5\n10000000000.0\n0.01\n1.001"), backends: EVERY_COLUMN, release: Some("3.6.0"), case: Some("py-float-print/float_underscores") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("true_division"), expect: Expect::Stdout("3.5\n-3.5\n0.3333333333333333\n2.0\n-0.0\n0.0\n2.0\n3002399751580330.5\n-9007199254740992.0"), backends: IEEE_COLUMNS, release: Some("3.6.0"), case: Some("py-float-print/true_division") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("mixed_arithmetic"), expect: Expect::Stdout("1.5\n1.5\n0.30000000000000004\n0.30000000000000004\n0.0\n9007199254740992.0\n9.223372036854776e+18\n-9.223372036854776e+18\n4.5\n0.5"), backends: IEEE_COLUMNS, release: Some("3.6.0"), case: Some("py-float-print/mixed_arithmetic") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("signed_zero"), expect: Expect::Stdout("-0.0\n-0.0\n-0.0\n-0.0\n0.0\n-0.0\n0.0\n0.0\n0.0"), backends: IEEE_COLUMNS, release: Some("3.6.0"), case: Some("py-float-print/signed_zero") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("inf_and_nan"), expect: Expect::Stdout("inf\n-inf\nnan\nnan\n0.0\n-0.0\ninf\nnan"), backends: IEEE_COLUMNS, release: Some("3.6.0"), case: Some("py-float-print/inf_and_nan") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("repr_layout"), expect: Expect::Stdout("1e+22\n1.5e-07\n123.456\n4.35\n100.0\n1000000000000000.2\n0.30000000000000004\n0.14285714285714285\n0.0001\n-1e-300"), backends: IEEE_COLUMNS, release: Some("3.6.0"), case: Some("py-float-print/repr_layout") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("int_results_stay_int"), expect: Expect::Stdout("3\n6\n2.0\n-2.0\n-5"), backends: IEEE_COLUMNS, release: Some("3.6.0"), case: Some("py-float-print/int_results_stay_int") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("float_div_zero_after_output"), expect: Expect::StdoutThenTrap("1.5", "Trap.DivZero"), backends: IEEE_COLUMNS, release: Some("3.6.0"), case: Some("py-float-print/float_div_zero_after_output") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("int_true_div_zero"), expect: Expect::StdoutThenTrap("2", "Trap.DivZero"), backends: IEEE_COLUMNS, release: Some("3.6.0"), case: Some("py-float-print/int_true_div_zero") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("negative_zero_divisor"), expect: Expect::StdoutThenTrap("0.25", "Trap.DivZero"), backends: IEEE_COLUMNS, release: Some("3.6.0"), case: Some("py-float-print/negative_zero_divisor") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("div_zero_inside_argument"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: IEEE_COLUMNS, release: Some("3.6.0"), case: Some("py-float-print/div_zero_inside_argument") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("overflow_inside_float"), expect: Expect::StdoutThenTrap("1.5", "Trap.Overflow"), backends: IEEE_COLUMNS, release: Some("3.6.0"), case: Some("py-float-print/overflow_inside_float") },
+    // 3.5.10: its own float class (no `_` in a float before 3.6).
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("literals"), expect: Expect::Stdout("1.5\n0.5\n1.0\n0.25\n1000.0\n0.0025\n1e+16\n1000000000000000.0\n1e-05\n0.0001\n0.0\n0.1\n1.2345678901234568e+17\n1.7976931348623157e+308\n5e-324"), backends: EVERY_COLUMN, release: Some("3.5.10"), case: Some("py-float-print/literals") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("true_division"), expect: Expect::Stdout("3.5\n-3.5\n0.3333333333333333\n2.0\n-0.0\n0.0\n2.0\n3002399751580330.5\n-9007199254740992.0"), backends: IEEE_COLUMNS, release: Some("3.5.10"), case: Some("py-float-print/true_division") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("mixed_arithmetic"), expect: Expect::Stdout("1.5\n1.5\n0.30000000000000004\n0.30000000000000004\n0.0\n9007199254740992.0\n9.223372036854776e+18\n-9.223372036854776e+18\n4.5\n0.5"), backends: IEEE_COLUMNS, release: Some("3.5.10"), case: Some("py-float-print/mixed_arithmetic") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("signed_zero"), expect: Expect::Stdout("-0.0\n-0.0\n-0.0\n-0.0\n0.0\n-0.0\n0.0\n0.0\n0.0"), backends: IEEE_COLUMNS, release: Some("3.5.10"), case: Some("py-float-print/signed_zero") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("inf_and_nan"), expect: Expect::Stdout("inf\n-inf\nnan\nnan\n0.0\n-0.0\ninf\nnan"), backends: IEEE_COLUMNS, release: Some("3.5.10"), case: Some("py-float-print/inf_and_nan") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("repr_layout"), expect: Expect::Stdout("1e+22\n1.5e-07\n123.456\n4.35\n100.0\n1000000000000000.2\n0.30000000000000004\n0.14285714285714285\n0.0001\n-1e-300"), backends: IEEE_COLUMNS, release: Some("3.5.10"), case: Some("py-float-print/repr_layout") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("int_results_stay_int"), expect: Expect::Stdout("3\n6\n2.0\n-2.0\n-5"), backends: IEEE_COLUMNS, release: Some("3.5.10"), case: Some("py-float-print/int_results_stay_int") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("float_div_zero_after_output"), expect: Expect::StdoutThenTrap("1.5", "Trap.DivZero"), backends: IEEE_COLUMNS, release: Some("3.5.10"), case: Some("py-float-print/float_div_zero_after_output") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("int_true_div_zero"), expect: Expect::StdoutThenTrap("2", "Trap.DivZero"), backends: IEEE_COLUMNS, release: Some("3.5.10"), case: Some("py-float-print/int_true_div_zero") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("negative_zero_divisor"), expect: Expect::StdoutThenTrap("0.25", "Trap.DivZero"), backends: IEEE_COLUMNS, release: Some("3.5.10"), case: Some("py-float-print/negative_zero_divisor") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("div_zero_inside_argument"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: IEEE_COLUMNS, release: Some("3.5.10"), case: Some("py-float-print/div_zero_inside_argument") },
+    Prog { lang: Language::Python, ext: "py", src: python_float_case!("overflow_inside_float"), expect: Expect::StdoutThenTrap("1.5", "Trap.Overflow"), backends: IEEE_COLUMNS, release: Some("3.5.10"), case: Some("py-float-print/overflow_inside_float") },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -13017,6 +13209,14 @@ fn run_clr_il(p: &Prog, il: &str, input: &[u8], ilasm: &std::path::Path) -> RunR
     RunResult::Completed { code, stdout: printed }
 }
 
+/// Python's `repr(x)`, the text LANG83 PR6a `write_f64_py` writes (LANG84
+/// 7c slice 3, `py-float-print`): the same formatter vm-core's default
+/// builtin uses, so the VM and JIT columns capture exactly what a standalone
+/// run would print.
+fn py_float_text(x: f64) -> String {
+    vm_core::float_format::python_repr(x)
+}
+
 /// VM runner: source → IIR (`compile_source_to_iir`) → the **generic register VM**
 /// (`vm_core::VMCore`) interpreting the shared IIR directly (Phase V). This is the
 /// in-process, run-anywhere analog of the code-gen columns: the *same* `IIRModule` the
@@ -13108,6 +13308,20 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
     vm.builtins_mut().register("putchar", move |args: &[Value]| {
         let b = (args.first().and_then(|v| v.as_i64()).unwrap_or(0) & 0xFF) as u8;
         bytes.lock().expect("lang-matrix VM putchar buffer poisoned").push(b);
+        Ok(Value::Null)
+    });
+    // LANG83 PR6a `write_f64_py` (Python's `print` of a float, LANG84 7c
+    // slice 3): `repr(x)`, into the same ordered buffer. vm-core's default
+    // would write to the process stdout, where the harness cannot see it.
+    let bytes = Arc::clone(&printed_bytes);
+    vm.builtins_mut().register("write_f64_py", move |args: &[Value]| {
+        let x = args.first().and_then(Value::as_f64).ok_or_else(|| {
+            vm_core::errors::VMError::Custom(format!("write_f64_py: expected a float, got {args:?}"))
+        })?;
+        bytes
+            .lock()
+            .expect("lang-matrix VM output buffer poisoned")
+            .extend_from_slice(py_float_text(x).as_bytes());
         Ok(Value::Null)
     });
     let bytes = Arc::clone(&printed_bytes);
@@ -13244,6 +13458,17 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
         Ok(Value::Null)
     });
     let bytes = Arc::clone(&printed_bytes);
+    vm.builtins_mut().register("write_f64_py", move |args: &[Value]| {
+        let x = args.first().and_then(Value::as_f64).ok_or_else(|| {
+            vm_core::errors::VMError::Custom(format!("write_f64_py: expected a float, got {args:?}"))
+        })?;
+        bytes
+            .lock()
+            .expect("lang-matrix JIT output buffer poisoned")
+            .extend_from_slice(py_float_text(x).as_bytes());
+        Ok(Value::Null)
+    });
+    let bytes = Arc::clone(&printed_bytes);
     vm.builtins_mut().register("print_str", move |args: &[Value]| {
         let s = args.first().and_then(Value::as_str).unwrap_or("");
         bytes
@@ -13309,6 +13534,17 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     backend.register_builtin("putchar", move |args: &[Value]| {
         let b = (args.first().and_then(|v| v.as_i64()).unwrap_or(0) & 0xFF) as u8;
         bytes.lock().expect("lang-matrix JIT putchar buffer poisoned").push(b);
+        Value::Null
+    });
+    // `CALL_BUILTIN_F64` hands the compiled tier's handler a `Value::Float`.
+    let bytes = Arc::clone(&printed_bytes);
+    backend.register_builtin("write_f64_py", move |args: &[Value]| {
+        // A non-float would be a JIT bug; print a marker no row can match.
+        let text = args
+            .first()
+            .and_then(Value::as_f64)
+            .map_or_else(|| format!("<write_f64_py: not a float: {args:?}>"), py_float_text);
+        bytes.lock().expect("lang-matrix JIT output buffer poisoned").extend_from_slice(text.as_bytes());
         Value::Null
     });
     let input = Arc::clone(&stdin_buf);
@@ -14386,7 +14622,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::Twig, 49, 392),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 48),
-        (Language::DartmouthBasic, 51, 408),
+        (Language::DartmouthBasic, 52, 416),
         (Language::Oct, 12, 96),
         // MacroOct: 9 rows at PREP01 slice 1 (`@include`/`@if`/`@else`/`@end`),
         // plus slice 2's five `@define` rows — object-like, function-like with
@@ -14412,10 +14648,16 @@ fn feature_coverage_doc_counts_match_programs_source() {
         // Python: LANG84 phase 7a's eighteen py-int-print rows on the default
         // 3.13.16 (nine of them StdoutThenTrap: four Trap.DivZero, five
         // Trap.Overflow), plus 7b slice 2's rows on the two IIR-identity class
-        // representatives: 17 on 3.0a1 (no int_underscores) and 18 on 3.12.3,
-        // all eight columns. Phase 7c slice 1 adds the py2-int-print corpus
-        // (19 cases, nine StdoutThenTrap) on its one class representative, 2.2.
-        (Language::Python, 72, 576),
+        // representatives: 17 on 3.0a1 (no int_underscores) and 18 on 3.6.0
+        // (3.12.3 until 7c slice 2), all eight columns. Phase 7c adds the
+        // py2-int-print corpus on its two class representatives: 23 cases on
+        // 2.2 (all but pep3127_literals) and all 24 on 2.6 (ten StdoutThenTrap
+        // each). Phase 7c slice 3 adds the py-float-print corpus: 13 cases on
+        // 3.13.16 and on 3.6.0, 12 on 3.5.10 (no float_underscores); the
+        // literal-only rows (two, one on 3.5.10) declare all eight columns and
+        // the other 33 the seven IEEE columns (BEAM refuses `f64_*`):
+        // 100 + 38 rows, 800 + 5 * 8 + 33 * 7 = 1071 cells.
+        (Language::Python, 138, 1071),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -16448,6 +16690,106 @@ fn algol_multiplicative_entier_sign_widening_runs_on_every_available_standard_ba
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but multiplicative-entier-sign widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_multiple_sign_product_reductions_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "12 * sign(leftvalue()) * sign(rightvalue()) div 5) mod 3) ^ 2",
+                )
+        })
+        .expect("the ALGOL multiple-sign product reduction program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but multiple-sign product reductions did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_multiple_sign_product_prefix_reductions_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "20 div 3 * sign(leftvalue()) * sign(rightvalue())) mod 5) ^ 2",
+                )
+        })
+        .expect("the ALGOL multiple-sign product prefix-reduction program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but multiple-sign product prefix reductions did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_multiple_sign_product_inter_root_reductions_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "sign(leftvalue()) * 15 div 5 * sign(rightvalue())) mod 5) ^ 2",
+                )
+        })
+        .expect("the ALGOL multiple-sign inter-root reduction program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but multiple-sign inter-root reductions did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_stable_sign_reduction_divisibility_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "sign(leftvalue()) div 5 * sign(rightvalue()) mod 3) / 2) ^ 2",
+                )
+        })
+        .expect("the ALGOL stable sign-reduction divisibility program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but stable sign-reduction divisibility did not complete"
             );
             continue;
         };
@@ -28474,11 +28816,16 @@ fn python_corpus_dir() -> std::path::PathBuf {
 fn python_rows_run_on_every_available_backend() {
     let (mut ran, mut skipped, mut trapped) = (0usize, 0usize, 0usize);
     for program in python_rows() {
-        assert_eq!(
+        // Every integer row declares all eight columns; a py-float-print row
+        // with float arithmetic declares the seven IEEE columns (BEAM refuses
+        // the PR6c `f64_*` ops; `python_rows_pass_the_lang83_check_on_all_nine_backends`
+        // pins which).
+        let float_row = program.case.is_some_and(|c| c.starts_with("py-float-print/"));
+        assert!(
+            program.backends == EVERY_COLUMN || (float_row && program.backends == IEEE_COLUMNS),
+            "Python row declares {:?}: {:?}",
             program.backends,
-            &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
-            "every Python row declares all eight columns: {:?}",
-            program.src
+            program.case
         );
         for &backend in program.backends {
             let available = match backend {
@@ -28571,7 +28918,8 @@ fn python_rows_agree_with_the_host_python_oracle() {
     }
     // Python 3 rows only: a py2-int-print row is Python 2 (its own oracle is
     // python-iir-compiler's translation check).
-    for program in python_rows_of("py-int-print") {
+    let python3_rows: Vec<_> = python_rows_of("py-int-print").into_iter().chain(python_rows_of("py-float-print")).collect();
+    for &program in &python3_rows {
         let out = run_host_oracle(Command::new("python3").args(["-I", "-"]), program.src);
         // Windows interpreters write text-mode stdout ("\r\n"); the rows
         // record the language's output, so fold the line ending back.
@@ -28591,13 +28939,17 @@ fn python_rows_agree_with_the_host_python_oracle() {
                 let lines: Vec<&str> = stdout.lines().collect();
                 let before = if want.is_empty() { 0 } else { want.lines().count() };
                 assert_eq!(lines[..before].join("\n"), want, "{version}: {:?}", program.src);
-                let value: i128 = lines[before].parse().expect("CPython printed an integer");
-                assert!(i64::try_from(value).is_err(), "{version}: {value} fits in i64: {:?}", program.src);
+                // An int outside i64, or (py-float-print) the float of one.
+                let beyond = match lines[before].parse::<i128>() {
+                    Ok(value) => i64::try_from(value).is_err(),
+                    Err(_) => lines[before].parse::<f64>().is_ok_and(|v| v.abs() >= 9_223_372_036_854_775_808.0),
+                };
+                assert!(beyond, "{version}: {:?} is inside i64: {:?}", lines[before], program.src);
             }
             ref other => panic!("no Python oracle for {other:?}"),
         }
     }
-    eprintln!("Python oracle: {} rows agree with CPython {version}", python_rows_of("py-int-print").len());
+    eprintln!("Python oracle: {} rows agree with CPython {version}", python3_rows.len());
 }
 
 /// LANG84 C7.3: every row's module passes `check_module_for` on all nine
@@ -28605,9 +28957,14 @@ fn python_rows_agree_with_the_host_python_oracle() {
 /// run) and holds only registry ops: the PR4 checked arithmetic,
 /// `i64_div_floor` / `i64_mod_floor`, `print_i64` / `putchar`, plus the
 /// ungated `const`/`ret`. No wrapping `add`/`sub`/`mul`/`neg` survives.
+/// Since phase 7c slice 3 a `py-float-print` row may also hold the PR6c
+/// `f64_*` ops, `int_to_real`, `write_f64_py` and `trap`; BEAM refuses
+/// exactly the rows with `f64_*` arithmetic (which do not list it), and the
+/// generic JIT leaves `int_to_real` to its interpreter tier.
 #[test]
 fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
     let mut checked_ops = 0;
+    let (mut beam_runs, mut beam_refuses) = (0usize, 0usize);
     for program in python_rows() {
         let module = lang_aot::compile_source_to_iir_at(Language::Python, program.release, program.src, "c7")
             .unwrap_or_else(|e| panic!("{:?} {:?}: {e}", program.release, program.case));
@@ -28625,6 +28982,15 @@ fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
                             "i64_mod_floor",
                             "print_i64",
                             "putchar",
+                            // py-float-print (LANG84 7c slice 3).
+                            "f64_add",
+                            "f64_sub",
+                            "f64_mul",
+                            "f64_div",
+                            "f64_neg",
+                            "int_to_real",
+                            "write_f64_py",
+                            "trap",
                         ]
                         .contains(&name),
                         "{:?}: unexpected registry op {name}",
@@ -28636,26 +29002,68 @@ fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
             }
         }
         for backend in lang_aot::op_check::Backend::ALL {
-            lang_aot::op_check::check_module_for(backend, &module)
-                .unwrap_or_else(|e| panic!("{:?} refused on {}: {e}", program.src, backend.name()));
+            let checked = lang_aot::op_check::check_module_for(backend, &module);
+            match backend {
+                // BEAM lowers a row exactly when the row lists it: a float row
+                // with `f64_*` arithmetic is refused at compile time (BEAM
+                // floats have no ±inf/NaN), naming only those ops.
+                lang_aot::op_check::Backend::Beam => match (program.backends.contains(&Beam), checked) {
+                    (true, Ok(())) => {
+                        lang_aot::compile_iir_to_beam(module.clone(), "c7")
+                            .unwrap_or_else(|e| panic!("{:?}: BEAM lowering failed: {e}", program.case));
+                        beam_runs += 1;
+                    }
+                    (false, Err(refusal)) => {
+                        assert!(
+                            refusal.refusals.iter().all(|r| r.op.starts_with("f64_")),
+                            "{:?}: BEAM refused more than IEEE arithmetic: {refusal}",
+                            program.case
+                        );
+                        beam_refuses += 1;
+                    }
+                    (lists_beam, checked) => {
+                        panic!("{:?}: lists BEAM = {lists_beam} but BEAM's op check gave {checked:?}", program.case)
+                    }
+                },
+                // The generic JIT compiles no `int_to_real`: a function using
+                // it runs on the vm-core interpreter tier, as every printing
+                // function's JIT cell does today (`execute_with_jit`).
+                lang_aot::op_check::Backend::Jit => {
+                    if let Err(refusal) = checked {
+                        assert!(
+                            refusal.refusals.iter().all(|r| r.op == "int_to_real"),
+                            "{:?}: the JIT refused more than int_to_real: {refusal}",
+                            program.case
+                        );
+                    }
+                }
+                _ => {
+                    checked.unwrap_or_else(|e| panic!("{:?} refused on {}: {e}", program.src, backend.name()));
+                }
+            }
         }
     }
     assert!(checked_ops > 0, "the rows must exercise the LANG83 checked and floor ops");
+    assert!(beam_runs > 0 && beam_refuses > 0, "{beam_runs} BEAM runs, {beam_refuses} refusals");
 }
 
 /// LANG84 7b slice 2: the Python rows are the `py-int-print` corpus on the
 /// default release (3.13.16) and on each IIR-identity class representative
-/// (3.0a1, which refuses `int_underscores`, and 3.12.3), exactly as
-/// `python-iir-compiler`'s release sweep records them. Phase 7c slice 1: the
-/// `py2-int-print` rows are that corpus on its one class representative,
-/// 2.2 (Python 2 has no default release; 2.2 is passed as the default so
-/// only the representative's rows are expected).
+/// (3.0a1, which refuses `int_underscores`, and 3.6.0), exactly as
+/// `python-iir-compiler`'s release sweep records them. Phase 7c: the
+/// `py2-int-print` rows are that corpus on its two class representatives,
+/// 2.2 and 2.6 (Python 2 has no default release; 2.2 is passed as the
+/// default, and it is a representative anyway, so only the representatives'
+/// rows are expected).
 #[test]
 fn python_rows_run_their_corpus_case() {
     lang84_rows_run_their_corpus_case(&python_rows_of("py-int-print"), "python", "py-int-print", "py", "3.13.16");
     lang84_rows_run_their_corpus_case(&python_rows_of("py2-int-print"), "python", "py2-int-print", "py", "2.2");
+    // py-float-print (7c slice 3): the default 3.13.16 and the two class
+    // representatives, 3.6.0 and 3.5.10.
+    lang84_rows_run_their_corpus_case(&python_rows_of("py-float-print"), "python", "py-float-print", "py", "3.13.16");
     assert_eq!(
-        python_rows_of("py-int-print").len() + python_rows_of("py2-int-print").len(),
+        python_rows_of("py-int-print").len() + python_rows_of("py2-int-print").len() + python_rows_of("py-float-print").len(),
         python_rows().len(),
         "every Python row belongs to one subset"
     );

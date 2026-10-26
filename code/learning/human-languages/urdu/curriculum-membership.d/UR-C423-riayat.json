@@ -1,0 +1,11 @@
+{
+  "id": "UR-C423-riayat",
+  "pathSegment": "UR-PATH-423-SAUDA423",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-423-SAUDA423",
+      "order": 3
+    }
+  ]
+}

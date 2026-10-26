@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C441-vav",
+    "language": "gujarati",
+    "chapter": 441,
+    "sequence": 24480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b5a7c4a158ac83d"
+  },
+  "findings": []
+}

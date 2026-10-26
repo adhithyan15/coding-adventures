@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:adcec8eb0e130823",
+  "lessonIds": [
+    "UR-C516-khattati",
+    "UR-C516-naqqashi",
+    "UR-C516-murti",
+    "UR-C516-kanda-karna",
+    "UR-C516-but"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch516.txt",
+  "json": "urdu/narration/ch516.json",
+  "textHash": "fnv1a64:94538b0813893933",
+  "jsonHash": "fnv1a64:6941ba815aaeadfc",
+  "findings": []
+}

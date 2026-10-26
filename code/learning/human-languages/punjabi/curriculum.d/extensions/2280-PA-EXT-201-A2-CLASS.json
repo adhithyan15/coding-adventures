@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-201-A2-CLASS",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can recognise and use the school noun for a class or grade in one bounded identity frame.",
+  "prerequisites": [
+    "PA-EXT-200-A2-SABZI"
+  ]
+}

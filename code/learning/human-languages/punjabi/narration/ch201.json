@@ -1,0 +1,521 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 201,
+  "title": "This Is a Class",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:f8c45b1f625f2efe",
+  "lessons": [
+    {
+      "id": "PA-C201-identity-return",
+      "sequence": 10920,
+      "title": "Return to this and is",
+      "headword": "ਇਹ · ਹੈ",
+      "romanization": "eh; hai",
+      "gloss": "retrieve this and is for a familiar identity frame",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07cd1fb492b71b7a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "eh; hai; YOU SAY: ਇਹ; ਹੈ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *eh; hai*; YOU SAY: **ਇਹ; ਹੈ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the familiar pointer first and the familiar verb last. The middle slot stays empty until the next lesson owns its new school word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "eh; YOU SAY: ਇਹ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *eh*; YOU SAY: **ਇਹ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "hai; YOU SAY: ਹੈ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *hai*; YOU SAY: **ਹੈ**]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the first word, pause for the empty middle, then say the last."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the two familiar words around the empty middle slot. This opener owns no new word."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C201-class",
+      "sequence": 10930,
+      "title": "One school noun for a class or grade",
+      "headword": "ਕਲਾਸ",
+      "romanization": "kalaas",
+      "gloss": "school class or grade",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d3fc3dc8fd80683",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the familiar first and last words of the identity frame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: direct owner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਲਾਸ (kalaas) — kalās — school class; grade."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear and say the whole word before reading it. Keep it as one whole school noun rather than inventing smaller Punjabi pieces. This lesson owns the word alone; the complete identity frame comes only after a separate retrieval."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — a documented source",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Punjabi University's Punjabipedia explicitly records English Class as the source of modern written ਕਲਾਸ (kalaas). It also lists several meanings; this lesson keeps only the bounded school class-or-grade meaning. The Punjabi school noun comes from English Class. Source: Punjabi University Punjabipedia."
+            },
+            {
+              "kind": "speech",
+              "text": "The Punjab School Education Board's current circular page uses the word in school scheduling prose. That current school use supports the narrow meaning here. The deeper history and other meanings stay outside this lesson. Source: Punjab School Education Board."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "kalās; YOU SAY: ਕਲਾਸ (kalaas)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *kalās*; YOU SAY: **ਕਲਾਸ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕਲਾਸ (kalaas)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕਲਾਸ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕਲਾਸ (kalaas) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕਲਾਸ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the school noun for “class” or “grade” without looking."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C201-class-review",
+      "sequence": 10940,
+      "title": "Retrieve the new school word on its own",
+      "headword": "ਕਲਾਸ",
+      "romanization": "kalaas",
+      "gloss": "retrieve school class or grade by sound, meaning, and script",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:cf5795f5e92ffdb4",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "kalās; YOU SAY: ਕਲਾਸ (kalaas)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *kalās*; YOU SAY: **ਕਲਾਸ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "school class or grade; YOU SAY: ਕਲਾਸ (kalaas)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *school class or grade*; YOU SAY: **ਕਲਾਸ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕਲਾਸ (kalaas)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕਲਾਸ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਕਲਾਸ (kalaas)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਕਲਾਸ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep one school noun and the bounded class-or-grade meaning here. Wider forms, combinations, and other meanings stay outside this lesson."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say and then write the word once from memory."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C201-class-label",
+      "sequence": 10950,
+      "title": "Put the new school noun into one identity frame",
+      "headword": "ਇਹ ਕਲਾਸ ਹੈ",
+      "romanization": "eh kalaas hai",
+      "gloss": "this is a school class",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:95d892d5f6151137",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve ਇਹ, then the new school noun, then ਹੈ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਇਹ ਕਲਾਸ ਹੈ (eh kalaas hai) — eh kalās hai — this is a class."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the new whole noun between familiar ਇਹ and ਹੈ. Familiar ਹੈ stays last in the already-owned identity frame. This chapter teaches only this one school label; it does not add a form rule or a wider construction."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "eh kalās hai; YOU SAY: ਇਹ ਕਲਾਸ ਹੈ (eh kalaas hai)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *eh kalās hai*; YOU SAY: **ਇਹ ਕਲਾਸ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਇਹ ਕਲਾਸ ਹੈ (eh kalaas hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਇਹ ਕਲਾਸ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਇਹ ਕਲਾਸ ਹੈ (eh kalaas hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਇਹ ਕਲਾਸ ਹੈ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the complete identity frame."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C201-payoff",
+      "sequence": 10960,
+      "title": "A bounded school-class payoff",
+      "headword": "ਇਹ ਕਲਾਸ ਹੈ",
+      "romanization": "eh kalaas hai",
+      "gloss": "recognise and produce one school-class identity frame",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2867597fa703e752",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the new school noun alone before rebuilding its identity frame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "eh kalās hai; YOU SAY: ਇਹ ਕਲਾਸ ਹੈ (eh kalaas hai)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *eh kalās hai*; YOU SAY: **ਇਹ ਕਲਾਸ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਇਹ ਕਲਾਸ ਹੈ (eh kalaas hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਇਹ ਕਲਾਸ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write ਇਹ ਕਲਾਸ ਹੈ (eh kalaas hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write **ਇਹ ਕਲਾਸ ਹੈ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the new noun, then produce the complete identity frame."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the twenty-fourth prerequisite tranche exposed by Punjabi A2 mock drafting. It does not unblock Punjabi A2 mock 1 by itself. It is not an A2 mock, not A2 readiness or attainment, and not external or human validation."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

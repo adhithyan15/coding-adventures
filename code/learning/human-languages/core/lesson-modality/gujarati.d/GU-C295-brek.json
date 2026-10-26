@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C295-brek",
+    "language": "gujarati",
+    "chapter": 295,
+    "sequence": 16520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dcc5a4b7cf689610"
+  },
+  "findings": []
+}

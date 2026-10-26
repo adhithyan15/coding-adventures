@@ -1,0 +1,19 @@
+{
+  "chapter": 312,
+  "title": "Rebellion",
+  "label": "ch:ur-rebellion",
+  "canDo": "I can tell how people rose against a ruler.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C312-lalkarna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: I can tell how people rose against a ruler.",
+    "assesses": [
+      "UR-LEX-C312-BAGHAVAT312-03",
+      "UR-LEX-C312-BAGHAVAT312-04",
+      "UR-LEX-C312-BAGHAVAT312-05"
+    ]
+  }
+}

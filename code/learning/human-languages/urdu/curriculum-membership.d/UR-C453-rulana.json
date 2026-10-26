@@ -1,0 +1,11 @@
+{
+  "id": "UR-C453-rulana",
+  "pathSegment": "UR-PATH-453-LAUGH453",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-453-LAUGH453",
+      "order": 1
+    }
+  ]
+}

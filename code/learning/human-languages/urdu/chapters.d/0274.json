@@ -1,0 +1,21 @@
+{
+  "chapter": 274,
+  "title": "If, Then, or Else",
+  "label": "ch:ur-if-then-or-else",
+  "canDo": "I can say what will happen if something happens (agar bārish huī, to …; agar voh āe gī, to …), give a warning with varnā, and set a condition (ek shart par).",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-R274-if-and-otherwise",
+    "kind": "production",
+    "summary": "Complete UR-R274-if-and-otherwise: say what will happen if something happens, or else.",
+    "assesses": [
+      "UR-GRAMMAR-C274-IF-01",
+      "UR-GRAMMAR-C274-IF-02",
+      "UR-GRAMMAR-C274-REAL-01",
+      "UR-GRAMMAR-C274-REAL-02",
+      "UR-LEX-C274-SHART-01"
+    ]
+  }
+}

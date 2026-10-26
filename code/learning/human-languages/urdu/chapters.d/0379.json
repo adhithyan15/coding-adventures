@@ -1,0 +1,19 @@
+{
+  "chapter": 379,
+  "title": "Effort",
+  "label": "ch:ur-effort",
+  "canDo": "I can say what effort it will take to succeed.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C379-dohrana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can say what effort it will take to succeed.",
+    "assesses": [
+      "UR-LEX-C379-MEHNAT379-03",
+      "UR-LEX-C379-MEHNAT379-04",
+      "UR-LEX-C379-MEHNAT379-05"
+    ]
+  }
+}

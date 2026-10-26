@@ -1,0 +1,11 @@
+{
+  "id": "GU-C328-arti",
+  "pathSegment": "GU-PATH-328-PUJA328",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-328-PUJA328",
+      "order": 1
+    }
+  ]
+}

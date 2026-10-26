@@ -186,10 +186,27 @@ props together. The runtime ends the batch on setter failure too; this is not
 a rollback of props already assigned. Handwritten components without the
 interface keep immediate assignment behavior.
 
+For `IReadOnlyList<T>` props with string, double or bool leaves (including nested
+lists), the host reuses the live property value when converted contents match.
+Setters still run, but unchanged dependency-property list references no longer
+force binding invalidation. Changed contents and local mutations are replaced by
+runtime values. Arrays and custom object lists keep normal conversion/assignment;
+unreadable or throwing getters fall back to the converted value. This preserves
+identity, not a guarantee of zero conversion allocation or a latency threshold.
+
 Set `MOSAIC_PROFILE_PATH` to a writable JSONL file before launching a generated
 XAML app. The host buffers up to 4096 timing samples and appends them on normal
 process exit; no log files are written on the click path. Unset the variable to
 disable instrumentation. A failed export does not fail the application.
+
+For longer selection workloads, also set `MOSAIC_PROFILE_INTERACTIONS_ONLY=1`.
+Only `interaction-handler` and `interaction-next-render` then reserve samples;
+excluded phases create no scope and read no component diagnostics. The same
+4096-sample bound applies to pending and completed scopes together. Any other
+value (or an unset variable) retains full-phase profiling. Settings are read
+once at process startup. This mode omits internal dispatch/persistence timings
+and reduces instrumentation overhead: compare runs using the same mode, and
+do not present filtered and full-phase measurements as equivalent baselines.
 
 Samples contain only a phase, elapsed milliseconds and current-thread managed
 allocated bytes. Phases separate FFI dispatch, snapshot persistence and property
@@ -220,3 +237,13 @@ intervals can overlap and must not be summed as exclusive event totals. Missing
 or failing diagnostic getters omit this object; disabled profiling does not read
 them. Counter sampling adds profiling overhead. Export remains bounded and runs
 on normal process exit.
+
+### Native repeater lifecycle counters
+
+Opt-in XAML profiling includes an optional `realization` object with per-interval
+`prepared` and `cleared` counts from ItemsRepeater lifecycle events. They count
+item preparations/clearings (including reuse), not unique controls or visibility.
+No visual-tree traversal or element retention is added. Projection counts remain
+separate; absent/malformed/throwing diagnostic contracts omit their own object.
+Overlapping intervals are not exclusive attribution. See
+`code/specs/mosaic-xaml-realization-counters-20261026.md` for acceptance limits.

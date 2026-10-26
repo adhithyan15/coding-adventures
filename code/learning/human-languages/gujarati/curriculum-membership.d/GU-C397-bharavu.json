@@ -1,0 +1,11 @@
+{
+  "id": "GU-C397-bharavu",
+  "pathSegment": "GU-PATH-397-DOOR397",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-397-DOOR397",
+      "order": 4
+    }
+  ]
+}

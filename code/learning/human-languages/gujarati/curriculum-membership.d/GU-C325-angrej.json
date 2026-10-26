@@ -1,0 +1,11 @@
+{
+  "id": "GU-C325-angrej",
+  "pathSegment": "GU-PATH-325-AZADI325",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-325-AZADI325",
+      "order": 2
+    }
+  ]
+}

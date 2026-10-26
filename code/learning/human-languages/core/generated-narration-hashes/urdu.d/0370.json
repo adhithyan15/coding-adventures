@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:40b4b98b1a3e262e",
+  "lessonIds": [
+    "UR-C370-jald-bazi",
+    "UR-C370-dhyan",
+    "UR-C370-sabr",
+    "UR-C370-phorna",
+    "UR-C370-masalna",
+    "UR-R370-review-363-370"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch370.txt",
+  "json": "urdu/narration/ch370.json",
+  "textHash": "fnv1a64:52d64f4b02b03a1e",
+  "jsonHash": "fnv1a64:73b6c49fe75b18d3",
+  "findings": []
+}

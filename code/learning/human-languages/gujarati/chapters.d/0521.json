@@ -1,0 +1,19 @@
+{
+  "chapter": 521,
+  "title": "Milk, Curd and Butter",
+  "label": "ch:gu-milk-curd-and-butter",
+  "canDo": "I can talk about setting curd and churning butter.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C521-phinvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 521: I can talk about setting curd and churning butter.",
+    "assesses": [
+      "GU-LEX-C521-VALONU521-03",
+      "GU-LEX-C521-VALONU521-04",
+      "GU-LEX-C521-VALONU521-05"
+    ]
+  }
+}

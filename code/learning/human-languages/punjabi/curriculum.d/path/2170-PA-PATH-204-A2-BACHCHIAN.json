@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-204-A2-BACHCHIAN",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "PA-EXT-204-A2-BACHCHIAN"
+  ],
+  "after": []
+}

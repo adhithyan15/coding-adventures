@@ -1,0 +1,21 @@
+{
+  "chapter": 370,
+  "title": "Danger and Harm",
+  "label": "ch:gu-danger-and-harm",
+  "canDo": "I can say what harm will follow if nothing is done.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-R370-review-363-370",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can say what harm will follow if nothing is done.",
+    "assesses": [
+      "GU-LEX-C370-KHATRO370-01",
+      "GU-LEX-C370-KHATRO370-02",
+      "GU-LEX-C370-KHATRO370-03",
+      "GU-LEX-C370-KHATRO370-04",
+      "GU-LEX-C370-KHATRO370-05"
+    ]
+  }
+}

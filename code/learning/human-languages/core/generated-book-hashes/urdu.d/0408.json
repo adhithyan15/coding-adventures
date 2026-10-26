@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:d4b06fa3aa1e4022",
+  "lessonIds": [
+    "UR-C408-simt",
+    "UR-C408-shimal",
+    "UR-C408-junub",
+    "UR-C408-mashriq",
+    "UR-C408-maghrib"
+  ],
+  "tex": "urdu/book/chapters/ch408-north-south-east-and-west.tex"
+}

@@ -1,9 +1,10 @@
 //! The LANG84 release sweep for Python (phase 7b slice 2, "CI bounding"
 //! steps 1–2), on the model of Perl's (phase 4c).
 //!
-//! Five Python releases claim `py-int-print` at stage I (3.0a1, 3.12.3,
-//! 3.13.16, 3.11.17 and 3.16.0a1, in `releases.csv` order, which is date
-//! order) and there are eight executable backends. LANG84 bounds the matrix
+//! Seven Python releases claim `py-int-print` at stage I (3.0a1, 3.6.0,
+//! 3.5.10, 3.12.3, 3.13.16, 3.11.17 and 3.16.0a1, in `releases.csv` order,
+//! which is date order: 3.5.10 shipped after 3.6.0) and there are eight
+//! executable backends. LANG84 bounds the matrix
 //! by **IIR identity**: two releases that produce byte-identical IIR for
 //! every case are indistinguishable to every backend, so running one of them
 //! proves the other.
@@ -18,8 +19,10 @@
 //! ```
 //!
 //! A cell is `rejected` only when the corpus says so: a `.reject@<release>`
-//! override (`int_underscores.reject@3.0a1`: PEP 515's `_` separators arrived
-//! in 3.6, so 3.0a1's pair lexes `1_000_000` as an error) whose category the
+//! override (`int_underscores.reject@3.0a1` and `@3.5.10`: PEP 515's `_`
+//! separators arrived in 3.6, so those pairs lex `1_000_000` as an error;
+//! `pep3127_literals.reject@2.2` and `@2.4`: `0o`/`0b` arrived in 2.6) whose
+//! category the
 //! compile error matches. Any other refusal of a positive case by a claiming
 //! release is a test failure, never a quiet `rejected`, exactly as in stage I.
 //!
@@ -28,8 +31,9 @@
 //! under the same module name.
 //!
 //! Since phase 7c slice 1 the sweep runs once per subset in
-//! `python_iir_compiler::SUBSETS`: `py-int-print` over its five Python 3
-//! releases, then `py2-int-print` over 2.2 and 2.7.18. A class is a digest of
+//! `python_iir_compiler::SUBSETS`: `py-int-print` over its seven Python 3
+//! releases, then `py2-int-print` over 2.2, 2.4, 2.6 and 2.7.18 (phase 7c
+//! slice 2 added 2.4, 2.6, 3.5.10 and 3.6.0). A class is a digest of
 //! one subset's outcome vector, so classes of different subsets never mix.
 //!
 //! The result is `code/grammars/python/release_classes.csv`
@@ -160,12 +164,16 @@ fn classes(sweep: &Sweep) -> Vec<(String, &str, Vec<&str>)> {
 fn the_sweep_covers_every_claiming_release_in_inventory_order() {
     let sweep = run_sweep("py-int-print");
     let swept: Vec<&str> = sweep.cells.iter().map(|(r, _)| r.as_str()).collect();
-    assert_eq!(swept, ["3.0a1", "3.12.3", "3.13.16", "3.11.17", "3.16.0a1"]);
+    assert_eq!(swept, ["3.0a1", "3.6.0", "3.5.10", "3.12.3", "3.13.16", "3.11.17", "3.16.0a1"]);
     assert_eq!(sweep.cases.len(), 18, "every positive py-int-print case");
     let sweep = run_sweep("py2-int-print");
     let swept: Vec<&str> = sweep.cells.iter().map(|(r, _)| r.as_str()).collect();
-    assert_eq!(swept, ["2.2", "2.7.18"]);
-    assert_eq!(sweep.cases.len(), 19, "every positive py2-int-print case");
+    assert_eq!(swept, ["2.2", "2.4", "2.6", "2.7.18"]);
+    assert_eq!(sweep.cases.len(), 24, "every positive py2-int-print case");
+    let sweep = run_sweep("py-float-print");
+    let swept: Vec<&str> = sweep.cells.iter().map(|(r, _)| r.as_str()).collect();
+    assert_eq!(swept, ["3.6.0", "3.5.10", "3.12.3", "3.13.16", "3.11.17", "3.16.0a1"]);
+    assert_eq!(sweep.cases.len(), 13, "every positive py-float-print case");
 }
 
 /// Steps 1 and 2, compared with the committed `release_classes.csv`.
@@ -224,12 +232,17 @@ fn the_boundary_releases_are_the_class_representatives() {
     let sweep = run_sweep("py-int-print");
     let classes = classes(&sweep);
     let representatives: Vec<&str> = classes.iter().map(|(_, r, _)| *r).collect();
-    // 3.0a1: refuses `int_underscores` (no PEP 515 separators). 3.12.3: the
-    // first of the four releases that accept the whole corpus; the default
-    // 3.13.16 is in its class but comes after it in releases.csv.
-    assert_eq!(representatives, ["3.0a1", "3.12.3"]);
+    // 3.0a1: refuses `int_underscores` (no PEP 515 separators), and so does
+    // 3.5.10, which joins its class. 3.6.0 (phase 7c slice 2): the first of
+    // the five releases that accept the whole corpus, so it took over from
+    // 3.12.3 as their representative; the default 3.13.16 is in its class
+    // but comes after it in releases.csv.
+    assert_eq!(representatives, ["3.0a1", "3.6.0"]);
     let members: Vec<&[&str]> = classes.iter().map(|(_, _, m)| m.as_slice()).collect();
-    assert_eq!(members, [&["3.0a1"][..], &["3.12.3", "3.13.16", "3.11.17", "3.16.0a1"][..]]);
+    assert_eq!(
+        members,
+        [&["3.0a1", "3.5.10"][..], &["3.6.0", "3.12.3", "3.13.16", "3.11.17", "3.16.0a1"][..]]
+    );
     // The default and the newest claiming release are in a class, so a
     // representative row covers them.
     let newest = sweep.cells.last().map(|(r, _)| r.as_str()).unwrap();
@@ -239,14 +252,32 @@ fn the_boundary_releases_are_the_class_representatives() {
     eprintln!("Python release sweep: {} classes {representatives:?}", classes.len());
 }
 
-/// Python 2 (phase 7c slice 1): 2.2 and 2.7.18 lex the subset alike (their
-/// token tables differ only outside it: `@`, `as`, `with`) and share one
-/// grammar and one profile, so they are one class and 2.2, the first in
-/// `releases.csv`, represents it in `lang_matrix`.
+/// `py-float-print` (phase 7c slice 3): the six `py3` releases share one
+/// grammar and one profile, and their token tables differ inside the subset
+/// in one place, PEP 515's `_` (3.5.10 lexes `1_000.5` as an error). So
+/// there are two classes, represented by 3.6.0 (first in `releases.csv`,
+/// which is date order) and 3.5.10; the default 3.13.16 is in 3.6.0's.
 #[test]
-fn python_2_releases_are_one_class_represented_by_2_2() {
+fn python_float_releases_split_on_pep_515_separators() {
+    let sweep = run_sweep("py-float-print");
+    let classes = classes(&sweep);
+    let shape: Vec<(&str, Vec<&str>)> = classes.iter().map(|(_, r, m)| (*r, m.clone())).collect();
+    assert_eq!(
+        shape,
+        [("3.6.0", vec!["3.6.0", "3.12.3", "3.13.16", "3.11.17", "3.16.0a1"]), ("3.5.10", vec!["3.5.10"])]
+    );
+}
+
+/// Python 2: the four pairs share one grammar and one profile, and their
+/// token tables differ outside the subset (`@` from 2.4, `as`/`with` from
+/// 2.6) and in one place inside it: PEP 3127's `0o`/`0b` literals, which
+/// 2.6 and 2.7.18 lex and 2.2 and 2.4 do not (phase 7c slice 2). So there
+/// are two classes, represented in `lang_matrix` by 2.2 and 2.6, the first
+/// of each in `releases.csv`.
+#[test]
+fn python_2_releases_split_on_pep_3127_literals() {
     let sweep = run_sweep("py2-int-print");
     let classes = classes(&sweep);
     let shape: Vec<(&str, Vec<&str>)> = classes.iter().map(|(_, r, m)| (*r, m.clone())).collect();
-    assert_eq!(shape, [("2.2", vec!["2.2", "2.7.18"])]);
+    assert_eq!(shape, [("2.2", vec!["2.2", "2.4"]), ("2.6", vec!["2.6", "2.7.18"])]);
 }

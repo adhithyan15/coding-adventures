@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-204-A2-BACHCHIAN",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can recognise and use one children form before a familiar postposition.",
+  "prerequisites": [
+    "PA-EXT-203-A2-BAARE"
+  ]
+}

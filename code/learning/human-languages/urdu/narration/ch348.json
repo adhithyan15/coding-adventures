@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 348,
+  "title": "Objecting and Persuading",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3ad3365c89bd35d5",
+  "lessons": [
+    {
+      "id": "UR-C348-etiraz",
+      "sequence": 20870,
+      "title": "اعتراض (etirāz) — an objection",
+      "headword": "اعتراض",
+      "romanization": "etirāz",
+      "gloss": "an objection",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44a7cc1a113d3ee0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to get tangled, then the Urdu for to bring up a topic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اعتراض",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اعتراض — etirāz — \"an objection\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کیا آپ کو کوئی اعتراض ہے؟ kyā āp ko koī etirāz hai? Do you have any objection?"
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اعتراض (etirāz) is usually traced, through Persian, to Arabic iʿtirāḍ, \"standing across the way; objecting\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "etirāz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *etirāz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "etirāz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *etirāz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyā āp ko koī etirāz hai? — Do you have any objection?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyā āp ko koī etirāz hai?* — Do you have any objection?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to get tangled, then the Urdu for to bring up a topic, then say etirāz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to get tangled, then the Urdu for to bring up a topic, then say *etirāz* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اعتراض (etirāz) mean? (\"An objection\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C348-tanqid",
+      "sequence": 20880,
+      "title": "تنقید (tanqīd) — criticism",
+      "headword": "تنقید",
+      "romanization": "tanqīd",
+      "gloss": "criticism",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:673b824b3c933a28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to bring up a topic, then the Urdu for an objection."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تنقید",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تنقید — tanqīd — \"criticism\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اس نے حکومت پر سخت تنقید کی۔ us ne hukūmat par sakht tanqīd kī. He criticised the government harshly."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تنقید (tanqīd) is usually traced, through Persian, to Arabic tanqīd, \"sorting good coins from bad\": judging what holds up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanqīd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanqīd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanqīd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanqīd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us ne hukūmat par sakht tanqīd kī. — He criticised the government harshly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us ne hukūmat par sakht tanqīd kī.* — He criticised the government harshly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to bring up a topic, then the Urdu for an objection, then say tanqīd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to bring up a topic, then the Urdu for an objection, then say *tanqīd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تنقید (tanqīd) mean? (\"Criticism\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C348-nuqta-e-nazar",
+      "sequence": 20890,
+      "title": "نقطہ نظر (nuqta-e-nazar) — a viewpoint; a point of view",
+      "headword": "نقطہ نظر",
+      "romanization": "nuqta-e-nazar",
+      "gloss": "a viewpoint; a point of view",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75a598c7bc520c92",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for an objection, then the Urdu for criticism."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نقطہ نظر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نقطہ نظر — nuqta-e-nazar — \"a viewpoint; a point of view\"."
+            },
+            {
+              "kind": "speech",
+              "text": "آپ کا نقطہ نظر کیا ہے؟ āp kā nuqta-e-nazar kyā hai? What is your point of view?"
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نقطہ نظر (nuqta-e-nazar) is built from two loans, each usually traced, through Persian, to Arabic: Arabic nuqṭa, \"a dot, a point\", and Arabic naẓar, \"a look\". The point you look from."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nuqta-e-nazar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nuqta-e-nazar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nuqta-e-nazar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nuqta-e-nazar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āp kā nuqta-e-nazar kyā hai? — What is your point of view?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āp kā nuqta-e-nazar kyā hai?* — What is your point of view?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for an objection, then the Urdu for criticism, then say nuqta-e-nazar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for an objection, then the Urdu for criticism, then say *nuqta-e-nazar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نقطہ نظر (nuqta-e-nazar) mean? (\"A viewpoint; a point of view\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C348-dhamkana",
+      "sequence": 20900,
+      "title": "دھمکانا (dhamkānā) — to threaten",
+      "headword": "دھمکانا",
+      "romanization": "dhamkānā",
+      "gloss": "to threaten",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c017e510284f688",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for criticism, then the Urdu for a viewpoint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دھمکانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دھمکانا — dhamkānā — \"to threaten\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اس نے دکاندار کو دھمکایا۔ us ne dukāndār ko dhamkāyā. He threatened the shopkeeper."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے مجھے دھمکایا, us ne mujhe dhamkāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دھمکانا (dhamkānā) is inherited: CDIAL lists the Hindi cousin dhamkī, \"a threat\", under dhammakka, a form it reconstructs (CDIAL 6736)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhamkānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhamkānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhamkānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhamkānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us ne dukāndār ko dhamkāyā. — He threatened the shopkeeper.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us ne dukāndār ko dhamkāyā.* — He threatened the shopkeeper.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for criticism, then the Urdu for a viewpoint, then say dhamkānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for criticism, then the Urdu for a viewpoint, then say *dhamkānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دھمکانا (dhamkānā) mean? (\"To threaten\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C348-phuslana",
+      "sequence": 20910,
+      "title": "پھسلانا (phuslānā) — to coax; to wheedle",
+      "headword": "پھسلانا",
+      "romanization": "phuslānā",
+      "gloss": "to coax; to wheedle",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae5b889afcb325a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a viewpoint, then the Urdu for to threaten."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پھسلانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پھسلانا — phuslānā — \"to coax; to wheedle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اس نے پھسلا کر ابو سے پیسے لیے۔ us ne phuslā kar abbū se paise liye. She coaxed some money out of her father."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے بچے کو پھسلایا, us ne bachche ko phuslāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پھسلانا (phuslānā) is inherited: CDIAL lists the Hindi cousin phuslānā, \"to cajole\", under Sanskrit spṛśáti, \"touches, strokes\" (CDIAL 13815). To win someone over as one strokes an animal."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phuslānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phuslānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phuslānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phuslānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us ne phuslā kar abbū se paise liye. — She coaxed some money out of her father.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us ne phuslā kar abbū se paise liye.* — She coaxed some money out of her father.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a viewpoint, then the Urdu for to threaten, then say phuslānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a viewpoint, then the Urdu for to threaten, then say *phuslānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پھسلانا (phuslānā) mean? (\"To coax; to wheedle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

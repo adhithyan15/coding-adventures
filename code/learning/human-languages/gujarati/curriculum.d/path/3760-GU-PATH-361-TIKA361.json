@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-361-TIKA361",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GU-EXT-361-TIKA361"
+  ],
+  "after": []
+}

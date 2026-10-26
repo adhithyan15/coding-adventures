@@ -1,0 +1,11 @@
+{
+  "id": "GU-C524-santakukdi",
+  "pathSegment": "GU-PATH-524-SANGRAH524",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-524-SANGRAH524",
+      "order": 3
+    }
+  ]
+}

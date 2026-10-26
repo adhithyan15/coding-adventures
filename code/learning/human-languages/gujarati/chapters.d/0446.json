@@ -1,0 +1,21 @@
+{
+  "chapter": 446,
+  "title": "Herds and Herders",
+  "label": "ch:gu-herds-and-herders",
+  "canDo": "I can talk about herders and their animals.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-R446-review-final-446",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can talk about herders and their animals.",
+    "assesses": [
+      "GU-LEX-C446-HERD446-01",
+      "GU-LEX-C446-HERD446-02",
+      "GU-LEX-C446-HERD446-03",
+      "GU-LEX-C446-HERD446-04",
+      "GU-LEX-C446-HERD446-05"
+    ]
+  }
+}

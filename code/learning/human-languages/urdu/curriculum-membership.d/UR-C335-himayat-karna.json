@@ -1,0 +1,11 @@
+{
+  "id": "UR-C335-himayat-karna",
+  "pathSegment": "UR-PATH-335-HIMAYAT335",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-335-HIMAYAT335",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:66a8d29b09a5004f",
+  "lessonIds": [
+    "GU-C494-balpan",
+    "GU-C494-ucharvu",
+    "GU-C494-kisor",
+    "GU-C494-vrddh",
+    "GU-C494-vrddhasram"
+  ],
+  "tex": "gujarati/book/chapters/ch494-growing-up-growing-old.tex"
+}

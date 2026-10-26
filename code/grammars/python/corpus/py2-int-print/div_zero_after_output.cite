@@ -1,3 +1,3 @@
-oracle: pinned historical source, CPython v2.2 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+oracle: pinned historical source, CPython v2.2, v2.4, v2.6 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
 evidence: i_divmod raises ZeroDivisionError ("integer division or modulo by zero") for a zero divisor; the first statement's output stays
 result: CPython 2 writes the stdout before `trap:` and then exits with ZeroDivisionError; the subset traps Trap.DivZero after the same stdout

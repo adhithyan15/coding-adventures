@@ -1,0 +1,11 @@
+{
+  "id": "GU-C425-giro",
+  "pathSegment": "GU-PATH-425-LOAN425",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-425-LOAN425",
+      "order": 3
+    }
+  ]
+}

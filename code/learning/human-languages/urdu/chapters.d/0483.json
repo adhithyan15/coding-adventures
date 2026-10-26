@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "A New Baby",
+  "label": "ch:ur-a-new-baby",
+  "canDo": "I can talk about the birth of a baby.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C483-naumaulud",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can talk about the birth of a baby.",
+    "assesses": [
+      "UR-LEX-C483-BABY483-03",
+      "UR-LEX-C483-BABY483-04",
+      "UR-LEX-C483-BABY483-05"
+    ]
+  }
+}

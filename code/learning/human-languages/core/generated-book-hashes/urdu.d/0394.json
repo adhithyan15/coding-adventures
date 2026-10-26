@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:3f99d05006cee64f",
+  "lessonIds": [
+    "UR-C394-garha",
+    "UR-C394-draivar",
+    "UR-C394-dhakka",
+    "UR-C394-uchhalna",
+    "UR-C394-viran"
+  ],
+  "tex": "urdu/book/chapters/ch394-potholes-and-jolts.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C479-acki",
+    "language": "gujarati",
+    "chapter": 479,
+    "sequence": 26660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc149d712eecc0d6"
+  },
+  "findings": []
+}

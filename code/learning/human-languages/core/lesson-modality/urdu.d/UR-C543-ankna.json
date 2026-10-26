@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C543-ankna",
+    "language": "urdu",
+    "chapter": 543,
+    "sequence": 31540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a0e866c4337a8e3"
+  },
+  "findings": []
+}

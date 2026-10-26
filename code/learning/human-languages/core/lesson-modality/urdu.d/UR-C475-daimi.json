@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C475-daimi",
+    "language": "urdu",
+    "chapter": 475,
+    "sequence": 27790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6271ba5919eb4c80"
+  },
+  "findings": []
+}

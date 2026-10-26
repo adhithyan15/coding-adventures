@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "If Only",
+  "label": "ch:ur-if-only",
+  "canDo": "I can say what I wish had happened.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C369-ganvana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can say what I wish had happened.",
+    "assesses": [
+      "UR-LEX-C369-KASH369-03",
+      "UR-LEX-C369-KASH369-04",
+      "UR-LEX-C369-KASH369-05"
+    ]
+  }
+}

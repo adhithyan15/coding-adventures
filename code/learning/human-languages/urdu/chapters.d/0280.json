@@ -1,0 +1,19 @@
+{
+  "chapter": 280,
+  "title": "Robbers on the Road",
+  "label": "ch:ur-robbers-on-the-road",
+  "canDo": "I can tell what robbers did and say what we will do if they come.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C280-lutera",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 280: I can tell what robbers did and say what we will do if they come.",
+    "assesses": [
+      "UR-LEX-C280-DAKU280-03",
+      "UR-LEX-C280-DAKU280-04",
+      "UR-LEX-C280-DAKU280-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:2c3a4d197481c4ec",
+  "lessonIds": [
+    "GU-C433-posak",
+    "GU-C433-jholi",
+    "GU-C433-kothlo",
+    "GU-C433-sobhvu",
+    "GU-C433-sankocavu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch433.txt",
+  "json": "gujarati/narration/ch433.json",
+  "textHash": "fnv1a64:d2daabc1ee0be830",
+  "jsonHash": "fnv1a64:0c97a8bc93e5f2c0",
+  "findings": []
+}

@@ -1,0 +1,90 @@
+name: Neural Framework Conformance
+
+on:
+  # ci.yml owns automatic scheduling and the required roll-up. Reuse the same
+  # numerical gate without claiming a second runner for a standalone PR event.
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-training-and-checkpoint-exchange:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          # Cargo's repository workspace references crates outside the five
+          # small native lanes. CI must validate that real workspace as well.
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+      - uses: actions/setup-go@v7
+        with:
+          go-version: "1.26.1"
+          cache: false
+      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        with:
+          ruby-version: '3.4'
+          bundler-cache: false
+      - name: Validate native Ruby framework and matrix foundation
+        working-directory: code/packages/ruby/neural-framework
+        run: |
+          ruby scripts/build.rb
+          python -m unittest discover -s ../../../scripts/tests -p test_neural_framework_ruby.py
+          python ../../../scripts/validate_neural_framework_ruby.py
+      - name: Validate native Go matrix foundation
+        working-directory: code/packages/go/matrix
+        run: |
+          go mod tidy
+          go vet ./...
+          go test ./...
+          go build ./...
+      - name: Validate native Go framework
+        working-directory: code/packages/go/neural-framework
+        run: |
+          go mod tidy
+          test -z "$(gofmt -l .)"
+          go vet ./...
+          go test ./... -cover
+          go test -race ./...
+          go build ./...
+          python -m unittest discover -s ../../../scripts/tests -p test_neural_framework_go.py
+          python ../../../scripts/validate_neural_framework_go.py
+      - name: Set up Rust
+        run: rustup toolchain install stable --profile minimal --component clippy --component rustfmt
+      - name: Validate native Rust framework
+        working-directory: code/packages/rust/neural-framework
+        run: |
+          cargo +stable fmt -p neural-framework -- --check
+          cargo +stable clippy -p neural-framework --all-targets --no-deps -- -D warnings
+          cargo +stable test -p neural-framework
+          cargo +stable build -p neural-framework --release --example xor
+          python -m unittest discover -s ../../../scripts/tests -p test_neural_framework_rust.py
+          python ../../../scripts/validate_neural_framework_rust.py
+      - name: Validate native Python framework
+        working-directory: code/packages/python/neural-framework
+        run: |
+          python -m pip install --no-deps -e ../matrix
+          python -m pip install --no-deps -e .
+          python -m pip install pytest pytest-cov ruff build
+          ruff check src tests examples
+          python -m pytest
+          python -m build --wheel
+      - name: Validate native TypeScript framework
+        working-directory: code/packages/typescript/neural-framework
+        run: |
+          npm --prefix ../matrix ci --omit=dev --ignore-scripts
+          npm ci --ignore-scripts
+          npm run build
+          npm run test:coverage
+      - name: Execute training and exchange portable checkpoints both ways
+        run: |
+          python -m unittest discover -s code/scripts/tests -p test_neural_framework_interchange.py
+          python code/scripts/validate_neural_framework_interchange.py

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 313,
+  "title": "A Movement for Freedom",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ef3acaf89a9ceb1e",
+  "lessons": [
+    {
+      "id": "UR-C313-angrez",
+      "sequence": 18890,
+      "title": "انگریز (angrez) — an English person",
+      "headword": "انگریز",
+      "romanization": "angrez",
+      "gloss": "an English person",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57ed7149c67c6a3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a rebellion, then the Urdu for to challenge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: انگریز",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انگریز — angrez — \"an English person\"."
+            },
+            {
+              "kind": "speech",
+              "text": "انگریز سو سال یہاں رہے۔ angrez sau sāl yahāṅ rahe. The English stayed here for a hundred years."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine or feminine, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انگریز (angrez) is usually traced to Portuguese inglês, \"English\", which reached Urdu through Persian angrez. انگریزی is the language."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "angrez",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *angrez*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "angrez, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *angrez*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "angrez sau sāl yahāṅ rahe. — The English stayed here for a hundred years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *angrez sau sāl yahāṅ rahe.* — The English stayed here for a hundred years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a rebellion, then the Urdu for to challenge, then say angrez again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a rebellion, then the Urdu for to challenge, then say *angrez* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does انگریز (angrez) mean? (\"An English person\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C313-tahrik",
+      "sequence": 18900,
+      "title": "تحریک (tahrīk) — a movement (of people)",
+      "headword": "تحریک",
+      "romanization": "tahrīk",
+      "gloss": "a movement (of people)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:230b914deb90f1fd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to challenge, then the Urdu for an English person."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تحریک",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تحریک — tahrīk — \"a movement (of people)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ہر شہر میں آزادی کی تحریک تھی۔ har shahr meṅ āzādī kī tahrīk thī. There was a freedom movement in every city."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تحریک (tahrīk) is usually traced, through Persian, to Arabic taḥrīk, \"a setting in motion\": people moved to act together."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tahrīk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tahrīk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tahrīk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tahrīk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "har shahr meṅ āzādī kī tahrīk thī. — There was a freedom movement in every city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *har shahr meṅ āzādī kī tahrīk thī.* — There was a freedom movement in every city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to challenge, then the Urdu for an English person, then say tahrīk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to challenge, then the Urdu for an English person, then say *tahrīk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تحریک (tahrīk) mean? (\"A movement (of people)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C313-jaddojahd",
+      "sequence": 18910,
+      "title": "جدوجہد (jaddojahd) — a struggle",
+      "headword": "جدوجہد",
+      "romanization": "jaddojahd",
+      "gloss": "a struggle",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da03457da2e572b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for an English person, then the Urdu for a movement (of people)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جدوجہد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جدوجہد — jaddojahd — \"a struggle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "یہ ایک لمبی جدوجہد تھی۔ yih ek lambī jaddojahd thī. It was a long struggle."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جدوجہد (jaddojahd) is usually traced, through Persian, to Arabic jidd, \"effort\", and jahd, \"striving\", joined by o, \"and\". It is feminine."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaddojahd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaddojahd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaddojahd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaddojahd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yih ek lambī jaddojahd thī. — It was a long struggle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yih ek lambī jaddojahd thī.* — It was a long struggle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for an English person, then the Urdu for a movement (of people), then say jaddojahd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for an English person, then the Urdu for a movement (of people), then say *jaddojahd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جدوجہد (jaddojahd) mean? (\"A struggle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C313-qurbani",
+      "sequence": 18920,
+      "title": "قربانی (qurbānī) — a sacrifice",
+      "headword": "قربانی",
+      "romanization": "qurbānī",
+      "gloss": "a sacrifice",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e26324d7e4b8ee65",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a movement (of people), then the Urdu for a struggle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قربانی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قربانی — qurbānī — \"a sacrifice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لوگوں نے بڑی قربانیاں دیں۔ logoṅ ne baṛī qurbāniyāṅ dīṅ. People made great sacrifices."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قربانی (qurbānī) is usually traced, through Persian, to Arabic qurbān, \"an offering\", with the ending -ī. It is also the animal sacrifice of Eid."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qurbānī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qurbānī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qurbānī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qurbānī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "logoṅ ne baṛī qurbāniyāṅ dīṅ. — People made great sacrifices.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *logoṅ ne baṛī qurbāniyāṅ dīṅ.* — People made great sacrifices.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a movement (of people), then the Urdu for a struggle, then say qurbānī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a movement (of people), then the Urdu for a struggle, then say *qurbānī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قربانی (qurbānī) mean? (\"A sacrifice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C313-saunpna",
+      "sequence": 18930,
+      "title": "سونپنا (saunpnā) — to entrust; to hand over",
+      "headword": "سونپنا",
+      "romanization": "saunpnā",
+      "gloss": "to entrust; to hand over",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c621899111810744",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a struggle, then the Urdu for a sacrifice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سونپنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سونپنا — saunpnā — \"to entrust; to hand over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بادشاہ نے بیٹے کو تخت سونپا۔ bādshāh ne beṭe ko takht saunpā. The king handed the throne to his son."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے چابی سونپی, us ne chābī saunpī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سونپنا (saunpnā) is inherited: CDIAL lists the Hindi cousin saũpnā, \"hands over\", under Sanskrit sámarpayati (CDIAL 13192). The one who receives takes کو, and the verb follows the thing: تخت سونپا."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saunpnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saunpnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saunpnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saunpnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bādshāh ne beṭe ko takht saunpā. — The king handed the throne to his son.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bādshāh ne beṭe ko takht saunpā.* — The king handed the throne to his son.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a struggle, then the Urdu for a sacrifice, then say saunpnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a struggle, then the Urdu for a sacrifice, then say *saunpnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سونپنا (saunpnā) mean? (\"To entrust; to hand over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

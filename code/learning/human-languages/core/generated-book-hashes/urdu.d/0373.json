@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:d887dffb3f1a379d",
+  "lessonIds": [
+    "UR-C373-bikharna",
+    "UR-C373-mitna",
+    "UR-C373-dantna",
+    "UR-C373-dhalna",
+    "UR-C373-adhura"
+  ],
+  "tex": "urdu/book/chapters/ch373-if-things-go-wrong.tex"
+}

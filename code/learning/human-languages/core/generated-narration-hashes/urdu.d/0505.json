@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:550136987c5b3204",
+  "lessonIds": [
+    "UR-C505-raddi",
+    "UR-C505-jala",
+    "UR-C505-atari",
+    "UR-C505-pharna",
+    "UR-C505-rakhvana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch505.txt",
+  "json": "urdu/narration/ch505.json",
+  "textHash": "fnv1a64:d8ba6e32e27615c5",
+  "jsonHash": "fnv1a64:c3b19310c5bc76ab",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C318-mahel",
+  "pathSegment": "GU-PATH-318-RAJA318",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-318-RAJA318",
+      "order": 2
+    }
+  ]
+}

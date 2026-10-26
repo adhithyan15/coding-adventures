@@ -1,0 +1,19 @@
+{
+  "chapter": 552,
+  "title": "If the Show Goes On",
+  "label": "ch:gu-if-the-show-goes-on",
+  "canDo": "I can talk about a show, the stage and the audience.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C552-jaamvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 552: I can talk about a show, the stage and the audience.",
+    "assesses": [
+      "GU-LEX-C552-MANCH552-03",
+      "GU-LEX-C552-MANCH552-04",
+      "GU-LEX-C552-MANCH552-05"
+    ]
+  }
+}

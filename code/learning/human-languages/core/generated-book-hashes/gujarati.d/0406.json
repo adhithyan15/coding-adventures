@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:269ae99c8eb79ed4",
+  "lessonIds": [
+    "GU-C406-vijha",
+    "GU-C406-sima",
+    "GU-C406-jakat",
+    "GU-C406-phi",
+    "GU-C406-thalavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch406-at-the-border.tex"
+}

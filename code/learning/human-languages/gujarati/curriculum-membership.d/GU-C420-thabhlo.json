@@ -1,0 +1,11 @@
+{
+  "id": "GU-C420-thabhlo",
+  "pathSegment": "GU-PATH-420-HOUSE420",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-420-HOUSE420",
+      "order": 3
+    }
+  ]
+}

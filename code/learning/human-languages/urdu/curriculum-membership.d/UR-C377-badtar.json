@@ -1,0 +1,11 @@
+{
+  "id": "UR-C377-badtar",
+  "pathSegment": "UR-PATH-377-BADTAR377",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-377-BADTAR377",
+      "order": 0
+    }
+  ]
+}

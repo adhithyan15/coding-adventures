@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:0aea0615e285c0fc",
+  "lessonIds": [
+    "GU-C364-sodh",
+    "GU-C364-avlokan",
+    "GU-C364-siddh",
+    "GU-C364-rahasya",
+    "GU-C364-ughadvu-uncover"
+  ],
+  "tex": "gujarati/book/chapters/ch364-discoveries.tex"
+}

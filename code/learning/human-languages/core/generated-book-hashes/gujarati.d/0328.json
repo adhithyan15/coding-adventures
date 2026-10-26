@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:0176cd52de4f04e7",
+  "lessonIds": [
+    "GU-C328-puja",
+    "GU-C328-arti",
+    "GU-C328-prasad",
+    "GU-C328-pragtavvu",
+    "GU-C328-dhup"
+  ],
+  "tex": "gujarati/book/chapters/ch328-evening-prayers-at-the-temple.tex"
+}

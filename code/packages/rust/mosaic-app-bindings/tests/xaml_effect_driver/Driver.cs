@@ -20,11 +20,19 @@ using System.Threading.Tasks;
 
 namespace Mosaic.Generated;
 
-internal sealed class MalformedProjectionProbe { public string MosaicProjectionCounts => "not counters"; }
+internal sealed class MalformedProjectionProbe { public string MosaicProjectionCounts => "not counters"; public int MosaicRealizationCounts => 0; }
+
+internal sealed class RealizationOnlyProbe { public (long, long) MosaicRealizationCounts { get; set; } }
 
 // Mirrors the emitter's public diagnostic shape without a WinUI dependency.
 internal sealed class ProjectionProbe
 {
+    public int RealizationReads;
+    public (long, long) Realizations = (100, 80);
+    public (long, long) MosaicRealizationCounts
+    {
+        get { RealizationReads++; if (Throw) throw new InvalidOperationException(); return Realizations; }
+    }
     public int Reads;
     public bool Throw;
     public (long, long, long, long) Counts = (10, 20, 30, 40);
@@ -87,9 +95,94 @@ internal sealed class InvalidBatchComponent : System.ComponentModel.ISupportInit
     public void EndInit() { Depth--; Ends++; }
 }
 
+internal sealed class ListComponent
+{
+    public IReadOnlyList<IReadOnlyList<string>>? Rows { get; set; }
+    public IReadOnlyList<double>? Numbers { get; set; }
+    public IReadOnlyList<bool>? Flags { get; set; }
+    public string[]? Array { get; set; }
+    public int Sets;
+    public IReadOnlyList<string>? Observed;
+    public IReadOnlyList<string>? Values { get => Observed; set { Sets++; Observed = value; } }
+    public int WriteOnlySets;
+    public IReadOnlyList<string>? WriteOnly { set { WriteOnlySets++; } }
+    public int ThrowingSets;
+    public IReadOnlyList<string> Throwing { get => throw new Exception("getter"); set { ThrowingSets++; } }
+}
+
+internal sealed class BrokenList : IReadOnlyList<string>
+{
+    public bool Infinite;
+    public int Moves;
+    public int Count => throw new Exception("count");
+    public string this[int index] => throw new Exception("index");
+    public IEnumerator<string> GetEnumerator()
+    {
+        while (true) { Moves++; if (!Infinite) throw new Exception("enumeration"); yield return "a"; }
+    }
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+}
+
 internal static class Driver
 {
     private static int failures;
+
+    private static void CaseListProps()
+    {
+        // Inject a response fixture into the real host, then exercise public
+        // ApplyProps. The conformance app has no list props; this isolates host
+        // conversion/assignment without changing its domain or faking setters.
+        MosaicRuntimeHost.LoadRequired();
+        var flags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+        var runtime = typeof(MosaicRuntimeHost).GetField("State",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!.GetValue(null)!;
+        var update = runtime.GetType().GetField("latestUpdate", flags)!;
+        var original = update.GetValue(runtime);
+        using var document = System.Text.Json.JsonDocument.Parse(
+            "{\"revision\":0,\"props\":{\"rows\":[[\"a\",\"b\"],[]],\"numbers\":[1,2],\"flags\":[true,false],\"array\":[\"a\"],\"values\":[\"a\"],\"writeOnly\":[\"a\"],\"throwing\":[\"a\"]}}");
+        try
+        {
+            update.SetValue(runtime, document.RootElement);
+            var component = new ListComponent();
+            MosaicRuntimeHost.ApplyProps(component);
+            var rows = component.Rows;
+            var numbers = component.Numbers;
+            var booleans = component.Flags;
+            var array = component.Array;
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(ReferenceEquals(rows, component.Rows) && ReferenceEquals(numbers, component.Numbers)
+                && ReferenceEquals(booleans, component.Flags), "equal nested and scalar lists keep identity");
+            Check(!ReferenceEquals(array, component.Array), "arrays retain ordinary assignment semantics");
+            Check(component.Sets == 2 && component.WriteOnlySets == 2 && component.ThrowingSets == 2,
+                "equal, write-only and throwing-getter setters still run");
+            ((List<string>)component.Rows![0])[0] = "local edit";
+            ((List<double>)component.Numbers!)[0] = 2;
+            ((List<bool>)component.Flags!)[0] = false;
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(!ReferenceEquals(rows, component.Rows) && component.Rows![0][0] == "a"
+                && component.Numbers![0] == 1 && component.Flags![0], "local list mutations are corrected");
+            component.Rows = new List<IReadOnlyList<string>> { new List<string> { "b", "a" }, new List<string>() };
+            component.Observed = new List<string> { "a", "extra" };
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(component.Rows![0][0] == "a" && component.Observed!.Count == 1, "order and extra elements are replaced");
+            component.Rows = new List<IReadOnlyList<string>> { new List<string> { "a" } };
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(component.Rows!.Count == 2 && component.Rows[0].Count == 2, "short and nested-short lists are replaced");
+            var broken = new BrokenList();
+            component.Observed = broken;
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(component.Observed![0] == "a" && !ReferenceEquals(broken, component.Observed), "enumeration failure falls back to incoming list");
+            var endless = new BrokenList { Infinite = true };
+            component.Observed = endless;
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(endless.Moves == 2 && !ReferenceEquals(endless, component.Observed), "existing enumeration is bounded by incoming length plus one");
+            using var nulls = System.Text.Json.JsonDocument.Parse("{\"revision\":1,\"props\":{\"rows\":null,\"values\":null}}");
+            update.SetValue(runtime, nulls.RootElement);
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(component.Rows is null && component.Observed is null, "null runtime lists clear current values");
+        }
+        finally { update.SetValue(runtime, original); }
+    }
 
     private static void Check(bool ok, string what)
     {
@@ -459,6 +552,7 @@ internal static class Driver
         var probeCase = Environment.GetEnvironmentVariable("MOSAIC_PROBE_CASE") ?? string.Empty;
         switch (probeCase)
         {
+            case "props-lists": CaseListProps(); break;
             case "profile-disabled":
                 var disabledProjection = new ProjectionProbe();
                 Check(MosaicRuntimeHost.BeginProfile("probe", disabledProjection) is null
@@ -469,7 +563,9 @@ internal static class Driver
                 var projectionProbe = new ProjectionProbe();
                 var projectionScope = MosaicRuntimeHost.BeginProfile("projection", projectionProbe)!;
                 projectionProbe.Counts = (12, 23, 35, 47);
+                projectionProbe.Realizations = (107, 83);
                 CheckScope(projectionScope);
+                Check(projectionProbe.RealizationReads == 2, "idempotent disposal reads realization twice");
                 Check(projectionProbe.Reads == 2, "idempotent disposal reads end counters once");
                 using (MosaicRuntimeHost.BeginProfile("absent", new object())) { }
                 using (MosaicRuntimeHost.BeginProfile("malformed", new MalformedProjectionProbe())) { }
@@ -477,42 +573,73 @@ internal static class Driver
                 projectionProbe.Throw = true;
                 failingEnd?.Dispose();
                 using (MosaicRuntimeHost.BeginProfile("throwing", projectionProbe)) { }
+                var realizationOnly = new RealizationOnlyProbe();
+                using (MosaicRuntimeHost.BeginProfile("realization-only", realizationOnly))
+                    realizationOnly.MosaicRealizationCounts = (4, 1);
                 break;
             case "projection-validate":
                 var projectionLines = System.IO.File.ReadAllLines(Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH")!);
-                Check(projectionLines.Length == 5, "one record per scope");
+                Check(projectionLines.Length == 6, "one record per scope");
                 using (var doc = System.Text.Json.JsonDocument.Parse(projectionLines[0]))
                 {
+                    var realization = doc.RootElement.GetProperty("realization");
+                    Check(realization.GetProperty("prepared").GetInt64() == 7
+                        && realization.GetProperty("cleared").GetInt64() == 3, "native lifecycle deltas are exported");
                     var delta = doc.RootElement.GetProperty("projection");
                     Check(delta.GetProperty("reads").GetInt64() == 2
                         && delta.GetProperty("created").GetInt64() == 3
                         && delta.GetProperty("reused").GetInt64() == 5
                         && delta.GetProperty("removed").GetInt64() == 7, "counter deltas are exported");
                 }
-                foreach (var line in projectionLines[1..])
+                foreach (var line in projectionLines[1..5])
                 {
                     using var doc = System.Text.Json.JsonDocument.Parse(line);
+                    Check(!doc.RootElement.TryGetProperty("realization", out _), "unavailable realization omitted");
                     Check(!doc.RootElement.TryGetProperty("projection", out _), "unavailable diagnostics omit projection");
+                }
+                using (var doc = System.Text.Json.JsonDocument.Parse(projectionLines[5]))
+                {
+                    Check(!doc.RootElement.TryGetProperty("projection", out _), "realization is independent of projection contract");
+                    Check(doc.RootElement.GetProperty("realization").GetProperty("prepared").GetInt64() == 4,
+                        "realization-only contract exports counters");
                 }
                 break;
             case "profile-bounded":
+            case "profile-interactions":
+                if (probeCase == "profile-interactions")
+                {
+                    var excluded = new ProjectionProbe();
+                    for (var i = 0; i < 5000; i++)
+                        Check(MosaicRuntimeHost.BeginProfile("apply-props-set", excluded) is null,
+                            "excluded phase creates no scope");
+                    Check(MosaicRuntimeHost.BeginProfile("Interaction-handler", excluded) is null,
+                        "phase filtering is ordinal and exact");
+                    Check(excluded.Reads == 0 && excluded.RealizationReads == 0, "excluded phases never inspect component diagnostics");
+                }
                 var scopes = new List<IDisposable>();
                 for (var i = 0; i < 5000; i++)
                 {
-                    var scope = MosaicRuntimeHost.BeginProfile("probe");
+                    var phase = probeCase == "profile-interactions"
+                        ? (i % 2 == 0 ? "interaction-handler" : "interaction-next-render") : "probe";
+                    var scope = MosaicRuntimeHost.BeginProfile(phase);
                     if (scope is not null) scopes.Add(scope);
                 }
                 Check(scopes.Count == 4096, "pending profiling scopes are bounded before disposal");
                 foreach (var scope in scopes) CheckScope(scope);
                 break;
             case "profile-validate":
+            case "profile-interactions-validate":
                 var lines = System.IO.File.ReadAllLines(Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH")!);
                 Check(lines.Length == 4096, "profiling sample count is bounded");
+                var profileIndex = 0;
                 foreach (var line in lines)
                 {
                     using var document = System.Text.Json.JsonDocument.Parse(line);
                     var sample = document.RootElement;
-                    if (sample.GetProperty("phase").GetString() != "probe"
+                    var expectedPhase = probeCase == "profile-interactions-validate"
+                        ? (profileIndex % 2 == 0 ? "interaction-handler" : "interaction-next-render") : "probe";
+                    profileIndex++;
+                    if (sample.GetProperty("phase").GetString() != expectedPhase
                         || sample.GetProperty("milliseconds").GetDouble() < 0
                         || sample.GetProperty("bytes").GetInt64() < 0)
                         failures++;

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C508-bhunna",
+    "language": "urdu",
+    "chapter": 508,
+    "sequence": 29720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1366f4488f7156fb"
+  },
+  "findings": []
+}

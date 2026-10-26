@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "Inside the Body",
+  "label": "ch:gu-inside-the-body",
+  "canDo": "I can name some parts inside the body.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C472-hojri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can name some parts inside the body.",
+    "assesses": [
+      "GU-LEX-C472-NAS472-03",
+      "GU-LEX-C472-NAS472-04",
+      "GU-LEX-C472-NAS472-05"
+    ]
+  }
+}

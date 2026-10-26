@@ -1,0 +1,11 @@
+{
+  "id": "UR-C318-mubarak-bad",
+  "pathSegment": "UR-PATH-318-EIDMORNING318",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-318-EIDMORNING318",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:ff161ae032b791b4",
+  "lessonIds": [
+    "UR-C315-ajdad",
+    "UR-C315-basna",
+    "UR-C315-nasl",
+    "UR-C315-sadi",
+    "UR-C315-ujarna",
+    "UR-R315-review-308-315"
+  ],
+  "tex": "urdu/book/chapters/ch315-ancestors.tex"
+}

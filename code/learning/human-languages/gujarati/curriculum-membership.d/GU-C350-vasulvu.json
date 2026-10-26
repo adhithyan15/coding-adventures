@@ -1,0 +1,11 @@
+{
+  "id": "GU-C350-vasulvu",
+  "pathSegment": "GU-PATH-350-KARAR350",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-350-KARAR350",
+      "order": 4
+    }
+  ]
+}

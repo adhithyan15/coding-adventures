@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C309-birdavvu",
+    "language": "gujarati",
+    "chapter": 309,
+    "sequence": 17260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce6e915e6d4b90fc"
+  },
+  "findings": []
+}

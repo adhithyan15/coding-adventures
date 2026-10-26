@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "Famine and Sickness",
+  "label": "ch:ur-famine-and-sickness",
+  "canDo": "I can tell how hunger and disease spread.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C294-haiza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can tell how hunger and disease spread.",
+    "assesses": [
+      "UR-LEX-C294-QAHAT294-03",
+      "UR-LEX-C294-QAHAT294-04",
+      "UR-LEX-C294-QAHAT294-05"
+    ]
+  }
+}

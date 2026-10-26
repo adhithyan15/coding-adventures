@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C538-vimasan",
+    "language": "gujarati",
+    "chapter": 538,
+    "sequence": 29890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02c654d31848d5f5"
+  },
+  "findings": []
+}

@@ -1,5 +1,12 @@
 # Changelog — @coding-adventures/forme-doc-heading-anchors
 
+## Unreleased
+
+- Reconcile the downstream pipeline documentation with the
+  complete shipped DOC00 v0 cluster.
+- Correct the empty-heading collision comment: the second
+  occurrence receives `-1`, matching the implementation.
+
 ## 1.0.0 — 2026-10-05
 
 - Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C311-fateh",
+    "language": "urdu",
+    "chapter": 311,
+    "sequence": 18810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a5a5805ab390c9a"
+  },
+  "findings": []
+}

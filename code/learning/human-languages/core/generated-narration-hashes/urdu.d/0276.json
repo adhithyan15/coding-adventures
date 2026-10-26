@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:7dd1092cf677d66e",
+  "lessonIds": [
+    "UR-C276-chor",
+    "UR-C276-chori",
+    "UR-C276-churana",
+    "UR-C276-gavah",
+    "UR-C276-vardat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch276.txt",
+  "json": "urdu/narration/ch276.json",
+  "textHash": "fnv1a64:00bcfcdce06c14be",
+  "jsonHash": "fnv1a64:c3197f98ba99c525",
+  "findings": []
+}

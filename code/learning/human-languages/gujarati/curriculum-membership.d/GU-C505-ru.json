@@ -1,0 +1,11 @@
+{
+  "id": "GU-C505-ru",
+  "pathSegment": "GU-PATH-505-RENTIYO505",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-505-RENTIYO505",
+      "order": 1
+    }
+  ]
+}

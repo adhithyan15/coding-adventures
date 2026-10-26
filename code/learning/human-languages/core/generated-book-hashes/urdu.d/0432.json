@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:1c37a6ee3040def1",
+  "lessonIds": [
+    "UR-C432-tulu",
+    "UR-C432-ghurub",
+    "UR-C432-ufuq",
+    "UR-C432-shafaq",
+    "UR-C432-ujala",
+    "UR-R432-review-426-432"
+  ],
+  "tex": "urdu/book/chapters/ch432-sunrise-and-sunset.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:ade97be35d30cf18",
+  "lessonIds": [
+    "GU-C504-kumbhar",
+    "GU-C504-cakdo",
+    "GU-C504-garo",
+    "GU-C504-gudvu",
+    "GU-C504-kodiyu"
+  ],
+  "tex": "gujarati/book/chapters/ch504-clay-and-the-wheel.tex"
+}

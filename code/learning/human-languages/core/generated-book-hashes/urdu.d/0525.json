@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:ae7492f9cccfe43b",
+  "lessonIds": [
+    "UR-C525-mohlat",
+    "UR-C525-iltiva",
+    "UR-C525-muattal",
+    "UR-C525-barqarar",
+    "UR-C525-atkana",
+    "UR-R525-review-518-525"
+  ],
+  "tex": "urdu/book/chapters/ch525-putting-things-off.tex"
+}

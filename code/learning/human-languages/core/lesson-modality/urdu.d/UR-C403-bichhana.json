@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C403-bichhana",
+    "language": "urdu",
+    "chapter": 403,
+    "sequence": 23900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f20bd370f9cb8971"
+  },
+  "findings": []
+}

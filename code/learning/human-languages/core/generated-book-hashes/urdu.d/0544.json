@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:91a04da60a491d71",
+  "lessonIds": [
+    "UR-C544-aghaz",
+    "UR-C544-shuru",
+    "UR-C544-ikhtitam",
+    "UR-C544-silsila",
+    "UR-C544-tartib"
+  ],
+  "tex": "urdu/book/chapters/ch544-a-good-start.tex"
+}

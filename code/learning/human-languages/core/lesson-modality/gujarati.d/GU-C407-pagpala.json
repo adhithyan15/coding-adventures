@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C407-pagpala",
+    "language": "gujarati",
+    "chapter": 407,
+    "sequence": 22740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af70e66f198b1e8e"
+  },
+  "findings": []
+}

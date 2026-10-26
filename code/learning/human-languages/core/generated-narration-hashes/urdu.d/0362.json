@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:f11f442c2f821c2d",
+  "lessonIds": [
+    "UR-C362-takhmina",
+    "UR-C362-yaqin",
+    "UR-C362-aksar",
+    "UR-C362-qiyas",
+    "UR-C362-bujhna-guess",
+    "UR-R362-review-355-362"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch362.txt",
+  "json": "urdu/narration/ch362.json",
+  "textHash": "fnv1a64:27624628cf73d08c",
+  "jsonHash": "fnv1a64:ace732b923e982ce",
+  "findings": []
+}

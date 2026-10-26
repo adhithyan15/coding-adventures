@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:c615a9e1afc5073c",
+  "lessonIds": [
+    "GU-C514-dhilu",
+    "GU-C514-skru",
+    "GU-C514-kasvu",
+    "GU-C514-khiti",
+    "GU-C514-latkavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch514.txt",
+  "json": "gujarati/narration/ch514.json",
+  "textHash": "fnv1a64:6d06e9153a1dc99b",
+  "jsonHash": "fnv1a64:ac87c567b2c8be49",
+  "findings": []
+}

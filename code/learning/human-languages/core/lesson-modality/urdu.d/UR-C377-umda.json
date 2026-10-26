@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C377-umda",
+    "language": "urdu",
+    "chapter": 377,
+    "sequence": 22360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8355ffaeb45b82d5"
+  },
+  "findings": []
+}

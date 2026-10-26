@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:56f0dd260ad343a2",
+  "lessonIds": [
+    "GU-C514-dhilu",
+    "GU-C514-skru",
+    "GU-C514-kasvu",
+    "GU-C514-khiti",
+    "GU-C514-latkavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch514-something-has-come-loose.tex"
+}

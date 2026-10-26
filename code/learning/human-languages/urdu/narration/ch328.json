@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 328,
+  "title": "The Prince in Disguise",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b28ef5f29739c7c8",
+  "lessons": [
+    {
+      "id": "UR-C328-shahzada",
+      "sequence": 19660,
+      "title": "شہزادہ (shahzādā) — a prince",
+      "headword": "شہزادہ",
+      "romanization": "shahzādā",
+      "gloss": "a prince",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:accfa1aaa510b119",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to bite (of a snake), then the Urdu for a diamond."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شہزادہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شہزادہ — shahzādā — \"a prince\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شہزادہ رات کو شہر میں گھومتا تھا۔ shahzādā rāt ko shahr meṅ ghūmtā thā. The prince used to walk about the city at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شہزادہ (shahzādā) is usually traced to Persian shāhzāda, \"born of a king\", built from shāh, a king, and zāda, \"born\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shahzādā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shahzādā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shahzādā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shahzādā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shahzādā rāt ko shahr meṅ ghūmtā thā. — The prince used to walk about the city at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shahzādā rāt ko shahr meṅ ghūmtā thā.* — The prince used to walk about the city at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to bite (of a snake), then the Urdu for a diamond, then say shahzādā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to bite (of a snake), then the Urdu for a diamond, then say *shahzādā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شہزادہ (shahzādā) mean? (\"A prince\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C328-bhes",
+      "sequence": 19670,
+      "title": "بھیس (bhes) — a disguise",
+      "headword": "بھیس",
+      "romanization": "bhes",
+      "gloss": "a disguise",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6c0348593284302",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a diamond, then the Urdu for a prince."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بھیس",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بھیس — bhes — \"a disguise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اس نے کسان کا بھیس بدلا۔ us ne kisān kā bhes badlā. He disguised himself as a farmer."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بھیس (bhes) is inherited: CDIAL lists the Hindi cousin bhes, \"dress, an assumed appearance\", under Sanskrit vēṣa (CDIAL 12129). بھیس بدلنا is to put on a disguise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhes*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhes, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhes*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us ne kisān kā bhes badlā. — He disguised himself as a farmer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us ne kisān kā bhes badlā.* — He disguised himself as a farmer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a diamond, then the Urdu for a prince, then say bhes again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a diamond, then the Urdu for a prince, then say *bhes* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بھیس (bhes) mean? (\"A disguise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C328-azmana",
+      "sequence": 19680,
+      "title": "آزمانا (āzmānā) — to put to the test",
+      "headword": "آزمانا",
+      "romanization": "āzmānā",
+      "gloss": "to put to the test",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c871da1b32098bc2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a prince, then the Urdu for a disguise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: آزمانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آزمانا — āzmānā — \"to put to the test\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شہزادے نے لوگوں کو آزمایا۔ shahzāde ne logoṅ ko āzmāyā. The prince put the people to the test."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے دوست کو آزمایا, us ne dost ko āzmāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آزمانا (āzmānā) is usually traced to Persian āzmā-, the stem of āzmūdan, \"to test\", with the Urdu verb ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āzmānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āzmānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āzmānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āzmānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shahzāde ne logoṅ ko āzmāyā. — The prince put the people to the test.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shahzāde ne logoṅ ko āzmāyā.* — The prince put the people to the test.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a prince, then the Urdu for a disguise, then say āzmānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a prince, then the Urdu for a disguise, then say *āzmānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does آزمانا (āzmānā) mean? (\"To put to the test\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C328-fareb",
+      "sequence": 19690,
+      "title": "فریب (fareb) — deceit; a false show",
+      "headword": "فریب",
+      "romanization": "fareb",
+      "gloss": "deceit; a false show",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:978c5552312f9ed8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a disguise, then the Urdu for to put to the test."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فریب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فریب — fareb — \"deceit; a false show\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لوگ اس کے فریب میں آ گئے۔ log us ke fareb meṅ ā gae. People fell for his deceit."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فریب (fareb) is usually traced to Persian farēb, \"deceit\". فریب میں آنا is to be taken in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fareb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fareb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fareb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fareb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "log us ke fareb meṅ ā gae. — People fell for his deceit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *log us ke fareb meṅ ā gae.* — People fell for his deceit.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a disguise, then the Urdu for to put to the test, then say fareb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a disguise, then the Urdu for to put to the test, then say *fareb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فریب (fareb) mean? (\"Deceit; a false show\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C328-bahkana",
+      "sequence": 19700,
+      "title": "بہکانا (bahkānā) — to lead astray",
+      "headword": "بہکانا",
+      "romanization": "bahkānā",
+      "gloss": "to lead astray",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:27e1fcb9b7c540cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to put to the test, then the Urdu for deceit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بہکانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بہکانا — bahkānā — \"to lead astray\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وزیر نے بادشاہ کو بہکایا۔ vazīr ne bādshāh ko bahkāyā. The minister led the king astray."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے بچے کو بہکایا, us ne bachche ko bahkāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بہکانا (bahkānā) is the causing form of bahaknā, \"to be misled\", which CDIAL lists for Hindi under Sanskrit vyáthatē (CDIAL 12164): to make someone lose the way."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahkānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahkānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahkānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahkānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vazīr ne bādshāh ko bahkāyā. — The minister led the king astray.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vazīr ne bādshāh ko bahkāyā.* — The minister led the king astray.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to put to the test, then the Urdu for deceit, then say bahkānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to put to the test, then the Urdu for deceit, then say *bahkānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بہکانا (bahkānā) mean? (\"To lead astray\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C292-jasus",
+  "pathSegment": "GU-PATH-292-KAUBHAND292",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-292-KAUBHAND292",
+      "order": 3
+    }
+  ]
+}

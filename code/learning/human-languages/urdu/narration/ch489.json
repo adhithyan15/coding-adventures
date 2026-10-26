@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 489,
+  "title": "More of the Family",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:520f8025a60d3724",
+  "lessons": [
+    {
+      "id": "UR-C489-devar",
+      "sequence": 28510,
+      "title": "دیور (devar) — a husband's younger brother",
+      "headword": "دیور",
+      "romanization": "devar",
+      "gloss": "a husband's younger brother",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e42fbd0e14123546",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a son-in-law, then the Urdu for to marry off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دیور",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دیور — devar — \"a husband's younger brother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "میرا دیور کالج میں پڑھتا ہے۔ merā devar kālij meṅ paṛhtā hai. My husband's younger brother is at college."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دیور (devar) is inherited from Sanskrit dēvara, \"husband's younger brother\" (CDIAL 6546)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "devar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *devar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "devar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *devar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā devar kālij meṅ paṛhtā hai. — My husband's younger brother is at college.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā devar kālij meṅ paṛhtā hai.* — My husband's younger brother is at college.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a son-in-law, then the Urdu for to marry off, then say devar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a son-in-law, then the Urdu for to marry off, then say *devar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دیور (devar) mean? (\"A husband's younger brother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C489-jeth",
+      "sequence": 28520,
+      "title": "جیٹھ (jeṭh) — a husband's elder brother",
+      "headword": "جیٹھ",
+      "romanization": "jeṭh",
+      "gloss": "a husband's elder brother",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a351198bc10b783",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to marry off, then the Urdu for a husband's younger brother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جیٹھ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جیٹھ — jeṭh — \"a husband's elder brother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "میرے جیٹھ ڈاکٹر ہیں۔ mere jeṭh ḍākṭar haiṅ. My husband's elder brother is a doctor."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جیٹھ (jeṭh) is inherited: CDIAL lists the Hindi cousin jeṭh, \"the eldest\", under Sanskrit jyḗṣṭha, \"first, eldest\" (CDIAL 5286)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jeṭh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jeṭh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jeṭh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jeṭh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mere jeṭh ḍākṭar haiṅ. — My husband's elder brother is a doctor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mere jeṭh ḍākṭar haiṅ.* — My husband's elder brother is a doctor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to marry off, then the Urdu for a husband's younger brother, then say jeṭh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to marry off, then the Urdu for a husband's younger brother, then say *jeṭh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جیٹھ (jeṭh) mean? (\"A husband's elder brother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C489-nanad",
+      "sequence": 28530,
+      "title": "نند (nanad) — a husband's sister",
+      "headword": "نند",
+      "romanization": "nanad",
+      "gloss": "a husband's sister",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d25927596ab658ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a husband's younger brother, then the Urdu for a husband's elder brother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نند",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نند — nanad — \"a husband's sister\"."
+            },
+            {
+              "kind": "speech",
+              "text": "میری نند ہمارے گھر کے پاس رہتی ہے۔ merī nanad hamāre ghar ke pās rahtī hai. My husband's sister lives near our house."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نند (nanad) is inherited from Sanskrit nánāndṛ, \"husband's sister\" (CDIAL 6946)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merī nanad hamāre ghar ke pās rahtī hai. — My husband's sister lives near our house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merī nanad hamāre ghar ke pās rahtī hai.* — My husband's sister lives near our house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a husband's younger brother, then the Urdu for a husband's elder brother, then say nanad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a husband's younger brother, then the Urdu for a husband's elder brother, then say *nanad* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نند (nanad) mean? (\"A husband's sister\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C489-bhanja",
+      "sequence": 28540,
+      "title": "بھانجا (bhāṅjā) — a nephew (a sister's son)",
+      "headword": "بھانجا",
+      "romanization": "bhāṅjā",
+      "gloss": "a nephew (a sister's son)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0d0a19d55ad2a41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a husband's elder brother, then the Urdu for a husband's sister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بھانجا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بھانجا — bhāṅjā — \"a nephew (a sister's son)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "میرا بھانجا دس سال کا ہے۔ merā bhāṅjā das sāl kā hai. My sister's son is ten years old."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بھانجا (bhāṅjā) is inherited from Sanskrit bhāginēya, \"sister's son\" (CDIAL 9433)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāṅjā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāṅjā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāṅjā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāṅjā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā bhāṅjā das sāl kā hai. — My sister's son is ten years old.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā bhāṅjā das sāl kā hai.* — My sister's son is ten years old.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a husband's elder brother, then the Urdu for a husband's sister, then say bhāṅjā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a husband's elder brother, then the Urdu for a husband's sister, then say *bhāṅjā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بھانجا (bhāṅjā) mean? (\"A nephew (a sister's son)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C489-navasa",
+      "sequence": 28550,
+      "title": "نواسا (navāsā) — a grandson (a daughter's son)",
+      "headword": "نواسا",
+      "romanization": "navāsā",
+      "gloss": "a grandson (a daughter's son)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16c614fc80b25e58",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a husband's sister, then the Urdu for a nephew (a sister's son)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نواسا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نواسا — navāsā — \"a grandson (a daughter's son)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نانا اپنے نواسے کے ساتھ کھیلتے ہیں۔ nānā apne navāse ke sāth khelte haiṅ. My grandfather plays with his grandson."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نواسا (navāsā) is usually traced to Persian navāsa, \"grandchild\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "navāsā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *navāsā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "navāsā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *navāsā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānā apne navāse ke sāth khelte haiṅ. — My grandfather plays with his grandson.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānā apne navāse ke sāth khelte haiṅ.* — My grandfather plays with his grandson.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a husband's sister, then the Urdu for a nephew (a sister's son), then say navāsā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a husband's sister, then the Urdu for a nephew (a sister's son), then say *navāsā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نواسا (navāsā) mean? (\"A grandson (a daughter's son)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

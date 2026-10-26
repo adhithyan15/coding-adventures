@@ -5,6 +5,9 @@
  * iso_test.h. If this ever fails, the harness or its flags are broken.
  */
 #include "iso_test.h"
+#include <limits.h>
+
+_Static_assert(sizeof(int) * CHAR_BIT >= 16, "ISO C int has at least 16 bits");
 
 static int add(int a, int b) {
     return a + b;
@@ -16,7 +19,7 @@ int main(void) {
 
     ISO_CHECK(add(2, 3) == 5);
     ISO_CHECK_EQ_INT(add(10, -4), 6);
-    ISO_CHECK_MSG(sizeof(int) >= 2, "ISO C guarantees int is at least 16 bits");
+    ISO_CHECK_MSG(add(1, 1) == 2, "portable runtime assertion");
 
     /* Exercise the extended assertion macros so they are verified under every
      * compiler (GCC, Clang, MSVC), not just the ones on a dev machine. */

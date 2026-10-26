@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "Needle and Pattern",
+  "label": "ch:ur-needle-and-pattern",
+  "canDo": "I can talk about embroidery and handwork.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C514-jhalar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can talk about embroidery and handwork.",
+    "assesses": [
+      "UR-LEX-C514-KARHAI514-03",
+      "UR-LEX-C514-KARHAI514-04",
+      "UR-LEX-C514-KARHAI514-05"
+    ]
+  }
+}

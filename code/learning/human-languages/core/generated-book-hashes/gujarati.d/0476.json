@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:a2065ccc5cb97db8",
+  "lessonIds": [
+    "GU-C476-ghorvu",
+    "GU-C476-nidar",
+    "GU-C476-jagran",
+    "GU-C476-podhvu",
+    "GU-C476-anidra"
+  ],
+  "tex": "gujarati/book/chapters/ch476-a-long-night-s-sleep.tex"
+}

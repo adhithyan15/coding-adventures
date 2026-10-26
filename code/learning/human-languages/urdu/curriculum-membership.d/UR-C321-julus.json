@@ -1,0 +1,11 @@
+{
+  "id": "UR-C321-julus",
+  "pathSegment": "UR-PATH-321-MELA321",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-321-MELA321",
+      "order": 1
+    }
+  ]
+}

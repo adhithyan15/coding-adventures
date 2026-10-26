@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:20c36f4f60fa4bfa",
+  "lessonIds": [
+    "UR-C335-khilaf",
+    "UR-C335-himayat-karna",
+    "UR-C335-mukhalafat-karna",
+    "UR-C335-muttafiq",
+    "UR-C335-fariq"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch335.txt",
+  "json": "urdu/narration/ch335.json",
+  "textHash": "fnv1a64:34b67c980509384c",
+  "jsonHash": "fnv1a64:b5f42c85f72345a7",
+  "findings": []
+}

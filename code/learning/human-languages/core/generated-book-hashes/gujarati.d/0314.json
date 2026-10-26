@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:84933f7fdf3f8060",
+  "lessonIds": [
+    "GU-C314-hadtal",
+    "GU-C314-morco",
+    "GU-C314-sutra",
+    "GU-C314-pravacan",
+    "GU-C314-gunjvu"
+  ],
+  "tex": "gujarati/book/chapters/ch314-the-strike.tex"
+}

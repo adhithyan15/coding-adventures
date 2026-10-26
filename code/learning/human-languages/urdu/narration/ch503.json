@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 503,
+  "title": "Damp and Cracks",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c3c5968f1d5d6efe",
+  "lessons": [
+    {
+      "id": "UR-C503-silan",
+      "sequence": 29460,
+      "title": "سیلن (sīlan) — damp (in a wall)",
+      "headword": "سیلن",
+      "romanization": "sīlan",
+      "gloss": "damp (in a wall)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2eff6095784548c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for rust, then the Urdu for a metal spring."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سیلن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سیلن — sīlan — \"damp (in a wall)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "برسات میں دیواروں میں سیلن آ جاتی ہے۔ barsāt meṅ dīvāroṅ meṅ sīlan ā jātī hai. In the rainy season damp gets into the walls."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سیلن (sīlan) is built on sīl, \"cool, moist\", which CDIAL lists under Sanskrit sītala, \"cold\" (CDIAL 12487)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīlan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīlan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīlan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīlan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "barsāt meṅ dīvāroṅ meṅ sīlan ā jātī hai. — In the rainy season damp gets into the walls.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *barsāt meṅ dīvāroṅ meṅ sīlan ā jātī hai.* — In the rainy season damp gets into the walls.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for rust, then the Urdu for a metal spring, then say sīlan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for rust, then the Urdu for a metal spring, then say *sīlan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سیلن (sīlan) mean? (\"Damp (in a wall)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C503-int",
+      "sequence": 29470,
+      "title": "اینٹ (īṅṭ) — a brick",
+      "headword": "اینٹ",
+      "romanization": "īṅṭ",
+      "gloss": "a brick",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5623cfae61253ec0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a metal spring, then the Urdu for damp (in a wall)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اینٹ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اینٹ — īṅṭ — \"a brick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مزدور نے دیوار کے لیے اینٹیں اٹھائیں۔ mazdūr ne dīvār ke liye īṅṭeṅ uṭhāīṅ. The labourer carried bricks for the wall."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اینٹ (īṅṭ) is inherited from Sanskrit iṣṭakā, \"a brick\" (CDIAL 1600)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īṅṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īṅṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īṅṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īṅṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mazdūr ne dīvār ke liye īṅṭeṅ uṭhāīṅ. — The labourer carried bricks for the wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mazdūr ne dīvār ke liye īṅṭeṅ uṭhāīṅ.* — The labourer carried bricks for the wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a metal spring, then the Urdu for damp (in a wall), then say īṅṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a metal spring, then the Urdu for damp (in a wall), then say *īṅṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اینٹ (īṅṭ) mean? (\"A brick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C503-palastar",
+      "sequence": 29480,
+      "title": "پلستر (palastar) — plaster (on a wall)",
+      "headword": "پلستر",
+      "romanization": "palastar",
+      "gloss": "plaster (on a wall)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17c1c2cb9eeba5a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for damp (in a wall), then the Urdu for a brick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پلستر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پلستر — palastar — \"plaster (on a wall)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "برسات میں دیوار کا پلستر گر گیا۔ barsāt meṅ dīvār kā palastar gir gayā. The plaster came off the wall in the rainy season."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پلستر (palastar) is borrowed from English plaster."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palastar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palastar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palastar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palastar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "barsāt meṅ dīvār kā palastar gir gayā. — The plaster came off the wall in the rainy season.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *barsāt meṅ dīvār kā palastar gir gayā.* — The plaster came off the wall in the rainy season.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for damp (in a wall), then the Urdu for a brick, then say palastar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for damp (in a wall), then the Urdu for a brick, then say *palastar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پلستر (palastar) mean? (\"Plaster (on a wall)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C503-rangvana",
+      "sequence": 29490,
+      "title": "رنگوانا (rangvānā) — to have (something) painted",
+      "headword": "رنگوانا",
+      "romanization": "rangvānā",
+      "gloss": "to have (something) painted",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6c6eb8d19fb2893",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a brick, then the Urdu for plaster (on a wall)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رنگوانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رنگوانا — rangvānā — \"to have (something) painted\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ہم نے برسات کے بعد دیواریں رنگوائیں۔ ham ne barsāt ke bād dīvāreṅ rangvāīṅ. We had the walls painted after the rainy season."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے دروازہ رنگوایا, us ne darvāzā rangvāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رنگوانا (rangvānā) is the causative of rangnā, \"to colour\": to have someone colour a thing. CDIAL lists the Hindi cousin rãgānā, \"to be coloured\", under raṅgayati, \"dyes\", a form it reconstructs (CDIAL 10570)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rangvānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rangvānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rangvānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rangvānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ham ne barsāt ke bād dīvāreṅ rangvāīṅ. — We had the walls painted after the rainy season.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ham ne barsāt ke bād dīvāreṅ rangvāīṅ.* — We had the walls painted after the rainy season.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a brick, then the Urdu for plaster (on a wall), then say rangvānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a brick, then the Urdu for plaster (on a wall), then say *rangvānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رنگوانا (rangvānā) mean? (\"To have (something) painted\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C503-lipna",
+      "sequence": 29500,
+      "title": "لیپنا (līpnā) — to smear (with mud)",
+      "headword": "لیپنا",
+      "romanization": "līpnā",
+      "gloss": "to smear (with mud)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e67205904d95fbd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for plaster (on a wall), then the Urdu for to have (something) painted."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لیپنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لیپنا — līpnā — \"to smear (with mud)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دادی نے آنگن کو مٹی سے لیپا۔ dādī ne āṅgan ko miṭṭī se līpā. Grandmother smeared the courtyard with fresh mud."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے فرش لیپا, us ne farsh līpā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لیپنا (līpnā) is inherited: CDIAL lists the Hindi cousin līpnā, \"to smear\", under Sanskrit lipyatē, \"is smeared\" (CDIAL 11061)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "līpnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *līpnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "līpnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *līpnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī ne āṅgan ko miṭṭī se līpā. — Grandmother smeared the courtyard with fresh mud.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī ne āṅgan ko miṭṭī se līpā.* — Grandmother smeared the courtyard with fresh mud.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for plaster (on a wall), then the Urdu for to have (something) painted, then say līpnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for plaster (on a wall), then the Urdu for to have (something) painted, then say *līpnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does لیپنا (līpnā) mean? (\"To smear (with mud)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

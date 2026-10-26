@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-318-EIDMORNING318",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "UR-EXT-318-EIDMORNING318"
+  ],
+  "after": []
+}

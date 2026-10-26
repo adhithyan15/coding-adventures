@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "Obstacles",
+  "label": "ch:gu-obstacles",
+  "canDo": "I can say what might stand in the way and how to stop it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C374-nivarvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can say what might stand in the way and how to stop it.",
+    "assesses": [
+      "GU-LEX-C374-AVRODH374-03",
+      "GU-LEX-C374-AVRODH374-04",
+      "GU-LEX-C374-AVRODH374-05"
+    ]
+  }
+}

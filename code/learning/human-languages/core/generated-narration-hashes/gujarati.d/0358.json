@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:b4c2a7a80f94b0bf",
+  "lessonIds": [
+    "GU-C358-seva",
+    "GU-C358-tyag",
+    "GU-C358-paropkar",
+    "GU-C358-sahkar",
+    "GU-C358-nibhavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch358.txt",
+  "json": "gujarati/narration/ch358.json",
+  "textHash": "fnv1a64:75fd13091f04c7db",
+  "jsonHash": "fnv1a64:ed029cf999acb16a",
+  "findings": []
+}

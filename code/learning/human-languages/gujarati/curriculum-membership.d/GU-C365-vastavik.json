@@ -1,0 +1,11 @@
+{
+  "id": "GU-C365-vastavik",
+  "pathSegment": "GU-PATH-365-SIDDHANT365",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-365-SIDDHANT365",
+      "order": 3
+    }
+  ]
+}

@@ -4,7 +4,7 @@ This crate holds two Python frontends that share nothing but the crate:
 
 | Path | Entry points | Subset | Grammar |
 |------|--------------|--------|---------|
-| LANG84 release path (phase 7a) | `compile_source_at`, `compile_cst`, `run_source_at` | `py-int-print`: `print` of integer arithmetic, on all nine backends | one tagged CPython release's `python<release>.*` pair |
+| LANG84 release path (phases 7a–7c) | `compile_source_at`, `compile_cst`, `run_source_at` | `py-int-print`: `print` of integer arithmetic; `py-float-print` (7c slice 3): plus floats; `py2-int-print`; on all nine backends | one tagged CPython release's `python<release>.*` pair |
 | LANG79 float pilot | `compile_source`, `compile_ast`, `run_source` | float expressions and bindings, on `vm-core` | the legacy minor line `"3.12"` |
 
 ## The release path: `py-int-print` (LANG84 phase 7a)
@@ -55,20 +55,70 @@ Everything else is a typed `FrontendError` (`Lex`, `Parse`, `Unsupported`,
 a 1-based position. Refused examples: `/` (true division gives a float),
 names, another callee, two arguments, and a literal outside `i64`.
 
-Releases: 3.0a1, 3.11.17, 3.12.3, 3.13.16 and 3.16.0a1. All use the `py3`
-profile in `src/profiles.rs`, which cites the CPython sources it rests on.
-They emit byte-identical IIR for every corpus case they all accept. The
+Python 3 releases: 3.0a1 (profile `py30`), and 3.5.10, 3.6.0, 3.11.17,
+3.12.3, 3.13.16 and 3.16.0a1 (profile `py3`), which also compile
+`py-float-print` (LANG84 phase 7c slice 3, below). Python 2 releases (LANG84 phase 7c):
+2.2, 2.4, 2.6 and 2.7.18, on the `py2` profile, which compile the
+`py2-int-print` subset: the `print` statement, classic `/` (it floors on
+ints and lowers like `//`), and every Python 2 integer spelling (`010` is
+octal 8, `0x1F`, `0o17` and `0b101` from 2.6, and an `L` suffix that prints
+without the `L`). A profile is a plain struct of switches in
+`src/profiles.rs` (`slash`, `int_literals`, `floats`, `subsets`), which
+cites the CPython sources it rests on. Releases with one profile emit byte-identical
+IIR for every corpus case they all accept. The
 readers of the inventory and corpus that the release tests share live in
 `tests/common/mod.rs`. Tests:
 
 | Test | Proves |
 |------|--------|
-| `tests/release_subsets.rs` | LANG84 stage I: every case of `code/grammars/python/corpus/py-int-print` on every claiming release (vm-core output and trap kind), C7 op checks, IIR identity, and the host CPython 3.11/3.12/3.13 oracle |
-| `tests/release_sweep.rs` | LANG84 "CI bounding": every positive case under every claiming release, grouped into IIR-identity classes (two today: 3.0a1, which refuses `int_underscores`, and 3.12.3 with 3.13.16, 3.11.17 and 3.16.0a1), checked against `code/grammars/python/release_classes.csv`. After a deliberate change, `PYTHON_RELEASE_SWEEP_WRITE=1 cargo test -p python-iir-compiler --test release_sweep` rewrites the file (and fails, so review the diff and re-run). `lang-aot`'s matrix runs the corpus on each class representative |
+| `tests/release_subsets.rs` | LANG84 stage I: every case of `code/grammars/python/corpus/py-int-print`, `py-float-print` and `py2-int-print` on every claiming release (vm-core output and trap kind), C7 op checks, IIR identity, and the host CPython 3.11/3.12/3.13 oracle |
+| `tests/release_sweep.rs` | LANG84 "CI bounding": every positive case under every claiming release, grouped into IIR-identity classes (for `py-int-print`: 3.0a1 with 3.5.10, which refuse `int_underscores`, and 3.6.0 with 3.12.3, 3.13.16, 3.11.17 and 3.16.0a1; for `py2-int-print`: 2.2 with 2.4, and 2.6 with 2.7.18, the releases that lex PEP 3127 `0o`/`0b`; for `py-float-print`: 3.5.10 alone, which refuses `float_underscores`, and the other five), checked against `code/grammars/python/release_classes.csv`. After a deliberate change, `PYTHON_RELEASE_SWEEP_WRITE=1 cargo test -p python-iir-compiler --test release_sweep` rewrites the file (and fails, so review the diff and re-run). `lang-aot`'s matrix runs the corpus on each class representative |
 | `tests/release_lowering.rs` | which op each construct becomes, the `-1` fold, `main: i64`, located refusals, forged trees |
 | `tests/cst_contract.rs` | LANG84 C8: every dispatched rule and token exists in each release |
 | `tests/hostile_release.rs` | LANG84 C5 hostile probes, in a child process |
 | `tests/iir_path.rs` | the release path never touches a legacy grammar or compares release IDs |
+
+### Floats: `py-float-print` (LANG84 phase 7c slice 3)
+
+On the `py3` profile a program may also use float literals (`1.5`, `.5`,
+`1.`, `1e16`, `1_000.5` from 3.6.0), `/` as true division, and any mix of
+`int` and `float` in `+ - * /` and unary `+ -`:
+
+```rust
+use python_iir_compiler::run_source_at;
+
+let ran = run_source_at("print(7 / 2)
+print(0.1 + 0.2)
+print(-0.0)
+print(1e308 * 10)
+", None).unwrap();
+assert_eq!(ran.stdout, "3.5
+0.30000000000000004
+-0.0
+inf
+");
+let ran = run_source_at("print(1.5)
+print(1 / 0.0)
+", None).unwrap();
+assert_eq!((ran.stdout.as_str(), ran.trap.as_deref()), ("1.5
+", Some("Trap.DivZero")));
+```
+
+| Python | IIR |
+|--------|-----|
+| a float literal | `const x : f64` (correctly rounded) |
+| an `int` operand of a float op | `int_to_real` |
+| `+ - *` with a float, `/` always | `f64_add`, `f64_sub`, `f64_mul`, `f64_div` (LANG83 PR6c, IEEE, never trap) |
+| `/` by a known `±0` | `trap "Trap.DivZero"` first (CPython's ZeroDivisionError) |
+| `-a`, `+a` (float) | `f64_neg`, nothing |
+| `print(a)` (float) | `write_f64_py` (Python `repr`), `putchar 10` |
+
+Refused (`Unsupported`): `//` and `%` on a float, `int / int` with an operand
+above 2^53 (CPython rounds the exact quotient once), and a literal that
+overflows to `inf` (`1e400`). 3.0a1 has no floats: its `str(float)` is
+`%.12g`, which no LANG83 writer produces. BEAM refuses the `f64_*`
+arithmetic at compile time (its floats have no `inf`/`nan`); a literal-only
+program runs there too.
 
 ## LANG79's float pilot
 

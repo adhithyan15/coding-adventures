@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 481,
+  "title": "Getting Better",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b638d29ec1f2d00f",
+  "lessons": [
+    {
+      "id": "UR-C481-ifaqa",
+      "sequence": 28100,
+      "title": "افاقہ (ifāqā) — an easing (of an illness); relief",
+      "headword": "افاقہ",
+      "romanization": "ifāqā",
+      "gloss": "an easing (of an illness); relief",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a920f0265f85c5dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to lay (someone) down, then the Urdu for to cover someone up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: افاقہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "افاقہ — ifāqā — \"an easing (of an illness); relief\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دوا سے مریض کو افاقہ ہوا۔ davā se marīz ko ifāqā huā. The medicine brought the patient some relief."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "افاقہ (ifāqā) is usually traced, through Persian, to Arabic ifāqa, \"recovering, coming to oneself\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ifāqā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ifāqā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ifāqā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ifāqā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "davā se marīz ko ifāqā huā. — The medicine brought the patient some relief.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *davā se marīz ko ifāqā huā.* — The medicine brought the patient some relief.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to lay (someone) down, then the Urdu for to cover someone up, then say ifāqā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to lay (someone) down, then the Urdu for to cover someone up, then say *ifāqā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does افاقہ (ifāqā) mean? (\"An easing (of an illness); relief\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C481-bahal",
+      "sequence": 28110,
+      "title": "بحال (bahāl) — restored; back to normal",
+      "headword": "بحال",
+      "romanization": "bahāl",
+      "gloss": "restored; back to normal",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d60d273f147098f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to cover someone up, then the Urdu for an easing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بحال",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بحال — bahāl — \"restored; back to normal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ایک ہفتے بعد اس کی صحت بحال ہو گئی۔ ek hafte bād us kī sehat bahāl ho gaī. A week later her health was back to normal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بحال (bahāl) is usually traced to Persian bahāl, \"restored\", from ba, \"to, in\", and Arabic ḥāl, \"state\": back in its proper state."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek hafte bād us kī sehat bahāl ho gaī. — A week later her health was back to normal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek hafte bād us kī sehat bahāl ho gaī.* — A week later her health was back to normal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to cover someone up, then the Urdu for an easing, then say bahāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to cover someone up, then the Urdu for an easing, then say *bahāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بحال (bahāl) mean? (\"Restored; back to normal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C481-malish-karna",
+      "sequence": 28120,
+      "title": "مالش کرنا (mālish karnā) — to massage",
+      "headword": "مالش کرنا",
+      "romanization": "mālish karnā",
+      "gloss": "to massage",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c69eb52ba239a7d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for an easing, then the Urdu for restored."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مالش کرنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مالش کرنا — mālish karnā — \"to massage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "امی نے دادی کی کمر کی مالش کی۔ ammī ne dādī kī kamar kī mālish kī. Mum massaged my grandmother's back."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے سر کی مالش کی, us ne sar kī mālish kī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مالش کرنا (mālish karnā) is built from مالش, usually traced to Persian mālish, \"rubbing\", and کرنا, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mālish karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mālish karnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mālish karnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mālish karnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ammī ne dādī kī kamar kī mālish kī. — Mum massaged my grandmother's back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ammī ne dādī kī kamar kī mālish kī.* — Mum massaged my grandmother's back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for an easing, then the Urdu for restored, then say mālish karnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for an easing, then the Urdu for restored, then say *mālish karnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مالش کرنا (mālish karnā) mean? (\"To massage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C481-dabana",
+      "sequence": 28130,
+      "title": "دبانا (dabānā) — to press gently",
+      "headword": "دبانا",
+      "romanization": "dabānā",
+      "gloss": "to press gently",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79626d5dfbbba636",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for restored, then the Urdu for to massage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دبانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دبانا — dabānā — \"to press gently\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بیٹی نے ابو کا سر دبایا۔ beṭī ne abbū kā sar dabāyā. The daughter gently pressed her father's head."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے کندھا دبایا, us ne kandhā dabāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دبانا (dabānā) is inherited: CDIAL lists the Hindi cousin dābnā, \"to press\", under dabb, \"press\", a form it reconstructs (CDIAL 6173)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dabānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dabānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dabānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dabānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beṭī ne abbū kā sar dabāyā. — The daughter gently pressed her father's head.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beṭī ne abbū kā sar dabāyā.* — The daughter gently pressed her father's head.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for restored, then the Urdu for to massage, then say dabānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for restored, then the Urdu for to massage, then say *dabānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دبانا (dabānā) mean? (\"To press gently\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C481-senkna",
+      "sequence": 28140,
+      "title": "سینکنا (seṅknā) — to warm a sore place; to toast",
+      "headword": "سینکنا",
+      "romanization": "seṅknā",
+      "gloss": "to warm a sore place; to toast",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e9e7889ec7e2c8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to massage, then the Urdu for to press gently."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سینکنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سینکنا — seṅknā — \"to warm a sore place; to toast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دادی گرم پانی سے گھٹنا سینکتی ہیں۔ dādī garm pānī se ghuṭnā seṅktī haiṅ. My grandmother warms her knee with hot water."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے کمر سینکی, us ne kamar seṅkī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سینکنا (seṅknā) is inherited: CDIAL lists the Hindi cousin sẽknā, \"to warm, to foment, to toast\", under sēkk, a form it reconstructs (CDIAL 13581)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seṅknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seṅknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seṅknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seṅknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī garm pānī se ghuṭnā seṅktī haiṅ. — My grandmother warms her knee with hot water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī garm pānī se ghuṭnā seṅktī haiṅ.* — My grandmother warms her knee with hot water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to massage, then the Urdu for to press gently, then say seṅknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to massage, then the Urdu for to press gently, then say *seṅknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سینکنا (seṅknā) mean? (\"To warm a sore place; to toast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

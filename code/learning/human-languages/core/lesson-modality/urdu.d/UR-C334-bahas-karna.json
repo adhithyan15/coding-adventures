@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C334-bahas-karna",
+    "language": "urdu",
+    "chapter": 334,
+    "sequence": 20150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d8b800e7678b7eb"
+  },
+  "findings": []
+}

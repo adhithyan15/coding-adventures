@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:3d0d45c301062110",
+  "lessonIds": [
+    "UR-C372-jamna",
+    "UR-C372-ubalna-boil-up",
+    "UR-C372-galna",
+    "UR-C372-tarakna",
+    "UR-C372-darmiyana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch372.txt",
+  "json": "urdu/narration/ch372.json",
+  "textHash": "fnv1a64:94dda70d295c122f",
+  "jsonHash": "fnv1a64:3f8c9605f4fc1dd9",
+  "findings": []
+}

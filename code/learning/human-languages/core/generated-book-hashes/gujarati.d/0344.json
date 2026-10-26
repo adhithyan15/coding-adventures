@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:c68201e89fd84a8e",
+  "lessonIds": [
+    "GU-C344-davo",
+    "GU-C344-sabiti",
+    "GU-C344-khatri",
+    "GU-C344-sandeh",
+    "GU-C344-darsavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch344-proof.tex"
+}

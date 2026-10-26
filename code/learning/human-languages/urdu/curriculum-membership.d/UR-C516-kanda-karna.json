@@ -1,0 +1,11 @@
+{
+  "id": "UR-C516-kanda-karna",
+  "pathSegment": "UR-PATH-516-KHATTATI516",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-516-KHATTATI516",
+      "order": 3
+    }
+  ]
+}

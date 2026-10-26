@@ -1,0 +1,19 @@
+{
+  "chapter": 423,
+  "title": "Rates and Deals",
+  "label": "ch:ur-rates-and-deals",
+  "canDo": "I can ask the going rate, hear the price and get a discount.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C423-sel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can ask the going rate, hear the price and get a discount.",
+    "assesses": [
+      "UR-LEX-C423-SAUDA423-03",
+      "UR-LEX-C423-SAUDA423-04",
+      "UR-LEX-C423-SAUDA423-05"
+    ]
+  }
+}

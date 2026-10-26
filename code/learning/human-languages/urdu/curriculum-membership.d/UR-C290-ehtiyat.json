@@ -1,0 +1,11 @@
+{
+  "id": "UR-C290-ehtiyat",
+  "pathSegment": "UR-PATH-290-AILAN290",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-290-AILAN290",
+      "order": 4
+    }
+  ]
+}

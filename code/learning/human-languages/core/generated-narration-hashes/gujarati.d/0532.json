@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:464d4df88db36c15",
+  "lessonIds": [
+    "GU-C532-posavu",
+    "GU-C532-gaju",
+    "GU-C532-nabhvu",
+    "GU-C532-anukul",
+    "GU-C532-rajinamu",
+    "GU-R532-review-525-532"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch532.txt",
+  "json": "gujarati/narration/ch532.json",
+  "textHash": "fnv1a64:746ee35aa79ad7d6",
+  "jsonHash": "fnv1a64:de544485108b69d9",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C266-dauran",
+  "pathSegment": "UR-PATH-266-SCENE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-266-SCENE",
+      "order": 1
+    }
+  ]
+}

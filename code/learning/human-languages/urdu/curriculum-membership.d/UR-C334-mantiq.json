@@ -1,0 +1,11 @@
+{
+  "id": "UR-C334-mantiq",
+  "pathSegment": "UR-PATH-334-BAHAS334",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-334-BAHAS334",
+      "order": 4
+    }
+  ]
+}

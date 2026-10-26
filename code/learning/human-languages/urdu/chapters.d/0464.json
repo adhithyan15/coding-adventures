@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "Inside the Body",
+  "label": "ch:ur-inside-the-body",
+  "canDo": "I can name some organs inside the body.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C464-rag",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can name some organs inside the body.",
+    "assesses": [
+      "UR-LEX-C464-ORGAN464-03",
+      "UR-LEX-C464-ORGAN464-04",
+      "UR-LEX-C464-ORGAN464-05"
+    ]
+  }
+}

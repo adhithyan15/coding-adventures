@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:5b74ae9443baa308",
+  "lessonIds": [
+    "UR-C368-diqqat",
+    "UR-C368-rukavat",
+    "UR-C368-hal",
+    "UR-C368-atakna",
+    "UR-C368-nibtana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch368.txt",
+  "json": "urdu/narration/ch368.json",
+  "textHash": "fnv1a64:d2e0dc3de2caa04b",
+  "jsonHash": "fnv1a64:601de16246b26b15",
+  "findings": []
+}

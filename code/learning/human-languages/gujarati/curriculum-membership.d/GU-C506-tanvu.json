@@ -1,0 +1,11 @@
+{
+  "id": "GU-C506-tanvu",
+  "pathSegment": "GU-PATH-506-TANTANO506",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-506-TANTANO506",
+      "order": 3
+    }
+  ]
+}

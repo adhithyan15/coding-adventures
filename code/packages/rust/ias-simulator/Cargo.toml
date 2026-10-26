@@ -1,0 +1,10 @@
+[package]
+name = "ias-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Source-backed IAS machine functional simulator"
+license = "MIT"
+
+[lib]
+name = "ias_simulator"
+path = "src/lib.rs"

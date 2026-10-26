@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:249def80e3b2889b",
+  "lessonIds": [
+    "GU-C317-itihas",
+    "GU-C317-sadi",
+    "GU-C317-pracin",
+    "GU-C317-bhutkal",
+    "GU-C317-janmavu"
+  ],
+  "tex": "gujarati/book/chapters/ch317-pages-of-history.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C424-pasbuk",
+  "pathSegment": "GU-PATH-424-COUNTER424",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-424-COUNTER424",
+      "order": 1
+    }
+  ]
+}

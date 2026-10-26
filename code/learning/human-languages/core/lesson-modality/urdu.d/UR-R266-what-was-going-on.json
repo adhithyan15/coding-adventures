@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R266-what-was-going-on",
+    "language": "urdu",
+    "chapter": 266,
+    "sequence": 16190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e32cc7a6a9aff51"
+  },
+  "findings": []
+}

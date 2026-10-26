@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C519-mahfil",
+    "language": "urdu",
+    "chapter": 519,
+    "sequence": 30310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3cfbb7a07de431ed"
+  },
+  "findings": []
+}

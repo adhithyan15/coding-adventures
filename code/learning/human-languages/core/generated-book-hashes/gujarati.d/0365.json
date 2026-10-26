@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:cf0bb198c1d66eca",
+  "lessonIds": [
+    "GU-C365-siddhat",
+    "GU-C365-vyavhar",
+    "GU-C365-anuman",
+    "GU-C365-vastavik",
+    "GU-C365-sakalvu"
+  ],
+  "tex": "gujarati/book/chapters/ch365-theory-and-practice.tex"
+}

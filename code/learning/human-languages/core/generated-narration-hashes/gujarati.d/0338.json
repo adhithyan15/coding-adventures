@@ -1,0 +1,21 @@
+{
+  "language": "gujarati",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:cca5d8e2f5571181",
+  "lessonIds": [
+    "GU-C338-granth",
+    "GU-C338-samayik",
+    "GU-C338-chapavvu",
+    "GU-C338-bhajavvu",
+    "GU-C338-adbhut",
+    "GU-R338-review-332-338",
+    "GU-R338-review-final-338"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "gujarati/narration/ch338.txt",
+  "json": "gujarati/narration/ch338.json",
+  "textHash": "fnv1a64:76091d4e48398a68",
+  "jsonHash": "fnv1a64:5ccbbf849ef5473c",
+  "findings": []
+}

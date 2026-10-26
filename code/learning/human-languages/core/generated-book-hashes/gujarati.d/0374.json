@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:0b0f3792ff539df8",
+  "lessonIds": [
+    "GU-C374-avrodh",
+    "GU-C374-vighna",
+    "GU-C374-musibat",
+    "GU-C374-khalvu",
+    "GU-C374-nivarvu"
+  ],
+  "tex": "gujarati/book/chapters/ch374-obstacles.tex"
+}

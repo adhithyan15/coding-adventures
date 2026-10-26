@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:b8c9a9ca23104ffa",
+  "lessonIds": [
+    "GU-C427-pensan",
+    "GU-C427-rokan",
+    "GU-C427-thapan",
+    "GU-C427-mudat",
+    "GU-C427-phalavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch427.txt",
+  "json": "gujarati/narration/ch427.json",
+  "textHash": "fnv1a64:d4f6a4b8fe31dc0f",
+  "jsonHash": "fnv1a64:f718e7793498b767",
+  "findings": []
+}

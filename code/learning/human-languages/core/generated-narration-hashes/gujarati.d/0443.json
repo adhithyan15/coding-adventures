@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:0904148c9a3b3dca",
+  "lessonIds": [
+    "GU-C443-jhad",
+    "GU-C443-vad",
+    "GU-C443-piplo",
+    "GU-C443-abo",
+    "GU-C443-phutvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch443.txt",
+  "json": "gujarati/narration/ch443.json",
+  "textHash": "fnv1a64:0d105173f8737f04",
+  "jsonHash": "fnv1a64:82d84de98c17ce2d",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Small Houses and Fences",
+  "label": "ch:gu-small-houses-and-fences",
+  "canDo": "I can describe a simple country house.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C420-chavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can describe a simple country house.",
+    "assesses": [
+      "GU-LEX-C420-HOUSE420-03",
+      "GU-LEX-C420-HOUSE420-04",
+      "GU-LEX-C420-HOUSE420-05"
+    ]
+  }
+}

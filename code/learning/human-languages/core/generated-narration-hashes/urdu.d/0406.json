@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:b84a2c5c35679fae",
+  "lessonIds": [
+    "UR-C406-lakri",
+    "UR-C406-sulgana",
+    "UR-C406-orhna",
+    "UR-C406-shamiyana",
+    "UR-C406-basera"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch406.txt",
+  "json": "urdu/narration/ch406.json",
+  "textHash": "fnv1a64:8a5e478f01634657",
+  "jsonHash": "fnv1a64:da9885c9b57e00b1",
+  "findings": []
+}

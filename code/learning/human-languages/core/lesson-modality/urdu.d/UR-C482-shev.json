@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C482-shev",
+    "language": "urdu",
+    "chapter": 482,
+    "sequence": 28170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:809c727bff0101b4"
+  },
+  "findings": []
+}

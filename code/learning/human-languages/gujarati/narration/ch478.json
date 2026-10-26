@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 478,
+  "title": "A Cough That Lingers",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:66a0d331921976ec",
+  "lessons": [
+    {
+      "id": "GU-C478-kaph",
+      "sequence": 26580,
+      "title": "કફ (kaph) — phlegm",
+      "headword": "કફ",
+      "romanization": "kaph",
+      "gloss": "phlegm",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:caab392fcb4cdc9c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to throw up, then the Gujarati for to stomach."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કફ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કફ — kaph — \"phlegm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "શરદીને લીધે મારી છાતીમાં કફ છે. śardīne līdhe mārī chātīmā̃ kaph che. My chest is full of phlegm because of the cold."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કફ (kaph) is a tatsama, Sanskrit kapha, \"phlegm\", one of the three humours of the old medicine, as Monier-Williams records it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaph",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaph*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaph, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaph*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śardīne līdhe mārī chātīmā̃ kaph che. — My chest is full of phlegm because of the cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śardīne līdhe mārī chātīmā̃ kaph che.* — My chest is full of phlegm because of the cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to throw up, then the Gujarati for to stomach, then say kaph again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to throw up, then the Gujarati for to stomach, then say *kaph* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કફ (kaph) mean? (\"Phlegm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C478-udhras",
+      "sequence": 26590,
+      "title": "ઉધરસ (udhras) — a lingering cough; a cough",
+      "headword": "ઉધરસ",
+      "romanization": "udhras",
+      "gloss": "a lingering cough; a cough",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2078292c334e9ea1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to stomach, then the Gujarati for phlegm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઉધરસ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉધરસ — udhras — \"a lingering cough; a cough\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દાદીને આખી રાત ઉધરસ આવી. dādīne ākhī rāt udhras āvī. Grandmother coughed all night."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉધરસ (udhras) goes back to a reconstructed uddhrasā-, \"coughing up\"; CDIAL lists the Gujarati word, \"cough\" (CDIAL 2030)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udhras",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udhras*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udhras, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udhras*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādīne ākhī rāt udhras āvī. — Grandmother coughed all night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādīne ākhī rāt udhras āvī.* — Grandmother coughed all night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to stomach, then the Gujarati for phlegm, then say udhras again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to stomach, then the Gujarati for phlegm, then say *udhras* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઉધરસ (udhras) mean? (\"A lingering cough; a cough\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C478-kharas",
+      "sequence": 26600,
+      "title": "ખરાશ (kharāś) — a scratchy throat",
+      "headword": "ખરાશ",
+      "romanization": "kharāś",
+      "gloss": "a scratchy throat",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2214b4926155308b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for phlegm, then the Gujarati for a lingering cough."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ખરાશ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખરાશ — kharāś — \"a scratchy throat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ઠંડું પાણી પીધા પછી ગળામાં ખરાશ થઈ. ṭhanḍũ pāṇī pīdhā pachī gaḷāmā̃ kharāś thaī. After drinking cold water I got a scratchy throat."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખરાશ (kharāś) is usually traced to Persian xarāš, \"a scratch, a scraping\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kharāś",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kharāś*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kharāś, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kharāś*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhanḍũ pāṇī pīdhā pachī gaḷāmā̃ kharāś thaī. — After drinking cold water I got a scratchy throat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhanḍũ pāṇī pīdhā pachī gaḷāmā̃ kharāś thaī.* — After drinking cold water I got a scratchy throat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for phlegm, then the Gujarati for a lingering cough, then say kharāś again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for phlegm, then the Gujarati for a lingering cough, then say *kharāś* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ખરાશ (kharāś) mean? (\"A scratchy throat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C478-khansvu",
+      "sequence": 26610,
+      "title": "ખાંસવું (khā̃svũ) — to cough",
+      "headword": "ખાંસવું",
+      "romanization": "khā̃svũ",
+      "gloss": "to cough",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:476eeaa2c001ddc8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a lingering cough, then the Gujarati for a scratchy throat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ખાંસવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખાંસવું — khā̃svũ — \"to cough\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દર્દી આખી રાત ખાંસતો હતો. dardī ākhī rāt khā̃sto hato. The patient was coughing all night."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): તે આખી રાત ખાંસ્યો, te ākhī rāt khā̃syo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખાંસવું (khā̃svũ) is inherited from Sanskrit kāsatē, \"coughs\"; CDIAL lists the Gujarati verb (CDIAL 3135), beside the noun ખાંસી (khā̃sī), \"a cough\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khā̃svũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khā̃svũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khā̃svũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khā̃svũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dardī ākhī rāt khā̃sto hato. — The patient was coughing all night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dardī ākhī rāt khā̃sto hato.* — The patient was coughing all night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a lingering cough, then the Gujarati for a scratchy throat, then say khā̃svũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a lingering cough, then the Gujarati for a scratchy throat, then say *khā̃svũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ખાંસવું (khā̃svũ) mean? (\"To cough\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C478-kabjiyat",
+      "sequence": 26620,
+      "title": "કબજિયાત (kabjiyāt) — constipation",
+      "headword": "કબજિયાત",
+      "romanization": "kabjiyāt",
+      "gloss": "constipation",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba109a510445f9fd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a scratchy throat, then the Gujarati for to cough."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કબજિયાત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કબજિયાત — kabjiyāt — \"constipation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દાક્તરે કહ્યું કે કબજિયાત માટે વધારે પાણી પીઓ. dāktare kahyũ ke kabjiyāt māṭe vadhāre pāṇī pīo. The doctor said to drink more water for constipation."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કબજિયાત (kabjiyāt) is usually traced to Arabic qabḍ, \"contraction, seizing\", through Persian, with an abstract ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kabjiyāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kabjiyāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kabjiyāt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kabjiyāt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāktare kahyũ ke kabjiyāt māṭe vadhāre pāṇī pīo. — The doctor said to drink more water for constipation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāktare kahyũ ke kabjiyāt māṭe vadhāre pāṇī pīo.* — The doctor said to drink more water for constipation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a scratchy throat, then the Gujarati for to cough, then say kabjiyāt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a scratchy throat, then the Gujarati for to cough, then say *kabjiyāt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કબજિયાત (kabjiyāt) mean? (\"Constipation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R478-review-471-478",
+      "sequence": 26630,
+      "title": "Looking back: from How People Look to A Cough That Lingers",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from How People Look to A Cough That Lingers",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed680fae9a4ca9aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for complexion and height."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "complexion, height, the body, wrinkles, grey hairs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: complexion, height, the body, wrinkles, grey hairs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a vein, a muscle, the skull, an intestine, the stomach",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a vein, a muscle, the skull, an intestine, the stomach]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a thigh, the sole of the foot, the navel, the calf of the leg, an armpit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a thigh, the sole of the foot, the navel, the calf of the leg, an armpit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saliva, to chew, to suck, to spit, the palate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: saliva, to chew, to suck, to spit, the palate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "blind, deaf, silent, eyesight, to touch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: blind, deaf, silent, eyesight, to touch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to snore, slumber, staying up all night, to lie down to sleep, sleeplessness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to snore, slumber, staying up all night, to lie down to sleep, sleeplessness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a belch, bloating, nausea, to throw up, to stomach",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a belch, bloating, nausea, to throw up, to stomach]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phlegm, a lingering cough, a scratchy throat, to cough, constipation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: phlegm, a lingering cough, a scratchy throat, to cough, constipation]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Complexion? (વાન, vān.) Height? (કદ, kad.) The body? (દેહ, deh.) Wrinkles? (વળિયાં, vaḷiyā̃.) Grey hairs? (પળિયાં, paḷiyā̃.) A vein? (નસ, nas.) A muscle? (સ્નાયુ, snāyu.) The skull? (ખોપરી, khoprī.) An intestine? (આંતરડું, ā̃tarḍũ.) The stomach? (હોજરી, hojrī.) A thigh? (જાંઘ, jā̃gh.) The sole of the foot? (તળિયું, taḷiyũ.) The navel? (ડૂંટી, ḍū̃ṭī.) The calf of the leg? (પિંડી, pinḍī.) An armpit? (બગલ, bagal.) Saliva? (લાળ, lāḷ.) To chew? (ચાવવું, cāvvũ.) To suck? (ચૂસવું, cūsvũ.) To spit? (થૂંકવું, thū̃kvũ.) The palate? (તાળવું, tāḷvũ.) Blind? (અંધ, andh.) Deaf? (બહેરું, baherũ.) Silent? (મૂંગું, mū̃gũ.) Eyesight? (નજર, najar.) To touch? (અડકવું, aḍakvũ.) To snore? (ઘોરવું, ghorvũ.) Slumber? (નીંદર, nī̃dar.) Staying up all night? (જાગરણ, jāgraṇ.) To lie down to sleep? (પોઢવું, poḍhvũ.) Sleeplessness? (અનિદ્રા, anidrā.) A belch? (ઓડકાર, oḍkār.) Bloating? (આફરો, āphro.) Nausea? (ઉબકો, ubko.) To throw up? (ઓકવું, okvũ.) To stomach? (જીરવવું, jīravvũ.) Phlegm? (કફ, kaph.) A lingering cough? (ઉધરસ, udhras.) A scratchy throat? (ખરાશ, kharāś.) To cough? (ખાંસવું, khā̃svũ.) Constipation? (કબજિયાત, kabjiyāt.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

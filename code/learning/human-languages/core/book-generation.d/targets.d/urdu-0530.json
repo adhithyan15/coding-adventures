@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 530,
+  "output": "urdu/book/chapters/ch530-yes-or-no.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

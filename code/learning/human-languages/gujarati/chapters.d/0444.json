@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "Trunks, Bark and Buds",
+  "label": "ch:gu-trunks-bark-and-buds",
+  "canDo": "I can describe a tree from its trunk to its flowers.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C444-mahekvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can describe a tree from its trunk to its flowers.",
+    "assesses": [
+      "GU-LEX-C444-BUD444-03",
+      "GU-LEX-C444-BUD444-04",
+      "GU-LEX-C444-BUD444-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C452-itrana",
+  "pathSegment": "UR-PATH-452-PRIDE452",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-452-PRIDE452",
+      "order": 2
+    }
+  ]
+}

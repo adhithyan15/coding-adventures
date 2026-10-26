@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 352,
+  "title": "Ask an Expert",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f43712c5e9f59c2e",
+  "lessons": [
+    {
+      "id": "UR-C352-mazmun",
+      "sequence": 21070,
+      "title": "مضمون (mazmūn) — an article; an essay",
+      "headword": "مضمون",
+      "romanization": "mazmūn",
+      "gloss": "an article; an essay",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c59d9c8b117cd2e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to compare, then the Urdu for to assess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مضمون",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مضمون — mazmūn — \"an article; an essay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "میں نے اخبار میں اس کا مضمون پڑھا۔ maiṅ ne akhbār meṅ us kā mazmūn paṛhā. I read her article in the newspaper."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مضمون (mazmūn) is usually traced, through Persian, to Arabic maḍmūn, \"contents, what is contained\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mazmūn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mazmūn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mazmūn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mazmūn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṅ ne akhbār meṅ us kā mazmūn paṛhā. — I read her article in the newspaper.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṅ ne akhbār meṅ us kā mazmūn paṛhā.* — I read her article in the newspaper.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to compare, then the Urdu for to assess, then say mazmūn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to compare, then the Urdu for to assess, then say *mazmūn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مضمون (mazmūn) mean? (\"An article; an essay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C352-maqala",
+      "sequence": 21080,
+      "title": "مقالہ (maqālā) — a thesis; a research paper",
+      "headword": "مقالہ",
+      "romanization": "maqālā",
+      "gloss": "a thesis; a research paper",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6fb46b5fcc86c19a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to assess, then the Urdu for an article."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مقالہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مقالہ — maqālā — \"a thesis; a research paper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اس نے اپنا مقالہ ختم کیا۔ us ne apnā maqālā khatm kiyā. She finished her thesis."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مقالہ (maqālā) is usually traced, through Persian, to Arabic maqāla, \"a saying; a treatise\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maqālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maqālā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maqālā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maqālā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us ne apnā maqālā khatm kiyā. — She finished her thesis.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us ne apnā maqālā khatm kiyā.* — She finished her thesis.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to assess, then the Urdu for an article, then say maqālā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to assess, then the Urdu for an article, then say *maqālā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مقالہ (maqālā) mean? (\"A thesis; a research paper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C352-danishvar",
+      "sequence": 21090,
+      "title": "دانشور (dānishvar) — an intellectual; a thinker",
+      "headword": "دانشور",
+      "romanization": "dānishvar",
+      "gloss": "an intellectual; a thinker",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:245c1ba608f7b5fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for an article, then the Urdu for a thesis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دانشور",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دانشور — dānishvar — \"an intellectual; a thinker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شہر کے دانشور اس بات پر متفق ہیں۔ shahr ke dānishvar is bāt par muttafiq haiṅ. The city's thinkers agree on this point."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine or feminine, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دانشور (dānishvar) is usually traced to Persian dānishvar, \"possessing knowledge\", built on dānish, \"knowledge\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dānishvar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dānishvar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dānishvar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dānishvar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shahr ke dānishvar is bāt par muttafiq haiṅ. — The city's thinkers agree on this point.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shahr ke dānishvar is bāt par muttafiq haiṅ.* — The city's thinkers agree on this point.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for an article, then the Urdu for a thesis, then say dānishvar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for an article, then the Urdu for a thesis, then say *dānishvar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دانشور (dānishvar) mean? (\"An intellectual; a thinker\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C352-ilm",
+      "sequence": 21100,
+      "title": "علم (ilm) — knowledge; learning",
+      "headword": "علم",
+      "romanization": "ilm",
+      "gloss": "knowledge; learning",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c29e4845bb478913",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a thesis, then the Urdu for an intellectual."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: علم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "علم — ilm — \"knowledge; learning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کتابوں سے علم ملتا ہے۔ kitāboṅ se ilm miltā hai. Books give us knowledge."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "علم (ilm) is usually traced, through Persian, to Arabic ʿilm, \"knowledge\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ilm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ilm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ilm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ilm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kitāboṅ se ilm miltā hai. — Books give us knowledge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kitāboṅ se ilm miltā hai.* — Books give us knowledge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a thesis, then the Urdu for an intellectual, then say ilm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a thesis, then the Urdu for an intellectual, then say *ilm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does علم (ilm) mean? (\"Knowledge; learning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C352-chhantna",
+      "sequence": 21110,
+      "title": "چھانٹنا (chhānṭnā) — to pick out; to sort (the good from the bad)",
+      "headword": "چھانٹنا",
+      "romanization": "chhānṭnā",
+      "gloss": "to pick out; to sort (the good from the bad)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3969c1156c91f596",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for an intellectual, then the Urdu for knowledge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: چھانٹنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چھانٹنا — chhānṭnā — \"to pick out; to sort (the good from the bad)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ماہر نے اچھے نمونے چھانٹے۔ māhir ne achchhe namūne chhānṭe. The expert picked out the good samples."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے سیب چھانٹے, us ne seb chhānṭe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چھانٹنا (chhānṭnā) is inherited: CDIAL lists the Hindi cousin chā̃ṭnā, \"to sift, to select\", under chaṇṭ, a form it reconstructs (CDIAL 4970)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhānṭnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhānṭnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhānṭnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhānṭnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māhir ne achchhe namūne chhānṭe. — The expert picked out the good samples.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māhir ne achchhe namūne chhānṭe.* — The expert picked out the good samples.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for an intellectual, then the Urdu for knowledge, then say chhānṭnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for an intellectual, then the Urdu for knowledge, then say *chhānṭnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does چھانٹنا (chhānṭnā) mean? (\"To pick out; to sort (the good from the bad)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

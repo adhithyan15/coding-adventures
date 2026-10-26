@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C394-uchhalna",
+    "language": "urdu",
+    "chapter": 394,
+    "sequence": 23440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69e17256a6a1e2db"
+  },
+  "findings": []
+}

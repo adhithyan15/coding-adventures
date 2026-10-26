@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Missing Someone",
+  "label": "ch:gu-missing-someone",
+  "canDo": "I can say how I feel when someone is far away.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C458-sabharvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can say how I feel when someone is far away.",
+    "assesses": [
+      "GU-LEX-C458-VIRAH458-03",
+      "GU-LEX-C458-VIRAH458-04",
+      "GU-LEX-C458-VIRAH458-05"
+    ]
+  }
+}

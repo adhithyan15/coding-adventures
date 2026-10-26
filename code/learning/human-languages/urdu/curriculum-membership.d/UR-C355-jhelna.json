@@ -1,0 +1,11 @@
+{
+  "id": "UR-C355-jhelna",
+  "pathSegment": "UR-PATH-355-TARIF355",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-355-TARIF355",
+      "order": 4
+    }
+  ]
+}

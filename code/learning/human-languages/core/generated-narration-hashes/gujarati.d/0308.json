@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:6379a223e8004e0d",
+  "lessonIds": [
+    "GU-C308-tarapo",
+    "GU-C308-sahas",
+    "GU-C308-vir",
+    "GU-C308-dhiraj",
+    "GU-C308-kargarvu",
+    "GU-R308-review-301-308"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch308.txt",
+  "json": "gujarati/narration/ch308.json",
+  "textHash": "fnv1a64:b0117a652c513020",
+  "jsonHash": "fnv1a64:f7a31e55950a172d",
+  "findings": []
+}

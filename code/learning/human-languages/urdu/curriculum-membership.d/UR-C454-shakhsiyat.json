@@ -1,0 +1,11 @@
+{
+  "id": "UR-C454-shakhsiyat",
+  "pathSegment": "UR-PATH-454-CHARACTER454",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-454-CHARACTER454",
+      "order": 4
+    }
+  ]
+}

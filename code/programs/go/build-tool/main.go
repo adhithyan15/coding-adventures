@@ -564,20 +564,32 @@ func changedPackageRootsForPlatformAndLanguage(
 		}
 		changed[closureProvenanceConsumer] = true
 	}
-	// Only the committed Go native reader consumes this exact external corpus.
-	// Seed before the ordinary fixture early return, including deleted old paths.
-	if containsPath(changedFiles, "code/specs/fixtures/starlark-opcode-provider-v1/cases.json") && (language == "all" || language == "go") {
-		found := false
-		for _, pkg := range packages {
-			if pkg.Name == "go/starlark-compiler" && pkg.Language == "go" {
-				found = true
-				break
+	// The committed Go and Haskell native readers consume this exact external
+	// corpus. Seed before the ordinary fixture early return, including deleted
+	// old paths, while preserving an explicitly single-language invocation.
+	if containsPath(changedFiles, "code/specs/fixtures/starlark-opcode-provider-v1/cases.json") {
+		consumers := []struct {
+			name, language string
+		}{
+			{"go/starlark-compiler", "go"},
+			{"haskell/starlark-compiler", "haskell"},
+		}
+		for _, consumer := range consumers {
+			if language != "all" && language != consumer.language {
+				continue
 			}
+			found := false
+			for _, pkg := range packages {
+				if pkg.Name == consumer.name && pkg.Language == consumer.language {
+					found = true
+					break
+				}
+			}
+			if !found {
+				return nil, fmt.Errorf("STP01 fixture consumer %q is missing from discovered packages", consumer.name)
+			}
+			changed[consumer.name] = true
 		}
-		if !found {
-			return nil, fmt.Errorf("STP01 fixture consumer %q is missing from discovered packages", "go/starlark-compiler")
-		}
-		changed["go/starlark-compiler"] = true
 	}
 	// BF03's native Go reader lives outside the shared fixture directory. Seed
 	// its real package before external-fixture early return, including deletion
@@ -595,10 +607,12 @@ func changedPackageRootsForPlatformAndLanguage(
 		}
 		changed["go/compiler-ir"] = true
 	}
-	// TE04's bounded fenced-node corpus is outside the reader package. Seed
-	// the actual TypeScript reader without statting the fixture so deletion
-	// and rename-old paths still exercise native tests and ordinary consumers.
-	if containsPath(changedFiles, "code/specs/gfm-fenced-block-v1/cases.json") && (language == "all" || language == "typescript") {
+	// TE04's bounded corpora are outside the reader package. Seed the actual
+	// TypeScript reader without statting either fixture so deletion and
+	// rename-old paths still exercise native tests and ordinary consumers.
+	gfmCorpusChanged := containsPath(changedFiles, "code/specs/gfm-fenced-block-v1/cases.json") ||
+		containsPath(changedFiles, "code/specs/fixtures/gfm-extension-v1/cases.json")
+	if gfmCorpusChanged && (language == "all" || language == "typescript") {
 		found := false
 		for _, pkg := range packages {
 			if pkg.Name == "typescript/gfm-parser" && pkg.Language == "typescript" {
@@ -849,6 +863,7 @@ func affectedListFromSet(affectedSet map[string]bool) []string {
 	for name := range affectedSet {
 		affected = append(affected, name)
 	}
+	sort.Strings(affected)
 	return affected
 }
 

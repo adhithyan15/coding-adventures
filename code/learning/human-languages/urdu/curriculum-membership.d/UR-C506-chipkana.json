@@ -1,0 +1,11 @@
+{
+  "id": "UR-C506-chipkana",
+  "pathSegment": "UR-PATH-506-SAFAI506",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-506-SAFAI506",
+      "order": 2
+    }
+  ]
+}

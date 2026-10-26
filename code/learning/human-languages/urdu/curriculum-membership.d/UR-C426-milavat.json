@@ -1,0 +1,11 @@
+{
+  "id": "UR-C426-milavat",
+  "pathSegment": "UR-PATH-426-KHALIS426",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-426-KHALIS426",
+      "order": 2
+    }
+  ]
+}

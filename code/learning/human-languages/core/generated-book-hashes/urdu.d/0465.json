@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:5612ae1c66e920a6",
+  "lessonIds": [
+    "UR-C465-haddi",
+    "UR-C465-pasli",
+    "UR-C465-khopri",
+    "UR-C465-rirh",
+    "UR-C465-jabra"
+  ],
+  "tex": "urdu/book/chapters/ch465-bones.tex"
+}

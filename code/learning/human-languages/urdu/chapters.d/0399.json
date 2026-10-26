@@ -1,0 +1,19 @@
+{
+  "chapter": 399,
+  "title": "Security Checks",
+  "label": "ch:ur-security-checks",
+  "canDo": "I can get through a security check and customs.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C399-charhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can get through a security check and customs.",
+    "assesses": [
+      "UR-LEX-C399-HIFAZAT399-03",
+      "UR-LEX-C399-HIFAZAT399-04",
+      "UR-LEX-C399-HIFAZAT399-05"
+    ]
+  }
+}

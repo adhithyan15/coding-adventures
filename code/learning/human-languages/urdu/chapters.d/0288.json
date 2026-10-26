@@ -1,0 +1,19 @@
+{
+  "chapter": 288,
+  "title": "The Lamp That Fell",
+  "label": "ch:ur-the-lamp-that-fell",
+  "canDo": "I can describe a fire at its height.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C288-tapish",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 288: I can describe a fire at its height.",
+    "assesses": [
+      "UR-LEX-C288-CHIRAGH288-03",
+      "UR-LEX-C288-CHIRAGH288-04",
+      "UR-LEX-C288-CHIRAGH288-05"
+    ]
+  }
+}

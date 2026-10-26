@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:984725d209d00296",
+  "lessonIds": [
+    "UR-C472-hazm-karna",
+    "UR-C472-hazma",
+    "UR-C472-badhazmi",
+    "UR-C472-ubkai",
+    "UR-C472-ghiza"
+  ],
+  "tex": "urdu/book/chapters/ch472-an-upset-stomach.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C382-mathvu",
+    "language": "gujarati",
+    "chapter": 382,
+    "sequence": 21240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:129e1b9ddf0d850e"
+  },
+  "findings": []
+}

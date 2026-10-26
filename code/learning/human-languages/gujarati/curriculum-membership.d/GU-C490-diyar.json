@@ -1,0 +1,11 @@
+{
+  "id": "GU-C490-diyar",
+  "pathSegment": "GU-PATH-490-SASRA490",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-490-SASRA490",
+      "order": 1
+    }
+  ]
+}

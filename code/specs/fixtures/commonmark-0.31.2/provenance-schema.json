@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:coding-adventures:commonmark-0.31.2-provenance",
+  "title": "CommonMark 0.31.2 fixture provenance",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile", "source_url", "specification_url", "version", "published", "author", "license", "artifact"],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "profile": {"const": "commonmark-0.31.2"},
+    "source_url": {"const": "https://spec.commonmark.org/0.31.2/spec.json"},
+    "specification_url": {"const": "https://spec.commonmark.org/0.31.2/"},
+    "version": {"const": "0.31.2"},
+    "published": {"const": "2024-01-28"},
+    "author": {"const": "John MacFarlane"},
+    "license": {"$ref": "#/$defs/license"},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256", "examples"],
+      "properties": {
+        "path": {"const": "spec.json"},
+        "bytes": {"type": "integer", "const": 140487},
+        "sha256": {"const": "d431b29d97b6f73e69d547109cf5081578fac931e72afe95639ebe766c1b2a20"},
+        "examples": {"type": "integer", "const": 652}
+      }
+    }
+  },
+  "$defs": {
+    "license": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["spdx", "url"],
+      "properties": {
+        "spdx": {"const": "CC-BY-SA-4.0"},
+        "url": {"const": "https://creativecommons.org/licenses/by-sa/4.0/"}
+      }
+    }
+  }
+}

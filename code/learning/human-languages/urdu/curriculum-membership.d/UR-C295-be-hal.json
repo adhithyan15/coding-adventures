@@ -1,0 +1,11 @@
+{
+  "id": "UR-C295-be-hal",
+  "pathSegment": "UR-PATH-295-PHANSA295",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-295-PHANSA295",
+      "order": 4
+    }
+  ]
+}

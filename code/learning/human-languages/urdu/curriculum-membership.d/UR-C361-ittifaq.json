@@ -1,0 +1,11 @@
+{
+  "id": "UR-C361-ittifaq",
+  "pathSegment": "UR-PATH-361-IMKAN361",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-361-IMKAN361",
+      "order": 2
+    }
+  ]
+}

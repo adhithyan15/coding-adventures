@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:820bb2da1dfca5d8",
+  "lessonIds": [
+    "UR-C521-maich",
+    "UR-C521-turnament",
+    "UR-C521-kaptan",
+    "UR-C521-fatih",
+    "UR-C521-shikast"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch521.txt",
+  "json": "urdu/narration/ch521.json",
+  "textHash": "fnv1a64:ecc3f3d697e05e14",
+  "jsonHash": "fnv1a64:786932e3de0920db",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C468-lams",
+    "language": "urdu",
+    "chapter": 468,
+    "sequence": 27450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c9f6875db6b4e44"
+  },
+  "findings": []
+}

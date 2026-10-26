@@ -1,0 +1,11 @@
+{
+  "id": "UR-C492-vasiyat",
+  "pathSegment": "UR-PATH-492-OLDAGE492",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-492-OLDAGE492",
+      "order": 3
+    }
+  ]
+}

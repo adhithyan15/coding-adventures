@@ -1,0 +1,11 @@
+{
+  "id": "UR-C288-raushni",
+  "pathSegment": "UR-PATH-288-CHIRAGH288",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-288-CHIRAGH288",
+      "order": 3
+    }
+  ]
+}

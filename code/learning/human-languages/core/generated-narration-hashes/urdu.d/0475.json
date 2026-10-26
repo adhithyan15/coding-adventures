@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:f11824837222af71",
+  "lessonIds": [
+    "UR-C475-daimi",
+    "UR-C475-dama",
+    "UR-C475-falij",
+    "UR-C475-kainsar",
+    "UR-C475-mubtala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch475.txt",
+  "json": "urdu/narration/ch475.json",
+  "textHash": "fnv1a64:a214f41ddd7107ac",
+  "jsonHash": "fnv1a64:a9c3f15eee9a2acc",
+  "findings": []
+}

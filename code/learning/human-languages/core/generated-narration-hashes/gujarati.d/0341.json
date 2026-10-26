@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:c7bb191ae24c8e68",
+  "lessonIds": [
+    "GU-C341-dalil",
+    "GU-C341-carca",
+    "GU-C341-muddo",
+    "GU-C341-sandarbh",
+    "GU-C341-uthavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch341.txt",
+  "json": "gujarati/narration/ch341.json",
+  "textHash": "fnv1a64:8d6ff97cfb1bda8c",
+  "jsonHash": "fnv1a64:0eda23e5da128a91",
+  "findings": []
+}

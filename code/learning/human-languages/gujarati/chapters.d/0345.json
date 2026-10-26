@@ -1,0 +1,19 @@
+{
+  "chapter": 345,
+  "title": "Explaining Yourself",
+  "label": "ch:gu-explaining-yourself",
+  "canDo": "I can explain what I meant and set the record straight.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C345-palatvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can explain what I meant and set the record straight.",
+    "assesses": [
+      "GU-LEX-C345-KHULASO345-03",
+      "GU-LEX-C345-KHULASO345-04",
+      "GU-LEX-C345-KHULASO345-05"
+    ]
+  }
+}

@@ -5,6 +5,29 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.10.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
+
+- **Bytecodes `ADD_F64` / `SUB_F64` / `MUL_F64` / `DIV_F64` / `NEG_F64` /
+  `SIGNBIT_F64` and `RET_F64`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6c). A float register holds the value's
+  bit pattern; the ops decode, compute in Rust `f64` (never a trap), and
+  encode. `NEG_F64` flips bit 63; `SIGNBIT_F64` is `bits >> 63` (unsigned).
+- The PR6a float-register set widens to the destinations of the five
+  arithmetic ops; those ops, `f64_signbit` and `ret_f64` may read one, and a
+  float literal folded into an operand is materialised as its bits. Any other
+  use of a float register still refuses the function, and `f64_signbit`'s
+  integer dest may not also be a float register.
+- `RET_F64` returns a float register as `Value::Float`, so a function that
+  returns an `f64` it computed is now JIT-compiled (it fell back before).
+- `op_support`: all six `Lowered`; the declaration test types
+  `f64_signbit`'s result as `i64`.
+- **A parameter not typed `f64` that a float op or `const_f64` writes now
+  refuses the function** (security review M1). Such a parameter is seeded as
+  an integer, so `f64_add x <- x, 1.0` on an `i64`/`any` `x` read the
+  integer's bits as a float: `f(Int(5))` and `f(Float(2.5))` both returned
+  `Float(1.0)`. The function now falls back to the interpreter; an `f64`
+  parameter is still compiled. The `const_f64` case existed since PR6a.
+  Regression test `a_non_f64_param_written_by_a_float_op_is_refused`.
+
 ## [0.9.0] — 2026-10-20 (LANG83 PR6a — shortest round-trip float output)
 
 - **`write_f64_py` / `write_f64_js` are `Lowered`.** The new `CALL_BUILTIN_F64`

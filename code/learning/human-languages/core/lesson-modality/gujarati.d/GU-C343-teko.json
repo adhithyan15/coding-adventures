@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C343-teko",
+    "language": "gujarati",
+    "chapter": 343,
+    "sequence": 19200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9af4b44fed81d726"
+  },
+  "findings": []
+}

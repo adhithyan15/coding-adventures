@@ -1,0 +1,11 @@
+{
+  "id": "GU-C344-khatri",
+  "pathSegment": "GU-PATH-344-SABITI344",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-344-SABITI344",
+      "order": 2
+    }
+  ]
+}

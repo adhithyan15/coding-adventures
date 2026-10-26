@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:48a8c1511c6035db",
+  "lessonIds": [
+    "UR-C533-jua",
+    "UR-C533-pansa",
+    "UR-C533-bari",
+    "UR-C533-chal",
+    "UR-C533-paltana",
+    "UR-R533-review-526-533"
+  ],
+  "tex": "urdu/book/chapters/ch533-a-game-of-chance.tex"
+}

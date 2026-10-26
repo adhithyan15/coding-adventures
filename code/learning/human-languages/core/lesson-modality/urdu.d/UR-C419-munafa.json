@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C419-munafa",
+    "language": "urdu",
+    "chapter": 419,
+    "sequence": 24690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92fbb128469a2480"
+  },
+  "findings": []
+}

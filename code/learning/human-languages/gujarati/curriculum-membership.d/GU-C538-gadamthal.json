@@ -1,0 +1,11 @@
+{
+  "id": "GU-C538-gadamthal",
+  "pathSegment": "GU-PATH-538-SANSAY538",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-538-SANSAY538",
+      "order": 2
+    }
+  ]
+}

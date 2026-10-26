@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 416,
+  "title": "Rubbish and Drains",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0013f594df2b8899",
+  "lessons": [
+    {
+      "id": "UR-C416-kura",
+      "sequence": 24530,
+      "title": "کوڑا (kūṛā) — rubbish",
+      "headword": "کوڑا",
+      "romanization": "kūṛā",
+      "gloss": "rubbish",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f65333edbea92153",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a flavour, then the Urdu for to serve (food)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کوڑا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کوڑا — kūṛā — \"rubbish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "گلی میں کوڑا نہیں پھینکنا چاہیے۔ galī meṅ kūṛā nahīṅ pheṅknā chāhiye. You shouldn't throw rubbish in the lane."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کوڑا (kūṛā) is inherited: CDIAL lists the Hindi cousin kūṛā, \"a dust heap\", under Sanskrit kūṭa, \"a heap\" (CDIAL 3392)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṛā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṛā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṛā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṛā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "galī meṅ kūṛā nahīṅ pheṅknā chāhiye. — You shouldn't throw rubbish in the lane.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *galī meṅ kūṛā nahīṅ pheṅknā chāhiye.* — You shouldn't throw rubbish in the lane.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a flavour, then the Urdu for to serve (food), then say kūṛā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a flavour, then the Urdu for to serve (food), then say *kūṛā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کوڑا (kūṛā) mean? (\"Rubbish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C416-nali",
+      "sequence": 24540,
+      "title": "نالی (nālī) — a drain",
+      "headword": "نالی",
+      "romanization": "nālī",
+      "gloss": "a drain",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba5fe27845cc094d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to serve (food), then the Urdu for rubbish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نالی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نالی — nālī — \"a drain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بارش کے بعد نالی بھر گئی۔ bārish ke bād nālī bhar gaī. After the rain the drain filled up."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نالی (nālī) is built on nāl, \"a hollow stalk, a tube\", which CDIAL lists under Sanskrit nāḍī, \"a tube\" (CDIAL 7047), with the ending -ī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nālī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nālī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nālī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nālī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārish ke bād nālī bhar gaī. — After the rain the drain filled up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārish ke bād nālī bhar gaī.* — After the rain the drain filled up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to serve (food), then the Urdu for rubbish, then say nālī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to serve (food), then the Urdu for rubbish, then say *nālī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نالی (nālī) mean? (\"A drain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C416-gatar",
+      "sequence": 24550,
+      "title": "گٹر (gaṭar) — a sewer; a covered drain",
+      "headword": "گٹر",
+      "romanization": "gaṭar",
+      "gloss": "a sewer; a covered drain",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e5c43d3dd5f56f8d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for rubbish, then the Urdu for a drain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: گٹر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گٹر — gaṭar — \"a sewer; a covered drain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سڑک کے نیچے ایک بڑا گٹر ہے۔ saṛak ke nīche ek baṛā gaṭar hai. There's a big sewer under the road."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گٹر (gaṭar) is borrowed from English gutter; in Urdu it names a sewer."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaṭar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaṭar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaṭar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaṭar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṛak ke nīche ek baṛā gaṭar hai. — There's a big sewer under the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṛak ke nīche ek baṛā gaṭar hai.* — There's a big sewer under the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for rubbish, then the Urdu for a drain, then say gaṭar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for rubbish, then the Urdu for a drain, then say *gaṭar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does گٹر (gaṭar) mean? (\"A sewer; a covered drain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C416-badbu",
+      "sequence": 24560,
+      "title": "بدبو (badbū) — a stink; a bad smell",
+      "headword": "بدبو",
+      "romanization": "badbū",
+      "gloss": "a stink; a bad smell",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8090d24f0425cad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a drain, then the Urdu for a sewer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بدبو",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بدبو — badbū — \"a stink; a bad smell\"."
+            },
+            {
+              "kind": "speech",
+              "text": "گٹر سے بدبو آتی ہے۔ gaṭar se badbū ātī hai. The sewer stinks."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بدبو (badbū) is built from Persian bad, \"bad\", and bū, \"a smell\": it is usually traced to Persian badbū."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badbū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badbū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badbū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badbū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaṭar se badbū ātī hai. — The sewer stinks.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaṭar se badbū ātī hai.* — The sewer stinks.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a drain, then the Urdu for a sewer, then say badbū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a drain, then the Urdu for a sewer, then say *badbū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بدبو (badbū) mean? (\"A stink; a bad smell\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C416-phailana",
+      "sequence": 24570,
+      "title": "پھیلانا (phailānā) — to spread (something) around; to strew",
+      "headword": "پھیلانا",
+      "romanization": "phailānā",
+      "gloss": "to spread (something) around; to strew",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e0ea3b0285bcec1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a sewer, then the Urdu for a stink."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پھیلانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پھیلانا — phailānā — \"to spread (something) around; to strew\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کچھ لوگ گلی میں کوڑا پھیلاتے ہیں۔ kuchh log galī meṅ kūṛā phailāte haiṅ. Some people strew rubbish about the lane."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے میز پر نقشہ پھیلایا, us ne mez par naqshā phailāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پھیلانا (phailānā) is built on پھیلنا, \"to spread\": CDIAL lists both, as Hindi phailnā and phailānā, under Sanskrit prathita, \"spread out\" (CDIAL 8651). This is the form for spreading something else."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phailānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phailānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phailānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phailānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuchh log galī meṅ kūṛā phailāte haiṅ. — Some people strew rubbish about the lane.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuchh log galī meṅ kūṛā phailāte haiṅ.* — Some people strew rubbish about the lane.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a sewer, then the Urdu for a stink, then say phailānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a sewer, then the Urdu for a stink, then say *phailānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پھیلانا (phailānā) mean? (\"To spread (something) around; to strew\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C409-agvad",
+  "pathSegment": "GU-PATH-409-LODGE409",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-409-LODGE409",
+      "order": 3
+    }
+  ]
+}

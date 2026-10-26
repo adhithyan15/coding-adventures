@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C475-adakvu",
+    "language": "gujarati",
+    "chapter": 475,
+    "sequence": 26470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50bb761a97fd87c8"
+  },
+  "findings": []
+}

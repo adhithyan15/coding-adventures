@@ -1,0 +1,11 @@
+{
+  "id": "UR-C372-galna",
+  "pathSegment": "UR-PATH-372-JAMNA372",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-372-JAMNA372",
+      "order": 2
+    }
+  ]
+}

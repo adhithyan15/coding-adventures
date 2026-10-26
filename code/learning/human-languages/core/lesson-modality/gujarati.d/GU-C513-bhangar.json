@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C513-bhangar",
+    "language": "gujarati",
+    "chapter": 513,
+    "sequence": 28650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b3bc29f1c84807c"
+  },
+  "findings": []
+}

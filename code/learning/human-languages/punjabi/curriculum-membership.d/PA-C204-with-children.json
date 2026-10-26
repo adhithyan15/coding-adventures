@@ -1,0 +1,11 @@
+{
+  "id": "PA-C204-with-children",
+  "pathSegment": "PA-PATH-204-A2-BACHCHIAN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-204-A2-BACHCHIAN",
+      "order": 3
+    }
+  ]
+}

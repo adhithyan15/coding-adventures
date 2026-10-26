@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:70aaadb6160194b0",
+  "lessonIds": [
+    "GU-C408-saphar",
+    "GU-C408-phero",
+    "GU-C408-ato",
+    "GU-C408-visamo",
+    "GU-C408-tahelvu",
+    "GU-R408-review-401-408"
+  ],
+  "tex": "gujarati/book/chapters/ch408-trips-and-rounds.tex"
+}

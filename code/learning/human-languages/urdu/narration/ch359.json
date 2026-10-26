@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 359,
+  "title": "Even So",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:15cb3e347871e633",
+  "lessons": [
+    {
+      "id": "UR-C359-bavujud",
+      "sequence": 21430,
+      "title": "باوجود (bāvujūd) — despite (کے باوجود)",
+      "headword": "باوجود",
+      "romanization": "bāvujūd",
+      "gloss": "despite (کے باوجود)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98aa6ef10e716aac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a majority, then the Urdu for to spurn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: باوجود",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "باوجود — bāvujūd — \"despite (کے باوجود)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بارش کے باوجود وہ دفتر گیا۔ bārish ke bāvujūd voh daftar gayā. He went to the office despite the rain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "باوجود (bāvujūd) is usually traced to Persian bāvujūd, \"with the existence of\": bā, \"with\", and vujūd, \"existence\", a word Persian took from Arabic."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāvujūd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāvujūd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāvujūd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāvujūd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārish ke bāvujūd voh daftar gayā. — He went to the office despite the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārish ke bāvujūd voh daftar gayā.* — He went to the office despite the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a majority, then the Urdu for to spurn, then say bāvujūd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a majority, then the Urdu for to spurn, then say *bāvujūd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does باوجود (bāvujūd) mean? (\"Despite (کے باوجود (bāvujūd))\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C359-alava",
+      "sequence": 21440,
+      "title": "علاوہ (alāvā) — besides; apart from (کے علاوہ)",
+      "headword": "علاوہ",
+      "romanization": "alāvā",
+      "gloss": "besides; apart from (کے علاوہ)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3bed6dda240d1988",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to spurn, then the Urdu for despite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: علاوہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "علاوہ — alāvā — \"besides; apart from (کے علاوہ)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اس کے علاوہ کوئی راستہ نہیں ہے۔ is ke alāvā koī rāstā nahīṅ hai. Apart from this there is no way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "علاوہ (alāvā) is usually traced, through Persian, to Arabic ʿalāwa, \"an addition\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alāvā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alāvā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alāvā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alāvā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "is ke alāvā koī rāstā nahīṅ hai. — Apart from this there is no way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *is ke alāvā koī rāstā nahīṅ hai.* — Apart from this there is no way.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to spurn, then the Urdu for despite, then say alāvā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to spurn, then the Urdu for despite, then say *alāvā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does علاوہ (alāvā) mean? (\"Besides; apart from (کے علاوہ (alāvā))\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C359-agarche",
+      "sequence": 21450,
+      "title": "اگرچہ (agarche) — even though",
+      "headword": "اگرچہ",
+      "romanization": "agarche",
+      "gloss": "even though",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2577634eb2f2d0d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for despite, then the Urdu for besides."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اگرچہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اگرچہ — agarche — \"even though\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگرچہ وہ بیمار تھا، پھر بھی کام پر آیا۔ agarche voh bīmār thā, phir bhī kām par āyā. Even though he was ill, he still came to work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اگرچہ (agarche) is usually traced to Persian agarchi, \"even if\", built on اگر, \"if\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agarche",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agarche*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agarche, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agarche*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agarche voh bīmār thā, phir bhī kām par āyā. — Even though he was ill, he still came to work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agarche voh bīmār thā, phir bhī kām par āyā.* — Even though he was ill, he still came to work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for despite, then the Urdu for besides, then say agarche again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for despite, then the Urdu for besides, then say *agarche* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اگرچہ (agarche) mean? (\"Even though\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C359-albatta",
+      "sequence": 21460,
+      "title": "البتہ (albattā) — however; mind you",
+      "headword": "البتہ",
+      "romanization": "albattā",
+      "gloss": "however; mind you",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b32720eb02240d18",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for besides, then the Urdu for even though."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: البتہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "البتہ — albattā — \"however; mind you\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کام مشکل ہے، البتہ ناممکن نہیں۔ kām mushkil hai, albattā nāmumkin nahīṅ. The work is hard; it is not impossible, though."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "البتہ (albattā) is usually traced, through Persian, to Arabic al-battata, \"decidedly, by all means\"; in Urdu it brings in a reservation."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "albattā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *albattā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "albattā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *albattā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kām mushkil hai, albattā nāmumkin nahīṅ. — The work is hard; it is not impossible, though.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kām mushkil hai, albattā nāmumkin nahīṅ.* — The work is hard; it is not impossible, though.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for besides, then the Urdu for even though, then say albattā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for besides, then the Urdu for even though, then say *albattā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does البتہ (albattā) mean? (\"However; mind you\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C359-jhukna",
+      "sequence": 21470,
+      "title": "جھکنا (jhuknā) — to give in; to bow",
+      "headword": "جھکنا",
+      "romanization": "jhuknā",
+      "gloss": "to give in; to bow",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c99734f1795c51d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for even though, then the Urdu for however."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جھکنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جھکنا — jhuknā — \"to give in; to bow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مزدور حکومت کے سامنے نہیں جھکے۔ mazdūr hukūmat ke sāmne nahīṅ jhuke. The workers did not give in to the government."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): وہ آخر میں جھک گیا, voh ākhir meṅ jhuk gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جھکنا (jhuknā) is inherited: CDIAL lists the Hindi cousin jhuknā under jhukkati, \"stoops\", a form it reconstructs (CDIAL 5399)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhuknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhuknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhuknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhuknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mazdūr hukūmat ke sāmne nahīṅ jhuke. — The workers did not give in to the government.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mazdūr hukūmat ke sāmne nahīṅ jhuke.* — The workers did not give in to the government.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for even though, then the Urdu for however, then say jhuknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for even though, then the Urdu for however, then say *jhuknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جھکنا (jhuknā) mean? (\"To give in; to bow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

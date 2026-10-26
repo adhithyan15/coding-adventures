@@ -1,0 +1,11 @@
+{
+  "id": "UR-C502-ispring",
+  "pathSegment": "UR-PATH-502-ZANG502",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-502-ZANG502",
+      "order": 4
+    }
+  ]
+}

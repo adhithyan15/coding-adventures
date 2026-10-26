@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:c4272d190ca47c4e",
+  "lessonIds": [
+    "UR-C380-tariqa",
+    "UR-C380-mashq",
+    "UR-C380-himmat",
+    "UR-C380-sujhna",
+    "UR-C380-jutna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch380.txt",
+  "json": "urdu/narration/ch380.json",
+  "textHash": "fnv1a64:efeba15124740887",
+  "jsonHash": "fnv1a64:7f295d1ded9a6d9c",
+  "findings": []
+}

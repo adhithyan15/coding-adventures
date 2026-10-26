@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:346a5f7d580b5419",
+  "lessonIds": [
+    "UR-C469-dakar",
+    "UR-C469-hichki",
+    "UR-C469-khankarna",
+    "UR-C469-balgham",
+    "UR-C469-nazla"
+  ],
+  "tex": "urdu/book/chapters/ch469-hiccups-and-colds.tex"
+}

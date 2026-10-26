@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 322,
+  "title": "The Attack at Dawn",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:38f6c9cc39f82939",
+  "lessons": [
+    {
+      "id": "GU-C322-humlo",
+      "sequence": 17890,
+      "title": "હુમલો (humlo) — an attack",
+      "headword": "હુમલો",
+      "romanization": "humlo",
+      "gloss": "an attack",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e46d31561f9430a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a cannon, then the Gujarati for to pierce."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: હુમલો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હુમલો — humlo — \"an attack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પરોઢે દુશ્મને કિલ્લા પર હુમલો કર્યો. paroḍhe duśmane killā par humlo karyo. At dawn the enemy attacked the fort."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હુમલો (humlo) is usually traced, through Persian, to Arabic ḥamla, \"a charge, an attack\". The place attacked takes પર: કિલ્લા પર હુમલો."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "humlo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *humlo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "humlo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *humlo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paroḍhe duśmane killā par humlo karyo. — At dawn the enemy attacked the fort.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paroḍhe duśmane killā par humlo karyo.* — At dawn the enemy attacked the fort.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a cannon, then the Gujarati for to pierce, then say humlo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a cannon, then the Gujarati for to pierce, then say *humlo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does હુમલો (humlo) mean? (\"An attack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C322-ladai",
+      "sequence": 17900,
+      "title": "લડાઈ (laḍāī) — a battle; a fight",
+      "headword": "લડાઈ",
+      "romanization": "laḍāī",
+      "gloss": "a battle; a fight",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63a4ffb0ecc41680",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to pierce, then the Gujarati for an attack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: લડાઈ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "લડાઈ — laḍāī — \"a battle; a fight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ લડાઈ આખો દિવસ ચાલી. ā laḍāī ākho divas cālī. This battle went on all day."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "લડાઈ (laḍāī) is built on લડવું, to fight, from laḍ, a form CDIAL reconstructs (CDIAL 10920), with the noun ending -āī: the fighting itself, from a quarrel to a battle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laḍāī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laḍāī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laḍāī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laḍāī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā laḍāī ākho divas cālī. — This battle went on all day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā laḍāī ākho divas cālī.* — This battle went on all day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to pierce, then the Gujarati for an attack, then say laḍāī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to pierce, then the Gujarati for an attack, then say *laḍāī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does લડાઈ (laḍāī) mean? (\"A battle; a fight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C322-yoddho",
+      "sequence": 17910,
+      "title": "યોદ્ધો (yoddho) — a warrior",
+      "headword": "યોદ્ધો",
+      "romanization": "yoddho",
+      "gloss": "a warrior",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ee8e9046fbb1dc9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an attack, then the Gujarati for a battle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: યોદ્ધો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "યોદ્ધો — yoddho — \"a warrior\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ગામના યોદ્ધા બહાદુર હતા. gāmnā yoddhā bahādur hatā. The village's warriors were brave."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "goes back to Sanskrit yoddhṛ, \"a fighter, a warrior\" (Monier-Williams), made into a Gujarati noun in -o: યોદ્ધો (yoddho), plural યોદ્ધા."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yoddho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yoddho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yoddho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yoddho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāmnā yoddhā bahādur hatā. — The village's warriors were brave.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāmnā yoddhā bahādur hatā.* — The village's warriors were brave.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an attack, then the Gujarati for a battle, then say yoddho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an attack, then the Gujarati for a battle, then say *yoddho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does યોદ્ધો (yoddho) mean? (\"A warrior\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C322-hanvu",
+      "sequence": 17920,
+      "title": "હણવું (haṇvũ) — to slay",
+      "headword": "હણવું",
+      "romanization": "haṇvũ",
+      "gloss": "to slay",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61493de5150f2499",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a battle, then the Gujarati for a warrior."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: હણવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હણવું — haṇvũ — \"to slay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "યોદ્ધાએ એક વાઘને હણ્યો. yoddhāe ek vāghne haṇyo. The warrior slew a tiger."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે દુશ્મનને હણ્યો, teṇe duśmanne haṇyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હણવું (haṇvũ) is inherited from Sanskrit hánati, \"strikes, kills\", and CDIAL lists the Gujarati verb, \"to strike, kill\" (CDIAL 13963). It is a word of old stories; મારવું is the everyday verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṇvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṇvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṇvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṇvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yoddhāe ek vāghne haṇyo. — The warrior slew a tiger.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yoddhāe ek vāghne haṇyo.* — The warrior slew a tiger.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a battle, then the Gujarati for a warrior, then say haṇvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a battle, then the Gujarati for a warrior, then say *haṇvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does હણવું (haṇvũ) mean? (\"To slay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C322-jhajhumvu",
+      "sequence": 17930,
+      "title": "ઝઝૂમવું (jhajhūmvũ) — to fight on; to struggle",
+      "headword": "ઝઝૂમવું",
+      "romanization": "jhajhūmvũ",
+      "gloss": "to fight on; to struggle",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23dd3e957aca6655",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a warrior, then the Gujarati for to slay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઝઝૂમવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝઝૂમવું — jhajhūmvũ — \"to fight on; to struggle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "સૈનિકો છેલ્લી પળ સુધી ઝઝૂમ્યા. sainiko chellī paḷ sudhī jhajhūmyā. The soldiers fought on to the very last moment."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): તે ખૂબ ઝઝૂમ્યો, te khūb jhajhūmyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝઝૂમવું (jhajhūmvũ) probably belongs with jhujhvũ, to fight, which CDIAL lists for Gujarati under Sanskrit yúdhyatē, \"fights against\" (CDIAL 10502); CDIAL does not list this longer form, so the link is not settled. It is to keep fighting against long odds: છેલ્લી પળ સુધી ઝઝૂમ્યા."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhajhūmvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhajhūmvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhajhūmvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhajhūmvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sainiko chellī paḷ sudhī jhajhūmyā. — The soldiers fought on to the very last moment.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sainiko chellī paḷ sudhī jhajhūmyā.* — The soldiers fought on to the very last moment.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a warrior, then the Gujarati for to slay, then say jhajhūmvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a warrior, then the Gujarati for to slay, then say *jhajhūmvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઝઝૂમવું (jhajhūmvũ) mean? (\"To fight on; to struggle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

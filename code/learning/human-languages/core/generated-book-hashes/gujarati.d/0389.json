@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:801631e9960f556b",
+  "lessonIds": [
+    "GU-C389-nirnay",
+    "GU-C389-marji",
+    "GU-C389-dvidha",
+    "GU-C389-khackavu",
+    "GU-C389-dagvu"
+  ],
+  "tex": "gujarati/book/chapters/ch389-making-a-choice.tex"
+}

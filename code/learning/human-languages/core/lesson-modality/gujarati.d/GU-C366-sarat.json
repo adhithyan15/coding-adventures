@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C366-sarat",
+    "language": "gujarati",
+    "chapter": 366,
+    "sequence": 20380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4446fd2535fc86c"
+  },
+  "findings": []
+}

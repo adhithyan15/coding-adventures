@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-280-DAKU280",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "UR-EXT-280-DAKU280"
+  ],
+  "after": []
+}

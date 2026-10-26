@@ -1,0 +1,11 @@
+{
+  "id": "GU-C290-banduk",
+  "pathSegment": "GU-PATH-290-DAKU290",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-290-DAKU290",
+      "order": 1
+    }
+  ]
+}

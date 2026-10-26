@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C481-rujhavu",
+    "language": "gujarati",
+    "chapter": 481,
+    "sequence": 26750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:473e4a80158ea036"
+  },
+  "findings": []
+}

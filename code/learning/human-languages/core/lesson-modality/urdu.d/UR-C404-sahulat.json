@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C404-sahulat",
+    "language": "urdu",
+    "chapter": 404,
+    "sequence": 23960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d021cfac3d1cbbbd"
+  },
+  "findings": []
+}

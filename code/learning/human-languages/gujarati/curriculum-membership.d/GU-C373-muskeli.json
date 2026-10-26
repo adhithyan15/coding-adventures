@@ -1,0 +1,11 @@
+{
+  "id": "GU-C373-muskeli",
+  "pathSegment": "GU-PATH-373-UPAY373",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-373-UPAY373",
+      "order": 3
+    }
+  ]
+}

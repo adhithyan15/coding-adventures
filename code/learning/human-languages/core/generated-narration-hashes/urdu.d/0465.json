@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:29eeb8e6caf1f676",
+  "lessonIds": [
+    "UR-C465-haddi",
+    "UR-C465-pasli",
+    "UR-C465-khopri",
+    "UR-C465-rirh",
+    "UR-C465-jabra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch465.txt",
+  "json": "urdu/narration/ch465.json",
+  "textHash": "fnv1a64:f245f72dc3292640",
+  "jsonHash": "fnv1a64:d8c4b5d73a07cb69",
+  "findings": []
+}

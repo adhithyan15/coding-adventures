@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-273-COMPARE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "UR-EXT-273-COMPARE"
+  ],
+  "after": []
+}

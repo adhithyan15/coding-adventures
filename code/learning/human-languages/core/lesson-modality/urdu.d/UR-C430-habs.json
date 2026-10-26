@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C430-habs",
+    "language": "urdu",
+    "chapter": 430,
+    "sequence": 25280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e124a8d2b9c64d0"
+  },
+  "findings": []
+}

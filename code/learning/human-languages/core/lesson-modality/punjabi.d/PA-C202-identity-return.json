@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C202-identity-return",
+    "language": "punjabi",
+    "chapter": 202,
+    "sequence": 10970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dacf5b0537d34faf"
+  },
+  "findings": []
+}

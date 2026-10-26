@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-300-AAG300",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how a fire started and who got burnt.",
+  "prerequisites": []
+}

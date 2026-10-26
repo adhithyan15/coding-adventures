@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "Looking for a Job",
+  "label": "ch:gu-looking-for-a-job",
+  "canDo": "I can talk about candidates, interviews, pay and promotion.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C512-badhti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can talk about candidates, interviews, pay and promotion.",
+    "assesses": [
+      "GU-LEX-C512-NOKRI512-03",
+      "GU-LEX-C512-NOKRI512-04",
+      "GU-LEX-C512-NOKRI512-05"
+    ]
+  }
+}

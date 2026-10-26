@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C295-be-hal",
+    "language": "urdu",
+    "chapter": 295,
+    "sequence": 18010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e2a5048b1279b34"
+  },
+  "findings": []
+}

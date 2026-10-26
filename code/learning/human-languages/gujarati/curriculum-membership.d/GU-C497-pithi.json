@@ -1,0 +1,11 @@
+{
+  "id": "GU-C497-pithi",
+  "pathSegment": "GU-PATH-497-KANKOTRI497",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-497-KANKOTRI497",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 547,
+  "sourceHash": "fnv1a64:3c0ec9468ee3cb88",
+  "lessonIds": [
+    "GU-C547-albatt",
+    "GU-C547-hargij",
+    "GU-C547-chata",
+    "GU-C547-balke",
+    "GU-C547-viprit",
+    "GU-R547-review-541-547"
+  ],
+  "tex": "gujarati/book/chapters/ch547-even-so.tex"
+}

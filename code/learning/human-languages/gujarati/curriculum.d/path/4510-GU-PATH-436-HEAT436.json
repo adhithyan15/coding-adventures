@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-436-HEAT436",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GU-EXT-436-HEAT436"
+  ],
+  "after": []
+}

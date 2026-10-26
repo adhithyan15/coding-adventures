@@ -1,3 +1,3 @@
-oracle: pinned historical source, CPython v2.2 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+oracle: pinned historical source, CPython v2.2, v2.4, v2.6 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
 evidence: Objects/intobject.c int_classic_div (nb_divide) -> i_divmod: C quotient, then decremented when the remainder's sign differs from the divisor's (floor)
-result: the subset prints exactly what CPython 2.2 and 2.7.18 print
+result: the subset prints exactly what CPython 2.2, 2.4, 2.6 and 2.7.18 print

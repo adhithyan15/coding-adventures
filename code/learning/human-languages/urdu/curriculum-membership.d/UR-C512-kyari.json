@@ -1,0 +1,11 @@
+{
+  "id": "UR-C512-kyari",
+  "pathSegment": "UR-PATH-512-KYARI512",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-512-KYARI512",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 473,
+  "title": "From Hip to Toe",
+  "label": "ch:gu-from-hip-to-toe",
+  "canDo": "I can name parts of the leg and arm.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C473-bagal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can name parts of the leg and arm.",
+    "assesses": [
+      "GU-LEX-C473-JANGH473-03",
+      "GU-LEX-C473-JANGH473-04",
+      "GU-LEX-C473-JANGH473-05"
+    ]
+  }
+}

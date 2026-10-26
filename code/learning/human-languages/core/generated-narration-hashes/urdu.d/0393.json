@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:c2d6e5425bb6557c",
+  "lessonIds": [
+    "UR-C393-jam",
+    "UR-C393-harn",
+    "UR-C393-kandaktar",
+    "UR-C393-sarakna",
+    "UR-C393-rukvana",
+    "UR-R393-review-386-393"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch393.txt",
+  "json": "urdu/narration/ch393.json",
+  "textHash": "fnv1a64:546227d7c6311682",
+  "jsonHash": "fnv1a64:6f764561bca2a1a4",
+  "findings": []
+}

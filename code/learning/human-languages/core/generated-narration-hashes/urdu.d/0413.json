@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:ac1f28121d8783c9",
+  "lessonIds": [
+    "UR-C413-kothi",
+    "UR-C413-jhonpri",
+    "UR-C413-ahata",
+    "UR-C413-chhappar",
+    "UR-C413-basana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch413.txt",
+  "json": "urdu/narration/ch413.json",
+  "textHash": "fnv1a64:270332a91891de5b",
+  "jsonHash": "fnv1a64:e620d601176f89c8",
+  "findings": []
+}

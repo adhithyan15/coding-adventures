@@ -1,0 +1,11 @@
+{
+  "id": "UR-C300-surkhi",
+  "pathSegment": "UR-PATH-300-KHABAR300",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-300-KHABAR300",
+      "order": 2
+    }
+  ]
+}

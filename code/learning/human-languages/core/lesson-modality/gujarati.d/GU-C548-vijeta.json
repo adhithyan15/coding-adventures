@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C548-vijeta",
+    "language": "gujarati",
+    "chapter": 548,
+    "sequence": 30440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:871cc4a0a26f01a4"
+  },
+  "findings": []
+}

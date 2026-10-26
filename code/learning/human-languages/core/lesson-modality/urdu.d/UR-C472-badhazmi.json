@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C472-badhazmi",
+    "language": "urdu",
+    "chapter": 472,
+    "sequence": 27660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85f61e9dd1c94204"
+  },
+  "findings": []
+}

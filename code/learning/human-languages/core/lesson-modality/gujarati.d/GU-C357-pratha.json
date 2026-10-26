@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C357-pratha",
+    "language": "gujarati",
+    "chapter": 357,
+    "sequence": 19950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24e31c71e8bc3cf9"
+  },
+  "findings": []
+}

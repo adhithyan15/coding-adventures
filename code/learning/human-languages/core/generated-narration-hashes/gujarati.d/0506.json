@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:542c001d1997c772",
+  "lessonIds": [
+    "GU-C506-vankar",
+    "GU-C506-tatno",
+    "GU-C506-vanat",
+    "GU-C506-tanvu",
+    "GU-C506-vintvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch506.txt",
+  "json": "gujarati/narration/ch506.json",
+  "textHash": "fnv1a64:f5d1acbc15287f6d",
+  "jsonHash": "fnv1a64:b7b05d26d18605a2",
+  "findings": []
+}

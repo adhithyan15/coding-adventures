@@ -1,0 +1,11 @@
+{
+  "id": "UR-C363-alamat",
+  "pathSegment": "UR-PATH-363-ANDESHA363",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-363-ANDESHA363",
+      "order": 2
+    }
+  ]
+}

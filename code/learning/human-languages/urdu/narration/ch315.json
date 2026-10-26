@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 315,
+  "title": "Ancestors",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:f1e2cfeaffa4cc4d",
+  "lessons": [
+    {
+      "id": "UR-C315-ajdad",
+      "sequence": 18990,
+      "title": "اجداد (ajdād) — ancestors",
+      "headword": "اجداد",
+      "romanization": "ajdād",
+      "gloss": "ancestors",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d12e23189a43f90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for an inscription, then the Urdu for ancient remains."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اجداد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اجداد — ajdād — \"ancestors\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ہمارے اجداد کسان تھے۔ hamāre ajdād kisān the. Our ancestors were farmers."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, used in the plural."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اجداد (ajdād) is usually traced, through Persian, to Arabic ajdād, the plural of jadd, \"a grandfather\": the grandfathers of the grandfathers."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajdād",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajdād*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajdād, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajdād*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hamāre ajdād kisān the. — Our ancestors were farmers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hamāre ajdād kisān the.* — Our ancestors were farmers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for an inscription, then the Urdu for ancient remains, then say ajdād again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for an inscription, then the Urdu for ancient remains, then say *ajdād* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اجداد (ajdād) mean? (\"Ancestors\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C315-basna",
+      "sequence": 19000,
+      "title": "بسنا (basnā) — to settle; to make a home",
+      "headword": "بسنا",
+      "romanization": "basnā",
+      "gloss": "to settle; to make a home",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da0858c5acd91a91",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for ancient remains, then the Urdu for ancestors."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بسنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بسنا — basnā — \"to settle; to make a home\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وہ دریا کے کنارے بس گئے۔ voh daryā ke kināre bas gae. They settled on the bank of the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): وہ یہاں بس گیا, voh yahāṅ bas gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بسنا (basnā) is inherited: CDIAL lists the Hindi cousin basnā, \"dwells\", under Sanskrit vásati (CDIAL 11435). بستی, a settlement, belongs with it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "basnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *basnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "basnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *basnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "voh daryā ke kināre bas gae. — They settled on the bank of the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *voh daryā ke kināre bas gae.* — They settled on the bank of the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for ancient remains, then the Urdu for ancestors, then say basnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for ancient remains, then the Urdu for ancestors, then say *basnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بسنا (basnā) mean? (\"To settle; to make a home\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C315-nasl",
+      "sequence": 19010,
+      "title": "نسل (nasl) — a generation; a line of descent",
+      "headword": "نسل",
+      "romanization": "nasl",
+      "gloss": "a generation; a line of descent",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccee3d2519c6c350",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for ancestors, then the Urdu for to settle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نسل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نسل — nasl — \"a generation; a line of descent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ہر نسل نے یہ گھر سنبھالا۔ har nasl ne yih ghar sambhālā. Every generation looked after this house."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نسل (nasl) is usually traced, through Persian, to Arabic nasl, \"offspring, descendants\". It is feminine: نئی نسل, the young generation."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nasl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nasl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nasl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nasl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "har nasl ne yih ghar sambhālā. — Every generation looked after this house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *har nasl ne yih ghar sambhālā.* — Every generation looked after this house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for ancestors, then the Urdu for to settle, then say nasl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for ancestors, then the Urdu for to settle, then say *nasl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نسل (nasl) mean? (\"A generation; a line of descent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C315-sadi",
+      "sequence": 19020,
+      "title": "صدی (sadī) — a century",
+      "headword": "صدی",
+      "romanization": "sadī",
+      "gloss": "a century",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19aea7d55363c5f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to settle, then the Urdu for a generation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: صدی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صدی — sadī — \"a century\"."
+            },
+            {
+              "kind": "speech",
+              "text": "یہ گھر دو صدیوں سے یہاں ہے۔ yih ghar do sadiyoṅ se yahāṅ hai. This house has stood here for two centuries."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صدی (sadī) is usually traced to Persian sadī, \"a century\", built on sad, \"a hundred\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sadī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sadī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sadī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sadī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yih ghar do sadiyoṅ se yahāṅ hai. — This house has stood here for two centuries.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yih ghar do sadiyoṅ se yahāṅ hai.* — This house has stood here for two centuries.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to settle, then the Urdu for a generation, then say sadī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to settle, then the Urdu for a generation, then say *sadī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does صدی (sadī) mean? (\"A century\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C315-ujarna",
+      "sequence": 19030,
+      "title": "اجڑنا (ujaṛnā) — to be ruined; to become deserted",
+      "headword": "اجڑنا",
+      "romanization": "ujaṛnā",
+      "gloss": "to be ruined; to become deserted",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce94e20e5d578d79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a generation, then the Urdu for a century."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اجڑنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اجڑنا — ujaṛnā — \"to be ruined; to become deserted\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سیلاب کے بعد گاؤں اجڑ گیا۔ sailāb ke bād gāoṅ ujaṛ gayā. After the flood the village was left deserted."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): وہ شہر اجڑ گیا, voh shahr ujaṛ gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اجڑنا (ujaṛnā) is inherited: CDIAL lists the Hindi cousin ujaṛnā, \"to be uprooted\", under a form it reconstructs (CDIAL 1661). A place اجڑ گیا when its people left or were driven out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ujaṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ujaṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ujaṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ujaṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sailāb ke bād gāoṅ ujaṛ gayā. — After the flood the village was left deserted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sailāb ke bād gāoṅ ujaṛ gayā.* — After the flood the village was left deserted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a generation, then the Urdu for a century, then say ujaṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a generation, then the Urdu for a century, then say *ujaṛnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اجڑنا (ujaṛnā) mean? (\"To be ruined; to become deserted\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R315-review-308-315",
+      "sequence": 19040,
+      "title": "Looking back: from Kings and Emperors to Ancestors",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Kings and Emperors to Ancestors",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85dacb65bd07eae7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for an emperor and a throne."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an emperor, a throne, a crown, a royal court, an heir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an emperor, a throne, a crown, a royal court, an heir]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an attack, a fort, to surround, a cannon, to clash",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an attack, a fort, to surround, a cannon, to clash]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sword, a shield, a spear, a bow for arrows, an army on the march",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sword, a shield, a spear, a bow for arrows, an army on the march]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to defeat, to throw down, a victory, a martyr, a peace settlement",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to defeat, to throw down, a victory, a martyr, a peace settlement]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the subjects (of a ruler), an order, a slave, a rebellion, to challenge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the subjects (of a ruler), an order, a slave, a rebellion, to challenge]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an English person, a movement (of people), a struggle, a sacrifice, to entrust",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an English person, a movement (of people), a struggle, a sacrifice, to entrust]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ruins, to dig, a statue, an inscription, ancient remains",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ruins, to dig, a statue, an inscription, ancient remains]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ancestors, to settle, a generation, a century, to become deserted",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ancestors, to settle, a generation, a century, to become deserted]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An emperor? (شہنشاہ, shahanshāh.) A throne? (تخت, takht.) A crown? (تاج, tāj.) A royal court? (دربار, darbār.) An heir? (وارث, vāris.) An attack? (حملہ, hamlā.) A fort? (قلعہ, qilā.) To surround? (گھیرنا, ghernā.) A cannon? (توپ, top.) To clash? (بھڑنا, bhiṛnā.) A sword? (تلوار, talvār.) A shield? (ڈھال, ḍhāl.) A spear? (بھالا, bhālā.) A bow for arrows? (کمان, kamān.) An army on the march? (لشکر, lashkar.) To defeat? (ہرانا, harānā.) To throw down? (پچھاڑنا, pachhāṛnā.) A victory? (فتح, fateh.) A martyr? (شہید, shahīd.) A peace settlement? (صلح, sulah.) The subjects (of a ruler)? (رعایا, riāyā.) An order? (حکم, hukm.) A slave? (غلام, ghulām.) A rebellion? (بغاوت, baghāvat.) To challenge? (للکارنا, lalkārnā.) An English person? (انگریز, angrez.) A movement (of people)? (تحریک, tahrīk.) A struggle? (جدوجہد, jaddojahd.) A sacrifice? (قربانی, qurbānī.) To entrust? (سونپنا, saunpnā.) Ruins? (کھنڈر, khanḍar.) To dig? (کھودنا, khodnā.) A statue? (مجسمہ, mujassamā.) An inscription? (کتبہ, katbā.) Ancient remains? (آثار, āsār.) Ancestors? (اجداد, ajdād.) To settle? (بسنا, basnā.) A generation? (نسل, nasl.) A century? (صدی, sadī.) To become deserted? (اجڑنا, ujaṛnā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

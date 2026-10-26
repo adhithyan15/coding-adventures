@@ -1,0 +1,11 @@
+{
+  "id": "UR-C360-hamdardi",
+  "pathSegment": "UR-PATH-360-RAHM360",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-360-RAHM360",
+      "order": 1
+    }
+  ]
+}

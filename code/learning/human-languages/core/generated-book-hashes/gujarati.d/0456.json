@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:299c8cf6eb16ddac",
+  "lessonIds": [
+    "GU-C456-dubhavu",
+    "GU-C456-mathu",
+    "GU-C456-mahenu",
+    "GU-C456-avganna",
+    "GU-C456-thes"
+  ],
+  "tex": "gujarati/book/chapters/ch456-hurt-feelings.tex"
+}

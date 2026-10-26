@@ -1,0 +1,11 @@
+{
+  "id": "GU-C491-salo",
+  "pathSegment": "GU-PATH-491-JAMAI491",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-491-JAMAI491",
+      "order": 1
+    }
+  ]
+}
