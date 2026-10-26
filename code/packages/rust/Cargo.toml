@@ -1305,6 +1305,7 @@ members = [
   "ibm704-gatelevel",
   "ibm-system360-simulator",
   "ibm-system360-gatelevel",
+  "ibm-system370-simulator",
   "ge225-gatelevel",
   "cdc6600-simulator",
   "cdc6600-gatelevel",
