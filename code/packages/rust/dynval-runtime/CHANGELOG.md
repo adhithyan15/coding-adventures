@@ -17,9 +17,11 @@ reachable under `code/scripts/miri-twig-vm.sh` (an earlier stdin-reading test
 used to abort the run first).
 
 `alloc_cons` now uses `Box::into_raw(cell)`, whose `*mut` carries full write
-permission; the leak-forever semantics are unchanged. Closures and strings are
-never written after allocation, so their `Box::leak … as *const` paths stay
-as they are.
+permission; the leak-forever semantics are unchanged. `alloc_closure`,
+`alloc_builtin_closure` and `alloc_string` switch to `Box::into_raw` too. They
+are never written through after allocation today, but a later pass (capture
+patching, a GC forwarding word, header flags) would hit the same UB through a
+read-only tag (security-review hardening).
 
 ### Added — regression test in this crate's blocking Miri suite
 

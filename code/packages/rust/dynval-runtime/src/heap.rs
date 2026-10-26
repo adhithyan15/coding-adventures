@@ -399,8 +399,11 @@ pub unsafe fn set_field_unchecked(
 /// Same PR 2 vs. future-PR contract as [`alloc_cons`].
 pub fn alloc_closure(fn_name: SymbolId, captures: Vec<LispyValue>) -> LispyValue {
     let clos = Box::new(Closure::new(fn_name, captures));
-    let ptr = Box::leak(clos) as *const Closure;
-    // SAFETY: Box::leak'd Closure is 8-aligned (const_assert) and lives forever.
+    // `Box::into_raw`, not `Box::leak(..) as *const`, for the reason spelled
+    // out in `alloc_cons`: the exposed tag must stay write-capable in case a
+    // later pass (capture patching, a GC forwarding word) writes through it.
+    let ptr: *const Closure = Box::into_raw(clos);
+    // SAFETY: the leaked Closure is 8-aligned (const_assert) and lives forever.
     unsafe { LispyValue::from_heap(ptr) }
 }
 
@@ -413,8 +416,11 @@ pub fn alloc_closure(fn_name: SymbolId, captures: Vec<LispyValue>) -> LispyValue
 /// routes through `LispyBinding::resolve_builtin`.
 pub fn alloc_builtin_closure(fn_name: SymbolId) -> LispyValue {
     let clos = Box::new(Closure::new_builtin(fn_name));
-    let ptr = Box::leak(clos) as *const Closure;
-    // SAFETY: Box::leak'd Closure is 8-aligned (const_assert) and lives forever.
+    // `Box::into_raw`, not `Box::leak(..) as *const`, for the reason spelled
+    // out in `alloc_cons`: the exposed tag must stay write-capable in case a
+    // later pass (capture patching, a GC forwarding word) writes through it.
+    let ptr: *const Closure = Box::into_raw(clos);
+    // SAFETY: the leaked Closure is 8-aligned (const_assert) and lives forever.
     unsafe { LispyValue::from_heap(ptr) }
 }
 
@@ -441,8 +447,9 @@ pub fn alloc_builtin_closure(fn_name: SymbolId) -> LispyValue {
 /// ```
 pub fn alloc_string(bytes: &[u8]) -> LispyValue {
     let s = Box::new(LangString::new(bytes));
-    let ptr = Box::leak(s) as *const LangString;
-    // SAFETY: Box::leak'd LangString is 8-aligned (compile-time const_assert)
+    // `Box::into_raw` for the same write-capable tag as `alloc_cons`.
+    let ptr: *const LangString = Box::into_raw(s);
+    // SAFETY: the leaked LangString is 8-aligned (compile-time const_assert)
     // and lives forever (intentional PR 2 leak).
     unsafe { LispyValue::from_heap(ptr) }
 }
