@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "JA-W256-jin-kanji",
+    "language": "japanese",
+    "chapter": 256,
+    "sequence": 15340,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:91ce3d451b413f1f",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

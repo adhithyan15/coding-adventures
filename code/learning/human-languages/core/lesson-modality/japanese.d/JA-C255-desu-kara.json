@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C255-desu-kara",
+    "language": "japanese",
+    "chapter": 255,
+    "sequence": 15280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7eff6205cad2d0da"
+  },
+  "findings": []
+}

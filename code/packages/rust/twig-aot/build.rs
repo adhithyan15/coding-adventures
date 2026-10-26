@@ -159,12 +159,40 @@ fn main() {
     if host_key.is_some() {
         let cargo = std::env::var("CARGO").unwrap_or_else(|_| "cargo".into());
         let gc_target = out_dir.join("gc-core-capi-build");
+        // Frame pointers are load-bearing for the precise collector. Its walk
+        // anchors at `current_fp()` inside `__gc_collect_precise` and follows the
+        // `[fp] = caller fp, [fp + 8] = return address` chain into the compiled
+        // Twig frames, whose stack maps name their exact reference slots. A
+        // `--release` build without frame pointers leaves `rbp` holding whatever
+        // the caller had in it: on rustc 1.97 that is the mutator's own frame
+        // pointer, so the innermost Twig frame is never resolved against its
+        // stack map and falls into the conservative `[sp, start_fp)` region
+        // (precise collection silently degrades to conservative), and in general
+        // `rbp` may be any value, which `stack_scan.rs` documents as unsafe once
+        // maps are registered. `-Cforce-frame-pointers=yes` makes every function
+        // in the archive keep the classic chain on SysV x86-64 and AArch64.
+        // It is NOT enough on Windows x64: there LLVM sets the frame pointer
+        // with `lea rbp, [rsp+N]` even under this flag, so `[rbp]` is not a
+        // saved-rbp record (see `windows_x86_64_smoke.rs`, whose precise-GC
+        // tests stay skipped for that reason).
+        //
+        // The flag is appended to the outer build's own encoded rustflags (cargo
+        // hands them to build scripts as `CARGO_ENCODED_RUSTFLAGS`, separated by
+        // 0x1f), so a caller's flags still reach the nested build. They are kept
+        // as an `OsString`: a non-UTF-8 flag (a path) must pass through, not
+        // make `env::var` fail and drop every outer flag.
+        let mut rustflags = std::env::var_os("CARGO_ENCODED_RUSTFLAGS").unwrap_or_default();
+        if !rustflags.is_empty() {
+            rustflags.push("\x1f");
+        }
+        rustflags.push("-Cforce-frame-pointers=yes");
         let status = std::process::Command::new(&cargo)
             .args(["build", "--release", "-p", "gc-core-capi", "--target-dir"])
             .arg(&gc_target)
             // Do not inherit the outer build's CARGO_TARGET_DIR — that would
             // point the nested build back at the locked outer target dir.
             .env_remove("CARGO_TARGET_DIR")
+            .env("CARGO_ENCODED_RUSTFLAGS", rustflags)
             .status()
             .expect("spawn nested cargo build for gc-core-capi staticlib");
         assert!(status.success(), "gc-core-capi staticlib build failed");
