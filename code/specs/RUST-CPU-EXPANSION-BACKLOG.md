@@ -75,7 +75,7 @@ architecture/core introduction era, not a claim about a particular chip.
 
 | Priority | Target | Finding / next action |
 |---:|---|---|
-| P1 active | AArch64 gate 32-bit carry authority | The 32-bit ADD flag path routes operands through repository adders but recovers carry with a host `u64 > u32::MAX` comparison. Replace that shortcut with the carry-out wire of an exact-width ripple network and pin the boundary with tests. Follow-up audits still need to cost host decode and fetch assembly separately. |
+| P1 complete locally | AArch64 gate 32-bit carry authority | The 32-bit ADD/SUB flag path now takes carry and overflow directly from exact-width ripple networks; host sum comparisons are gone. Width-edge tests, all seven topology/datapath tests, six lifecycle suites, all 836 Python differential vectors, strict checks, and 97.79% line coverage pass. Follow-up audits still need to cost host decode and fetch assembly separately. |
 
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,
   bitfield, saturation, dual-register, byte/halfword exclusive, and remaining

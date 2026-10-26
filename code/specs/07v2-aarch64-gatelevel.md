@@ -84,4 +84,5 @@ The completed package passes seven topology/datapath unit tests, six lifecycle
 and fault suites, and all 836 Python full-state transitions in complete
 trace/state lockstep with the functional oracle. The historical Python
 AArch64 gate package's 256 tests also pass. Strict formatting, Clippy, and
-rustdoc pass. Package line coverage is 97.45% (763/783).
+rustdoc pass. The exact-width carry repair is covered by 32-bit carry and
+signed-overflow boundaries; package line coverage is 97.79% (1,105/1,130).
