@@ -23,6 +23,8 @@ const APSR_Z: u32 = 1 << 30;
 const APSR_C: u32 = 1 << 29;
 const APSR_V: u32 = 1 << 28;
 const APSR_Q: u32 = 1 << 27;
+const APSR_GE_SHIFT: u32 = 16;
+const APSR_GE_MASK: u32 = 0xf << APSR_GE_SHIFT;
 const FPSCR_N: u32 = 1 << 31;
 const FPSCR_Z: u32 = 1 << 30;
 const FPSCR_C: u32 = 1 << 29;
@@ -274,6 +276,7 @@ impl CortexM4Simulator {
 
         if let Some(class) = classify_extension(first, second) {
             let second = second.expect("extension instructions are 32-bit");
+            validate_extension_operands(first, second, class, pc)?;
             let mut next = try_clone_state(&before)?;
             next.core.pc = pc.wrapping_add(4);
             let mnemonic = if before.core.itstate != 0
@@ -301,6 +304,7 @@ impl CortexM4Simulator {
         let core_trace = core.step()?;
         let mut next = try_clone_state(&before)?;
         next.core = core_trace.state_after;
+        integrate_inherited_ge(&before, &mut next, first, second, core_trace.mnemonic);
         let trace = StepTrace {
             pc_before: core_trace.pc_before,
             pc_after: core_trace.pc_after,
@@ -428,6 +432,77 @@ fn execute_extension(
         InstructionClass::FloatingPointCompare => execute_fp_compare(state, first, second, pc),
         InstructionClass::FloatingPointStatus => execute_fp_status(state, first, second, pc),
         InstructionClass::Core(_) => unreachable!("core classes use the Cortex-M3 oracle"),
+    }
+}
+
+fn validate_extension_operands(
+    first: u16,
+    second: u16,
+    class: InstructionClass,
+    pc: u32,
+) -> Result<(), CortexM4Error> {
+    match class {
+        InstructionClass::Saturating if first & 0xfff0 == 0xfa80 => {
+            let rd = ((second >> 8) & 0xf) as u8;
+            let rn = (first & 0xf) as u8;
+            let rm = (second & 0xf) as u8;
+            require_general_registers(first, second, pc, &[rd, rn, rm])
+        }
+        InstructionClass::Saturating => {
+            let rd = ((second >> 8) & 0xf) as u8;
+            let rn = (first & 0xf) as u8;
+            require_general_registers(first, second, pc, &[rd, rn])
+        }
+        InstructionClass::ParallelBytes => {
+            let rd = ((second >> 8) & 0xf) as u8;
+            let rn = (first & 0xf) as u8;
+            let rm = (second & 0xf) as u8;
+            require_general_registers(first, second, pc, &[rd, rn, rm])
+        }
+        InstructionClass::DspMultiply => {
+            let rd = ((second >> 8) & 0xf) as u8;
+            let rn = (first & 0xf) as u8;
+            let rm = (second & 0xf) as u8;
+            let ra = ((second >> 12) & 0xf) as u8;
+            require_general_registers(first, second, pc, &[rd, rn, rm])?;
+            if ra == PC {
+                Ok(())
+            } else {
+                require_general_registers(first, second, pc, &[ra])
+            }
+        }
+        InstructionClass::FloatingPointStatus => {
+            let rt = ((second >> 12) & 0xf) as u8;
+            require_general_registers(first, second, pc, &[rt])
+        }
+        InstructionClass::FloatingPointBinary
+        | InstructionClass::FloatingPointUnary
+        | InstructionClass::FloatingPointCompare => Ok(()),
+        InstructionClass::Core(_) => unreachable!("core classes use the Cortex-M3 oracle"),
+    }
+}
+
+fn integrate_inherited_ge(
+    before: &CortexM4State,
+    next: &mut CortexM4State,
+    first: u16,
+    second: Option<u16>,
+    mnemonic: &str,
+) {
+    let Some(second) = second else {
+        return;
+    };
+    let sysm = second as u8;
+    if sysm > 3 {
+        return;
+    }
+    if mnemonic == "mrs" && first == 0xf3ef {
+        let rd = usize::from(((second >> 8) & 0xf) as u8);
+        next.core.registers[rd] =
+            (next.core.registers[rd] & !APSR_GE_MASK) | (u32::from(before.ge) << APSR_GE_SHIFT);
+    } else if mnemonic == "msr" && first & 0xfff0 == 0xf380 {
+        let rn = usize::from((first & 0xf) as u8);
+        next.ge = ((before.core.registers[rn] & APSR_GE_MASK) >> APSR_GE_SHIFT) as u8;
     }
 }
 

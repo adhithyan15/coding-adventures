@@ -1,6 +1,6 @@
 use cortex_m4_simulator::{
     classify,
-    core_encoding::{bkpt, it, movs, nop, program},
+    core_encoding::{bkpt, it, movs, mrs, msr, nop, program},
     encoding::*,
     CortexM3Error, CortexM4Error, CortexM4Simulator, CortexM4State, InstructionClass,
     MAX_RETAINED_STEPS, MEMORY_SIZE,
@@ -178,6 +178,72 @@ fn parallel_byte_adds_update_ge_per_lane() {
     assert_eq!(unsigned.step().unwrap().mnemonic, "uadd8");
     assert_eq!(unsigned.read_register(3).unwrap(), 0x0002_10ff);
     assert_eq!(unsigned.get_state().ge, 0b1010);
+}
+
+#[test]
+fn parallel_ge_round_trips_through_inherited_apsr_transport() {
+    let add = uadd8(2, 0, 1);
+    let reads = [mrs(3, 0), mrs(4, 1), mrs(5, 2), mrs(6, 3)];
+    let mut code = vec![add[0], add[1]];
+    for read in reads {
+        code.extend(read);
+    }
+    let mut simulator = loaded(&code);
+    simulator.write_register(0, 0xff00_ff00).unwrap();
+    simulator.write_register(1, 0x0100_0100).unwrap();
+    simulator.step().unwrap();
+    assert_eq!(simulator.get_state().ge, 0b1010);
+    for _ in 0..4 {
+        simulator.step().unwrap();
+    }
+    for register in 3..=6 {
+        assert_eq!(
+            simulator.read_register(register).unwrap() >> 16 & 0xf,
+            0b1010
+        );
+    }
+
+    for sysm in 0..=3 {
+        let write = msr(0, sysm);
+        let read = mrs(1, sysm);
+        let mut unprivileged = loaded(&[write[0], write[1], read[0], read[1]]);
+        let mut state = unprivileged.get_state();
+        state.core.control = 1;
+        unprivileged.restore(state).unwrap();
+        unprivileged.write_register(0, 0x000d_0000).unwrap();
+        let write_trace = unprivileged.step().unwrap();
+        assert_eq!(write_trace.mnemonic, "msr");
+        assert_eq!(write_trace.state_after.ge, 0b1101);
+        let read_trace = unprivileged.step().unwrap();
+        assert_eq!(read_trace.mnemonic, "mrs");
+        assert_eq!(unprivileged.read_register(1).unwrap() >> 16 & 0xf, 0b1101);
+    }
+}
+
+#[test]
+fn false_it_preserves_ge_on_inherited_apsr_transport() {
+    let write = msr(1, 0);
+    let mut skipped_write = loaded(&[movs(0, 1), it(0, 8), write[0], write[1]]);
+    let mut state = skipped_write.get_state();
+    state.ge = 0b0011;
+    skipped_write.restore(state).unwrap();
+    skipped_write.write_register(1, 0x000c_0000).unwrap();
+    skipped_write.step().unwrap();
+    skipped_write.step().unwrap();
+    assert_eq!(skipped_write.step().unwrap().mnemonic, "it-skip");
+    assert_eq!(skipped_write.get_state().ge, 0b0011);
+
+    let read = mrs(1, 0);
+    let mut skipped_read = loaded(&[movs(0, 1), it(0, 8), read[0], read[1]]);
+    let mut state = skipped_read.get_state();
+    state.ge = 0b1010;
+    skipped_read.restore(state).unwrap();
+    skipped_read.write_register(1, 0xfeed_face).unwrap();
+    skipped_read.step().unwrap();
+    skipped_read.step().unwrap();
+    assert_eq!(skipped_read.step().unwrap().mnemonic, "it-skip");
+    assert_eq!(skipped_read.read_register(1).unwrap(), 0xfeed_face);
+    assert_eq!(skipped_read.get_state().ge, 0b1010);
 }
 
 #[test]
@@ -478,6 +544,57 @@ fn reserved_extension_operands_are_typed_and_atomic() {
             simulator.step(),
             Err(CortexM4Error::UnknownInstruction32 { .. })
         ));
+        assert_eq!(simulator.get_state(), before);
+    }
+}
+
+#[test]
+fn false_it_still_rejects_every_reserved_extension_gpr_position() {
+    let mut invalid = Vec::new();
+    for register in [13, 15] {
+        invalid.extend([
+            qadd(register, 1, 2),
+            qadd(0, register, 2),
+            qadd(0, 1, register),
+            qsub(register, 1, 2),
+            qsub(0, register, 2),
+            qsub(0, 1, register),
+            ssat(register, 8, 1),
+            ssat(0, 8, register),
+            usat(register, 8, 1),
+            usat(0, 8, register),
+            sadd8(register, 1, 2),
+            sadd8(0, register, 2),
+            sadd8(0, 1, register),
+            uadd8(register, 1, 2),
+            uadd8(0, register, 2),
+            uadd8(0, 1, register),
+            smuad(register, 1, 2),
+            smuad(0, register, 2),
+            smuad(0, 1, register),
+            smlad(register, 1, 2, 3),
+            smlad(0, register, 2, 3),
+            smlad(0, 1, register, 3),
+            vmrs(register),
+            vmsr(register),
+        ]);
+    }
+    invalid.push(smlad(0, 1, 2, 13));
+
+    for [first, second] in invalid {
+        let mut simulator = loaded(&[movs(0, 1), it(0, 8), first, second]);
+        simulator.set_fpu_enabled(true);
+        simulator.step().unwrap();
+        simulator.step().unwrap();
+        let before = simulator.get_state();
+        assert_eq!(
+            simulator.step(),
+            Err(CortexM4Error::UnknownInstruction32 {
+                first,
+                second,
+                pc: ORIGIN + 4,
+            })
+        );
         assert_eq!(simulator.get_state(), before);
     }
 }

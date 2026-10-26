@@ -76,9 +76,13 @@ disabled-FPU, invalid-control, out-of-range, lifecycle, breakpoint, and SVC
 faults preserve the entire prior state.
 
 DSP saturation sets sticky APSR.Q. Parallel byte arithmetic writes APSR.GE
-lane results. SMUAD/SMLAD perform signed dual-halfword products and set sticky
-Q only when the 32-bit result overflows. FPU operations update
-FPSCR cumulative exception flags while preserving supported control bits;
+lane results. Inherited MRS/MSR transfers include GE bits 19:16 for the bounded
+APSR system-register variants, including unprivileged and conditional IT
+execution. SMUAD/SMLAD perform signed dual-halfword products and set sticky Q
+only when the 32-bit result overflows. Extension operand and destination
+constraints are validated before an IT condition can skip execution. FPU
+operations update FPSCR cumulative exception flags while preserving supported
+control bits;
 VCMP updates FPSCR.NZCV exactly. VMRS/VMSR transport the bounded FPSCR through
 integer registers.
 
@@ -99,8 +103,8 @@ The cell is complete only when it has:
    FPU state/arithmetic/compare/status behavior;
 3. transactional load, restore, step, run, execute, fetch, bounds, FPU
    configuration, and retention tests;
-4. release line coverage above 80 percent (completion baseline: 92.10 percent,
-   933/1013 lines); and
+4. release line coverage above 80 percent (completion baseline: 92.33 percent,
+   987/1069 lines); and
 5. Rustfmt, strict Clippy, rustdoc, release tests, BUILD integration, lessons
    validation, affected-package checks, and independent security review before
    publication.

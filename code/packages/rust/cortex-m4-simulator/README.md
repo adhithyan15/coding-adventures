@@ -25,10 +25,11 @@ invalid; signaling NaNs additionally set the cumulative invalid flag.
 
 ## Verification
 
-The 24-test completion suite covers inherited Cortex-M3 execution, every
+The 27-test completion suite covers inherited Cortex-M3 execution, every
 bounded DSP and FPU family, configuration and status transport, complete state
 restore, typed atomic faults including final-snapshot allocation rollback,
 inherited-candidate allocation rollback, exact binary32 status, bounded
-rollback, and exact traces. Release tests, strict Clippy, and rustdoc warnings
-pass. The completion baseline is updated to 92.10 percent line coverage
-(933/1013) from the measured release run.
+rollback, APSR.GE system-register round trips, pre-IT operand validation, and
+exact traces. Release tests, strict Clippy, and rustdoc warnings pass. The
+completion baseline is updated to 92.33 percent line coverage (987/1069) from
+the measured release run.
