@@ -1,5 +1,18 @@
 # Changelog — iir-to-beam
 
+## Unreleased — LANG83 PR7e — no float writers
+
+- `write_f64_py` / `write_f64_js` leave `OP_SUPPORT` and the validator's
+  builtin list, and the module no longer carries `'__iir_write_f64'/2`: a
+  module that calls either is refused. `'__iir_f64_shortest'/1` and the two
+  PR7b queries are unchanged, except that a module using them no longer
+  interns the writer-only imports (`lists:duplicate/2`, `lists:nthtail/2`,
+  `erlang:integer_to_list/1`) and literals, and the parse's frame shrinks
+  from 10 to 8 Y slots (the two that only the writer read).
+- Tests: `retired_float_writers_are_refused` replaces the writer tests; the
+  PR7b test also pins that the writer-only imports are absent and that a
+  module function may not take a helper's name.
+
 ## Unreleased — LANG83 PR7d — `Trap.Unbound`
 
 - `trap` validates its kind with `exception_kind::is_trap_kind` (LANG83 PR7d

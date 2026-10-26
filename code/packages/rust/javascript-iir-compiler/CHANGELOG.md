@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased - the crate owns its `Number::toString` oracle (LANG83 PR7e)
+
+### Changed
+
+- `write_number_matches_the_pr6a_layout_byte_for_byte` (was
+  `…_formatter_…`) compares the 1,200 values with a test-local
+  `number_to_string_oracle` over `vm_core::float_format::shortest_digits`,
+  because LANG83 PR7e removed vm-core's `format_f64` with the `write_f64_js`
+  builtin. `the_oracle_matches_host_node` pins the oracle to strings host
+  `node` printed. No code change: the compiler has emitted no `write_f64_js`
+  since 0.7.0.
+
 ## Unreleased - ReferenceError traps `Trap.Unbound` (LANG83 PR7d)
 
 ### Changed

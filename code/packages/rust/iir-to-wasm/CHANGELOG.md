@@ -1,5 +1,18 @@
 # Changelog — iir-to-wasm
 
+## Unreleased — LANG83 PR7e — no float writers
+
+- `write_f64_py` / `write_f64_js` leave `OP_SUPPORT` and the validator's
+  builtin list, and `lang83_f64.rs` loses its writer group
+  (`$__iir_write_f64`, `put_digits`, `put_repeat`): a module that calls
+  either is refused. `build_f64_helpers(base, scratch)` builds the ten
+  computing helpers only, which import nothing.
+- Tests: the writer tests are replaced by `retired_float_writers_are_refused`;
+  the scratch-region test runs the digit search on the widest values between
+  two string prints; the PR6c edge table prints `class digits exp10 sign`
+  (the test host gains `env.__write_i64`); `pr7b_digit_core_is_emitted_once`
+  replaces the writer-sharing test.
+
 ## Unreleased — LANG83 PR7d — `Trap.Unbound`
 
 - The validator checks a `trap` kind with `exception_kind::is_trap_kind`

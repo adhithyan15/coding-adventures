@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased - the crate owns its `repr` oracle (LANG83 PR7e)
+
+- `write_float_matches_the_pr6a_repr_byte_for_byte` (was
+  `…_pr6a_python_repr_…`) compares the 1,248 values with a test-local
+  `repr_oracle` over `vm_core::float_format::shortest_digits`, because LANG83
+  PR7e removed vm-core's `python_repr` with the `write_f64_py` builtin; it
+  still also runs host `python3` when installed.
+  `the_repr_oracle_matches_host_python3` pins the oracle to strings host
+  `python3` printed. No code change: the release path has emitted no
+  `write_f64_py` since 0.4.0.
+
 ## 0.4.0 - Unreleased - the compiler writes `repr(float)` (LANG83 PR7c-py)
 
 LANG83 PR7 says the IIR names no source language. This release takes

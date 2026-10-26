@@ -1,5 +1,28 @@
 # Changelog — interpreter-ir
 
+## Unreleased — LANG83 PR7e — no float writers, and no language names
+
+- **Breaking:** `write_f64_py` and `write_f64_js` are removed from
+  `op_registry::STANDARD_OPS`, with `LANG83_PR6A` and `OpSpec::is_pr6a`.
+  They printed a float in Python's `repr` or JavaScript's `Number::toString`
+  layout, so every backend carried two languages' rules. Since LANG83
+  PR7c-js / PR7c-py each compiler prints a float with its own module-local
+  helper over `f64_class` / `f64_digits` / `f64_exp10`, so nothing emits them.
+- New `op_registry::language_name_violation(name)` and `LANGUAGE_TOKENS`
+  (LANG83 PR7's "no-language-names" rule): the name is split on `_` and `.`,
+  and a part that is a language token (`py`, `python`, `js`, `ecma`, `rb`,
+  `ruby`, `pl`, `perl`, `lisp`, `scheme`, `twig`, `basic`, `algol`, `cobol`,
+  `fortran`, …) or that reads as a language's exception class (it ends in
+  `error` or `exception`, like `ReferenceError`) is refused.
+- Tests: `no_registry_name_or_trap_kind_names_a_language` runs the rule over
+  every registry name and every trap kind;
+  `the_language_name_rule_rejects_the_retired_names` pins that
+  `write_f64_py`, `write_f64_js`, `py_print_float`, `Trap.ReferenceError`,
+  `Ruby.ZeroDivisionError` and others are caught, unregistered and not trap
+  kinds, while `f64_digits`, `Trap.Unbound`, `equal?` and `adjust_plus` (a
+  token inside a word is not a part) pass. `pr6a_set_is_exactly_the_two_float_writers`
+  is removed.
+
 ## Unreleased — LANG83 PR7d — `Trap.Unbound`, and no language trap kinds
 
 - **Breaking:** `exception_kind::TRAP_REFERENCE_ERROR` (`"Trap.ReferenceError"`)

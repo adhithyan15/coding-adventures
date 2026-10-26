@@ -1,5 +1,17 @@
 # Changelog — iir-to-cil-bytecode
 
+## Unreleased — LANG83 PR7e — no float writers
+
+- `write_f64_py` / `write_f64_js` leave `OP_SUPPORT` and the validator's
+  builtin list, and the textual path no longer emits the IL helper
+  `__iir_write_f64(float64, int32)`: a module that calls either is refused on
+  both paths. The `"R"` digit parse `__iir_f64_shortest` and the two PR7b
+  helpers are unchanged.
+- Tests: the writer's stack-shape, call-site and layout-model tests are
+  replaced by `retired_float_writers_are_refused` and
+  `the_models_dotnet_r_style_matches_dotnet`; the IL model still runs the
+  PR7b helpers over the whole table in every `"R"` style.
+
 ## Unreleased — LANG83 PR7d — `Trap.Unbound`
 
 - `trap` validates its kind with `exception_kind::is_trap_kind` (LANG83 PR7d

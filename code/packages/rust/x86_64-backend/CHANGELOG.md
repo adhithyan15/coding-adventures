@@ -1,5 +1,16 @@
 # Changelog — `x86_64-backend`
 
+## Unreleased — LANG83 PR7e — no float writers
+
+- `write_f64_py` / `write_f64_js` leave the V1 builtin table and
+  `OP_SUPPORT`: a `call_builtin` of either is now an unknown builtin,
+  refused, and nothing calls `__twig_write_f64_*` (removed from the native
+  runtime). `f64_digits` / `f64_exp10` still call `__twig_f64_digits` /
+  `__twig_f64_exp10` with the raw bits in `rdi` / `rcx`.
+- Tests: `float_writers_pass_the_raw_bits_in_rdi` is replaced by
+  `retired_float_writers_are_unknown_builtins`; the bits-in-a-GPR contract
+  stays pinned by `f64_digits_and_exp10_call_the_runtime_with_the_bits`.
+
 ## Unreleased — LANG83 PR7b — the language-neutral float primitives
 
 - `f64_class` lowers inline and branch-free on the raw bits: `shl`/`shr`

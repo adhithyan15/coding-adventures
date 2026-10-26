@@ -1,4 +1,16 @@
 # Changelog — iir-to-llvm
+## Unreleased — LANG83 PR7e — no float writers
+
+- `write_f64_py` / `write_f64_js` leave `SUPPORTED_BUILTINS` and
+  `OP_SUPPORT`, and `lang83_f64.rs` loses its writer half
+  (`LANG83_F64_WRITE_LL`: `@__iir_write_f64`, `@__iir_put_digits`, …). A
+  module that calls either is refused at lowering. The digit core and the
+  two PR7b wrappers (`LANG83_F64_DIGITS_LL`, all `internal`) are unchanged and
+  are emitted only for `f64_digits` / `f64_exp10`.
+- Tests: `retired_float_writers_are_refused` replaces the writer tests; the
+  PR6c edge table on real clang prints each result as `class digits exp10
+  signbit` instead of through `write_f64_js`.
+
 ## Unreleased — LANG83 PR7d — `Trap.Unbound`
 
 - No code change: the trap message comes from

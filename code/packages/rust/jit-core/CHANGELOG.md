@@ -5,6 +5,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Unreleased — LANG83 PR7e — no float writers
+
+- **Breaking:** `write_f64_py` / `write_f64_js` leave `OP_SUPPORT`, and the
+  `CALL_BUILTIN_F64` bytecode (0x51) that handed a float register to their
+  handler is removed. 0x51 stays unassigned, so stale bytecode naming it is an
+  unknown opcode and fails closed. A `call_builtin` that reads a float
+  register now refuses the function like any other non-float use of one.
+  `PARAM_F64`, `const_f64` and every float op are unchanged.
+- New `GenericCirJit::builtin_names()`: the registered builtins, sorted.
+- Tests: the PR6a float-register tests observe the bits through `ret_f64`
+  instead of a writer; `run_ieee` returns the result and prints only its sign
+  bit; `the_retired_call_builtin_f64_byte_is_an_unknown_opcode` and a
+  "retired float writer" refusal row replace the writer tests.
+
 ## Unreleased — LANG83 PR7d — `Trap.Unbound`
 
 - No code change: `TRAP 7` reports its kind through

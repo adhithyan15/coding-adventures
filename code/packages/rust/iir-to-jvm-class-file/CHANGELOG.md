@@ -1,5 +1,17 @@
 # Changelog — iir-to-jvm-class-file
 
+## Unreleased — LANG83 PR7e — no float writers
+
+- `write_f64_py` / `write_f64_js` leave `OP_SUPPORT` and the validator's
+  builtin list, and the class no longer carries the synthetic
+  `__iir_write_f64(DI)V`: a module that calls either is refused. The
+  `BigDecimal` digit search `__iir_f64_shortest` and the two PR7b queries are
+  unchanged (its Java-5-only rationale moved to the PR7b section).
+- Tests: `retired_float_writers_are_refused` replaces the writer tests; the
+  PR7b test also pins the `BigDecimal` method refs and that
+  `Double.toString` is never used; the PR6c edge table on a real JVM prints
+  `class digits exp10 sign`.
+
 ## Unreleased — LANG83 PR7d — `Trap.Unbound`
 
 - `trap` validates its kind with `exception_kind::is_trap_kind` (LANG83 PR7d

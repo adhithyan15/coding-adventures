@@ -1,4 +1,11 @@
 # Changelog — `twig-aot`
+## Unreleased — LANG83 PR7e — no float writers in the runtime
+
+- `twig_runtime.c` drops `__twig_write_f64_py` / `__twig_write_f64_js` and
+  their layout code (`twig_write_f64`): the runtime holds no language's
+  float layout. The Burger–Dybvig core (`twig_f64_digits`) and
+  `__twig_f64_digits` / `__twig_f64_exp10` are unchanged.
+
 ## Unreleased — LANG83 PR7d — `Trap.Unbound`
 
 - `__twig_trap`'s kind table (`TWIG_TRAP_KINDS`) renames id 7 from

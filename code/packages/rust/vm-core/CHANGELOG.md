@@ -1,5 +1,20 @@
 # Changelog — vm-core
 
+## Unreleased — LANG83 PR7e — no float writers
+
+- **Breaking:** the default builtins `write_f64_py` / `write_f64_js` are
+  removed, and with them `float_format::FloatLayout`, `format_f64`,
+  `python_repr` and `js_to_string` (the two languages' layouts). A VM builtin
+  may not carry one language's rules (LANG83 "PR7"); each compiler now prints
+  a float with its own helper. `shortest_digits`, `f64_class`, `f64_digits`
+  and `f64_exp10` (the PR7b ops' lowering, also the JIT's) are unchanged.
+- New `BuiltinRegistry::names()`: every registered builtin, sorted.
+- Tests: the float tests check the digits (`digits_match_host_python`, ties
+  to even, and a round-trip sweep that also checks no shorter digit string
+  reads back) instead of the layouts; `default_builtins_name_no_language`
+  checks every default builtin against
+  `op_registry::language_name_violation` and that the writers are gone.
+
 ## Unreleased — LANG83 PR7d — `Trap.Unbound`
 
 - The `trap` handler validates its kind with
