@@ -1,0 +1,19 @@
+{
+  "chapter": 392,
+  "title": "Asking for Help",
+  "label": "ch:sa-asking-for-help",
+  "canDo": "I can say who will help if I ask.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C392-anugrahah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can say who will help if I ask.",
+    "assesses": [
+      "SA-LEX-C392-SAHAYAKA392-03",
+      "SA-LEX-C392-SAHAYAKA392-04",
+      "SA-LEX-C392-SAHAYAKA392-05"
+    ]
+  }
+}

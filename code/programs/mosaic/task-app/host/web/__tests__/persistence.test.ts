@@ -13,7 +13,9 @@ import {
   makeWorkspaceRecord,
   openWorkspaceStorage,
   preserveRejectedWorkspace,
+  MAX_RECOVERY_WORKSPACES,
   RECOVERY_WORKSPACE_KEY,
+  recoveryWorkspaceKey,
   saveWorkspace,
   WORKSPACE_KEY,
 } from "../src/persistence";
@@ -69,10 +71,12 @@ describe("workspace persistence", () => {
     expect(rec.order).toEqual(["a"]);
   });
 
-  it("preserves a rejected record under the fixed recovery key", async () => {
+  it("preserves a rejected record under the first recovery key", async () => {
     const { storage } = await openWorkspaceStorage();
     const rejected = makeWorkspaceRecord("not-an-engine-snapshot", ["t1"], 1, 10);
-    await preserveRejectedWorkspace(storage, rejected);
+    await expect(preserveRejectedWorkspace(storage, rejected)).resolves.toBe(
+      RECOVERY_WORKSPACE_KEY,
+    );
 
     const recovery = await storage.get<typeof rejected>("workspace", RECOVERY_WORKSPACE_KEY);
     expect(recovery).toMatchObject({
@@ -82,6 +86,61 @@ describe("workspace persistence", () => {
       counter: 1,
       savedAt: 10,
     });
+  });
+
+  it("never replaces an earlier recovery record", async () => {
+    // The earlier copy may be the real workspace: startup rejected it, and a
+    // later launch rejected something else.
+    const { storage } = await openWorkspaceStorage();
+    const earlier = makeWorkspaceRecord("the real workspace", ["t1"], 1, 10);
+    const later = makeWorkspaceRecord("a later rejection", ["t2"], 2, 20);
+    await preserveRejectedWorkspace(storage, earlier);
+    await expect(preserveRejectedWorkspace(storage, later)).resolves.toBe(
+      recoveryWorkspaceKey(1),
+    );
+
+    expect(
+      (await storage.get<typeof earlier>("workspace", RECOVERY_WORKSPACE_KEY))!.snapshot,
+    ).toBe("the real workspace");
+    expect(
+      (await storage.get<typeof later>("workspace", "web-corrupt.1"))!.snapshot,
+    ).toBe("a later rejection");
+  });
+
+  it("does not copy a record it already keeps", async () => {
+    // Until the first save the live key still holds the rejected record, so a
+    // reload rejects the same record again.
+    const { storage } = await openWorkspaceStorage();
+    const rejected = makeWorkspaceRecord("not-an-engine-snapshot", ["t1"], 1, 10);
+    await preserveRejectedWorkspace(storage, rejected);
+    await expect(preserveRejectedWorkspace(storage, { ...rejected, id: "web" })).resolves.toBe(
+      RECOVERY_WORKSPACE_KEY,
+    );
+    expect(await storage.get("workspace", "web-corrupt.1")).toBeUndefined();
+  });
+
+  it("refuses when every recovery key is taken", async () => {
+    const { storage } = await openWorkspaceStorage();
+    for (let index = 0; index < MAX_RECOVERY_WORKSPACES; index += 1) {
+      await storage.put("workspace", {
+        ...makeWorkspaceRecord(`kept ${index}`, [], 0, index),
+        id: recoveryWorkspaceKey(index),
+      });
+    }
+    await expect(
+      preserveRejectedWorkspace(storage, makeWorkspaceRecord("one more", [], 0, 99)),
+    ).rejects.toThrow("already in use");
+    expect(await storage.get("workspace", "web-corrupt.10")).toBeUndefined();
+    expect(
+      (await storage.get<{ snapshot: string }>("workspace", "web-corrupt.9"))!.snapshot,
+    ).toBe("kept 9");
+  });
+
+  it("names the recovery keys web-corrupt, then web-corrupt.1 to .9", () => {
+    expect(MAX_RECOVERY_WORKSPACES).toBe(10);
+    expect(recoveryWorkspaceKey(0)).toBe("web-corrupt");
+    expect(recoveryWorkspaceKey(1)).toBe("web-corrupt.1");
+    expect(recoveryWorkspaceKey(9)).toBe("web-corrupt.9");
   });
 
   it("keeps a single workspace record, overwriting on re-save", async () => {

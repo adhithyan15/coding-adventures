@@ -1,0 +1,11 @@
+{
+  "id": "SA-C469-sparsah",
+  "pathSegment": "SA-PATH-469-INDRIYA469",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-469-INDRIYA469",
+      "order": 2
+    }
+  ]
+}

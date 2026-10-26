@@ -1,0 +1,11 @@
+{
+  "id": "SA-C506-saucikah",
+  "pathSegment": "SA-PATH-506-VAYATI506",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-506-VAYATI506",
+      "order": 4
+    }
+  ]
+}

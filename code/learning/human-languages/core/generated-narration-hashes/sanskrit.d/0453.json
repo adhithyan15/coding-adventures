@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:dcfe6520637bdd19",
+  "lessonIds": [
+    "SA-C453-utkantha",
+    "SA-C453-vidhurah",
+    "SA-C453-pravasati",
+    "SA-C453-suhrd",
+    "SA-C453-sandisati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch453.txt",
+  "json": "sanskrit/narration/ch453.json",
+  "textHash": "fnv1a64:fbfd36ced8b17192",
+  "jsonHash": "fnv1a64:59bb6daa72e20dac",
+  "findings": []
+}

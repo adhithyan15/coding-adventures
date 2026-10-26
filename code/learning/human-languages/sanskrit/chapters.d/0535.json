@@ -1,0 +1,19 @@
+{
+  "chapter": 535,
+  "title": "Keeping One's Word",
+  "label": "ch:sa-keeping-one-s-word",
+  "canDo": "I can say what happens if someone keeps or breaks their word.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C535-vacanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 535: I can say what happens if someone keeps or breaks their word.",
+    "assesses": [
+      "SA-LEX-C535-SATYASANDHA535-03",
+      "SA-LEX-C535-SATYASANDHA535-04",
+      "SA-LEX-C535-SATYASANDHA535-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C423-nirgamah",
+  "pathSegment": "SA-PATH-423-PRAVESHA423",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-423-PRAVESHA423",
+      "order": 1
+    }
+  ]
+}

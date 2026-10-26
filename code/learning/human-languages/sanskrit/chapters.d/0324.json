@@ -1,0 +1,19 @@
+{
+  "chapter": 324,
+  "title": "Tales of History",
+  "label": "ch:sa-tales-of-history",
+  "canDo": "I can tell what happened long ago and how it is remembered.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C324-kirtayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can tell what happened long ago and how it is remembered.",
+    "assesses": [
+      "SA-LEX-C324-PURA324-03",
+      "SA-LEX-C324-PURA324-04",
+      "SA-LEX-C324-PURA324-05"
+    ]
+  }
+}

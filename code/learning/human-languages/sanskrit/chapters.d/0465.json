@@ -1,0 +1,19 @@
+{
+  "chapter": 465,
+  "title": "Steady and Careless",
+  "label": "ch:sa-steady-and-careless",
+  "canDo": "I can say whether someone works carefully.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C465-udyami",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can say whether someone works carefully.",
+    "assesses": [
+      "SA-LEX-C465-UDYAMIN465-03",
+      "SA-LEX-C465-UDYAMIN465-04",
+      "SA-LEX-C465-UDYAMIN465-05"
+    ]
+  }
+}

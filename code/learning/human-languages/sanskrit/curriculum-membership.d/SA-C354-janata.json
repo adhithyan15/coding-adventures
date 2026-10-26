@@ -1,0 +1,11 @@
+{
+  "id": "SA-C354-janata",
+  "pathSegment": "SA-PATH-354-NAGARIKA354",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-354-NAGARIKA354",
+      "order": 1
+    }
+  ]
+}

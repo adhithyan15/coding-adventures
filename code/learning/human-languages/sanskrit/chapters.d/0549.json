@@ -1,0 +1,19 @@
+{
+  "chapter": 549,
+  "title": "Longings",
+  "label": "ch:sa-longings",
+  "canDo": "I can talk about what I long for and what I would do.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C549-samihate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 549: I can talk about what I long for and what I would do.",
+    "assesses": [
+      "SA-LEX-C549-LALASA549-03",
+      "SA-LEX-C549-LALASA549-04",
+      "SA-LEX-C549-LALASA549-05"
+    ]
+  }
+}

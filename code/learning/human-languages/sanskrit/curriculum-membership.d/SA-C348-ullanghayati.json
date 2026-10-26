@@ -1,0 +1,11 @@
+{
+  "id": "SA-C348-ullanghayati",
+  "pathSegment": "SA-PATH-348-AUCITYA348",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-348-AUCITYA348",
+      "order": 4
+    }
+  ]
+}

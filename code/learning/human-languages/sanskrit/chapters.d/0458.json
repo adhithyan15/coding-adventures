@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Pride and Modesty",
+  "label": "ch:sa-pride-and-modesty",
+  "canDo": "I can say whether someone is proud or modest.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C458-vinitah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can say whether someone is proud or modest.",
+    "assesses": [
+      "SA-LEX-C458-DARPA458-03",
+      "SA-LEX-C458-DARPA458-04",
+      "SA-LEX-C458-DARPA458-05"
+    ]
+  }
+}

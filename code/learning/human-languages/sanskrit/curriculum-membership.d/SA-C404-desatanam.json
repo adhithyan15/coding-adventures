@@ -1,0 +1,11 @@
+{
+  "id": "SA-C404-desatanam",
+  "pathSegment": "SA-PATH-404-PRANTARA404",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-404-PRANTARA404",
+      "order": 2
+    }
+  ]
+}

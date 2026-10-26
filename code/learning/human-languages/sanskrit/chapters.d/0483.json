@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "Medicines",
+  "label": "ch:sa-medicines",
+  "canDo": "I can say how a medicine is taken or applied.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C483-limpati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can say how a medicine is taken or applied.",
+    "assesses": [
+      "SA-LEX-C483-GUTIKA483-03",
+      "SA-LEX-C483-GUTIKA483-04",
+      "SA-LEX-C483-GUTIKA483-05"
+    ]
+  }
+}

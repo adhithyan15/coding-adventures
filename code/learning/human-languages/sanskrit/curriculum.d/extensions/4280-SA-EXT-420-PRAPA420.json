@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-420-PRAPA420",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say where a thirsty traveller is given water.",
+  "prerequisites": []
+}

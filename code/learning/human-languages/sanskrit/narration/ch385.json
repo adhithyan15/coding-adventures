@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 385,
+  "title": "Competing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a43e05595c2e1fa1",
+  "lessons": [
+    {
+      "id": "SA-C385-spardhate",
+      "sequence": 22300,
+      "title": "स्पर्धते (spardhate) — competes",
+      "headword": "स्पर्धते",
+      "romanization": "spardhate",
+      "gloss": "competes",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:484273f7068e36b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for carries out, then the Sanskrit for encourages."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्पर्धते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्पर्धते — spardhate — \"competes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि मीरा स्पर्धते, तर्हि सा प्रथमा भविष्यति। yadi mīrā spardhate, tarhi sā prathamā bhaviṣyati. If Mira competes, she will come first."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): सा स्पर्धितवती, sā spardhitavatī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्पर्धते (spardhate) comes from the root √spardh, \"to contend, to vie\"; MW gives spardhita \"contending or competing together\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spardhate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *spardhate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spardhate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *spardhate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi mīrā spardhate, tarhi sā prathamā bhaviṣyati. — If Mira competes, she will come first.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi mīrā spardhate, tarhi sā prathamā bhaviṣyati.* — If Mira competes, she will come first.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for carries out, then the Sanskrit for encourages, then say spardhate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for carries out, then the Sanskrit for encourages, then say *spardhate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्पर्धते (spardhate) mean? (\"Competes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C385-pratidvandvi",
+      "sequence": 22310,
+      "title": "प्रतिद्वन्द्वी (pratidvandvī) — a rival",
+      "headword": "प्रतिद्वन्द्वी",
+      "romanization": "pratidvandvī",
+      "gloss": "a rival",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e1bfdd4f2b728dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for encourages, then the Sanskrit for competes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रतिद्वन्द्वी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिद्वन्द्वी — pratidvandvī — \"a rival\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि प्रतिद्वन्द्वी बलवान्, तर्हि अधिकः अभ्यासः आवश्यकः। yadi pratidvandvī balavān, tarhi adhikaḥ abhyāsaḥ āvaśyakaḥ. If the rival is strong, more practice is needed."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिद्वन्द्वी (pratidvandvī) is built on prati, \"against\", and dvandva, \"a pair, a strife\"; MW gives prati-dvaṃdvin \"an adversary, a rival\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratidvandvī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratidvandvī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratidvandvī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratidvandvī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi pratidvandvī balavān, tarhi adhikaḥ abhyāsaḥ āvaśyakaḥ. — If the rival is strong, more practice is needed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi pratidvandvī balavān, tarhi adhikaḥ abhyāsaḥ āvaśyakaḥ.* — If the rival is strong, more practice is needed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for encourages, then the Sanskrit for competes, then say pratidvandvī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for encourages, then the Sanskrit for competes, then say *pratidvandvī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रतिद्वन्द्वी (pratidvandvī) mean? (\"A rival\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C385-jeta",
+      "sequence": 22320,
+      "title": "जेता (jetā) — a winner; a victor",
+      "headword": "जेता",
+      "romanization": "jetā",
+      "gloss": "a winner; a victor",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:adb9a0630c68e40f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for competes, then the Sanskrit for a rival."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जेता",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जेता — jetā — \"a winner; a victor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि भवान् जेता भवति, तर्हि पारितोषिकं लभते। yadi bhavān jetā bhavati, tarhi pāritoṣikaṃ labhate. If you are the winner, you get the prize."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जेता (jetā) is built on the root √ji, \"to win\", with the agent ending -tṛ; MW gives jetṛ \"victorious, triumphant, a conqueror\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jetā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jetā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jetā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jetā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bhavān jetā bhavati, tarhi pāritoṣikaṃ labhate. — If you are the winner, you get the prize.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bhavān jetā bhavati, tarhi pāritoṣikaṃ labhate.* — If you are the winner, you get the prize.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for competes, then the Sanskrit for a rival, then say jetā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for competes, then the Sanskrit for a rival, then say *jetā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जेता (jetā) mean? (\"A winner; a victor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C385-puraskaroti",
+      "sequence": 22330,
+      "title": "पुरस्करोति (puraskaroti) — rewards (with a prize)",
+      "headword": "पुरस्करोति",
+      "romanization": "puraskaroti",
+      "gloss": "rewards (with a prize)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18517e5d3751cfe7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a rival, then the Sanskrit for a winner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पुरस्करोति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुरस्करोति — puraskaroti — \"rewards (with a prize)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि छात्रः प्रथमः, तर्हि विद्यालयः तं पुरस्करोति। yadi chātraḥ prathamaḥ, tarhi vidyālayaḥ taṃ puraskaroti. If the student comes first, the school rewards him."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः छात्रं पुरस्कृतवान्, saḥ chātraṃ puraskṛtavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुरस्करोति (puraskaroti) is built from puras, \"in front\", and the root √kṛ, \"to make\"; MW gives puras-√kṛ \"to place before\" and \"to respect, to honour\", and \"rewards with a prize\" is its modern sense (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puraskaroti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puraskaroti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puraskaroti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puraskaroti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi chātraḥ prathamaḥ, tarhi vidyālayaḥ taṃ puraskaroti. — If the student comes first, the school rewards him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi chātraḥ prathamaḥ, tarhi vidyālayaḥ taṃ puraskaroti.* — If the student comes first, the school rewards him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a rival, then the Sanskrit for a winner, then say puraskaroti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a rival, then the Sanskrit for a winner, then say *puraskaroti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पुरस्करोति (puraskaroti) mean? (\"Rewards (with a prize)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C385-utkarsah",
+      "sequence": 22340,
+      "title": "उत्कर्षः (utkarṣaḥ) — excellence",
+      "headword": "उत्कर्षः",
+      "romanization": "utkarṣaḥ",
+      "gloss": "excellence",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:42633adc95f8c2a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a winner, then the Sanskrit for rewards (with a prize)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उत्कर्षः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उत्कर्षः — utkarṣaḥ — \"excellence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि नित्यम् अभ्यासं करोति, तर्हि उत्कर्षः निश्चितः। yadi nityam abhyāsaṃ karoti, tarhi utkarṣaḥ niścitaḥ. If one practises constantly, excellence is certain."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उत्कर्षः (utkarṣaḥ) is built on ut, \"up\", and the root √kṛṣ, \"to draw\"; MW gives ut-karṣa \"excellence, eminence\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utkarṣaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utkarṣaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utkarṣaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utkarṣaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi nityam abhyāsaṃ karoti, tarhi utkarṣaḥ niścitaḥ. — If one practises constantly, excellence is certain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi nityam abhyāsaṃ karoti, tarhi utkarṣaḥ niścitaḥ.* — If one practises constantly, excellence is certain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a winner, then the Sanskrit for rewards (with a prize), then say utkarṣaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a winner, then the Sanskrit for rewards (with a prize), then say *utkarṣaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उत्कर्षः (utkarṣaḥ) mean? (\"Excellence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

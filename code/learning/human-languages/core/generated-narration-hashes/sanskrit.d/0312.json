@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:c53e8178cf1017be",
+  "lessonIds": [
+    "SA-C312-pravakta",
+    "SA-C312-aropah",
+    "SA-C312-nirakaroti",
+    "SA-C312-anrtam",
+    "SA-C312-sandigdhah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch312.txt",
+  "json": "sanskrit/narration/ch312.json",
+  "textHash": "fnv1a64:60fc2653b3c6ab92",
+  "jsonHash": "fnv1a64:bd37c2f6fb71db0f",
+  "findings": []
+}

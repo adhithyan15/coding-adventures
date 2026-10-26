@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:13373288423967df",
+  "lessonIds": [
+    "SA-C521-vadakah",
+    "SA-C521-tantri",
+    "SA-C521-damaruh",
+    "SA-C521-murajah",
+    "SA-C521-nadah"
+  ],
+  "tex": "sanskrit/book/chapters/ch521-drums-and-strings.tex"
+}

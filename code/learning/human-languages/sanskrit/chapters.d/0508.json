@@ -1,0 +1,19 @@
+{
+  "chapter": 508,
+  "title": "Bricks and Mortar",
+  "label": "ch:sa-bricks-and-mortar",
+  "canDo": "I can talk about building, mending and plastering walls.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C508-sudha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can talk about building, mending and plastering walls.",
+    "assesses": [
+      "SA-LEX-C508-NIRMANA508-03",
+      "SA-LEX-C508-NIRMANA508-04",
+      "SA-LEX-C508-NIRMANA508-05"
+    ]
+  }
+}

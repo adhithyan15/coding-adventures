@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:79f21380440f9d40",
+  "lessonIds": [
+    "SA-C415-srotah",
+    "SA-C415-avartah",
+    "SA-C415-santarati",
+    "SA-C415-param",
+    "SA-C415-setubandhah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch415.txt",
+  "json": "sanskrit/narration/ch415.json",
+  "textHash": "fnv1a64:47728472b97a365e",
+  "jsonHash": "fnv1a64:eb54e58b4072f2a4",
+  "findings": []
+}

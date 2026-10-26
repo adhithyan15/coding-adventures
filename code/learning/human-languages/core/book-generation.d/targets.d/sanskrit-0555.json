@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 555,
+  "output": "sanskrit/book/chapters/ch555-the-road-ahead.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

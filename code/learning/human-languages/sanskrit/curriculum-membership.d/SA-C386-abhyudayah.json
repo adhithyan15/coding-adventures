@@ -1,0 +1,11 @@
+{
+  "id": "SA-C386-abhyudayah",
+  "pathSegment": "SA-PATH-386-SIDDHI386",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-386-SIDDHI386",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C326-mandayati",
+    "language": "sanskrit",
+    "chapter": 326,
+    "sequence": 19070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f1e5d55e7ef4ea8"
+  },
+  "findings": []
+}

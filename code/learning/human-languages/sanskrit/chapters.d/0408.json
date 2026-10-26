@@ -1,0 +1,19 @@
+{
+  "chapter": 408,
+  "title": "Beasts of Burden",
+  "label": "ch:sa-beasts-of-burden",
+  "canDo": "I can talk about the animals that carry people and loads.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C408-asvasala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can talk about the animals that carry people and loads.",
+    "assesses": [
+      "SA-LEX-C408-VAHA408-03",
+      "SA-LEX-C408-VAHA408-04",
+      "SA-LEX-C408-VAHA408-05"
+    ]
+  }
+}

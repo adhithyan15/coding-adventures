@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C290-abharanam",
+    "language": "sanskrit",
+    "chapter": 290,
+    "sequence": 17230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf2ef2574b13a219"
+  },
+  "findings": []
+}

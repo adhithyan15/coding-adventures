@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "Sense and Folly",
+  "label": "ch:sa-sense-and-folly",
+  "canDo": "I can say whether someone acted wisely.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C466-bodhah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can say whether someone acted wisely.",
+    "assesses": [
+      "SA-LEX-C466-MEDHA466-03",
+      "SA-LEX-C466-MEDHA466-04",
+      "SA-LEX-C466-MEDHA466-05"
+    ]
+  }
+}

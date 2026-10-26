@@ -1,0 +1,11 @@
+{
+  "id": "SA-C319-bandi",
+  "pathSegment": "SA-PATH-319-VIJAYA319",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-319-VIJAYA319",
+      "order": 2
+    }
+  ]
+}

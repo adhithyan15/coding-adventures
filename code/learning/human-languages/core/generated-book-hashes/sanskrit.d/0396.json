@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:c3bf5e97ad8cd60a",
+  "lessonIds": [
+    "SA-C396-dhvanati",
+    "SA-C396-darsanam",
+    "SA-C396-pratima",
+    "SA-C396-garbhagrham",
+    "SA-C396-bhaktah"
+  ],
+  "tex": "sanskrit/book/chapters/ch396-at-the-shrine.tex"
+}

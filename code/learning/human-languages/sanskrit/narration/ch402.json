@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 402,
+  "title": "Rest Houses",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:55d9a623da59d583",
+  "lessons": [
+    {
+      "id": "SA-C402-dharmasala",
+      "sequence": 23410,
+      "title": "धर्मशाला (dharmaśālā) — a pilgrims' rest house",
+      "headword": "धर्मशाला",
+      "romanization": "dharmaśālā",
+      "gloss": "a pilgrims' rest house",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:300f2d2133aaa79e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a lay follower, then the Sanskrit for a memorial shrine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धर्मशाला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धर्मशाला — dharmaśālā — \"a pilgrims' rest house\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यात्रिकाः धर्मशालायां रात्रिं वसन्ति। yātrikāḥ dharmaśālāyāṃ rātriṃ vasanti. The pilgrims stay the night in the rest house."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धर्मशाला (dharmaśālā) is built from dharma, \"right conduct, charity\", and śālā, \"a hall, a house\"; MW gives the compound as a charitable asylum, especially a religious one (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dharmaśālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dharmaśālā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dharmaśālā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dharmaśālā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātrikāḥ dharmaśālāyāṃ rātriṃ vasanti. — The pilgrims stay the night in the rest house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātrikāḥ dharmaśālāyāṃ rātriṃ vasanti.* — The pilgrims stay the night in the rest house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a lay follower, then the Sanskrit for a memorial shrine, then say dharmaśālā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a lay follower, then the Sanskrit for a memorial shrine, then say *dharmaśālā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धर्मशाला (dharmaśālā) mean? (\"A pilgrims' rest house\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C402-parnasala",
+      "sequence": 23420,
+      "title": "पर्णशाला (parṇaśālā) — a hut of leaves",
+      "headword": "पर्णशाला",
+      "romanization": "parṇaśālā",
+      "gloss": "a hut of leaves",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:388fbb103f62c1e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a memorial shrine, then the Sanskrit for a pilgrims' rest house."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पर्णशाला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पर्णशाला — parṇaśālā — \"a hut of leaves\"."
+            },
+            {
+              "kind": "speech",
+              "text": "परिव्राजकः वने पर्णशालायां वसति। parivrājakaḥ vane parṇaśālāyāṃ vasati. The wandering ascetic lives in a hut of leaves in the forest."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पर्णशाला (parṇaśālā) is built from parṇa, \"a leaf\", and śālā, \"a hall, a house\"; MW gives the compound as a hut of leaves, an arbour (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parṇaśālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parṇaśālā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parṇaśālā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parṇaśālā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parivrājakaḥ vane parṇaśālāyāṃ vasati. — The wandering ascetic lives in a hut of leaves in the forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parivrājakaḥ vane parṇaśālāyāṃ vasati.* — The wandering ascetic lives in a hut of leaves in the forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a memorial shrine, then the Sanskrit for a pilgrims' rest house, then say parṇaśālā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a memorial shrine, then the Sanskrit for a pilgrims' rest house, then say *parṇaśālā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पर्णशाला (parṇaśālā) mean? (\"A hut of leaves\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C402-nisidati",
+      "sequence": 23430,
+      "title": "निषीदति (niṣīdati) — sits down to rest",
+      "headword": "निषीदति",
+      "romanization": "niṣīdati",
+      "gloss": "sits down to rest",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f163513cffe9dfe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a pilgrims' rest house, then the Sanskrit for a hut of leaves."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निषीदति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निषीदति — niṣīdati — \"sits down to rest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "श्रान्तः पथिकः वृक्षस्य छायायां निषीदति। śrāntaḥ pathikaḥ vṛkṣasya chāyāyāṃ niṣīdati. The tired wayfarer sits down to rest in the shade of a tree."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः छायायां निषण्णवान्, saḥ chāyāyāṃ niṣaṇṇavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निषीदति (niṣīdati) is built from ni, \"down\", and the root √sad, \"to sit\"; MW gives ni-ṣad as to sit down, rest or settle, with the participle niṣaṇṇa, \"seated, resting\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṣīdati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṣīdati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṣīdati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṣīdati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śrāntaḥ pathikaḥ vṛkṣasya chāyāyāṃ niṣīdati. — The tired wayfarer sits down to rest in the shade of a tree.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śrāntaḥ pathikaḥ vṛkṣasya chāyāyāṃ niṣīdati.* — The tired wayfarer sits down to rest in the shade of a tree.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a pilgrims' rest house, then the Sanskrit for a hut of leaves, then say niṣīdati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a pilgrims' rest house, then the Sanskrit for a hut of leaves, then say *niṣīdati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निषीदति (niṣīdati) mean? (\"Sits down to rest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C402-samvisati",
+      "sequence": 23440,
+      "title": "संविशति (saṃviśati) — lies down to sleep",
+      "headword": "संविशति",
+      "romanization": "saṃviśati",
+      "gloss": "lies down to sleep",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d47d3a86a0b56d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a hut of leaves, then the Sanskrit for sits down to rest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संविशति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संविशति — saṃviśati — \"lies down to sleep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात्रौ यात्रिकाः धर्मशालायां संविशन्ति। rātrau yātrikāḥ dharmaśālāyāṃ saṃviśanti. At night the pilgrims lie down to sleep in the rest house."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः धर्मशालायां संविष्टवान्, saḥ dharmaśālāyāṃ saṃviṣṭavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संविशति (saṃviśati) is built from sam, \"together\", and the root √viś, \"to enter, to settle\"; MW gives saṃ-viś as to lie down or go to rest, and its participle saṃviṣṭa as one who has lain down, sleeping (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃviśati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃviśati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃviśati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃviśati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātrau yātrikāḥ dharmaśālāyāṃ saṃviśanti. — At night the pilgrims lie down to sleep in the rest house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātrau yātrikāḥ dharmaśālāyāṃ saṃviśanti.* — At night the pilgrims lie down to sleep in the rest house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a hut of leaves, then the Sanskrit for sits down to rest, then say saṃviśati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a hut of leaves, then the Sanskrit for sits down to rest, then say *saṃviśati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संविशति (saṃviśati) mean? (\"Lies down to sleep\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C402-padyam",
+      "sequence": 23450,
+      "title": "पाद्यम् (pādyam) — water for washing the feet",
+      "headword": "पाद्यम्",
+      "romanization": "pādyam",
+      "gloss": "water for washing the feet",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:224564f57124d93d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for sits down to rest, then the Sanskrit for lies down to sleep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पाद्यम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाद्यम् — pādyam — \"water for washing the feet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "स्वामी अतिथये पाद्यं ददाति। svāmī atithaye pādyaṃ dadāti. The host gives the guest water to wash his feet."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाद्यम् (pādyam) is built on pāda, \"a foot\", with the ending -ya; MW gives pādya as belonging to the foot and, as a noun, water for washing the feet, offered to a guest (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pādyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pādyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pādyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pādyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svāmī atithaye pādyaṃ dadāti. — The host gives the guest water to wash his feet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svāmī atithaye pādyaṃ dadāti.* — The host gives the guest water to wash his feet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for sits down to rest, then the Sanskrit for lies down to sleep, then say pādyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for sits down to rest, then the Sanskrit for lies down to sleep, then say *pādyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पाद्यम् (pādyam) mean? (\"Water for washing the feet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

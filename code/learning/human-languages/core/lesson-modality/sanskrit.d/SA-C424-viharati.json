@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C424-viharati",
+    "language": "sanskrit",
+    "chapter": 424,
+    "sequence": 24570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aafede6793c496b9"
+  },
+  "findings": []
+}

@@ -4,8 +4,15 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.5.12` accumulate here until the next version is
+Entries added after `task-app-v0.5.13` accumulate here until the next version is
 cut.
+
+## [0.5.13] - 2026-10-26
+
+### Fixed
+
+- Preserve Qt timeline labels' authored 150-pixel non-shrinking width (#18305),
+  without changing shared styles or claiming general flex support.
 
 ### Changed
 

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C347-ittham",
+  "pathSegment": "SA-PATH-347-UDAHARANA347",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-347-UDAHARANA347",
+      "order": 2
+    }
+  ]
+}

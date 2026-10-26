@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:cdf7c6ae4069d68b",
+  "lessonIds": [
+    "SA-C423-pravesah",
+    "SA-C423-nirgamah",
+    "SA-C423-viparitah",
+    "SA-C423-antaram",
+    "SA-C423-dvarapalah"
+  ],
+  "tex": "sanskrit/book/chapters/ch423-ways-in-and-out.tex"
+}

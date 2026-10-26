@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-492-JANMA492",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "SA-EXT-492-JANMA492"
+  ],
+  "after": []
+}

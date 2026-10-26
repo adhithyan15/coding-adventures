@@ -1,0 +1,11 @@
+{
+  "id": "SA-C351-anuvartate",
+  "pathSegment": "SA-PATH-351-VIVEKA351",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-351-VIVEKA351",
+      "order": 2
+    }
+  ]
+}

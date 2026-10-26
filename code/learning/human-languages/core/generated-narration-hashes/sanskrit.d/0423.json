@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:48b7863c5df42b7b",
+  "lessonIds": [
+    "SA-C423-pravesah",
+    "SA-C423-nirgamah",
+    "SA-C423-viparitah",
+    "SA-C423-antaram",
+    "SA-C423-dvarapalah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch423.txt",
+  "json": "sanskrit/narration/ch423.json",
+  "textHash": "fnv1a64:511852deb62953fe",
+  "jsonHash": "fnv1a64:ded8ee8763ca6b22",
+  "findings": []
+}

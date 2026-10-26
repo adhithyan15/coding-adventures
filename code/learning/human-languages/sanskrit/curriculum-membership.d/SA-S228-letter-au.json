@@ -1,0 +1,11 @@
+{
+  "id": "SA-S228-letter-au",
+  "pathSegment": "SA-PATH-281-TRAVEL281",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-281-TRAVEL281",
+      "order": 4
+    }
+  ]
+}

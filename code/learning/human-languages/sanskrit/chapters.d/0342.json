@@ -1,0 +1,19 @@
+{
+  "chapter": 342,
+  "title": "On What Grounds",
+  "label": "ch:sa-on-what-grounds",
+  "canDo": "I can say what a view rests on and what follows from it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C342-upapadayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 342: I can say what a view rests on and what follows from it.",
+    "assesses": [
+      "SA-LEX-C342-ADHARA342-03",
+      "SA-LEX-C342-ADHARA342-04",
+      "SA-LEX-C342-ADHARA342-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C549-lalasa",
+    "language": "sanskrit",
+    "chapter": 549,
+    "sequence": 31420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28acdcfa7db77e76"
+  },
+  "findings": []
+}

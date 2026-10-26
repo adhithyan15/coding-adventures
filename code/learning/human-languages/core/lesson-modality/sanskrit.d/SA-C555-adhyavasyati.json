@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C555-adhyavasyati",
+    "language": "sanskrit",
+    "chapter": 555,
+    "sequence": 31750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:076964b6bd271a59"
+  },
+  "findings": []
+}

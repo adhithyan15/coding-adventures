@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C425-preksakah",
+    "language": "sanskrit",
+    "chapter": 425,
+    "sequence": 24600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7ebaf8d7df839ee"
+  },
+  "findings": []
+}

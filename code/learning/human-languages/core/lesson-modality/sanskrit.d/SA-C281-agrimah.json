@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C281-agrimah",
+    "language": "sanskrit",
+    "chapter": 281,
+    "sequence": 16460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0828953109dbd37a"
+  },
+  "findings": []
+}

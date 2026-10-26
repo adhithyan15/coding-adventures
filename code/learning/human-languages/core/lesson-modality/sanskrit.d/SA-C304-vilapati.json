@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C304-vilapati",
+    "language": "sanskrit",
+    "chapter": 304,
+    "sequence": 17950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9fb6d7a3818a484"
+  },
+  "findings": []
+}

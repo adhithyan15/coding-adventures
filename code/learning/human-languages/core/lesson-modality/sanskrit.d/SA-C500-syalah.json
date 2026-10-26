@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C500-syalah",
+    "language": "sanskrit",
+    "chapter": 500,
+    "sequence": 28680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b722b6a4c6efb1b9"
+  },
+  "findings": []
+}

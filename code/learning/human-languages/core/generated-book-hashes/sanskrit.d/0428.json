@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:5d8daf0fb192a93e",
+  "lessonIds": [
+    "SA-C428-grhapatih",
+    "SA-C428-abhyagatah",
+    "SA-C428-nivasayati",
+    "SA-C428-pratyudgacchati",
+    "SA-C428-anuvrajati"
+  ],
+  "tex": "sanskrit/book/chapters/ch428-hosts-and-guests.tex"
+}

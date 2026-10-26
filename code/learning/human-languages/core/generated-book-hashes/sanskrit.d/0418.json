@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:2557ec668a83121f",
+  "lessonIds": [
+    "SA-C418-jalam",
+    "SA-C418-badisam",
+    "SA-C418-suktih",
+    "SA-C418-mauktikam",
+    "SA-C418-pravalam"
+  ],
+  "tex": "sanskrit/book/chapters/ch418-nets-shells-and-pearls.tex"
+}

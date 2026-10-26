@@ -24,6 +24,15 @@
   now keeps the outer rustflags as an `OsString`, so a non-UTF-8 flag no
   longer drops all of them (security review).
 
+## Unreleased (LANG84 phase 6e — `Trap.ReferenceError`)
+
+- `__twig_trap`'s kind table (`TWIG_TRAP_KINDS`) gains
+  `"Trap.ReferenceError"` at stable id 7, the kind `javascript-iir-compiler`
+  emits for an undeclared or temporal-dead-zone read. A native program that
+  stops on it prints `trap: Trap.ReferenceError` after flushing its output.
+  `runtime_trap_kind_table_matches_exception_kind` keeps the C table equal to
+  `interpreter_ir::exception_kind::ALL_TRAP_KINDS`.
+
 ## [0.57.0] — 2026-10-20 (LANG83 PR6a — native runtime float writers)
 
 - **`__twig_write_f64_py(int64_t bits)` / `__twig_write_f64_js(int64_t bits)`**

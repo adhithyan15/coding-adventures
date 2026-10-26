@@ -29,6 +29,22 @@ public static class MosaicHost
     private static IntPtr Session = IntPtr.Zero;
     private static string? LoadError;
 
+    // A snapshot this build cannot load is someone's study history, not
+    // garbage. Before the demo deck is saved in its place, HydrateSession
+    // copies it aside, and a copy never replaces an earlier one, because that
+    // earlier one may be the real history:
+    //
+    //   first rejection    <snapshot>.corrupt      (the generated hosts' name)
+    //   second             <snapshot>.corrupt.1
+    //   ...                ...
+    //   tenth              <snapshot>.corrupt.9
+    //
+    // If the copy fails, or all ten names are taken, saving is switched off
+    // for the session: an unsaved session is recoverable, an overwritten
+    // snapshot is not.
+    private const int MaxQuarantinedSnapshots = 10;
+    private static bool PersistenceDisabled;
+
     public static event EventHandler<MosaicHostIntent>? HostIntentReceived;
 
     public static MosaicHostIntent? LastHostIntent { get; private set; }
@@ -623,18 +639,56 @@ public static class MosaicHost
                 {
                     return;
                 }
+                Console.Error.WriteLine("Engram persisted snapshot was invalid");
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
             {
                 Console.Error.WriteLine($"Engram could not read persisted snapshot: {ex.Message}");
             }
+            QuarantineSnapshot(path);
         }
 
         PersistSnapshot(session);
     }
 
+    private static void QuarantineSnapshot(string path)
+    {
+        for (var index = 0; index < MaxQuarantinedSnapshots; index++)
+        {
+            var corrupt = index == 0 ? path + ".corrupt" : $"{path}.corrupt.{index}";
+            if (File.Exists(corrupt) || Directory.Exists(corrupt))
+            {
+                continue;
+            }
+
+            try
+            {
+                // overwrite: false throws instead of replacing a file that
+                // appeared after the check above.
+                File.Copy(path, corrupt, overwrite: false);
+                Console.Error.WriteLine($"Engram copied the unreadable snapshot to {corrupt}");
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                PersistenceDisabled = true;
+                Console.Error.WriteLine(
+                    $"Engram could not copy the unreadable snapshot aside; this session will not be saved: {ex.Message}");
+            }
+            return;
+        }
+
+        PersistenceDisabled = true;
+        Console.Error.WriteLine(
+            $"Engram already holds {MaxQuarantinedSnapshots} unreadable snapshots beside {path}; this session will not be saved until they are cleared");
+    }
+
     private static void PersistSnapshot(IntPtr session)
     {
+        if (PersistenceDisabled)
+        {
+            return;
+        }
+
         try
         {
             var json = Native.TakeString(Native.eg_snapshot(session));

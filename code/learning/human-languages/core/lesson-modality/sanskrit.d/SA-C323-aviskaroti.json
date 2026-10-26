@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C323-aviskaroti",
+    "language": "sanskrit",
+    "chapter": 323,
+    "sequence": 18930,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1bfe652e28525150"
+  },
+  "findings": []
+}

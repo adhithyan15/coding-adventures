@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Effort",
+  "label": "ch:sa-effort",
+  "canDo": "I can say what effort it will take to succeed.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C384-protsahayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can say what effort it will take to succeed.",
+    "assesses": [
+      "SA-LEX-C384-UDYAMA384-03",
+      "SA-LEX-C384-UDYAMA384-04",
+      "SA-LEX-C384-UDYAMA384-05"
+    ]
+  }
+}

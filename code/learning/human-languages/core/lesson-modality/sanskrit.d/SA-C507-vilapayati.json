@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C507-vilapayati",
+    "language": "sanskrit",
+    "chapter": 507,
+    "sequence": 29270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:019577bb7cd84c41"
+  },
+  "findings": []
+}

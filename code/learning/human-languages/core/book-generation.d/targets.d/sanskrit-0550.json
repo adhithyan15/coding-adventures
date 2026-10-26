@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 550,
+  "output": "sanskrit/book/chapters/ch550-sharing-out.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

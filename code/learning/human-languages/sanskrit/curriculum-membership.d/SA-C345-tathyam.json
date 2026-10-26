@@ -1,0 +1,11 @@
+{
+  "id": "SA-C345-tathyam",
+  "pathSegment": "SA-PATH-345-PRATYAYA345",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-345-PRATYAYA345",
+      "order": 2
+    }
+  ]
+}

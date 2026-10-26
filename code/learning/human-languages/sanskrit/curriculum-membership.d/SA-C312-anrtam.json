@@ -1,0 +1,11 @@
+{
+  "id": "SA-C312-anrtam",
+  "pathSegment": "SA-PATH-312-NIRAKARANA312",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-312-NIRAKARANA312",
+      "order": 3
+    }
+  ]
+}

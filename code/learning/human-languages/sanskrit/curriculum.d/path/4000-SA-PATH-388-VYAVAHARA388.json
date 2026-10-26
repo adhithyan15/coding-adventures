@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-388-VYAVAHARA388",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "SA-EXT-388-VYAVAHARA388"
+  ],
+  "after": []
+}

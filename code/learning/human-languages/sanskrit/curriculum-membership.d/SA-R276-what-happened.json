@@ -1,0 +1,11 @@
+{
+  "id": "SA-R276-what-happened",
+  "pathSegment": "SA-PATH-276-NARRATE276",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-276-NARRATE276",
+      "order": 4
+    }
+  ]
+}
