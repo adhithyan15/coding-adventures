@@ -138,6 +138,16 @@ written would count against the letter-anchoring ratchet, which keeps Chinese at
 zero unwritten characters, and it would ask the reader to read a shape nobody
 taught them. Every hanzi the book prints is one the reader writes.
 
+**Chapters 31-57** are the first half of the pre-A1 vocabulary: 135 words (37 verbs),
+five a chapter, from family and names through eating, shopping, coming and going,
+days, weeks, months and the time, to the body, feelings, learning and free time.
+Thirty characters are written along the way, one or two a chapter, each right after
+the word that first shows it (他 们 妈 男 叫 来 这 那 吃 饭 喝 水 买 多 少 去 车 天 今 星
+期 年 明 点 午 晚 手 说 话 想), with its stroke order and a stroke-by-stroke strip. 41
+words are headed in characters the reader has written; the other 94 are taught by
+ear with pinyin headwords, as in chapter 30, and change to characters once their
+characters are written.
+
 ## Read and practise
 
 - [`roadmap.md`](./roadmap.md) records the original authored-and-planned path

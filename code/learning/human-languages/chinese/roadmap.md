@@ -218,6 +218,15 @@ of an adjective; the four words whose characters are not written yet are taught
 by ear with pinyin headwords, because a character shown but never written would
 count against the track's letter-anchoring ratchet.
 
+## The pre-A1 vocabulary, first half *(delivered, chapters 31-57)*
+
+135 words (37 verbs) on the pre-A1 nodes, five a chapter, and 30 characters written
+(他 们 妈 男 叫 来 这 那 吃 饭 喝 水 买 多 少 去 车 天 今 星 期 年 明 点 午 晚 手 说 话 想), each
+right after the word that first shows it. Words whose characters are not written yet
+are taught by ear with pinyin headwords. Pre-A1 headwords 54 -> 189 and verbs 0 -> 37;
+the second half (chapters 58-84, 24 more characters) takes the track to pre-A1
+attained.
+
 ## Part II onward — cumulative pre-A1 to C2 build *(planned)*
 
 Continue the official vocabulary tranche with oral meaning, source-verified
