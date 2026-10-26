@@ -14,9 +14,10 @@
 //! | `print_i64_and_putchar_share_one_ordered_stream` | the LANG83 ordered-output contract for the one builtin pair no frontend emits together today |
 //! | `pr1b_ops_are_lowered_on_every_backend` | LANG83 PR1b landed everywhere: no backend still refuses `write_i64`, `i64_div_floor`, `i64_mod_floor` or `trap` |
 //! | `pr4_ops_are_lowered_on_every_backend` | LANG83 PR4 landed everywhere: every backend lowers `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf` and `i64_neg_ovf` |
-//! | `pr6a_ops_are_lowered_on_every_backend` | LANG83 PR6a landed everywhere: every backend lowers `write_f64_py` and `write_f64_js` |
+//! | `pr7e_float_writers_are_gone_and_the_layouts_run_everywhere` | LANG83 PR7e: `write_f64_py` / `write_f64_js` are in no registry and no backend (each refuses a module that calls one), and the PR6a table, printed by the Python and JavaScript compilers' own layout helpers, runs on every executable column |
 //! | `pr6c_ops_follow_the_ieee_contract` | LANG83 PR6c: the IEEE arithmetic is lowered everywhere but BEAM (which refuses it at compile time), `f64_signbit` on all nine, and the PR6c cases run on every executable column |
-//! | `float_table_matches_host_python3_and_node` | the PR6a expected strings are what host `python3` (`repr`) and `node` (`String(x)`) print today, whenever they are installed |
+//! | `float_table_matches_host_python3_and_node` | the PR6a expected strings (the oracle the PR7e helper cases print) are what host `python3` (`repr`) and `node` (`String(x)`) print today, whenever they are installed |
+//! | `harness_builtins_name_no_language` | LANG83 PR7e: no builtin a conformance runner registers names a source language |
 //! | `pr7b_ops_are_lowered_on_every_backend` | LANG83 PR7b: `f64_class`, `f64_digits` and `f64_exp10` are lowered on all nine backends, the PR7b cases run on every executable column, and BEAM compiles the finite ones |
 //! | `float_digits_table_matches_host_python3` | the PR7b expected digits are host `python3`'s `repr` split at the digits, whenever it is installed |
 //! | `flush_before_trap_is_proven_on_every_executable_column` | a program that writes (unflushed) output and then traps keeps that output, and the trap kind is observed, on every column that can run it |
@@ -36,7 +37,7 @@
 //! |--------|----------------|------------|
 //! | WASM | compile + execute (in-process `wasm-runtime`) | never |
 //! | VM | execute (`vm-core`) | never |
-//! | JIT | execute (`jit-core`), and `main` must really be JIT-compiled | never (cases whose ops the JIT refuses are not JIT cases) |
+//! | JIT | execute (`jit-core`), and every call-free function (`main`, or a layout helper's digit functions) must really be JIT-compiled | never (cases whose ops the JIT refuses are not JIT cases) |
 //! | LLVM | compile + `clang` + execute | `clang` absent |
 //! | native | compile + link + execute (Linux host) | not Linux |
 //! | JVM | compile + `java` (verifier on) + execute | `java`/`javac` absent |
@@ -63,9 +64,9 @@
 use std::process::Command;
 use std::sync::{Arc, Mutex};
 
-use interpreter_ir::op_registry::{registry_entry, OpSupport, STANDARD_OPS};
+use interpreter_ir::op_registry::{language_name_violation, lookup, registry_entry, OpSupport, STANDARD_OPS};
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
-use lang_aot::{check_module_for, Backend, LangAotError};
+use lang_aot::{check_module_for, Backend, LangAotError, Language};
 
 mod common;
 
@@ -355,27 +356,109 @@ const FLOAT_TABLE: &[(u64, &str, &str)] = &[
     (0x40B99E157689CA19, "6558.08384", "6558.08384"),
 ];
 
-/// `writer(x); putchar('\n')` for every value of [`FLOAT_TABLE`].
-fn float_table_program(writer: &str) -> IIRModule {
-    let mut body = vec![int("nl", 10)];
-    for (i, (bits, _, _)) in FLOAT_TABLE.iter().enumerate() {
-        let x = format!("x{i}");
-        body.push(real(&x, f64::from_bits(*bits)));
-        body.push(builtin(writer, &x));
-        body.push(builtin("putchar", "nl"));
-    }
-    program(body)
+// --- LANG83 PR7e: the PR6a table, printed by the compilers' own helpers --------
+//
+// PR6a printed each table value with the `write_f64_py` / `write_f64_js`
+// builtins, which every backend lowered. LANG83 PR7e removed them: since
+// PR7c-js / PR7c-py each compiler lays a float out itself, in module-local
+// helpers built from `f64_class` / `f64_digits` / `f64_exp10`, integer ops and
+// `putchar`. So the table now runs through those helpers, taken verbatim from
+// the module each compiler produces, and the PR6a strings stay the oracle:
+// every value must print byte for byte what host `python3` / `node` print, on
+// every column.
+
+/// A float layout: the compiler that emits it, a one-print program in that
+/// language, the helpers' common prefix and the entry helper's name.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Layout {
+    /// python-iir-compiler's `__py_write_float` (`repr(float)`).
+    Python,
+    /// javascript-iir-compiler's `__js_write_number` (`Number::toString`).
+    JavaScript,
 }
 
-/// The expected (trimmed) stdout of [`float_table_program`], one line per row.
-fn float_table_expect(js: bool) -> &'static str {
-    static PY: std::sync::OnceLock<String> = std::sync::OnceLock::new();
-    static JS: std::sync::OnceLock<String> = std::sync::OnceLock::new();
-    let cell = if js { &JS } else { &PY };
-    cell.get_or_init(|| {
-        let lines: Vec<&str> = FLOAT_TABLE.iter().map(|(_, py, js_text)| if js { *js_text } else { *py }).collect();
-        lines.join("\n")
-    })
+impl Layout {
+    fn entry(self) -> &'static str {
+        match self {
+            Layout::Python => "__py_write_float",
+            Layout::JavaScript => "__js_write_number",
+        }
+    }
+
+    /// The helper functions the compiler emits into a module that prints a
+    /// float: compiled once from a one-print program and taken by prefix, so
+    /// they are exactly what every float-printing module of that language
+    /// carries.
+    fn helpers(self) -> Vec<IIRFunction> {
+        static PY: std::sync::OnceLock<Vec<IIRFunction>> = std::sync::OnceLock::new();
+        static JS: std::sync::OnceLock<Vec<IIRFunction>> = std::sync::OnceLock::new();
+        let (cell, language, source, prefix) = match self {
+            Layout::Python => (&PY, Language::Python, "print(1.5)\n", "__py_"),
+            Layout::JavaScript => (&JS, Language::JavaScript, "console.log(1.5);\n", "__js_"),
+        };
+        cell.get_or_init(|| {
+            let module = lang_aot::compile_source_to_iir(language, source, "layout")
+                .unwrap_or_else(|e| panic!("{language}: the one-print program must compile: {e}"));
+            let helpers: Vec<IIRFunction> =
+                module.functions.into_iter().filter(|f| f.name.starts_with(prefix)).collect();
+            assert_eq!(helpers.len(), 4, "{language}: the layout, digit count, digit writer and uint writer");
+            assert!(helpers.iter().any(|f| f.name == self.entry()), "{language}: {} is emitted", self.entry());
+            helpers
+        })
+        .clone()
+    }
+}
+
+/// `program(body)` plus the helpers of every layout in `layouts`.
+fn program_with(body: Vec<IIRInstr>, layouts: &[Layout]) -> IIRModule {
+    let mut module = program(body);
+    for layout in layouts {
+        for helper in layout.helpers() {
+            module.add_or_replace(helper);
+        }
+    }
+    module
+}
+
+/// `call <layout>(x)`, the way the compilers print a float. The unused `0`
+/// result goes to one register, `printed`, as python-iir-compiler's does.
+fn print_float(layout: Layout, x: &str) -> IIRInstr {
+    IIRInstr::new("call", Some("printed".into()), vec![var(layout.entry()), var(x)], "i64")
+}
+
+/// `layout(x); putchar('\n')` for every value of [`FLOAT_TABLE`] that `keep`
+/// accepts.
+fn float_table_program(layout: Layout, keep: fn(f64) -> bool) -> IIRModule {
+    let mut body = vec![int("nl", 10)];
+    for (i, (bits, _, _)) in FLOAT_TABLE.iter().enumerate() {
+        let x = f64::from_bits(*bits);
+        if !keep(x) {
+            continue;
+        }
+        let name = format!("x{i}");
+        body.push(real(&name, x));
+        body.push(print_float(layout, &name));
+        body.push(builtin("putchar", "nl"));
+    }
+    program_with(body, &[layout])
+}
+
+/// The expected (trimmed) stdout of [`float_table_program`]: the PR6a
+/// table's Python or JavaScript column, one line per kept row.
+fn float_table_expect(layout: Layout, finite_rows: bool) -> &'static str {
+    static CELLS: std::sync::OnceLock<Vec<String>> = std::sync::OnceLock::new();
+    let cells = CELLS.get_or_init(|| {
+        let column = |js: bool, keep: fn(f64) -> bool| {
+            FLOAT_TABLE
+                .iter()
+                .filter(|(bits, _, _)| keep(f64::from_bits(*bits)))
+                .map(|(_, py, js_text)| if js { *js_text } else { *py })
+                .collect::<Vec<&str>>()
+                .join("\n")
+        };
+        vec![column(false, finite), column(false, non_finite), column(true, finite), column(true, non_finite)]
+    });
+    &cells[usize::from(layout == Layout::JavaScript) * 2 + usize::from(!finite_rows)]
 }
 
 // --- LANG83 PR7b: the digits on their own -----------------------------------
@@ -567,10 +650,16 @@ fn compare(name: &str, a: i64, b: i64) -> IIRModule {
 }
 
 /// LANG83 PR6c: for each `(op, operands, print_sign)`, compute `op` on float
-/// constants, `write_f64_js` the result and — when `print_sign` — a space and
-/// its `f64_signbit` via `write_i64`; a `\n` after each row. A NaN row does
-/// not print its sign: the spec leaves a NaN's sign unspecified (x86's
+/// constants and print the result as `class digits exp10` (`f64_class`,
+/// `f64_digits`, `f64_exp10` via `write_i64`) and — when `print_sign` — a
+/// space and its `f64_signbit`; a `\n` after each row. Those four integers
+/// identify every value (`2 0 0 1` is -Infinity, `0 0 0 1` is -0). A NaN row
+/// does not print its sign: the spec leaves a NaN's sign unspecified (x86's
 /// default NaN has it set, AArch64's does not).
+///
+/// PR6a printed the result with `write_f64_js` (gone since PR7e). The digit
+/// ops keep `main` call-free, so the JIT column still runs the IEEE ops as
+/// compiled bytecode.
 fn ieee_rows(rows: &[(&str, &[f64], bool)]) -> IIRModule {
     let mut body = vec![int("sp", 32), int("nl", 10)];
     for (i, (name, xs, sign)) in rows.iter().enumerate() {
@@ -581,7 +670,14 @@ fn ieee_rows(rows: &[(&str, &[f64], bool)]) -> IIRModule {
         let (r, s) = (format!("r{i}"), format!("s{i}"));
         let src_refs: Vec<&str> = srcs.iter().map(String::as_str).collect();
         body.push(op(name, &r, &src_refs, "f64"));
-        body.push(builtin("write_f64_js", &r));
+        for (k, query) in ["f64_class", "f64_digits", "f64_exp10"].iter().enumerate() {
+            let q = format!("q{i}_{k}");
+            body.push(op(query, &q, &[&r], "i64"));
+            body.push(builtin("write_i64", &q));
+            if k < 2 {
+                body.push(builtin("putchar", "sp"));
+            }
+        }
         if *sign {
             body.push(builtin("putchar", "sp"));
             body.push(op("f64_signbit", &s, &[&r], "i64"));
@@ -785,66 +881,88 @@ fn cases() -> Vec<Case> {
             },
             expect: Expect::StdoutThenTrap("1", "Trap.DivZero"),
         },
-        // ── LANG83 PR6a: shortest round-trip float output ───────────────────
+        // ── LANG83 PR6a → PR7e: shortest round-trip float output ────────────
+        //
+        // PR6a's float writers are gone (PR7e). The same table, the same
+        // expected strings, now printed by the compilers' own helpers. The
+        // finite rows run on all nine backends (BEAM included); ±Infinity and
+        // NaN, which a BEAM float cannot hold, are cases of their own.
         Case {
-            name: "write_f64_py prints Python's repr for every table value (PR6a)",
-            build: || float_table_program("write_f64_py"),
-            expect: Expect::Stdout(float_table_expect(false)),
+            name: "Python's repr helper prints every finite table value (PR7e)",
+            build: || float_table_program(Layout::Python, finite),
+            expect: Expect::Stdout(float_table_expect(Layout::Python, true)),
         },
         Case {
-            name: "write_f64_js prints JavaScript's toString for every table value (PR6a)",
-            build: || float_table_program("write_f64_js"),
-            expect: Expect::Stdout(float_table_expect(true)),
+            name: "Python's repr helper prints the infinities and NaN (PR7e)",
+            build: || float_table_program(Layout::Python, non_finite),
+            expect: Expect::Stdout(float_table_expect(Layout::Python, false)),
         },
         Case {
-            name: "write_f64 shares one ordered stream with write_i64, print_i64 and putchar (PR6a)",
+            name: "JavaScript's Number::toString helper prints every finite table value (PR7e)",
+            build: || float_table_program(Layout::JavaScript, finite),
+            expect: Expect::Stdout(float_table_expect(Layout::JavaScript, true)),
+        },
+        Case {
+            name: "JavaScript's Number::toString helper prints the infinities and NaN (PR7e)",
+            build: || float_table_program(Layout::JavaScript, non_finite),
+            expect: Expect::Stdout(float_table_expect(Layout::JavaScript, false)),
+        },
+        Case {
+            name: "the layout helpers share one ordered stream with write_i64, print_i64 and putchar (PR7e)",
             build: || {
-                program(vec![
-                    int("seven", 7),
-                    real("half", 0.5),
-                    int("one", 1),
-                    real("negzero", -0.0),
-                    int("sp", 32),
-                    real("big", 1e21),
-                    builtin("write_i64", "seven"),
-                    builtin("write_f64_py", "half"),
-                    print_i64("one"),
-                    builtin("write_f64_js", "negzero"),
-                    builtin("putchar", "sp"),
-                    builtin("write_f64_py", "negzero"),
-                    builtin("putchar", "sp"),
-                    builtin("write_f64_js", "big"),
-                ])
+                program_with(
+                    vec![
+                        int("seven", 7),
+                        real("half", 0.5),
+                        int("one", 1),
+                        real("negzero", -0.0),
+                        int("sp", 32),
+                        real("big", 1e21),
+                        builtin("write_i64", "seven"),
+                        print_float(Layout::Python, "half"),
+                        print_i64("one"),
+                        print_float(Layout::JavaScript, "negzero"),
+                        builtin("putchar", "sp"),
+                        print_float(Layout::Python, "negzero"),
+                        builtin("putchar", "sp"),
+                        print_float(Layout::JavaScript, "big"),
+                    ],
+                    &[Layout::Python, Layout::JavaScript],
+                )
             },
             expect: Expect::Stdout("70.51\n0 -0.0 1e+21"),
         },
         Case {
-            name: "write_f64 prints computed floats, not only constants (PR6a)",
+            name: "the layout helpers print computed floats, not only constants (PR7e)",
             build: || {
-                program(vec![
-                    real("a", 0.1),
-                    real("b", 0.2),
-                    op("add", "c", &["a", "b"], "f64"),
-                    int("sp", 32),
-                    int("n", 7),
-                    op("int_to_real", "r", &["n"], "f64"),
-                    builtin("write_f64_py", "c"),
-                    builtin("putchar", "sp"),
-                    builtin("write_f64_js", "c"),
-                    builtin("putchar", "sp"),
-                    builtin("write_f64_py", "r"),
-                    builtin("putchar", "sp"),
-                    builtin("write_f64_js", "r"),
-                ])
+                program_with(
+                    vec![
+                        real("a", 0.1),
+                        real("b", 0.2),
+                        op("add", "c", &["a", "b"], "f64"),
+                        int("sp", 32),
+                        int("n", 7),
+                        op("int_to_real", "r", &["n"], "f64"),
+                        print_float(Layout::Python, "c"),
+                        builtin("putchar", "sp"),
+                        print_float(Layout::JavaScript, "c"),
+                        builtin("putchar", "sp"),
+                        print_float(Layout::Python, "r"),
+                        builtin("putchar", "sp"),
+                        print_float(Layout::JavaScript, "r"),
+                    ],
+                    &[Layout::Python, Layout::JavaScript],
+                )
             },
             expect: Expect::Stdout("0.30000000000000004 0.30000000000000004 7.0 7"),
         },
         // ── LANG83 PR6c: IEEE f64 arithmetic that never traps ───────────────
         //
         // The spec's edge table: infinities from division and overflow, NaN,
-        // signed zeros, an inexact sum. Every row's value is printed with
-        // `write_f64_js` and (except NaN) its sign bit, so `-0` — which
-        // JavaScript prints as `0` — is still told apart from `+0`.
+        // signed zeros, an inexact sum. Every row's value is printed as
+        // `class digits exp10` and (except NaN) its sign bit, so `-0` is told
+        // apart from `+0` (see `ieee_rows`; PR6a printed it with
+        // `write_f64_js`, removed in PR7e).
         Case {
             name: "IEEE edges: infinities, NaN, signed zeros (PR6c)",
             build: || {
@@ -868,9 +986,11 @@ fn cases() -> Vec<Case> {
                     ("f64_neg", &[-inf], true),
                 ])
             },
+            // Infinity, -Infinity, -Infinity, NaN ×3, Infinity, -0, 0, -0,
+            // 0, 0, -0, 0, 0.30000000000000004, Infinity.
             expect: Expect::Stdout(
-                "Infinity 0\n-Infinity 1\n-Infinity 1\nNaN\nNaN\nNaN\nInfinity 0\n0 1\n0 0\n0 1\n0 0\n\
-                 0 0\n0 1\n0 0\n0.30000000000000004 0\nInfinity 0",
+                "2 0 0 0\n2 0 0 1\n2 0 0 1\n3 0 0\n3 0 0\n3 0 0\n2 0 0 0\n0 0 0 1\n0 0 0 0\n0 0 0 1\n\
+                 0 0 0 0\n0 0 0 0\n0 0 0 1\n0 0 0 0\n1 30000000000000004 -1 0\n2 0 0 0",
             ),
         },
         // Constants only, finite values only, no arithmetic: the one PR6c case
@@ -902,13 +1022,22 @@ fn cases() -> Vec<Case> {
                     op("f64_mul", "x", &["x", "x"], "f64"),
                     op("f64_sub", "x", &["x", "z"], "f64"),
                     op("f64_neg", "x", &["x"], "f64"),
-                    builtin("write_f64_js", "x"),
+                    op("f64_digits", "d", &["x"], "i64"),
+                    builtin("write_i64", "d"),
+                    builtin("putchar", "sp"),
+                    op("f64_signbit", "s", &["x"], "i64"),
+                    builtin("write_i64", "s"),
                     builtin("putchar", "sp"),
                     op("f64_div", "x", &["x", "z"], "f64"),
-                    builtin("write_f64_js", "x"),
+                    op("f64_class", "c", &["x"], "i64"),
+                    builtin("write_i64", "c"),
+                    builtin("putchar", "sp"),
+                    op("f64_signbit", "s2", &["x"], "i64"),
+                    builtin("write_i64", "s2"),
                 ])
             },
-            expect: Expect::Stdout("-9 -Infinity"),
+            // -9 (digits 9, sign 1), then -9 / 0 = -Infinity (class 2, sign 1).
+            expect: Expect::Stdout("9 1 2 1"),
         },
         // ── LANG83 PR7b: the language-neutral float primitives ──────────────
         //
@@ -955,11 +1084,12 @@ fn cases() -> Vec<Case> {
         // that shared a name with one of them (PR7b first named its C helper
         // `__iir_f64_digits`, the LLVM core's name) would interpose on it:
         // `write_f64_py 0.1` printed `0.0` and `123.456` crashed. The LLVM
-        // helpers are now `internal` and the C ones `__twig_*`.
+        // helpers are now `internal` and the C ones `__twig_*`. Since PR7e the
+        // floats are printed by Python's layout helper, over the same digits.
         Case {
-            name: "float digits and writers survive a linked native runtime (PR7b review)",
+            name: "float digits and the layout helper survive a linked native runtime (PR7b review)",
             build: || {
-                program(vec![
+                program_with(vec![
                     text("a", "xy"),
                     text("b", "xy"),
                     int("sp", 32),
@@ -969,9 +1099,9 @@ fn cases() -> Vec<Case> {
                     op("str_eq", "e", &["a", "b"], "i64"),
                     builtin("write_i64", "e"),
                     builtin("putchar", "sp"),
-                    builtin("write_f64_py", "x"),
+                    print_float(Layout::Python, "x"),
                     builtin("putchar", "sp"),
-                    builtin("write_f64_py", "y"),
+                    print_float(Layout::Python, "y"),
                     builtin("putchar", "sp"),
                     op("f64_digits", "d", &["x"], "i64"),
                     builtin("write_i64", "d"),
@@ -981,7 +1111,7 @@ fn cases() -> Vec<Case> {
                     builtin("putchar", "sp"),
                     op("f64_digits", "d2", &["h"], "i64"),
                     builtin("write_i64", "d2"),
-                ])
+                ], &[Layout::Python])
             },
             expect: Expect::Stdout("1 123.456 0.1 123456 2 15"),
         },
@@ -1241,20 +1371,8 @@ fn register_vm_output(vm: &mut vm_core::VMCore, sink: &Sink) {
         s.lock().expect("sink").extend_from_slice(n.to_string().as_bytes());
         Ok(Value::Null)
     });
-    // LANG83 PR6a: the same formatter as vm-core's default builtins.
-    for (name, layout) in [
-        ("write_f64_py", vm_core::float_format::FloatLayout::Python),
-        ("write_f64_js", vm_core::float_format::FloatLayout::JavaScript),
-    ] {
-        let s = Arc::clone(sink);
-        vm.builtins_mut().register(name, move |args: &[Value]| {
-            let x = args.first().and_then(Value::as_f64).ok_or_else(|| {
-                vm_core::errors::VMError::Custom(format!("{name}: expected a float, got {args:?}"))
-            })?;
-            s.lock().expect("sink").extend_from_slice(vm_core::float_format::format_f64(x, layout).as_bytes());
-            Ok(Value::Null)
-        });
-    }
+    // No float writer: LANG83 PR7e removed `write_f64_py` / `write_f64_js`;
+    // a float is printed by its compiler's layout helper, through `putchar`.
     let s = Arc::clone(sink);
     vm.builtins_mut().register("print_str", move |args: &[Value]| {
         let text = args.first().and_then(Value::as_str).unwrap_or("");
@@ -1263,11 +1381,23 @@ fn register_vm_output(vm: &mut vm_core::VMCore, sink: &Sink) {
     });
 }
 
+/// LANG83 PR7e: no builtin a runner registers may name a source language,
+/// exactly like the registry's ops and trap kinds. (PR6a's runners had
+/// `write_f64_py` / `write_f64_js` sinks.)
+fn assert_runner_builtins_name_no_language<'a>(column: &str, names: impl IntoIterator<Item = &'a str>) {
+    for name in names {
+        if let Some(why) = language_name_violation(name) {
+            panic!("{column} runner builtin: {why}");
+        }
+    }
+}
+
 fn run_vm(module: IIRModule) -> RunResult {
     let mut module = module;
     let mut vm = vm_core::VMCore::new();
     let sink: Sink = Arc::default();
     register_vm_output(&mut vm, &sink);
+    assert_runner_builtins_name_no_language("Vm", vm.builtins_mut().names());
     match vm.execute(&mut module, "main", &[]) {
         Ok(_) => RunResult::Completed { stdout: sink_text(&sink) },
         Err(vm_core::errors::VMError::Trap { kind }) => RunResult::Trapped { stdout: sink_text(&sink), kind: Some(kind) },
@@ -1276,8 +1406,9 @@ fn run_vm(module: IIRModule) -> RunResult {
 }
 
 /// The JIT column. Only cases whose every op the JIT declares `Lowered` reach
-/// here, so `main` must genuinely be JIT-compiled — asserting it is what stops
-/// the interpreter fallback from passing as JIT support.
+/// here, so every call-free function (`main`, unless the case prints with a
+/// compiler's layout helper) must genuinely be JIT-compiled — asserting it is
+/// what stops the interpreter fallback from passing as JIT support.
 ///
 /// `main` is compiled explicitly with `JITCore::compile` rather than left to
 /// `execute_with_jit`'s eager phase, because that phase only compiles
@@ -1313,34 +1444,53 @@ fn run_jit(module: IIRModule, case: &Case) -> RunResult {
         s.lock().expect("sink").extend_from_slice(n.to_string().as_bytes());
         Value::Null
     });
-    // LANG83 PR6a: `CALL_BUILTIN_F64` hands the handler a `Value::Float`.
-    for (name, layout) in [
-        ("write_f64_py", vm_core::float_format::FloatLayout::Python),
-        ("write_f64_js", vm_core::float_format::FloatLayout::JavaScript),
-    ] {
-        let s = Arc::clone(&sink);
-        backend.register_builtin(name, move |args: &[Value]| {
-            // A non-float would be a JIT bug; print a marker the case cannot match.
-            let text = args.first().and_then(Value::as_f64).map_or_else(
-                || format!("<{name}: not a float: {args:?}>"),
-                |x| vm_core::float_format::format_f64(x, layout),
-            );
-            s.lock().expect("sink").extend_from_slice(text.as_bytes());
-            Value::Null
-        });
-    }
     // `run` cannot return an error, so a JIT-side trap lands in this slot;
     // `JITCore` must drain it into an `Err` (fail closed). A message still
     // sitting here after `execute` returns means the trap failed open.
     let error_slot = Arc::clone(&backend.error);
+    assert_runner_builtins_name_no_language("Jit", backend.builtin_names().iter().map(String::as_str));
+    assert_runner_builtins_name_no_language("Jit (interpreter tier)", vm.builtins_mut().names());
     let mut jit = JITCore::new(&mut vm, Box::new(backend));
-    let compiled = jit.compile(&mut vm, &module, "main");
+    // Every function without a `call` must be JIT-compiled. The generic JIT
+    // has no bytecode for `call`, so a function that makes one (`main` of a
+    // case that prints with a compiler's layout helper, the helper itself)
+    // runs on the interpreter tier and calls the compiled ones — the split
+    // the `lang_matrix` Python and JavaScript rows have (LANG83 PR7c).
+    let call_free: Vec<String> = module
+        .functions
+        .iter()
+        .filter(|f| f.instructions.iter().all(|i| i.op != "call"))
+        .map(|f| f.name.clone())
+        .collect();
     assert!(
-        matches!(compiled, Ok(true)) && jit.is_compiled("main"),
-        "Jit: case `{}` uses only JIT-Lowered ops, so `main` must be JIT-compiled ({compiled:?})",
+        !call_free.is_empty(),
+        "Jit: case `{}` must have a call-free function for the JIT to compile",
         case.name
     );
+    for name in &call_free {
+        let compiled = jit.compile(&mut vm, &module, name);
+        assert!(
+            matches!(compiled, Ok(true)) && jit.is_compiled(name),
+            "Jit: case `{}` uses only JIT-Lowered ops, so `{name}` must be JIT-compiled ({compiled:?})",
+            case.name
+        );
+    }
     let result = jit.execute(&mut vm, &mut module, "main", &[]);
+    // A compiled function that ran really ran as JIT code: `main` when it is
+    // call-free, otherwise the helpers it reaches. A layout helper reaches
+    // its compiled digit writer for every finite non-zero value, so a case
+    // whose output holds a digit must have run one; `inf`, `nan` and the
+    // zeros are written by the (interpreted) entry helper alone.
+    let prints_a_digit = match case.expect {
+        Expect::Stdout(out) | Expect::StdoutThenTrap(out, _) => out.bytes().any(|b| b.is_ascii_digit()),
+    };
+    if !call_free.iter().any(|n| n == "main") && prints_a_digit {
+        let stats = jit.cache_stats();
+        let ran_compiled = call_free.iter().any(|n| {
+            stats.get(n).and_then(|s| s.get("exec_count")).and_then(|c| c.parse::<u64>().ok()).is_some_and(|c| c > 0)
+        });
+        assert!(ran_compiled, "Jit: case `{}` never ran a compiled function ({stats:?})", case.name);
+    }
     let leftover = error_slot.lock().expect("jit error slot").take();
     assert!(
         leftover.is_none(),
@@ -1875,17 +2025,30 @@ fn pr4_ops_are_lowered_on_every_backend() {
     }
 }
 
+/// LANG83 PR7e: PR6a's float writers are gone — from the registry, from
+/// every backend's `OP_SUPPORT`, and from every compile entry point, which
+/// now refuses a module that still calls one — and the PR6a table, printed
+/// by the Python and JavaScript compilers' own layout helpers, runs (with
+/// the PR6a strings) on every executable column whose toolchain is present.
+/// BEAM compiles the finite cases and refuses the ones holding ±Infinity and
+/// NaN constants.
 #[test]
-fn pr6a_ops_are_lowered_on_every_backend() {
-    let pr6a: Vec<&str> = STANDARD_OPS.iter().filter(|s| s.is_pr6a()).map(|s| s.name).collect();
-    assert_eq!(pr6a, ["write_f64_py", "write_f64_js"], "the PR6a float writers");
-    for name in pr6a {
+fn pr7e_float_writers_are_gone_and_the_layouts_run_everywhere() {
+    for name in ["write_f64_py", "write_f64_js"] {
+        assert!(lookup(name).is_none(), "{name} must not be a registry entry");
+        assert!(language_name_violation(name).is_some(), "the language-name rule must catch {name}");
         for backend in Backend::ALL {
-            assert!(backend.op_support(name).is_lowered(), "{backend} refuses {name}: {:?}", backend.op_support(name));
+            assert!(!backend.op_support(name).is_lowered(), "{backend} still declares {name}");
         }
+        // A module that still calls one is refused by every code-generation
+        // backend (an unknown builtin), never compiled into a call nothing
+        // defines; the VM has no such builtin either.
+        let module = || program(vec![int("nl", 10), real("x", 1.5), builtin(name, "x"), builtin("putchar", "nl")]);
+        for &backend in COMPILE_BACKENDS.iter().chain(std::iter::once(&Backend::native_host())) {
+            assert!(compile_on(backend, module()).is_err(), "{backend} compiled a call to {name}");
+        }
+        assert!(matches!(run_vm(module()), RunResult::Trapped { kind: None, .. }), "Vm ran {name}");
     }
-    // Both table cases run — and pass — on every executable column: the
-    // in-process ones always, the toolchain ones whenever the tool exists.
     let mut required = vec!["Wasm", "Vm", "Jit"];
     if clang_ok() {
         required.push("Llvm");
@@ -1897,15 +2060,53 @@ fn pr6a_ops_are_lowered_on_every_backend() {
         required.push("Jvm");
     }
     let corpus = cases();
-    let tables: Vec<&Case> = corpus.iter().filter(|c| c.name.contains("for every table value")).collect();
-    assert_eq!(tables.len(), 2);
-    for case in tables {
+    let pr7e: Vec<&Case> = corpus.iter().filter(|c| c.name.ends_with("(PR7e)")).collect();
+    assert_eq!(pr7e.len(), 6);
+    let columns = [
+        ("Wasm", Backend::Wasm),
+        ("Vm", Backend::Vm),
+        ("Jit", Backend::Jit),
+        ("Llvm", Backend::Llvm),
+        ("NativeAot", Backend::native_host()),
+        ("Jvm", Backend::Jvm),
+    ];
+    let mut table_rows = 0;
+    for case in pr7e {
+        let table = case.name.contains("table value") || case.name.contains("infinities");
         let ran = execute_everywhere(case);
-        for column in &required {
-            assert!(ran.contains(column), "{}: did not run on {column} (ran {ran:?})", case.name);
+        for (column, backend) in columns {
+            // The table cases use only ops every column lowers; the
+            // computed-float case's `int_to_real` keeps it off the JIT.
+            assert!(!table || case.lowered_on(backend) || backend == Backend::Beam, "{}: {column}", case.name);
+            if required.contains(&column) && case.lowered_on(backend) {
+                assert!(ran.contains(&column), "{}: did not run on {column} (ran {ran:?})", case.name);
+            }
         }
-        eprintln!("LANG83 PR6a `{}` proven on {ran:?}", case.name);
+        match (case.lowered_on(Backend::Beam), case.has_non_finite_float_const(), compile_on(Backend::Beam, case.module())) {
+            (true, _, Ok(())) => {}
+            (false, true, Err(e)) => assert!(e.to_string().contains("non-finite float"), "{}: {e}", case.name),
+            (false, false, Err(LangAotError::UnsupportedOps(e))) => assert_eq!(e.backend, Backend::Beam),
+            (_, _, other) => panic!("{}: BEAM gave {other:?}", case.name),
+        }
+        if table {
+            let Expect::Stdout(out) = case.expect else { unreachable!() };
+            table_rows += out.lines().count();
+        }
+        eprintln!("LANG83 PR7e `{}` proven on {ran:?}", case.name);
     }
+    // Every PR6a table value, in both layouts.
+    assert_eq!(table_rows, 2 * FLOAT_TABLE.len());
+}
+
+/// LANG83 PR7e: no builtin either runner registers names a source language
+/// (the runners also check this on every run).
+#[test]
+fn harness_builtins_name_no_language() {
+    let mut vm = vm_core::VMCore::new();
+    register_vm_output(&mut vm, &Sink::default());
+    let names = vm.builtins_mut().names();
+    assert!(names.contains(&"putchar") && !names.contains(&"write_f64_py"), "{names:?}");
+    assert_runner_builtins_name_no_language("Vm", names);
 }
 
 /// LANG83 PR6c: the IEEE arithmetic is lowered on the eight IEEE backends and
@@ -2008,7 +2209,7 @@ fn llvm_float_helpers_cannot_be_interposed_by_the_native_runtime() {
     let case = corpus.iter().find(|c| c.name.ends_with("(PR7b review)")).expect("the regression case");
     let ll = lang_aot::compile_iir_to_llvm(case.module(), "opconf", "x86_64-unknown-linux-gnu").expect("compiles");
     assert!(ll.contains("@__twig_"), "the module must make run_llvm link the native runtime");
-    for name in ["__iir_f64_digits", "__iir_f64_shortest_digits", "__iir_f64_shortest_exp10", "__iir_write_f64"] {
+    for name in ["__iir_f64_digits", "__iir_f64_shortest_digits", "__iir_f64_shortest_exp10"] {
         let def = ll.lines().find(|l| l.starts_with("define") && l.contains(&format!("@{name}("))).unwrap_or_else(|| panic!("{name} defined"));
         assert!(def.starts_with("define internal "), "{name} must not be interposable: {def}");
     }
@@ -2158,17 +2359,19 @@ fn print_i64_and_putchar_share_one_ordered_stream() {
     eprintln!("LANG83 print_i64 + putchar ordering proven on {ran:?}");
 }
 
-/// BEAM refuses the float-table modules at compile time instead of building
-/// a `.beam` whose literal table holds `inf`/`nan`, which no Erlang loader
-/// reads. A table with only finite values still compiles.
+/// BEAM refuses a float-table module that holds `inf`/`nan` at compile time
+/// instead of building a `.beam` whose literal table no Erlang loader reads.
+/// The finite table, helpers included, still compiles.
 #[test]
 fn beam_refuses_non_finite_float_constants() {
-    for writer in ["write_f64_py", "write_f64_js"] {
-        match compile_on(Backend::Beam, float_table_program(writer)) {
-            Err(e) => assert!(e.to_string().contains("non-finite float"), "{writer}: {e}"),
-            Ok(()) => panic!("{writer}: BEAM compiled a module holding inf/nan constants"),
+    for layout in [Layout::Python, Layout::JavaScript] {
+        match compile_on(Backend::Beam, float_table_program(layout, non_finite)) {
+            Err(e) => assert!(e.to_string().contains("non-finite float"), "{layout:?}: {e}"),
+            Ok(()) => panic!("{layout:?}: BEAM compiled a module holding inf/nan constants"),
         }
+        compile_on(Backend::Beam, float_table_program(layout, finite))
+            .unwrap_or_else(|e| panic!("{layout:?}: finite float constants compile on BEAM: {e}"));
     }
-    let finite = program(vec![int("nl", 10), real("x", 1.5), builtin("write_f64_py", "x"), builtin("putchar", "nl")]);
-    compile_on(Backend::Beam, finite).expect("finite float constants compile on BEAM");
+    let digits = program(vec![real("x", 1.5), op("f64_digits", "d", &["x"], "i64"), builtin("write_i64", "d")]);
+    compile_on(Backend::Beam, digits).expect("a finite digit query compiles on BEAM");
 }

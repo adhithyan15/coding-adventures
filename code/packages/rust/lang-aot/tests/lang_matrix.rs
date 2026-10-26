@@ -13275,12 +13275,17 @@ fn run_clr_il(p: &Prog, il: &str, input: &[u8], ilasm: &std::path::Path) -> RunR
     RunResult::Completed { code, stdout: printed }
 }
 
-/// Python's `repr(x)`, the text LANG83 PR6a `write_f64_py` writes: the same
-/// formatter vm-core's default builtin uses, so the VM and JIT sinks capture
-/// exactly what a standalone run would print. (Since LANG83 PR7c-py no
-/// Python row calls `write_f64_py`; the module writes `repr` itself.)
-fn py_float_text(x: f64) -> String {
-    vm_core::float_format::python_repr(x)
+/// LANG83 PR7e: every builtin a harness registers names no source language,
+/// exactly like the registry's ops and trap kinds
+/// (`interpreter_ir::op_registry::language_name_violation`). The VM and JIT
+/// runners call this on what they registered, so a sink named after a
+/// language (PR6a's `write_f64_py` / `write_f64_js`) cannot come back.
+fn assert_harness_builtins_name_no_language<'a>(column: &str, names: impl IntoIterator<Item = &'a str>) {
+    for name in names {
+        if let Some(why) = interpreter_ir::op_registry::language_name_violation(name) {
+            panic!("{column} harness builtin: {why}");
+        }
+    }
 }
 
 /// VM runner: source → IIR (`compile_source_to_iir`) → the **generic register VM**
@@ -13315,13 +13320,6 @@ fn py_float_text(x: f64) -> String {
 /// The passes are no-ops on programs without those constructs (every non-Twig /
 /// non-dynamic cell), matching how the code-gen pipelines already run them for
 /// every language.
-/// JavaScript's `String(x)`, the text LANG83 PR6a `write_f64_js` writes: the
-/// same formatter vm-core's default builtin uses, so the VM and JIT columns
-/// capture exactly what a standalone run would print.
-fn js_number_text(x: f64) -> String {
-    vm_core::float_format::format_f64(x, vm_core::float_format::FloatLayout::JavaScript)
-}
-
 fn lower_dynamic_for_generic_engine(module: &mut interpreter_ir::IIRModule) {
     iir_builtin_lowering::lower_global_io(module);
     iir_builtin_lowering::lower_closures_to_heap(module);
@@ -13383,36 +13381,9 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
         bytes.lock().expect("lang-matrix VM putchar buffer poisoned").push(b);
         Ok(Value::Null)
     });
-    // LANG83 PR6a `write_f64_js` (JavaScript's `console.log`, LANG84 6e): the
-    // float's `String(x)` text, into the same ordered buffer. vm-core's default
-    // would write to the process stdout, where the harness cannot see it.
-    let bytes = Arc::clone(&printed_bytes);
-    vm.builtins_mut().register("write_f64_js", move |args: &[Value]| {
-        let x = args.first().and_then(Value::as_f64).ok_or_else(|| {
-            vm_core::errors::VMError::Custom(format!("write_f64_js: expected a float, got {args:?}"))
-        })?;
-        bytes
-            .lock()
-            .expect("lang-matrix VM output buffer poisoned")
-            .extend_from_slice(js_number_text(x).as_bytes());
-        Ok(Value::Null)
-    });
-    // LANG83 PR6a `write_f64_py`: `repr(x)`, into the same ordered buffer.
-    // vm-core's default would write to the process stdout, where the harness
-    // cannot see it. Since LANG83 PR7c-py the Python frontend prints with its
-    // own `__py_write_float` and never calls this; the sink stays until PR7e
-    // removes the builtin.
-    let bytes = Arc::clone(&printed_bytes);
-    vm.builtins_mut().register("write_f64_py", move |args: &[Value]| {
-        let x = args.first().and_then(Value::as_f64).ok_or_else(|| {
-            vm_core::errors::VMError::Custom(format!("write_f64_py: expected a float, got {args:?}"))
-        })?;
-        bytes
-            .lock()
-            .expect("lang-matrix VM output buffer poisoned")
-            .extend_from_slice(py_float_text(x).as_bytes());
-        Ok(Value::Null)
-    });
+    // No float writer: LANG83 PR7e removed `write_f64_py` / `write_f64_js`.
+    // The Python and JavaScript modules write every float themselves, with
+    // `putchar` (their `__py_write_float` / `__js_write_number` helpers).
     let bytes = Arc::clone(&printed_bytes);
     vm.builtins_mut().register("print_str", move |args: &[Value]| {
         let s = args.first().and_then(Value::as_str).unwrap_or("");
@@ -13460,6 +13431,7 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
     vm.builtins_mut().register("input_str", move |_args: &[Value]| {
         Ok(Value::Str(drain_stdin_line(&input)))
     });
+    assert_harness_builtins_name_no_language("Vm", vm.builtins_mut().names());
 
     let result = match vm.execute(&mut module, &entry, &[]) {
         Ok(result) => result,
@@ -13547,28 +13519,6 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
         Ok(Value::Null)
     });
     let bytes = Arc::clone(&printed_bytes);
-    vm.builtins_mut().register("write_f64_js", move |args: &[Value]| {
-        let x = args.first().and_then(Value::as_f64).ok_or_else(|| {
-            vm_core::errors::VMError::Custom(format!("write_f64_js: expected a float, got {args:?}"))
-        })?;
-        bytes
-            .lock()
-            .expect("lang-matrix JIT output buffer poisoned")
-            .extend_from_slice(js_number_text(x).as_bytes());
-        Ok(Value::Null)
-    });
-    let bytes = Arc::clone(&printed_bytes);
-    vm.builtins_mut().register("write_f64_py", move |args: &[Value]| {
-        let x = args.first().and_then(Value::as_f64).ok_or_else(|| {
-            vm_core::errors::VMError::Custom(format!("write_f64_py: expected a float, got {args:?}"))
-        })?;
-        bytes
-            .lock()
-            .expect("lang-matrix JIT output buffer poisoned")
-            .extend_from_slice(py_float_text(x).as_bytes());
-        Ok(Value::Null)
-    });
-    let bytes = Arc::clone(&printed_bytes);
     vm.builtins_mut().register("print_str", move |args: &[Value]| {
         let s = args.first().and_then(Value::as_str).unwrap_or("");
         bytes
@@ -13636,27 +13586,6 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
         bytes.lock().expect("lang-matrix JIT putchar buffer poisoned").push(b);
         Value::Null
     });
-    // `CALL_BUILTIN_F64` hands the compiled tier's handler a `Value::Float`.
-    let bytes = Arc::clone(&printed_bytes);
-    backend.register_builtin("write_f64_js", move |args: &[Value]| {
-        // A non-float would be a JIT bug; print a marker no row can match.
-        let text = args
-            .first()
-            .and_then(Value::as_f64)
-            .map_or_else(|| format!("<write_f64_js: not a float: {args:?}>"), js_number_text);
-        bytes.lock().expect("lang-matrix JIT output buffer poisoned").extend_from_slice(text.as_bytes());
-        Value::Null
-    });
-    let bytes = Arc::clone(&printed_bytes);
-    backend.register_builtin("write_f64_py", move |args: &[Value]| {
-        // A non-float would be a JIT bug; print a marker no row can match.
-        let text = args
-            .first()
-            .and_then(Value::as_f64)
-            .map_or_else(|| format!("<write_f64_py: not a float: {args:?}>"), py_float_text);
-        bytes.lock().expect("lang-matrix JIT output buffer poisoned").extend_from_slice(text.as_bytes());
-        Value::Null
-    });
     let input = Arc::clone(&stdin_buf);
     backend.register_builtin("getchar", move |_args: &[Value]| {
         let byte = input.lock().expect("lang-matrix JIT stdin buffer poisoned").pop_front();
@@ -13691,6 +13620,8 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     backend.register_builtin("equal?", |args: &[Value]| {
         Value::Bool(args.len() == 2 && args[0] == args[1])
     });
+    assert_harness_builtins_name_no_language("Jit (interpreter tier)", vm.builtins_mut().names());
+    assert_harness_builtins_name_no_language("Jit", backend.builtin_names().iter().map(String::as_str));
 
     // `JITCore::new` takes `&mut vm` only to thread thresholds — it does not hold the
     // borrow, so `execute_with_jit` can re-borrow `vm` for the interpreter tier.
