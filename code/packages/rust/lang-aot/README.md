@@ -1415,13 +1415,23 @@ division and `int`/`float` mixing, printed as Python `repr`:
 | `+ - *` with a float, `/` | `f64_add`, `f64_sub`, `f64_mul`, `f64_div` (PR6c, IEEE, never trap) |
 | `/` by a known `±0` | `trap "Trap.DivZero"` before the division |
 | `-a` (float) | `f64_neg` |
-| `print(a)` (float) | `write_f64_py`, `putchar 10` |
+| `print(a)` (float) | `call __py_write_float, a`, `putchar 10` |
 
 38 rows run `code/grammars/python/corpus/py-float-print/` on 3.13.16 and
 on its two class representatives, 3.6.0 and 3.5.10 (which refuses `_` in
 a float). The five literal-only rows declare all eight columns; the other
 33 declare `IEEE_COLUMNS`, because BEAM refuses the `f64_*` arithmetic at
 compile time (`UnsupportedOps`).
+
+Since LANG83 PR7c-py, `repr` is a function the compiler writes into the
+module, `__py_write_float`, built from the PR7b primitives `f64_class`,
+`f64_signbit`, `f64_digits` and `f64_exp10` plus integer helpers and
+`putchar`; it replaces the `write_f64_py` builtin. A module that prints no
+float carries none of it. BEAM lowers the helpers, so only the arithmetic
+decides a row's columns (`python_float_prints_lower_on_beam_once_the_arithmetic_is_gone`).
+On the JIT, the two call-free helpers compile and write every significant
+digit; `main` calls the helper, and the generic JIT has no `call`
+bytecode, so `main` runs on its interpreter tier.
 
 Since phase 7b, `--lang python@<release>` selects any profiled release of
 `code/grammars/python/releases.csv` exactly, through the same release API as

@@ -11371,9 +11371,12 @@ fn main() { out(1, VALUE); }\n",
     // Each source is a case of `code/grammars/python/corpus/py-float-print/`
     // verbatim, checked against host CPython 3.13 by
     // `python_rows_agree_with_the_host_python_oracle`. The two literal-only
-    // rows (`const`, `write_f64_py`, `putchar`) run on all eight columns; the
-    // rest use the LANG83 PR6c `f64_*` ops, which BEAM refuses at compile time
-    // (`UnsupportedOps`, which stage B allows), so they declare `IEEE_COLUMNS`.
+    // rows run on all eight columns; the rest use the LANG83 PR6c `f64_*`
+    // ops, which BEAM refuses at compile time (`UnsupportedOps`, which stage B
+    // allows), so they declare `IEEE_COLUMNS`. Since LANG83 PR7c-py a float is
+    // printed by the module's own `__py_write_float` helper
+    // (`f64_class`/`f64_signbit`/`f64_digits`/`f64_exp10` and integer code,
+    // all lowered on BEAM), so the arithmetic alone decides the columns.
     Prog { lang: Language::Python, ext: "py", src: python_float_case!("literals"), expect: Expect::Stdout("1.5\n0.5\n1.0\n0.25\n1000.0\n0.0025\n1e+16\n1000000000000000.0\n1e-05\n0.0001\n0.0\n0.1\n1.2345678901234568e+17\n1.7976931348623157e+308\n5e-324"), backends: EVERY_COLUMN, release: Some("3.13.16"), case: Some("py-float-print/literals") },
     Prog { lang: Language::Python, ext: "py", src: python_float_case!("float_underscores"), expect: Expect::Stdout("1000.5\n10000000000.0\n0.01\n1.001"), backends: EVERY_COLUMN, release: Some("3.13.16"), case: Some("py-float-print/float_underscores") },
     Prog { lang: Language::Python, ext: "py", src: python_float_case!("true_division"), expect: Expect::Stdout("3.5\n-3.5\n0.3333333333333333\n2.0\n-0.0\n0.0\n2.0\n3002399751580330.5\n-9007199254740992.0"), backends: IEEE_COLUMNS, release: Some("3.13.16"), case: Some("py-float-print/true_division") },
@@ -13272,10 +13275,10 @@ fn run_clr_il(p: &Prog, il: &str, input: &[u8], ilasm: &std::path::Path) -> RunR
     RunResult::Completed { code, stdout: printed }
 }
 
-/// Python's `repr(x)`, the text LANG83 PR6a `write_f64_py` writes (LANG84
-/// 7c slice 3, `py-float-print`): the same formatter vm-core's default
-/// builtin uses, so the VM and JIT columns capture exactly what a standalone
-/// run would print.
+/// Python's `repr(x)`, the text LANG83 PR6a `write_f64_py` writes: the same
+/// formatter vm-core's default builtin uses, so the VM and JIT sinks capture
+/// exactly what a standalone run would print. (Since LANG83 PR7c-py no
+/// Python row calls `write_f64_py`; the module writes `repr` itself.)
 fn py_float_text(x: f64) -> String {
     vm_core::float_format::python_repr(x)
 }
@@ -13394,9 +13397,11 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
             .extend_from_slice(js_number_text(x).as_bytes());
         Ok(Value::Null)
     });
-    // LANG83 PR6a `write_f64_py` (Python's `print` of a float, LANG84 7c
-    // slice 3): `repr(x)`, into the same ordered buffer. vm-core's default
-    // would write to the process stdout, where the harness cannot see it.
+    // LANG83 PR6a `write_f64_py`: `repr(x)`, into the same ordered buffer.
+    // vm-core's default would write to the process stdout, where the harness
+    // cannot see it. Since LANG83 PR7c-py the Python frontend prints with its
+    // own `__py_write_float` and never calls this; the sink stays until PR7e
+    // removes the builtin.
     let bytes = Arc::clone(&printed_bytes);
     vm.builtins_mut().register("write_f64_py", move |args: &[Value]| {
         let x = args.first().and_then(Value::as_f64).ok_or_else(|| {
@@ -29091,24 +29096,33 @@ fn python_rows_agree_with_the_host_python_oracle() {
 /// LANG83 backends (CLR, BEAM and AArch64 included, whatever this host can
 /// run) and holds only registry ops: the PR4 checked arithmetic,
 /// `i64_div_floor` / `i64_mod_floor`, `print_i64` / `putchar`, plus the
-/// ungated `const`/`ret`. No wrapping `add`/`sub`/`mul`/`neg` survives.
-/// Since phase 7c slice 3 a `py-float-print` row may also hold the PR6c
-/// `f64_*` ops, `int_to_real`, `write_f64_py` and `trap`; BEAM refuses
-/// exactly the rows with `f64_*` arithmetic (which do not list it), and the
-/// generic JIT leaves `int_to_real` to its interpreter tier.
+/// ungated `const`/`ret`. No wrapping `add`/`sub`/`mul`/`neg` survives in
+/// `main`. Since phase 7c slice 3 a `py-float-print` row may also hold the
+/// PR6c `f64_*` ops, `int_to_real` and `trap`; since LANG83 PR7c-py its float
+/// prints `call` the module's own `__py_write_float`, whose helpers hold the
+/// PR7b `f64_class`/`f64_digits`/`f64_exp10`, `f64_signbit`, integer
+/// `add`/`sub`/`mul`/`div` on non-negative operands, `cmp_*`, branches and
+/// `call`s between themselves, and no `write_f64_py` survives anywhere.
+/// BEAM refuses exactly the rows with `f64_*` arithmetic (which do not list
+/// it), naming only those five ops, and the generic JIT leaves `int_to_real`
+/// to its interpreter tier.
 #[test]
 fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
+    const ARITHMETIC: [&str; 5] = ["f64_add", "f64_sub", "f64_mul", "f64_div", "f64_neg"];
+    const HELPERS: [&str; 4] = ["__py_write_float", "__py_digit_count", "__py_write_digits", "__py_write_uint"];
     let mut checked_ops = 0;
     let (mut beam_runs, mut beam_refuses) = (0usize, 0usize);
     for program in python_rows() {
         let module = lang_aot::compile_source_to_iir_at(Language::Python, program.release, program.src, "c7")
             .unwrap_or_else(|e| panic!("{:?} {:?}: {e}", program.release, program.case));
         assert_eq!(module.release.as_deref(), program.release, "{:?}", program.case);
-        for instr in module.functions.iter().flat_map(|f| &f.instructions) {
-            match interpreter_ir::op_registry::registry_name(instr) {
-                Some(name) => {
-                    assert!(
-                        [
+        for function in &module.functions {
+            let in_main = function.name == "main";
+            assert!(in_main || HELPERS.contains(&function.name.as_str()), "{:?}: {}", program.case, function.name);
+            for instr in &function.instructions {
+                match interpreter_ir::op_registry::registry_name(instr) {
+                    Some(name) => {
+                        let main_op = [
                             "i64_add_ovf",
                             "i64_sub_ovf",
                             "i64_mul_ovf",
@@ -29118,22 +29132,42 @@ fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
                             "print_i64",
                             "putchar",
                             // py-float-print (LANG84 7c slice 3).
-                            "f64_add",
-                            "f64_sub",
-                            "f64_mul",
-                            "f64_div",
-                            "f64_neg",
                             "int_to_real",
-                            "write_f64_py",
                             "trap",
                         ]
-                        .contains(&name),
-                        "{:?}: unexpected registry op {name}",
-                        program.src
-                    );
-                    checked_ops += usize::from(name.starts_with("i64_"));
+                        .contains(&name)
+                            || ARITHMETIC.contains(&name);
+                        // The `repr(float)` helpers (LANG83 PR7c-py).
+                        let helper_op = [
+                            "f64_class", "f64_signbit", "f64_digits", "f64_exp10", "add", "sub", "mul", "div",
+                            "cmp_eq", "cmp_lt", "cmp_gt", "cmp_ge", "putchar",
+                        ]
+                        .contains(&name);
+                        assert!(
+                            if in_main { main_op } else { helper_op },
+                            "{:?}: unexpected registry op {name} in {}",
+                            program.src,
+                            function.name
+                        );
+                        checked_ops += usize::from(name.starts_with("i64_"));
+                    }
+                    None => {
+                        let op = instr.op.as_str();
+                        let allowed = match op {
+                            "const" | "ret" => true,
+                            // Only the compiler's own helpers are ever called.
+                            "call" => instr.srcs.first().and_then(|s| s.as_var()).is_some_and(|f| HELPERS.contains(&f)),
+                            "jmp" | "jmp_if_false" | "label" => !in_main,
+                            _ => false,
+                        };
+                        assert!(allowed, "{:?}: {instr:?} in {}", program.src, function.name);
+                    }
                 }
-                None => assert!(["const", "ret"].contains(&instr.op.as_str()), "{:?}: {instr:?}", program.src),
+                assert!(
+                    instr.srcs.iter().all(|s| s.as_var() != Some("write_f64_py")),
+                    "{:?}: PR7c-py prints with the module's helper, not write_f64_py: {instr:?}",
+                    program.case
+                );
             }
         }
         for backend in lang_aot::op_check::Backend::ALL {
@@ -29150,7 +29184,7 @@ fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
                     }
                     (false, Err(refusal)) => {
                         assert!(
-                            refusal.refusals.iter().all(|r| r.op.starts_with("f64_")),
+                            refusal.refusals.iter().all(|r| ARITHMETIC.contains(&r.op)),
                             "{:?}: BEAM refused more than IEEE arithmetic: {refusal}",
                             program.case
                         );
@@ -29180,6 +29214,126 @@ fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
     }
     assert!(checked_ops > 0, "the rows must exercise the LANG83 checked and floor ops");
     assert!(beam_runs > 0 && beam_refuses > 0, "{beam_runs} BEAM runs, {beam_refuses} refusals");
+}
+
+/// LANG83 PR7c-py: with the arithmetic taken out, what is left of a Python
+/// float print — the `call` and the four `repr(float)` helpers — lowers on
+/// BEAM. Every `py-float-print` row's module, minus its `f64_*` arithmetic
+/// (each result replaced by a constant), passes BEAM's op check and the
+/// whole BEAM pipeline, so a print is never what keeps a module off BEAM.
+#[test]
+fn python_float_prints_lower_on_beam_once_the_arithmetic_is_gone() {
+    let (mut stripped, mut helpers) = (0usize, 0usize);
+    for program in python_rows_of("py-float-print") {
+        let mut module = prog_iir(program, "c7").unwrap();
+        helpers += usize::from(module.get_function("__py_write_float").is_some());
+        for function in &mut module.functions {
+            for instr in &mut function.instructions {
+                if matches!(instr.op.as_str(), "f64_add" | "f64_sub" | "f64_mul" | "f64_div" | "f64_neg") {
+                    *instr = interpreter_ir::IIRInstr::new(
+                        "const",
+                        instr.dest.clone(),
+                        vec![interpreter_ir::Operand::Float(1.5)],
+                        "f64",
+                    );
+                    stripped += 1;
+                }
+            }
+        }
+        lang_aot::op_check::check_module_for(lang_aot::op_check::Backend::Beam, &module)
+            .unwrap_or_else(|e| panic!("{:?}: BEAM refused a print: {e}", program.case));
+        lang_aot::compile_iir_to_beam(module, "c7")
+            .unwrap_or_else(|e| panic!("{:?}: BEAM lowering failed: {e}", program.case));
+    }
+    assert!(stripped > 0 && helpers > 0, "{stripped} {helpers}");
+}
+
+/// The matrix's JIT column drives `execute_with_jit`, which compiles the
+/// fully typed functions eagerly and interprets the rest. Since LANG83
+/// PR7c-py a float print `call`s the module's `__py_write_float`, and the
+/// generic JIT has no `call` bytecode, so `main`, `__py_write_float` and the
+/// recursive `__py_write_uint` run on the interpreter tier (as LANG83
+/// "Per-backend lowering" anticipates). The two call-free helpers,
+/// `__py_digit_count` and `__py_write_digits`, are integer code the JIT
+/// compiles. This test pins exactly that split for every `py-float-print`
+/// row, then runs `main` with those two compiled: the row's stdout (and
+/// trap) is unchanged, and the compiled tier writes the significant digits.
+#[test]
+fn python_float_rows_run_with_their_call_free_float_helpers_compiled_by_the_jit() {
+    use jit_core::core::JITCore;
+    use jit_core::GenericCirJit;
+    use std::sync::{Arc, Mutex};
+    use vm_core::value::Value;
+
+    for program in python_rows_of("py-float-print") {
+        let mut module = prog_iir(program, "main").unwrap();
+        lower_dynamic_for_generic_engine(&mut module);
+        let printed: Arc<Mutex<Vec<u8>>> = Arc::default();
+        let compiled_bytes: Arc<Mutex<Vec<u8>>> = Arc::default();
+        // The interpreter tier: `main` (ints through `print_i64`, newlines),
+        // and the non-digit text of `__py_write_float`.
+        let mut vm = vm_core::core::VMCore::new();
+        let bytes = Arc::clone(&printed);
+        vm.builtins_mut().register("putchar", move |args: &[Value]| {
+            let b = (args.first().and_then(Value::as_i64).unwrap_or(0) & 0xFF) as u8;
+            bytes.lock().expect("VM output buffer").push(b);
+            Ok(Value::Null)
+        });
+        let bytes = Arc::clone(&printed);
+        vm.builtins_mut().register("print_i64", move |args: &[Value]| {
+            let n = args.first().and_then(Value::as_i64).unwrap_or(0);
+            bytes.lock().expect("VM output buffer").extend_from_slice(format!("{n}\n").as_bytes());
+            Ok(Value::Null)
+        });
+        // The compiled tier writes into the same stream, and also records
+        // what it wrote.
+        let backend = GenericCirJit::new();
+        let (bytes, mine) = (Arc::clone(&printed), Arc::clone(&compiled_bytes));
+        backend.register_builtin("putchar", move |args: &[Value]| {
+            let b = (args.first().and_then(Value::as_i64).unwrap_or(0) & 0xFF) as u8;
+            bytes.lock().expect("JIT output buffer").push(b);
+            mine.lock().expect("JIT output record").push(b);
+            Value::Null
+        });
+        let error_slot = Arc::clone(&backend.error);
+        let mut jit = JITCore::new(&mut vm, Box::new(backend));
+        let names: Vec<String> = module.functions.iter().map(|f| f.name.clone()).collect();
+        let mut compiled: Vec<&str> = Vec::new();
+        for name in &names {
+            if matches!(jit.compile(&mut vm, &module, name), Ok(true)) {
+                compiled.push(name);
+            }
+        }
+        assert_eq!(
+            compiled,
+            ["__py_digit_count", "__py_write_digits"],
+            "{:?}@{:?}: the JIT's share of {names:?}",
+            program.case,
+            program.release
+        );
+        let outcome = jit.execute(&mut vm, &mut module, "main", &[]);
+        assert!(error_slot.lock().expect("JIT error slot").take().is_none());
+        let stdout = String::from_utf8(printed.lock().unwrap().clone()).unwrap();
+        let want = match (&program.expect, outcome) {
+            (Expect::Stdout(want), Ok(_)) => *want,
+            (Expect::StdoutThenTrap(want, kind), Err(vm_core::errors::VMError::Trap { kind: got })) => {
+                assert_eq!(got, *kind, "{:?}@{:?}", program.case, program.release);
+                *want
+            }
+            (expect, outcome) => panic!("{:?}@{:?}: {outcome:?}, want {expect:?}", program.case, program.release),
+        };
+        assert_eq!(stdout.trim_end(), want, "{:?}@{:?}", program.case, program.release);
+        // Every byte the compiled tier wrote is a digit, and it wrote some
+        // exactly when a finite non-zero float was printed (each has a
+        // significant digit; `0.0`, `inf` and `nan` are the helper's own
+        // text, and an int is `print_i64`'s).
+        let from_jit = compiled_bytes.lock().unwrap().clone();
+        assert!(from_jit.iter().all(u8::is_ascii_digit), "{:?}: {from_jit:?}", program.case);
+        let prints_a_finite_nonzero_float = want.lines().any(|line| {
+            line.contains(['.', 'e']) && line.bytes().any(|b| (b'1'..=b'9').contains(&b))
+        });
+        assert_eq!(!from_jit.is_empty(), prints_a_finite_nonzero_float, "{:?}@{:?}", program.case, program.release);
+    }
 }
 
 /// LANG84 7b slice 2: the Python rows are the `py-int-print` corpus on the

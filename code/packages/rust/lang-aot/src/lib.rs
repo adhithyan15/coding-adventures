@@ -178,7 +178,10 @@ pub enum Language {
     /// registry ops: `+ - *` and unary `-` are the PR4 checked ops (a result
     /// outside `i64` traps `Trap.Overflow`), `//`/`%` are `i64_div_floor`/
     /// `i64_mod_floor` (a zero divisor traps `Trap.DivZero`), `print` is
-    /// `print_i64`. No backend has Python code.
+    /// `print_i64`, and a float `print` is a `call` of the module's own
+    /// `repr(float)` helper, `__py_write_float` (LANG83 PR7c-py:
+    /// `f64_class`/`f64_signbit`/`f64_digits`/`f64_exp10` and integer
+    /// code), then `putchar 10`. No backend has Python code.
     Python,
     /// JavaScript — the `es-number-log` subset (`console.log` of IEEE number
     /// arithmetic over top-level `let`/`const`) via `javascript-iir-compiler`,
