@@ -199,7 +199,15 @@ def read_regular_file(path: Path, limit: int, what: str) -> bytes:
     if not stat.S_ISREG(info.st_mode):
         raise GateError(f"{what} is not a regular file: {path}")
 
-    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_BINARY", 0)
+    # O_NONBLOCK: if a FIFO is swapped in after the ``lstat``, a blocking open
+    # would hang until a writer appears, before the ``fstat`` below could
+    # refuse it. A regular file ignores the flag.
+    flags = (
+        os.O_RDONLY
+        | getattr(os, "O_NOFOLLOW", 0)
+        | getattr(os, "O_NONBLOCK", 0)
+        | getattr(os, "O_BINARY", 0)
+    )
     try:
         descriptor = os.open(path, flags)
     except OSError as error:
@@ -531,14 +539,19 @@ def materialize_fixture(fixture: GateFixture, output: Path) -> Path:
         fixture.snapshot_version,
         encode_state(fixture.state),
     )
-    # The same two layers as ``read_regular_file``: the ``lstat`` above works
-    # everywhere, and ``O_NOFOLLOW`` closes the race on platforms that have it.
+    # The same three layers as ``read_regular_file``: the ``lstat`` above works
+    # everywhere, ``O_NOFOLLOW`` refuses a symlink swapped in before the open
+    # on platforms that have it, and the ``fstat`` on the opened descriptor
+    # refuses anything else that is not a regular file (a FIFO or device
+    # node). ``O_NONBLOCK`` keeps a swapped-in FIFO from hanging the open, and
+    # the file is only truncated once the descriptor is known to be a regular
+    # file, so nothing is emptied before it has been checked.
     # 0o600 because this is a stand-in for one person's private data.
     flags = (
         os.O_WRONLY
         | os.O_CREAT
-        | os.O_TRUNC
         | getattr(os, "O_NOFOLLOW", 0)
+        | getattr(os, "O_NONBLOCK", 0)
         | getattr(os, "O_BINARY", 0)
     )
     try:
@@ -546,6 +559,9 @@ def materialize_fixture(fixture: GateFixture, output: Path) -> Path:
     except OSError as error:
         raise GateError(f"{refusal} ({error})") from None
     with os.fdopen(descriptor, "wb") as handle:
+        if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+            raise GateError(refusal)
+        os.ftruncate(handle.fileno(), 0)
         handle.write(envelope)
     return output
 

@@ -24,6 +24,7 @@ import unittest
 from contextlib import redirect_stderr
 from pathlib import Path
 from typing import Any, ClassVar
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -311,6 +312,34 @@ class MaterializeAndVerifyTests(GateTestCase):
         with self.assertRaisesRegex(gate.GateError, "non-regular path"):
             gate.materialize_fixture(self.fixture(), self.state)
         self.assertEqual(target.read_text(encoding="utf-8"), "keep me")
+
+    # The two tests below simulate the race the ``lstat`` cannot close: a FIFO
+    # put in place after the ``lstat`` said "regular file". ``lstat`` is
+    # patched to say so, and the gate must still refuse the FIFO, through the
+    # ``fstat`` on the opened descriptor, without hanging on the open.
+    def _fifo_that_lstat_calls_regular(self) -> Any:
+        if not hasattr(os, "mkfifo"):
+            self.skipTest("FIFOs are unavailable on this platform")
+        self.state.parent.mkdir(parents=True)
+        os.mkfifo(self.state)
+        regular = os.stat(self.root / "fixture-for-lstat", follow_symlinks=False)
+        return mock.patch.object(gate.os, "lstat", return_value=regular)
+
+    def test_a_fifo_swapped_in_after_lstat_is_refused_on_read(self) -> None:
+        (self.root / "fixture-for-lstat").write_text("x", encoding="utf-8")
+        with (
+            self._fifo_that_lstat_calls_regular(),
+            self.assertRaisesRegex(gate.GateError, "not a regular file"),
+        ):
+            gate.read_regular_file(self.state, 1024, "state")
+
+    def test_a_fifo_swapped_in_after_lstat_is_refused_on_write(self) -> None:
+        (self.root / "fixture-for-lstat").write_text("x", encoding="utf-8")
+        with (
+            self._fifo_that_lstat_calls_regular(),
+            self.assertRaisesRegex(gate.GateError, "non-regular path"),
+        ):
+            gate.materialize_fixture(self.fixture(), self.state)
 
     def test_materialize_overwrites_an_existing_regular_file(self) -> None:
         self.state.parent.mkdir(parents=True)
