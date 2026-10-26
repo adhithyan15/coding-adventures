@@ -14,7 +14,8 @@
   - `overflow-y: auto` on the web.
 
   The package stays native-complete with no new style drops.
-- **Tests.**
+
+  **Tests:**
   - `package_compiles::the_pane_scrolls` requires that the split's pane is
     `HostScroll [ timeline-scroll ]` wrapping exactly `Column [ timeline ]`.
   - `native_complete_gate::every_native_backend_scrolls_the_pane` builds each
