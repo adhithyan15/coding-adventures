@@ -64,6 +64,29 @@ ROM is external and excluded from the count.
 an educational estimate of gates in storage and combinational paths and must be
 larger than six gates per persistent flip-flop.
 
+### HALT storage authority
+
+The one-bit HALT `StateRegister` Q output is the sole architectural halt
+authority. Observation, snapshots, reset, program load, checked restore,
+instruction-step and bounded-run guards, `HLT` execution, and transactional
+rollback must read or clock that Q bit. A private host Boolean may remain only
+as a synchronized diagnostic observer. Deliberately corrupting that observer
+in either direction must not change execution, faults, returned snapshots, or
+run results, and the next simulator-owned transition must repair it from Q.
+
+No lifecycle or execution path may write the HALT storage outside one reviewed
+clock helper. That helper must call the shared two-phase `StateRegister::write`
+path and then synchronize any observer from Q. The exact topology inventory
+must be derived independently from the lengths of the owned register, PC,
+stack, RAM, selector, port, and HALT storage containers and must total 1,428
+D flip-flops.
+
+Structural conformance tests lock the complete HALT transition chain and reject
+compile-valid hostile variants that make the observer decisive, hide that
+bypass behind a helper, retain a dead clock anchor, overwrite a clocked `HLT`,
+or assign the underlying DFF state directly. Every hostile variant must first
+type-check as an isolated full crate before validator rejection.
+
 ## Checked public contract
 
 ```rust
@@ -71,6 +94,8 @@ impl Intel4004GateLevel {
     pub fn new() -> Self;
     pub fn reset(&mut self);
     pub fn load_program(&mut self, program: &[u8])
+        -> Result<(), Intel4004Error>;
+    pub fn restore(&mut self, state: &GateState)
         -> Result<(), Intel4004Error>;
     pub fn step(&mut self) -> Result<GateTrace, Intel4004Error>;
     pub fn run(&mut self, program: &[u8], max_steps: usize)
@@ -82,8 +107,10 @@ impl Intel4004GateLevel {
 The gate package shares `Intel4004Error` with the functional package. It rejects
 oversized ROM images, illegal encodings, truncated two-byte instructions, and
 steps after halt. Rejected loads and steps leave the complete snapshot unchanged.
-`run` grows its trace only as instructions are accepted and must not allocate
-from an untrusted `max_steps` value.
+`restore` validates the complete owned state before changing the machine. `run`
+grows its trace only as instructions are accepted, must not allocate from an
+untrusted `max_steps` value, and restores the caller's complete pre-run state
+after any late execution fault.
 
 `GateState` owns the full ROM, registers, PC, stack and pointer, RAM and status,
 ports, selectors, carry, accumulator, and halt state. Callers cannot mutate the
@@ -101,6 +128,10 @@ Completion requires:
    taken/fall-through page branches, indirect fetch/jump, and circular stack.
 4. Atomic oversized-load, illegal-opcode, truncated-fetch, halted-step, and
    unbounded-limit boundaries.
-5. Reset/snapshot determinism and the exact 1,428-DFF topology.
-6. A working BUILD recipe, workspace membership, format, warnings-denied Clippy
+5. Reset/snapshot/restore determinism, transactional run rollback, deliberate
+   two-way HALT-observer divergence, and the exact container-derived
+   1,428-DFF topology.
+6. Exact source-chain locks plus five compiler-checked hostile full-crate
+   observer, helper, dead-anchor, post-commit, and direct-Q variants.
+7. A working BUILD recipe, workspace membership, format, warnings-denied Clippy
    and rustdoc, and at least 80% core line coverage with a 95% target.
