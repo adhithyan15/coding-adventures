@@ -14,8 +14,12 @@ algorithms instead of Swift's process-randomized `Hasher`.
 
 The hash input is exact: one type tag, an unsigned 64-bit little-endian payload
 length, and the payload. A byte key and a string with the same payload are
-therefore distinct. The package does not call `String(describing:)`, Codable,
-host object getters, or caller-supplied encoders.
+therefore distinct. String identity is also exact UTF-8 byte identity: the
+package does not normalize Unicode, so canonically equivalent composed and
+decomposed spellings remain distinct keys. This makes equality agree with the
+bytes supplied to the hash function. The package does not call
+`String(describing:)`, Codable, host object getters, or caller-supplied
+encoders.
 
 `HashAlgorithm` admits only DT17 algorithms with explicit parameters:
 FNV-1a-32, MurmurHash3-32 with a caller seed, and SipHash-2-4 with an exact

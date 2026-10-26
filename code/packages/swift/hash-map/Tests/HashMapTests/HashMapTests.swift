@@ -15,6 +15,49 @@ final class HashMapTests: XCTestCase {
     XCTAssertNotEqual(HashMapKey.string("a"), HashMapKey.bytes([0x61]))
   }
 
+  func testStringKeyEqualityUsesExactUTF8Bytes() {
+    let composed = "\u{00E9}"
+    let decomposed = "e\u{0301}"
+
+    XCTAssertEqual(composed, decomposed)
+    XCTAssertNotEqual(HashMapKey.string(composed), HashMapKey.string(decomposed))
+    XCTAssertNotEqual(
+      HashMapKey.string(composed).encodedBytes,
+      HashMapKey.string(decomposed).encodedBytes
+    )
+  }
+
+  func testCanonicallyEquivalentStringsCoexistAcrossStrategies() throws {
+    let composed = HashMapKey.string("\u{00E9}")
+    let decomposed = HashMapKey.string("e\u{0301}")
+
+    for strategy in [CollisionStrategy.separateChaining, .linearProbing] {
+      let empty = try HashMap<Int>(
+        capacity: 8,
+        strategy: strategy,
+        hashAlgorithm: .fnv1a32
+      )
+      let composedOnly = try empty.setting(1, for: composed)
+      XCTAssertEqual(composedOnly.value(forKey: composed), 1)
+      XCTAssertNil(composedOnly.value(forKey: decomposed))
+
+      let both = try composedOnly.setting(2, for: decomposed)
+      XCTAssertEqual(both.count, 2)
+      XCTAssertEqual(both.value(forKey: composed), 1)
+      XCTAssertEqual(both.value(forKey: decomposed), 2)
+
+      let overwritten = try both.setting(3, for: composed)
+      XCTAssertEqual(overwritten.count, 2)
+      XCTAssertEqual(overwritten.value(forKey: composed), 3)
+      XCTAssertEqual(overwritten.value(forKey: decomposed), 2)
+
+      let removed = overwritten.removingValue(for: decomposed)
+      XCTAssertEqual(removed.count, 1)
+      XCTAssertEqual(removed.value(forKey: composed), 3)
+      XCTAssertNil(removed.value(forKey: decomposed))
+    }
+  }
+
   func testChainingCRUDOverwriteAndPersistence() throws {
     let empty = try HashMap<Int>(
       capacity: 4,

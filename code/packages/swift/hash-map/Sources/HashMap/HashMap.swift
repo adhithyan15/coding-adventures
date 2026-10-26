@@ -50,11 +50,25 @@ public enum HashAlgorithm: Equatable, Sendable {
 ///
 /// The leading byte distinguishes raw bytes from UTF-8 strings. It is followed
 /// by an unsigned 64-bit little-endian payload length and then the payload.
+/// String keys use exact UTF-8 identity. Swift's canonical-equivalence
+/// `String` equality is deliberately not used because the hash input is not
+/// normalized: composed and decomposed spellings remain distinct keys.
 /// This avoids Swift's randomized `Hasher`, host object descriptions, Codable,
 /// and caller-supplied executable encoders.
 public enum HashMapKey: Equatable, Sendable {
   case bytes([UInt8])
   case string(String)
+
+  public static func == (lhs: HashMapKey, rhs: HashMapKey) -> Bool {
+    switch (lhs, rhs) {
+    case (.bytes(let lhsBytes), .bytes(let rhsBytes)):
+      lhsBytes == rhsBytes
+    case (.string(let lhsString), .string(let rhsString)):
+      lhsString.utf8.elementsEqual(rhsString.utf8)
+    default:
+      false
+    }
+  }
 
   public var encodedBytes: [UInt8] {
     let tag: UInt8
