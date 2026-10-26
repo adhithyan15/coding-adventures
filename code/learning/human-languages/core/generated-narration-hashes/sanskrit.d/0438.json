@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:7eb046be1579e38c",
+  "lessonIds": [
+    "SA-C438-atapah",
+    "SA-C438-nidaghah",
+    "SA-C438-prakharah",
+    "SA-C438-svedah",
+    "SA-C438-dipyate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch438.txt",
+  "json": "sanskrit/narration/ch438.json",
+  "textHash": "fnv1a64:005521659d2c66e9",
+  "jsonHash": "fnv1a64:53982feb5d5e41bd",
+  "findings": []
+}

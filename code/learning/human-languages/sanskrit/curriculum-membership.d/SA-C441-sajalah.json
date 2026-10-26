@@ -1,0 +1,11 @@
+{
+  "id": "SA-C441-sajalah",
+  "pathSegment": "SA-PATH-441-DURDINA441",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-441-DURDINA441",
+      "order": 1
+    }
+  ]
+}

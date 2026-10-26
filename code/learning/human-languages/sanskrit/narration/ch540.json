@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 540,
+  "title": "Time Running Out",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:54d6adff199eed63",
+  "lessons": [
+    {
+      "id": "SA-C540-asannah",
+      "sequence": 30940,
+      "title": "आसन्नः (āsannaḥ) — close at hand",
+      "headword": "आसन्नः",
+      "romanization": "āsannaḥ",
+      "gloss": "close at hand",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6cc9e88d9f3da73c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for suspects, then the Sanskrit for keeps safe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आसन्नः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आसन्नः — āsannaḥ — \"close at hand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि परीक्षा आसन्ना अस्ति, तर्हि अद्य एव पठतु। yadi parīkṣā āsannā asti, tarhi adya eva paṭhatu. If the exam is close, study today."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आसन्नः (āsannaḥ) is built on ā and the root √sad, \"to sit\", as its past participle: sat down near; MW gives āsanna as seated down, and near, close at hand (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsannaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsannaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsannaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsannaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi parīkṣā āsannā asti, tarhi adya eva paṭhatu. — If the exam is close, study today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi parīkṣā āsannā asti, tarhi adya eva paṭhatu.* — If the exam is close, study today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for suspects, then the Sanskrit for keeps safe, then say āsannaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for suspects, then the Sanskrit for keeps safe, then say *āsannaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आसन्नः (āsannaḥ) mean? (\"Close at hand\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C540-avasistah",
+      "sequence": 30950,
+      "title": "अवशिष्टः (avaśiṣṭaḥ) — left over",
+      "headword": "अवशिष्टः",
+      "romanization": "avaśiṣṭaḥ",
+      "gloss": "left over",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ce880d39a73d669",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for keeps safe, then the Sanskrit for close at hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अवशिष्टः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवशिष्टः — avaśiṣṭaḥ — \"left over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि किञ्चित् अन्नम् अवशिष्टम् अस्ति, तर्हि श्वः खादिष्यामः। yadi kiñcit annam avaśiṣṭam asti, tarhi śvaḥ khādiṣyāmaḥ. If any food is left over, we'll eat it tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवशिष्टः (avaśiṣṭaḥ) is built on ava and the root √śiṣ, \"to leave\", as its past participle; MW gives avaśiṣṭa as left, remaining (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaśiṣṭaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaśiṣṭaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaśiṣṭaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaśiṣṭaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi kiñcit annam avaśiṣṭam asti, tarhi śvaḥ khādiṣyāmaḥ. — If any food is left over, we'll eat it tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi kiñcit annam avaśiṣṭam asti, tarhi śvaḥ khādiṣyāmaḥ.* — If any food is left over, we'll eat it tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for keeps safe, then the Sanskrit for close at hand, then say avaśiṣṭaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for keeps safe, then the Sanskrit for close at hand, then say *avaśiṣṭaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अवशिष्टः (avaśiṣṭaḥ) mean? (\"Left over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C540-samaptih",
+      "sequence": 30960,
+      "title": "समाप्तिः (samāptiḥ) — completion",
+      "headword": "समाप्तिः",
+      "romanization": "samāptiḥ",
+      "gloss": "completion",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab91a96d13a0b997",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for close at hand, then the Sanskrit for left over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: समाप्तिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समाप्तिः — samāptiḥ — \"completion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि कार्यस्य समाप्तिः भवति, तर्हि वयं विश्रामं करिष्यामः। yadi kāryasya samāptiḥ bhavati, tarhi vayaṃ viśrāmaṃ kariṣyāmaḥ. When the work is finished, we will rest."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समाप्तिः (samāptiḥ) is built on sam, \"wholly\", and the root √āp, \"to reach\", which also gives samāpayati, \"finishes\"; MW gives samāpti as accomplishment, completion, conclusion (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samāptiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samāptiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samāptiḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samāptiḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi kāryasya samāptiḥ bhavati, tarhi vayaṃ viśrāmaṃ kariṣyāmaḥ. — When the work is finished, we will rest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi kāryasya samāptiḥ bhavati, tarhi vayaṃ viśrāmaṃ kariṣyāmaḥ.* — When the work is finished, we will rest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for close at hand, then the Sanskrit for left over, then say samāptiḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for close at hand, then the Sanskrit for left over, then say *samāptiḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does समाप्तिः (samāptiḥ) mean? (\"Completion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C540-kalaksepah",
+      "sequence": 30970,
+      "title": "कालक्षेपः (kālakṣepaḥ) — a waste of time; delay",
+      "headword": "कालक्षेपः",
+      "romanization": "kālakṣepaḥ",
+      "gloss": "a waste of time; delay",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df2ff62b55d7b37a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for left over, then the Sanskrit for completion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कालक्षेपः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कालक्षेपः — kālakṣepaḥ — \"a waste of time; delay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि कालक्षेपः भवति, तर्हि वयं समये न आगमिष्यामः। yadi kālakṣepaḥ bhavati, tarhi vayaṃ samaye na āgamiṣyāmaḥ. If there is a delay, we will not arrive on time."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कालक्षेपः (kālakṣepaḥ) is built from kāla, \"time\", and kṣepa, \"a throwing, a letting go\", from the root √kṣip, \"to throw\"; MW gives kālakṣepa as letting time pass, delay, loss of time (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālakṣepaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālakṣepaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālakṣepaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālakṣepaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi kālakṣepaḥ bhavati, tarhi vayaṃ samaye na āgamiṣyāmaḥ. — If there is a delay, we will not arrive on time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi kālakṣepaḥ bhavati, tarhi vayaṃ samaye na āgamiṣyāmaḥ.* — If there is a delay, we will not arrive on time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for left over, then the Sanskrit for completion, then say kālakṣepaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for left over, then the Sanskrit for completion, then say *kālakṣepaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कालक्षेपः (kālakṣepaḥ) mean? (\"A waste of time; delay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C540-ativahayati",
+      "sequence": 30980,
+      "title": "अतिवाहयति (ativāhayati) — spends time",
+      "headword": "अतिवाहयति",
+      "romanization": "ativāhayati",
+      "gloss": "spends time",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2641e13e4543fa7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for completion, then the Sanskrit for a waste of time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अतिवाहयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अतिवाहयति — ativāhayati — \"spends time\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि वर्षा भवति, तर्हि वयं दिनं गृहे अतिवाहयामः। yadi varṣā bhavati, tarhi vayaṃ dinaṃ gṛhe ativāhayāmaḥ. If it rains, we spend the day at home."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः दिनं गृहे अतिवाहितवान्, saḥ dinaṃ gṛhe ativāhitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अतिवाहयति (ativāhayati) is built on ati, \"beyond\", and the causative of the root √vah, \"to carry\", which also gives vahati; MW gives ativāhayati as to let pass, to let time pass, to spend it (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ativāhayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ativāhayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ativāhayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ativāhayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi varṣā bhavati, tarhi vayaṃ dinaṃ gṛhe ativāhayāmaḥ. — If it rains, we spend the day at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi varṣā bhavati, tarhi vayaṃ dinaṃ gṛhe ativāhayāmaḥ.* — If it rains, we spend the day at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for completion, then the Sanskrit for a waste of time, then say ativāhayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for completion, then the Sanskrit for a waste of time, then say *ativāhayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अतिवाहयति (ativāhayati) mean? (\"Spends time\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

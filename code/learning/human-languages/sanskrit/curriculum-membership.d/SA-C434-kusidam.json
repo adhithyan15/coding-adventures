@@ -1,0 +1,11 @@
+{
+  "id": "SA-C434-kusidam",
+  "pathSegment": "SA-PATH-434-RNA434",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-434-RNA434",
+      "order": 2
+    }
+  ]
+}

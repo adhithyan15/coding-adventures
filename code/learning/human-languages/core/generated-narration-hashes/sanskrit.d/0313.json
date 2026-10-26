@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:6e749912753f1215",
+  "lessonIds": [
+    "SA-C313-upadravah",
+    "SA-C313-kalahah",
+    "SA-C313-ksobhah",
+    "SA-C313-vestayati",
+    "SA-C313-samayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch313.txt",
+  "json": "sanskrit/narration/ch313.json",
+  "textHash": "fnv1a64:fd06092eed14e5f0",
+  "jsonHash": "fnv1a64:de0335ff0c3e73ea",
+  "findings": []
+}

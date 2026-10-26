@@ -1,0 +1,19 @@
+{
+  "chapter": 338,
+  "title": "Heaven and Hell",
+  "label": "ch:sa-heaven-and-hell",
+  "canDo": "I can say what the old stories teach about good and bad deeds.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C338-bhunkte",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can say what the old stories teach about good and bad deeds.",
+    "assesses": [
+      "SA-LEX-C338-SVARGA338-03",
+      "SA-LEX-C338-SVARGA338-04",
+      "SA-LEX-C338-SVARGA338-05"
+    ]
+  }
+}

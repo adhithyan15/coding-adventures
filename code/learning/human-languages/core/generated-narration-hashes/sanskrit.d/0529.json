@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:a46c08370fde34ae",
+  "lessonIds": [
+    "SA-C529-parivartanam",
+    "SA-C529-upasamharati",
+    "SA-C529-samsodhayati",
+    "SA-C529-tvarayati",
+    "SA-C529-tvara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch529.txt",
+  "json": "sanskrit/narration/ch529.json",
+  "textHash": "fnv1a64:e360ed7672840599",
+  "jsonHash": "fnv1a64:f16081e3c648f823",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 537,
+  "title": "A Game of Chance",
+  "label": "ch:sa-a-game-of-chance",
+  "canDo": "I can talk about dice, stakes and losing.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C537-dyutakarah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 537: I can talk about dice, stakes and losing.",
+    "assesses": [
+      "SA-LEX-C537-PASAKA537-03",
+      "SA-LEX-C537-PASAKA537-04",
+      "SA-LEX-C537-PASAKA537-05"
+    ]
+  }
+}

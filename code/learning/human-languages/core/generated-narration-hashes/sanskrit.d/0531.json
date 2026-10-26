@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:dd62ad811e11dc47",
+  "lessonIds": [
+    "SA-C531-vanchati",
+    "SA-C531-manorathah",
+    "SA-C531-aradhayati",
+    "SA-C531-prarthana",
+    "SA-C531-kamana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch531.txt",
+  "json": "sanskrit/narration/ch531.json",
+  "textHash": "fnv1a64:22e66bb191ec3af7",
+  "jsonHash": "fnv1a64:3dd0c7569611eee1",
+  "findings": []
+}

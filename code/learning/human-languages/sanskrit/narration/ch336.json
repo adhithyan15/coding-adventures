@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 336,
+  "title": "Fables",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:077182c90915470d",
+  "lessons": [
+    {
+      "id": "SA-C336-nitih",
+      "sequence": 19560,
+      "title": "नीतिः (nītiḥ) — wise conduct; a moral",
+      "headword": "नीतिः",
+      "romanization": "nītiḥ",
+      "gloss": "wise conduct; a moral",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6afa9db788bc764a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for bewilders, then the Sanskrit for attracts."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नीतिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नीतिः — nītiḥ — \"wise conduct; a moral\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पितामहः बालाय नीतिं कथयति। pitāmahaḥ bālāya nītiṃ kathayati. Grandfather tells the boy about wise conduct."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नीतिः (nītiḥ) comes from the root √nī, \"to lead\", as in nayati; MW gives nīti as guidance, management, and right or wise conduct, prudence (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nītiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nītiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nītiḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nītiḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pitāmahaḥ bālāya nītiṃ kathayati. — Grandfather tells the boy about wise conduct.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pitāmahaḥ bālāya nītiṃ kathayati.* — Grandfather tells the boy about wise conduct.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for bewilders, then the Sanskrit for attracts, then say nītiḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for bewilders, then the Sanskrit for attracts, then say *nītiḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नीतिः (nītiḥ) mean? (\"Wise conduct; a moral\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C336-lobhah",
+      "sequence": 19570,
+      "title": "लोभः (lobhaḥ) — greed",
+      "headword": "लोभः",
+      "romanization": "lobhaḥ",
+      "gloss": "greed",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbf7423a82999126",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for attracts, then the Sanskrit for wise conduct."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लोभः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लोभः — lobhaḥ — \"greed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लोभः दुःखस्य कारणम् अस्ति। lobhaḥ duḥkhasya kāraṇam asti. Greed is a cause of sorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लोभः (lobhaḥ) comes from the root √lubh, \"to be perplexed, desire greatly\"; MW gives lobha as confusion, eager desire, and covetousness, greed (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lobhaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lobhaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lobhaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lobhaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lobhaḥ duḥkhasya kāraṇam asti. — Greed is a cause of sorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lobhaḥ duḥkhasya kāraṇam asti.* — Greed is a cause of sorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for attracts, then the Sanskrit for wise conduct, then say lobhaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for attracts, then the Sanskrit for wise conduct, then say *lobhaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लोभः (lobhaḥ) mean? (\"Greed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C336-makarah",
+      "sequence": 19580,
+      "title": "मकरः (makaraḥ) — a sea monster; a crocodile",
+      "headword": "मकरः",
+      "romanization": "makaraḥ",
+      "gloss": "a sea monster; a crocodile",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:624a0360429d70c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for wise conduct, then the Sanskrit for greed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मकरः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मकरः — makaraḥ — \"a sea monster; a crocodile\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नद्याम् एकः मकरः वसति। nadyām ekaḥ makaraḥ vasati. A crocodile lives in the river."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मकरः (makaraḥ) MW gives makara as a kind of sea monster, sometimes confused with the crocodile, shark or dolphin, without a derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makaraḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makaraḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makaraḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makaraḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nadyām ekaḥ makaraḥ vasati. — A crocodile lives in the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nadyām ekaḥ makaraḥ vasati.* — A crocodile lives in the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for wise conduct, then the Sanskrit for greed, then say makaraḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for wise conduct, then the Sanskrit for greed, then say *makaraḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मकरः (makaraḥ) mean? (\"A sea monster; a crocodile\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C336-mudhah",
+      "sequence": 19590,
+      "title": "मूढः (mūḍhaḥ) — bewildered; foolish",
+      "headword": "मूढः",
+      "romanization": "mūḍhaḥ",
+      "gloss": "bewildered; foolish",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:007e8962733e6df0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for greed, then the Sanskrit for a sea monster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मूढः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मूढः — mūḍhaḥ — \"bewildered; foolish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मूढः मकरः वानरं विश्वसिति। mūḍhaḥ makaraḥ vānaraṃ viśvasiti. The foolish crocodile trusts the monkey."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मूढः (mūḍhaḥ) comes from the root √muh, \"to be confused, go astray\"; MW gives mūḍha as stupefied, bewildered, perplexed, confused (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūḍhaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūḍhaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūḍhaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūḍhaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūḍhaḥ makaraḥ vānaraṃ viśvasiti. — The foolish crocodile trusts the monkey.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūḍhaḥ makaraḥ vānaraṃ viśvasiti.* — The foolish crocodile trusts the monkey.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for greed, then the Sanskrit for a sea monster, then say mūḍhaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for greed, then the Sanskrit for a sea monster, then say *mūḍhaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मूढः (mūḍhaḥ) mean? (\"Bewildered; foolish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C336-lobhayati",
+      "sequence": 19600,
+      "title": "लोभयति (lobhayati) — tempts; lures",
+      "headword": "लोभयति",
+      "romanization": "lobhayati",
+      "gloss": "tempts; lures",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b5e4b768266f1f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a sea monster, then the Sanskrit for bewildered."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लोभयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लोभयति — lobhayati — \"tempts; lures\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शृगालः फलेन काकं लोभयति। śṛgālaḥ phalena kākaṃ lobhayati. The jackal tempts the crow with a fruit."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः काकं लोभितवान्, saḥ kākaṃ lobhitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लोभयति (lobhayati) comes from the root √lubh, \"to desire greatly\", as in lobha, in its causative form: to make desire, tempt, lure (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lobhayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lobhayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lobhayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lobhayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śṛgālaḥ phalena kākaṃ lobhayati. — The jackal tempts the crow with a fruit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śṛgālaḥ phalena kākaṃ lobhayati.* — The jackal tempts the crow with a fruit.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a sea monster, then the Sanskrit for bewildered, then say lobhayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a sea monster, then the Sanskrit for bewildered, then say *lobhayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लोभयति (lobhayati) mean? (\"Tempts; lures\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

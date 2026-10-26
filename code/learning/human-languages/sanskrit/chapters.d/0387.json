@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "Getting Better",
+  "label": "ch:sa-getting-better",
+  "canDo": "I can say whether things will get better if we work at them.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C387-vrddhih",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can say whether things will get better if we work at them.",
+    "assesses": [
+      "SA-LEX-C387-UNNATI387-03",
+      "SA-LEX-C387-UNNATI387-04",
+      "SA-LEX-C387-UNNATI387-05"
+    ]
+  }
+}

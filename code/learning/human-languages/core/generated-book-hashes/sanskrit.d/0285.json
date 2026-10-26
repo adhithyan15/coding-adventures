@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:c5306e0a3e8c2289",
+  "lessonIds": [
+    "SA-C285-adhinam",
+    "SA-C285-samayadhinam",
+    "SA-C285-yadi-samayah-abhavisyat",
+    "SA-W285-six-lines",
+    "SA-R285-depends-and-would"
+  ],
+  "tex": "sanskrit/book/chapters/ch285-it-depends-and-what-would-have-been.tex"
+}

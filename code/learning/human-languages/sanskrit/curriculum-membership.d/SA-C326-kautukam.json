@@ -1,0 +1,11 @@
+{
+  "id": "SA-C326-kautukam",
+  "pathSegment": "SA-PATH-326-DIPAVALI326",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-326-DIPAVALI326",
+      "order": 3
+    }
+  ]
+}

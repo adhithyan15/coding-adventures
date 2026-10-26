@@ -1,0 +1,11 @@
+{
+  "id": "SA-C278-mama-matena",
+  "pathSegment": "SA-PATH-278-REASONS278",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-278-REASONS278",
+      "order": 0
+    }
+  ]
+}

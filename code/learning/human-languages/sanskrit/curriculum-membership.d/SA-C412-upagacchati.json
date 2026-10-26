@@ -1,0 +1,11 @@
+{
+  "id": "SA-C412-upagacchati",
+  "pathSegment": "SA-PATH-412-VIRAMA412",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-412-VIRAMA412",
+      "order": 2
+    }
+  ]
+}

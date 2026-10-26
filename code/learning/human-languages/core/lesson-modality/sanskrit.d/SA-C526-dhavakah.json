@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C526-dhavakah",
+    "language": "sanskrit",
+    "chapter": 526,
+    "sequence": 30240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17fad8354065e40f"
+  },
+  "findings": []
+}

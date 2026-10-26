@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 397,
+  "title": "Lamps and Hymns",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1aa8c6aa432cac5e",
+  "lessons": [
+    {
+      "id": "SA-C397-jvalayati",
+      "sequence": 23150,
+      "title": "ज्वालयति (jvālayati) — lights; kindles",
+      "headword": "ज्वालयति",
+      "romanization": "jvālayati",
+      "gloss": "lights; kindles",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e34761a6f770d71e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for an inner sanctum, then the Sanskrit for a devotee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ज्वालयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज्वालयति — jvālayati — \"lights; kindles\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माता सायं दीपं ज्वालयति। mātā sāyaṃ dīpaṃ jvālayati. Mother lights a lamp in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): सा दीपं ज्वालितवती, sā dīpaṃ jvālitavatī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज्वालयति (jvālayati) is built on the root √jval, \"to blaze\", which gives jvalati, \"burns\"; MW gives its causative, \"makes blaze\", as to set on fire, light or kindle, and KRM gives the causative participle jvālita (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jvālayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jvālayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jvālayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jvālayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātā sāyaṃ dīpaṃ jvālayati. — Mother lights a lamp in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātā sāyaṃ dīpaṃ jvālayati.* — Mother lights a lamp in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for an inner sanctum, then the Sanskrit for a devotee, then say jvālayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for an inner sanctum, then the Sanskrit for a devotee, then say *jvālayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ज्वालयति (jvālayati) mean? (\"Lights; kindles\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C397-dipasikha",
+      "sequence": 23160,
+      "title": "दीपशिखा (dīpaśikhā) — a lamp's flame",
+      "headword": "दीपशिखा",
+      "romanization": "dīpaśikhā",
+      "gloss": "a lamp's flame",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ab2f0957d7f68ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a devotee, then the Sanskrit for kindles."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दीपशिखा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दीपशिखा — dīpaśikhā — \"a lamp's flame\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वायुना दीपशिखा चलति। vāyunā dīpaśikhā calati. The lamp's flame flickers in the wind."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दीपशिखा (dīpaśikhā) is built from dīpa, \"a lamp\", and śikhā, \"a tuft, a point of flame\"; MW gives the compound as the flame of a lamp (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīpaśikhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīpaśikhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīpaśikhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīpaśikhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāyunā dīpaśikhā calati. — The lamp's flame flickers in the wind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāyunā dīpaśikhā calati.* — The lamp's flame flickers in the wind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a devotee, then the Sanskrit for kindles, then say dīpaśikhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a devotee, then the Sanskrit for kindles, then say *dīpaśikhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दीपशिखा (dīpaśikhā) mean? (\"A lamp's flame\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C397-karpurah",
+      "sequence": 23170,
+      "title": "कर्पूरः (karpūraḥ) — camphor",
+      "headword": "कर्पूरः",
+      "romanization": "karpūraḥ",
+      "gloss": "camphor",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6840d75f4ee64018",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for kindles, then the Sanskrit for a lamp's flame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कर्पूरः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कर्पूरः — karpūraḥ — \"camphor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दीपे कर्पूरः ज्वलति। dīpe karpūraḥ jvalati. Camphor burns in the lamp."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कर्पूरः (karpūraḥ) is the word MW gives for camphor; MW records only a commentator's guess at a root √kṛp, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karpūraḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karpūraḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karpūraḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karpūraḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīpe karpūraḥ jvalati. — Camphor burns in the lamp.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīpe karpūraḥ jvalati.* — Camphor burns in the lamp.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for kindles, then the Sanskrit for a lamp's flame, then say karpūraḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for kindles, then the Sanskrit for a lamp's flame, then say *karpūraḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कर्पूरः (karpūraḥ) mean? (\"Camphor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C397-stotram",
+      "sequence": 23180,
+      "title": "स्तोत्रम् (stotram) — a hymn of praise",
+      "headword": "स्तोत्रम्",
+      "romanization": "stotram",
+      "gloss": "a hymn of praise",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d414752bb808e2ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a lamp's flame, then the Sanskrit for camphor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्तोत्रम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्तोत्रम् — stotram — \"a hymn of praise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बालाः सायं स्तोत्रं गायन्ति। bālāḥ sāyaṃ stotraṃ gāyanti. The children sing a hymn in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्तोत्रम् (stotram) is built on the root √stu, \"to praise\", with the ending -tra; MW gives stotra as praise, a hymn of praise (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stotram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stotram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stotram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stotram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālāḥ sāyaṃ stotraṃ gāyanti. — The children sing a hymn in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālāḥ sāyaṃ stotraṃ gāyanti.* — The children sing a hymn in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a lamp's flame, then the Sanskrit for camphor, then say stotram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a lamp's flame, then the Sanskrit for camphor, then say *stotram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्तोत्रम् (stotram) mean? (\"A hymn of praise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C397-stauti",
+      "sequence": 23190,
+      "title": "स्तौति (stauti) — sings the praises of",
+      "headword": "स्तौति",
+      "romanization": "stauti",
+      "gloss": "sings the praises of",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f2ea109741fde23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for camphor, then the Sanskrit for a hymn of praise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्तौति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्तौति — stauti — \"sings the praises of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शिष्यः श्लोकेन गुरुं स्तौति। śiṣyaḥ ślokena guruṃ stauti. The disciple praises his teacher in a verse."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः गुरुं स्तुतवान्, saḥ guruṃ stutavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्तौति (stauti) comes from the root √stu, \"to praise, to hymn\", which also gives stotra, \"a hymn\"; MW gives the participle stuta, \"praised, hymned\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stauti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stauti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stauti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stauti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śiṣyaḥ ślokena guruṃ stauti. — The disciple praises his teacher in a verse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śiṣyaḥ ślokena guruṃ stauti.* — The disciple praises his teacher in a verse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for camphor, then the Sanskrit for a hymn of praise, then say stauti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for camphor, then the Sanskrit for a hymn of praise, then say *stauti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्तौति (stauti) mean? (\"Sings the praises of\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

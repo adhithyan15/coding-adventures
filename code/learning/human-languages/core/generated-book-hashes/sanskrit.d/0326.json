@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:414d15cbf143c092",
+  "lessonIds": [
+    "SA-C326-dipavalih",
+    "SA-C326-dipayati",
+    "SA-C326-mandayati",
+    "SA-C326-kautukam",
+    "SA-C326-sobha"
+  ],
+  "tex": "sanskrit/book/chapters/ch326-a-night-of-lights.tex"
+}

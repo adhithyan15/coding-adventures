@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:f7e541c1d3a77399",
+  "lessonIds": [
+    "SA-C352-himsa",
+    "SA-C352-sahisnuh",
+    "SA-C352-apakaroti",
+    "SA-C352-anugrhnati",
+    "SA-C352-ksama"
+  ],
+  "tex": "sanskrit/book/chapters/ch352-harm-and-no-harm.tex"
+}

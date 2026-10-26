@@ -1,0 +1,19 @@
+{
+  "chapter": 341,
+  "title": "What It Is For",
+  "label": "ch:sa-what-it-is-for",
+  "canDo": "I can say what something is for and why people do it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C341-karayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can say what something is for and why people do it.",
+    "assesses": [
+      "SA-LEX-C341-PRAYOJANA341-03",
+      "SA-LEX-C341-PRAYOJANA341-04",
+      "SA-LEX-C341-PRAYOJANA341-05"
+    ]
+  }
+}

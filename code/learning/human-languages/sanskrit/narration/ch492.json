@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 492,
+  "title": "A New Baby",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2fe4ada3621c8e7e",
+  "lessons": [
+    {
+      "id": "SA-C492-garbhini",
+      "sequence": 28250,
+      "title": "गर्भिणी (garbhiṇī) — a pregnant woman",
+      "headword": "गर्भिणी",
+      "romanization": "garbhiṇī",
+      "gloss": "a pregnant woman",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:741ea6e96066fa15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for funeral rites, then the Sanskrit for a rite for the ancestors."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गर्भिणी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गर्भिणी — garbhiṇī — \"a pregnant woman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गर्भिणी पथ्यं भोजनं खादति। garbhiṇī pathyaṃ bhojanaṃ khādati. The pregnant woman eats wholesome food."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गर्भिणी (garbhiṇī) is built on garbha, \"the womb\"; MW's garbhin is \"pregnant\", and this is its feminine (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garbhiṇī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garbhiṇī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garbhiṇī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garbhiṇī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garbhiṇī pathyaṃ bhojanaṃ khādati. — The pregnant woman eats wholesome food.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garbhiṇī pathyaṃ bhojanaṃ khādati.* — The pregnant woman eats wholesome food.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for funeral rites, then the Sanskrit for a rite for the ancestors, then say garbhiṇī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for funeral rites, then the Sanskrit for a rite for the ancestors, then say *garbhiṇī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गर्भिणी (garbhiṇī) mean? (\"A pregnant woman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C492-prasute",
+      "sequence": 28260,
+      "title": "प्रसूते (prasūte) — gives birth",
+      "headword": "प्रसूते",
+      "romanization": "prasūte",
+      "gloss": "gives birth",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c12c97e22b205e4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a rite for the ancestors, then the Sanskrit for a pregnant woman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रसूते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रसूते — prasūte — \"gives birth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "धेनुः वत्सं प्रसूते। dhenuḥ vatsaṃ prasūte. The cow gives birth to a calf."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): सा पुत्रं प्रसूतवती, sā putraṃ prasūtavatī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रसूते (prasūte) is built from pra and the root √sū, \"to beget, to bear\"; MW gives \"to procreate, bring forth\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prasūte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prasūte*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prasūte, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prasūte*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhenuḥ vatsaṃ prasūte. — The cow gives birth to a calf.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhenuḥ vatsaṃ prasūte.* — The cow gives birth to a calf.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a rite for the ancestors, then the Sanskrit for a pregnant woman, then say prasūte again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a rite for the ancestors, then the Sanskrit for a pregnant woman, then say *prasūte* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रसूते (prasūte) mean? (\"Gives birth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C492-janma",
+      "sequence": 28270,
+      "title": "जन्म (janma) — birth",
+      "headword": "जन्म",
+      "romanization": "janma",
+      "gloss": "birth",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d790c35cd38b644f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a pregnant woman, then the Sanskrit for gives birth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जन्म",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जन्म — janma — \"birth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मम भ्रातुः जन्म रात्रौ अभवत्। mama bhrātuḥ janma rātrau abhavat. My brother was born at night."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जन्म (janma) comes from the root √jan, \"to be born\", the root of जायते; MW gives \"birth, production, origin\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mama bhrātuḥ janma rātrau abhavat. — My brother was born at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mama bhrātuḥ janma rātrau abhavat.* — My brother was born at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a pregnant woman, then the Sanskrit for gives birth, then say janma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a pregnant woman, then the Sanskrit for gives birth, then say *janma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जन्म (janma) mean? (\"Birth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C492-navajatah",
+      "sequence": 28280,
+      "title": "नवजातः (navajātaḥ) — newborn",
+      "headword": "नवजातः",
+      "romanization": "navajātaḥ",
+      "gloss": "newborn",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:602552044ccade5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for gives birth, then the Sanskrit for birth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नवजातः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नवजातः — navajātaḥ — \"newborn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नवजातः शिशुः बहु स्वपिति। navajātaḥ śiśuḥ bahu svapiti. A newborn baby sleeps a lot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नवजातः (navajātaḥ) is built from नव, \"new\", and jāta, \"born\", from the root √jan; MW gives \"recently born, new\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "navajātaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *navajātaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "navajātaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *navajātaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "navajātaḥ śiśuḥ bahu svapiti. — A newborn baby sleeps a lot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *navajātaḥ śiśuḥ bahu svapiti.* — A newborn baby sleeps a lot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for gives birth, then the Sanskrit for birth, then say navajātaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for gives birth, then the Sanskrit for birth, then say *navajātaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नवजातः (navajātaḥ) mean? (\"Newborn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C492-dola",
+      "sequence": 28290,
+      "title": "दोला (dolā) — a swing; a cradle",
+      "headword": "दोला",
+      "romanization": "dolā",
+      "gloss": "a swing; a cradle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84b6af0eba7361cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for birth, then the Sanskrit for newborn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दोला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दोला — dolā — \"a swing; a cradle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शिशुः दोलायां शेते। śiśuḥ dolāyāṃ śete. The baby lies in the cradle."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दोला (dolā) MW gives \"litter, hammock, palanquin, swing\"; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dolā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dolā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dolā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dolā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śiśuḥ dolāyāṃ śete. — The baby lies in the cradle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śiśuḥ dolāyāṃ śete.* — The baby lies in the cradle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for birth, then the Sanskrit for newborn, then say dolā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for birth, then the Sanskrit for newborn, then say *dolā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दोला (dolā) mean? (\"A swing; a cradle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

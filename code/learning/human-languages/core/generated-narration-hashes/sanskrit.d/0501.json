@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:8ccd0f43b4aee7f6",
+  "lessonIds": [
+    "SA-C501-grhasthah",
+    "SA-C501-sambandhah",
+    "SA-C501-sangacchate",
+    "SA-C501-dampati",
+    "SA-C501-pitarau",
+    "SA-R501-review-495-501",
+    "SA-R501-review-final-501"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch501.txt",
+  "json": "sanskrit/narration/ch501.json",
+  "textHash": "fnv1a64:6a79e7e19ebae452",
+  "jsonHash": "fnv1a64:ee3563ac95ee32aa",
+  "findings": []
+}

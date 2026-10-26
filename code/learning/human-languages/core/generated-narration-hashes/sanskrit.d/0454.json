@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:13b02e07105bd059",
+  "lessonIds": [
+    "SA-C454-irsyati",
+    "SA-C454-jugupsate",
+    "SA-C454-dvesah",
+    "SA-C454-vairam",
+    "SA-C454-sprha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch454.txt",
+  "json": "sanskrit/narration/ch454.json",
+  "textHash": "fnv1a64:6d290f268ae96265",
+  "jsonHash": "fnv1a64:2861966216664210",
+  "findings": []
+}

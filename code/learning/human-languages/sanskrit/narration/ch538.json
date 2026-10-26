@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 538,
+  "title": "Fate and Omens",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2bd9c20e41eabc7b",
+  "lessons": [
+    {
+      "id": "SA-C538-sakunah",
+      "sequence": 30840,
+      "title": "शकुनः (śakunaḥ) — an omen",
+      "headword": "शकुनः",
+      "romanization": "śakunaḥ",
+      "gloss": "an omen",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15643fa9818def8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for covetous, then the Sanskrit for a gambler."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शकुनः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शकुनः — śakunaḥ — \"an omen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि शकुनः शुभः अस्ति, तर्हि वयं श्वः यात्रां गच्छामः। yadi śakunaḥ śubhaḥ asti, tarhi vayaṃ śvaḥ yātrāṃ gacchāmaḥ. If the omen is good, we set out tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शकुनः (śakunaḥ) is the word MW gives for a bird, above all a large bird of good or bad omen, and so an omen; MW reports a derivation from √śak, \"to be able\", only as \"said to be\", so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śakunaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śakunaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śakunaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śakunaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi śakunaḥ śubhaḥ asti, tarhi vayaṃ śvaḥ yātrāṃ gacchāmaḥ. — If the omen is good, we set out tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi śakunaḥ śubhaḥ asti, tarhi vayaṃ śvaḥ yātrāṃ gacchāmaḥ.* — If the omen is good, we set out tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for covetous, then the Sanskrit for a gambler, then say śakunaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for covetous, then the Sanskrit for a gambler, then say *śakunaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शकुनः (śakunaḥ) mean? (\"An omen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C538-niyatih",
+      "sequence": 30850,
+      "title": "नियतिः (niyatiḥ) — destiny",
+      "headword": "नियतिः",
+      "romanization": "niyatiḥ",
+      "gloss": "destiny",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93794fd4f62c3277",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a gambler, then the Sanskrit for an omen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नियतिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नियतिः — niyatiḥ — \"destiny\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि नियतिः सत्यम् अस्ति, तर्हि अहं किमर्थं चिन्तयामि? yadi niyatiḥ satyam asti, tarhi ahaṃ kimarthaṃ cintayāmi? If destiny is real, why do I worry?"
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नियतिः (niyatiḥ) is built on ni, \"down\", and the root √yam, \"to hold, to restrain\"; MW gives niyati as the fixed order of things, necessity, destiny (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyatiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyatiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyatiḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyatiḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi niyatiḥ satyam asti, tarhi ahaṃ kimarthaṃ cintayāmi? — If destiny is real, why do I worry?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi niyatiḥ satyam asti, tarhi ahaṃ kimarthaṃ cintayāmi?* — If destiny is real, why do I worry?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a gambler, then the Sanskrit for an omen, then say niyatiḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a gambler, then the Sanskrit for an omen, then say *niyatiḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नियतिः (niyatiḥ) mean? (\"Destiny\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C538-mangalam",
+      "sequence": 30860,
+      "title": "मंगलम् (maṅgalam) — auspiciousness; good fortune",
+      "headword": "मंगलम्",
+      "romanization": "maṅgalam",
+      "gloss": "auspiciousness; good fortune",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e578f13cd05592cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for an omen, then the Sanskrit for destiny."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मंगलम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मंगलम् — maṅgalam — \"auspiciousness; good fortune\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि गृहे मंगलम् अस्ति, तर्हि माता प्रसन्ना भवति। yadi gṛhe maṅgalam asti, tarhi mātā prasannā bhavati. If all is well at home, my mother is happy."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मंगलम् (maṅgalam) is the word MW gives for happiness, welfare, and anything auspicious, a good omen; MW reports a derivation from a root √maṅg only after the grammarians, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṅgalam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṅgalam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṅgalam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṅgalam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi gṛhe maṅgalam asti, tarhi mātā prasannā bhavati. — If all is well at home, my mother is happy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi gṛhe maṅgalam asti, tarhi mātā prasannā bhavati.* — If all is well at home, my mother is happy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for an omen, then the Sanskrit for destiny, then say maṅgalam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for an omen, then the Sanskrit for destiny, then say *maṅgalam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मंगलम् (maṅgalam) mean? (\"Auspiciousness; good fortune\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C538-ganakah",
+      "sequence": 30870,
+      "title": "गणकः (gaṇakaḥ) — an astrologer",
+      "headword": "गणकः",
+      "romanization": "gaṇakaḥ",
+      "gloss": "an astrologer",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44c033849c58c846",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for destiny, then the Sanskrit for auspiciousness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गणकः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गणकः — gaṇakaḥ — \"an astrologer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि गणकः सत्यं वदति, तर्हि श्वः वर्षा भविष्यति। yadi gaṇakaḥ satyaṃ vadati, tarhi śvaḥ varṣā bhaviṣyati. If the astrologer is right, it will rain tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गणकः (gaṇakaḥ) comes from the root √gaṇ, \"to count\", which also gives gaṇayati, with the agent ending -aka; MW gives gaṇaka as one who calculates nativities, an astrologer (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaṇakaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaṇakaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaṇakaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaṇakaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi gaṇakaḥ satyaṃ vadati, tarhi śvaḥ varṣā bhaviṣyati. — If the astrologer is right, it will rain tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi gaṇakaḥ satyaṃ vadati, tarhi śvaḥ varṣā bhaviṣyati.* — If the astrologer is right, it will rain tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for destiny, then the Sanskrit for auspiciousness, then say gaṇakaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for destiny, then the Sanskrit for auspiciousness, then say *gaṇakaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गणकः (gaṇakaḥ) mean? (\"An astrologer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C538-upatisthate",
+      "sequence": 30880,
+      "title": "उपतिष्ठते (upatiṣṭhate) — draws near; presents itself",
+      "headword": "उपतिष्ठते",
+      "romanization": "upatiṣṭhate",
+      "gloss": "draws near; presents itself",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85615744c72a8768",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for auspiciousness, then the Sanskrit for an astrologer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उपतिष्ठते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपतिष्ठते — upatiṣṭhate — \"draws near; presents itself\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि शुभः समयः उपतिष्ठते, तर्हि वयं यात्रां गच्छामः। yadi śubhaḥ samayaḥ upatiṣṭhate, tarhi vayaṃ yātrāṃ gacchāmaḥ. If a lucky moment comes, we set out on the journey."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः गुरुम् उपस्थितवान्, saḥ gurum upasthitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपतिष्ठते (upatiṣṭhate) is built on upa, \"near\", and the root √sthā, \"to stand\", which also gives tiṣṭhati; MW gives upasthā as to stand or place oneself near, to be present, to approach; its past participle is upasthita (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upatiṣṭhate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upatiṣṭhate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upatiṣṭhate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upatiṣṭhate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi śubhaḥ samayaḥ upatiṣṭhate, tarhi vayaṃ yātrāṃ gacchāmaḥ. — If a lucky moment comes, we set out on the journey.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi śubhaḥ samayaḥ upatiṣṭhate, tarhi vayaṃ yātrāṃ gacchāmaḥ.* — If a lucky moment comes, we set out on the journey.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for auspiciousness, then the Sanskrit for an astrologer, then say upatiṣṭhate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for auspiciousness, then the Sanskrit for an astrologer, then say *upatiṣṭhate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उपतिष्ठते (upatiṣṭhate) mean? (\"Draws near; presents itself\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

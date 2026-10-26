@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:945e5cc7bec03eee",
+  "lessonIds": [
+    "SA-C392-abhyarthayate",
+    "SA-C392-sahayakah",
+    "SA-C392-asvasayati",
+    "SA-C392-sahakarah",
+    "SA-C392-anugrahah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch392.txt",
+  "json": "sanskrit/narration/ch392.json",
+  "textHash": "fnv1a64:9f5e965b6f185066",
+  "jsonHash": "fnv1a64:1316ec922651e4e5",
+  "findings": []
+}

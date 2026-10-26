@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C305-uddharati",
+    "language": "sanskrit",
+    "chapter": 305,
+    "sequence": 17970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1413386bf81be205"
+  },
+  "findings": []
+}

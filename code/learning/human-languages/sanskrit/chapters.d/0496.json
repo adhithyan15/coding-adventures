@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "A Wedding",
+  "label": "ch:sa-a-wedding",
+  "canDo": "I can describe a wedding.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C496-saptapadi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can describe a wedding.",
+    "assesses": [
+      "SA-LEX-C496-VIVAHA496-03",
+      "SA-LEX-C496-VIVAHA496-04",
+      "SA-LEX-C496-VIVAHA496-05"
+    ]
+  }
+}

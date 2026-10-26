@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "Nets, Shells and Pearls",
+  "label": "ch:sa-nets-shells-and-pearls",
+  "canDo": "I can talk about what fishermen and divers bring up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C418-pravalam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can talk about what fishermen and divers bring up.",
+    "assesses": [
+      "SA-LEX-C418-JALA418-03",
+      "SA-LEX-C418-JALA418-04",
+      "SA-LEX-C418-JALA418-05"
+    ]
+  }
+}

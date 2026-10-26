@@ -1,5 +1,9 @@
 # Five native learners exchanging one model
 
+This records the delivered NN46 five-language tranche. The current runner is
+extended separately by [NN49 six-native conformance](./six-native-dense-conformance.md),
+which additionally requires a harness-built native C executable.
+
 NN45 proved Ruby can train a model independently. NN46 asks a different question:
 can every native implementation continue every other's model without changing
 its meaning? A roster of five language names cannot answer that question.

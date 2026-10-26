@@ -25,6 +25,22 @@ must flow through explicit gate networks. Hexadecimal floating-point uses
 fixed-width sign/exponent/fraction networks; host integers may only transport
 the settled bit vectors.
 
+### Branch predicate authority
+
+Every modeled branch clocks the instruction address from a gate-derived select
+wire. `BCR` and `BC` select the condition-code mask bit with a gate mux tree.
+`BALR` suppresses a zero target-register field with an OR reduction, while
+`BCTR` and `BCT` combine that field predicate where applicable with a gate
+zero reduction of the decremented count. `BXH` and `BXLE` consume the
+gate-comparator condition code and the one-hot opcode decode to distinguish
+high from not-high. The settled select wire is then applied by the 24/32-bit
+gate mux; host equality, ordering, Boolean short-circuit operators, and dynamic
+mask shifts must not reconstruct any architectural branch decision.
+
+Completion evidence exhausts every four-bit branch mask, both condition-code
+bits, every target-register field, zero/nonzero count boundaries, and both
+index-branch opcodes, with a structural guard over the production executor.
+
 Channel I/O, interruption controls, protection keys, interval timers, model-
 specific microcode, analog delay, package pins, and storage technology are
 outside this CPU cell. They belong to later SoC/interconnect and lower-level
@@ -77,8 +93,24 @@ Completion requires:
    affected-package BUILD checks, security review, and at least 80% package
    line coverage before publication.
 
-The accepted implementation passes eleven Rust differential suites, including
-every first-byte classification, every supported hexadecimal-floating order,
-both branch paths, overlap semantics, lifecycle, and typed atomic faults.
-Rustfmt, strict Clippy, rustdoc, lesson validation, and the package BUILD are
-green. Package line coverage is 92.86% (1,626/1,751).
+The accepted implementation passes eleven Rust differential suites and three
+gate-integrity suites, including every first-byte classification, every
+supported hexadecimal-floating order, exhaustive branch predicate truth
+tables, both architectural branch paths, overlap semantics, lifecycle, typed
+atomic faults, and token-normalized exact-body structural checks over the full
+branch-select, fixed-width-adder, signed-comparator, and top-level dispatch
+dependency chain, including the exact four-byte router, RR/RX/RS dispatcher
+shells, complete validation router, and branch-validator shell, with hostile
+helper-rewrite, dead-dispatch, expectation-shadowing, oracle-substitution, and
+post-dispatch-overwrite fixtures. The complete public `step`, `run`, and
+`execute` bridge is exact-locked so only the independently computed,
+validated, oracle-compared gate result reaches the DFF commit path.
+The crate root must bind `executor` directly to the reviewed file-backed
+module; attributed paths, aliases, duplicate routing modules, and inline
+oracle-backed replacements are structural-test failures. Module identity is
+resolved from parsed Rust syntax and only exact top-level external declarations,
+so a literal declaration discarded inside macro input cannot authorize a
+macro-generated live `executor` or `gates` module, and delimiter-shaped
+character literals cannot counterfeit top-level scope.
+Rustfmt, strict Clippy, rustdoc, lesson validation, and the
+package BUILD are green. Package line coverage is 93.01% (1,662/1,787).

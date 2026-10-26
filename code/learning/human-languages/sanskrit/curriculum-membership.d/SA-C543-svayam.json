@@ -1,0 +1,11 @@
+{
+  "id": "SA-C543-svayam",
+  "pathSegment": "SA-PATH-543-HATHA543",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-543-HATHA543",
+      "order": 4
+    }
+  ]
+}

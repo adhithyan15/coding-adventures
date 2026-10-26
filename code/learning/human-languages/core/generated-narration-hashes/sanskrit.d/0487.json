@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:e394815ab805d458",
+  "lessonIds": [
+    "SA-C487-dantadhavanam",
+    "SA-C487-prasadhanam",
+    "SA-C487-anjanam",
+    "SA-C487-angaragah",
+    "SA-C487-paridadhati",
+    "SA-R487-review-480-487"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch487.txt",
+  "json": "sanskrit/narration/ch487.json",
+  "textHash": "fnv1a64:87709e508ad09be6",
+  "jsonHash": "fnv1a64:4c2a484166b099af",
+  "findings": []
+}

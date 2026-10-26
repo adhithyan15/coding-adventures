@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "Sleep and Waking",
+  "label": "ch:sa-sleep-and-waking",
+  "canDo": "I can say how well someone slept.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C488-praharah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can say how well someone slept.",
+    "assesses": [
+      "SA-LEX-C488-PRATIBODHA488-03",
+      "SA-LEX-C488-PRATIBODHA488-04",
+      "SA-LEX-C488-PRATIBODHA488-05"
+    ]
+  }
+}

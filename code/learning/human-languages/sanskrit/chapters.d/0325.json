@@ -1,0 +1,21 @@
+{
+  "chapter": 325,
+  "title": "Weapons of Old",
+  "label": "ch:sa-weapons-of-old",
+  "canDo": "I can describe how battles were fought long ago.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-R325-review-318-325",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can describe how battles were fought long ago.",
+    "assesses": [
+      "SA-LEX-C325-GADA325-01",
+      "SA-LEX-C325-GADA325-02",
+      "SA-LEX-C325-GADA325-03",
+      "SA-LEX-C325-GADA325-04",
+      "SA-LEX-C325-GADA325-05"
+    ]
+  }
+}

@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 290,
+  "title": "Robbers on the Road",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:943220067eaa93b5",
+  "lessons": [
+    {
+      "id": "SA-C290-dasyuh",
+      "sequence": 17200,
+      "title": "दस्युः (dasyuḥ) — a robber; a bandit",
+      "headword": "दस्युः",
+      "romanization": "dasyuḥ",
+      "gloss": "a robber; a bandit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:272c7dbc87d50e55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a trace, then the Sanskrit for before one's eyes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दस्युः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दस्युः — dasyuḥ — \"a robber; a bandit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वने दस्युः वसति। vane dasyuḥ vasati. A robber lives in the forest."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दस्युः (dasyuḥ) comes from the root √das, \"to lay waste\"; MW's older sense is an enemy of the gods, and it also gives dasyu as a robber (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dasyuḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dasyuḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dasyuḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dasyuḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vane dasyuḥ vasati. — A robber lives in the forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vane dasyuḥ vasati.* — A robber lives in the forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a trace, then the Sanskrit for before one's eyes, then say dasyuḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a trace, then the Sanskrit for before one's eyes, then say *dasyuḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दस्युः (dasyuḥ) mean? (\"A robber; a bandit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C290-lunthati",
+      "sequence": 17210,
+      "title": "लुण्ठति (luṇṭhati) — plunders",
+      "headword": "लुण्ठति",
+      "romanization": "luṇṭhati",
+      "gloss": "plunders",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab5a64c1a9757be7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for before one's eyes, then the Sanskrit for a robber."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लुण्ठति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लुण्ठति — luṇṭhati — \"plunders\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि दस्युः आगच्छति, तर्हि ग्रामं लुण्ठति। yadi dasyuḥ āgacchati, tarhi grāmaṃ luṇṭhati. If a robber comes, then he plunders the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः ग्रामं लुण्ठितवान्, saḥ grāmaṃ luṇṭhitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लुण्ठति (luṇṭhati) comes from the root √luṇṭh, which MW gives with several senses, among them to rob or plunder (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luṇṭhati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *luṇṭhati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luṇṭhati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *luṇṭhati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi dasyuḥ āgacchati, tarhi grāmaṃ luṇṭhati. — If a robber comes, then he plunders the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi dasyuḥ āgacchati, tarhi grāmaṃ luṇṭhati.* — If a robber comes, then he plunders the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for before one's eyes, then the Sanskrit for a robber, then say luṇṭhati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for before one's eyes, then the Sanskrit for a robber, then say *luṇṭhati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लुण्ठति (luṇṭhati) mean? (\"Plunders\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C290-akramati",
+      "sequence": 17220,
+      "title": "आक्रमति (ākramati) — attacks",
+      "headword": "आक्रमति",
+      "romanization": "ākramati",
+      "gloss": "attacks",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b550c3eeaf87c9f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a robber, then the Sanskrit for plunders."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आक्रमति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आक्रमति — ākramati — \"attacks\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दस्युः पथिकम् आक्रमति। dasyuḥ pathikam ākramati. The robber attacks the traveller."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः पथिकम् आक्रान्तवान्, saḥ pathikam ākrāntavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आक्रमति (ākramati) is built from ā, \"towards\", and the root √kram, \"to step, stride\"; MW gives ā-kram as to step near, seize and attack (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākramati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākramati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākramati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākramati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dasyuḥ pathikam ākramati. — The robber attacks the traveller.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dasyuḥ pathikam ākramati.* — The robber attacks the traveller.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a robber, then the Sanskrit for plunders, then say ākramati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a robber, then the Sanskrit for plunders, then say *ākramati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आक्रमति (ākramati) mean? (\"Attacks\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C290-abharanam",
+      "sequence": 17230,
+      "title": "आभरणम् (ābharaṇam) — a piece of jewellery",
+      "headword": "आभरणम्",
+      "romanization": "ābharaṇam",
+      "gloss": "a piece of jewellery",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf2ef2574b13a219",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for plunders, then the Sanskrit for attacks."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आभरणम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आभरणम् — ābharaṇam — \"a piece of jewellery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दस्युः आभरणं हरति। dasyuḥ ābharaṇaṃ harati. The robber takes the jewellery."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आभरणम् (ābharaṇam) is built from ā and the root √bhṛ, \"to bear, carry\"; MW gives ābharaṇa as decorating and as an ornament such as jewels (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ābharaṇam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ābharaṇam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ābharaṇam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ābharaṇam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dasyuḥ ābharaṇaṃ harati. — The robber takes the jewellery.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dasyuḥ ābharaṇaṃ harati.* — The robber takes the jewellery.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for plunders, then the Sanskrit for attacks, then say ābharaṇam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for plunders, then the Sanskrit for attacks, then say *ābharaṇam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आभरणम् (ābharaṇam) mean? (\"A piece of jewellery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C290-balat",
+      "sequence": 17240,
+      "title": "बलात् (balāt) — by force",
+      "headword": "बलात्",
+      "romanization": "balāt",
+      "gloss": "by force",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:174d479e4a21cb00",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for attacks, then the Sanskrit for a piece of jewellery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बलात्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बलात् — balāt — \"by force\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दस्युः बलात् धनं गृह्णाति। dasyuḥ balāt dhanaṃ gṛhṇāti. The robber takes the money by force."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बलात् (balāt) is built on bala, \"strength, force\": MW records its ablative balāt as meaning forcibly, against one's will (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "balāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *balāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "balāt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *balāt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dasyuḥ balāt dhanaṃ gṛhṇāti. — The robber takes the money by force.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dasyuḥ balāt dhanaṃ gṛhṇāti.* — The robber takes the money by force.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for attacks, then the Sanskrit for a piece of jewellery, then say balāt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for attacks, then the Sanskrit for a piece of jewellery, then say *balāt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बलात् (balāt) mean? (\"By force\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

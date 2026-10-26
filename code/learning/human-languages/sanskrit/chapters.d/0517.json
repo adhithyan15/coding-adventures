@@ -1,0 +1,21 @@
+{
+  "chapter": 517,
+  "title": "Games at Home",
+  "label": "ch:sa-games-at-home",
+  "canDo": "I can talk about board games, riddles and guessing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-R517-review-510-517",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can talk about board games, riddles and guessing.",
+    "assesses": [
+      "SA-LEX-C517-CATURANGA517-01",
+      "SA-LEX-C517-CATURANGA517-02",
+      "SA-LEX-C517-CATURANGA517-03",
+      "SA-LEX-C517-CATURANGA517-04",
+      "SA-LEX-C517-CATURANGA517-05"
+    ]
+  }
+}

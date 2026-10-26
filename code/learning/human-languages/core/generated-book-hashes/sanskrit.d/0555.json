@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 555,
+  "sourceHash": "fnv1a64:f96220ab9970120f",
+  "lessonIds": [
+    "SA-C555-prerana",
+    "SA-C555-udyuktah",
+    "SA-C555-pratyuta",
+    "SA-C555-karmathah",
+    "SA-C555-adhyavasyati",
+    "SA-R555-review-549-555",
+    "SA-R555-review-final-555"
+  ],
+  "tex": "sanskrit/book/chapters/ch555-the-road-ahead.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:964606528428053c",
+  "lessonIds": [
+    "SA-C504-avedanam",
+    "SA-C504-niyuktih",
+    "SA-C504-pratibha",
+    "SA-C504-upajivati",
+    "SA-C504-pravinah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch504.txt",
+  "json": "sanskrit/narration/ch504.json",
+  "textHash": "fnv1a64:1c10c42deb565eca",
+  "jsonHash": "fnv1a64:64305fec889447d2",
+  "findings": []
+}

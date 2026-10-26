@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:e59194d2ec266a09",
+  "lessonIds": [
+    "SA-C506-vayati",
+    "SA-C506-tantuh",
+    "SA-C506-ranjakah",
+    "SA-C506-ranjayati",
+    "SA-C506-saucikah"
+  ],
+  "tex": "sanskrit/book/chapters/ch506-thread-and-loom.tex"
+}

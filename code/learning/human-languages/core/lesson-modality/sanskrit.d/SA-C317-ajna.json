@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C317-ajna",
+    "language": "sanskrit",
+    "chapter": 317,
+    "sequence": 18590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12bcfcfb079c4a09"
+  },
+  "findings": []
+}

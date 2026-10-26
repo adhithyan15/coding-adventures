@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-320-VIPLAVA320",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "SA-EXT-320-VIPLAVA320"
+  ],
+  "after": []
+}

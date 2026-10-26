@@ -1,0 +1,11 @@
+{
+  "id": "SA-C534-samvid",
+  "pathSegment": "SA-PATH-534-SAMVID534",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-534-SAMVID534",
+      "order": 1
+    }
+  ]
+}

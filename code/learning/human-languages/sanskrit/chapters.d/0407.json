@@ -1,0 +1,19 @@
+{
+  "chapter": 407,
+  "title": "Drivers and Reins",
+  "label": "ch:sa-drivers-and-reins",
+  "canDo": "I can say how a driver harnesses and handles horses.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C407-yunakti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can say how a driver harnesses and handles horses.",
+    "assesses": [
+      "SA-LEX-C407-YANTA407-03",
+      "SA-LEX-C407-YANTA407-04",
+      "SA-LEX-C407-YANTA407-05"
+    ]
+  }
+}

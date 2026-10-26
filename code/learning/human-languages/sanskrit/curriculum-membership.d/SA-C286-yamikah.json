@@ -1,0 +1,11 @@
+{
+  "id": "SA-C286-yamikah",
+  "pathSegment": "SA-PATH-286-CAURYA286",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-286-CAURYA286",
+      "order": 1
+    }
+  ]
+}

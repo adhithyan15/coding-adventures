@@ -1,0 +1,22 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER useMaxWidth render configuration vertical slice",
+  "fixtures": [
+    {
+      "name": "upstream-use-max-width-default",
+      "source": "erDiagram\nCUSTOMER ||--o{ ORDER : places\nORDER ||--|{ LINE-ITEM : contains",
+      "use_max_width": true
+    },
+    {
+      "name": "upstream-use-max-width-true",
+      "source": "%%{init: {\"er\": {\"useMaxWidth\": true}}}%%\nerDiagram\nCUSTOMER ||--o{ ORDER : places\nORDER ||--|{ LINE-ITEM : contains",
+      "use_max_width": true
+    },
+    {
+      "name": "upstream-use-max-width-false",
+      "source": "---\nconfig:\n  er:\n    useMaxWidth: false\n---\nerDiagram\nCUSTOMER ||--o{ ORDER : places\nORDER ||--|{ LINE-ITEM : contains",
+      "use_max_width": false
+    }
+  ]
+}

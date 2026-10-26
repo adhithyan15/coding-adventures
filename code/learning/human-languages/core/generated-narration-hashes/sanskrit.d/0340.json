@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:ee61b217b0a290dd",
+  "lessonIds": [
+    "SA-C340-nimittam",
+    "SA-C340-prabhavah",
+    "SA-C340-abhavah",
+    "SA-C340-utpadyate",
+    "SA-C340-janayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch340.txt",
+  "json": "sanskrit/narration/ch340.json",
+  "textHash": "fnv1a64:74baf98124d4eb74",
+  "jsonHash": "fnv1a64:7a5ae59a32976bcd",
+  "findings": []
+}

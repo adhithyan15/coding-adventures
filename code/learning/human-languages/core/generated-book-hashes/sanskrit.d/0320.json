@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:3fbcc53589fc1b6a",
+  "lessonIds": [
+    "SA-C320-praja",
+    "SA-C320-dasah",
+    "SA-C320-viplavah",
+    "SA-C320-niskasayati",
+    "SA-C320-svatantryam"
+  ],
+  "tex": "sanskrit/book/chapters/ch320-rebellion.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C521-murajah",
+  "pathSegment": "SA-PATH-521-VADAKA521",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-521-VADAKA521",
+      "order": 3
+    }
+  ]
+}

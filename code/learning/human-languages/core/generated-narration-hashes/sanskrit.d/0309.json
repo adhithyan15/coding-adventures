@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:f075c2a1fc4471c5",
+  "lessonIds": [
+    "SA-C309-vrttantah",
+    "SA-C309-prasarayati",
+    "SA-C309-akarnayati",
+    "SA-C309-mukhyah",
+    "SA-C309-vartaharah",
+    "SA-R309-review-302-309"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch309.txt",
+  "json": "sanskrit/narration/ch309.json",
+  "textHash": "fnv1a64:0adf10b6cd061f4e",
+  "jsonHash": "fnv1a64:7c9bd5124d95c852",
+  "findings": []
+}

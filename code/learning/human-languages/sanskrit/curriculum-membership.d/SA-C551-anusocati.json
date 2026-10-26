@@ -1,0 +1,11 @@
+{
+  "id": "SA-C551-anusocati",
+  "pathSegment": "SA-PATH-551-PARITYAJATI551",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-551-PARITYAJATI551",
+      "order": 1
+    }
+  ]
+}

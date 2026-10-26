@@ -1,0 +1,11 @@
+{
+  "id": "SA-C389-yatharthah",
+  "pathSegment": "SA-PATH-389-SHAKYA389",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-389-SHAKYA389",
+      "order": 4
+    }
+  ]
+}

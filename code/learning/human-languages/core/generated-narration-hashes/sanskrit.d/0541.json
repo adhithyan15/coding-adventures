@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:6f440c382dc57168",
+  "lessonIds": [
+    "SA-C541-dolayate",
+    "SA-C541-vimrsati",
+    "SA-C541-dvidha",
+    "SA-C541-aparah",
+    "SA-C541-vibhinnah",
+    "SA-R541-review-534-541"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch541.txt",
+  "json": "sanskrit/narration/ch541.json",
+  "textHash": "fnv1a64:a9433489f6af7f25",
+  "jsonHash": "fnv1a64:788ee2bae609a77e",
+  "findings": []
+}

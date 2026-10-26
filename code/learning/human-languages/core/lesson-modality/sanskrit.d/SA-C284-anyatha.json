@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C284-anyatha",
+    "language": "sanskrit",
+    "chapter": 284,
+    "sequence": 16620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:900425bad4199dce"
+  },
+  "findings": []
+}

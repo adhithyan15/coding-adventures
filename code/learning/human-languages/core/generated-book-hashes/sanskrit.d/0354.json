@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:a4add17725eb6976",
+  "lessonIds": [
+    "SA-C354-nagarikah",
+    "SA-C354-janata",
+    "SA-C354-samajah",
+    "SA-C354-svatantrah",
+    "SA-C354-sanghatayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch354-citizens-and-society.tex"
+}

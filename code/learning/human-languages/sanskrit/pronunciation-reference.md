@@ -9,7 +9,7 @@ reader.
 1. **Consonants carry a built-in "a".** क = ka, न = na, म = ma — left to right
    under a connecting top line.
 2. **A vowel sign changes it:** का kā · कि ki · की kī · कु ku · के ke · को ko. A
-   word-initial vowel has its own letter: अ a · आ ā · इ i · उ u · ए e · ओ o.
+   word-initial vowel has its own letter: अ a · आ ā · इ i · ई ī · उ u · ए e · ओ o · औ au.
 3. **A *halant* (्) removes the vowel**, and the bare consonant joins the next
    as a conjunct: स् + त → स्त, न् + य → न्य.
 

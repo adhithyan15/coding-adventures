@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 455,
+  "title": "Fondness and Attachment",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:7685c8b35f26a0fb",
+  "lessons": [
+    {
+      "id": "SA-C455-sannidhyam",
+      "sequence": 26350,
+      "title": "सान्निध्यम् (sānnidhyam) — nearness; presence",
+      "headword": "सान्निध्यम्",
+      "romanization": "sānnidhyam",
+      "gloss": "nearness; presence",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e038fad6662b6f69",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for enmity, then the Sanskrit for covetous longing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सान्निध्यम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सान्निध्यम् — sānnidhyam — \"nearness; presence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मातुः सान्निध्ये शिशुः शान्तः भवति। mātuḥ sānnidhye śiśuḥ śāntaḥ bhavati. In its mother's presence the baby is calm."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सान्निध्यम् (sānnidhyam) is built on saṃnidhi, \"nearness\", from sam, ni and the root √dhā, \"to put\", with the lengthening of its first vowel; MW gives \"the being near, nearness, vicinity, presence\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sānnidhyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sānnidhyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sānnidhyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sānnidhyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātuḥ sānnidhye śiśuḥ śāntaḥ bhavati. — In its mother's presence the baby is calm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātuḥ sānnidhye śiśuḥ śāntaḥ bhavati.* — In its mother's presence the baby is calm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for enmity, then the Sanskrit for covetous longing, then say sānnidhyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for enmity, then the Sanskrit for covetous longing, then say *sānnidhyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सान्निध्यम् (sānnidhyam) mean? (\"Nearness; presence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C455-kamayate",
+      "sequence": 26360,
+      "title": "कामयते (kāmayate) — desires",
+      "headword": "कामयते",
+      "romanization": "kāmayate",
+      "gloss": "desires",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f69401ec0a57b05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for covetous longing, then the Sanskrit for nearness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कामयते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कामयते — kāmayate — \"desires\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सर्वः जनः सुखं कामयते। sarvaḥ janaḥ sukhaṃ kāmayate. Everyone desires happiness."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः सुखं कामितवान्, saḥ sukhaṃ kāmitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कामयते (kāmayate) comes from the root √kam, \"to love, to desire\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāmayate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāmayate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāmayate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāmayate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarvaḥ janaḥ sukhaṃ kāmayate. — Everyone desires happiness.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarvaḥ janaḥ sukhaṃ kāmayate.* — Everyone desires happiness.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for covetous longing, then the Sanskrit for nearness, then say kāmayate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for covetous longing, then the Sanskrit for nearness, then say *kāmayate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कामयते (kāmayate) mean? (\"Desires\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C455-mohah",
+      "sequence": 26370,
+      "title": "मोहः (mohaḥ) — infatuation; delusion",
+      "headword": "मोहः",
+      "romanization": "mohaḥ",
+      "gloss": "infatuation; delusion",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f957808bcd82d3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for nearness, then the Sanskrit for desires."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मोहः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोहः — mohaḥ — \"infatuation; delusion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "धनस्य मोहः जनं मूर्खं करोति। dhanasya mohaḥ janaṃ mūrkhaṃ karoti. Infatuation with money makes a person foolish."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोहः (mohaḥ) comes from the root √muh, \"to be bewildered\"; MW gives \"bewilderment, infatuation, delusion\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mohaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mohaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mohaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mohaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhanasya mohaḥ janaṃ mūrkhaṃ karoti. — Infatuation with money makes a person foolish.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhanasya mohaḥ janaṃ mūrkhaṃ karoti.* — Infatuation with money makes a person foolish.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for nearness, then the Sanskrit for desires, then say mohaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for nearness, then the Sanskrit for desires, then say *mohaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मोहः (mohaḥ) mean? (\"Infatuation; delusion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C455-asaktih",
+      "sequence": 26380,
+      "title": "आसक्तिः (āsaktiḥ) — attachment",
+      "headword": "आसक्तिः",
+      "romanization": "āsaktiḥ",
+      "gloss": "attachment",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6903aad17a92623",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for desires, then the Sanskrit for infatuation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आसक्तिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आसक्तिः — āsaktiḥ — \"attachment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वृद्धस्य गृहे आसक्तिः अस्ति। vṛddhasya gṛhe āsaktiḥ asti. The old man is attached to his house."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आसक्तिः (āsaktiḥ) is built from ā and the root √sañj, \"to cling, to stick\"; MW gives \"devotedness, attachment\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsaktiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsaktiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsaktiḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsaktiḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vṛddhasya gṛhe āsaktiḥ asti. — The old man is attached to his house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vṛddhasya gṛhe āsaktiḥ asti.* — The old man is attached to his house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for desires, then the Sanskrit for infatuation, then say āsaktiḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for desires, then the Sanskrit for infatuation, then say *āsaktiḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आसक्तिः (āsaktiḥ) mean? (\"Attachment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C455-vatsalyam",
+      "sequence": 26390,
+      "title": "वात्सल्यम् (vātsalyam) — tenderness for a child",
+      "headword": "वात्सल्यम्",
+      "romanization": "vātsalyam",
+      "gloss": "tenderness for a child",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90e7f8ee406a2973",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for infatuation, then the Sanskrit for attachment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वात्सल्यम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वात्सल्यम् — vātsalyam — \"tenderness for a child\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मातुः वात्सल्यं शिशुं रक्षति। mātuḥ vātsalyaṃ śiśuṃ rakṣati. A mother's tenderness protects her baby."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वात्सल्यम् (vātsalyam) is built on vatsala, \"fond, tender\", from vatsa, \"a calf\" (वत्सः); MW gives \"affection or tenderness, esp. towards offspring\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vātsalyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vātsalyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vātsalyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vātsalyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātuḥ vātsalyaṃ śiśuṃ rakṣati. — A mother's tenderness protects her baby.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātuḥ vātsalyaṃ śiśuṃ rakṣati.* — A mother's tenderness protects her baby.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for infatuation, then the Sanskrit for attachment, then say vātsalyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for infatuation, then the Sanskrit for attachment, then say *vātsalyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वात्सल्यम् (vātsalyam) mean? (\"Tenderness for a child\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R455-review-448-455",
+      "sequence": 26400,
+      "title": "Looking back: from Naming a Feeling to Fondness and Attachment",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Naming a Feeling to Fondness and Attachment",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bce8adf0b7688248",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for a feeling and regret."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a feeling, regret, thrills with joy, merriment, distress",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a feeling, regret, thrills with joy, merriment, distress]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a flurry of feeling, is amazed, a marvel, pleases, a thrill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a flurry of feeling, is amazed, a marvel, pleases, a thrill]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dejection, grieves, weeping, tears, a sigh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dejection, grieves, weeping, tears, a sigh]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "is pained, takes heart, coaxes, troubled, anguish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: is pained, takes heart, coaxes, troubled, anguish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anxiety, despairing, loses heart, agitated, wretched",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: anxiety, despairing, loses heart, agitated, wretched]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pining for someone absent, bereft, lives away from home, a dear friend, sends word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pining for someone absent, bereft, lives away from home, a dear friend, sends word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "envies, detests, hatred, enmity, covetous longing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: envies, detests, hatred, enmity, covetous longing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nearness, desires, infatuation, attachment, tenderness for a child",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: nearness, desires, infatuation, attachment, tenderness for a child]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A feeling? (भावः, bhāvaḥ.) Regret? (अनुतापः, anutāpaḥ.) Thrills with joy? (हृष्यति, hṛṣyati.) Merriment? (उल्लासः, ullāsaḥ.) Distress? (खेदः, khedaḥ.) A flurry of feeling? (आवेगः, āvegaḥ.) Is amazed? (विस्मयते, vismayate.) A marvel? (आश्चर्यम्, āścaryam.) Pleases? (तोषयति, toṣayati.) A thrill? (रोमाञ्चः, romāñcaḥ.) Dejection? (विषादः, viṣādaḥ.) Grieves? (शोचति, śocati.) Weeping? (रोदनम्, rodanam.) Tears? (बाष्पः, bāṣpaḥ.) A sigh? (निःश्वासः, niḥśvāsaḥ.) Is pained? (व्यथते, vyathate.) Takes heart? (आश्वसिति, āśvasiti.) Coaxes? (अनुनयति, anunayati.) Troubled? (व्याकुलः, vyākulaḥ.) Anguish? (सन्तापः, santāpaḥ.) Anxiety? (उद्वेगः, udvegaḥ.) Despairing? (हताशः, hatāśaḥ.) Loses heart? (विषीदति, viṣīdati.) Agitated? (व्यग्रः, vyagraḥ.) Wretched? (दीनः, dīnaḥ.) Pining for someone absent? (उत्कण्ठा, utkaṇṭhā.) Bereft? (विधुरः, vidhuraḥ.) Lives away from home? (प्रवसति, pravasati.) A dear friend? (सुहृद्, suhṛd.) Sends word? (सन्दिशति, sandiśati.) Envies? (ईर्ष्यति, īrṣyati.) Detests? (जुगुप्सते, jugupsate.) Hatred? (द्वेषः, dveṣaḥ.) Enmity? (वैरम्, vairam.) Covetous longing? (स्पृहा, spṛhā.) Nearness? (सान्निध्यम्, sānnidhyam.) Desires? (कामयते, kāmayate.) Infatuation? (मोहः, mohaḥ.) Attachment? (आसक्तिः, āsaktiḥ.) Tenderness for a child? (वात्सल्यम्, vātsalyam.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

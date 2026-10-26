@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:0776da5eb5152cc9",
+  "lessonIds": [
+    "SA-C288-aparadhah",
+    "SA-C288-sandehah",
+    "SA-C288-abhiyogah",
+    "SA-C288-tarjayati",
+    "SA-C288-sastram"
+  ],
+  "tex": "sanskrit/book/chapters/ch288-at-the-watch-house.tex"
+}

@@ -412,7 +412,7 @@ siphash_2_4(data, key):
   v0 = k0 ^ 0x736f6d6570736575
   v1 = k1 ^ 0x646f72616e646f6d
   v2 = k0 ^ 0x6c7967656e657261
-  v3 = k1 ^ 0x7465646265656665
+  v3 = k1 ^ 0x7465646279746573
 
   # Process 8-byte blocks
   for each 8-byte block m:
@@ -538,6 +538,14 @@ See full pseudocode in Concepts section. Key steps:
 2. Handle tail bytes.
 3. XOR with length, apply fmix32.
 
+### `polynomial_rolling(data: bytes, base: int = 31, modulus: int = 2^61 - 1) → int`
+
+Polynomial rolling is a repository compatibility extension rather than one of
+the four core DT17 families. Established package lanes expose it because the
+dependent data-structure packages already consume the helper. Implementations
+must reject a zero or negative modulus and use an intermediate wide enough to
+evaluate `(hash * base + byte) mod modulus` without losing information.
+
 ### `siphash_2_4(data: bytes, key: bytes) → int`
 
 See full pseudocode in Concepts section.
@@ -561,6 +569,13 @@ for _ in range(sample_size):
 return total_bit_flips / total_trials      # ideal: 0.5
 ```
 
+Portable implementations must not obtain these samples from ambient operating-
+system randomness. They may generate a documented deterministic sequence from
+`sample_size`, or expose an idiomatic overload that accepts the caller's
+explicit non-empty byte samples. The Swift lane uses the explicit-sample form,
+so identical inputs always produce identical analysis results without entropy
+authority.
+
 ### `distribution_test(hash_fn, inputs, num_buckets) → float`
 
 Returns the chi-squared statistic (lower = better; ideal ≈ num_buckets - 1).
@@ -583,6 +598,11 @@ return chi2
 def fnv1a_32(data: bytes) -> int: ...            # 32-bit output
 def fnv1a_64(data: bytes) -> int: ...            # 64-bit output
 def djb2(data: bytes) -> int: ...                # 64-bit output (no truncation)
+def polynomial_rolling(
+    data: bytes,
+    base: int = 31,
+    modulus: int = 2**61 - 1,
+) -> int: ...                                    # compatibility extension
 def murmur3_32(data: bytes, seed: int = 0) -> int: ...   # 32-bit output
 def siphash_2_4(data: bytes, key: bytes) -> int: ...     # 64-bit output; key must be 16 bytes
 

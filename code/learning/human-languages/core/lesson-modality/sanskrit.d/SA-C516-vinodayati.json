@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C516-vinodayati",
+    "language": "sanskrit",
+    "chapter": 516,
+    "sequence": 29730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:284cb886b98abc8f"
+  },
+  "findings": []
+}

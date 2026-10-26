@@ -14,9 +14,17 @@ All notable changes to the `task-app` web program are documented here.
   or all ten are taken, it stays in place and Trestle saves nothing that
   session and says so. `LOCAL-DATA.txt` and the release gate's upgrade check
   follow the new names.
+- Preserve Qt timeline labels' authored 150-pixel non-shrinking width (#18305),
+  without changing shared styles or claiming general flex support.
 
 Entries added after `task-app-v0.5.12` accumulate here until the next version is
 cut.
+
+### Changed
+
+- The `mosaic-pkg-toolkit` dependency pin moves from 0.15.0 to 0.16.0, the
+  toolkit's current version (Journal already pins it). 0.16.0 only adds
+  `RecordList`; nothing TaskApp uses changed, so no source or output changes.
 
 ## [0.5.12] - 2026-10-25
 

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C363-visayah",
+  "pathSegment": "SA-PATH-363-ADHYAYANA363",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-363-ADHYAYANA363",
+      "order": 1
+    }
+  ]
+}

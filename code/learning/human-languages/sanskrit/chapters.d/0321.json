@@ -1,0 +1,19 @@
+{
+  "chapter": 321,
+  "title": "A Coronation",
+  "label": "ch:sa-a-coronation",
+  "canDo": "I can describe how a king was crowned.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C321-uccarayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can describe how a king was crowned.",
+    "assesses": [
+      "SA-LEX-C321-ABHISHEKA321-03",
+      "SA-LEX-C321-ABHISHEKA321-04",
+      "SA-LEX-C321-ABHISHEKA321-05"
+    ]
+  }
+}

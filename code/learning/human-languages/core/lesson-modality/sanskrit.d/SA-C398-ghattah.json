@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C398-ghattah",
+    "language": "sanskrit",
+    "chapter": 398,
+    "sequence": 23200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a89f9d4d8993922"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:d35bf3cafa4382cd",
+  "lessonIds": [
+    "SA-C330-parampara",
+    "SA-C330-ritih",
+    "SA-C330-acarati",
+    "SA-C330-parva",
+    "SA-C330-tilakah"
+  ],
+  "tex": "sanskrit/book/chapters/ch330-old-customs.tex"
+}

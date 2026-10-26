@@ -1,0 +1,19 @@
+{
+  "chapter": 328,
+  "title": "Fasting and Offerings",
+  "label": "ch:sa-fasting-and-offerings",
+  "canDo": "I can say how a family kept a festival day.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C328-prasadah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can say how a family kept a festival day.",
+    "assesses": [
+      "SA-LEX-C328-VRATA328-03",
+      "SA-LEX-C328-VRATA328-04",
+      "SA-LEX-C328-VRATA328-05"
+    ]
+  }
+}

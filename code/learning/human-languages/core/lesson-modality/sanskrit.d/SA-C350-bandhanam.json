@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C350-bandhanam",
+    "language": "sanskrit",
+    "chapter": 350,
+    "sequence": 20510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3424643293ae5cb"
+  },
+  "findings": []
+}

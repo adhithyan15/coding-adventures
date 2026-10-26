@@ -1,0 +1,21 @@
+{
+  "chapter": 471,
+  "title": "Head and Face",
+  "label": "ch:sa-head-and-face",
+  "canDo": "I can talk about the head, the beard and the eyelashes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-R471-review-464-471",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 471: I can talk about the head, the beard and the eyelashes.",
+    "assesses": [
+      "SA-LEX-C471-MASTISKA471-01",
+      "SA-LEX-C471-MASTISKA471-02",
+      "SA-LEX-C471-MASTISKA471-03",
+      "SA-LEX-C471-MASTISKA471-04",
+      "SA-LEX-C471-MASTISKA471-05"
+    ]
+  }
+}

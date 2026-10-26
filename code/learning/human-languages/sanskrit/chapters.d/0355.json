@@ -1,0 +1,21 @@
+{
+  "chapter": 355,
+  "title": "The Assembly",
+  "label": "ch:sa-the-assembly",
+  "canDo": "I can say who sits in a parliament and what they do there.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-R355-review-348-355",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can say who sits in a parliament and what they do there.",
+    "assesses": [
+      "SA-LEX-C355-SANSAD355-01",
+      "SA-LEX-C355-SANSAD355-02",
+      "SA-LEX-C355-SANSAD355-03",
+      "SA-LEX-C355-SANSAD355-04",
+      "SA-LEX-C355-SANSAD355-05"
+    ]
+  }
+}

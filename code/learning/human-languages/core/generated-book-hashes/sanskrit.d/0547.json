@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 547,
+  "sourceHash": "fnv1a64:b02232c7db7f1acd",
+  "lessonIds": [
+    "SA-C547-utthanam",
+    "SA-C547-avanatih",
+    "SA-C547-patanam",
+    "SA-C547-arohah",
+    "SA-C547-ucchalati"
+  ],
+  "tex": "sanskrit/book/chapters/ch547-ups-and-downs.tex"
+}
