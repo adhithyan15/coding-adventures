@@ -75,7 +75,7 @@ architecture/core introduction era, not a claim about a particular chip.
 
 | Priority | Target | Finding / next action |
 |---:|---|---|
-| P0 in progress | Intel 8051 gate HALT storage | The allocated HALT state register is only a write-only copy: snapshots, execution control, results, restore, and the HALT sentinel use the adjacent public host boolean. Make DFF Q the sole authority, retain the public field only as a synchronized compatibility observer, cover restore and fault rollback under deliberate divergence, and replace the tautological topology assertion with an inventory derived from owned storage. |
+| P0 complete locally | Intel 8051 gate HALT storage | HALT DFF Q is now the sole architectural authority; the public boolean is only a synchronized compatibility observer. The published storage inventory derives 524,288 code bits, 524,288 XDATA bits, 2,048 IRAM/SFR bits, 16 PC bits, and one HALT bit from owned containers. Deliberate mirror-divergence, restore, run/result, and typed-fault rollback tests pass alongside 70 unit tests, the all-256-opcode differential, eight lifecycle/integrity tests, and 23 doctests. Strict Clippy/rustdoc/fmt, lessons validation, the five-package affected build, and 97.32% line coverage (1,921/1,974) are green. |
 | P1 audit | Remaining completed gate packages with public halt fields | Audit each package before changing it. A public observation field is acceptable only when execution, snapshots, restore, and faults are driven by DFF Q; otherwise add one bounded repair cell and a non-tautological storage inventory. |
 
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,
