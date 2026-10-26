@@ -2,6 +2,10 @@
 
 ## 1. Status, purpose, and evidence lock
 
+**Status:** independently reviewed specification; implementation authorized.
+The exact reviewed spec-only head is
+`7bbb725e059c97c75bbdfb1d026a25828f163968`.
+
 This cell specifies one bounded, checked functional simulator for the scalar
 fixed-point execution surface shared by Power ISA Version 3.0C and the
 Microwatt soft core. It is the functional predecessor of any later
