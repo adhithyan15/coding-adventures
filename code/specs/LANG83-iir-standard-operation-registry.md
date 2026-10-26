@@ -1259,6 +1259,68 @@ formatter byte for byte.
 - `release_classes.csv` is regenerated. The classes partition the editions
   as before: es2016–es2020 and es2021–es2025.
 
+**What PR7c-py landed, and where it diverged from the plan above.**
+`python-iir-compiler` 0.4.0 emits no `write_f64_py` on the release path. A
+module that prints a float carries `__py_write_float(x: f64) -> i64` and
+the three shared helpers, as `__py_digit_count(D)`,
+`__py_write_digits(D, n, from, to)` and `__py_write_uint(u)`, written in
+the crate's `float_repr` module. Every float `print` is one
+`call __py_write_float` followed by `putchar 10`. All PR7c-js precedents
+hold: the digit is `q − (q div 10) × 10`, the run of zeros after `0.` is
+`write_digits(D, n, n, n − e − 1)`, each helper returns `i64` from one
+`ret` and is `FullyTyped`. All 138 `lang_matrix` Python rows print what
+they printed before on every column that ran (native x86-64, LLVM, WASM,
+JVM, VM and JIT locally: 828 cells, 372 trapping as expected), and a crate
+test compares 1,248 values, each positive and negative, with vm-core's
+PR6a `python_repr` and with host `python3` byte for byte.
+
+- *No call-site sign test.* Python's `repr` prints the sign of every zero
+  (`-0.0`), so the helper writes it (the `c == 0` branch above), and a
+  print site is the `call` alone. Only JavaScript's `console.log` needs the
+  class-and-sign test.
+- *One result register.* Every `call __py_write_float` writes its unused
+  `0` into the same register, `py_repr`, so a float print costs `main` no
+  VM register. vm-core's frame holds at most 65,536 named registers
+  (`VMFrame::MAX_FRAME_REGISTERS`); a fresh register per call would have
+  shrunk the largest float program vm-core can run by a quarter.
+- *Python 2 and 3.0a1 are untouched.* Their profiles (`py2`, `py30`) have
+  `Floats::None`: a `FLOAT` token and a true `/` are refused, so their
+  modules never print a float and never carry the helpers. Their `%.12g`
+  waits for `f64_digits_prec`, as planned. Every `py-int-print` and
+  `py2-int-print` module is byte-identical to before, and the release
+  sweep confirms it: only the 77 `py-float-print` digests in
+  `code/grammars/python/release_classes.csv` changed, and the classes
+  partition the releases as before ({3.6.0, 3.12.3, 3.13.16, 3.11.17,
+  3.16.0a1} and {3.5.10}).
+- *The step budget is re-derived.* A print went from one VM step to up to
+  700 (`-1.7976931348623157e+308`; `1.5` takes 134). The release runner's
+  flat budget of `MAX_IIR_INSTRUCTIONS` (1M), sized when a print was one
+  step, would have refused the 2,048-line 64 KiB program of
+  `print(-1.2345678901234567e-308)` that the default frontend budgets
+  accept (1,423,362 steps). The budget is now
+  `MAX_IIR_INSTRUCTIONS × (1 + 1,024 / 4)`: `main` is straight-line, a
+  float print costs `main` at least four instructions, and
+  `MAX_STEPS_PER_FLOAT_PRINT` (1,024) bounds the helper. A test measures
+  the dearest print over the sweep and pins it between half the bound and
+  the bound; another runs the largest program the default budgets accept,
+  and a trusted-budget one at vm-core's register limit.
+- *Which rows BEAM runs did not change.* The five literal-only float rows
+  still list all eight columns and lower on BEAM, helpers included; the 33
+  others are refused at compile time naming only the five `f64_*`
+  arithmetic ops. `python_float_prints_lower_on_beam_once_the_arithmetic_is_gone`
+  replaces each float row's arithmetic with constants and lowers every
+  module to BEAM.
+- *JIT.* As for JavaScript, `main`, `__py_write_float` and
+  `__py_write_uint` contain a `call` and run on the interpreter tier;
+  `__py_digit_count` and `__py_write_digits` compile.
+  `python_float_rows_run_with_their_call_free_float_helpers_compiled_by_the_jit`
+  pins that split for every float row and checks that the compiled tier
+  writes the significant digits.
+- `write_f64_py` stays registered and lowered everywhere, and the
+  `lang_matrix` VM and JIT harnesses keep their sinks; PR7e removes them.
+  `run_module` registers only `print_i64` and `putchar`. The LANG79 pilot
+  (`compile_source`, `py_print_float`) is PR7g's.
+
 **Conformance.** PR6a's 90-value table (its Python and JavaScript
 columns) stays the oracle. The PR7b
 `op_conformance` cases print `f64_class`, `f64_digits` and `f64_exp10` of
@@ -1319,7 +1381,8 @@ anything still emits it.
    changes. *Landed;* see "What PR7c-js landed" under "The layouts, as
    compiler-emitted helpers".
 4. **PR7c-py — python-iir-compiler does the same** on the release path.
-   Its `lang_matrix` rows stay byte-identical.
+   Its `lang_matrix` rows stay byte-identical. *Landed;* see "What
+   PR7c-py landed" under "The layouts, as compiler-emitted helpers".
 5. **PR7d — `Trap.ReferenceError` → `Trap.Unbound`, and retire
    `LANGUAGE_TRAP_KINDS`.** The kind keeps id 7. It lands before PR7e,
    because PR7e's test rejects the old name.

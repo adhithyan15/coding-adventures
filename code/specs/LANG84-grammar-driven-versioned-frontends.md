@@ -2488,7 +2488,7 @@ print(7.5 // 2)         # refused: float `//` and `%` (no LANG83 op yet)
   | `a / b`, `b` is `±0` | `trap "Trap.DivZero"`, then the `f64_div` (dead) |
   | `-x` (float) | `f64_neg` (so `-0.0` is `-0.0`) |
   | `+x` (float) | nothing: `float.__pos__` is the identity |
-  | `print(x)` (float) | `call_builtin write_f64_py, x`, `putchar 10` |
+  | `print(x)` (float) | `call_builtin write_f64_py, x`, `putchar 10` (since LANG83 PR7c-py: `call __py_write_float, x`) |
   | `a // b`, `a % b` with a float | `Unsupported` |
 
   - *Why the zero test is at compile time.* CPython's `float_div` (and
@@ -2570,6 +2570,21 @@ print(7.5 // 2)         # refused: float `//` and `%` (no LANG83 op yet)
   - The plan's example of an int overflow inside a float expression used
     `**`, which the subset does not have; the corpus case
     `overflow_inside_float` writes `(9223372036854775807 + 1) * 1.0`.
+
+**Since LANG83 PR7c-py (2026-10-26)** the IIR names no language, so the
+`write_f64_py` lowering above is history. The compiler writes `repr(float)`
+into the module as `__py_write_float`, built from
+`f64_class`/`f64_signbit`/`f64_digits`/`f64_exp10`, and every float `print`
+is one `call` of it, then `putchar 10`. A module that prints no float is
+unchanged, so the `py-int-print` and `py2-int-print` classes keep their
+digests; the 77 `py-float-print` digests changed, with the same two
+classes. The 38 float rows print what they printed before on every column
+they ran on (828 Python cells locally, 372 trapping, as above) and keep
+their columns. A float row's `main` now calls a function, so it runs on
+the JIT's interpreter tier; the two call-free helpers compile
+(`python_float_rows_run_with_their_call_free_float_helpers_compiled_by_the_jit`).
+The release runner's step budget is now derived from the IIR limit and a
+measured 700-step dearest print (LANG83 "What PR7c-py landed").
 
 ### Wire every IIR frontend into lang-aot
 
