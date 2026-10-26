@@ -1,3 +1,10 @@
+use std::{
+    fs,
+    path::{Path, PathBuf},
+    process::Command,
+    sync::atomic::{AtomicUsize, Ordering},
+};
+
 use ibm_system360_gatelevel::{gates, System360GateLevel};
 
 fn rust_tokens(source: &str) -> Vec<String> {
@@ -107,6 +114,60 @@ fn require_exact_body(source: &str, function: &str, expected: &str) -> Result<()
     }
 }
 
+fn token_digest(tokens: &[String]) -> u64 {
+    tokens
+        .iter()
+        .fold(0xcbf2_9ce4_8422_2325, |mut hash, token| {
+            for byte in token.bytes().chain(std::iter::once(0xff)) {
+                hash ^= u64::from(byte);
+                hash = hash.wrapping_mul(0x0000_0100_0000_01b3);
+            }
+            hash
+        })
+}
+
+fn require_body_digest(source: &str, function: &str, expected: u64) -> Result<(), String> {
+    let body = function_body(&rust_tokens(source), function)?;
+    let actual = token_digest(&body);
+    if actual == expected {
+        Ok(())
+    } else {
+        Err(format!(
+            "{function} parsed body digest changed: {actual:#018x}, expected {expected:#018x}"
+        ))
+    }
+}
+
+fn const_initializer(source: &str, name: &str) -> Result<Vec<String>, String> {
+    let tokens = rust_tokens(source);
+    let starts: Vec<_> = tokens
+        .windows(2)
+        .enumerate()
+        .filter_map(|(index, pair)| (pair == ["const", name]).then_some(index))
+        .collect();
+    if starts.len() != 1 {
+        return Err(format!("expected one const {name}, found {}", starts.len()));
+    }
+    let equals = (starts[0]..tokens.len())
+        .find(|&index| tokens[index] == "=")
+        .ok_or_else(|| format!("const {name} has no initializer"))?;
+    let semicolon = (equals..tokens.len())
+        .find(|&index| tokens[index] == ";")
+        .ok_or_else(|| format!("const {name} has no terminator"))?;
+    Ok(tokens[equals + 1..semicolon].to_vec())
+}
+
+fn require_const_digest(source: &str, name: &str, expected: u64) -> Result<(), String> {
+    let actual = token_digest(&const_initializer(source, name)?);
+    if actual == expected {
+        Ok(())
+    } else {
+        Err(format!(
+            "{name} parsed initializer digest changed: {actual:#018x}, expected {expected:#018x}"
+        ))
+    }
+}
+
 fn require_external_module(source: &str, name: &str, public: bool) -> Result<(), String> {
     let syntax = syn::parse_file(source).map_err(|error| format!("invalid Rust: {error}"))?;
     let modules: Vec<_> = syntax
@@ -167,6 +228,47 @@ fn verify_decode_authority(networks: &str, executor: &str, validator: &str) -> R
     syn::parse_file(validator).map_err(|error| format!("validator does not parse: {error}"))?;
     require_external_module(validator, "executor", false)?;
     require_external_module(validator, "gates", true)?;
+
+    // These are hashes of parsed Rust tokens, not source bytes.  They retain
+    // the former exact-body locks without making harmless whitespace or
+    // comment changes significant, while covering the complete authority,
+    // router, validator, branch/add/compare, and public commit chain.
+    for (function, digest) in [
+        ("decode_byte", 0x96cb_0cae_2d05_2ad9),
+        ("add_24", 0xa04f_a7e8_e3af_49b0),
+        ("add_32", 0x3d11_3f86_3d34_d438),
+        ("branch_selected", 0x7a7a_e79a_1519_1977),
+        ("index_branch_selected", 0x9c31_cac5_60a3_4171),
+        ("signed_compare_condition_code", 0x4e5c_8f7d_9b74_a639),
+    ] {
+        require_body_digest(networks, function, digest)?;
+    }
+    require_const_digest(executor, "CANDIDATES", 0x22b1_e37c_9a05_f100)?;
+    for (function, digest) in [
+        ("new", 0x93b8_b823_037f_bec8),
+        ("transport_width", 0x2040_ffc0_ac40_1d6b),
+        ("operation", 0x9ac2_8adf_5c72_d0b1),
+        ("format_matches_operation", 0x4ad6_bb6c_d234_da31),
+        ("execute", 0xd23f_a2ec_eb10_29a9),
+        ("execute_rr", 0x0eff_489c_cc30_d39b),
+        ("execute_rx", 0x0aca_3dbb_e40d_8499),
+        ("execute_rs", 0x5604_80ab_c44a_4da4),
+        ("execute_si", 0xc0c5_9ca1_85bf_6bdc),
+        ("execute_ss", 0xc14c_e106_eeee_a468),
+    ] {
+        require_body_digest(executor, function, digest)?;
+    }
+    for (function, digest) in [
+        ("decode_transition", 0x7de3_9596_a584_63e1),
+        ("validate_gate_transition", 0xe541_8847_1eff_e819),
+        ("validate_control_transition", 0x63cb_8bbd_bdfe_0fda),
+        ("commit_transition", 0x5fb6_3d73_0d97_42f6),
+        ("step", 0x49e8_10bf_f82d_108f),
+        ("run", 0xf70a_d777_3fa6_49be),
+        ("execute", 0x5050_4f02_0534_5e98),
+    ] {
+        require_body_digest(validator, function, digest)?;
+    }
 
     require_exact_body(
         networks,
@@ -278,62 +380,93 @@ fn verify_decode_authority(networks: &str, executor: &str, validator: &str) -> R
     Ok(())
 }
 
-#[allow(dead_code)]
-mod compile_checked_hostile_shapes {
-    use super::gates;
+fn replace_once(source: &str, anchor: &str, replacement: &str) -> String {
+    assert_eq!(
+        source.matches(anchor).count(),
+        1,
+        "mutation anchor: {anchor}"
+    );
+    source.replacen(anchor, replacement, 1)
+}
 
-    pub fn raw_match(raw: &[u8]) -> u8 {
-        match raw[0] {
-            0x05..=0x07 => 1,
-            _ => 0,
-        }
-    }
+static MUTANT_ID: AtomicUsize = AtomicUsize::new(0);
 
-    pub fn raw_equality(raw: &[u8]) -> bool {
-        raw[0] == 0x05
-    }
+struct MutantCrate(PathBuf);
 
-    pub fn raw_range(raw: &[u8]) -> bool {
-        (0x40..=0x7f).contains(&raw[0])
+impl Drop for MutantCrate {
+    fn drop(&mut self) {
+        let _ = fs::remove_dir_all(&self.0);
     }
+}
 
-    pub fn duplicate_decode(opcode: u8) -> ([u8; 256], [u8; 256]) {
-        (gates::decode_byte(opcode), gates::decode_byte(opcode))
-    }
+fn toml_path(path: &Path) -> String {
+    path.display().to_string().replace('\\', "\\\\")
+}
 
-    pub fn dead_decode(opcode: u8) -> [u8; 256] {
-        if false {
-            let _ = gates::decode_byte(opcode);
-        }
-        [0; 256]
-    }
+fn mutant_target() -> PathBuf {
+    std::env::temp_dir().join(format!(
+        "system360-authority-mutant-target-{}",
+        std::process::id()
+    ))
+}
 
-    pub fn secondary_decode(raw: &[u8]) -> [u8; 256] {
-        gates::decode_byte(raw[0])
-    }
+fn compile_mutant(executor: &str, validator: &str) {
+    let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let rust_packages = manifest_dir.parent().expect("Rust package parent");
+    let id = MUTANT_ID.fetch_add(1, Ordering::Relaxed);
+    let root = std::env::temp_dir().join(format!(
+        "system360-authority-mutant-{}-{id}",
+        std::process::id()
+    ));
+    let guard = MutantCrate(root.clone());
+    fs::create_dir_all(root.join("src")).expect("create mutant source directory");
+    let manifest = format!(
+        r#"[package]
+name = "system360-authority-mutant-{id}"
+version = "0.0.0"
+edition = "2021"
 
-    pub fn inactive_read(memory: &[u8], selected: bool) -> Option<u8> {
-        let eager = memory[0];
-        selected.then_some(eager)
+[dependencies]
+arithmetic = {{ path = "{}" }}
+logic-gates = {{ path = "{}" }}
+ibm-system360-simulator = {{ path = "{}" }}
+"#,
+        toml_path(&rust_packages.join("arithmetic")),
+        toml_path(&rust_packages.join("logic-gates")),
+        toml_path(&rust_packages.join("ibm-system360-simulator")),
+    );
+    fs::write(root.join("Cargo.toml"), manifest).expect("write mutant manifest");
+    for file in ["gates.rs", "hfp.rs", "state.rs"] {
+        fs::copy(
+            manifest_dir.join("src").join(file),
+            root.join("src").join(file),
+        )
+        .expect("copy production source");
     }
+    fs::write(root.join("src/executor.rs"), executor).expect("write mutant executor");
+    fs::write(root.join("src/lib.rs"), validator).expect("write mutant validator");
+    let output = Command::new(std::env::var_os("CARGO").unwrap_or_else(|| "cargo".into()))
+        .args(["check", "--quiet", "--manifest-path"])
+        .arg(root.join("Cargo.toml"))
+        .env("CARGO_TARGET_DIR", mutant_target())
+        .output()
+        .expect("run cargo check for hostile mutant");
+    assert!(
+        output.status.success(),
+        "hostile mutation must compile before the verifier rejects it:\n{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    drop(guard);
+}
 
-    pub fn oracle_dispatch<T: Clone>(oracle_next: &T) -> T {
-        oracle_next.clone()
-    }
+fn assert_executor_mutant_rejected(networks: &str, executor: &str, validator: &str) {
+    compile_mutant(executor, validator);
+    assert!(verify_decode_authority(networks, executor, validator).is_err());
+}
 
-    mod fake_gates {
-        pub(super) use ibm_system360_gatelevel::gates::decode_byte;
-    }
-
-    pub fn shadowed_decode(opcode: u8) -> [u8; 256] {
-        fake_gates::decode_byte(opcode)
-    }
-
-    pub fn post_overwrite(mut selected: u32, old: u32) -> u32 {
-        selected = selected.wrapping_add(1);
-        let _ = selected;
-        old
-    }
+fn assert_validator_mutant_rejected(networks: &str, executor: &str, validator: &str) {
+    compile_mutant(executor, validator);
+    assert!(verify_decode_authority(networks, executor, validator).is_err());
 }
 
 #[test]
@@ -379,79 +512,99 @@ fn production_decode_and_dispatch_match_the_reviewed_authority_chain() {
 
 #[test]
 fn compile_checked_hostile_dispatch_shapes_are_rejected() {
+    let _target_guard = MutantCrate(mutant_target());
     let networks = include_str!("../src/gates.rs");
     let executor = include_str!("../src/executor.rs");
     let validator = include_str!("../src/lib.rs");
 
-    let raw_match = executor.replacen(
+    let raw_match = replace_once(
+        executor,
         "let operation = authority.operation().ok_or(System360Error::Specification {",
         "let operation = match trace.raw[0] { _ => authority.operation() }.ok_or(System360Error::Specification {",
-        1,
     );
-    assert!(verify_decode_authority(networks, &raw_match, validator).is_err());
+    assert_executor_mutant_rejected(networks, &raw_match, validator);
 
-    let raw_range = executor.replacen(
+    let raw_range = replace_once(
+        executor,
         "let operation = authority.operation().ok_or(System360Error::Specification {",
         "let operation = if (0x40..=0x7f).contains(&trace.raw[0]) { authority.operation() } else { authority.operation() }.ok_or(System360Error::Specification {",
-        1,
     );
-    assert!(verify_decode_authority(networks, &raw_range, validator).is_err());
+    assert_executor_mutant_rejected(networks, &raw_range, validator);
 
-    let raw_equality = executor.replacen(
+    let raw_equality = replace_once(
+        executor,
         "let operation = authority.operation().ok_or(System360Error::Specification {",
         "let operation = if trace.raw[0] == 0x05 { authority.operation() } else { authority.operation() }.ok_or(System360Error::Specification {",
-        1,
     );
-    assert!(verify_decode_authority(networks, &raw_equality, validator).is_err());
+    assert_executor_mutant_rejected(networks, &raw_equality, validator);
 
-    let duplicate_decode = executor.replacen(
+    let helper_indirection = replace_once(
+        executor,
+        "pub(crate) fn execute(\n",
+        "fn operation_from_trace(trace: &StepTrace, authority: &DecodeAuthority) -> Option<Operation> { let _ = trace.raw.first(); authority.operation() }\npub(crate) fn execute(\n",
+    );
+    let helper_indirection = replace_once(
+        &helper_indirection,
+        "let operation = authority.operation().ok_or(System360Error::Specification {",
+        "let operation = operation_from_trace(trace, authority).ok_or(System360Error::Specification {",
+    );
+    assert_executor_mutant_rejected(networks, &helper_indirection, validator);
+
+    let duplicate_decode = replace_once(
+        executor,
         "let lines = gates::decode_byte(opcode);",
         "let lines = gates::decode_byte(opcode); let _duplicate = gates::decode_byte(opcode);",
-        1,
     );
-    assert!(verify_decode_authority(networks, &duplicate_decode, validator).is_err());
+    assert_executor_mutant_rejected(networks, &duplicate_decode, validator);
 
-    let dead_decode = executor.replacen(
+    let dead_decode = replace_once(
+        executor,
         "let lines = gates::decode_byte(opcode);",
         "if false { let _ = gates::decode_byte(opcode); } let lines = [0; 256];",
-        1,
     );
-    assert!(verify_decode_authority(networks, &dead_decode, validator).is_err());
+    assert_executor_mutant_rejected(networks, &dead_decode, validator);
 
-    let secondary_decode = executor.replacen(
+    let secondary_decode = replace_once(
+        executor,
         "let operation = authority.operation().ok_or(System360Error::Specification {",
         "let _secondary = gates::decode_byte(trace.raw[0]); let operation = authority.operation().ok_or(System360Error::Specification {",
-        1,
     );
-    assert!(verify_decode_authority(networks, &secondary_decode, validator).is_err());
+    assert_executor_mutant_rejected(networks, &secondary_decode, validator);
 
-    let inactive_access = executor.replacen(
+    let inactive_access = replace_once(
+        executor,
         "let operation = authority.operation().ok_or(System360Error::Specification {",
         "let _inactive = before.memory[0]; let operation = authority.operation().ok_or(System360Error::Specification {",
-        1,
     );
-    assert!(verify_decode_authority(networks, &inactive_access, validator).is_err());
+    assert_executor_mutant_rejected(networks, &inactive_access, validator);
 
-    let shadow = executor.replacen(
+    let shadow = replace_once(
+        executor,
         "use crate::{gates, hfp::GateHfp, StepTrace, System360Error, System360State};",
-        "use fake_gates as gates; use crate::{hfp::GateHfp, StepTrace, System360Error, System360State};",
-        1,
+        "mod fake_gates { pub(crate) use crate::gates::*; } use fake_gates as gates; use crate::{hfp::GateHfp, StepTrace, System360Error, System360State};",
     );
-    assert!(verify_decode_authority(networks, &shadow, validator).is_err());
+    assert_executor_mutant_rejected(networks, &shadow, validator);
 
-    let oracle_dispatch = validator.replacen(
+    let post_authorization_overwrite = replace_once(
+        executor,
+        "if authority.transport_width() != Some(trace.raw.len())",
+        "let operation = if trace.raw.first().copied() == Some(0x05) { Operation::Balr } else { operation }; if authority.transport_width() != Some(trace.raw.len())",
+    );
+    assert_executor_mutant_rejected(networks, &post_authorization_overwrite, validator);
+
+    let oracle_dispatch = replace_once(
+        validator,
         "let gate_next = executor::execute(&before, &trace, &authority)?;",
         "let gate_next = oracle_next.clone();",
-        1,
     );
-    assert!(verify_decode_authority(networks, executor, &oracle_dispatch).is_err());
+    assert_validator_mutant_rejected(networks, executor, &oracle_dispatch);
 
-    let post_overwrite = validator.replacen(
+    let post_overwrite = replace_once(
+        validator,
         "self.commit_transition(&gate_next);",
         "self.commit_transition(&oracle_next);",
-        1,
     );
-    assert!(verify_decode_authority(networks, executor, &post_overwrite).is_err());
+    assert_validator_mutant_rejected(networks, executor, &post_overwrite);
 }
 
 #[test]

@@ -15,10 +15,13 @@ All notable changes to this package will be documented in this file.
 - Remove secondary raw-opcode dispatch, including the BXH/BXLE decode inside
   the branch network, and carry the original settled select wires throughout
   the transition.
-- Add a 256-opcode by 2/4/6-byte fail-closed matrix, inactive-storage poison
-  witness, exact decode-to-commit structural lock, and hostile raw dispatch,
+- Add an independent literal 256-opcode classification matrix exercised at
+  2/4/6-byte loaded lengths, explicit reserved-hole truncation witnesses,
+  inactive-storage poison witness, and parsed-token exact locks from decode
+  through commit. Anchored hostile raw dispatch, helper-indirection,
   duplicate/dead/secondary decode, oracle routing, storage-access, shadowing,
-  and post-commit-overwrite fixtures.
+  and post-authorization/commit mutations now compile as disposable complete
+  crates before the verifier must reject them.
 
 ## [0.1.1] - 2026-10-26
 

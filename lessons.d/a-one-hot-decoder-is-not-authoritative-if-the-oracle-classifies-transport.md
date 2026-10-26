@@ -26,3 +26,12 @@ is evidence, not authority.  Test all first bytes at every transport width,
 include reserved holes whose truncation precedence differs from their final
 opcode fault, and use a storage-poison witness to prove inactive candidates are
 not evaluated eagerly.
+
+Structural security fixtures must mutate the real source at an exact anchor,
+compile the resulting complete crate, and only then prove that the verifier
+rejects it. A standalone helper that merely resembles an attack does not prove
+the production verifier catches helper-indirected raw-byte dispatch, a dead or
+second decoder, or a post-authorization overwrite. Likewise, a classification
+matrix derived from the same ranges as production is circular; freeze an
+independent literal table and drive every opcode at every relevant loaded
+length.

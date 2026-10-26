@@ -22,6 +22,13 @@ fault, or mutate state. The functional package is used only as a fail-closed
 trace, fault, and complete-state oracle; no gate transition is clocked unless
 its complete settled state agrees with that oracle.
 
+The authority is regression-locked with an independent literal 256-entry
+opcode/family table at each 2/4/6-byte loaded length, parsed-token digests of
+the complete decode-to-commit chain, and compile-checked full-source hostile
+mutations (including indirect raw-byte dispatch and post-authorization
+overwrites). Known-width reserved holes also have short-image witnesses proving
+that `TruncatedInstruction` precedes `UnknownOpcode`.
+
 This is an educational ISA-visible System/360 base processor rather than a
 cycle-accurate reconstruction of a particular model's SLT cards, channels,
 timers, protection hardware, or storage technology. The fidelity boundary is
