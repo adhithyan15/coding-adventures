@@ -18,8 +18,11 @@ release-optimized LLVM-IR regression test that proves every loop cycle passes
 through those operations and that loop exits do not depend on values derived
 from the volatile reads. Merely counting `volatile` tokens or rejecting
 `memcmp`/`bcmp` can false-pass when the operations execute once outside the
-loop or a direct data-dependent exit remains. Functional tests alone cannot
-detect this class of optimizer rewrite.
+loop, a direct data-dependent loop exit remains, or a data-dependent preheader
+bypasses the valid loop and converges on its return. Check ordinary input-byte
+loads and branch control across the whole optimized function, not just inside
+the loop component. Functional tests alone cannot detect this class of
+optimizer rewrite.
 
 Keep the claim narrow. Volatile operations establish compiler-observable work;
 they do not establish resistance to cache, speculative-execution, power, or

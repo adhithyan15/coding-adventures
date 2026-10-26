@@ -113,6 +113,38 @@ exit:
     assert!(assert_full_scan_loop(false_pass).is_err());
 }
 
+#[test]
+fn structural_gate_rejects_a_data_dependent_preheader_bypass() {
+    let false_pass = r#"
+define i1 @ct_eq_equal_length(ptr %a.0, i64 %a.1, ptr %b.0, i64 %b.1) {
+start:
+  %acc = alloca i8
+  %first_a = load i8, ptr %a.0
+  %first_b = load i8, ptr %b.0
+  %different = icmp ne i8 %first_a, %first_b
+  br i1 %different, label %exit, label %loop
+loop:
+  %i = phi i64 [ 0, %start ], [ %next, %loop ]
+  %left_ptr = getelementptr i8, ptr %a.0, i64 %i
+  %right_ptr = getelementptr i8, ptr %b.0, i64 %i
+  %old = load volatile i8, ptr %acc
+  %left = load volatile i8, ptr %left_ptr
+  %right = load volatile i8, ptr %right_ptr
+  %combined = or i8 %old, %left
+  store volatile i8 %combined, ptr %acc
+  %next = add i64 %i, 1
+  %done = icmp eq i64 %next, %a.1
+  br i1 %done, label %exit, label %loop
+exit:
+  %result = load volatile i8, ptr %acc
+  %equal = icmp eq i8 %result, 0
+  ret i1 %equal
+}
+"#;
+
+    assert!(assert_full_scan_loop(false_pass).is_err());
+}
+
 fn assert_full_scan_loop(scan: &str) -> Result<(), String> {
     if scan.matches("load volatile i8").count() != 4 {
         return Err("expected three loop reads and one final accumulator read".into());
@@ -205,38 +237,43 @@ fn assert_full_scan_loop(scan: &str) -> Result<(), String> {
 
     let definitions = ssa_definitions(scan);
     let tainted = volatile_taint(&definitions);
-    for block in blocks
-        .iter()
-        .filter(|block| loop_component.contains(&block.name))
-    {
+    // Inspect every block, not only the loop SCC. A data-dependent preheader
+    // must not be able to bypass a perfectly formed volatile loop and converge
+    // on its single return.
+    for block in &blocks {
         for line in block.text.lines().map(str::trim) {
-            if line.starts_with("ret ")
-                || line.starts_with("switch ")
+            if line.starts_with("switch ")
                 || line.starts_with("invoke ")
                 || line.starts_with("indirectbr ")
-                || line.starts_with("call ")
-                || line.contains(" call ")
             {
                 return Err(format!(
-                    "unsupported loop control in {}: {line}",
+                    "unsupported comparison control in {}: {line}",
                     block.name
                 ));
             }
             if line.contains("load i8") && !line.contains("load volatile i8") {
-                return Err(format!("ordinary byte load inside loop: {line}"));
+                return Err(format!("ordinary byte load inside comparison: {line}"));
+            }
+            if (line.starts_with("call ") || line.contains(" call "))
+                && !line.contains("@llvm.lifetime.")
+                && !line.contains("panic_bounds_check")
+            {
+                return Err(format!("unexpected call inside comparison: {line}"));
             }
             let Some(condition) = branch_condition(line) else {
                 continue;
             };
             if tainted.contains(condition) {
-                return Err(format!("loop exit depends on volatile data: {line}"));
+                return Err(format!(
+                    "comparison control depends on volatile data: {line}"
+                ));
             }
             let definition = definitions
                 .get(condition)
                 .ok_or_else(|| format!("branch condition has no SSA definition: {condition}"))?;
             if !definition.contains("icmp ") || !definition.contains(" i64 ") {
                 return Err(format!(
-                    "loop exit is not an induction/length comparison: {line}"
+                    "comparison branch is not an induction/length comparison: {line}"
                 ));
             }
         }
