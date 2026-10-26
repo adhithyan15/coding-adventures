@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:82dfaaf0bb11b556",
+  "lessonIds": [
+    "ZH-C69-zuofan",
+    "ZH-W69-zuo-make",
+    "ZH-C69-zaofan",
+    "ZH-C69-wufan",
+    "ZH-C69-wanfan",
+    "ZH-C69-haochi",
+    "ZH-R69-review-64-69"
+  ],
+  "tex": "chinese/book/chapters/ch69-meals.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:dc83db73aab268fa",
+  "lessonIds": [
+    "ZH-C62-kuai",
+    "ZH-W62-kuai-fast",
+    "ZH-C62-jiu",
+    "ZH-C62-yuan",
+    "ZH-C62-jin",
+    "ZH-C62-zhidao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch62.txt",
+  "json": "chinese/narration/ch62.json",
+  "textHash": "fnv1a64:bd98e2dfad9ed56e",
+  "jsonHash": "fnv1a64:74564109aa04b638",
+  "findings": []
+}

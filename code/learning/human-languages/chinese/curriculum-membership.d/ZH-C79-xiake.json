@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C79-xiake",
+  "pathSegment": "ZH-PATH-79-SCHOOL79",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-79-SCHOOL79",
+      "order": 2
+    }
+  ]
+}

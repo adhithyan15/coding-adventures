@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:aadf2b8f5787db46",
+  "lessonIds": [
+    "ZH-C72-huoche",
+    "ZH-W72-huo",
+    "ZH-C72-kaiche",
+    "ZH-W72-kai",
+    "ZH-C72-feiji",
+    "ZH-C72-lu",
+    "ZH-C72-dao"
+  ],
+  "tex": "chinese/book/chapters/ch72-getting-about.tex"
+}

@@ -728,6 +728,174 @@
       "sourceHash": "fnv1a64:2bd960d147e66400",
       "svgHash": "fnv1a64:49782ed92989ce98",
       "svg": "chinese/book/figures/ZH-W55-xiang-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W58-ji-machine",
+      "sourceHash": "fnv1a64:eb17ca4f9f90dfde",
+      "svgHash": "fnv1a64:70e1b40198feec85",
+      "svg": "chinese/book/figures/ZH-W58-ji-machine-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W60-bai-white",
+      "sourceHash": "fnv1a64:b1e11aa725c989b3",
+      "svgHash": "fnv1a64:1fb4052b88582883",
+      "svg": "chinese/book/figures/ZH-W60-bai-white-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W61-chang-long",
+      "sourceHash": "fnv1a64:4a1c589c9e40f100",
+      "svgHash": "fnv1a64:8fa6ac2cf3dd60fb",
+      "svg": "chinese/book/figures/ZH-W61-chang-long-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W62-kuai-fast",
+      "sourceHash": "fnv1a64:fcce8ccf619ba179",
+      "svgHash": "fnv1a64:ee1e9b3c21ba0926",
+      "svg": "chinese/book/figures/ZH-W62-kuai-fast-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W63-da-hit",
+      "sourceHash": "fnv1a64:bc556f0c96f7149c",
+      "svgHash": "fnv1a64:cee158fa9aaf623d",
+      "svg": "chinese/book/figures/ZH-W63-da-hit-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W63-dian-electric",
+      "sourceHash": "fnv1a64:be3bf7e0c7303fcb",
+      "svgHash": "fnv1a64:96c0ae260f755639",
+      "svg": "chinese/book/figures/ZH-W63-dian-electric-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W64-qi-rise",
+      "sourceHash": "fnv1a64:7e8ae21e517cad28",
+      "svgHash": "fnv1a64:dcc1ee59a6a75e03",
+      "svg": "chinese/book/figures/ZH-W64-qi-rise-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W65-men-door",
+      "sourceHash": "fnv1a64:b46124788edb5c8a",
+      "svgHash": "fnv1a64:3200cce36ec870f1",
+      "svg": "chinese/book/figures/ZH-W65-men-door-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W65-wen-ask",
+      "sourceHash": "fnv1a64:c75aa11f833bc3ef",
+      "svgHash": "fnv1a64:dc32461001c62a56",
+      "svg": "chinese/book/figures/ZH-W65-wen-ask-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W66-qi-air",
+      "sourceHash": "fnv1a64:eb737cd8a24ea8e0",
+      "svgHash": "fnv1a64:83deef8fff59ddd2",
+      "svg": "chinese/book/figures/ZH-W66-qi-air-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W66-yu-rain",
+      "sourceHash": "fnv1a64:e616c666327e946c",
+      "svgHash": "fnv1a64:0c64141122c1b9ec",
+      "svg": "chinese/book/figures/ZH-W66-yu-rain-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W67-ma-horse",
+      "sourceHash": "fnv1a64:51fc1346a71786f3",
+      "svgHash": "fnv1a64:733d56e814e89341",
+      "svg": "chinese/book/figures/ZH-W67-ma-horse-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W68-shan",
+      "sourceHash": "fnv1a64:36a5c7ef74cf3bdd",
+      "svgHash": "fnv1a64:d34ca3398c925875",
+      "svg": "chinese/book/figures/ZH-W68-shan-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W69-zuo-make",
+      "sourceHash": "fnv1a64:4389b9e891fd5ba9",
+      "svgHash": "fnv1a64:c1728105a1c18090",
+      "svg": "chinese/book/figures/ZH-W69-zuo-make-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W72-huo",
+      "sourceHash": "fnv1a64:4cabd0d60727a6ea",
+      "svgHash": "fnv1a64:03ba5051d0229a37",
+      "svg": "chinese/book/figures/ZH-W72-huo-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W72-kai",
+      "sourceHash": "fnv1a64:ac612973e94fa275",
+      "svgHash": "fnv1a64:fc5fa9f54d0142bb",
+      "svg": "chinese/book/figures/ZH-W72-kai-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W73-xia",
+      "sourceHash": "fnv1a64:c12e36280c249b9e",
+      "svgHash": "fnv1a64:56707f96e2f2f450",
+      "svg": "chinese/book/figures/ZH-W73-xia-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W74-jin-enter",
+      "sourceHash": "fnv1a64:2224fd52755652f1",
+      "svgHash": "fnv1a64:ac12fd9e2befb8be",
+      "svg": "chinese/book/figures/ZH-W74-jin-enter-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W74-ke-guest",
+      "sourceHash": "fnv1a64:fe372691d29905b6",
+      "svgHash": "fnv1a64:f389e8de4e8ec32d",
+      "svg": "chinese/book/figures/ZH-W74-ke-guest-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W75-le-joy",
+      "sourceHash": "fnv1a64:35e54fbdbaa18772",
+      "svgHash": "fnv1a64:dbb5ee73a23fc1af",
+      "svg": "chinese/book/figures/ZH-W75-le-joy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W76-hui",
+      "sourceHash": "fnv1a64:fc4ee302d4dcd980",
+      "svgHash": "fnv1a64:ddf4c02f9a8526ae",
+      "svg": "chinese/book/figures/ZH-W76-hui-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W78-qian-before",
+      "sourceHash": "fnv1a64:2daaa569498b1238",
+      "svgHash": "fnv1a64:922320b331af7c61",
+      "svg": "chinese/book/figures/ZH-W78-qian-before-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W79-ke-lesson",
+      "sourceHash": "fnv1a64:eba6632942589cc0",
+      "svgHash": "fnv1a64:3d53a80a7de67df9",
+      "svg": "chinese/book/figures/ZH-W79-ke-lesson-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W81-li-inside",
+      "sourceHash": "fnv1a64:3848d07549617f1b",
+      "svgHash": "fnv1a64:46369ead9d819736",
+      "svg": "chinese/book/figures/ZH-W81-li-inside-filmstrip.svg"
     }
   ]
 }

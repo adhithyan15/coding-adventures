@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:3e71b5a7170d8093",
+  "lessonIds": [
+    "ZH-C73-xiache",
+    "ZH-W73-xia",
+    "ZH-C73-shangche",
+    "ZH-C73-huochezhan",
+    "ZH-C73-jichang",
+    "ZH-C73-piao"
+  ],
+  "tex": "chinese/book/chapters/ch73-at-the-station.tex"
+}

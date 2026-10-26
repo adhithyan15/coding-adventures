@@ -1,0 +1,16 @@
+{
+  "language": "chinese",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:a05d529e9b3f72ed",
+  "lessonIds": [
+    "ZH-C74-jin",
+    "ZH-W74-jin-enter",
+    "ZH-C74-keren",
+    "ZH-W74-ke-guest",
+    "ZH-C74-menkou",
+    "ZH-C74-huanying",
+    "ZH-C74-jieshao",
+    "ZH-R74-review-70-74"
+  ],
+  "tex": "chinese/book/chapters/ch74-visiting.tex"
+}
