@@ -108,6 +108,36 @@ fn halt_dff_q_overrides_both_compatibility_observer_divergences() {
 }
 
 #[test]
+fn pc_dff_q_drives_snapshot_step_restore_run_and_results() {
+    let mut cpu = Cpu8051::new();
+    cpu.load_checked(&[0x00, 0xA5]).unwrap();
+    cpu.rf.pc = 0x4321;
+    assert_eq!(cpu.rf.read_pc(), 0);
+    assert_eq!(cpu.get_state().pc, 0);
+
+    let trace = cpu.step_checked().unwrap();
+    assert_eq!(trace.pc_before, 0);
+    assert_eq!(trace.pc_after, 1);
+    assert_eq!(cpu.rf.pc, 1);
+
+    cpu.rf.pc = 0x9999;
+    let result = cpu.run_loaded_checked(2).unwrap();
+    assert!(result.halted);
+    assert_eq!(result.steps, 1);
+    assert_eq!(result.pc, 2);
+    assert_eq!(result.final_state.pc, 2);
+    assert_eq!(cpu.rf.pc, 2);
+
+    let mut restored = cpu.get_state();
+    restored.pc = 0x1234;
+    restored.halted = false;
+    cpu.restore(&restored).unwrap();
+    assert_eq!(cpu.rf.read_pc(), 0x1234);
+    assert_eq!(cpu.rf.pc, 0x1234);
+    assert_eq!(cpu.get_state(), restored);
+}
+
+#[test]
 fn restore_clocks_halt_q_and_fault_rollback_preserves_it() {
     let mut cpu = Cpu8051::new();
     let mut halted = cpu.get_state();
@@ -126,6 +156,7 @@ fn restore_clocks_halt_q_and_fault_rollback_preserves_it() {
     running.loaded_len = 1;
     cpu.restore(&running).unwrap();
     cpu.halted = true;
+    cpu.rf.pc = 0x4321;
     let before = cpu.get_state();
     assert!(matches!(
         cpu.run_loaded_checked(1),
@@ -134,6 +165,8 @@ fn restore_clocks_halt_q_and_fault_rollback_preserves_it() {
     assert_eq!(cpu.get_state(), before);
     assert!(!cpu.halted());
     assert!(!cpu.halted);
+    assert_eq!(cpu.rf.read_pc(), 0);
+    assert_eq!(cpu.rf.pc, 0);
 }
 
 #[test]

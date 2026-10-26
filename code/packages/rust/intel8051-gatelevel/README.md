@@ -122,7 +122,9 @@ bits, 524,288 XDATA bits, 2,048 IRAM/SFR bits, 16 PC bits, and one halt bit.
 `physical_storage_inventory()` derives those bank counts from the concrete
 owned storage. The halt DFF's Q output is the sole architectural authority;
 the legacy public `halted` boolean is retained only as a synchronized observer.
-Snapshots, restore, steps, bounded runs, results, and fault rollback all use Q.
+The PC DFF bank likewise governs fetch and control flow while the legacy public
+`rf.pc` integer is only an observer. Snapshots, restore, steps, bounded runs,
+results, and fault rollback all use Q.
 
 ### SUBB model
 
@@ -179,8 +181,8 @@ changing the machine and return complete before/after traces.
 
 The differential suite restores deterministic full Harvard states and checks
 one complete transition for every opcode byte against `intel8051-simulator`.
-The package has 70 unit tests, eight lifecycle tests, one exhaustive
-differential test, and 23 doctests. Line coverage is 97.32% overall and 97.13%
+The package has 71 unit tests, nine lifecycle tests, one exhaustive
+differential test, and 23 doctests. Line coverage is 97.34% overall and 97.14%
 in the CPU engine.
 
 ## Covered instructions

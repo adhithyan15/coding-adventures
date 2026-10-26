@@ -75,7 +75,7 @@ architecture/core introduction era, not a claim about a particular chip.
 
 | Priority | Target | Finding / next action |
 |---:|---|---|
-| P0 review fix in progress | Intel 8051 gate HALT and PC storage | HALT DFF Q is authoritative, but independent review found that the inventoried 16-bit PC state register is still only a shadow of the public host integer. Make PC DFF Q authoritative for fetch, control flow, snapshots, restore, runs/results, and rollback; retain `RegisterFile8051::pc` only as a synchronized compatibility observer; and add deliberate PC-mirror divergence regressions before the topology claim can close. |
+| P0 complete locally; review fix | Intel 8051 gate HALT and PC storage | HALT DFF Q and all 16 PC DFF Q outputs are now the sole architectural authorities; the public boolean and PC integer are synchronized compatibility observers. The storage inventory derives 524,288 code bits, 524,288 XDATA bits, 2,048 IRAM/SFR bits, 16 PC bits, and one HALT bit from owned containers. Deliberate HALT/PC mirror-divergence, snapshot, step, restore, run/result, and typed-fault rollback tests pass alongside 71 unit tests, the all-256-opcode differential, nine lifecycle/integrity tests, and 23 doctests. Strict Clippy/rustdoc/fmt and 97.34% line coverage (1,937/1,990) are green; lessons and the five-package affected build must be rerun before handoff. |
 | P1 audit | Remaining completed gate packages with public halt fields | Audit each package before changing it. A public observation field is acceptable only when execution, snapshots, restore, and faults are driven by DFF Q; otherwise add one bounded repair cell and a non-tautological storage inventory. |
 
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,

@@ -42,7 +42,10 @@ use crate::state::{DffMemory, StateRegister};
 pub struct RegisterFile8051 {
     /// Internal RAM: 0x00-0x7F lower RAM, 0x80-0xFF SFRs.
     pub iram: DffMemory,
-    /// Program counter (16-bit, not memory-mapped on real 8051).
+    /// Source-compatible observer of the 16-bit PC DFF bank.
+    ///
+    /// Architectural behavior is driven by [`Self::read_pc`]. External writes
+    /// are repaired at the next mutating execution boundary.
     pub pc: u16,
     pc_state: StateRegister,
 }
@@ -59,7 +62,7 @@ impl RegisterFile8051 {
             pc: 0,
             pc_state: StateRegister::new(16),
         };
-        rf.pc_state.write(0);
+        rf.write_pc(0);
         rf
     }
 
@@ -79,24 +82,24 @@ impl RegisterFile8051 {
 
     // ── PC access ────────────────────────────────────────────────────────────
 
-    /// Read the 16-bit program counter.
+    /// Read the authoritative stable-Q outputs of the 16-bit PC DFF bank.
     #[inline]
     pub fn read_pc(&self) -> u16 {
-        self.pc
+        self.pc_state.read()
     }
 
-    /// Write the 16-bit program counter.
+    /// Clock the 16-bit program counter, then refresh its public observer.
     #[inline]
     pub fn write_pc(&mut self, val: u16) {
-        self.pc = val;
         self.pc_state.write(val);
+        self.synchronize_pc_mirror();
     }
 
     /// Increment the PC by `by` using the gate-level 16-bit adder.
     ///
     /// Wraps at 0xFFFF → 0x0000.
     pub fn increment_pc(&mut self, by: u16) {
-        let (new_pc, _carry) = add_16bit_full(self.pc, by, 0);
+        let (new_pc, _carry) = add_16bit_full(self.read_pc(), by, 0);
         self.write_pc(new_pc);
     }
 
@@ -161,6 +164,11 @@ impl RegisterFile8051 {
         self.pc_state.dff_count()
     }
 
+    /// Repair the legacy public observer from the physical Q outputs.
+    pub(crate) fn synchronize_pc_mirror(&mut self) {
+        self.pc = self.read_pc();
+    }
+
     #[cfg(test)]
     pub(crate) fn latched_pc(&self) -> u16 {
         self.pc_state.read()
@@ -195,6 +203,17 @@ mod tests {
         rf.increment_pc(1); // wraps
         assert_eq!(rf.read_pc(), 0x0000);
         assert_eq!(rf.latched_pc(), 0x0000);
+    }
+
+    #[test]
+    fn pc_dff_q_overrides_the_public_observer() {
+        let mut rf = RegisterFile8051::new();
+        rf.write_pc(0x1234);
+        rf.pc = 0xABCD;
+        assert_eq!(rf.read_pc(), 0x1234);
+        rf.increment_pc(1);
+        assert_eq!(rf.read_pc(), 0x1235);
+        assert_eq!(rf.pc, 0x1235);
     }
 
     #[test]

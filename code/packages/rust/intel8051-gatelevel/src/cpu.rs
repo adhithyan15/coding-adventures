@@ -252,7 +252,7 @@ impl Cpu8051 {
     /// Execute one instruction atomically and compare its complete transition
     /// with the functional simulator.
     pub fn step_checked(&mut self) -> Result<StepTrace, Intel8051Error> {
-        self.synchronize_halted_mirror();
+        self.synchronize_compatibility_observers();
         if self.halted() {
             return Err(Intel8051Error::Halted);
         }
@@ -307,7 +307,7 @@ impl Cpu8051 {
     ) -> Result<ExecutionResult, Intel8051Error> {
         let original = self.get_state();
         let mut traces = Vec::new();
-        self.synchronize_halted_mirror();
+        self.synchronize_compatibility_observers();
         while !self.halted() && traces.len() < max_steps {
             match self.step_checked() {
                 Ok(trace) => traces.push(trace),
@@ -358,7 +358,7 @@ impl Cpu8051 {
 
     /// Execute one instruction.
     pub fn step(&mut self) {
-        self.synchronize_halted_mirror();
+        self.synchronize_compatibility_observers();
         if self.halted() {
             return;
         }
@@ -393,6 +393,12 @@ impl Cpu8051 {
     /// Repair the legacy public observer from the physical Q output.
     fn synchronize_halted_mirror(&mut self) {
         self.halted = self.halted();
+    }
+
+    /// Repair every legacy public observer from its physical Q outputs.
+    fn synchronize_compatibility_observers(&mut self) {
+        self.rf.synchronize_pc_mirror();
+        self.synchronize_halted_mirror();
     }
 
     // ── Fetch helpers ─────────────────────────────────────────────────────────
