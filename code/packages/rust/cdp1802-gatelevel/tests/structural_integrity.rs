@@ -118,7 +118,12 @@ fn production_structure_passes_and_five_compiler_valid_bypasses_fail() {
             "self.q = u8::from(candidate.q)",
             false,
         ),
-        ("lib.rs", "mod decode;", "mod decode;", true),
+        (
+            "lib.rs",
+            "mod decode;",
+            "mod decode;\nuse functional_oracle::Cdp1802Simulator as HostOracle;\nconst _HOST_ORACLE_ALIAS: Option<HostOracle> = None;",
+            true,
+        ),
     ];
 
     for (index, (file, needle, replacement, include_oracle)) in mutations.into_iter().enumerate() {
