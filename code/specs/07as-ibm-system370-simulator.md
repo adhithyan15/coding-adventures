@@ -84,8 +84,10 @@ unchanged. Condition code is 0 for equal
 initial lengths, 1 when destination is shorter, and 2 when destination is
 longer. If a destination byte would destructively overlap unread source in the
 architecturally forbidden direction, condition code 3 is produced without
-moving data or changing either register pair. Odd register pairs and invalid
-storage ranges are typed atomic faults.
+moving data or changing either length register. The ignored high byte of each
+address register (R1 and R2) is nevertheless cleared, as it is at normal
+completion; the low 24-bit addresses remain unchanged. Odd register pairs and
+invalid storage ranges are typed atomic faults.
 
 ### Compare Logical Long — `CLCL` (`0F`, RR)
 
@@ -146,8 +148,9 @@ step limits. Every error has stable, nonempty display text.
 - This specification is committed before tests and implementation.
 - Tests cover inherited format/family representatives and every new
   instruction, all condition-code outcomes, mask patterns, padding, register
-  updates, overlap, pair validation, storage boundaries, transport, complete
-  state restoration, bounded execution, and atomic faults.
+  updates, destructive-overlap address-high-byte clearing with storage and
+  length preservation, pair validation, storage boundaries, transport,
+  complete state restoration, bounded execution, and atomic faults.
 - Differential tests prove compatible instructions match the checked
   System/360 core from equivalent state.
 - Line coverage exceeds 95% where practical and never falls below 80%.
