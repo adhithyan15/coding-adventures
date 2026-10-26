@@ -78,7 +78,7 @@ architecture/core introduction era, not a claim about a particular chip.
 | 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
 | 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
 | 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
-| 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
+| 13 | AVR classic | published instruction-set manual | Complete locally: ATmega328P/`avr5` Harvard core, mapped register/I/O/data state, checked stack/control flow, all 26 typed undefined-overlap refusals, transactional traces/lifecycle, 30 release tests with exhaustive add/subtract flag oracles, and 97.11% line coverage (940/968). Gate partner remains queued. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
 
 ## Discovered follow-up work
@@ -92,6 +92,14 @@ architecture/core introduction era, not a claim about a particular chip.
 | P1 queued | PowerPC 601 shift/count/divide authority | Replace host slice moves, iterator leading-zero counting, and conditional restoring-divide selection with fixed gate/mux networks, then audit multiply accumulation and record-form updates as one bounded datapath family at a time. |
 | P0 complete locally | MIPS R2000 gate HALT storage | HALT DFF Q is now the sole architectural halt authority; the public boolean remains only as a source-compatible observation mirror and is repaired by simulator mutations. The published storage inventory derives 524,288 memory bits, 1,120 register bits, and one HALT bit from the owned physical containers. Deliberate mirror-divergence, restore, and typed-fault atomicity tests pass alongside 33 unit tests, the 218-vector differential suite, nine lifecycle/integrity tests, and 20 doctests. Strict Clippy/rustdoc, the six-package affected build, and 94.50% line coverage (1,581/1,673) are green. |
 | P1 audit | Remaining completed gate packages with public halt fields | Audit each package before changing it. A public observation field is acceptable only when execution, snapshots, restore, and faults are driven by DFF Q; otherwise add one bounded repair cell and a non-tautological storage inventory. Candidate packages discovered by source scan include ARM1, SPARC V8, Motorola 68000, Intel 8051, Intel 8086, and OpenRISC 1000. |
+
+### Functional follow-ups
+
+- Add the repository-gate companion for the exact ATmega328P/`avr5` Classic
+  AVR functional boundary before composing source-backed AVR buses and
+  peripherals. Keep GPIO, timers, serial engines, ADC, interrupts, EEPROM,
+  watchdog, clocking, and pins in later SoC cells rather than fabricating them
+  inside the CPU oracle.
 
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,
   bitfield, saturation, dual-register, byte/halfword exclusive, and remaining
