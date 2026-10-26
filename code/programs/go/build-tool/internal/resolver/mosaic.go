@@ -1,0 +1,313 @@
+package resolver
+
+// Mosaic package manifests
+// ========================
+//
+// A Mosaic package is a directory of `.mil` (interface), `.mll` (layout) and
+// `.msl` (style) sources described by a `mosaic-package.toml` manifest (UI29
+// §4.2). Discovery already classifies such directories as language "mosaic"
+// — they live under code/packages/mosaic/ and code/programs/mosaic/ and carry
+// an ordinary BUILD file whose `cargo test` compiles the package through a
+// small Rust smoke harness.
+//
+// What the build tool used to miss is that Mosaic packages depend on each
+// other, and say so in their manifest:
+//
+//	[package]
+//	name = "task-app"
+//	version = "0.1.0"
+//
+//	[dependencies]
+//	mosaic-pkg-toolkit = "0.16.0"   # a caret requirement on the toolkit
+//	mosaic-pkg-sheet   = "0.1.0"
+//
+// The package compiler inlines `pkg::mosaic-pkg-toolkit::Button` from the
+// toolkit's own `.mil`/`.mll`, so an edit to the toolkit changes what task-app
+// compiles to. Without an edge mosaic/mosaic-pkg-toolkit →
+// mosaic/programs/task-app, CI re-ran the toolkit's tests and none of its
+// consumers'.
+//
+// The rule is the same one every other ecosystem here follows:
+//
+//   - only the keys of the root `[dependencies]` table are candidates — the
+//     requirement string beside each key is version data, not identity;
+//   - a key resolves through the Mosaic name table (directory basename and
+//     the manifest's own `[package].name`), so a dependency outside the
+//     repository is silently ignored;
+//   - the lookup is scoped to the "mosaic" language, so a Mosaic dependency
+//     can never accidentally bind to a Rust crate that happens to share its
+//     name (the smoke harnesses are named `<pkg>-smoke` for exactly that
+//     reason, but scope keeps it from mattering).
+//
+// Unrelated tables are ignored even when they reuse the word: engram-app's
+// `[host_assets]` table has a `dependencies = [ ... ]` array of *third-party
+// host* coordinates (`file_selector` for Flutter), which must never become a
+// graph edge.
+//
+// The parser is a deliberately small line reader rather than a TOML library:
+// the build tool has no TOML dependency, the manifests are machine-checked by
+// `mosaic-package-manifest` (so they are always valid TOML in practice), and
+// every other manifest reader in this package takes the same approach.
+
+import (
+	"os"
+	"path/filepath"
+	"sort"
+	"strings"
+
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
+)
+
+// mosaicManifestName is the one file that makes a directory a Mosaic package.
+const mosaicManifestName = "mosaic-package.toml"
+
+// readMosaicManifestTables reads pkgPath/mosaic-package.toml and returns, for
+// each top-level table header, the keys assigned directly inside it. Keys of
+// a dotted sub-table header such as `[dependencies.mosaic-pkg-card]` are
+// reported as the key "mosaic-pkg-card" of the "dependencies" table, which is
+// how TOML itself defines that spelling.
+//
+// Example — for
+//
+//	[package]
+//	name = "card"           # comment
+//	[dependencies]
+//	"mosaic-pkg-grid" = "0.1.0"
+//	[dependencies.mosaic-pkg-sheet]
+//	version = "0.1.0"
+//
+// it returns {"package": {"name"}, "dependencies": {"mosaic-pkg-grid",
+// "mosaic-pkg-sheet"}} and the value of each key in values["package.name"].
+//
+// Multi-line arrays are tracked by bracket depth outside strings, so an array
+// element that begins with `[` is never mistaken for a table header. Array
+// of tables (`[[x]]`) headers end the current table and are otherwise
+// ignored: no Mosaic manifest field the resolver reads uses them.
+func readMosaicManifestTables(pkgPath string) (keys map[string][]string, values map[string]string, ok bool) {
+	data, err := os.ReadFile(filepath.Join(pkgPath, mosaicManifestName))
+	if err != nil {
+		return nil, nil, false
+	}
+
+	keys = make(map[string][]string)
+	values = make(map[string]string)
+	table := "" // "" is the root table, before any header
+	depth := 0  // open '[' / '{' count inside a multi-line value
+
+	for _, rawLine := range strings.Split(string(data), "\n") {
+		line := strings.TrimSpace(stripTomlComment(rawLine))
+		if line == "" {
+			continue
+		}
+
+		if depth > 0 {
+			// Still inside a value that opened on an earlier line.
+			depth += tomlBracketDelta(line)
+			if depth < 0 {
+				depth = 0
+			}
+			continue
+		}
+
+		if strings.HasPrefix(line, "[[") {
+			table = "[[array-of-tables]]"
+			continue
+		}
+		if strings.HasPrefix(line, "[") && strings.HasSuffix(line, "]") {
+			path := splitTomlKeyPath(line[1 : len(line)-1])
+			if len(path) == 0 {
+				table = "[[malformed]]"
+				continue
+			}
+			table = path[0]
+			if len(path) == 2 {
+				// [dependencies.mosaic-pkg-x] declares key mosaic-pkg-x.
+				keys[table] = append(keys[table], path[1])
+			}
+			if len(path) > 2 {
+				table = "[[nested]]"
+			}
+			continue
+		}
+
+		eq := tomlKeyValueSplit(line)
+		if eq < 0 {
+			continue
+		}
+		path := splitTomlKeyPath(line[:eq])
+		value := strings.TrimSpace(line[eq+1:])
+		depth = tomlBracketDelta(value)
+		if depth < 0 {
+			depth = 0
+		}
+		if len(path) == 0 {
+			continue
+		}
+		keys[table] = append(keys[table], path[0])
+		if len(path) == 1 {
+			values[table+"."+path[0]] = tomlBasicStringValue(value)
+		}
+	}
+	return keys, values, true
+}
+
+// readMosaicPackageName returns the manifest's `[package].name`, lowercased,
+// or "" when the manifest is absent or names nothing.
+func readMosaicPackageName(pkgPath string) string {
+	_, values, ok := readMosaicManifestTables(pkgPath)
+	if !ok {
+		return ""
+	}
+	return strings.ToLower(strings.TrimSpace(values["package.name"]))
+}
+
+// parseMosaicDeps returns the qualified names of the repository Mosaic
+// packages that pkg's manifest lists under `[dependencies]`, sorted and
+// unique. A dependency that names pkg itself is dropped rather than turned
+// into a self-loop (the manifest validator reports that case; the build
+// graph must stay acyclic regardless).
+func parseMosaicDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	keys, _, ok := readMosaicManifestTables(pkg.Path)
+	if !ok {
+		return nil
+	}
+
+	seen := make(map[string]bool)
+	for _, key := range keys["dependencies"] {
+		if dependency, found := knownNames[strings.ToLower(key)]; found && dependency != pkg.Name {
+			seen[dependency] = true
+		}
+	}
+
+	deps := make([]string, 0, len(seen))
+	for dependency := range seen {
+		deps = append(deps, dependency)
+	}
+	sort.Strings(deps)
+	return deps
+}
+
+// stripTomlComment removes a '#' comment that is not inside a quoted string.
+func stripTomlComment(line string) string {
+	var quote byte
+	for index := 0; index < len(line); index++ {
+		character := line[index]
+		switch {
+		case quote != 0:
+			if quote == '"' && character == '\\' {
+				index++
+			} else if character == quote {
+				quote = 0
+			}
+		case character == '"' || character == '\'':
+			quote = character
+		case character == '#':
+			return line[:index]
+		}
+	}
+	return line
+}
+
+// tomlBracketDelta counts '[' and '{' minus ']' and '}' outside strings: the
+// number of value brackets a line leaves open for the following lines.
+func tomlBracketDelta(text string) int {
+	delta := 0
+	var quote byte
+	for index := 0; index < len(text); index++ {
+		character := text[index]
+		switch {
+		case quote != 0:
+			if quote == '"' && character == '\\' {
+				index++
+			} else if character == quote {
+				quote = 0
+			}
+		case character == '"' || character == '\'':
+			quote = character
+		case character == '[' || character == '{':
+			delta++
+		case character == ']' || character == '}':
+			delta--
+		}
+	}
+	return delta
+}
+
+// tomlKeyValueSplit returns the index of the '=' separating a key from its
+// value, skipping any '=' inside a quoted key, or -1 when there is none.
+func tomlKeyValueSplit(line string) int {
+	var quote byte
+	for index := 0; index < len(line); index++ {
+		character := line[index]
+		switch {
+		case quote != 0:
+			if quote == '"' && character == '\\' {
+				index++
+			} else if character == quote {
+				quote = 0
+			}
+		case character == '"' || character == '\'':
+			quote = character
+		case character == '=':
+			return index
+		}
+	}
+	return -1
+}
+
+// splitTomlKeyPath splits a (possibly dotted, possibly quoted) TOML key into
+// its parts: `a.b`, `"a".b` and `a . "b"` all give ["a", "b"]. A malformed
+// key — an unterminated quote or an empty part — yields nil, which callers
+// treat as "nothing to read here" rather than guessing.
+func splitTomlKeyPath(key string) []string {
+	var parts []string
+	var current strings.Builder
+	var quote byte
+	quotedPart := false
+	flush := func() bool {
+		part := strings.TrimSpace(current.String())
+		current.Reset()
+		if part == "" && !quotedPart {
+			return false
+		}
+		parts = append(parts, part)
+		quotedPart = false
+		return true
+	}
+	for index := 0; index < len(key); index++ {
+		character := key[index]
+		switch {
+		case quote != 0:
+			if quote == '"' && character == '\\' && index+1 < len(key) {
+				index++
+				current.WriteByte(key[index])
+			} else if character == quote {
+				quote = 0
+			} else {
+				current.WriteByte(character)
+			}
+		case character == '"' || character == '\'':
+			quote = character
+			quotedPart = true
+		case character == '.':
+			if !flush() {
+				return nil
+			}
+		default:
+			current.WriteByte(character)
+		}
+	}
+	if quote != 0 || !flush() {
+		return nil
+	}
+	return parts
+}
+
+// tomlBasicStringValue returns the contents of a single-line quoted string
+// value, or "" for any other value shape (numbers, arrays, inline tables).
+func tomlBasicStringValue(value string) string {
+	if len(value) >= 2 && (value[0] == '"' || value[0] == '\'') && value[len(value)-1] == value[0] {
+		return value[1 : len(value)-1]
+	}
+	return ""
+}
