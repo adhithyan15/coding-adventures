@@ -10,6 +10,7 @@ import { lessonModalities, orderChapterLessons, unstartableCause } from "../../.
 const ids = [
   "PA-C206-go-return",
   "PA-C206-gae",
+  "PA-C206-e",
   "PA-C206-gae-review",
   "PA-C206-they-went",
   "PA-C206-payoff",
@@ -36,13 +37,13 @@ it("adds a slow Punjabi A2 went-form prerequisite without mock credit", () => {
   expect(chapterLessons.map((lesson) => Number(lesson?.frontmatter.chapter)))
     .toEqual(ids.map(() => 206));
   expect(chapterLessons.map((lesson) => Number(lesson?.frontmatter.sequence)))
-    .toEqual([11170, 11180, 11190, 11200, 11210]);
+    .toEqual([11170, 11180, 11190, 11200, 11210, 11220]);
 
   const target = "ਗਏ";
   const atom = "PA-GRAM-GAE-206";
   const ownerIndex = 1;
   expect(chapterLessons.map((lesson) => lesson?.frontmatter["introduces.knowledge"]))
-    .toEqual([[], [atom], [], [], []]);
+    .toEqual([[], [atom], ["PA-SCRIPT-RECOG-E-206"], [], [], []]);
 
   const rawBeforeOwner = ids.slice(0, ownerIndex).map((id) => {
     const source = readFileSync(new URL(
@@ -63,7 +64,19 @@ it("adds a slow Punjabi A2 went-form prerequisite without mock credit", () => {
     Number(lesson?.frontmatter.sequence) > ownerSequence &&
     lesson?.frontmatter["practises.knowledge"].includes(atom),
   );
-  expect(laterPractices).toHaveLength(3);
+  expect(laterPractices).toHaveLength(4);
+
+  expect(chapterLessons[2]?.frontmatter).toMatchObject({
+    type: "writing",
+    delivery: "script",
+    headword: "ਏ",
+    prerequisites: ["PA-C206-gae"],
+  });
+  const scriptCopy = chapterLessons[2]?.blocks.map((block) => block.markdown).join("\n") ?? "";
+  expect(scriptCopy)
+    .toMatch(/model visible.*not writing from memory|not writing from memory.*model visible/is);
+  expect(scriptCopy)
+    .toMatch(/no stroke order.*verified source|verified source.*no stroke order/is);
 
   for (const lesson of chapterLessons) {
     expect(Number(lesson?.frontmatter["duration.max_seconds"]))
@@ -100,6 +113,7 @@ it("adds a slow Punjabi A2 went-form prerequisite without mock credit", () => {
     .join("\n");
   const supportingPunjabi = new Set(learnerCopy.match(/[\u0A00-\u0A7F]+/gu) ?? []);
   supportingPunjabi.delete(target);
+  supportingPunjabi.delete("ਏ");
   for (const token of supportingPunjabi) {
     expect(taughtBefore.includes(token), `${token} must occur before chapter 206`).toBe(true);
   }
