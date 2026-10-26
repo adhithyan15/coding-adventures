@@ -43,9 +43,9 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | DEC VAX-11/780 | merged | merged | Complete; gate PR #18263 landed. |
 | P0 | Motorola 6809 | merged | merged | Complete; gate PR #18269 landed. |
 | P0 | OpenRISC 1000 | merged | merged | Complete; gate PR #18276 landed. |
-| P0 | OpenSPARC T1 | merged | PR #18295 | Babysit required checks; squash auto-merge armed. |
-| P0 | Arm Cortex-M0 | merged | local complete | Security correction validated; publish next. |
-| P0 | Arm Cortex-M3 | merged | local complete | Exact-head security review follows Cortex-M0 publication. |
+| P0 | OpenSPARC T1 | merged | merged | Complete; gate PR #18295 landed. |
+| P0 | Arm Cortex-M0 | merged | PR #18296 | Conflict reconciliation in progress; squash auto-merge remains armed. |
+| P0 | Arm Cortex-M3 | merged | merged | Complete; gate PR #18297 landed. |
 
 ## Independent functional queue
 
