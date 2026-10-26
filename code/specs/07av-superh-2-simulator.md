@@ -10,6 +10,12 @@ encodings, operand ordering, sign extension, delayed branches, status-bit
 effects, and multiply/divide behavior come from that manual rather than from a
 console emulator or a later SH-2A derivative.
 
+Delay-slot exception classification is additionally cross-checked against
+Renesas's *SH7619 Group Hardware Manual*, revision 6.00, document
+REJ09B0237-0600 (July 15, 2009), table 5.9. That SH-2 exception table makes the
+otherwise excluded `LDC Rm,SR` and `LDC.L @Rm+,SR` forms explicit members of
+the illegal-slot set.
+
 The package is an architectural teaching oracle for the coherent SH-2 subset
 below. It is not a claim to reproduce a particular Renesas microcontroller,
 Sega system, pipeline, cache, bus, interrupt controller, or cycle timing.
@@ -107,14 +113,22 @@ architectural PC basis. Register targets must be half-word aligned. A target
 is validated when it becomes the next fetch; this preserves the architectural
 delay-slot effect while keeping faults atomic.
 
-A control-transfer instruction or any other instruction on the manual's
-exhaustive illegal-slot list returns `IllegalDelaySlot` without mutation.
-`SLEEP` is not on that architectural list, but `SLEEP` in a live delay slot is
-explicitly deferred by this bounded cell and returns `UnsupportedDelaySlot`
-without mutation. A fault in a delay-slot step preserves the exact pre-step
-pending-transfer record and does not commit its target; whole-run rollback may
-instead restore the earlier pre-run state. Successful traces identify whether
-the instruction was a delay slot and expose the pending target in the complete
+After a successful two-byte fetch, delay-slot legality takes precedence over
+the instruction's ordinary decode classification. The manual's complete
+PC-writing set (`BF`, `BT`, `BRA`, `BSR`, `JMP`, `JSR`, `RTS`, `RTE`,
+`TRAPA`, `BF/S`, `BT/S`, `BRAF`, and `BSRF`), ordinary undefined code, and the
+SH-2 exception table's `LDC Rm,SR` and `LDC.L @Rm+,SR` forms return
+`IllegalDelaySlot` without mutation. The excluded RTE, TRAPA, and SR-load forms
+remain `UnsupportedInstruction`, and undefined code remains
+`UnknownInstruction`, outside a delay slot. Fetch validation still precedes
+slot legality, so a missing or out-of-image slot word remains a transport
+fault and preserves the pending transfer. `SLEEP` is not on the primary
+manual's architectural list, but `SLEEP` in a live delay slot is explicitly
+deferred by this bounded cell and returns `UnsupportedDelaySlot` without
+mutation. A fault in a delay-slot step preserves the exact pre-step pending-
+transfer record and does not commit its target; whole-run rollback may instead
+restore the earlier pre-run state. Successful traces identify whether the
+instruction was a delay slot and expose the pending target in the complete
 post-state.
 
 `SLEEP` emits a successful trace and enters deterministic halt because external

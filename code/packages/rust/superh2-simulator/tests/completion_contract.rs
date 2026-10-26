@@ -222,6 +222,102 @@ fn conditional_delays_only_when_taken_and_illegal_slot_is_atomic() {
 }
 
 #[test]
+fn manual_illegal_slot_matrix_has_atomic_precedence_after_a_valid_fetch() {
+    // Every admitted instruction that rewrites PC, the excluded architectural
+    // control forms, the two excluded SR loads, and ordinary undefined code
+    // become IllegalDelaySlot when the same raw word is fetched in a live slot.
+    let illegal_words = [
+        0x8b00_u16, // BF
+        0x8900,     // BT
+        0xa000,     // BRA
+        0xb000,     // BSR
+        0x402b,     // JMP
+        0x400b,     // JSR
+        0x000b,     // RTS
+        0x8f00,     // BF/S
+        0x8d00,     // BT/S
+        0x0123,     // BRAF R1
+        0x0103,     // BSRF R1
+        0x002b,     // RTE (excluded from the bounded executor)
+        0xc300,     // TRAPA (excluded from the bounded executor)
+        0x400e,     // LDC R0,SR (excluded from the bounded executor)
+        0x4007,     // LDC.L @R0+,SR (excluded from the bounded executor)
+        0xffff,     // ordinary undefined SH-2 code
+    ];
+    for word in illegal_words {
+        let [high, low] = word.to_be_bytes();
+        let mut cpu = loaded(&[0xa0, 0x00, high, low, 0x00, 0x09]);
+        cpu.step().unwrap();
+        let pending = cpu.snapshot();
+        assert_eq!(
+            cpu.step(),
+            Err(SuperH2Error::IllegalDelaySlot {
+                word,
+                pc: DEFAULT_ORIGIN + 2,
+            }),
+            "word {word:#06x}"
+        );
+        assert_eq!(cpu.snapshot(), pending, "word {word:#06x}");
+    }
+
+    // Excluded instructions outside the manual's illegal-slot set keep their
+    // bounded UnsupportedInstruction classification, even in a live slot.
+    for word in [0x401b_u16, 0x402e] {
+        let [high, low] = word.to_be_bytes();
+        let mut cpu = loaded(&[0xa0, 0x00, high, low, 0x00, 0x09]);
+        cpu.step().unwrap();
+        let pending = cpu.snapshot();
+        assert_eq!(
+            cpu.step(),
+            Err(SuperH2Error::UnsupportedInstruction {
+                word,
+                pc: DEFAULT_ORIGIN + 2,
+            }),
+            "word {word:#06x}"
+        );
+        assert_eq!(cpu.snapshot(), pending, "word {word:#06x}");
+    }
+
+    // Outside a slot, the bounded decode classification remains unchanged.
+    for word in [0x002b_u16, 0xc300, 0x400e, 0x4007] {
+        let mut cpu = loaded(&word.to_be_bytes());
+        let before = cpu.snapshot();
+        assert!(matches!(
+            cpu.step(),
+            Err(SuperH2Error::UnsupportedInstruction { .. })
+        ));
+        assert_eq!(cpu.snapshot(), before);
+    }
+    let mut unknown = loaded(&0xffff_u16.to_be_bytes());
+    let before = unknown.snapshot();
+    assert!(matches!(
+        unknown.step(),
+        Err(SuperH2Error::UnknownInstruction { .. })
+    ));
+    assert_eq!(unknown.snapshot(), before);
+
+    // A legal NOP slot still commits the pending target.
+    let mut legal = loaded(&[0xa0, 0x00, 0x00, 0x09, 0x00, 0x1b]);
+    legal.step().unwrap();
+    let trace = legal.step().unwrap();
+    assert!(trace.delay_slot);
+    assert_eq!(trace.pc_after, DEFAULT_ORIGIN + 4);
+
+    // Fetch validation remains ahead of slot decoding; a missing slot word is
+    // a transport fault and preserves the pending transfer verbatim.
+    let mut missing = loaded(&[0xa0, 0x00]);
+    missing.step().unwrap();
+    let pending = missing.snapshot();
+    assert_eq!(
+        missing.step(),
+        Err(SuperH2Error::FetchOutsideProgram {
+            pc: DEFAULT_ORIGIN + 2,
+        })
+    );
+    assert_eq!(missing.snapshot(), pending);
+}
+
+#[test]
 fn sleep_in_slot_and_delayed_target_faults_preserve_state() {
     let mut sleep = loaded(&[0xa0, 0x00, 0x00, 0x1b, 0x00, 0x09]);
     sleep.step().unwrap();
@@ -258,7 +354,7 @@ fn backward_delay_and_slot_fault_roll_back_the_whole_run() {
     let before = faulty.snapshot();
     assert!(matches!(
         faulty.run(2),
-        Err(SuperH2Error::UnknownInstruction { .. })
+        Err(SuperH2Error::IllegalDelaySlot { .. })
     ));
     assert_eq!(faulty.snapshot(), before);
 }

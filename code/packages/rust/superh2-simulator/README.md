@@ -31,7 +31,10 @@ and a complete post-step snapshot.
 The completion suite classifies every admitted encoding family and reserved or
 unsupported neighbors, and exercises arithmetic flags, addressing modes,
 multiplication/division, MAC alias ordering, delayed control flow, PC-relative
-delay-slot bases, complete-state lifecycle, and transactional rollback.
-All 22 tests, including an independent exhaustive `DIV1` Q/M/T truth table,
+delay-slot bases, complete-state lifecycle, and transactional rollback. It
+also locks architectural illegal-slot precedence for admitted control
+transfers, undefined code, and excluded RTE, TRAPA, and SR-load forms while
+retaining ordinary outside-slot classifications and fetch-fault precedence.
+All 23 tests, including an independent exhaustive `DIV1` Q/M/T truth table,
 strict Clippy, rustdoc, and the package BUILD are green. Measured release line
-coverage is 94.29% (1,023/1,085).
+coverage is 94.44% (1,036/1,097).

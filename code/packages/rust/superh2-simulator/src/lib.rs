@@ -300,6 +300,14 @@ fn is_unsupported_system(word: u16) -> bool {
         || (word & 0xf0ff) == 0x401b
 }
 
+fn is_unsupported_illegal_delay_slot(word: u16) -> bool {
+    // REJ09B0171-0500O's illegal-slot set includes RTE and TRAPA. The SH-2
+    // exception table additionally identifies the two SR-load forms because
+    // changing SR in a live slot is architecturally prohibited. They remain
+    // unsupported during ordinary execution in this bounded simulator.
+    word == 0x002b || word & 0xff00 == 0xc300 || matches!(word & 0xf0ff, 0x400e | 0x4007)
+}
+
 /// Classify one instruction word without executing it.
 pub fn classify(word: u16) -> Result<InstructionClass, SuperH2Error> {
     use InstructionClass as C;
@@ -728,7 +736,40 @@ fn step_candidate(state: &SuperH2State) -> Result<StepTrace, SuperH2Error> {
     let start = pc_before as usize;
     let bytes = [state.memory[start], state.memory[start + 1]];
     let word = u16::from_be_bytes(bytes);
-    let class = classify(word).map_err(|error| match error {
+    let old_pending = state.pending_transfer;
+    let classification = classify(word);
+    if old_pending.is_some() {
+        match &classification {
+            Ok(InstructionClass::Sleep) => {
+                return Err(SuperH2Error::UnsupportedDelaySlot {
+                    word,
+                    pc: pc_before,
+                });
+            }
+            Ok(class) if is_control(*class) => {
+                return Err(SuperH2Error::IllegalDelaySlot {
+                    word,
+                    pc: pc_before,
+                });
+            }
+            Err(SuperH2Error::UnknownInstruction { .. }) => {
+                return Err(SuperH2Error::IllegalDelaySlot {
+                    word,
+                    pc: pc_before,
+                });
+            }
+            Err(SuperH2Error::UnsupportedInstruction { .. })
+                if is_unsupported_illegal_delay_slot(word) =>
+            {
+                return Err(SuperH2Error::IllegalDelaySlot {
+                    word,
+                    pc: pc_before,
+                });
+            }
+            _ => {}
+        }
+    }
+    classification.map_err(|error| match error {
         SuperH2Error::UnknownInstruction { .. } => SuperH2Error::UnknownInstruction {
             word,
             pc: pc_before,
@@ -739,21 +780,6 @@ fn step_candidate(state: &SuperH2State) -> Result<StepTrace, SuperH2Error> {
         },
         other => other,
     })?;
-    let old_pending = state.pending_transfer;
-    if old_pending.is_some() {
-        if class == InstructionClass::Sleep {
-            return Err(SuperH2Error::UnsupportedDelaySlot {
-                word,
-                pc: pc_before,
-            });
-        }
-        if is_control(class) {
-            return Err(SuperH2Error::IllegalDelaySlot {
-                word,
-                pc: pc_before,
-            });
-        }
-    }
     let mut next = state.clone();
     next.pc = pc_before.wrapping_add(2);
     next.pending_transfer = None;
