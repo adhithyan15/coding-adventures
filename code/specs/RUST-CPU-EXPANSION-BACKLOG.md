@@ -35,17 +35,17 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | Priority | Target | Functional | Gate | Dependency / next action |
 |---:|---|---|---|---|
 | P0 | DEC PDP-8 / PDP-8/E | merged | merged | Complete; PR #18120 landed. |
-| P0 | EDSAC | merged | PR #18166 | Babysit only; auto-merge armed. |
-| P0 | IAS machine | PR #18142 | missing | Gate starts only after functional merges. |
-| P0 | IBM System/360 | merged | ready | Next unclaimed gate cell. |
-| P0 | Motorola MC6800 | merged | ready | Gate cell follows System/360 gate start. |
-| P0 | Intel 8085 | merged | ready | Gate cell follows MC6800 gate start. |
-| P0 | DEC VAX-11/780 | PR #18164 | missing | Gate waits for functional oracle. |
-| P0 | Motorola 6809 | PR #18169 | missing | Gate waits for functional oracle. |
-| P0 | OpenRISC 1000 | merged | in progress | Gate cell uses the public mor1kx RTL boundary. |
-| P0 | OpenSPARC T1 | PR #18176 | missing | Gate can descend through public OpenSPARC RTL. |
-| P0 | Arm Cortex-M0 | PR #18177 | missing | Gate waits for the Armv6-M oracle. |
-| P0 | Arm Cortex-M3 | local complete | missing | Publish this cell; then gate waits for merge. |
+| P0 | EDSAC | merged | merged | Complete; gate PR #18166 landed. |
+| P0 | IAS machine | merged | merged | Complete; gate PR #18266 landed. |
+| P0 | IBM System/360 | merged | merged | Complete. |
+| P0 | Motorola MC6800 | merged | merged | Complete. |
+| P0 | Intel 8085 | merged | merged | Complete. |
+| P0 | DEC VAX-11/780 | merged | merged | Complete; gate PR #18263 landed. |
+| P0 | Motorola 6809 | merged | merged | Complete; gate PR #18269 landed. |
+| P0 | OpenRISC 1000 | merged | merged | Complete; gate PR #18276 landed. |
+| P0 | OpenSPARC T1 | merged | in progress | Gate specification descends from public OpenSPARC T1 RTL. |
+| P0 | Arm Cortex-M0 | merged | ready | Independent Armv6-M gate cell can start now. |
+| P0 | Arm Cortex-M3 | merged | ready | Independent Armv7-M gate cell can start now. |
 
 ## Independent functional queue
 
