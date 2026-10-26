@@ -6,8 +6,8 @@ indexed and indirect effective addresses, sixteen accumulators, complete owned
 state, typed atomic faults, and deterministic reset/load/restore/step/run/
 execute lifecycle APIs.
 
-The completion suite exercises 17 unit/integration tests and records 90.31%
-source line coverage (690 of 764 lines).
+The completion suite exercises 20 unit/integration tests and records 91.53%
+source line coverage (713 of 779 lines).
 
 The implemented instruction boundary includes data movement, signed fixed-point
 arithmetic, core Boolean families, signed compare/skip/jump families, AOBJ,

@@ -15,6 +15,7 @@ pub const DEFAULT_ORIGIN: u32 = 0o200;
 
 const SIGN36: u64 = 1 << 35;
 const SIGN35_MASK: u64 = SIGN36 - 1;
+const STACK_INCREMENT: u64 = (1_u64 << 18) | 1;
 
 /// Arithmetic status flags exposed by the bounded KA10 cell.
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
@@ -23,6 +24,7 @@ pub struct ArithmeticFlags {
     pub carry0: bool,
     pub carry1: bool,
     pub divide_check: bool,
+    pub pushdown_overflow: bool,
 }
 
 /// Complete, owned architectural and lifecycle state.
@@ -438,7 +440,8 @@ impl Pdp10Simulator {
         mut address: u32,
         pc: u32,
     ) -> Result<u32, Pdp10Error> {
-        for _ in 0..64 {
+        let mut indirect_links = 0;
+        loop {
             if index != 0 {
                 let index_value = self.accumulators[usize::from(index)] as u32 & ADDRESS_MASK;
                 address = address.wrapping_add(index_value) & ADDRESS_MASK;
@@ -446,12 +449,15 @@ impl Pdp10Simulator {
             if !indirect {
                 return Ok(address);
             }
+            if indirect_links == 64 {
+                return Err(Pdp10Error::IndirectAddressLimit { pc });
+            }
             let word = self.read_data(address);
+            indirect_links += 1;
             indirect = ((word >> 22) & 1) != 0;
             index = ((word >> 18) & 0x0f) as u8;
             address = (word as u32) & ADDRESS_MASK;
         }
-        Err(Pdp10Error::IndirectAddressLimit { pc })
     }
 
     fn execute_instruction(
@@ -520,11 +526,23 @@ impl Pdp10Simulator {
             signed.saturating_abs()
         };
         let result = word36(transformed);
-        let overflow = transformed > max_signed36();
-        self.flags.overflow |= overflow;
-        self.flags.carry0 |= negative && result == 0;
-        self.flags.carry1 |= overflow || (negative && result == 0);
-        self.store_form(opcode, ac, ea, result);
+        if opcode & 3 != 1 {
+            let overflow = transformed > max_signed36();
+            self.flags.overflow |= overflow;
+            self.flags.carry0 |= negative && result == 0;
+            self.flags.carry1 |= overflow || (negative && result == 0);
+        }
+        match opcode & 3 {
+            0 | 1 => self.accumulators[ac] = result,
+            2 => self.write_data(ea, result),
+            3 => {
+                self.write_data(ea, result);
+                if ac != 0 {
+                    self.accumulators[ac] = result;
+                }
+            }
+            _ => unreachable!(),
+        }
         if negative { "MOVN" } else { "MOVM" }.to_owned()
     }
 
@@ -766,10 +784,11 @@ impl Pdp10Simulator {
     }
 
     fn push_address(&mut self, ac: usize) -> u32 {
-        let left = ((self.accumulators[ac] >> 18) as u32).wrapping_add(1) & ADDRESS_MASK;
-        let right = (self.accumulators[ac] as u32).wrapping_add(1) & ADDRESS_MASK;
-        self.accumulators[ac] = (u64::from(left) << 18) | u64::from(right);
-        right
+        let pointer = self.accumulators[ac].wrapping_add(STACK_INCREMENT) & WORD_MASK;
+        self.accumulators[ac] = pointer;
+        let left = (pointer >> 18) as u32 & ADDRESS_MASK;
+        self.flags.pushdown_overflow |= left == 0;
+        pointer as u32 & ADDRESS_MASK
     }
 
     fn pop_address(&self, ac: usize) -> u32 {
@@ -777,9 +796,10 @@ impl Pdp10Simulator {
     }
 
     fn decrement_stack(&mut self, ac: usize) {
-        let left = ((self.accumulators[ac] >> 18) as u32).wrapping_sub(1) & ADDRESS_MASK;
-        let right = (self.accumulators[ac] as u32).wrapping_sub(1) & ADDRESS_MASK;
-        self.accumulators[ac] = (u64::from(left) << 18) | u64::from(right);
+        let pointer = self.accumulators[ac].wrapping_sub(STACK_INCREMENT) & WORD_MASK;
+        self.accumulators[ac] = pointer;
+        let left = (pointer >> 18) as u32 & ADDRESS_MASK;
+        self.flags.pushdown_overflow |= left == ADDRESS_MASK;
     }
 
     fn packed_flags(&self) -> u32 {

@@ -156,6 +156,86 @@ fn all_move_and_magnitude_forms_have_architectural_destinations() {
 }
 
 #[test]
+fn immediate_magnitude_flags_and_ac0_self_forms_follow_ka10_rules() {
+    for opcode in [0o211, 0o215] {
+        let mut cpu = loaded(&[instruction(opcode, 1, false, 0, 0)]);
+        let mut state = cpu.state();
+        state.flags = ArithmeticFlags {
+            overflow: true,
+            carry0: false,
+            carry1: true,
+            divide_check: true,
+            pushdown_overflow: true,
+        };
+        cpu.restore(&state).unwrap();
+        cpu.step().unwrap();
+        assert_eq!(cpu.state().flags, state.flags, "opcode {opcode:o}");
+    }
+
+    for opcode in [0o213, 0o217] {
+        let mut cpu = loaded(&[instruction(opcode, 0, false, 0, 0o400)]);
+        cpu.set_memory_word(0o400, signed_word(-5)).unwrap();
+        cpu.step().unwrap();
+        assert_eq!(cpu.accumulator(0).unwrap(), 0, "opcode {opcode:o}");
+        assert_eq!(cpu.memory_word(0o400).unwrap(), 5, "opcode {opcode:o}");
+    }
+}
+
+#[test]
+fn exactly_sixty_four_indirect_links_are_valid_and_sixty_five_are_atomic() {
+    fn install_chain(cpu: &mut Pdp10Simulator, links: usize, target: u32) {
+        for link in 0..links {
+            let address = 0o400 + u32::try_from(link).unwrap();
+            let is_indirect = link + 1 < links;
+            let next = if is_indirect { address + 1 } else { target };
+            cpu.set_memory_word(address, instruction(0, 0, is_indirect, 0, next))
+                .unwrap();
+        }
+    }
+
+    for links in [63, 64] {
+        let mut cpu = loaded(&[instruction(0o200, 1, true, 0, 0o400)]);
+        install_chain(&mut cpu, links, 0o700);
+        cpu.set_memory_word(0o700, 0o123456).unwrap();
+        cpu.step().unwrap();
+        assert_eq!(cpu.accumulator(1).unwrap(), 0o123456, "{links} links");
+    }
+
+    let mut cpu = loaded(&[instruction(0o200, 1, true, 0, 0o400)]);
+    install_chain(&mut cpu, 65, 0o700);
+    let before = cpu.state();
+    assert!(matches!(
+        cpu.step(),
+        Err(Pdp10Error::IndirectAddressLimit { .. })
+    ));
+    assert_eq!(cpu.state(), before);
+}
+
+#[test]
+fn pushdown_pointers_use_full_word_arithmetic_and_expose_overflow() {
+    let mut push = loaded(&[instruction(0o261, 3, false, 0, 0o500)]);
+    push.set_accumulator(3, 0o777777).unwrap();
+    push.set_memory_word(0o500, 0o123).unwrap();
+    push.step().unwrap();
+    assert_eq!(push.accumulator(3).unwrap(), 0o000002_000000);
+
+    let mut push_overflow = loaded(&[instruction(0o261, 3, false, 0, 0o500)]);
+    push_overflow.set_accumulator(3, 0o777777_777776).unwrap();
+    push_overflow.set_memory_word(0o500, 0o123).unwrap();
+    push_overflow.step().unwrap();
+    assert_eq!(push_overflow.accumulator(3).unwrap(), 0o000000_777777);
+    assert!(push_overflow.state().flags.pushdown_overflow);
+
+    let mut pop = loaded(&[instruction(0o262, 3, false, 0, 0o500)]);
+    pop.set_accumulator(0, 0o456).unwrap();
+    pop.set_accumulator(3, 0o000001_000000).unwrap();
+    pop.step().unwrap();
+    assert_eq!(pop.accumulator(3).unwrap(), 0o777777_777777);
+    assert_eq!(pop.memory_word(0o500).unwrap(), 0o456);
+    assert!(pop.state().flags.pushdown_overflow);
+}
+
+#[test]
 fn add_sub_and_short_multiply_cover_all_four_forms() {
     for base in [0o270_u16, 0o274, 0o220] {
         for form in 0..4_u16 {
@@ -215,6 +295,7 @@ fn add_sub_and_short_multiply_cover_all_four_forms() {
             carry0: false,
             carry1: true,
             divide_check: false,
+            pushdown_overflow: false,
         }
     );
     cpu.step().unwrap();
@@ -225,6 +306,7 @@ fn add_sub_and_short_multiply_cover_all_four_forms() {
             carry0: false,
             carry1: true,
             divide_check: false,
+            pushdown_overflow: false,
         }
     );
 }
@@ -416,6 +498,7 @@ fn count_jump_aobj_jrst_and_stack_control_are_deterministic() {
         carry0: true,
         carry1: true,
         divide_check: true,
+        pushdown_overflow: false,
     };
     cpu.restore(&state).unwrap();
     assert_eq!(cpu.step().unwrap().pc_after, 0o203);

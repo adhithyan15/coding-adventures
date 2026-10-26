@@ -81,7 +81,8 @@ Opcodes are written in the architecture's conventional octal notation.
 
 - Data movement: the `MOVE`, `MOVEI`, `MOVEM`, `MOVES`, `MOVN`, and `MOVM`
   families, including accumulator, immediate, memory, and both forms where the
-  handbook defines them.
+  handbook defines them. Immediate `MOVN`/`MOVM` forms do not alter arithmetic
+  flags, and self forms with AC0 update memory without overwriting AC0.
 - Fixed-point arithmetic: `ADD`, `ADDI`, `ADDM`, `ADDB`, `SUB`, `SUBI`,
   `SUBM`, `SUBB`, `IMUL`, `IMULI`, `IMULM`, `IMULB`, `IDIV`, `IDIVI`,
   `IDIVM`, and `IDIVB`. Overflow, both carry flags, and divide check are
@@ -106,7 +107,10 @@ Condition suffixes use the KA10 signed comparison result: never, less, equal,
 less-or-equal, always, greater-or-equal, not-equal, and greater. A skipped
 instruction advances the PC by one additional word. Stack pointers use a
 36-bit accumulator with an 18-bit count in the left half and an 18-bit address
-in the right half; push and pop update both halves before the memory transfer.
+in the right half. Push adds octal `1000001` before its transfer; pop transfers
+first and then subtracts octal `1000001`, with carry or borrow across the full
+36-bit word. The sticky pushdown-overflow output is set when a push produces a
+zero left half or a pop produces an all-ones left half.
 
 All other opcode classes fail as `UnsupportedOpcode { opcode, pc }`. A malformed
 encoding inside an implemented family fails as `InvalidInstruction`.
@@ -119,9 +123,10 @@ encoding inside an implemented family fails as `InvalidInstruction`.
 - `restore` validates every word, address, flag, memory length, and installed
   range before commit.
 - `step` rejects post-halt execution and fetch outside the installed program.
-- Every failed fetch, effective-address chain, memory access, arithmetic
-  operation, stack operation, decode, or final snapshot leaves the complete
-  pre-step state unchanged.
+- Every modeled typed failure in fetch, effective-address chaining, memory
+  access, arithmetic, stack operation, or decode leaves the complete pre-step
+  state unchanged. Host allocation failure is outside the recoverable
+  architectural fault model.
 - `run(max_steps)` and `execute(program, origin, max_steps)` require a nonzero
   bound and roll the complete machine back on any failure.
 
