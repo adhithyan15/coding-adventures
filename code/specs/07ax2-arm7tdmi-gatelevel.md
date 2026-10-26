@@ -93,10 +93,12 @@ the exact entry Q image.  Bounded `run` and `execute` are transactional across
 the whole invocation.  Halt is a successful committed transition; a later
 step is typed `Halted` and leaves all Q unchanged.
 
-Test-only deterministic allocation/commit fault seams must cover snapshot,
-trace retention/final-state materialization, and mid-commit rollback.  They
-must be unavailable in production and must prove complete stable-Q recovery,
-including memory, banked registers, CPSR/SPSRs, PC, HALT, and image metadata.
+One test-only deterministic commit-fault seam must interrupt a commit after a
+real DFF clock and then restore the complete entry snapshot.  It is unavailable
+in production and proves complete stable-Q recovery, including memory, banked
+registers, CPSR/SPSRs, PC, HALT, and image metadata.  Host allocation failure
+is intentionally not promised: the Rust allocation APIs used by this bounded
+model do not expose a portable, typed, deterministic failure boundary.
 
 ## 5. Differential and structural completion gate
 
@@ -110,7 +112,7 @@ Completion requires all of the following:
    pipeline-visible PC cases, every memory width/addressing mode, multiple
    transfers, overlap rejection, self-modifying trace capture, and target
    faults;
-3. reset/load/restore/halt/post-halt/run/execute/limit/allocation/commit-fault
+3. reset/load/restore/halt/post-halt/run/execute/limit/commit-fault
    lifecycle tests with full-state rollback;
 4. exact inventory and two-way authority tests that deliberately corrupt any
    observer/candidate copy without changing Q, and deliberately change Q
