@@ -162,7 +162,7 @@ exports = ["Consumer"]
 
 [dependencies]
 mosaic-std-controls = "0.3.0"
-mosaic-std-foundation = "0.1.0"
+mosaic-std-foundation = "0.2.0"
 
 [kernel]
 version = "1"

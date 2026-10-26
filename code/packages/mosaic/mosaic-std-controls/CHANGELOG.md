@@ -8,6 +8,10 @@
   source change: the build already compiled against 0.16.0, and the only
   breaking toolkit change since 0.11.0 (`SegmentedControl.options`, 0.15.0)
   touches no component this package uses (`Button`, `Checkbox`, `Input`, `NumberInput`).
+- The acceptance fixture consumer in `tests/package_compiles.rs` requires
+  `mosaic-std-foundation` `0.2.0` (was `0.1.0`), for the same reason. It
+  already compiled against 0.2.0: it fills `Surface` through its default
+  child mount, which 0.2.0's `children` → `items` rename does not affect.
 - Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
 - Depends on `mosaic-std-foundation` 0.2.0 (`Surface`'s `items` slot).
 
