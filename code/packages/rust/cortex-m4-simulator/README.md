@@ -18,10 +18,16 @@ disabled after reset until the composing platform enables it. NVIC, SysTick,
 MPU, exception stacking, caches, bus timing, and vendor peripherals compose
 around this package in later gate and SoC cells.
 
+Binary32 exception status is derived from exact dyadic significands and
+exponents, so wide exponent gaps and gradual underflow cannot disappear in an
+intermediate host `f64`. Quiet NaN comparisons produce unordered NZCV without
+invalid; signaling NaNs additionally set the cumulative invalid flag.
+
 ## Verification
 
-The 20-test completion suite covers inherited Cortex-M3 execution, every
+The 23-test completion suite covers inherited Cortex-M3 execution, every
 bounded DSP and FPU family, configuration and status transport, complete state
-restore, typed atomic faults, bounded rollback, and exact traces. Release
-tests, strict Clippy, and rustdoc warnings pass. The completion baseline is
-91.08 percent line coverage (766/841).
+restore, typed atomic faults including final-snapshot allocation rollback,
+exact binary32 status, bounded rollback, and exact traces. Release tests,
+strict Clippy, and rustdoc warnings pass. The completion baseline is updated
+to 91.93 percent line coverage (911/991) from the measured release run.

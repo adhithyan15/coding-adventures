@@ -9,6 +9,9 @@
 
 use core::fmt;
 
+#[cfg(test)]
+use core::cell::Cell;
+
 pub use cortex_m3_simulator::{
     encoding as core_encoding, CortexM3Error, CortexM3State, LR, MAX_RETAINED_BYTES,
     MAX_RETAINED_STEPS, MEMORY_SIZE, PC, SP,
@@ -41,6 +44,15 @@ const FPSCR_MASK: u32 = FPSCR_N
     | FPSCR_DZC
     | FPSCR_IOC;
 const CANONICAL_NAN: u32 = 0x7fc0_0000;
+
+#[derive(Clone, Copy)]
+struct FloatStatus {
+    inexact: bool,
+    exact_nonzero: bool,
+    invalid: bool,
+    divide_by_zero: bool,
+    overflow: bool,
+}
 
 /// Broad decode family, including the inherited Cortex-M3 classes.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -318,11 +330,18 @@ impl CortexM4Simulator {
                 }
             }
             if self.state.core.halted || self.state.core.sleeping {
+                let final_state = match snapshot_final_state(&self.state) {
+                    Ok(state) => state,
+                    Err(error) => {
+                        self.state = before;
+                        return Err(error);
+                    }
+                };
                 return Ok(ExecutionResult {
                     stopped: true,
                     steps: traces.len(),
                     traces,
-                    final_state: try_clone_state(&self.state)?,
+                    final_state,
                 });
             }
         }
@@ -547,44 +566,59 @@ fn execute_fp_binary(
     record_input_denormal(state, right_bits);
     let left = f32::from_bits(left_bits);
     let right = f32::from_bits(right_bits);
-    let (result, exact, invalid, divide_by_zero, mnemonic) = match (first & 0xffb0, second & 0x0040)
-    {
-        (0xee30, 0) => (
-            left + right,
-            f64::from(left) + f64::from(right),
-            left.is_infinite()
-                && right.is_infinite()
-                && left.is_sign_negative() != right.is_sign_negative(),
-            false,
-            "vadd.f32",
-        ),
-        (0xee30, 0x0040) => (
-            left - right,
-            f64::from(left) - f64::from(right),
-            left.is_infinite()
-                && right.is_infinite()
-                && left.is_sign_negative() == right.is_sign_negative(),
-            false,
-            "vsub.f32",
-        ),
-        (0xee20, 0) => (
-            left * right,
-            f64::from(left) * f64::from(right),
-            (left == 0.0 && right.is_infinite()) || (right == 0.0 && left.is_infinite()),
-            false,
-            "vmul.f32",
-        ),
-        (0xee80, 0) => (
-            left / right,
-            f64::from(left) / f64::from(right),
-            (left == 0.0 && right == 0.0) || (left.is_infinite() && right.is_infinite()),
-            right == 0.0 && left.is_finite() && left != 0.0,
-            "vdiv.f32",
-        ),
-        _ => return Err(unknown(first, second, pc)),
-    };
+    let (result, inexact, exact_nonzero, invalid, divide_by_zero, mnemonic) =
+        match (first & 0xffb0, second & 0x0040) {
+            (0xee30, 0) => (
+                left + right,
+                finite_inexact_sum(left_bits, right_bits, (left + right).to_bits(), false),
+                left + right != 0.0,
+                left.is_infinite()
+                    && right.is_infinite()
+                    && left.is_sign_negative() != right.is_sign_negative(),
+                false,
+                "vadd.f32",
+            ),
+            (0xee30, 0x0040) => (
+                left - right,
+                finite_inexact_sum(left_bits, right_bits, (left - right).to_bits(), true),
+                left - right != 0.0,
+                left.is_infinite()
+                    && right.is_infinite()
+                    && left.is_sign_negative() == right.is_sign_negative(),
+                false,
+                "vsub.f32",
+            ),
+            (0xee20, 0) => (
+                left * right,
+                finite_inexact_product(left_bits, right_bits, (left * right).to_bits()),
+                left.is_finite() && right.is_finite() && left != 0.0 && right != 0.0,
+                (left == 0.0 && right.is_infinite()) || (right == 0.0 && left.is_infinite()),
+                false,
+                "vmul.f32",
+            ),
+            (0xee80, 0) => (
+                left / right,
+                finite_inexact_quotient(left_bits, right_bits, (left / right).to_bits()),
+                left.is_finite() && right.is_finite() && left != 0.0 && right != 0.0,
+                (left == 0.0 && right == 0.0) || (left.is_infinite() && right.is_infinite()),
+                right == 0.0 && left.is_finite() && left != 0.0,
+                "vdiv.f32",
+            ),
+            _ => return Err(unknown(first, second, pc)),
+        };
     let invalid = invalid || signaling_nan(left_bits) || signaling_nan(right_bits);
-    let bits = finish_float(state, result, exact, invalid, divide_by_zero, left, right);
+    let status = FloatStatus {
+        inexact,
+        exact_nonzero,
+        invalid,
+        divide_by_zero,
+        overflow: result.is_infinite()
+            && left.is_finite()
+            && right.is_finite()
+            && !divide_by_zero
+            && !invalid,
+    };
+    let bits = finish_float(state, result, status);
     state.s_registers[usize::from(sd)] = bits;
     Ok(mnemonic)
 }
@@ -608,9 +642,22 @@ fn execute_fp_unary(
             record_input_denormal(state, bits);
             let invalid = value.is_sign_negative() && value != 0.0 || signaling_nan(bits);
             let result = value.sqrt();
-            let exact = f64::from(value).sqrt();
+            let inexact = value.is_finite()
+                && result.is_finite()
+                && value >= 0.0
+                && !exact_product_equals(result.to_bits(), result.to_bits(), bits);
             (
-                finish_float(state, result, exact, invalid, false, value, 0.0),
+                finish_float(
+                    state,
+                    result,
+                    FloatStatus {
+                        inexact,
+                        exact_nonzero: value.is_finite() && value != 0.0,
+                        invalid,
+                        divide_by_zero: false,
+                        overflow: false,
+                    },
+                ),
                 "vsqrt.f32",
             )
         }
@@ -637,7 +684,10 @@ fn execute_fp_compare(
     let right = f32::from_bits(right_bits);
     state.fpscr &= !(FPSCR_N | FPSCR_Z | FPSCR_C | FPSCR_V);
     if left.is_nan() || right.is_nan() {
-        state.fpscr |= FPSCR_C | FPSCR_V | FPSCR_IOC;
+        state.fpscr |= FPSCR_C | FPSCR_V;
+        if signaling_nan(left_bits) || signaling_nan(right_bits) {
+            state.fpscr |= FPSCR_IOC;
+        }
     } else if left == right {
         state.fpscr |= FPSCR_Z | FPSCR_C;
     } else if left < right {
@@ -670,30 +720,24 @@ fn execute_fp_status(
     }
 }
 
-fn finish_float(
-    state: &mut CortexM4State,
-    result: f32,
-    exact: f64,
-    invalid: bool,
-    divide_by_zero: bool,
-    left: f32,
-    right: f32,
-) -> u32 {
-    if invalid {
+fn finish_float(state: &mut CortexM4State, result: f32, status: FloatStatus) -> u32 {
+    if status.invalid {
         state.fpscr |= FPSCR_IOC;
     }
-    if divide_by_zero {
+    if status.divide_by_zero {
         state.fpscr |= FPSCR_DZC;
     }
-    if result.is_infinite() && left.is_finite() && right.is_finite() && !divide_by_zero && !invalid
-    {
+    if status.overflow {
         state.fpscr |= FPSCR_OFC | FPSCR_IXC;
     }
-    let inexact = exact.is_finite() && result.is_finite() && f64::from(result) != exact;
-    if exact != 0.0 && result.is_finite() && result.abs() < f32::MIN_POSITIVE && inexact {
+    if status.exact_nonzero
+        && result.is_finite()
+        && result.abs() < f32::MIN_POSITIVE
+        && status.inexact
+    {
         state.fpscr |= FPSCR_UFC;
     }
-    if inexact {
+    if status.inexact {
         state.fpscr |= FPSCR_IXC;
     }
     if result.is_nan() {
@@ -701,6 +745,138 @@ fn finish_float(
     } else {
         result.to_bits()
     }
+}
+
+/// Return the signed integer significand and base-two exponent of a finite
+/// binary32 value.  This representation is exact, including subnormals.
+fn finite_dyadic(bits: u32) -> Option<(i64, i32)> {
+    let exponent = (bits >> 23) & 0xff;
+    if exponent == 0xff {
+        return None;
+    }
+    let fraction = bits & 0x007f_ffff;
+    if exponent == 0 && fraction == 0 {
+        return Some((0, 0));
+    }
+    let significand = if exponent == 0 {
+        i64::from(fraction)
+    } else {
+        i64::from((1 << 23) | fraction)
+    };
+    let signed = if bits >> 31 == 0 {
+        significand
+    } else {
+        -significand
+    };
+    let power = if exponent == 0 {
+        -149
+    } else {
+        exponent as i32 - 127 - 23
+    };
+    Some((signed, power))
+}
+
+fn normalize_dyadic((significand, exponent): (i64, i32)) -> (i64, i32) {
+    if significand == 0 {
+        return (0, 0);
+    }
+    let trailing = significand.unsigned_abs().trailing_zeros();
+    (significand >> trailing, exponent + trailing as i32)
+}
+
+/// Decide whether three exact dyadic terms sum to zero without narrowing
+/// through a host float.  At the least occupied exponent, an odd coefficient
+/// cannot be cancelled by any higher term; equal-exponent coefficients are
+/// combined and normalized until that parity proof applies.
+fn dyadic_sum_is_zero(mut terms: [(i64, i32); 3]) -> bool {
+    for term in &mut terms {
+        *term = normalize_dyadic(*term);
+    }
+    loop {
+        let Some(minimum) = terms
+            .iter()
+            .filter(|(significand, _)| *significand != 0)
+            .map(|(_, exponent)| *exponent)
+            .min()
+        else {
+            return true;
+        };
+        let mut matching = [usize::MAX; 3];
+        let mut matching_len = 0;
+        for (index, (significand, exponent)) in terms.iter().enumerate() {
+            if *significand != 0 && *exponent == minimum {
+                matching[matching_len] = index;
+                matching_len += 1;
+            }
+        }
+        if matching_len == 1 {
+            return false;
+        }
+        let sum = matching[..matching_len]
+            .iter()
+            .map(|index| terms[*index].0)
+            .sum();
+        terms[matching[0]] = normalize_dyadic((sum, minimum));
+        for index in &matching[1..matching_len] {
+            terms[*index] = (0, 0);
+        }
+    }
+}
+
+fn exact_sum_equals(left: u32, right: u32, result: u32, subtract: bool) -> bool {
+    let (left_significand, left_exponent) = finite_dyadic(left).expect("finite operand");
+    let (mut right_significand, right_exponent) = finite_dyadic(right).expect("finite operand");
+    let (result_significand, result_exponent) = finite_dyadic(result).expect("finite result");
+    if subtract {
+        right_significand = -right_significand;
+    }
+    dyadic_sum_is_zero([
+        (left_significand, left_exponent),
+        (right_significand, right_exponent),
+        (-result_significand, result_exponent),
+    ])
+}
+
+fn exact_product_equals(left: u32, right: u32, result: u32) -> bool {
+    let Some((left_significand, left_exponent)) = finite_dyadic(left) else {
+        return false;
+    };
+    let Some((right_significand, right_exponent)) = finite_dyadic(right) else {
+        return false;
+    };
+    let Some((result_significand, result_exponent)) = finite_dyadic(result) else {
+        return false;
+    };
+    dyadic_sum_is_zero([
+        (
+            left_significand * right_significand,
+            left_exponent + right_exponent,
+        ),
+        (-result_significand, result_exponent),
+        (0, 0),
+    ])
+}
+
+fn finite_inexact_sum(left: u32, right: u32, result: u32, subtract: bool) -> bool {
+    finite_dyadic(left).is_some()
+        && finite_dyadic(right).is_some()
+        && finite_dyadic(result).is_some()
+        && !exact_sum_equals(left, right, result, subtract)
+}
+
+fn finite_inexact_product(left: u32, right: u32, result: u32) -> bool {
+    finite_dyadic(left).is_some()
+        && finite_dyadic(right).is_some()
+        && finite_dyadic(result).is_some()
+        && !exact_product_equals(left, right, result)
+}
+
+fn finite_inexact_quotient(left: u32, right: u32, result: u32) -> bool {
+    finite_dyadic(left).is_some()
+        && finite_dyadic(right).is_some()
+        && finite_dyadic(result).is_some()
+        && f32::from_bits(right) != 0.0
+        && !exact_product_equals(result, right, left)
 }
 
 fn fp_sd(first: u16, second: u16) -> u8 {
@@ -805,6 +981,19 @@ fn validate_extension_state(state: &CortexM4State) -> Result<(), CortexM4Error> 
         return Err(CortexM4Error::UnsupportedFpscr { value: state.fpscr });
     }
     Ok(())
+}
+
+#[cfg(test)]
+thread_local! {
+    static FAIL_FINAL_STATE_SNAPSHOT_ONCE: Cell<bool> = const { Cell::new(false) };
+}
+
+fn snapshot_final_state(state: &CortexM4State) -> Result<CortexM4State, CortexM4Error> {
+    #[cfg(test)]
+    if FAIL_FINAL_STATE_SNAPSHOT_ONCE.with(|fail| fail.replace(false)) {
+        return Err(CortexM4Error::Core(CortexM3Error::AllocationFailed));
+    }
+    try_clone_state(state)
 }
 
 fn try_clone_state(state: &CortexM4State) -> Result<CortexM4State, CortexM4Error> {
@@ -1152,5 +1341,25 @@ pub mod encoding {
     #[must_use]
     pub const fn vmsr(rt: u8) -> [u16; 2] {
         [0xeee1, ((rt as u16 & 0xf) << 12) | 0x0a10]
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn final_state_snapshot_allocation_failure_rolls_back_run() {
+        let mut simulator = CortexM4Simulator::new();
+        simulator
+            .load(&core_encoding::program(&[core_encoding::bkpt(0)]), 0x100)
+            .unwrap();
+        let before = simulator.get_state();
+        FAIL_FINAL_STATE_SNAPSHOT_ONCE.with(|fail| fail.set(true));
+        assert_eq!(
+            simulator.run(1),
+            Err(CortexM4Error::Core(CortexM3Error::AllocationFailed))
+        );
+        assert_eq!(simulator.get_state(), before);
     }
 }

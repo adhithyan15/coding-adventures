@@ -308,6 +308,53 @@ fn compare_and_status_transport_cover_fpscr_nzcv() {
 }
 
 #[test]
+fn compare_distinguishes_quiet_and_signaling_nan_invalid_status() {
+    let mut quiet = loaded_fpu(&words(&[vcmp_f32(0, 1)]));
+    quiet.write_s_register(0, 0x7fc0_0001).unwrap();
+    quiet.write_s_register(1, 1.0_f32.to_bits()).unwrap();
+    quiet.step().unwrap();
+    assert_eq!(quiet.get_state().fpscr >> 28, 0b0011);
+    assert_eq!(quiet.get_state().fpscr & 1, 0);
+
+    let mut signaling = loaded_fpu(&words(&[vcmp_f32(0, 1)]));
+    signaling.write_s_register(0, 0x7f80_0001).unwrap();
+    signaling.write_s_register(1, 1.0_f32.to_bits()).unwrap();
+    signaling.step().unwrap();
+    assert_eq!(signaling.get_state().fpscr >> 28, 0b0011);
+    assert_ne!(signaling.get_state().fpscr & 1, 0);
+}
+
+#[test]
+fn binary32_status_uses_exact_dyadic_remainders() {
+    let mut wide_gap = loaded_fpu(&words(&[vadd_f32(0, 1, 2)]));
+    wide_gap.write_s_register(1, 1.0_f32.to_bits()).unwrap();
+    wide_gap.write_s_register(2, 1).unwrap();
+    wide_gap.step().unwrap();
+    assert_eq!(wide_gap.read_s_register(0).unwrap(), 1.0_f32.to_bits());
+    assert_ne!(wide_gap.get_state().fpscr & (1 << 4), 0);
+    assert_eq!(wide_gap.get_state().fpscr & (1 << 3), 0);
+
+    let mut underflow = loaded_fpu(&words(&[vdiv_f32(0, 1, 2)]));
+    underflow.write_s_register(1, 1).unwrap();
+    underflow.write_s_register(2, 2.0_f32.to_bits()).unwrap();
+    underflow.step().unwrap();
+    assert_eq!(underflow.read_s_register(0).unwrap(), 0);
+    assert_ne!(underflow.get_state().fpscr & (1 << 4), 0);
+    assert_ne!(underflow.get_state().fpscr & (1 << 3), 0);
+
+    let mut exact_subnormal = loaded_fpu(&words(&[vdiv_f32(0, 1, 2)]));
+    exact_subnormal
+        .write_s_register(1, f32::MIN_POSITIVE.to_bits())
+        .unwrap();
+    exact_subnormal
+        .write_s_register(2, 2.0_f32.to_bits())
+        .unwrap();
+    exact_subnormal.step().unwrap();
+    assert_eq!(exact_subnormal.read_s_register(0).unwrap(), 0x0040_0000);
+    assert_eq!(exact_subnormal.get_state().fpscr & ((1 << 4) | (1 << 3)), 0);
+}
+
+#[test]
 fn floating_point_exception_flags_and_nan_are_deterministic() {
     let code = words(&[
         vdiv_f32(0, 1, 2),

@@ -42,6 +42,10 @@ The bounded FPU uses IEEE-754 binary32 host operations under round-to-nearest,
 ties-to-even. It canonicalizes NaN results, records invalid/divide-by-zero/
 overflow/underflow/inexact cumulative exception flags, implements FPSCR NZCV
 comparison results, and rejects unsupported FPSCR control modes atomically.
+Exception classification compares exact signed dyadic significands and
+exponents rather than narrowing an exact binary32 expression through `f64`;
+quiet NaN comparison is unordered without invalid, while signaling NaN
+comparison is unordered and records invalid.
 Denormal flushing, alternative rounding modes, fused multiply-add, conversion,
 load/store, and lazy context stacking are explicit later extensions rather
 than approximated behavior.
@@ -81,7 +85,8 @@ integer registers.
 Bounded `run` retains at most 64 complete traces under an 8 MiB snapshot budget
 and rolls back the whole run on a fault or step-limit exhaustion. `execute`
 preflights retention and atomically performs load plus run. Nested state
-snapshots use fallible allocation.
+snapshots use fallible allocation. Failure to allocate the successful run's
+final-state snapshot also rolls the entire run back to its entry state.
 
 ## 5. Completion gate
 
@@ -94,8 +99,8 @@ The cell is complete only when it has:
    FPU state/arithmetic/compare/status behavior;
 3. transactional load, restore, step, run, execute, fetch, bounds, FPU
    configuration, and retention tests;
-4. release line coverage above 80 percent (completion baseline: 91.08 percent,
-   766/841 lines); and
+4. release line coverage above 80 percent (completion baseline: 91.93 percent,
+   911/991 lines); and
 5. Rustfmt, strict Clippy, rustdoc, release tests, BUILD integration, lessons
    validation, affected-package checks, and independent security review before
    publication.
