@@ -44,6 +44,9 @@ shift, bitmask, size, and operation combinations fail closed.
 Repository Boolean gates implement decode predicates, muxes, bitwise ALU
 operations, equality, extension, and selection. Ripple-carry networks implement
 PC sequencing, targets, effective addresses, ADD/SUB, comparison, and NZCV.
+For both 32-bit and 64-bit ADD/SUB operations, the selected-width ripple
+network's carry output is the architectural C flag. A host-integer comparison
+of an already assembled sum is not a valid substitute for that carry wire.
 Fixed gate barrel networks implement 32/64-bit shifts, rotates, and replicated
 logical bitmasks. Fixed-width shift-add multiplication and restoring division
 networks implement low and high products, signed/unsigned division, division by
