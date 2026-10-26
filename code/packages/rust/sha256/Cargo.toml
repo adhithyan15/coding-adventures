@@ -5,3 +5,4 @@ edition = "2021"
 description = "SHA-256 cryptographic hash function (FIPS 180-4) implemented from scratch"
 
 [dependencies]
+coding_adventures_zeroize = { path = "../zeroize" }
