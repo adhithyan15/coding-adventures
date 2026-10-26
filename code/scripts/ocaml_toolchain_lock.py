@@ -132,7 +132,7 @@ GENERIC_BOOTSTRAP_RUN_SHA256 = (
 GENERIC_MATRIX_PLAN_RUN_SHA256 = (
     # NN51 adds only native C++ dense training's dependency-aware Windows lane.
     # OCaml predicates/bootstrap/mutation rejection remain unchanged and pinned.
-    "cd530f4ea60fc69003286525420e5f84edfeae47be355bae5bcad183f7e69474"
+    "020779b966f41a27ec7c83ee0c42074cde01b8fcbb3546b1e1aac9389dd68a67"
 )
 EXPECTED_RUN_METADATA = {
     "contract.validate": {"shell": None, "env": None},

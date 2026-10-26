@@ -12,8 +12,10 @@ the incompatible replacement hooks, plus actual command tests. Local coverage:
 after 17 receipt falsifications (70/71, missed-rejection sentinel unrun).
 Installed CMake consumer compiled/linked/ran. These are Windows-local results,
 not actual Linux/macOS/MSVC CI or seven-native exchange. Production planner
-execution confirmed Windows was missing for cpp/neural-framework; a narrow
-training owner now retains the existing runner/bootstrap/required BUILD roll-up
+execution omitted Windows for an isolated cpp/neural-framework plan. The actual
+Go diagnostic closure also includes its parser, retaining Windows but not an
+explicit training step. A narrow training owner now retains the existing
+runner/bootstrap/required BUILD roll-up
 with real cl+clang-cl numerical/schema/command validation. Seven production
 planner/ownership tests cover the change. OCaml planner identity is refreshed
 without changing its scheduling, pins or mutation-rejection checks. Teaching,

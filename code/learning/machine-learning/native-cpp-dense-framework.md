@@ -69,11 +69,17 @@ checks and actual command validation without incompatible global allocation
 replacement hooks. Standard runs retain the full sweep. The installed CMake
 consumer compiled, linked and ran prediction, update and checkpoint reload.
 
-The production CI planner initially omitted Windows for a native C++ consumer.
-NN51 adds a narrowly owned training predicate/actual cl+clang-cl step to the
+The production CI planner omitted Windows for an isolated training-only plan.
+The actual Go diagnostic closure also selects its parser prerequisite, retaining
+Windows but only the parser's explicit native step. NN51 adds a narrowly owned
+training predicate/actual cl+clang-cl step to the
 existing required BUILD roll-up, with executable planner/ownership regressions.
 OCaml scheduling/pins remain unchanged; its exact reviewed planner digest is
-refreshed with mutation checks. Actual Linux/macOS/MSVC CI, final independent
+refreshed with mutation checks. The actual Go diagnostic plan plus production
+matrix helper selects all three platforms and both native C++ owners. Local
+full-inventory validation was blocked by unrelated sparse exemption roots; only
+the diagnostic plan used `-validate-build-files=false`, never production CI.
+Actual Linux/macOS/MSVC CI, final independent
 review, publication and merge remain pending; no local result substitutes for
 those. UBSan has not run successfully on this local Windows toolchain.
 

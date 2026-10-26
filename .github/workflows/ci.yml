@@ -529,8 +529,8 @@ jobs:
             or "cpp/bounded-json" in windows_affected
           )
           print("needs_cpp_bounded_json_windows=" + str(cpp_bounded_json_windows).lower())
-          # NN51 training is a separate native owner: its consumer change does
-          # not make its parser dependency affected in the reverse closure.
+          # NN51 owns actual training execution, not merely a parser's Windows
+          # step. Retain its lane even in a plan selecting the trainer alone.
           cpp_neural_framework_windows = (
             not isinstance(windows_affected, list)
             or "cpp/neural-framework" in windows_affected
