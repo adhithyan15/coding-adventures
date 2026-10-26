@@ -18102,3 +18102,11 @@ test, release-build, coverage, capability-schema, package-planner, and exact-
 head independent-review gates to pass again after that rebase. The post-merge
 reconciliation also records the verified #18259 and #18260 receipts and removes
 #18260 from the live active-PR list; it changes no package behavior.
+
+Exact-head independent review then passed at
+`a6bb4b12daff8b350758ec62bf551bfb1caae4e0`. Draft PR #18312 was opened only
+to obtain its durable number; this receipt records it as the third live parity
+PR beside #18183 and #18293. The draft must not become ready until the
+metadata-only receipt head is independently reviewed. Auto-merge remains
+disabled until the final ready head is conflict-free and every required check
+is terminal acceptable.
