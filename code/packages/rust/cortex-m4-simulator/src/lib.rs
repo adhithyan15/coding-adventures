@@ -299,7 +299,7 @@ impl CortexM4Simulator {
         let mut core = CortexM3Simulator::new();
         core.restore(try_clone_core(&before.core)?)?;
         let core_trace = core.step()?;
-        let mut next = before.clone();
+        let mut next = try_clone_state(&before)?;
         next.core = core_trace.state_after;
         let trace = StepTrace {
             pc_before: core_trace.pc_before,
@@ -986,6 +986,7 @@ fn validate_extension_state(state: &CortexM4State) -> Result<(), CortexM4Error> 
 #[cfg(test)]
 thread_local! {
     static FAIL_FINAL_STATE_SNAPSHOT_ONCE: Cell<bool> = const { Cell::new(false) };
+    static FAIL_STATE_CLONE_ON_CALL: Cell<usize> = const { Cell::new(0) };
 }
 
 fn snapshot_final_state(state: &CortexM4State) -> Result<CortexM4State, CortexM4Error> {
@@ -997,6 +998,18 @@ fn snapshot_final_state(state: &CortexM4State) -> Result<CortexM4State, CortexM4
 }
 
 fn try_clone_state(state: &CortexM4State) -> Result<CortexM4State, CortexM4Error> {
+    #[cfg(test)]
+    if FAIL_STATE_CLONE_ON_CALL.with(|fail| {
+        let remaining = fail.get();
+        if remaining == 0 {
+            false
+        } else {
+            fail.set(remaining - 1);
+            remaining == 1
+        }
+    }) {
+        return Err(CortexM4Error::Core(CortexM3Error::AllocationFailed));
+    }
     Ok(CortexM4State {
         core: try_clone_core(&state.core)?,
         ge: state.ge,
@@ -1347,6 +1360,25 @@ pub mod encoding {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn inherited_next_state_allocation_failure_is_typed_and_atomic() {
+        let mut simulator = CortexM4Simulator::new();
+        simulator
+            .load(&core_encoding::program(&[core_encoding::movs(0, 7)]), 0x100)
+            .unwrap();
+        let before = simulator.get_state();
+
+        // The inherited path performs one fallible whole-state clone before
+        // fetch, then a second clone for the candidate Cortex-M4 state.  Fail
+        // that candidate allocation deterministically.
+        FAIL_STATE_CLONE_ON_CALL.with(|fail| fail.set(2));
+        assert_eq!(
+            simulator.step(),
+            Err(CortexM4Error::Core(CortexM3Error::AllocationFailed))
+        );
+        assert_eq!(simulator.get_state(), before);
+    }
 
     #[test]
     fn final_state_snapshot_allocation_failure_rolls_back_run() {

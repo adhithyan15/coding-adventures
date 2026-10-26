@@ -99,8 +99,8 @@ The cell is complete only when it has:
    FPU state/arithmetic/compare/status behavior;
 3. transactional load, restore, step, run, execute, fetch, bounds, FPU
    configuration, and retention tests;
-4. release line coverage above 80 percent (completion baseline: 91.93 percent,
-   911/991 lines); and
+4. release line coverage above 80 percent (completion baseline: 92.10 percent,
+   933/1013 lines); and
 5. Rustfmt, strict Clippy, rustdoc, release tests, BUILD integration, lessons
    validation, affected-package checks, and independent security review before
    publication.
