@@ -18231,9 +18231,10 @@ Select only the first owner as local `in_progress` on branch
 `codex/haskell-itf-stack-windows-build-front-coverage` from exact origin/main
 `aa568304c93e44d733535cdb3209793041ff9503`. Replace only the unconditional
 Windows skips in Haskell `barcode-layout-1d` and `itf` with the established
-fail-closed Cabal discovery and `cabal test all --builddir=dist` command. Keep
-the existing Unix fronts, Cabal package graphs, `tests: True` settings,
-production APIs, and encoder behavior unchanged.
+toolchain-optional Cabal route: skip successfully when Cabal is unavailable,
+and run `cabal test all --builddir=dist` with failures propagated when Cabal is
+present. Keep the existing Unix fronts, Cabal package graphs, `tests: True`
+settings, production APIs, and encoder behavior unchanged.
 
 The same audit found that Haskell, Lua, Perl, Python, Rust, and Swift ITF
 packages still lack the explicit empty required-capability metadata promised
