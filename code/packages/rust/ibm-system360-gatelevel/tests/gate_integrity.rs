@@ -107,31 +107,37 @@ fn matching_delimiter(
     Err(format!("unclosed {opening} delimiter"))
 }
 
-fn top_level_module_sites(tokens: &[String], name: &str) -> Vec<usize> {
-    let mut curly = 0_usize;
-    let mut round = 0_usize;
-    let mut square = 0_usize;
-    let mut sites = Vec::new();
-    for index in 0..tokens.len().saturating_sub(2) {
-        if curly == 0
-            && round == 0
-            && square == 0
-            && tokens[index] == "mod"
-            && tokens[index + 1] == name
-        {
-            sites.push(index);
-        }
-        match tokens[index].as_str() {
-            "{" => curly += 1,
-            "}" => curly = curly.saturating_sub(1),
-            "(" => round += 1,
-            ")" => round = round.saturating_sub(1),
-            "[" => square += 1,
-            "]" => square = square.saturating_sub(1),
-            _ => {}
-        }
+fn require_external_module(source: &str, name: &str, public: bool) -> Result<(), String> {
+    let syntax = syn::parse_file(source)
+        .map_err(|error| format!("validator is not valid Rust syntax: {error}"))?;
+    let modules: Vec<_> = syntax
+        .items
+        .iter()
+        .filter_map(|item| match item {
+            syn::Item::Mod(module) if module.ident == name => Some(module),
+            _ => None,
+        })
+        .collect();
+    if modules.len() != 1 {
+        return Err(format!(
+            "validator must contain exactly one top-level {name} module declaration"
+        ));
     }
-    sites
+    let module = modules[0];
+    let visibility_matches = matches!(
+        (&module.vis, public),
+        (syn::Visibility::Public(_), true) | (syn::Visibility::Inherited, false)
+    );
+    if !visibility_matches
+        || !module.attrs.is_empty()
+        || module.content.is_some()
+        || module.semi.is_none()
+    {
+        return Err(format!(
+            "validator {name} must be an exact un-attributed external module declaration"
+        ));
+    }
+    Ok(())
 }
 
 fn top_level_opcode_arms(body: &[String]) -> Result<Vec<MatchArmTokens>, String> {
@@ -314,31 +320,8 @@ fn verify_branch_structure(networks: &str, executor: &str, validator: &str) -> R
         return Err("executor gate-module binding is shadowed or changed".to_owned());
     }
 
-    let validator_tokens = rust_tokens(validator);
-    let executor_modules = top_level_module_sites(&validator_tokens, "executor");
-    if executor_modules.len() != 1
-        || validator_tokens[executor_modules[0] + 2] != ";"
-        || executor_modules[0] == 0
-        || validator_tokens[executor_modules[0] - 1] != ";"
-        || validator_tokens
-            .windows(2)
-            .any(|tokens| tokens == ["as", "executor"])
-    {
-        return Err(
-            "validator executor-module binding is shadowed, attributed, or aliased".to_owned(),
-        );
-    }
-    let gate_modules = top_level_module_sites(&validator_tokens, "gates");
-    if gate_modules.len() != 1
-        || validator_tokens[gate_modules[0] + 2] != ";"
-        || gate_modules[0] == 0
-        || validator_tokens[gate_modules[0] - 1] != "pub"
-        || validator_tokens
-            .windows(2)
-            .any(|tokens| tokens == ["as", "gates"])
-    {
-        return Err("validator gate-module binding is shadowed or attributed".to_owned());
-    }
+    require_external_module(validator, "executor", false)?;
+    require_external_module(validator, "gates", true)?;
 
     require_exact_body(
         networks,
@@ -991,6 +974,39 @@ define_oracle_executor!(executor);"#,
         1,
     );
     assert!(verify_branch_structure(networks, executor, &macro_generated_oracle_executor).is_err());
+
+    let character_literal_depth_confuser = validator.replacen(
+        "mod executor;",
+        r#"macro_rules! discard_routing_items {
+    ($($discarded:item)*) => {};
+}
+discard_routing_items! {
+    const SYNTHETIC_CLOSING_DELIMITER: char = '}';
+    mod executor;
+}
+macro_rules! define_oracle_executor {
+    ($name:ident) => {
+        mod $name {
+            use super::{StepTrace, System360Error, System360Simulator, System360State};
+
+            pub(crate) fn execute(
+                before: &System360State,
+                _trace: &StepTrace,
+            ) -> Result<System360State, System360Error> {
+                let mut oracle = System360Simulator::new();
+                oracle.restore(before.clone())?;
+                let _ = oracle.step()?;
+                Ok(oracle.get_state())
+            }
+        }
+    };
+}
+define_oracle_executor!(executor);"#,
+        1,
+    );
+    assert!(
+        verify_branch_structure(networks, executor, &character_literal_depth_confuser).is_err()
+    );
 
     let macro_generated_gates = validator.replacen(
         "pub mod gates;",

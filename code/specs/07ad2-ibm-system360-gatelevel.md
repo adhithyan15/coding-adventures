@@ -108,8 +108,9 @@ validated, oracle-compared gate result reaches the DFF commit path.
 The crate root must bind `executor` directly to the reviewed file-backed
 module; attributed paths, aliases, duplicate routing modules, and inline
 oracle-backed replacements are structural-test failures. Module identity is
-resolved only from exact top-level declarations, so a literal declaration
-discarded inside macro input cannot authorize a macro-generated live
-`executor` or `gates` module.
+resolved from parsed Rust syntax and only exact top-level external declarations,
+so a literal declaration discarded inside macro input cannot authorize a
+macro-generated live `executor` or `gates` module, and delimiter-shaped
+character literals cannot counterfeit top-level scope.
 Rustfmt, strict Clippy, rustdoc, lesson validation, and the
 package BUILD are green. Package line coverage is 93.01% (1,662/1,787).

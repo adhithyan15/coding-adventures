@@ -22,7 +22,8 @@ All notable changes to this package will be documented in this file.
   aliased, duplicate, or inline oracle-backed routing modules that leave the
   reviewed executor source dead. Top-level delimiter-aware module discovery
   also rejects macro-discarded declarations paired with macro-generated live
-  `executor` or `gates` modules.
+  `executor` or `gates` modules. Routing identity is parsed from the Rust AST,
+  so character literals containing delimiters cannot confuse module scope.
 
 ## [0.1.0] - 2026-10-24
 

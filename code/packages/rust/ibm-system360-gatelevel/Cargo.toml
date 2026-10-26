@@ -9,3 +9,6 @@ license = "MIT"
 arithmetic = { path = "../arithmetic" }
 logic-gates = { path = "../logic-gates" }
 ibm-system360-simulator = { path = "../ibm-system360-simulator" }
+
+[dev-dependencies]
+syn = { version = "2", features = ["full"] }
