@@ -69,7 +69,13 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next: #18250 — preserve Qt fixed non-shrinking rail geometry.**
+**Next: #18264 — publish and audit the v0.5.12 Qt rail checkpoint.**
+The rail repair #18250 merged in #18251 with all payload validations passing
+in run 40230057835. Prepare its compatible patch, then publish only after
+preparation merges and audit immutable provenance, assets, and checksums.
+Preparation is not publication; artifact and unsigned-platform limits stay unchanged.
+
+**Completed fidelity slice: #18250 — Qt fixed non-shrinking rail geometry.**
 The v0.5.11 checkpoint (#18238) is published and audited: run 40225950352,
 source `bd533925647b7fbac74eba35e611a8ba3930757f`, 13 assets / 12 checksums /
 11 manifest payloads. Return to bounded native fidelity under #12022: preserve
