@@ -43,6 +43,14 @@ must deliberately corrupt every public observer seam to prove that reset,
 restore, instruction execution, snapshots, and typed faults remain driven by
 DFF Q. A hard-coded count or self-referential field comparison is insufficient.
 
+Before this package can be implemented, `cortex-m3-gatelevel` must expose a
+narrow gate-to-gate integration module. Its physical-storage inventory entry
+point must derive named bit counts from the lengths of the production DFF
+containers. Returning `CORTEX_M3_DFF_COUNT`, or summing constants that are not
+checked against those containers, is not admissible evidence. The integration
+module is for repository gate companions, not an additional application-level
+CPU API, and it must not expose mutable access to the authoritative DFFs.
+
 ## 3. Gate transition engine
 
 The package delegates an instruction to the inherited Cortex-M3 gate engine
@@ -71,6 +79,27 @@ of the Cortex-M3 gate package. Architectural data results and selections must
 pass through fixed-width repository gate helpers before candidate state can
 commit. Host integers are limited to bounded control flow, indexes, validated
 address conversion, and trace bookkeeping.
+
+The inherited package's gate-to-gate integration module must provide all of
+the following before M7 implementation starts:
+
+- fallible snapshot into caller-preallocated storage, without an intermediate
+  infallible full-memory clone;
+- validated restore into a candidate and an explicit commit operation, so the
+  M7 wrapper can settle inherited and GE candidates before either clocks;
+- a transactional delegated-step operation that writes an exact trace into
+  caller-preallocated storage and leaves the inherited DFFs untouched on every
+  error;
+- preflight sizing for every nested snapshot/trace buffer used by step, run,
+  execute, and public read/write helpers; and
+- the same deterministic allocation-failure controller used by the production
+  fallible allocation adapter, plus the derived storage-inventory hook defined
+  above.
+
+These capabilities may be grouped into opaque scratch/candidate types, but
+they must be callable across the crate boundary. Copying the M3 engine,
+maintaining a second M3 state, or relying on its current infallible public
+`get_state` path is forbidden.
 
 ## 4. Status transport and exact compatibility
 
@@ -103,6 +132,15 @@ step budget. Deterministic allocation-failure seams must cover inherited and
 new state, traces, differential conversion, and rollback without adding
 production-only shortcuts.
 
+The DSP network must also have a compiled-definition-bound structural test
+surface. Production decode, add/subtract, saturation, lane, GE, Q, IT, and
+write-enable helpers run through one gate-backend interface. Normal builds bind
+that interface to repository gates. Tests bind the identical compiled helpers
+to a recording/hostile backend that can invert one selected primitive output.
+For every named path, at least one hostile fixture must change the architectural
+result or write enable. A gate-call counter, source-text search, identity gate
+anchor, or an oracle that duplicates the production predicate is insufficient.
+
 ## 6. Explicit exclusions and follow-up backlog
 
 The exclusions are exactly the functional cell's: the remaining Armv7E-M DSP
@@ -122,15 +160,24 @@ The gate cell is complete only when it:
    observer-divergence tests for inherited and GE state;
 2. proves production independence from both functional simulators and prevents
    DSP encodings/reserved neighbors from escaping into inherited decode;
-3. provides gate witnesses for positive/negative QADD/QSUB saturation,
-   nonsaturation, sticky Q, every SADD8/UADD8 lane and GE outcome, write
-   suppression, IT conditions, and APSR GE transport;
+3. binds production DSP helpers to the repository gate backend and proves with
+   recording/hostile-backend fixtures that decode, QADD/QSUB result,
+   saturation, sticky Q, SADD8/UADD8 lane result, carry/sign-to-GE, IT write
+   enable, destination write enable, and GE transport depend on those gates;
 4. exercises every inherited primary and subfamily through the reused M3 gate
    engine and compares the complete Spec 07an result/error/trace/state contract
    with the checked Cortex-M7 oracle;
-5. proves atomic invalid restore/load/fetch/data/control/decode, post-halt and
+5. independently exhausts all 65,536 ordered byte-operand pairs for signed and
+   unsigned lane sum/result/GE, all 4,096 `Rd/Rn/Rm` field triples for each DSP
+   encoding including every reserved-PC neighbor, and reduced-width exhaustive
+   add/sub carry, sign, overflow, saturation, and sticky-Q truth quadrants;
+6. proves atomic invalid restore/load/fetch/data/control/decode, post-halt and
    sleep behavior, retention, allocation failure, whole-run rollback, and
    exact pre-write fetched bytes; and
-6. passes release tests, package-scoped formatting, strict Clippy, rustdoc,
+7. proves inherited lifecycle composition through the narrow M3 integration
+   module, including preallocated snapshots, derived physical inventory,
+   candidate commit, delegated traces, and deterministic failure at every
+   outer and nested allocation site; and
+8. passes release tests, package-scoped formatting, strict Clippy, rustdoc,
    package BUILD, lessons validation, affected-package checks, latest-main
    ancestry, independent exact-head review, and more than 80% line coverage.
