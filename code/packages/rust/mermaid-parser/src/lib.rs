@@ -13612,7 +13612,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
         let entity_id = parse_er_name(&mut cursor)?;
         let mut entity_label = entity_id.clone();
         if cursor.consume_if("LBRACKET").is_some() {
-            entity_label = parse_er_name(&mut cursor)?;
+            entity_label = normalize_mermaid_line_breaks(&parse_er_name(&mut cursor)?);
             cursor
                 .consume_if("RBRACKET")
                 .ok_or_else(|| token_error(cursor.current(), "expected ']' after ER alias"))?;

@@ -158,6 +158,7 @@ Mermaid's block lexer boundary: key-prefixed words remain valid, while exact key
 markers, numeric tokens, and quoted strings do not become types.
 Attribute comments normalize Mermaid HTML break variants to semantic newlines,
 with line-aware structural measurement and backend-neutral text lowering. ER
+entity aliases apply the same normalization with multiline header geometry. ER
 remains partial while the rest of the pinned upstream syntax and visual corpus
 is incomplete.
 
