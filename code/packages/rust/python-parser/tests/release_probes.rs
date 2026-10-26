@@ -77,7 +77,17 @@ fn supported_releases_are_exactly_the_paired_inventory_rows() {
 #[test]
 fn every_paired_row_claims_stage_p_for_its_subset() {
     for row in paired_rows() {
-        let subset = if PY2_RELEASES.contains(&row["release"].as_str()) { "py2-int-print" } else { "py-int-print" };
+        // The pair's grammar is the widest subset it parses: Python 2's
+        // integer print statement, 3.0a1's integer-only grammar, or (3.5.10
+        // and later) the float grammar, whose `atom` admits FLOAT.
+        let release = row["release"].as_str();
+        let subset = if PY2_RELEASES.contains(&release) {
+            "py2-int-print"
+        } else if release == "3.0a1" {
+            "py-int-print"
+        } else {
+            "py-float-print"
+        };
         assert_eq!(
             (
                 row["grammar_status"].as_str(),
