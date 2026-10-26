@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:f84b5e227567366a",
+  "lessonIds": [
+    "SA-C303-durbhiksam",
+    "SA-C303-mahamari",
+    "SA-C303-ksinah",
+    "SA-C303-vyapnoti",
+    "SA-C303-mlayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch303.txt",
+  "json": "sanskrit/narration/ch303.json",
+  "textHash": "fnv1a64:71bb195f9583d3dd",
+  "jsonHash": "fnv1a64:2c1204f57565ea64",
+  "findings": []
+}

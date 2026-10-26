@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:05698ab97f891afa",
+  "lessonIds": [
+    "SA-C398-ghattah",
+    "SA-C398-avagahate",
+    "SA-C398-sangamah",
+    "SA-C398-pavanah",
+    "SA-C398-proksati"
+  ],
+  "tex": "sanskrit/book/chapters/ch398-at-the-river-steps.tex"
+}

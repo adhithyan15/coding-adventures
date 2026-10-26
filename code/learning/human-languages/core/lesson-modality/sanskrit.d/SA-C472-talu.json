@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C472-talu",
+    "language": "sanskrit",
+    "chapter": 472,
+    "sequence": 27230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2b6fc024726f488"
+  },
+  "findings": []
+}

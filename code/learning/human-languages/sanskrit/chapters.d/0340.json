@@ -1,0 +1,19 @@
+{
+  "chapter": 340,
+  "title": "Why It Happened",
+  "label": "ch:sa-why-it-happened",
+  "canDo": "I can say what caused something and what it led to.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C340-janayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can say what caused something and what it led to.",
+    "assesses": [
+      "SA-LEX-C340-KARANA340-03",
+      "SA-LEX-C340-KARANA340-04",
+      "SA-LEX-C340-KARANA340-05"
+    ]
+  }
+}

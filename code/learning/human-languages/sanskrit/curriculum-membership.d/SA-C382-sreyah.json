@@ -1,0 +1,11 @@
+{
+  "id": "SA-C382-sreyah",
+  "pathSegment": "SA-PATH-382-HITA382",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-382-HITA382",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:8f3e6682a8d8ceb1",
+  "lessonIds": [
+    "SA-C514-parivesayati",
+    "SA-C514-bhojayati",
+    "SA-C514-asnati",
+    "SA-C514-ucchistam",
+    "SA-C514-pidhanam"
+  ],
+  "tex": "sanskrit/book/chapters/ch514-serving-the-meal.tex"
+}

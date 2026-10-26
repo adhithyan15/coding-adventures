@@ -1,0 +1,11 @@
+{
+  "id": "SA-C471-mundayati",
+  "pathSegment": "SA-PATH-471-MASTISKA471",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-471-MASTISKA471",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:ec094bc14ad1c198",
+  "lessonIds": [
+    "SA-C505-mrd",
+    "SA-C505-mrnmayah",
+    "SA-C505-mrdnati",
+    "SA-C505-apakah",
+    "SA-C505-akarah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch505.txt",
+  "json": "sanskrit/narration/ch505.json",
+  "textHash": "fnv1a64:259f4b99456047d0",
+  "jsonHash": "fnv1a64:060aacd07cf41c99",
+  "findings": []
+}

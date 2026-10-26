@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C518-rekha",
+    "language": "sanskrit",
+    "chapter": 518,
+    "sequence": 29840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbf6b87cbd5f02c0"
+  },
+  "findings": []
+}

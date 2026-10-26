@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:1358bb0517063d0f",
+  "lessonIds": [
+    "SA-C495-kisorah",
+    "SA-C495-yauvanam",
+    "SA-C495-praudhah",
+    "SA-C495-varayati",
+    "SA-C495-brahmacari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch495.txt",
+  "json": "sanskrit/narration/ch495.json",
+  "textHash": "fnv1a64:0d054690f22ad133",
+  "jsonHash": "fnv1a64:19e5c284147c8c2f",
+  "findings": []
+}

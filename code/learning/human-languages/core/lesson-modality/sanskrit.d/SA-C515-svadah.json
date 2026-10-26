@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C515-svadah",
+    "language": "sanskrit",
+    "chapter": 515,
+    "sequence": 29660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23b779ec72320855"
+  },
+  "findings": []
+}

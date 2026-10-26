@@ -1,0 +1,11 @@
+{
+  "id": "SA-C282-utsukah",
+  "pathSegment": "SA-PATH-282-EXPERIENCE282",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-282-EXPERIENCE282",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C430-grahakah",
+  "pathSegment": "SA-PATH-430-HATTA430",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-430-HATTA430",
+      "order": 3
+    }
+  ]
+}

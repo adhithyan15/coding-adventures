@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:512dc83104517e85",
+  "lessonIds": [
+    "SA-C388-vyavaharati",
+    "SA-C388-upeksate",
+    "SA-C388-saumyah",
+    "SA-C388-vrtha",
+    "SA-C388-adarsah"
+  ],
+  "tex": "sanskrit/book/chapters/ch388-dealing-with-people.tex"
+}

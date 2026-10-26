@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C426-janakirnah",
+    "language": "sanskrit",
+    "chapter": 426,
+    "sequence": 24650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0acbe1fa35e84e5e"
+  },
+  "findings": []
+}

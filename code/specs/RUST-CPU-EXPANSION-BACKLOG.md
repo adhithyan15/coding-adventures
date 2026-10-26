@@ -37,15 +37,15 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | DEC PDP-8 / PDP-8/E | merged | merged | Complete; PR #18120 landed. |
 | P0 | EDSAC | merged | merged | Complete; gate PR #18166 landed. |
 | P0 | IAS machine | merged | merged | Complete; gate PR #18266 landed. |
-| P0 | IBM System/360 | merged | merged | Complete. |
-| P0 | Motorola MC6800 | merged | merged | Complete. |
-| P0 | Intel 8085 | merged | merged | Complete. |
+| P0 | IBM System/360 | merged | merged | Complete; gate PR #18181 landed. |
+| P0 | Motorola MC6800 | merged | merged | Complete; gate PR #18182 landed. |
+| P0 | Intel 8085 | merged | merged | Complete; gate PR #18257 landed. |
 | P0 | DEC VAX-11/780 | merged | merged | Complete; gate PR #18263 landed. |
 | P0 | Motorola 6809 | merged | merged | Complete; gate PR #18269 landed. |
 | P0 | OpenRISC 1000 | merged | merged | Complete; gate PR #18276 landed. |
-| P0 | OpenSPARC T1 | merged | in progress | Gate specification descends from public OpenSPARC T1 RTL. |
-| P0 | Arm Cortex-M0 | merged | ready | Independent Armv6-M gate cell can start now. |
-| P0 | Arm Cortex-M3 | merged | ready | Independent Armv7-M gate cell can start now. |
+| P0 | OpenSPARC T1 | merged | merged | Complete; gate PR #18295 landed. |
+| P0 | Arm Cortex-M0 | merged | PR #18296 | Conflict reconciliation in progress; squash auto-merge remains armed. |
+| P0 | Arm Cortex-M3 | merged | merged | Complete; gate PR #18297 landed. |
 
 ## P0 gate-integrity repair queue
 
@@ -69,25 +69,25 @@ boundary explicitly classifies all 20 inherited Cortex-M3 instruction
 families, differentially witnesses inherited integer, privilege, IT, memory,
 exclusive, branch, power, and lifecycle state, and covers the bounded DSP and
 optional FPv4-SP extension. All 30 release tests, strict Clippy/rustdoc, and
-92.81% line coverage (994/1071) are green. Cortex-M7 is merged, while
-Cortex-M23 is the next queued publication cell and Cortex-M33 is already in
-review.
+92.81% line coverage (994/1071) are green. Cortex-M7 and Cortex-M23 are
+merged, while Cortex-M33 is already in review.
 
 | Order | Target | Public basis | Planned boundary |
 |---:|---|---|---|
-| 1 | Arm Cortex-M7 (merged) | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
-| 2 | Arm Cortex-M23 (in publication) | Armv8-M manuals | Baseline profile and security-state boundary. |
-| 3 | Arm Cortex-M33 (in review) | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
-| 4 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
-| 5 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
-| 6 | IBM System/370 | published Principles of Operation | System/360-compatible extension boundary. |
-| 7 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
-| 8 | PA-RISC 1.1 | published architecture manuals | Checked integer core and delayed-control boundary. |
-| 9 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
-| 10 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
-| 11 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
-| 12 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
-| 13 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
+| 1 | Arm Cortex-M4 (in publication) | Armv7E-M manuals | Cortex-M3 integer base plus documented DSP/FPU boundary. |
+| 2 | Arm Cortex-M7 (merged) | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
+| 3 | Arm Cortex-M23 (merged) | Armv8-M manuals | Bounded baseline/security-state cell complete; exclusive encodings and exceptions remain follow-up work. |
+| 4 | Arm Cortex-M33 (in review) | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
+| 5 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
+| 6 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
+| 7 | IBM System/370 | published Principles of Operation | System/360-compatible extension boundary. |
+| 8 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
+| 9 | PA-RISC 1.1 | published architecture manuals | Checked integer core and delayed-control boundary. |
+| 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
+| 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
+| 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
+| 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
+| 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
 
 ## Discovered follow-up work
 
@@ -95,9 +95,16 @@ review.
 
 | Priority | Target | Finding / next action |
 |---:|---|---|
+| P1 complete locally | PowerPC 601 conditional-branch authority | The host-language BO/CTR/CR predicate is replaced by explicit gate ALU, 32:1 CR mux, polarity, bypass-mux, and final-AND networks. Exhaustive tests cover every BO value and CR selector, both selected-bit polarities, and CTR zero/nonzero boundaries against an independent truth table. Three gate/topology suites, three lifecycle suites, all 239 differential vectors, strict checks, and 94.58% line coverage pass. The counted GPR/LR/CTR/XER/CR/CIA, memory, and HALT storage banks remain private stable-Q authority with no public host-state mirrors. |
+| P1 queued | PowerPC 601 CR/XER update authority | Replace host `Ordering`/Boolean control in CR-field, CR0, CA, and SO propagation with explicit relation wires, masks, muxes, and gates while preserving the public lifecycle. |
+| P1 queued | PowerPC 601 shift/count/divide authority | Replace host slice moves, iterator leading-zero counting, and conditional restoring-divide selection with fixed gate/mux networks, then audit multiply accumulation and record-form updates as one bounded datapath family at a time. |
 | P0 complete locally | MIPS R2000 gate HALT storage | HALT DFF Q is now the sole architectural halt authority; the public boolean remains only as a source-compatible observation mirror and is repaired by simulator mutations. The published storage inventory derives 524,288 memory bits, 1,120 register bits, and one HALT bit from the owned physical containers. Deliberate mirror-divergence, restore, and typed-fault atomicity tests pass alongside 33 unit tests, the 218-vector differential suite, nine lifecycle/integrity tests, and 20 doctests. Strict Clippy/rustdoc, the six-package affected build, and 94.50% line coverage (1,581/1,673) are green. |
 | P1 audit | Remaining completed gate packages with public halt fields | Audit each package before changing it. A public observation field is acceptable only when execution, snapshots, restore, and faults are driven by DFF Q; otherwise add one bounded repair cell and a non-tautological storage inventory. Candidate packages discovered by source scan include ARM1, SPARC V8, Motorola 68000, Intel 8051, Intel 8086, and OpenRISC 1000. |
 
+- Extend the bounded Cortex-M23 core with source-backed Armv8-M-exclusive
+  instructions, encoded SG/BXNS/BLXNS transitions, exception stacking/return,
+  stack-limit registers, and MPU/IDAU composition. Keep NVIC, bus transactions,
+  debug, and timing in later SoC/integration cells.
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,
   bitfield, saturation, dual-register, byte/halfword exclusive, and remaining
   wide Thumb-2 encodings. This is non-blocking for the core lifecycle and SoC

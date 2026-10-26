@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 352,
+  "title": "Harm and No Harm",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:dfeaf2ea74d47e65",
+  "lessons": [
+    {
+      "id": "SA-C352-himsa",
+      "sequence": 20610,
+      "title": "हिंसा (hiṃsā) — violence; harm",
+      "headword": "हिंसा",
+      "romanization": "hiṃsā",
+      "gloss": "violence; harm",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d16da6b7f034950",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for abides by, then the Sanskrit for the bounds of propriety."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हिंसा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिंसा — hiṃsā — \"violence; harm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हिंसा कदापि उचिता न भवति। hiṃsā kadāpi ucitā na bhavati. Violence is not right at any time."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिंसा (hiṃsā) comes from the root √hiṃs, \"to injure\"; MW gives hiṃsā \"injury, harm, hurt, mischief\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiṃsā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiṃsā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiṃsā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiṃsā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiṃsā kadāpi ucitā na bhavati. — Violence is not right at any time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiṃsā kadāpi ucitā na bhavati.* — Violence is not right at any time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for abides by, then the Sanskrit for the bounds of propriety, then say hiṃsā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for abides by, then the Sanskrit for the bounds of propriety, then say *hiṃsā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हिंसा (hiṃsā) mean? (\"Violence; harm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C352-sahisnuh",
+      "sequence": 20620,
+      "title": "सहिष्णुः (sahiṣṇuḥ) — tolerant; forbearing",
+      "headword": "सहिष्णुः",
+      "romanization": "sahiṣṇuḥ",
+      "gloss": "tolerant; forbearing",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe67fc338a9d6010",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for the bounds of propriety, then the Sanskrit for violence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सहिष्णुः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सहिष्णुः — sahiṣṇuḥ — \"tolerant; forbearing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सहिष्णुः जनः क्रोधं न करोति। sahiṣṇuḥ janaḥ krodhaṃ na karoti. A tolerant person does not give way to anger."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सहिष्णुः (sahiṣṇuḥ) comes from the root √sah, \"to bear, to put up with\", with the ending -iṣṇu; MW gives sahiṣṇu \"patient, forbearing\" and \"bearing, enduring\", and KRM lists sahiṣṇu among the forms of the root (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahiṣṇuḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahiṣṇuḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahiṣṇuḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahiṣṇuḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahiṣṇuḥ janaḥ krodhaṃ na karoti. — A tolerant person does not give way to anger.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahiṣṇuḥ janaḥ krodhaṃ na karoti.* — A tolerant person does not give way to anger.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for the bounds of propriety, then the Sanskrit for violence, then say sahiṣṇuḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for the bounds of propriety, then the Sanskrit for violence, then say *sahiṣṇuḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सहिष्णुः (sahiṣṇuḥ) mean? (\"Tolerant; forbearing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C352-apakaroti",
+      "sequence": 20630,
+      "title": "अपकरोति (apakaroti) — does harm to; wrongs",
+      "headword": "अपकरोति",
+      "romanization": "apakaroti",
+      "gloss": "does harm to; wrongs",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:844c4def75d0eb8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for violence, then the Sanskrit for tolerant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अपकरोति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अपकरोति — apakaroti — \"does harm to; wrongs\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सः कस्य अपि न अपकरोति। saḥ kasya api na apakaroti. He does no one any harm."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः मम अपकृतवान्, saḥ mama apakṛtavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अपकरोति (apakaroti) is built on apa, \"away, off\", and the root √kṛ, \"to do\"; MW gives apa-kṛta \"done wrongly or maliciously\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apakaroti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apakaroti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apakaroti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apakaroti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saḥ kasya api na apakaroti. — He does no one any harm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saḥ kasya api na apakaroti.* — He does no one any harm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for violence, then the Sanskrit for tolerant, then say apakaroti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for violence, then the Sanskrit for tolerant, then say *apakaroti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अपकरोति (apakaroti) mean? (\"Does harm to; wrongs\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C352-anugrhnati",
+      "sequence": 20640,
+      "title": "अनुगृह्णाति (anugṛhṇāti) — shows favour to; obliges",
+      "headword": "अनुगृह्णाति",
+      "romanization": "anugṛhṇāti",
+      "gloss": "shows favour to; obliges",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a464b2e53acd7e6b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for tolerant, then the Sanskrit for does harm to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अनुगृह्णाति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुगृह्णाति — anugṛhṇāti — \"shows favour to; obliges\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गुरुः शिष्यम् अनुगृह्णाति। guruḥ śiṣyam anugṛhṇāti. The teacher shows his pupil favour."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः माम् अनुगृहीतवान्, saḥ mām anugṛhītavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुगृह्णाति (anugṛhṇāti) is built on anu, \"after\", and the root √grah, \"to seize, to take\"; MW gives anu-√grah \"to support\" and \"to treat with kindness, to favour, to oblige\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anugṛhṇāti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anugṛhṇāti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anugṛhṇāti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anugṛhṇāti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guruḥ śiṣyam anugṛhṇāti. — The teacher shows his pupil favour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guruḥ śiṣyam anugṛhṇāti.* — The teacher shows his pupil favour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for tolerant, then the Sanskrit for does harm to, then say anugṛhṇāti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for tolerant, then the Sanskrit for does harm to, then say *anugṛhṇāti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अनुगृह्णाति (anugṛhṇāti) mean? (\"Shows favour to; obliges\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C352-ksama",
+      "sequence": 20650,
+      "title": "क्षमा (kṣamā) — forbearance; patience",
+      "headword": "क्षमा",
+      "romanization": "kṣamā",
+      "gloss": "forbearance; patience",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a75ee019b9bb31f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for does harm to, then the Sanskrit for shows favour to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: क्षमा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्षमा — kṣamā — \"forbearance; patience\"."
+            },
+            {
+              "kind": "speech",
+              "text": "क्रोधस्य औषधं क्षमा अस्ति। krodhasya auṣadhaṃ kṣamā asti. The medicine for anger is forbearance."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्षमा (kṣamā) comes from the root √kṣam, \"to be patient, to endure\"; MW gives kṣamā \"patience, forbearance, indulgence\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣamā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣamā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣamā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣamā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krodhasya auṣadhaṃ kṣamā asti. — The medicine for anger is forbearance.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krodhasya auṣadhaṃ kṣamā asti.* — The medicine for anger is forbearance.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for does harm to, then the Sanskrit for shows favour to, then say kṣamā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for does harm to, then the Sanskrit for shows favour to, then say *kṣamā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does क्षमा (kṣamā) mean? (\"Forbearance; patience\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

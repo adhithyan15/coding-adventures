@@ -1,0 +1,21 @@
+{
+  "chapter": 433,
+  "title": "Income and Shares",
+  "label": "ch:sa-income-and-shares",
+  "canDo": "I can talk about income, capital and fair shares.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-R433-review-426-433",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can talk about income, capital and fair shares.",
+    "assesses": [
+      "SA-LEX-C433-AYA433-01",
+      "SA-LEX-C433-AYA433-02",
+      "SA-LEX-C433-AYA433-03",
+      "SA-LEX-C433-AYA433-04",
+      "SA-LEX-C433-AYA433-05"
+    ]
+  }
+}

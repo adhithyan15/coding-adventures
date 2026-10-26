@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:1a76fe2b568bb9aa",
+  "lessonIds": [
+    "SA-C414-digbhramah",
+    "SA-C414-bhrantah",
+    "SA-C414-pratipadyate",
+    "SA-C414-aparicitah",
+    "SA-C414-agantukah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch414.txt",
+  "json": "sanskrit/narration/ch414.json",
+  "textHash": "fnv1a64:f042d99376d7d566",
+  "jsonHash": "fnv1a64:6d8293fc309f9bc0",
+  "findings": []
+}

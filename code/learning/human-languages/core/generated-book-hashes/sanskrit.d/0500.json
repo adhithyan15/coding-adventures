@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:dd47fec48de19a45",
+  "lessonIds": [
+    "SA-C500-devarah",
+    "SA-C500-nananda",
+    "SA-C500-syalah",
+    "SA-C500-prapitamahah",
+    "SA-C500-santatih"
+  ],
+  "tex": "sanskrit/book/chapters/ch500-in-laws-and-ancestors.tex"
+}

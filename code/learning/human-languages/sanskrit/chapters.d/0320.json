@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "Rebellion",
+  "label": "ch:sa-rebellion",
+  "canDo": "I can tell how people rose against a ruler.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C320-svatantryam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can tell how people rose against a ruler.",
+    "assesses": [
+      "SA-LEX-C320-VIPLAVA320-03",
+      "SA-LEX-C320-VIPLAVA320-04",
+      "SA-LEX-C320-VIPLAVA320-05"
+    ]
+  }
+}

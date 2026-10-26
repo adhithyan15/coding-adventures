@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C503-daksah",
+    "language": "sanskrit",
+    "chapter": 503,
+    "sequence": 29060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8636c138beb1eee"
+  },
+  "findings": []
+}

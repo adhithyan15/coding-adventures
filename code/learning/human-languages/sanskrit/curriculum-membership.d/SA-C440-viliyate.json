@@ -1,0 +1,11 @@
+{
+  "id": "SA-C440-viliyate",
+  "pathSegment": "SA-PATH-440-HIMA440",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-440-HIMA440",
+      "order": 2
+    }
+  ]
+}

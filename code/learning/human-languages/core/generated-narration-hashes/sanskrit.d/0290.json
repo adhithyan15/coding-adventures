@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:943220067eaa93b5",
+  "lessonIds": [
+    "SA-C290-dasyuh",
+    "SA-C290-lunthati",
+    "SA-C290-akramati",
+    "SA-C290-abharanam",
+    "SA-C290-balat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch290.txt",
+  "json": "sanskrit/narration/ch290.json",
+  "textHash": "fnv1a64:c8d2c861aa484667",
+  "jsonHash": "fnv1a64:1c6c9abf28687f6d",
+  "findings": []
+}

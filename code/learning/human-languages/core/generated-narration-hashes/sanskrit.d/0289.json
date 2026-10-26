@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:6bd12c1b6ba26d1a",
+  "lessonIds": [
+    "SA-C289-abhijanati",
+    "SA-C289-varnayati",
+    "SA-C289-niriksate",
+    "SA-C289-cihnam",
+    "SA-C289-pratyaksam"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "sanskrit/narration/ch289.txt",
+  "json": "sanskrit/narration/ch289.json",
+  "textHash": "fnv1a64:f117cbdfe6e1c7d1",
+  "jsonHash": "fnv1a64:1ed21a07d6884ad5",
+  "findings": []
+}

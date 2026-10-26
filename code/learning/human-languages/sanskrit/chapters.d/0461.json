@@ -1,0 +1,19 @@
+{
+  "chapter": 461,
+  "title": "Good People and Bad",
+  "label": "ch:sa-good-people-and-bad",
+  "canDo": "I can say whether someone is good-hearted or wicked.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C461-druhyati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can say whether someone is good-hearted or wicked.",
+    "assesses": [
+      "SA-LEX-C461-SATPURUSA461-03",
+      "SA-LEX-C461-SATPURUSA461-04",
+      "SA-LEX-C461-SATPURUSA461-05"
+    ]
+  }
+}

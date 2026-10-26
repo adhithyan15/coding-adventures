@@ -1,0 +1,11 @@
+{
+  "id": "SA-C549-samihate",
+  "pathSegment": "SA-PATH-549-LALASA549",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-549-LALASA549",
+      "order": 4
+    }
+  ]
+}

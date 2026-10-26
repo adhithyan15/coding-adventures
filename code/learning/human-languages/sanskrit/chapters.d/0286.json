@@ -1,0 +1,19 @@
+{
+  "chapter": 286,
+  "title": "A Theft in the Village",
+  "label": "ch:sa-a-theft-in-the-village",
+  "canDo": "I can say what was stolen and who saw it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C286-palayate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 286: I can say what was stolen and who saw it.",
+    "assesses": [
+      "SA-LEX-C286-CAURYA286-03",
+      "SA-LEX-C286-CAURYA286-04",
+      "SA-LEX-C286-CAURYA286-05"
+    ]
+  }
+}

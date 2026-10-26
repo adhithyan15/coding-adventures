@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:4e022ec12a4a0326",
+  "lessonIds": [
+    "SA-C421-palli",
+    "SA-C421-upanagaram",
+    "SA-C421-catvaram",
+    "SA-C421-harmyam",
+    "SA-C421-sambhasate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch421.txt",
+  "json": "sanskrit/narration/ch421.json",
+  "textHash": "fnv1a64:e4b66920a8990ab5",
+  "jsonHash": "fnv1a64:aebf77e8dc1f1dec",
+  "findings": []
+}

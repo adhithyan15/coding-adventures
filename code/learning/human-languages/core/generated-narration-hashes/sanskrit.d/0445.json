@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:b70f2493d24e4f42",
+  "lessonIds": [
+    "SA-C445-ulka",
+    "SA-C445-dhruvah",
+    "SA-C445-grahanam",
+    "SA-C445-diva",
+    "SA-C445-yapayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch445.txt",
+  "json": "sanskrit/narration/ch445.json",
+  "textHash": "fnv1a64:fc2bc030b63df8b6",
+  "jsonHash": "fnv1a64:420c8a4ca1e53547",
+  "findings": []
+}

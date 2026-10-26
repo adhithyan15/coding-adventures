@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 365,
+  "output": "sanskrit/book/chapters/ch365-theory-and-practice.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

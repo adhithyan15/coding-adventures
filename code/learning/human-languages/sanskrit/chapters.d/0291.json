@@ -1,0 +1,19 @@
+{
+  "chapter": 291,
+  "title": "Cheats",
+  "label": "ch:sa-cheats",
+  "canDo": "I can say how someone was cheated and what to do if it happens.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C291-krtrimah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: I can say how someone was cheated and what to do if it happens.",
+    "assesses": [
+      "SA-LEX-C291-VANCANA291-03",
+      "SA-LEX-C291-VANCANA291-04",
+      "SA-LEX-C291-VANCANA291-05"
+    ]
+  }
+}

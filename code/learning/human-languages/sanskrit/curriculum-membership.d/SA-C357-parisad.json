@@ -1,0 +1,11 @@
+{
+  "id": "SA-C357-parisad",
+  "pathSegment": "SA-PATH-357-SAMITI357",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-357-SAMITI357",
+      "order": 1
+    }
+  ]
+}

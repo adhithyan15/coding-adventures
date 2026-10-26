@@ -1,0 +1,21 @@
+{
+  "chapter": 555,
+  "title": "The Road Ahead",
+  "label": "ch:sa-the-road-ahead",
+  "canDo": "I can say what I resolve to do and what will follow.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-R555-review-final-555",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 555: I can say what I resolve to do and what will follow.",
+    "assesses": [
+      "SA-LEX-C555-PRERANA555-01",
+      "SA-LEX-C555-PRERANA555-02",
+      "SA-LEX-C555-PRERANA555-03",
+      "SA-LEX-C555-PRERANA555-04",
+      "SA-LEX-C555-PRERANA555-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C407-yunakti",
+    "language": "sanskrit",
+    "chapter": 407,
+    "sequence": 23700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e2f87aa05a3b30c"
+  },
+  "findings": []
+}

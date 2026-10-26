@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C423-antaram",
+    "language": "sanskrit",
+    "chapter": 423,
+    "sequence": 24510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d98de9fac74c4e3b"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:902ac737a70df3ad",
+  "lessonIds": [
+    "SA-C411-rathya",
+    "SA-C411-apayati",
+    "SA-C411-sanketah",
+    "SA-C411-rodhah",
+    "SA-C411-varjayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch411-streets-and-blockages.tex"
+}

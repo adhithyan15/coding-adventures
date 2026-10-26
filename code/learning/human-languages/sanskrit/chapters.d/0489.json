@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "Habits and Self-Control",
+  "label": "ch:sa-habits-and-self-control",
+  "canDo": "I can talk about a bad habit and giving it up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C489-madyam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can talk about a bad habit and giving it up.",
+    "assesses": [
+      "SA-LEX-C489-VYASANA489-03",
+      "SA-LEX-C489-VYASANA489-04",
+      "SA-LEX-C489-VYASANA489-05"
+    ]
+  }
+}

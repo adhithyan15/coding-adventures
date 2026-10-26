@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C294-ghatah",
+    "language": "sanskrit",
+    "chapter": 294,
+    "sequence": 17420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f21cf81ee9d2a463"
+  },
+  "findings": []
+}

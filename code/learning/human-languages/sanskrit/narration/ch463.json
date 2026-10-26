@@ -1,0 +1,846 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 463,
+  "title": "Courage and Fear",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:607ef554f30a06b4",
+  "lessons": [
+    {
+      "id": "SA-C463-bhisayate",
+      "sequence": 26760,
+      "title": "भीषयते (bhīṣayate) — frightens",
+      "headword": "भीषयते",
+      "romanization": "bhīṣayate",
+      "gloss": "frightens",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf9d08c27025bcb7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for trustworthy, then the Sanskrit for a betrayal of trust."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भीषयते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भीषयते — bhīṣayate — \"frightens\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सिंहः गर्जनेन मृगान् भीषयते। siṃhaḥ garjanena mṛgān bhīṣayate. The lion frightens the deer with its roar."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): सिंहः मृगान् भीषितवान्, siṃhaḥ mṛgān bhīṣitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भीषयते (bhīṣayate) is built on the causative of the root √bhī, \"to fear\", the root of बिभेति and भयम्: to make afraid; MW records this causative bhīṣayate, citing Pāṇini 1.3.68 (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhīṣayate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhīṣayate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhīṣayate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhīṣayate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siṃhaḥ garjanena mṛgān bhīṣayate. — The lion frightens the deer with its roar.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siṃhaḥ garjanena mṛgān bhīṣayate.* — The lion frightens the deer with its roar.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for trustworthy, then the Sanskrit for a betrayal of trust, then say bhīṣayate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for trustworthy, then the Sanskrit for a betrayal of trust, then say *bhīṣayate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भीषयते (bhīṣayate) mean? (\"Frightens\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C463-vihvalah",
+      "sequence": 26770,
+      "title": "विह्वलः (vihvalaḥ) — distraught; perturbed",
+      "headword": "विह्वलः",
+      "romanization": "vihvalaḥ",
+      "gloss": "distraught; perturbed",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ac4bf46b526a37a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a betrayal of trust, then the Sanskrit for frightens."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विह्वलः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विह्वलः — vihvalaḥ — \"distraught; perturbed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भयेन विह्वलः बालः मातरम् आह्वयति। bhayena vihvalaḥ bālaḥ mātaram āhvayati. Distraught with fear, the child calls his mother."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विह्वलः (vihvalaḥ) is built from vi and the root √hval, \"to go crookedly, to stagger\"; MW gives \"agitated, perturbed, distressed, afflicted\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vihvalaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vihvalaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vihvalaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vihvalaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhayena vihvalaḥ bālaḥ mātaram āhvayati. — Distraught with fear, the child calls his mother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhayena vihvalaḥ bālaḥ mātaram āhvayati.* — Distraught with fear, the child calls his mother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a betrayal of trust, then the Sanskrit for frightens, then say vihvalaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a betrayal of trust, then the Sanskrit for frightens, then say *vihvalaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विह्वलः (vihvalaḥ) mean? (\"Distraught; perturbed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C463-bhiruh",
+      "sequence": 26780,
+      "title": "भीरुः (bhīruḥ) — timid",
+      "headword": "भीरुः",
+      "romanization": "bhīruḥ",
+      "gloss": "timid",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45ce93d15eba54ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for frightens, then the Sanskrit for distraught."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भीरुः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भीरुः — bhīruḥ — \"timid\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भीरुः शशकः सहसा धावति। bhīruḥ śaśakaḥ sahasā dhāvati. The timid rabbit suddenly runs off."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भीरुः (bhīruḥ) comes from the root √bhī, \"to fear\", the root of बिभेति and भयम्; MW gives \"fearful, timid, cowardly\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhīruḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhīruḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhīruḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhīruḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhīruḥ śaśakaḥ sahasā dhāvati. — The timid rabbit suddenly runs off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhīruḥ śaśakaḥ sahasā dhāvati.* — The timid rabbit suddenly runs off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for frightens, then the Sanskrit for distraught, then say bhīruḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for frightens, then the Sanskrit for distraught, then say *bhīruḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भीरुः (bhīruḥ) mean? (\"Timid\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C463-trasyati",
+      "sequence": 26790,
+      "title": "त्रस्यति (trasyati) — trembles with fear",
+      "headword": "त्रस्यति",
+      "romanization": "trasyati",
+      "gloss": "trembles with fear",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f68a7fceb77ef41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for distraught, then the Sanskrit for timid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: त्रस्यति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "त्रस्यति — trasyati — \"trembles with fear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मूषकः मार्जारात् त्रस्यति। mūṣakaḥ mārjārāt trasyati. The mouse trembles in fear of the cat."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): मूषकः मार्जारात् त्रस्तवान्, mūṣakaḥ mārjārāt trastavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "त्रस्यति (trasyati) comes from the root √tras, \"to tremble, to be afraid of\", which takes the ablative of what is feared (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trasyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trasyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trasyati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trasyati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūṣakaḥ mārjārāt trasyati. — The mouse trembles in fear of the cat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūṣakaḥ mārjārāt trasyati.* — The mouse trembles in fear of the cat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for distraught, then the Sanskrit for timid, then say trasyati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for distraught, then the Sanskrit for timid, then say *trasyati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does त्रस्यति (trasyati) mean? (\"Trembles with fear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C463-pragalbhah",
+      "sequence": 26800,
+      "title": "प्रगल्भः (pragalbhaḥ) — bold",
+      "headword": "प्रगल्भः",
+      "romanization": "pragalbhaḥ",
+      "gloss": "bold",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9462754dc25823c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for timid, then the Sanskrit for trembles with fear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रगल्भः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रगल्भः — pragalbhaḥ — \"bold\"."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रगल्भः बालः सभायां वदति। pragalbhaḥ bālaḥ sabhāyāṃ vadati. The bold boy speaks up in the assembly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रगल्भः (pragalbhaḥ) is built from pra and the root √galbh, \"to be bold\"; MW gives \"bold, confident, resolute, brave\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pragalbhaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pragalbhaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pragalbhaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pragalbhaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pragalbhaḥ bālaḥ sabhāyāṃ vadati. — The bold boy speaks up in the assembly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pragalbhaḥ bālaḥ sabhāyāṃ vadati.* — The bold boy speaks up in the assembly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for timid, then the Sanskrit for trembles with fear, then say pragalbhaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for timid, then the Sanskrit for trembles with fear, then say *pragalbhaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रगल्भः (pragalbhaḥ) mean? (\"Bold\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R463-review-456-463",
+      "sequence": 26810,
+      "title": "Looking back: from Calm and Composure to Courage and Fear",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Calm and Composure to Courage and Fear",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db611e0dfb8d037e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for is shaken and appeases."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "is shaken, appeases, composed, massages, a secluded place",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: is shaken, appeases, composed, massages, a secluded place]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "smiles, laughs at, a jest, a loud laugh, amusement",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: smiles, laughs at, a jest, a loud laugh, amusement]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haughtiness, boasts, bombast, arrogant, modest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: haughtiness, boasts, bombast, arrogant, modest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "contempt, despises, insults, regard, self-respect",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: contempt, despises, insults, regard, self-respect]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "temperament, refined, conducts himself, a virtue, wicked",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: temperament, refined, conducts himself, a virtue, wicked]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a great soul, a scoundrel, goodness, heartless, bears malice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a great soul, a scoundrel, goodness, heartless, bears malice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "deceitful, devious, explains away, trustworthy, a betrayal of trust",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: deceitful, devious, explains away, trustworthy, a betrayal of trust]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "frightens, distraught, timid, trembles with fear, bold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: frightens, distraught, timid, trembles with fear, bold]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is shaken? (क्षुभ्यति, kṣubhyati.) Appeases? (प्रसादयति, prasādayati.) Composed? (समाहितः, samāhitaḥ.) Massages? (मर्दयति, mardayati.) A secluded place? (एकान्तः, ekāntaḥ.) Smiles? (स्मयते, smayate.) Laughs at? (उपहसति, upahasati.) A jest? (परिहासः, parihāsaḥ.) A loud laugh? (अट्टहासः, aṭṭahāsaḥ.) Amusement? (विनोदः, vinodaḥ.) Haughtiness? (दर्पः, darpaḥ.) Boasts? (श्लाघते, ślāghate.) Bombast? (आडम्बरः, āḍambaraḥ.) Arrogant? (उद्धतः, uddhataḥ.) Modest? (विनीतः, vinītaḥ.) Contempt? (अवज्ञा, avajñā.) Despises? (अवमन्यते, avamanyate.) Insults? (तिरस्करोति, tiraskaroti.) Regard? (आदरः, ādaraḥ.) Self-respect? (मानः, mānaḥ.) Temperament? (स्वभावः, svabhāvaḥ.) Refined? (सभ्यः, sabhyaḥ.) Conducts himself? (प्रवर्तते, pravartate.) A virtue? (गुणः, guṇaḥ.) Wicked? (दुष्टः, duṣṭaḥ.) A great soul? (महात्मा, mahātmā.) A scoundrel? (खलः, khalaḥ.) Goodness? (सौजन्यम्, saujanyam.) Heartless? (निष्ठुरः, niṣṭhuraḥ.) Bears malice? (द्रुह्यति, druhyati.) Deceitful? (शठः, śaṭhaḥ.) Devious? (कुटिलः, kuṭilaḥ.) Explains away? (अपलपति, apalapati.) Trustworthy? (विश्वसनीयः, viśvasanīyaḥ.) A betrayal of trust? (विश्वासघातः, viśvāsaghātaḥ.) Frightens? (भीषयते, bhīṣayate.) Distraught? (विह्वलः, vihvalaḥ.) Timid? (भीरुः, bhīruḥ.) Trembles with fear? (त्रस्यति, trasyati.) Bold? (प्रगल्भः, pragalbhaḥ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

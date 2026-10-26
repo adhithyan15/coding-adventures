@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C407-yanta",
+    "language": "sanskrit",
+    "chapter": 407,
+    "sequence": 23660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:408aa5ee66b10b57"
+  },
+  "findings": []
+}

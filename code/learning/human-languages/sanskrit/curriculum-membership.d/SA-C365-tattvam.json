@@ -1,0 +1,11 @@
+{
+  "id": "SA-C365-tattvam",
+  "pathSegment": "SA-PATH-365-SIDDHANTA365",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-365-SIDDHANTA365",
+      "order": 1
+    }
+  ]
+}

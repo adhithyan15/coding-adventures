@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:85fe1115ed817461",
+  "lessonIds": [
+    "SA-C481-andhah",
+    "SA-C481-badhirah",
+    "SA-C481-mukah",
+    "SA-C481-panguh",
+    "SA-C481-kubjah"
+  ],
+  "tex": "sanskrit/book/chapters/ch481-blind-deaf-and-lame.tex"
+}

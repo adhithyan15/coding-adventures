@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C329-dhupah",
+    "language": "sanskrit",
+    "chapter": 329,
+    "sequence": 19220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19d8f85106698524"
+  },
+  "findings": []
+}

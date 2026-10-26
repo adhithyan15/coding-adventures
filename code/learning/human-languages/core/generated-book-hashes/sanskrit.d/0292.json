@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:3b24e8ff3fa90908",
+  "lessonIds": [
+    "SA-C292-carah",
+    "SA-C292-pramanam",
+    "SA-C292-pariksate",
+    "SA-C292-rahasyam",
+    "SA-C292-prakatayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch292-the-investigation.tex"
+}

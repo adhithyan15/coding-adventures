@@ -1,0 +1,11 @@
+{
+  "id": "SA-C324-kirtayati",
+  "pathSegment": "SA-PATH-324-PURA324",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-324-PURA324",
+      "order": 4
+    }
+  ]
+}
