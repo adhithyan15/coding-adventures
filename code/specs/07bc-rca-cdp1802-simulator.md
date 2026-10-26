@@ -178,10 +178,10 @@ External bus service is exposed through typed atomic operations:
   a DMA-out transaction; and
 - `interrupt()` requires IE=true and `first_instruction_pending=false`, sets
   T=(X<<4)|P, then X=2, P=1, IE=false, clears idle, and returns an
-  interrupt-acknowledge transaction. If IE is false it returns
-  `InterruptMasked` unchanged. If the reset inhibit is still set it returns
-  `InterruptInhibited` unchanged, even after any number of pre-instruction DMA
-  cycles.
+  interrupt-acknowledge transaction. The reset inhibit has first precedence:
+  while it is set, the call returns `InterruptInhibited` unchanged regardless
+  of IE, including after any number of pre-instruction DMA cycles. Once the
+  inhibit is clear, IE=false returns `InterruptMasked` unchanged.
 
 These calls model one acknowledged S2 or S3 cycle. Simultaneous-request
 priority, WAIT/CLEAR pins, bus arbitration, devices, and elapsed clocks belong
@@ -217,7 +217,8 @@ Implementation is incomplete until it provides:
 5. all seven port inputs/outputs, self-modifying traces, Q, IDL/resume,
    DMA-in/out, masked/inhibited/accepted interrupt, T packing, and R0 wrap,
    including reset/load inhibit, DMA before first fetch, first-step fault, and
-   first-instruction IDL witnesses;
+   first-instruction IDL witnesses; an overlap regression must restore
+   IE=false with the inhibit set and prove `InterruptInhibited` precedence;
 6. reset/load/snapshot/restore/run/execute rollback and injected allocation
    failures with exact complete-state equality;
 7. package docs, BUILD integration, lessons validation, release tests,
