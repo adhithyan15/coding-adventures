@@ -53,12 +53,12 @@
 //! );
 //! ```
 
+use coding_adventures_ct_compare::ct_eq;
 use coding_adventures_md5::sum_md5;
 use coding_adventures_sha1::sum1;
 use coding_adventures_sha256::sha256;
 use coding_adventures_sha512::sum512;
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
-use subtle::ConstantTimeEq;
 
 // ─── ipad and opad constants (RFC 2104 §2) ───────────────────────────────────
 //
@@ -266,9 +266,11 @@ pub fn hmac_sha512_hex(key: &[u8], message: &[u8]) -> String {
 /// an attacker can exploit these timing side-channels to reconstruct the
 /// expected tag byte by byte — a **timing attack**.
 ///
-/// `verify` uses a bitwise OR accumulator that processes all bytes regardless
-/// of where the first difference occurs, producing a result in time that is
-/// proportional to `min(expected.len(), actual.len())`.
+/// For equal-length inputs, `verify` delegates to the repository-owned
+/// `coding_adventures_ct_compare` primitive. Its audited volatile boundary
+/// preserves a full scan of both tags in optimized builds regardless of where
+/// the first difference occurs. Length is public: mismatched lengths return
+/// `false` without scanning either input.
 ///
 /// Returns `true` iff `expected` and `actual` are byte-for-byte identical.
 ///
@@ -282,16 +284,7 @@ pub fn hmac_sha512_hex(key: &[u8], message: &[u8]) -> String {
 /// assert!(!verify(&tag, &[0u8; 32]));
 /// ```
 pub fn verify(expected: &[u8], actual: &[u8]) -> bool {
-    // A hand-rolled XOR accumulator is not safe under LLVM's optimizer: release
-    // builds with -O2 can short-circuit the fold once the accumulator is provably
-    // non-zero, because the pure functional expression has no observable side
-    // effects. `subtle::ConstantTimeEq` prevents this via compiler barriers.
-    //
-    // Returns false in constant time even when the lengths differ.
-    if expected.len() != actual.len() {
-        return false;
-    }
-    bool::from(expected.ct_eq(actual))
+    ct_eq(expected, actual)
 }
 
 // ─── Private helpers ──────────────────────────────────────────────────────────
@@ -516,6 +509,28 @@ mod tests {
             hmac_sha256(b"k", b"m").unwrap(),
             hmac_sha256(b"k", b"m").unwrap()
         );
+    }
+
+    #[test]
+    fn verify_accepts_identical_tags() {
+        let tag = hmac_sha256(b"key", b"message").unwrap();
+        assert!(verify(&tag, &tag));
+    }
+
+    #[test]
+    fn verify_rejects_a_difference_at_every_position() {
+        let expected = hmac_sha256(b"key", b"message").unwrap();
+        for index in 0..expected.len() {
+            let mut actual = expected;
+            actual[index] ^= 1;
+            assert!(!verify(&expected, &actual), "difference at index {index}");
+        }
+    }
+
+    #[test]
+    fn verify_rejects_public_length_mismatches() {
+        assert!(!verify(b"fixed-length-tag", b"fixed-length-ta"));
+        assert!(!verify(b"fixed-length-tag", b"fixed-length-tag!"));
     }
 
     #[test]
