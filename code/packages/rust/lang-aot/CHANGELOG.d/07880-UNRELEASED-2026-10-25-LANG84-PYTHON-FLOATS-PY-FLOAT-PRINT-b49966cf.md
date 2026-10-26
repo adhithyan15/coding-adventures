@@ -1,0 +1,8 @@
+## Unreleased — LANG84 phase 7c slice 3: Python floats (`py-float-print`)
+
+### Added
+
+- `--lang python` (default 3.13.16) and `python@3.5.10`, `@3.6.0`, `@3.11.17`, `@3.12.3`, `@3.16.0a1` now compile `py-float-print`: float literals, `/` as true division, and `int`/`float` mixing, printed as Python `repr`. The frontend emits LANG83 ops only (`f64_add`/`f64_sub`/`f64_mul`/`f64_div`/`f64_neg`, `int_to_real`, `write_f64_py`, and `trap "Trap.DivZero"` for a zero divisor), so no backend changed. 3.0a1 and Python 2 keep refusing floats (their `str(float)` is `%.12g`).
+- 38 `lang_matrix` rows run the `py-float-print` corpus verbatim (new `python_float_case!` macro) on the default 3.13.16 and on the two IIR-identity class representatives, 3.6.0 (13 rows) and 3.5.10 (12; no `_` in a float). The five literal-only rows declare all eight columns; the 33 with float arithmetic declare the new `IEEE_COLUMNS` (all but BEAM, which refuses `f64_*` at compile time with `UnsupportedOps`, as stage B allows). Python is now 138 rows / 1071 cells (LANG-VM-FEATURE-COVERAGE.md).
+- `python_rows_pass_the_lang83_check_on_all_nine_backends` pins that BEAM lowers exactly the rows that list it and refuses the others naming only `f64_*`, and that the generic JIT's only refusal is `int_to_real` (its interpreter tier runs those functions, as it runs every printing function's JIT cell). The host CPython 3.13 oracle covers the float rows, including the `Trap.Overflow` row whose CPython output is the float of an int outside `i64`.
+- `release_inventory.py check --matrix` reports Python 17 claims (11 `py-int-print`/`py2-int-print`, 6 `py-float-print`).
