@@ -75,7 +75,7 @@ architecture/core introduction era, not a claim about a particular chip.
 
 | Priority | Target | Finding / next action |
 |---:|---|---|
-| P0 in progress | SPARC V8 gate HALT storage | The allocated HALT Q bit is not authoritative: snapshots, execution control, results, and one trap path read or write the adjacent public host boolean. Make Q the sole authority, retain the public field only as a synchronized compatibility observer, cover restore and fault rollback under deliberate divergence, and replace the tautological topology assertion with an inventory derived from owned storage. |
+| P0 complete locally | SPARC V8 gate HALT storage | HALT DFF Q is now the sole architectural authority; the public boolean is only a synchronized compatibility observer. The published storage inventory derives 524,288 memory bits, 1,896 register/control bits, and one HALT bit from owned containers. Deliberate mirror-divergence, restore, run/result, and typed-fault atomicity tests pass alongside 42 unit tests, the 248-vector differential, and eight lifecycle/integrity tests. Strict Clippy/rustdoc/fmt, lessons validation, the six-package affected build, and 94.68% line coverage (1,691/1,786) are green. |
 | P1 audit | Remaining completed gate packages with public halt fields | Audit each package before changing it. A public observation field is acceptable only when execution, snapshots, restore, and faults are driven by DFF Q; otherwise add one bounded repair cell and a non-tautological storage inventory. |
 
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,
