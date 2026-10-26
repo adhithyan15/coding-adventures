@@ -264,7 +264,11 @@ the negative magnitude, zero, and the positive magnitude. Static `div` and
 `mod` retain the exact reduced common divisor for that stable shape, including
 after multiplication by another stable sign root, so a later exact `/` may use
 the sharper divisibility proof. Broader quotient and remainder value sets stay
-conservative. A checked variable-free integer
+conservative. Independently, when the complete magnitude is below a static
+divisor, `div` proves an exact zero quotient and `mod` is an identity that
+retains the existing common divisor. Those range-dominated reductions also
+compose across multiplied roots and later exact `/`; zero and dynamic divisors
+remain excluded. A checked variable-free integer
 prefix may likewise use `*`, exact `/`, `div`, and `mod` before the first root
 when multiplication connects the folded result to that root. Zero divisors,
 inexact divisions, dynamic divisors, and rooted divisors remain conservative.

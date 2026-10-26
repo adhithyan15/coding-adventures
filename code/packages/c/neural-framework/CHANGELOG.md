@@ -1,6 +1,12 @@
 # Changelog
 
-## 0.1.0 (NN48; publication/CI pending)
+## Unreleased
+
+- NN49 separately connects C to six-native checkpoint interchange: thirty
+  directed pairs and return trips, 78 real children and full states through
+  3002. Local execution passed; required exact-head CI/merge pending.
+
+## 0.1.0 (NN48; merged in #18285)
 
 - Add native C17 owned dense network construction, deterministic initialization,
   prediction, full backpropagation traces, atomic candidate SGD and exact fit.
@@ -16,5 +22,6 @@
 - Local library coverage is 97.11%, command 100%, validator 95%; four compiler
   suites pass 6857 checks each. Scope Windows execution to the dependency plan,
   preserve independent OCaml/Rust selection and reviewed planner identity.
-- Review, publication and actual exact-head repository CI/merge remain pending.
+- Exact reviewed head `437c4c2d01bb` merged as `c91b44a06e7` after actual
+  Linux/macOS/Windows package BUILDs and all selected workflows passed.
 - Native C is independent training, not a Rust binding or six-native exchange.

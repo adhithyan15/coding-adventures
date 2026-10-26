@@ -6,7 +6,7 @@ required repository `CI gate`, not merely an independent optional workflow.
 ## Scheduling contract
 
 Register `neural-framework-conformance` as a job-scoped gate. Both affected
-Python/TypeScript/Rust/Go/Ruby framework or matrix packages and direct changes to their
+Python/TypeScript/Rust/Go/Ruby/C framework or matrix packages and direct changes to their
 sources, the shared fixture, interchange validator, gate tests, registry, or
 either workflow select it. Unrelated documentation does not select it. Forced
 main builds select it through the existing registry evaluator.
@@ -32,6 +32,15 @@ directed pairs with return trips: 55 actual children, five native lanes and
 zero binding lanes. Every parameter/prediction/loss and exact step is compared.
 No duplicate automatic workflow or roll-up weakening is introduced.
 
+NN49 adds native C framework/matrix/float-math/bounded-json/ISO-harness and the
+native C validator/tests as selecting inputs. The reusable workflow executes
+the existing C package front with both GCC and Clang required, including actual
+command tests and full native baseline/resume validation for each binary. The
+shared runner then uses a trusted produced executable for six fresh models,
+twelve baselines and thirty directed return trips: 78 actual children, six
+native lanes, zero bindings. Every original lane and real root Rust workspace
+validation remains. NN49 local runtime evidence is not publication/CI proof.
+
 Use one reusable workflow for native package validation and checkpoint exchange.
 Keep manual dispatch, but let repository CI own automatic PR/main scheduling so
 the same source change does not claim duplicate conformance runners.
@@ -56,7 +65,7 @@ steps 3001 and 3002. This changes validation coverage, not the training API or
 checkpoint format, and claims no binding lane.
 
 NN40's shared `checkpoints.json` fixture is covered by the existing fixture
-directory selection rule. All five native package suites directly execute its
+directory selection rule. All six native package suites directly execute its
 55 accept/reject cases (NN43 adds six null numeric cells), including accepted
 round-trip controls. No standalone
 workflow or shell-based checkpoint transport is added for malformed inputs.

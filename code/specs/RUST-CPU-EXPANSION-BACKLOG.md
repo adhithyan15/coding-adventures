@@ -47,17 +47,19 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | Arm Cortex-M0 | merged | ready | Independent Armv6-M gate cell can start now. |
 | P0 | Arm Cortex-M3 | merged | ready | Independent Armv7-M gate cell can start now. |
 
-## Gate-integrity repair queue
+## P0 gate-integrity repair queue
 
 Completed gate packages are re-audited when source inspection finds a host
-operation deciding an architecturally visible datapath result.  These bounded
+operation deciding an architecturally visible datapath result or a public host
+field shadowing physical storage. These bounded
 repairs outrank new completeness work because an existing gate claim is
 already public.
 
-| Priority | Target | Finding / next action |
-|---:|---|---|
-| P0 complete locally | x86-64 multiply/divide qualification | The fixed-round multiplier/divider now return gate-qualified wide results: an OR reduction of the unsigned high half, a sign-extension mismatch reduction for signed products/quotients, and the divider's gate zero reduction decide all modeled IMUL/MUL and DIV/IDIV flags or faults. Exact signed/unsigned fit boundaries, atomic divide faults, every discarded high wire, and exact normalized qualifier/entry-point/consumer contracts cover the repair; adversarial helper-shadow, iterator, high-word, and dead-anchor fixtures prove the earlier source-spelling bypasses fail. Release tests include 18 unit cases, three structural cases, three lifecycle cases, and the 262-row Python differential; strict formatting/lints/docs and all six affected builds pass. Standard all-target package coverage (`cargo llvm-cov --manifest-path code/packages/rust/Cargo.toml -p coding-adventures-x86-64-gatelevel --all-targets --summary-only`) is 88.40% (1,357/1,535). |
-| P1 audit | Remaining completed gate packages | Search architecturally visible arithmetic, flags, fault qualification, decode, and state selection for host-language shortcuts; record and repair one bounded cell at a time. Address/control bookkeeping permitted by the educational boundary is not itself a defect. |
+| Priority | Target | Status | Required boundary |
+|---:|---|---|---|
+| P0 complete locally | x86-64 multiply/divide qualification | ready | The fixed-round multiplier/divider returns gate-qualified wide results; exact signed/unsigned fit boundaries, atomic divide faults, discarded high wires, structural anti-bypass fixtures, strict checks, all affected builds, and 88.40% line coverage are green. |
+| P0 | Motorola 68000 gate | local complete | All 560 register/PC/SR DFF Q outputs and the HALT DFF Q output are authoritative; public fields are synchronized observers. Concrete inventory, deliberate observer-divergence lifecycle regressions, 71 unit tests, all 82 differential vectors, 6 lifecycle tests, 7 doctests, strict checks, lessons, and 83.39% combined line coverage are green. |
+| P1 audit | Remaining completed gate packages | queued | Search architecturally visible arithmetic, flags, fault qualification, decode, state selection, and storage authority for host-language shortcuts; record and repair one bounded cell at a time. Address/control bookkeeping permitted by the educational boundary is not itself a defect. |
 
 ## Independent functional queue
 
