@@ -10,10 +10,10 @@ fn manifest_and_corpus_are_exact_and_complete() {
     let generator = include_bytes!("rtl/generate.py");
     let manifest = include_str!("rtl/manifest.txt");
     let rows = rtl_support::rows();
-    assert_eq!(rows.len(), 164);
+    assert_eq!(rows.len(), 173);
     assert!(manifest.contains("microwatt_commit=f341bed306a9a7281bf65200df8cc1f0a002617d"));
     assert!(manifest.contains("ghdl_version=GHDL 6.0.0 (6.0.0.r0.ge589c698c) [Dunoon edition]"));
-    assert!(manifest.contains("row_count=164"));
+    assert!(manifest.contains("row_count=173"));
     assert!(manifest.contains(&format!("vectors_sha256={}", sha256_hex(vectors))));
     assert!(manifest.contains(&format!("harness_sha256={}", sha256_hex(harness))));
     assert!(manifest.contains(&format!("generator_sha256={}", sha256_hex(generator))));
@@ -36,6 +36,15 @@ fn manifest_and_corpus_are_exact_and_complete() {
         "sraw_sign_extend_32",
         "prtyw_byte_lsb",
         "prtyd_byte_lsb",
+        "cmpw_slash",
+        "mcrf_slash",
+        "bclr_bh_slash",
+        "isync_slash",
+        "popcntb_slash",
+        "mfcr_slash",
+        "mulhwu_oe_slash",
+        "sync_slash",
+        "eieio_slash",
         "sync",
         "lwsync",
         "attn",
@@ -76,4 +85,24 @@ fn source_locked_rows_independently_assert_the_pinned_rtl_choices() {
     assert_eq!(row("sraw_sign_extend_32").after_gprs[5], u64::MAX);
     assert_eq!(row("prtyw_byte_lsb").after_gprs[5], 0x0000_0001_0000_0000);
     assert_eq!(row("prtyd_byte_lsb").after_gprs[5], 0);
+
+    for (plain, slash) in [
+        ("cmpw", "cmpw_slash"),
+        ("mcrf", "mcrf_slash"),
+        ("bclr", "bclr_bh_slash"),
+        ("isync", "isync_slash"),
+        ("popcntb", "popcntb_slash"),
+        ("mfcr", "mfcr_slash"),
+        ("mulhwu", "mulhwu_oe_slash"),
+        ("sync", "sync_slash"),
+        ("eieio", "eieio_slash"),
+    ] {
+        let plain = row(plain);
+        let slash = row(slash);
+        assert_eq!(slash.after_gprs, plain.after_gprs, "{slash:?}");
+        assert_eq!(slash.after_lr, plain.after_lr, "{slash:?}");
+        assert_eq!(slash.after_ctr, plain.after_ctr, "{slash:?}");
+        assert_eq!(slash.after_cr, plain.after_cr, "{slash:?}");
+        assert_eq!(slash.after_xer, plain.after_xer, "{slash:?}");
+    }
 }

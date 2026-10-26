@@ -17,7 +17,7 @@ result is not enough to define this profile:
 
 The committed corpus is an executed full-core RTL differential, not a
 hand-derived substitute. `rtl/generate.py` compiles the exact Microwatt commit
-in VHDL-2008 mode with FPU and branch-target cache disabled, runs 164
+in VHDL-2008 mode with FPU and branch-target cache disabled, runs 173
 deterministic one-instruction rows, and exports all 32 GPRs, CR, XER, LR, CTR,
 CIA, RAM writes, and the complete 64 KiB memory hash. `rtl_corpus.rs`
 independently validates the manifest/schema and pinned boundary choices;

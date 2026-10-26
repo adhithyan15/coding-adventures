@@ -540,8 +540,8 @@ pub fn classify(raw: u32) -> Classification {
     match op {
         7 => Classification::Supported("mulli"),
         8 => Classification::Supported("subfic"),
-        10 if raw & (1 << 22) == 0 => Classification::Supported("cmpli"),
-        11 if raw & (1 << 22) == 0 => Classification::Supported("cmpi"),
+        10 => Classification::Supported("cmpli"),
+        11 => Classification::Supported("cmpi"),
         12 => Classification::Supported("addic"),
         13 => Classification::Supported("addic."),
         14 => Classification::Supported("addi"),
@@ -594,26 +594,21 @@ pub fn classify(raw: u32) -> Classification {
 
 fn classify_19(raw: u32) -> Classification {
     let xo = (raw >> 1) & 0x3ff;
-    let bt = (raw >> 21) & 31;
-    let ba = (raw >> 16) & 31;
-    let bb = (raw >> 11) & 31;
     match xo {
-        0 if bt & 3 == 0 && ba & 3 == 0 && bb == 0 && raw & 1 == 0 => {
-            Classification::Supported("mcrf")
-        }
-        16 if bb <= 3 => Classification::Supported("bclr"),
-        33 if raw & 1 == 0 => Classification::Supported("crnor"),
-        129 if raw & 1 == 0 => Classification::Supported("crandc"),
-        150 if raw & 0x03ff_f801 == 0 => Classification::Supported("isync"),
-        193 if raw & 1 == 0 => Classification::Supported("crxor"),
-        225 if raw & 1 == 0 => Classification::Supported("crnand"),
-        257 if raw & 1 == 0 => Classification::Supported("crand"),
-        289 if raw & 1 == 0 => Classification::Supported("creqv"),
-        417 if raw & 1 == 0 => Classification::Supported("crorc"),
-        449 if raw & 1 == 0 => Classification::Supported("cror"),
+        0 => Classification::Supported("mcrf"),
+        16 => Classification::Supported("bclr"),
+        33 => Classification::Supported("crnor"),
+        129 => Classification::Supported("crandc"),
+        150 => Classification::Supported("isync"),
+        193 => Classification::Supported("crxor"),
+        225 => Classification::Supported("crnand"),
+        257 => Classification::Supported("crand"),
+        289 => Classification::Supported("creqv"),
+        417 => Classification::Supported("crorc"),
+        449 => Classification::Supported("cror"),
         528 => {
             let bo = (raw >> 21) & 31;
-            if bo & 4 == 0 || bb > 3 {
+            if bo & 4 == 0 {
                 Classification::Illegal
             } else {
                 Classification::Supported("bcctr")
@@ -651,46 +646,8 @@ fn classify_31(raw: u32) -> Classification {
     if matches!(xo10, 181 | 183 | 247 | 439) && ra == 0 {
         return Classification::Illegal;
     }
-    if raw & 1 != 0
-        && matches!(
-            xo10,
-            0 | 19
-                | 21
-                | 23
-                | 32
-                | 53
-                | 55
-                | 87
-                | 119
-                | 144
-                | 149
-                | 151
-                | 181
-                | 183
-                | 215
-                | 247
-                | 279
-                | 311
-                | 339
-                | 341
-                | 343
-                | 373
-                | 375
-                | 407
-                | 439
-                | 467
-                | 532
-                | 534
-                | 598
-                | 660
-                | 662
-                | 790
-                | 854
-                | 918
-        )
-    {
-        return Classification::Illegal;
-    }
+    // Power ISA Book I section 1.3.3 requires slash-marked reserved fields to
+    // be ignored.  For the fixed-Rc X/XFX forms below, bit 31 is such a field.
     if matches!(
         xo9,
         8 | 10
@@ -730,37 +687,41 @@ fn classify_31(raw: u32) -> Classification {
             _ => "divw",
         });
     }
+    if matches!(xo9, 9 | 11 | 73 | 75) {
+        return Classification::Supported(match xo9 {
+            9 => "mulhdu",
+            11 => "mulhwu",
+            73 => "mulhd",
+            _ => "mulhw",
+        });
+    }
     match xo10 {
-        0 if raw & ((1 << 22) | 1) == 0 => Classification::Supported("cmp"),
-        9 => Classification::Supported("mulhdu"),
-        11 => Classification::Supported("mulhwu"),
-        19 if raw & 0x001f_f000 == 0 => Classification::Supported("mfcr"),
-        19 => Classification::Illegal,
+        0 => Classification::Supported("cmp"),
+        19 if raw & (1 << 20) == 0 => Classification::Supported("mfcr"),
+        19 => Classification::Unsupported("mfocrf"),
         21 => Classification::Supported("ldx"),
         23 => Classification::Supported("lwzx"),
         24 => Classification::Supported("slw"),
         26 => Classification::Supported("cntlzw"),
         27 => Classification::Supported("sld"),
         28 => Classification::Supported("and"),
-        32 if raw & ((1 << 22) | 1) == 0 => Classification::Supported("cmpl"),
+        32 => Classification::Supported("cmpl"),
         53 => Classification::Supported("ldux"),
         55 => Classification::Supported("lwzux"),
         58 => Classification::Supported("cntlzd"),
         60 => Classification::Supported("andc"),
-        73 => Classification::Supported("mulhd"),
-        75 => Classification::Supported("mulhw"),
         87 => Classification::Supported("lbzx"),
         119 => Classification::Supported("lbzux"),
-        122 if raw & 1 == 0 => Classification::Supported("popcntb"),
+        122 => Classification::Supported("popcntb"),
         124 => Classification::Supported("nor"),
         144 if raw & (1 << 20) == 0 => Classification::Supported("mtcrf"),
-        144 => Classification::Illegal,
+        144 => Classification::Unsupported("mtocrf"),
         149 => Classification::Supported("stdx"),
         151 => Classification::Supported("stwx"),
-        154 if raw & 1 == 0 => Classification::Supported("prtyw"),
+        154 => Classification::Supported("prtyw"),
         181 => Classification::Supported("stdux"),
         183 => Classification::Supported("stwux"),
-        186 if raw & 1 == 0 => Classification::Supported("prtyd"),
+        186 => Classification::Supported("prtyd"),
         215 => Classification::Supported("stbx"),
         247 => Classification::Supported("stbux"),
         279 => Classification::Supported("lhzx"),
@@ -772,7 +733,7 @@ fn classify_31(raw: u32) -> Classification {
         343 => Classification::Supported("lhax"),
         375 => Classification::Supported("lhaux"),
         373 => Classification::Supported("lwaux"),
-        378 if raw & 1 == 0 => Classification::Supported("popcntw"),
+        378 => Classification::Supported("popcntw"),
         407 => Classification::Supported("sthx"),
         412 => Classification::Supported("orc"),
         826 | 827 => Classification::Supported("sradi"),
@@ -780,14 +741,14 @@ fn classify_31(raw: u32) -> Classification {
         444 => Classification::Supported("or"),
         467 => Classification::Supported("mtspr"),
         476 => Classification::Supported("nand"),
-        506 if raw & 1 == 0 => Classification::Supported("popcntd"),
+        506 => Classification::Supported("popcntd"),
         532 => Classification::Supported("ldbrx"),
         534 => Classification::Supported("lwbrx"),
         536 => Classification::Supported("srw"),
         538 => Classification::Supported("cnttzw"),
         539 => Classification::Supported("srd"),
         570 => Classification::Supported("cnttzd"),
-        598 if raw & 0x039f_f801 == 0 => match (raw >> 21) & 3 {
+        598 => match (raw >> 21) & 3 {
             0 => Classification::Supported("sync"),
             1 => Classification::Supported("lwsync"),
             2 => Classification::Unsupported("ptesync"),
@@ -799,7 +760,7 @@ fn classify_31(raw: u32) -> Classification {
         792 => Classification::Supported("sraw"),
         794 => Classification::Supported("srad"),
         824 => Classification::Supported("srawi"),
-        854 if raw & 0x03ff_f801 == 0 => Classification::Supported("eieio"),
+        854 => Classification::Supported("eieio"),
         918 => Classification::Supported("sthbrx"),
         922 => Classification::Supported("extsh"),
         954 => Classification::Supported("extsb"),
@@ -1167,10 +1128,12 @@ fn execute_31(state: &mut State, raw: u32) -> Result<Outcome, Error> {
             }
             .into();
         }
-        9 | 11 | 73 | 75 => {
+        9 | 11 | 73 | 75 | 521 | 523 | 585 | 587 => {
             let a32 = state.gpr[ra] as u32;
             let b32 = state.gpr[rb] as u32;
-            let (value, base) = match xo10 {
+            // The XO-form OE position is slash-reserved for high multiply and
+            // therefore does not participate in Microwatt's decode.
+            let (value, base) = match xo9 {
                 9 => {
                     let product = u128::from(state.gpr[ra]) * u128::from(state.gpr[rb]);
                     ((product >> 64) as u64, "mulhdu")
@@ -1326,10 +1289,11 @@ fn execute_31(state: &mut State, raw: u32) -> Result<Outcome, Error> {
                 _ => ((source as u32 as i32 as i64) as u64, "extsw"),
             };
             state.gpr[ra] = value;
-            if rc {
+            let rc_is_defined = !matches!(xo10, 122 | 154 | 186 | 378 | 506);
+            if rc && rc_is_defined {
                 update_cr0(state, value);
             }
-            outcome.mnemonic = record_name(base, false, rc)?;
+            outcome.mnemonic = record_name(base, false, rc && rc_is_defined)?;
         }
         144 => {
             let mask = ((raw >> 12) & 0xff) as u8;

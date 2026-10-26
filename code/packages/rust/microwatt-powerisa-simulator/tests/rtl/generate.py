@@ -321,6 +321,18 @@ def row_definitions(
     add("srawi_sign_extend_31", x(3, 5, 31, 824, True), {3: 0x8000_0001})
     add("prtyw_byte_lsb", x(3, 5, 0, 154), {3: 0x0102_0408_0102_0304})
     add("prtyd_byte_lsb", x(3, 5, 0, 186), {3: 0x2})
+    # Normative Power ISA 1.3.3 slash-reserved fields are ignored by the
+    # processor.  These rows execute the pinned RTL with each important decode
+    # shape nonzero rather than treating slash fields as validity guards.
+    add("cmpw_slash", x(0, 3, 4, 0, True) | (1 << 22))
+    add("mcrf_slash", (19 << 26) | (4 << 21) | (8 << 16) | (3 << 11) | 1)
+    add("bclr_bh_slash", xl(20, 0, 0x1c, 16), special={"lr": next_cia})
+    add("isync_slash", (19 << 26) | (0x7FFF << 11) | (150 << 1) | 1)
+    add("popcntb_slash", x(3, 5, 31, 122, True))
+    add("mfcr_slash", x(5, 0, 0, 19, True) | (0x1FF << 11))
+    add("mulhwu_oe_slash", x(3, 5, 4, 11, True) | (1 << 10))
+    add("sync_slash", (31 << 26) | (7 << 23) | (0x3FF << 11) | (598 << 1) | 1)
+    add("eieio_slash", (31 << 26) | (0x7FFF << 11) | (854 << 1) | 1)
     return rows
 
 

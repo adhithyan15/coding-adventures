@@ -193,7 +193,11 @@ image validation.
 
 Only the following scalar instructions are implemented. Optional OE and Rc
 suffixes are accepted exactly where their Version 3.0C forms define those
-bits. Reserved bit combinations remain illegal.
+bits. Per Version 3.0C Book I section 1.3.3, fields printed as `/` are ignored
+by the processor even when nonzero; only defined fields containing reserved
+values are illegal. In particular, fixed-Rc count/parity instructions ignore
+Rc, high multiply ignores its slash OE position, and compare, branch-hint,
+condition, synchronization, and XFX slash fields do not constrain decode.
 
 ### 7.1 Immediate arithmetic and logical
 
@@ -263,8 +267,10 @@ complete 64-bit destination before Rc records CR0.
 - `mfcr` and `mtcrf`, in their L=0 forms; and
 - `mfspr` and `mtspr` only for XER (SPR 1), LR (SPR 8), and CTR (SPR 9).
 
+`mfcr` ignores the FXM field because it is slash-reserved in its L=0 form;
 `mtcrf` honors its field mask exactly. The L=1 `mfocrf`/`mtocrf` forms are
-recognized but outside this boundary. Any otherwise valid special-register
+recognized but outside this boundary and return `UnsupportedInstruction`
+regardless of FXM. Any otherwise valid special-register
 encoding naming another SPR returns `UnsupportedSpecialRegister` atomically.
 
 ### 7.5 Branch
@@ -338,7 +344,7 @@ Microwatt decode tables are a second implementation witness, never the sole
 architecture transcription. The implementation must distinguish:
 
 - `IllegalInstruction` for unallocated primary/extended selectors, reserved
-  bits, and architecturally invalid option combinations;
+  values in defined fields, and architecturally invalid option combinations;
 - `UnsupportedInstruction` for a recognized instruction outside Section 7;
 - `UnsupportedSpecialRegister` for a recognized `mfspr`/`mtspr` targeting an
   unmodeled SPR;
@@ -417,7 +423,8 @@ Completion requires all of the following.
 - within every relevant primary family, enumerate all 1,024 ten-bit extended
   selectors or all 512 nine-bit OE selectors as applicable;
 - exhaustively cover branch BO (32), BI (32), AA, LK, BH-validity, CR field,
-  record, overflow, field-mask, L, and reserved-bit classifications;
+  record, overflow, field-mask, L, defined-field reserved values, and every
+  slash-field bit that must be classification-invariant;
 - keep immediate/register payloads representative while exhaustively varying
   every field that can change classification; and
 - prove each supported family plus adjacent reserved and recognized-but-
@@ -435,9 +442,12 @@ the production instruction enum.
   memory, executes one valid included instruction, and exports complete state;
 - checked-in generated vectors record the commit, harness command, generator
   version, seed, row count, and content SHA-256 so CI does not need the network;
-- every valid classification family, Rc/OE width, carry/overflow boundary,
-  shift-count boundary, mask wrap, BO/BI outcome, update-addressing form,
-  byte-reverse width, and branch mode has a complete-state differential row;
+- the RTL corpus contains at least one complete-state row for every included
+  execution family/form plus explicit source-lock rows for slash-field decode,
+  SO/OV32, word multiply/divide shaping, arithmetic shifts, parity, branch,
+  memory, and synchronization. It does not claim that all BO/BI outcomes,
+  carry/overflow inputs, shift counts, or masks are separate RTL rows; those
+  exhaustive matrices are independent Rust truth-table/property tests;
 - OE rows include `addo` with `0x0000_0000_7fff_ffff + 1`, which produces
   OV=0 and OV32=1, once with incoming SO=0 and once with incoming SO=1; both
   rows prove SO is unchanged by OV32 alone, and the Rc variant proves CR0.SO
@@ -449,9 +459,11 @@ the production instruction enum.
   signed-word products and prove the full product plus OV/OV32/SO boundary;
 - sync classification and lifecycle rows cover L=0 `sync`, L=1 `lwsync`,
   recognized-but-unsupported L=2 `ptesync`, and reserved L=3 without mutation;
-- independent widened-arithmetic oracles cover add/subtract carry and signed
-  overflow; exhaustive truth tables cover shift counts, CR Boolean operations,
-  and BO/BI/CTR branch decisions; and
+- independent Rust tests cover the source-locked add/subtract carry and signed
+  overflow boundaries, shift counts at/beyond 32 and 64, every CR Boolean
+  operation, and representative taken/not-taken BO/BI/CTR branch decisions;
+  exhaustive encoding classification is required by Section 11.1, while an
+  exhaustive semantic input-space claim is intentionally not made; and
 - typed fault, lifecycle, image-bound, rollback, allocation, and unsupported-
   facility cases are Rust boundary tests rather than fabricated RTL results.
 

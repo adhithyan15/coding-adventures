@@ -91,6 +91,71 @@ fn ptesync_is_recognized_unsupported_and_atomic() {
 }
 
 #[test]
+fn mfocrf_and_mtocrf_are_recognized_unsupported_and_atomic() {
+    for (raw, name) in [
+        (
+            (31 << 26) | (5 << 21) | (1 << 20) | (0xa5 << 12) | (19 << 1) | 1,
+            "mfocrf",
+        ),
+        (
+            (31 << 26) | (5 << 21) | (1 << 20) | (0xa5 << 12) | (144 << 1) | 1,
+            "mtocrf",
+        ),
+    ] {
+        let mut cpu = loaded(raw);
+        cpu.write_register(5, 0xfeed_face_dead_beef).unwrap();
+        let before = cpu.get_state();
+        assert_eq!(
+            cpu.step(),
+            Err(Error::UnsupportedInstruction {
+                cia: 0x100,
+                raw,
+                name
+            })
+        );
+        assert_eq!(cpu.get_state(), before);
+    }
+}
+
+#[test]
+fn slash_fields_execute_as_ignored_microwatt_inputs() {
+    // mfcr ignores FXM, its adjacent slash bit, and its fixed-Rc slash bit.
+    let raw = (31 << 26) | (5 << 21) | (0xff << 12) | (1 << 11) | (19 << 1) | 1;
+    let mut cpu = loaded(raw);
+    let trace = cpu.step().unwrap();
+    assert_eq!(trace.mnemonic, "mfcr");
+    assert_eq!(cpu.read_register(5).unwrap(), 0);
+
+    // Fixed-Rc count/parity forms ignore both Rc and the five-bit slash field.
+    for (xo, mnemonic) in [
+        (122, "popcntb"),
+        (154, "prtyw"),
+        (186, "prtyd"),
+        (378, "popcntw"),
+        (506, "popcntd"),
+    ] {
+        let raw = x_form(31, 3, 5, 31, xo, true);
+        let mut cpu = loaded(raw);
+        cpu.write_register(3, 0x0102_0304_0506_0708).unwrap();
+        let trace = cpu.step().unwrap();
+        assert_eq!(trace.mnemonic, mnemonic);
+        assert_eq!(trace.state_after.cr, 0);
+    }
+
+    // OE is slash-reserved on high multiply and must not change decode/result.
+    let mut plain = loaded(x_form(31, 5, 3, 4, 11, true));
+    let mut slash = loaded(x_form(31, 5, 3, 4, 11, true) | (1 << 10));
+    for cpu in [&mut plain, &mut slash] {
+        cpu.write_register(3, 0xffff_ffff).unwrap();
+        cpu.write_register(4, 0xffff_ffff).unwrap();
+        cpu.step().unwrap();
+    }
+    assert_eq!(plain.read_register(5), slash.read_register(5));
+    assert_eq!(plain.get_state().cr, slash.get_state().cr);
+    assert_eq!(plain.get_state().xer, slash.get_state().xer);
+}
+
+#[test]
 fn scalar_memory_is_little_endian_and_traced() {
     let mut cpu = loaded(d_form(36, 3, 4, 8)); // stw r3,8(r4)
     cpu.write_register(3, 0x1122_3344_5566_7788).unwrap();
@@ -156,31 +221,6 @@ fn parity_uses_byte_lsbs_and_word_halves_are_independent() {
     cpu.write_register(3, 0x0102_0408_0102_0304).unwrap();
     cpu.step().unwrap();
     assert_eq!(cpu.read_register(5).unwrap(), 1);
-}
-
-#[test]
-fn fixed_rc_and_reserved_control_encodings_are_illegal_and_atomic() {
-    let mut raws = vec![
-        x_form(31, 3, 5, 4, 122, true),
-        x_form(31, 3, 5, 4, 154, true),
-        x_form(31, 3, 5, 4, 186, true),
-        x_form(31, 3, 5, 4, 378, true),
-        x_form(31, 3, 5, 4, 506, true),
-        (31 << 26) | (3 << 21) | (1 << 20) | (144 << 1),
-    ];
-    for bit in 12..=20 {
-        raws.push((31 << 26) | (3 << 21) | (1 << bit) | (19 << 1));
-    }
-    for raw in raws {
-        let mut cpu = loaded(raw);
-        cpu.write_register(3, 0xdead_beef_cafe_babe).unwrap();
-        let before = cpu.get_state();
-        assert_eq!(
-            cpu.step(),
-            Err(Error::IllegalInstruction { cia: 0x100, raw })
-        );
-        assert_eq!(cpu.get_state(), before, "raw={raw:#010x}");
-    }
 }
 
 #[test]
