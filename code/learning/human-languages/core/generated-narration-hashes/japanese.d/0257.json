@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:650ef1d1eaaba5d9",
+  "lessonIds": [
+    "JA-C257-nakushimashita",
+    "JA-C257-noriokureru",
+    "JA-C257-nihonjuu",
+    "JA-W257-juu-kanji",
+    "JA-R257-something-went-wrong"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "japanese/narration/ch257.txt",
+  "json": "japanese/narration/ch257.json",
+  "textHash": "fnv1a64:e25ea0904a25e9cb",
+  "jsonHash": "fnv1a64:a84db2b2686282b2",
+  "findings": []
+}

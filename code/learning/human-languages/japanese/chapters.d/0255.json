@@ -1,0 +1,21 @@
+{
+  "chapter": 255,
+  "title": "Advice, and So",
+  "label": "ch:ja-advice-and-so",
+  "canDo": "I can give advice for and against (yasunda hō ga ii desu; nomanai hō ga ii desu), and say what follows from something with dakara, desu kara and sorede.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-R255-advice-and-so",
+    "kind": "production",
+    "summary": "Complete JA-R255-advice-and-so: give advice and say what follows from it.",
+    "assesses": [
+      "JA-GRAMMAR-C255-SHOULD-01",
+      "JA-LEX-C255-DAKARA-01",
+      "JA-GRAMMAR-C255-SHOULD-02",
+      "JA-GRAMMAR-C255-SO-01",
+      "JA-GRAMMAR-C255-SO-02"
+    ]
+  }
+}

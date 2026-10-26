@@ -1,0 +1,11 @@
+{
+  "id": "JA-W261-six-lines",
+  "pathSegment": "JA-PATH-261-CONDITION261",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-261-CONDITION261",
+      "order": 3
+    }
+  ]
+}

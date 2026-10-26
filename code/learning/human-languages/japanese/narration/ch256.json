@@ -1,0 +1,911 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 256,
+  "title": "Which Way to the Station",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:c143865a8e2175c0",
+  "lessons": [
+    {
+      "id": "JA-C256-dou-yatte",
+      "sequence": 15300,
+      "title": "どこですか / どうやって (doko desu ka / dō yatte) — asking the way",
+      "headword": "どこですか / どうやって",
+      "romanization": "doko desu ka / dō yatte",
+      "gloss": "where is it, how do I get there — asking the way and following directions",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:242945ef39fde2d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"where\" and \"a station\". (doko, eki.) Then the -て form of いく. (itte.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: どこですか, どうやって",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えきは どこですか。 eki wa doko desu ka. — \"Where is the station?\""
+            },
+            {
+              "kind": "speech",
+              "text": "To ask how to get somewhere, どうやって (dō yatte) asks \"how\": どう, \"how\", with やって, the -て form of やる, \"to do\"."
+            },
+            {
+              "kind": "speech",
+              "text": "くうこうまで どうやって いきますか。 kūkō made dō yatte ikimasu ka. — \"How do I get to the airport?\""
+            },
+            {
+              "kind": "speech",
+              "text": "ちかてつで いきます。 chikatetsu de ikimasu. — \"You go by subway.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: いって、まがって ください",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Directions are -て ください requests, one after another, joined with the -て form:"
+            },
+            {
+              "kind": "speech",
+              "text": "まっすぐ いって ください。 massugu itte kudasai. — \"Please go straight on.\""
+            },
+            {
+              "kind": "speech",
+              "text": "まっすぐ いって、みぎに まがって ください。 massugu itte, migi ni magatte kudasai. — \"Go straight on, then turn right.\""
+            },
+            {
+              "kind": "speech",
+              "text": "つぎの かどを ひだりに まがって ください。 tsugi no kado o hidari ni magatte kudasai. — \"Turn left at the next corner.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ぎんこうの まえに あります。 ginkō no mae ni arimasu. — \"It is in front of the bank.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Where is the station?\" — eki wa doko desu ka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Where is the station?\" — *eki wa doko desu ka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Where is the bank?\" — ginkō wa doko desu ka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Where is the bank?\" — *ginkō wa doko desu ka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Where is the hospital?\" — byōin wa doko desu ka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Where is the hospital?\" — *byōin wa doko desu ka*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C256-dou-yatte-say",
+              "prompt": "Ask how to get to the airport.",
+              "assesses": [
+                "JA-GRAMMAR-C256-DIRECTION-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "kūkō made dō yatte ikimasu ka",
+                "くうこうまで どうやって いきますか。",
+                "kuukou made dou yatte ikimasu ka"
+              ],
+              "feedback": {
+                "correct": "dō yatte asks how; made says where to.",
+                "incorrect": "Place, made, then dō yatte ikimasu ka."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"How do I get there?\" (どうやって いきますか.) \"Please turn right\"? (みぎに まがって ください.) \"Go straight on, then turn left\"? (まっすぐ いって、ひだりに まがって ください.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C256-mai",
+      "sequence": 15310,
+      "title": "まい (mai) — the counter for flat things",
+      "headword": "まい",
+      "romanization": "mai",
+      "gloss": "the counter for flat things",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0440502ac8ad99cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say \"where is the station?\" (eki wa doko desu ka.) Then \"a ticket\". (kippu.) People are counted with にん; flat things have a counter of their own."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: まい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まい — mai — the counter for flat things: tickets, stamps, sheets, plates. The number goes in front: いちまい (ichimai), one; にまい (nimai), two; さんまい (sanmai), three."
+            },
+            {
+              "kind": "speech",
+              "text": "きっぷを にまい ください。 kippu o nimai kudasai. — \"Two tickets, please.\""
+            },
+            {
+              "kind": "speech",
+              "text": "きってを さんまい ください。 kitte o sanmai kudasai. — \"Three stamps, please.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まい (mai) is Sino-Japanese (kango): the on'yomi of a character KANJIDIC2 glosses \"sheet of …\" and \"counter for flat thin objects or sheets\", a reading borrowed from Chinese (KANJIDIC2). JMdict lists it as a counter, \"for thin, flat objects (e.g. sheets of paper, plates, coins)\" (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"One ticket, please\" — kippu o ichimai kudasai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"One ticket, please\" — *kippu o ichimai kudasai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Two tickets, please\" — kippu o nimai kudasai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Two tickets, please\" — *kippu o nimai kudasai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Three tickets, please\" — kippu o sanmai kudasai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Three tickets, please\" — *kippu o sanmai kudasai*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C256-mai-say",
+              "prompt": "Say 'two tickets, please'.",
+              "assesses": [
+                "JA-LEX-C256-MAI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "kippu o nimai kudasai",
+                "きっぷを にまい ください。",
+                "きっぷを にまい ください"
+              ],
+              "feedback": {
+                "correct": "nimai: two, then the counter for flat things.",
+                "incorrect": "Two flat things is nimai: kippu o nimai kudasai."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two tickets? (にまい.) Three stamps? (さんまい.) Two people? (ふたり.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C256-kippu-o-nimai",
+      "sequence": 15320,
+      "title": "きっぷを にまい ください (kippu o nimai kudasai) — at the ticket window",
+      "headword": "きっぷを にまい ください",
+      "romanization": "kippu o nimai kudasai",
+      "gloss": "two tickets, please — buying a ticket, and asking when the train leaves",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:42ba1c23463f9140",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"two tickets, please\". (kippu o nimai kudasai.) Then \"a ticket window\", \"one way\" and \"a round trip\". (madoguchi, katamichi, ōfuku.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 〜までの きっぷ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くうこうまでの きっぷを ください。 kūkō made no kippu o kudasai. — \"A ticket to the airport, please.\""
+            },
+            {
+              "kind": "speech",
+              "text": "まで says how far; の joins it to the ticket: \"a ticket as far as the airport\". The number and まい (mai) go before ください:"
+            },
+            {
+              "kind": "speech",
+              "text": "くうこうまでの きっぷを にまい ください。 kūkō made no kippu o nimai kudasai. — \"Two tickets to the airport, please.\""
+            },
+            {
+              "kind": "speech",
+              "text": "かたみちですか。 katamichi desu ka. — \"One way?\""
+            },
+            {
+              "kind": "speech",
+              "text": "いいえ、おうふくを にまい ください。 iie, ōfuku o nimai kudasai. — \"No, two returns, please.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: なんじに でますか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なんじ (nanji), \"what time\", is なん, \"what\", with じ (ji), \"o'clock\". でます (demasu) is what a train does when it leaves:"
+            },
+            {
+              "kind": "speech",
+              "text": "つぎの でんしゃは なんじに でますか。 tsugi no densha wa nanji ni demasu ka. — \"What time does the next train leave?\""
+            },
+            {
+              "kind": "speech",
+              "text": "くじに でます。 kuji ni demasu. — \"It leaves at nine.\""
+            },
+            {
+              "kind": "speech",
+              "text": "のりばは どこですか。 noriba wa doko desu ka. — \"Where does it leave from?\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It leaves at nine\" — kuji ni demasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It leaves at nine\" — *kuji ni demasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It leaves at five\" — goji ni demasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It leaves at five\" — *goji ni demasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It leaves at seven\" — shichiji ni demasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It leaves at seven\" — *shichiji ni demasu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C256-kippu-o-nimai-say",
+              "prompt": "Ask what time the next train leaves.",
+              "assesses": [
+                "JA-GRAMMAR-C256-TICKET-02"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "tsugi no densha wa nanji ni demasu ka",
+                "つぎの でんしゃは なんじに でますか。",
+                "tsugi no densha wa nanji ni demasu ka?"
+              ],
+              "feedback": {
+                "correct": "nanji ni demasu ka: what time, then the verb of leaving.",
+                "incorrect": "Tsugi no densha wa, then nanji ni demasu ka."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"A ticket to the airport, please\"? (くうこうまでの きっぷを ください.) \"What time does it leave?\" (なんじに でますか.) \"Where does it leave from?\" (のりばは どこですか.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C256-nihonjin",
+      "sequence": 15330,
+      "title": "日本人 (nihonjin) — a Japanese person",
+      "headword": "日本人",
+      "romanization": "nihonjin",
+      "gloss": "a Japanese person",
+      "script": "japanese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:3d85f48ce3c86aa9",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "You'll want to know: 日本人"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: You'll want to know: 日本人."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say \"the Japanese language\". (nihongo.) Then \"a friend\". (tomodachi.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 日本人",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "日本人 — nihonjin — \"a Japanese person\". It is 日本 (nihon), \"Japan\", the first part of 日本語, with じん (jin), \"person\", after it."
+            },
+            {
+              "kind": "speech",
+              "text": "ともだちは 日本人です。 tomodachi wa nihonjin desu. — \"My friend is Japanese.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You write the first two signs. The third is new, read じん (jin) here; the next lesson writes it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "日本人 (nihonjin) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ni, \"sun\" (Middle Chinese nyit), hon, \"origin\" (pwonX) and jin, \"person\" (nyin) (KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict glosses it \"Japanese person\" (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nihonjin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nihonjin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My friend is Japanese\" — tomodachi wa nihonjin desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My friend is Japanese\" — *tomodachi wa nihonjin desu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My teacher is Japanese\" — sensei wa nihonjin desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My teacher is Japanese\" — *sensei wa nihonjin desu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C256-nihonjin-say",
+              "prompt": "Say the Japanese for 'a Japanese person'.",
+              "assesses": [
+                "JA-LEX-C256-NIHONJIN-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "nihonjin",
+                "日本人",
+                "にほんじん"
+              ],
+              "feedback": {
+                "correct": "Right: nihonjin, Japan and a person.",
+                "incorrect": "'A Japanese person' is nihonjin."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"A Japanese person\"? (日本人, nihonjin.) How is the new sign read here? (じん, jin.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W256-jin-kanji",
+      "sequence": 15340,
+      "title": "人 (jin) — a person, two strokes",
+      "headword": "人",
+      "romanization": "jin",
+      "gloss": "the two-stroke kanji for a person, read jin in 日本人",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:91ce3d451b413f1f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say nihonjin, a Japanese person. You write 日 and 本. Then call up 出: the long stem first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "人 — jin."
+            },
+            {
+              "kind": "speech",
+              "text": "Its parts:"
+            },
+            {
+              "kind": "speech",
+              "text": "a stroke falling to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "a stroke falling to the right, leaning on it."
+            },
+            {
+              "kind": "speech",
+              "text": "Two strokes, one lift:"
+            },
+            {
+              "kind": "speech",
+              "text": "draw the long falling stroke from the top, down to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, start partway down the first stroke and draw the second down to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "The second stroke starts on the first, not at the top. Here it is read じん (jin), as in 日本人 (nihonjin); this lesson asks only for that reading."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Find 人 (jin) in 日本人 and say nihonjin."
+            },
+            {
+              "kind": "speech",
+              "text": "Copy 人 three times, saying jin at each one."
+            },
+            {
+              "kind": "speech",
+              "text": "Find it once more, in ともだちは 日本人です (tomodachi wa nihonjin desu), and say the line."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How many strokes? (Two.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: KanjiVG stroke-order data: KanjiVG, kanji/04eba.svg, kanji 人 (jin) (U+4EBA), 2 stroke paths kvg:04eba-s1 to s2 (Ulrich Apel and contributors, CC BY-SA 3.0). Only the order and direction are taken from it."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-W256-jin-kanji-strokes",
+              "prompt": "Where does the second stroke of the kanji read jin begin?",
+              "assesses": [
+                "JA-SCRIPT-KANJI-JIN-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "partway down the first stroke",
+                "on the first stroke",
+                "halfway down the first",
+                "partway down the first"
+              ],
+              "feedback": {
+                "correct": "It starts partway down the first stroke.",
+                "incorrect": "The second stroke starts on the first one, partway down."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R256-which-way-to-the-station",
+      "sequence": 15350,
+      "title": "Review — which way to the station",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "asking the way, buying tickets and asking when the train leaves",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7425f68e5a0ce13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask \"where is the station?\" (eki wa doko desu ka.) Then say \"two tickets, please\". (kippu o nimai kudasai.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "How do I get to the station?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: How do I get to the station?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Turn left at the next corner.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Turn left at the next corner.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "One ticket to the airport, please.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: One ticket to the airport, please.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "What time does the next train leave?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: What time does the next train leave?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My friend is Japanese.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My friend is Japanese.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Tomorrow is a holiday. So the bank is closed. — politely",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Tomorrow is a holiday. So the bank is closed. — politely]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R256-which-way-to-the-station-say",
+              "prompt": "Tell someone to go straight on and turn right, then ask for two tickets to the airport.",
+              "assesses": [
+                "JA-GRAMMAR-C256-DIRECTION-02",
+                "JA-GRAMMAR-C256-TICKET-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "massugu itte, migi ni magatte kudasai; kūkō made no kippu o nimai kudasai",
+                "まっすぐ いって、みぎに まがって ください。くうこうまでの きっぷを にまい ください。",
+                "massugu itte migi ni magatte kudasai, kūkō made no kippu o nimai kudasai"
+              ],
+              "feedback": {
+                "correct": "itte joins the directions; nimai counts the tickets.",
+                "incorrect": "Join with itte, end with magatte kudasai; then made no kippu o nimai kudasai."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"How\"? (どうやって.) Three stamps? (さんまい.) \"What time\"? (なんじ.) \"A Japanese person\"? (日本人 (nihonjin).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
