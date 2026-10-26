@@ -199,12 +199,12 @@ describe("handwriting ductus", () => {
     // 60 -> 61: 尔, the sound half of 你, which ZH-W01-er teaches alone.
     // 61 -> 62: 很, which ZH-W30-hen teaches as the character in front of
     // every adjective (我很好), written in chapter 30.
-    // 62 -> 86: 他 们 妈 男 叫 来 这 那 吃 饭 喝 水 买 多 少 去 车 天 今 星 期 年 明 点, the first
-    // characters stage 2's tranche a writes (chapters 31-48), each right after
-    // the word that anchors it.
-    expect(chinese.letters).toHaveLength(86);
+    // 62 -> 92: the thirty characters stage 2's tranche a writes (chapters
+    // 31-55), each right after the word that anchors it: 他 们 妈 男 叫 来
+    // 这 那 吃 饭 喝 水 买 多 少 去 车 天 今 星 期 年 明 点 午 晚 手 说 话 想.
+    expect(chinese.letters).toHaveLength(92);
     expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(
-      86,
+      92,
     );
     expect(
       chinese.letters.every((letter) => letter.strokeOrderSource !== undefined),
