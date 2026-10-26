@@ -63,10 +63,11 @@ python3 tools/generate_upstream_corpora.py \
 ```
 
 The recorded development run used Apple clang 21.0.0 in `g++` compatibility
-mode and Verilator 5.052. The generator verifies the commit and all seven
-source hashes from Spec 07be before compiling either harness. Ordinary builds
-and tests do not require C++, Verilator, a network connection, or the upstream
-checkout.
+mode and Verilator 5.052. The generator verifies the commit and all eleven
+project-source hashes from Spec 07be before compiling either harness,
+including the C++ helper/header inputs and the slow multiplier RTL. Ordinary
+builds and tests do not require C++, Verilator, a network connection, or the
+upstream checkout.
 
 ## Validation
 

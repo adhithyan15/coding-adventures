@@ -12,7 +12,8 @@
 - Add typed transactional load, restore, step, run and execute operations plus
   named deterministic seams at every real retained allocation boundary.
 - Check in independently reproducible 1,954-row C++ and 2,016-row Verilated
-  RTL corpora, source-lock their hashes, and compare complete projected state
-  and ordered instruction-fetch transactions for all 3,970 rows.
+  RTL corpora, source-lock every compiled project input, and compare complete
+  projected state and every field of the ordered instruction-fetch
+  transactions for all 3,970 rows.
 - Add 31 completion-contract tests, two corpus-consumer tests and one doctest.
   Strict checks pass with 92.70% release line coverage (1,270/1,370).

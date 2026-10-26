@@ -23,8 +23,12 @@ HASHES = {
     "rtl/core/cpuops.v": "54707430127001eb7e716eb14ff3b733ecfeac437a4a1cec6906bb7befa48a7e",
     "rtl/core/div.v": "ca220c1db020a4b3365d8c29fe9cdb24dfbc93a5db82827cb818b888d834abf5",
     "rtl/core/mpyop.v": "2b831b42a8b14671925c2284ce2e838378f3d738b1293eca74ede4c861aed5a4",
+    "rtl/core/slowmpy.v": "449527da756405fab2b30ad7121609a0a0d7555c7fba68a6d0c81eb0f90502d4",
     "rtl/core/memops.v": "b2d0f99a20263acc860d91c835f05df6ad0b2713a4a03ac1acb96da47946ed61",
     "sim/cpp/zsim.cpp": "cecb8e72d741c81a69e68982673021d273259da0d680dfce5158b881b9374e1b",
+    "sim/cpp/twoc.cpp": "55466d21033429bd06cc28a075c96588db5e07973a04284652d7f7e6a521764a",
+    "sim/cpp/twoc.h": "32110672ffd716f340da93ac2532ba485a64cd0f147d1f94798db938b723b1cb",
+    "sim/cpp/zipelf.h": "4cecdc651d2d7f5235f10fe19fb2ac361e304b096dec7fac5a3e5ba5351e7bfa",
 }
 
 

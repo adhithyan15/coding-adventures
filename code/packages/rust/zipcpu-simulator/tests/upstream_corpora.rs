@@ -1,6 +1,6 @@
 use zipcpu_simulator::{
-    encoding, Condition, InstructionClass, MemoryDirection, MemoryPurpose, ZipCpuSimulator,
-    CC_CPU_INFO,
+    encoding, Condition, InstructionClass, MemoryDirection, MemoryPurpose, MemoryTransaction,
+    ZipCpuSimulator, CC_CPU_INFO,
 };
 
 const ORIGIN: u32 = 0x100;
@@ -69,12 +69,19 @@ fn pinned_cpp_simulator_common_surface_matches_complete_state() {
         assert_eq!(cpu.state(), &expected, "{line}");
         assert_eq!(trace.state_after, expected, "{line}");
         assert_eq!(trace.raw_bytes, word.to_be_bytes(), "{line}");
-        assert_eq!(trace.transactions.len(), 1, "{line}");
-        assert_eq!(trace.transactions[0].purpose, MemoryPurpose::Instruction);
-        assert_eq!(trace.transactions[0].direction, MemoryDirection::Read);
-        assert_eq!(trace.transactions[0].address, ORIGIN);
-        assert_eq!(trace.transactions[0].value, word);
-        assert!(trace.transactions[0].success);
+        assert_eq!(
+            trace.transactions,
+            vec![MemoryTransaction {
+                purpose: MemoryPurpose::Instruction,
+                direction: MemoryDirection::Read,
+                address: ORIGIN,
+                width: 4,
+                value: word,
+                byte_enable: 0x0f,
+                success: true,
+            }],
+            "{line}"
+        );
         count += 1;
     }
     assert_eq!(count, 1_954);
@@ -117,12 +124,19 @@ fn pinned_rtl_cpuops_matches_complete_state_projection() {
         assert_eq!(cpu.state(), &expected, "{line}");
         assert_eq!(trace.state_after, expected, "{line}");
         assert_eq!(trace.raw_bytes, word.to_be_bytes(), "{line}");
-        assert_eq!(trace.transactions.len(), 1, "{line}");
-        assert_eq!(trace.transactions[0].purpose, MemoryPurpose::Instruction);
-        assert_eq!(trace.transactions[0].direction, MemoryDirection::Read);
-        assert_eq!(trace.transactions[0].address, ORIGIN);
-        assert_eq!(trace.transactions[0].value, word);
-        assert!(trace.transactions[0].success);
+        assert_eq!(
+            trace.transactions,
+            vec![MemoryTransaction {
+                purpose: MemoryPurpose::Instruction,
+                direction: MemoryDirection::Read,
+                address: ORIGIN,
+                width: 4,
+                value: word,
+                byte_enable: 0x0f,
+                success: true,
+            }],
+            "{line}"
+        );
         count += 1;
     }
     assert_eq!(count, 2_016);
