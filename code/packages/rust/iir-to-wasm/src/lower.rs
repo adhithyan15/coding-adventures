@@ -152,7 +152,7 @@ use crate::codegen::{
     F32_NE, F32_SUB, F64_ADD, F64_CONVERT_I64_S, F64_DIV, F64_EQ, F64_FLOOR, F64_GE, F64_GT,
     F64_LE, F64_LT, F64_MUL,
     F64_NEG, F64_NE, F64_SQRT, F64_SUB, I32_ADD, I32_AND, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S,
-    I64_REINTERPRET_F64, I64_TRUNC_F64_S,
+    I64_EXTEND_I32_U, I64_REINTERPRET_F64, I64_TRUNC_F64_S,
     I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE,
     I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_SUB, I32_XOR, I64_ADD,
     I64_AND, I64_DIV_S, I64_DIV_U, I64_EQ, I64_GE_S, I64_GE_U, I64_GT_S, I64_GT_U, I64_LE_S, I64_LT_S,
@@ -1315,6 +1315,11 @@ struct Lang83Imports {
     /// `lang83_f64.rs`), present when the module uses `write_f64_py` or
     /// `write_f64_js`.
     write_f64: Option<u32>,
+    /// LANG83 PR7b: the function indices of the in-module `f64_digits` /
+    /// `f64_exp10` wrappers (`(f64) -> i64`, NOT imports), present when the
+    /// module uses either op or a float writer (the digit core is shared).
+    f64_digits: Option<u32>,
+    f64_exp10: Option<u32>,
 }
 
 /// Emit WASM bytes for a single IIR instruction.
@@ -2688,6 +2693,55 @@ fn emit_instr(
                         _ => F64_DIV,
                     });
                 }
+            }
+            code.extend(encode_local_set(rd));
+        }
+        // LANG83 PR7b — the language-neutral float primitives (`f64 → i64`).
+        //
+        // `f64_class` is inline: the magnitude (bits with bit 63 masked off)
+        // goes to the dest (an `i64` local, its type_hint), then three
+        // compares against +Infinity's bits are summed as i32 and widened:
+        //
+        //   local.get a; i64.reinterpret_f64; i64.const 0x7FFF…F; i64.and; local.set d
+        //   local.get d; i64.const 0;      i64.ne               ; mag != 0
+        //   local.get d; i64.const 0x7FF0…0; i64.ge_u; i32.add  ; + (mag >= inf)
+        //   local.get d; i64.const 0x7FF0…0; i64.gt_u; i32.add  ; + (mag >  inf)
+        //   i64.extend_i32_u; local.set d
+        //
+        //   ±0 → 0   finite ≠ 0 → 1   ±Infinity → 2   NaN → 3
+        //
+        // `f64_digits` / `f64_exp10` call the in-module wrappers around the
+        // PR6a digit core (`lang83_f64.rs`): `local.get a; call $w; local.set d`.
+        "f64_class" | "f64_digits" | "f64_exp10" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("{} must have a dest", instr.op),
+            })?;
+            let rd = get_reg(dest)?;
+            code.extend(encode_local_get(get_src_reg(&instr.srcs, 0, reg_map, fn_name)?));
+            if instr.op == "f64_class" {
+                const INF_BITS: i64 = 0x7FF0_0000_0000_0000;
+                code.push(I64_REINTERPRET_F64);
+                code.extend(encode_i64_const(i64::MAX));
+                code.push(I64_AND);
+                code.extend(encode_local_set(rd));
+                code.extend(encode_local_get(rd));
+                code.extend(encode_i64_const(0));
+                code.push(I64_NE);
+                for cmp in [I64_GE_U, I64_GT_U] {
+                    code.extend(encode_local_get(rd));
+                    code.extend(encode_i64_const(INF_BITS));
+                    code.push(cmp);
+                    code.push(I32_ADD);
+                }
+                code.push(I64_EXTEND_I32_U);
+            } else {
+                let helper = if instr.op == "f64_digits" { lang83.f64_digits } else { lang83.f64_exp10 };
+                let fn_idx = helper.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                    function: fn_name.to_string(),
+                    op: format!("{}: no in-module digit helper (internal error)", instr.op),
+                })?;
+                code.extend(encode_call(fn_idx));
             }
             code.extend(encode_local_set(rd));
         }
@@ -5863,7 +5917,14 @@ pub fn lower_iir_to_wasm(
         i.op == "call_builtin"
             && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "write_f64_py" || n == "write_f64_js")
     });
-    let f64_scratch: Option<u32> = if lang83_uses_write_f64 {
+    // LANG83 PR7b: `f64_digits` / `f64_exp10` run the same digit core, so
+    // they reserve the same scratch region (but need no `env.putchar`).
+    let lang83_uses_f64_digit_ops = module
+        .functions
+        .iter()
+        .flat_map(|f| &f.instructions)
+        .any(|i| i.op == "f64_digits" || i.op == "f64_exp10");
+    let f64_scratch: Option<u32> = if lang83_uses_write_f64 || lang83_uses_f64_digit_ops {
         string_data.resize(string_data.len().next_multiple_of(8), 0);
         let base = string_data.len() as u32;
         string_data.resize(string_data.len() + crate::lang83_f64::F64_SCRATCH_BYTES, 0);
@@ -6024,7 +6085,13 @@ pub fn lower_iir_to_wasm(
             + u32::from(uses_str_cmp_runtime)
             + u32::from(uses_memory)
     });
-    lang83.write_f64 = f64_helpers_base.map(|base| base + crate::lang83_f64::WRITE_F64_OFFSET);
+    // The writer group (and so `$__iir_write_f64`) exists only when a float
+    // is printed; the PR7b wrappers are in the computation group, always.
+    lang83.write_f64 = f64_helpers_base
+        .filter(|_| lang83_uses_write_f64)
+        .map(|base| base + crate::lang83_f64::WRITE_F64_OFFSET);
+    lang83.f64_digits = f64_helpers_base.map(|base| base + crate::lang83_f64::DIGITS_VALUE_OFFSET);
+    lang83.f64_exp10 = f64_helpers_base.map(|base| base + crate::lang83_f64::EXP10_VALUE_OFFSET);
 
     // ── Step 4: Lower each function ──────────────────────────────────────────
 
@@ -6431,10 +6498,16 @@ pub fn lower_iir_to_wasm(
     // LANG83 PR6a: append the float writer's helpers (see `lang83_f64.rs`),
     // matching `f64_helpers_base` above.
     if let (Some(base), Some(scratch)) = (f64_helpers_base, f64_scratch) {
-        let putchar = putchar_fn_idx.ok_or_else(|| IIRWasmError::UnsupportedOp {
-            function: "<module>".to_string(),
-            op: "write_f64_*: no env.putchar import (internal error)".to_string(),
-        })?;
+        // Only the writer group prints; a module with just the PR7b digit
+        // ops gets the computation group and imports no `putchar`.
+        let putchar = if lang83_uses_write_f64 {
+            Some(putchar_fn_idx.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                function: "<module>".to_string(),
+                op: "write_f64_*: no env.putchar import (internal error)".to_string(),
+            })?)
+        } else {
+            None
+        };
         for (ty, body) in crate::lang83_f64::build_f64_helpers(base, putchar, scratch) {
             let type_idx = types.len() as u32 + struct_type_offset;
             types.push(ty);

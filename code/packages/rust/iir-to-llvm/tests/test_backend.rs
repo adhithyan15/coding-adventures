@@ -3770,6 +3770,94 @@ fn a_module_function_in_the_reserved_iir_namespace_is_refused_when_floats_are_pr
 }
 
 // ===========================================================================
+// LANG83 PR7b — f64_class / f64_digits / f64_exp10
+// ===========================================================================
+
+/// `main` writes `f64_class`, `f64_digits` and `f64_exp10` of each value with
+/// `write_i64`, a space after each (and, when `with_putchar` is false, no
+/// separator at all, so the module uses no `putchar`).
+fn digit_program(values: &[f64], with_putchar: bool) -> IIRModule {
+    let mut m = float_program("write_i64", &[]);
+    let ret = m.functions[0].instructions.split_off(1);
+    let body = &mut m.functions[0].instructions;
+    for (i, x) in values.iter().enumerate() {
+        let c = format!("c{i}");
+        body.push(IIRInstr::new("const", Some(c.clone()), vec![Operand::Float(*x)], "f64"));
+        for op in ["f64_class", "f64_digits", "f64_exp10"] {
+            let r = format!("{op}{i}");
+            body.push(IIRInstr::new(op, Some(r.clone()), vec![v(&c)], "i64"));
+            body.push(IIRInstr::new("call_builtin", None, vec![v("write_i64"), v(&r)], "void"));
+            if with_putchar {
+                body.push(IIRInstr::new("call_builtin", None, vec![v("putchar"), v("sp")], "void"));
+            }
+        }
+    }
+    body.extend(ret);
+    m
+}
+
+#[test]
+fn digit_ops_emit_the_core_and_wrappers_but_not_the_writer() {
+    let ll = lower(&digit_program(&[1.5], false));
+    // f64_class: reinterpret, mask the sign, three unsigned compares summed.
+    assert!(ll.contains("bitcast double 0x3FF8000000000000 to i64"), "{ll}");
+    assert!(ll.contains("and i64 %__clsbits"), "{ll}");
+    for cmp in ["icmp ne i64 %__clsmag", "icmp uge i64 %__clsmag", "icmp ugt i64 %__clsmag"] {
+        assert!(ll.contains(cmp), "missing `{cmp}`:\n{ll}");
+    }
+    assert!(ll.contains("= call i64 @__iir_f64_shortest_digits(double 0x3FF8000000000000)"), "{ll}");
+    assert!(ll.contains("= call i64 @__iir_f64_shortest_exp10(double 0x3FF8000000000000)"), "{ll}");
+    assert_eq!(ll.matches("define linkonce_odr i32 @__iir_f64_digits(").count(), 1);
+    assert_eq!(ll.matches("define linkonce_odr i64 @__iir_f64_shortest_digits(").count(), 1);
+    // No layout code, and nothing that writes a byte: the digits are pure.
+    assert!(!ll.contains("@__iir_write_f64") && !ll.contains("@putchar"), "{ll}");
+    // A module that both prints a float and asks for its digits carries ONE core.
+    let mut both = digit_program(&[1.5], true);
+    let tail_at = both.functions[0].instructions.len() - 2;
+    let ret = both.functions[0].instructions.split_off(tail_at);
+    both.functions[0].instructions.push(IIRInstr::new("call_builtin", None, vec![v("write_f64_py"), v("c0")], "void"));
+    both.functions[0].instructions.extend(ret);
+    let ll = lower(&both);
+    assert_eq!(ll.matches("define linkonce_odr i32 @__iir_f64_digits(").count(), 1, "{ll}");
+    assert_eq!(ll.matches("define linkonce_odr void @__iir_write_f64(").count(), 1);
+    assert_eq!(ll.matches("declare i32 @putchar(i32)").count(), 1);
+    assert!(validate_for_llvm(&digit_program(&[1.5], true)).is_empty());
+    // The reserved namespace is refused for the digit ops too.
+    let mut clash = digit_program(&[1.0], false);
+    clash.functions.push(IIRFunction::new("__iir_f64_shortest_digits", vec![], "void", vec![IIRInstr::new("ret_void", None, vec![], "void")]));
+    assert!(lower_iir_to_llvm(&clash, &IIRLlvmConfig::default()).is_err());
+}
+
+#[test]
+fn digit_ops_match_python_repr_on_real_clang() {
+    // (value, class, digits, exp10) — the digits are host python3's repr.
+    let rows: &[(f64, &str)] = &[
+        (1.5, "1 15 0"),
+        (-1.5, "1 15 0"),
+        (100.0, "1 1 2"),
+        (0.1, "1 1 -1"),
+        (123.456, "1 123456 2"),
+        (1e21, "1 1 21"),
+        (1e-7, "1 1 -7"),
+        (5e-324, "1 5 -324"),
+        (2.2250738585072014e-308, "1 22250738585072014 -308"),
+        (1.7976931348623157e308, "1 17976931348623157 308"),
+        (2.9802322387695312e-08, "1 29802322387695312 -8"),
+        (1072012167405248.25, "1 10720121674052482 15"),
+        (0.0, "0 0 0"),
+        (-0.0, "0 0 0"),
+        (f64::INFINITY, "2 0 0"),
+        (f64::NEG_INFINITY, "2 0 0"),
+        (f64::NAN, "3 0 0"),
+    ];
+    let values: Vec<f64> = rows.iter().map(|(x, _)| *x).collect();
+    let Some(out) = run_on_clang(&digit_program(&values, true), "f64_digits") else { return };
+    assert!(out.status.success(), "{}", String::from_utf8_lossy(&out.stderr));
+    let want: String = rows.iter().map(|(_, w)| format!("{w} ")).collect();
+    assert_eq!(String::from_utf8_lossy(&out.stdout), want);
+}
+
+// ===========================================================================
 // LANG83 PR6c — non-trapping IEEE f64 arithmetic and f64_signbit
 // ===========================================================================
 

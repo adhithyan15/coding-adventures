@@ -1,4 +1,18 @@
 # Changelog — iir-to-llvm
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- The module-local float IR is now two constants: `LANG83_F64_DIGITS_LL`
+  (big integers, the `@__iir_f64_digits` core and two new `linkonce_odr`
+  wrappers `@__iir_f64_shortest_digits(double)` / `@__iir_f64_shortest_exp10(double)`)
+  and `LANG83_F64_WRITE_LL` (the PR6a layout and output). A module with
+  `f64_digits` / `f64_exp10` gets the first only (no `putchar`); a module
+  that prints a float gets both, with one copy of the core.
+- `f64_class` is inline: `bitcast`, mask, three `icmp`s `zext`ed and summed.
+- The reserved `__iir_` function-name check also covers the digit ops.
+- Tests: emitted shape, one core with both users, and the three ops on real
+  `clang` against host `python3`. The wrappers were also checked against
+  `python3` on a 122 108-value corpus at `-O0` and `-O2`.
+
 ## [0.63.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
 
 - **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /

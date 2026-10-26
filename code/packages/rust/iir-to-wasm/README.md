@@ -279,3 +279,5 @@ add/sub, `a == MIN` for negation, and for multiply a `-1 × MIN` guard followed 
 LANG83 PR6a adds `write_f64_py` / `write_f64_js` → the in-module `$__iir_write_f64(f64, i32 layout)`. Eleven in-module functions compute the shortest round-trip digits (Burger–Dybvig over big integers in a scratch region reserved after the static data) and print Python's `repr` or JavaScript's `toString` layout through `env.putchar` (see `src/lang83_f64.rs`).
 
 LANG83 PR6c adds the non-trapping IEEE `f64_add`/`f64_sub`/`f64_mul`/`f64_div`/`f64_neg` → `f64.add` … `f64.neg`, and `f64_signbit` → `i64.reinterpret_f64; i64.const 63; i64.shr_u`.
+
+LANG83 PR7b adds `f64_class` (inline: reinterpret, mask, three `i64` compares summed) and `f64_digits` / `f64_exp10` → calls of two in-module `(f64) -> i64` wrappers around the same digit core. The helpers now come in two groups: the ten that compute (present for the digit ops or a writer) and the three that print (only for a writer), so a module that asks for digits but prints no float imports no `env.putchar`.

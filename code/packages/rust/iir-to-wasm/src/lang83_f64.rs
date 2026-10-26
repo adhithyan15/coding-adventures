@@ -33,9 +33,23 @@
 //! | 5 | `bn_sub` | `(a: i32, b: i32)` | `a -= b` |
 //! | 6 | `bn_cmp` | `(a: i32, b: i32) -> i32` | `-1 / 0 / 1` |
 //! | 7 | `f64_digits` | `(mag: i64) -> i32` | the digits, `k` stored at `K` |
-//! | 8 | `put_digits` | `(from: i32, to: i32)` | `putchar('0' + D[i])` |
-//! | 9 | `put_repeat` | `(c: i32, n: i64)` | `putchar(c)` `n` times |
-//! | 10 | `write_f64` | `(x: f64, js: i32)` | specials, sign, layout |
+//! | 8 | `digits_value` | `(x: f64) -> i64` | LANG83 PR7b `f64_digits`: `D` as one integer |
+//! | 9 | `exp10_value` | `(x: f64) -> i64` | LANG83 PR7b `f64_exp10`: `k - 1` |
+//! | 10 | `put_digits` | `(from: i32, to: i32)` | `putchar('0' + D[i])` |
+//! | 11 | `put_repeat` | `(c: i32, n: i64)` | `putchar(c)` `n` times |
+//! | 12 | `write_f64` | `(x: f64, js: i32)` | specials, sign, layout |
+//!
+//! # Two groups (LANG83 PR7b)
+//!
+//! Helpers 0–9 are pure computation: the big integers, the digit core and
+//! the two PR7b wrappers that return `D` and `e10` as plain `i64`s. They are
+//! present whenever a module uses `f64_digits` / `f64_exp10` or a float
+//! writer. Helpers 10–12 print, so they need `env.putchar`; they are appended
+//! only when a module uses `write_f64_py` / `write_f64_js`. A module that
+//! asks for the digits but prints no float therefore imports no `putchar`.
+//! Either way there is ONE digit core, so an op and a writer agree on every
+//! digit. `f64_class` needs no helper: it is a reinterpret and three
+//! compares, inline in `lower.rs`.
 //!
 //! # Memory
 //!
@@ -62,12 +76,23 @@ use wasm_types::{FuncType, FunctionBody, ValueType};
 /// integers, a 32-byte digit buffer, an 8-byte `k`, padded to 64).
 pub(crate) const F64_SCRATCH_BYTES: usize = 1664;
 
-/// How many in-module functions [`build_f64_helpers`] appends.
+/// How many in-module functions [`build_f64_helpers`] appends without the
+/// writer (the computation group, helpers 0–9).
 #[cfg(test)]
-pub(crate) const F64_HELPER_COUNT: u32 = 11;
+pub(crate) const F64_CORE_HELPER_COUNT: u32 = 10;
+
+/// How many it appends with the writer (helpers 0–12).
+#[cfg(test)]
+pub(crate) const F64_HELPER_COUNT: u32 = 13;
 
 /// Index of `$__iir_write_f64` among the helpers (it is the last one).
-pub(crate) const WRITE_F64_OFFSET: u32 = 10;
+pub(crate) const WRITE_F64_OFFSET: u32 = 12;
+
+/// Index of the PR7b `f64_digits` wrapper among the helpers.
+pub(crate) const DIGITS_VALUE_OFFSET: u32 = 8;
+
+/// Index of the PR7b `f64_exp10` wrapper among the helpers.
+pub(crate) const EXP10_VALUE_OFFSET: u32 = 9;
 
 // Offsets of the scratch areas from the region's base.
 const R: i32 = 0;
@@ -91,6 +116,7 @@ const BR: u8 = 0x0C;
 const BR_IF: u8 = 0x0D;
 const RETURN: u8 = 0x0F;
 const CALL: u8 = 0x10;
+const DROP: u8 = 0x1A;
 const SELECT: u8 = 0x1B;
 const LOCAL_GET: u8 = 0x20;
 const LOCAL_SET: u8 = 0x21;
@@ -265,8 +291,8 @@ const BN_ADD: u32 = 4;
 const BN_SUB: u32 = 5;
 const BN_CMP: u32 = 6;
 const F64_DIGITS: u32 = 7;
-const PUT_DIGITS: u32 = 8;
-const PUT_REPEAT: u32 = 9;
+const PUT_DIGITS: u32 = 10;
+const PUT_REPEAT: u32 = 11;
 
 /// `limb(i)` address: `a + (i << 3)` with `a` and `i` in i32 locals.
 fn limb_addr(asm: &mut Asm, a: u32, i: u32) {
@@ -557,6 +583,66 @@ fn f64_digits(ctx: Ctx) -> FunctionBody {
     asm.finish(locals)
 }
 
+/// The PR7b guard shared by both wrappers: push `1` when `x` (local 0) has
+/// digits — finite and non-zero, i.e. `0 < mag < 0x7FF0…0` — and store
+/// `mag` in local `mag`.
+fn has_digits(asm: &mut Asm, mag: u32) {
+    asm.get(0).op(I64_REINTERPRET_F64).i64c(i64::MAX).op(I64_AND).set(mag);
+    asm.get(mag).i64c(0).op(I64_NE);
+    asm.get(mag).i64c(EXP_ALL_ONES).op(I64_LT_U);
+    asm.op(I32_AND);
+}
+
+/// `digits_value(x) -> i64` (LANG83 PR7b `f64_digits`): `0` unless `x` is
+/// finite and non-zero; else the digits the core stored at `DIGITS`, folded
+/// left to right into one integer (`D = D * 10 + digit`; at most 17 digits,
+/// so it fits), then any trailing zero divided away (the shortest search
+/// never leaves one; the loop keeps the contract explicit).
+fn digits_value(ctx: Ctx) -> FunctionBody {
+    const MAG: u32 = 1;
+    const N: u32 = 2; // i32
+    const I: u32 = 3; // i32
+    const D: u32 = 4;
+    let mut asm = Asm::new();
+    has_digits(&mut asm, MAG);
+    asm.op(I32_EQZ).open(IF);
+    asm.i64c(0).op(RETURN);
+    asm.op(END);
+    asm.get(MAG).call(ctx.f(F64_DIGITS)).set(N);
+    asm.open(BLOCK).open(LOOP);
+    asm.get(I).get(N).op(I32_GE_S).br_if(1);
+    asm.get(D).i64c(10).op(I64_MUL);
+    asm.i32c(ctx.addr(DIGITS)).get(I).op(I32_ADD).mem(I32_LOAD8_U, 0, 0).op(I64_EXTEND_I32_U);
+    asm.op(I64_ADD).set(D);
+    asm.get(I).i32c(1).op(I32_ADD).set(I);
+    asm.br(0);
+    asm.op(END).op(END);
+    // while D != 0 && D % 10 == 0: D /= 10
+    asm.open(BLOCK).open(LOOP);
+    asm.get(D).op(I64_EQZ).br_if(1);
+    asm.get(D).i64c(10).op(I64_REM_U).op(I64_EQZ).op(I32_EQZ).br_if(1);
+    asm.get(D).i64c(10).op(I64_DIV_U).set(D);
+    asm.br(0);
+    asm.op(END).op(END);
+    asm.get(D);
+    asm.finish(vec![ValueType::I64, ValueType::I32, ValueType::I32, ValueType::I64])
+}
+
+/// `exp10_value(x) -> i64` (LANG83 PR7b `f64_exp10`): `0` unless `x` is
+/// finite and non-zero; else `k - 1`, the exponent of the leading digit.
+fn exp10_value(ctx: Ctx) -> FunctionBody {
+    const MAG: u32 = 1;
+    let mut asm = Asm::new();
+    has_digits(&mut asm, MAG);
+    asm.op(I32_EQZ).open(IF);
+    asm.i64c(0).op(RETURN);
+    asm.op(END);
+    // The digit count is not needed, only the `k` the core stored.
+    asm.get(MAG).call(ctx.f(F64_DIGITS)).op(DROP);
+    asm.i32c(ctx.addr(K)).load64(0).i64c(1).op(I64_SUB);
+    asm.finish(vec![ValueType::I64])
+}
+
 /// `put_digits(from, to)`: `putchar('0' + DIGITS[i])` for `i` in `[from, to)`.
 fn put_digits(ctx: Ctx) -> FunctionBody {
     const FROM: u32 = 0;
@@ -693,14 +779,17 @@ fn write_f64(ctx: Ctx) -> FunctionBody {
     asm.finish(locals)
 }
 
-/// The eleven helpers in index order, each with its type, for a module whose
-/// helper #0 gets function index `base`, whose `env.putchar` import is
-/// `putchar`, and whose scratch region starts at linear address `scratch`.
-pub(crate) fn build_f64_helpers(base: u32, putchar: u32, scratch: u32) -> Vec<(FuncType, FunctionBody)> {
+/// The helpers in index order, each with its type, for a module whose helper
+/// #0 gets function index `base` and whose scratch region starts at linear
+/// address `scratch`. With `putchar` (the `env.putchar` import's index) the
+/// writer group 10–12 is appended too; without it only the computation group
+/// 0–9 (`F64_CORE_HELPER_COUNT`).
+pub(crate) fn build_f64_helpers(base: u32, putchar: Option<u32>, scratch: u32) -> Vec<(FuncType, FunctionBody)> {
     use ValueType::{F64, I32, I64};
-    let ctx = Ctx { base, putchar, scratch: scratch as i32 };
+    // `putchar` is only read by the writer group, which exists only with it.
+    let ctx = Ctx { base, putchar: putchar.unwrap_or(u32::MAX), scratch: scratch as i32 };
     let ty = |params: Vec<ValueType>, results: Vec<ValueType>| FuncType { params, results };
-    vec![
+    let mut helpers = vec![
         (ty(vec![I32, I64], vec![]), bn_set()),
         (ty(vec![I32, I64], vec![]), bn_mul_small()),
         (ty(vec![I32, I64], vec![]), bn_mul_pow(ctx, false)),
@@ -709,10 +798,15 @@ pub(crate) fn build_f64_helpers(base: u32, putchar: u32, scratch: u32) -> Vec<(F
         (ty(vec![I32, I32], vec![]), bn_sub()),
         (ty(vec![I32, I32], vec![I32]), bn_cmp()),
         (ty(vec![I64], vec![I32]), f64_digits(ctx)),
-        (ty(vec![I32, I32], vec![]), put_digits(ctx)),
-        (ty(vec![I32, I64], vec![]), put_repeat(ctx)),
-        (ty(vec![F64, I32], vec![]), write_f64(ctx)),
-    ]
+        (ty(vec![F64], vec![I64]), digits_value(ctx)),
+        (ty(vec![F64], vec![I64]), exp10_value(ctx)),
+    ];
+    if putchar.is_some() {
+        helpers.push((ty(vec![I32, I32], vec![]), put_digits(ctx)));
+        helpers.push((ty(vec![I32, I64], vec![]), put_repeat(ctx)));
+        helpers.push((ty(vec![F64, I32], vec![]), write_f64(ctx)));
+    }
+    helpers
 }
 
 #[cfg(test)]
@@ -721,11 +815,22 @@ mod tests {
 
     #[test]
     fn helper_count_and_write_index_agree_with_the_builder() {
-        let helpers = build_f64_helpers(100, 3, 4096);
+        let helpers = build_f64_helpers(100, Some(3), 4096);
         assert_eq!(helpers.len() as u32, F64_HELPER_COUNT);
         let (ty, _) = &helpers[WRITE_F64_OFFSET as usize];
         assert_eq!(ty.params, [ValueType::F64, ValueType::I32]);
         assert!(ty.results.is_empty());
+        // PR7b: both wrappers are f64 -> i64, inside the computation group,
+        // which is all a module gets without a writer.
+        for at in [DIGITS_VALUE_OFFSET, EXP10_VALUE_OFFSET] {
+            let (ty, _) = &helpers[at as usize];
+            assert_eq!((ty.params.as_slice(), ty.results.as_slice()), (&[ValueType::F64][..], &[ValueType::I64][..]));
+            assert!(at < F64_CORE_HELPER_COUNT);
+        }
+        let core = build_f64_helpers(100, None, 4096);
+        assert_eq!(core.len() as u32, F64_CORE_HELPER_COUNT);
+        // Nothing in the computation group calls the (absent) putchar.
+        assert!(core.iter().all(|(_, body)| !body.code.windows(6).any(|w| w[0] == CALL && w[1..6] == [0xFF, 0xFF, 0xFF, 0xFF, 0x0F])));
     }
 
     #[test]

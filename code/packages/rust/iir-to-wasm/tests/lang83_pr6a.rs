@@ -333,3 +333,96 @@ fn pr6c_signbit_is_reinterpret_then_logical_shift() {
     };
     assert_eq!(count(&[("f64_neg", &[1.0]), ("f64_neg", &[2.0])]) - count(&[("f64_neg", &[1.0])]), 1);
 }
+
+// ── LANG83 PR7b: f64_class / f64_digits / f64_exp10 ─────────────────────────
+
+/// A module with three exported functions `f64_class(x)`, `f64_digits(x)`,
+/// `f64_exp10(x)`, each returning its op's result for an `f64` parameter.
+fn digit_queries() -> IIRModule {
+    let query = |op: &str| {
+        IIRFunction::new(
+            op,
+            vec![("x".to_string(), "f64".to_string())],
+            "i64",
+            vec![
+                IIRInstr::new(op, Some("r".into()), vec![v("x")], "i64"),
+                IIRInstr::new("ret", None, vec![v("r")], "i64"),
+            ],
+        )
+    };
+    IIRModule {
+        name: "lang83_pr7b".into(),
+        functions: vec![query("f64_class"), query("f64_digits"), query("f64_exp10")],
+        entry_point: None,
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+        release: None,
+    }
+}
+
+/// The three ops on the real in-process runtime, against host `python3`'s
+/// `repr` split at the digits. The module prints nothing, so it imports no
+/// `env.putchar` and carries no writer code.
+#[test]
+fn pr7b_digit_queries_match_python_repr() {
+    let wasm = lower_iir_to_wasm(&digit_queries(), &IIRWasmConfig::default()).expect("lowering failed");
+    assert!(wasm.imports.iter().all(|i| i.name != "putchar"), "no output, so no putchar import");
+    let bytes = encode_module(&wasm).expect("encoding failed");
+    let rt = wasm_runtime::WasmRuntime::with_host(Box::new(Host(Rc::new(RefCell::new(Vec::new())))));
+    let module = rt.load(&bytes).expect("load");
+    let validated = rt.validate(&module).expect("validate");
+    let mut instance = rt.instantiate(&validated).expect("instantiate");
+    // (value, class, digits, exp10) — the digits are host python3's repr.
+    let rows: &[(f64, i64, i64, i64)] = &[
+        (1.5, 1, 15, 0),
+        (-1.5, 1, 15, 0),
+        (100.0, 1, 1, 2),
+        (0.1, 1, 1, -1),
+        (123.456, 1, 123456, 2),
+        (1e21, 1, 1, 21),
+        (1e-7, 1, 1, -7),
+        (5e-324, 1, 5, -324),
+        (2.2250738585072014e-308, 1, 22250738585072014, -308),
+        (1.7976931348623157e308, 1, 17976931348623157, 308),
+        (2.9802322387695312e-08, 1, 29802322387695312, -8),
+        (1072012167405248.25, 1, 10720121674052482, 15),
+        (0.0, 0, 0, 0),
+        (-0.0, 0, 0, 0),
+        (f64::INFINITY, 2, 0, 0),
+        (f64::NEG_INFINITY, 2, 0, 0),
+        (f64::NAN, 3, 0, 0),
+    ];
+    for &(x, class, digits, exp10) in rows {
+        let mut call = |op: &str| match rt.call_typed(&mut instance, op, &[WasmValue::F64(x)]).expect(op).as_slice() {
+            [WasmValue::I64(n)] => *n,
+            other => panic!("{op}({x:e}) returned {other:?}"),
+        };
+        assert_eq!(call("f64_class"), class, "f64_class({x:e})");
+        assert_eq!(call("f64_digits"), digits, "f64_digits({x:e})");
+        assert_eq!(call("f64_exp10"), exp10, "f64_exp10({x:e})");
+    }
+}
+
+/// A module that prints a float AND asks for its digits carries ONE digit
+/// core (the writer group follows the computation group), and both agree.
+#[test]
+fn pr7b_digit_queries_share_the_writer_core() {
+    let body = vec![
+        IIRInstr::new("const", Some("x".into()), vec![Operand::Float(123.456)], "f64"),
+        IIRInstr::new("call_builtin", None, vec![v("write_f64_py"), v("x")], "void"),
+        IIRInstr::new("f64_digits", Some("d".into()), vec![v("x")], "i64"),
+        IIRInstr::new("const", Some("k".into()), vec![Operand::Int(123_456)], "i64"),
+        IIRInstr::new("sub", Some("z".into()), vec![v("d"), v("k")], "i64"),
+        IIRInstr::new("ret", None, vec![v("z")], "i64"),
+    ];
+    let m = module(body);
+    let wasm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+    // main + the 13 helpers (10 computation + 3 writer), nothing duplicated.
+    assert_eq!(wasm.code.len(), 1 + 13);
+    let bytes = encode_module(&wasm).unwrap();
+    let out = Rc::new(RefCell::new(Vec::new()));
+    let rt = wasm_runtime::WasmRuntime::with_host(Box::new(Host(Rc::clone(&out))));
+    assert_eq!(rt.load_and_run(&bytes, "main", &[]).expect("runs"), vec![0], "f64_digits(123.456) = 123456");
+    assert_eq!(String::from_utf8(out.borrow().clone()).unwrap(), "123.456");
+}

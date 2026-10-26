@@ -323,6 +323,11 @@ const SUPPORTED_OPS: &[&str] = &[
     // `fneg`, which never trap in LLVM's default floating-point environment)
     // and the sign-bit test (`bitcast` + `lshr 63`).
     "f64_add", "f64_sub", "f64_mul", "f64_div", "f64_neg", "f64_signbit",
+    // LANG83 PR7b — the language-neutral float primitives. `f64_class` is a
+    // `bitcast` and three integer compares inline; `f64_digits` / `f64_exp10`
+    // call the module's own `linkonce_odr` wrappers around the PR6a digit
+    // core (`lang83_f64.rs`), so they need no runtime and no `putchar`.
+    "f64_class", "f64_digits", "f64_exp10",
 ];
 
 /// Builtins the LLVM backend knows how to lower.
@@ -874,6 +879,10 @@ pub fn lower_iir_to_llvm(
     // LANG83 PR6a: either float writer pulls in the module-local
     // `@__iir_write_f64` definitions (and `putchar`, which they write with).
     let mut used_write_f64 = false;
+    // LANG83 PR7b: `f64_digits` / `f64_exp10` pull in the digit core and its
+    // two wrappers (`LANG83_F64_DIGITS_LL`) — but not the writer's layout code
+    // or `putchar`.
+    let mut used_f64_digit_ops = false;
     let mut trap_kinds: std::collections::BTreeSet<u32> = std::collections::BTreeSet::new();
     // LANG83 PR4: the `*.with.overflow` intrinsics the checked ops call, each
     // declared once.
@@ -954,6 +963,9 @@ pub fn lower_iir_to_llvm(
             if i.op == "f64_atan" { used_f64_atan = true; }
             if i.op == "f64_tan"  { used_f64_tan  = true; }
             if i.op == "f64_pow"  { used_f64_pow  = true; }
+            if i.op == "f64_digits" || i.op == "f64_exp10" {
+                used_f64_digit_ops = true;
+            }
             if i.op == "call_builtin" {
                 if let Some(Operand::Var(name)) = i.srcs.first() {
                     match name.as_str() {
@@ -987,7 +999,8 @@ pub fn lower_iir_to_llvm(
     // LANG83 PR6a: the float writer's module-local definitions are all named
     // `@__iir_*`; a module function with such a name would be a duplicate
     // definition that clang rejects with a confusing error. Refuse it here.
-    if used_write_f64 {
+    // (PR7b's digit ops emit the same `@__iir_*` core.)
+    if used_write_f64 || used_f64_digit_ops {
         if let Some(f) = module.functions.iter().find(|f| f.name.starts_with("__iir_")) {
             return Err(IIRLlvmError::InvalidOperand {
                 function: f.name.clone(),
@@ -1002,8 +1015,13 @@ pub fn lower_iir_to_llvm(
         out.push_str("declare void @__print_i64(i64)\n");
     }
     emit_lang83_runtime(&mut out, used_write_i64, &trap_kinds);
+    // One copy of the digit core serves both the PR7b ops and the PR6a
+    // writers; the writer's layout code follows only when a module prints.
+    if used_write_f64 || used_f64_digit_ops {
+        out.push_str(lang83_f64::LANG83_F64_DIGITS_LL);
+    }
     if used_write_f64 {
-        out.push_str(lang83_f64::LANG83_F64_RUNTIME_LL);
+        out.push_str(lang83_f64::LANG83_F64_WRITE_LL);
     }
     if !used_ovf_intrinsics.is_empty() {
         out.push('\n');
@@ -2246,6 +2264,8 @@ fn lower_instr(
         "f64_add" | "f64_sub" | "f64_mul" | "f64_div" | "f64_neg" | "f64_signbit" => {
             lower_f64_ieee(instr, state, out)
         }
+        // LANG83 PR7b — the neutral float primitives.
+        "f64_class" | "f64_digits" | "f64_exp10" => lower_f64_digit_query(instr, state, out),
 
         // ── strings (LANG-FULL E4 literal-output foothold) ─────────────────
         "str_const" => lower_str_const(instr, state),
@@ -3214,6 +3234,56 @@ fn lower_f64_ieee(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Re
         let bits = state.fresh("sgnbits");
         out.push_str(&format!("  {bits} = bitcast double {a} to i64\n"));
         out.push_str(&format!("  %{dest} = lshr i64 {bits}, 63\n"));
+    }
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// Lower the LANG83 PR7b float primitives (each `f64 → i64`, never a trap):
+///
+/// | IIR | LLVM |
+/// |-----|------|
+/// | `f64_class d <- a` | `%b = bitcast double a to i64` ; `%m = and i64 %b, 0x7FFF…F` ; three `icmp`s, each `zext`ed and summed |
+/// | `f64_digits d <- a` | `%d = call i64 @__iir_f64_shortest_digits(double a)` |
+/// | `f64_exp10 d <- a` | `%d = call i64 @__iir_f64_shortest_exp10(double a)` |
+///
+/// `f64_class` counts how far the magnitude has climbed past two thresholds:
+///
+/// ```text
+///   class = (m != 0) + (m >= 0x7FF0…0) + (m > 0x7FF0…0)
+///   ±0 → 0     finite ≠ 0 → 1     ±Infinity → 2     NaN → 3
+/// ```
+///
+/// The two wrappers are the module's own `linkonce_odr` definitions around
+/// the PR6a digit core (`lang83_f64.rs`), so the digits match `write_f64_*`.
+fn lower_f64_digit_query(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Result<(), IIRLlvmError> {
+    let opname = instr.op.as_str();
+    let dest = require_dest(instr, opname, state.fn_name)?.to_string();
+    let a = resolve_operand(instr.srcs.first(), &state.env, "f64", state.fn_name)?;
+    match opname {
+        "f64_class" => {
+            let bits = state.fresh("clsbits");
+            let mag = state.fresh("clsmag");
+            out.push_str(&format!("  {bits} = bitcast double {a} to i64\n"));
+            out.push_str(&format!("  {mag} = and i64 {bits}, 9223372036854775807\n"));
+            let mut sum = String::from("0");
+            for (cond, bound) in [("ne", "0"), ("uge", "9218868437227405312"), ("ugt", "9218868437227405312")] {
+                let c = state.fresh("clscmp");
+                let z = state.fresh("clsbit");
+                let t = state.fresh("clssum");
+                out.push_str(&format!("  {c} = icmp {cond} i64 {mag}, {bound}\n"));
+                out.push_str(&format!("  {z} = zext i1 {c} to i64\n"));
+                out.push_str(&format!("  {t} = add i64 {sum}, {z}\n"));
+                sum = t;
+            }
+            out.push_str(&format!("  %{dest} = add i64 {sum}, 0\n"));
+        }
+        "f64_digits" => {
+            out.push_str(&format!("  %{dest} = call i64 @__iir_f64_shortest_digits(double {a})\n"));
+        }
+        _ => {
+            out.push_str(&format!("  %{dest} = call i64 @__iir_f64_shortest_exp10(double {a})\n"));
+        }
     }
     state.env.insert(dest.clone(), format!("%{dest}"));
     Ok(())

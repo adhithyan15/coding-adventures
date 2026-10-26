@@ -1,4 +1,5 @@
-//! LANG83 PR6a — shortest round-trip float output, as module-local LLVM IR.
+//! LANG83 PR6a — shortest round-trip float output, as module-local LLVM IR
+//! (and, since PR7b, the digits on their own).
 //!
 //! `call_builtin "write_f64_py", x` and `call_builtin "write_f64_js", x` lower
 //! to `call void @__iir_write_f64(double x, i32 0|1)`. This file holds the IR
@@ -26,7 +27,19 @@
 //! | `@__iir_bn_sub(a, b)` | `twig_bn_sub` | `a -= b`, `a >= b` |
 //! | `@__iir_bn_cmp(a, b)` | `twig_bn_cmp` | `-1 / 0 / 1` |
 //! | `@__iir_f64_digits(mag, out, kout)` | `twig_f64_digits` | digits 0..9 into `out`, count returned, `k` stored |
+//! | `@__iir_f64_shortest_digits(x)` | `__iir_f64_digits` | LANG83 PR7b `f64_digits`: `D` as an `i64` |
+//! | `@__iir_f64_shortest_exp10(x)` | `__iir_f64_exp10` | LANG83 PR7b `f64_exp10`: `k - 1` |
 //! | `@__iir_write_f64(x, js)` | `twig_write_f64` | specials, sign, layout, `putchar` |
+//!
+//! # Two constants, one core (LANG83 PR7b)
+//!
+//! [`LANG83_F64_DIGITS_LL`] holds the computation: the big integers, the
+//! digit core and the two PR7b wrappers that return `D` and `e10` as plain
+//! integers. [`LANG83_F64_WRITE_LL`] holds the PR6a layout and output, which
+//! call that same core. A module that only asks for the digits gets the first
+//! and no `putchar`; a module that prints a float gets both. Either way there
+//! is one copy of the core, so `f64_digits` and `write_f64_py` cannot disagree.
+//! `f64_class` needs no helper: it is a `bitcast` and three compares, inline.
 //!
 //! A big integer is `[40 x i64]` on the stack: 40 base-2^32 limbs, least
 //! significant first, each in a 64-bit word so `limb * m + carry` cannot
@@ -36,10 +49,11 @@
 //! is no recursion and no memory outside the five stack big integers and the
 //! 32-byte digit buffer, whose writes are bounded by `n < 31`.
 
-/// The module-local definitions, emitted once when a module uses either
-/// float writer. Needs `declare i32 @putchar(i32)`, which the caller emits
-/// (the module may already declare it for the `putchar` builtin).
-pub(crate) const LANG83_F64_RUNTIME_LL: &str = r#"
+/// The big-integer routines, the shortest-digits core and the two PR7b
+/// wrappers, emitted once when a module uses a float writer (PR6a) or
+/// `f64_digits` / `f64_exp10` (PR7b). Pure computation: needs no declaration
+/// from the caller.
+pub(crate) const LANG83_F64_DIGITS_LL: &str = r#"
 ; ── LANG83 PR6a: shortest round-trip float output (see lang83_f64.rs) ──────
 
 ; a = v: zero all 40 limbs, then the low and high 32 bits of v.
@@ -359,6 +373,88 @@ finish:
   ret i32 %cnt32
 }
 
+
+; ── LANG83 PR7b: the digits on their own ───────────────────────────────────
+;
+; `f64_digits x` and `f64_exp10 x` lower to calls of these two wrappers around
+; the same core the writer prints from, so an op and a writer can never
+; disagree on a digit. x = 0.D × 10^k, so the leading digit's exponent is
+; k - 1. Both give 0 for ±0, ±Infinity and NaN, which have no digits:
+;
+;   has = mag != 0 && mag < 0x7FF0000000000000   (finite and non-zero)
+
+; D: the digit values folded into one integer (at most 17 digits, so it fits),
+; then any trailing zero divided away (the shortest search never leaves one;
+; the loop keeps the "no trailing zeros" contract explicit).
+define linkonce_odr i64 @__iir_f64_shortest_digits(double %x) {
+entry:
+  %digits = alloca [32 x i8]
+  %kslot = alloca i64
+  %bits = bitcast double %x to i64
+  %mag = and i64 %bits, 9223372036854775807
+  %nz = icmp ne i64 %mag, 0
+  %fin = icmp ult i64 %mag, 9218868437227405312
+  %has = and i1 %nz, %fin
+  br i1 %has, label %search, label %none
+none:
+  ret i64 0
+search:
+  %n32 = call i32 @__iir_f64_digits(i64 %mag, ptr %digits, ptr %kslot)
+  %n = sext i32 %n32 to i64
+  br label %acc
+acc:
+  %i = phi i64 [ 0, %search ], [ %i1, %acc_body ]
+  %d = phi i64 [ 0, %search ], [ %d1, %acc_body ]
+  %more = icmp slt i64 %i, %n
+  br i1 %more, label %acc_body, label %strip
+acc_body:
+  %p = getelementptr i8, ptr %digits, i64 %i
+  %b = load i8, ptr %p
+  %bz = zext i8 %b to i64
+  %d10 = mul i64 %d, 10
+  %d1 = add i64 %d10, %bz
+  %i1 = add i64 %i, 1
+  br label %acc
+strip:
+  %s = phi i64 [ %d, %acc ], [ %sq, %strip_body ]
+  %r = urem i64 %s, 10
+  %rz = icmp eq i64 %r, 0
+  %snz = icmp ne i64 %s, 0
+  %again = and i1 %rz, %snz
+  br i1 %again, label %strip_body, label %done
+strip_body:
+  %sq = udiv i64 %s, 10
+  br label %strip
+done:
+  ret i64 %s
+}
+
+; e10 = k - 1, the exponent of D's leading digit.
+define linkonce_odr i64 @__iir_f64_shortest_exp10(double %x) {
+entry:
+  %digits = alloca [32 x i8]
+  %kslot = alloca i64
+  %bits = bitcast double %x to i64
+  %mag = and i64 %bits, 9223372036854775807
+  %nz = icmp ne i64 %mag, 0
+  %fin = icmp ult i64 %mag, 9218868437227405312
+  %has = and i1 %nz, %fin
+  br i1 %has, label %search, label %none
+none:
+  ret i64 0
+search:
+  %n32 = call i32 @__iir_f64_digits(i64 %mag, ptr %digits, ptr %kslot)
+  %k = load i64, ptr %kslot
+  %e = sub i64 %k, 1
+  ret i64 %e
+}
+"#;
+
+/// The PR6a writer's layout and output code, emitted only when a module uses
+/// `write_f64_py` / `write_f64_js`, after [`LANG83_F64_DIGITS_LL`] (whose core
+/// it calls). Needs `declare i32 @putchar(i32)`, which the caller emits (the
+/// module may already declare it for the `putchar` builtin).
+pub(crate) const LANG83_F64_WRITE_LL: &str = r#"
 ; putchar('0' + d[i]) for i in [from, to).
 define linkonce_odr void @__iir_put_digits(ptr %d, i64 %from, i64 %to) {
 entry:

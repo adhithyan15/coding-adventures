@@ -1,5 +1,19 @@
 # Changelog — iir-to-wasm
 
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- The in-module float helpers are two groups: helpers 0–9 compute (big
+  integers, the digit core and two new wrappers `(f64) -> i64` returning `D`
+  and `k - 1`), helpers 10–12 print (`put_digits`, `put_repeat`,
+  `$__iir_write_f64`). A module with `f64_digits` / `f64_exp10` reserves the
+  scratch region and gets the first group, and imports no `env.putchar`; a
+  module that prints a float gets both groups and one core.
+- `f64_class` is inline: reinterpret, mask, three `i64` compares summed as
+  `i32`, `i64.extend_i32_u` (new `codegen::I64_EXTEND_I32_U`).
+- Tests: the three ops on the in-process runtime against host `python3`, no
+  `putchar` import without output, one core with both users. The wrappers
+  were also checked against `python3` on 30 527 corpus values.
+
 ## [0.53.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
 
 - **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /

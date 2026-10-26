@@ -80,6 +80,12 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("f64_div", Lowered),
     ("f64_neg", Lowered),
     ("f64_signbit", Lowered),
+    // LANG83 PR7b — `f64_class` inline (`bitcast` + three compares);
+    // `f64_digits` / `f64_exp10` via the module's own `linkonce_odr` wrappers
+    // around the PR6a digit core.
+    ("f64_class", Lowered),
+    ("f64_digits", Lowered),
+    ("f64_exp10", Lowered),
     // ── Conversions ─────────────────────────────────────────────────────────
     ("int_to_real", Lowered),
     ("real_to_int_trunc", Lowered),
