@@ -582,7 +582,33 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Upstream byte-identity test:** `minify_fn_expr_iife` seed fixture.
 - **Input:** `(function(){return 42;}());`
 - **Upstream:** `(function(){return 42})();` (call moves outside the wrapping parens)
-- **Fix:** Token-stream pre-pass: scan kept for the 4-token sequence `} ( ) )` and rotate `[i+1..=i+3]` right by 1 to reorder to `} ) ( )`. Safe-by-construction — this token sequence can only appear in IIFE contexts in valid JS.
+- **Fix:** Token-stream pre-pass: scan kept for the 4-token sequence `} ( ) )` and rotate `[i+1..=i+3]` right by 1 to reorder to `} ) ( )`. That safety claim was wrong: the window also appears when an IIFE is a call argument, `f(function(){}())`. #18114 below adds the missing check.
+
+#### #18114 — gap-051 only rotates a grouping paren around the function
+
+- **The bug.** The pass rewrote every `} ( ) )` window to `} ) ( )`. That
+  is right only when the outer `)` closes a grouping paren around the
+  function. In `f(function(){return 1}())` it closes `f`'s argument list,
+  so the output `f(function(){return 1})()` called `f` with the function,
+  then called `f`'s result.
+- **Resolution.** `wraps_only_this_function` requires three things, using
+  bracket partners computed once (`bracket_partners`), so the pass stays
+  linear:
+  1. The outer `(` is a grouping paren: it has no predecessor, or the
+     predecessor is a punctuator other than `)`/`]`/`}`/`?.`, or one of the
+     uncallable reserved words `return typeof void delete throw case in
+     instanceof else do`, and not after `.`/`?.`.
+  2. Right inside it is `function` or `async function`.
+  3. That function's `[*] [name] (params) {` opens the block the window's
+     `}` closes.
+  Argument lists, `if`/`while` heads, `new(…)`, `a?.(…)` and parens that
+  hold more than the function keep their source form. All of these are
+  byte-identical to upstream except `var x=(function(){}())` and
+  `f((function(){}()))`. There closurec keeps a grouping paren that
+  upstream drops, and both forms are equivalent.
+- **Tests.** Five unit tests, and `closurec/tests/regression_ws_argument_iife.rs`.
+  It pins 20 shapes to the jar's bytes, pins the two kept-paren shapes, and
+  checks with `node` that seven programs print what their source prints.
 
 ### gap-052 — trailing `;` after `}` at EOF for control-flow / label-block bodies
 
