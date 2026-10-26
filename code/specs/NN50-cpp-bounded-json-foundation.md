@@ -1,7 +1,9 @@
 # NN50: Native C++ Bounded JSON Prerequisite
 
-Status: specified before implementation. No native C++ checkpoint or training
-claim is made by this parser tranche.
+Status: specified in commit `80e6139bae3` before implementation. Initial native
+parser and GCC/Clang local tests, Clang ASan and installed CMake consumer pass;
+Windows compilers, UBSan and publication/exact-head CI remain pending. No native C++ checkpoint
+or training claim is made by this parser tranche.
 
 ## Evidence and selection
 
@@ -56,6 +58,14 @@ member names and decoded strings, not just final node payloads. Check arithmetic
 before allocation or growth. Do not label a logical payload estimate an actual
 allocation ceiling. Use a bounded allocation owner/resource and a deterministic
 allocation-failure seam; error paths must release all partially built state.
+
+Implementation accounting counts every node and dynamic string/name request,
+including simultaneous old/new string capacity during growth. A fixed-size
+document owner, allocator bookkeeping, stack, caller input and standard-library
+conversion/runtime internals are explicitly outside that allocation-request cap;
+it is not a process-RSS guarantee. The document reports its actual peak. This
+clarification exposes ownership boundaries rather than claiming a payload
+estimate or controlling an implementation's hidden runtime allocations.
 
 Strictly decode escapes and Unicode surrogate pairs to valid UTF-8. Reject raw
 invalid UTF-8, overlong encodings, lone surrogates, out-of-range code points,
