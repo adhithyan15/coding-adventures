@@ -1,5 +1,42 @@
 # Changelog — vm-core
 
+## [0.32.0] — 2026-10-26 (frame register limit is a typed, load-time error)
+
+- **Fix: a frame's 65,537th register is no longer silently dropped.**
+  `VMFrame::assign` used to ignore any new register past
+  `MAX_FRAME_REGISTERS` (65,536), so a long straight-line function (for
+  example a big Python `main` from `python-iir-compiler`'s release path,
+  which gives every temporary a fresh `pyN`) ran on and then failed with a
+  misleading `undefined variable "py65536"`. Integer programs and every
+  frontend were affected.
+- The limit stays — it is a resource bound shared with `load_reg`/`store_reg`
+  (indices `0..=65_535`, now derived from the constant) and twig-vm's
+  `MAX_REGISTERS_PER_FRAME` — but exceeding it is now an error:
+  - **New `VMError::RegisterLimitExceeded { function, registers, limit }`**,
+    displayed as `function "main" needs 65537 registers, more than the 65536
+    a vm-core frame can hold`.
+  - **Load-time check.** `VMCore::execute` and `execute_traced` run the new
+    `core::check_register_limits(module)` before pushing the root frame: each
+    function's distinct register names (parameters plus instruction `dest`s)
+    are counted, and the whole module is refused before any instruction —
+    or output — runs. A cheap upper bound (`params + dests`) skips the hash
+    set for every function that is obviously within the limit. Per-function
+    check: `VMFrame::check_register_limit(&IIRFunction)`.
+  - **Run-time backstop.** `VMFrame::assign` now returns
+    `Result<(), VMError>` (breaking: callers add `?`), and the new
+    `VMFrame::register_index` (also used for the `call` return slot, which
+    used to bypass the cap entirely) fails the same way for a register a
+    custom opcode handler invents at run time.
+- `VMFrame::new` clamps the untrusted `register_count` pre-allocation hint
+  to the limit, so a hand-built module declaring `usize::MAX` registers no
+  longer aborts on allocation (the serialiser already capped decoded
+  modules; this covers modules built in memory).
+- Tests: a function with exactly 65,536 registers runs and returns its last
+  register; 65,537 is refused with the typed error and zero instructions
+  executed (via `execute`, `execute_traced`, and a module whose *callee* is
+  over the limit); frame-level tests for the 65,537th `assign`, parameter
+  counting, distinct-name counting and the `register_count` clamp.
+
 ## [0.31.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
 
 - **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /

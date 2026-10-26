@@ -106,6 +106,35 @@ class VMFrame:
 The call stack is a bounded deque.  The maximum frame depth is configurable
 (default: `max_frames=64`, matching JVM defaults; Tetrad uses `max_frames=4`).
 
+### Frame register limit
+
+A frame holds at most **65,536 (2¹⁶) distinct named registers**
+(`VMFrame::MAX_FRAME_REGISTERS` in the Rust implementation). This is a
+resource bound — it caps one frame's register file, and therefore the memory a
+deep call stack can pin — and the same 2¹⁶ bounds the `load_reg`/`store_reg`
+index range (`0..=65_535`).
+
+A function's registers are its parameters plus the `dest` of its
+instructions, so the count is static. Exceeding the limit is a typed error,
+never a silent drop:
+
+1. **Load time.** Before running anything, `execute` counts the distinct
+   register names of every function in the module. A function over the limit
+   refuses the whole module with `RegisterLimitExceeded { function, registers,
+   limit }` — no instruction runs and no output is written.
+2. **Run time (backstop).** Allocating a new register in a full frame raises
+   the same error, for a register a language opcode handler creates
+   dynamically.
+
+`register_count` is a pre-allocation hint only; the VM clamps it to the limit
+rather than trusting it.
+
+> History: the Rust vm-core originally dropped the 65,537th register
+> silently, so the program failed later with a misleading
+> `undefined variable`. The JIT tier (`jit-core`'s generic bytecode JIT) has
+> a smaller, separate limit — 256 registers, one-byte register numbers — and
+> declines to compile such a function, leaving it to the interpreter.
+
 When a `call` instruction is executed:
 
 1. A new `VMFrame` is allocated for the callee

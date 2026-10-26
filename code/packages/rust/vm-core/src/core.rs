@@ -380,6 +380,14 @@ impl VMCore {
     ///
     /// The value produced by the outermost `ret` instruction, or `None` if
     /// the function ends with `ret_void`.
+    ///
+    /// # Errors
+    ///
+    /// Before running anything, every function in `module` is checked
+    /// against the frame register limit ([`check_register_limits`]); a
+    /// function that needs more than [`VMFrame::MAX_FRAME_REGISTERS`]
+    /// registers fails the call with [`VMError::RegisterLimitExceeded`] and
+    /// no instruction executes.  Otherwise any error an instruction raises.
     pub fn execute(
         &mut self,
         module: &mut IIRModule,
@@ -389,6 +397,10 @@ impl VMCore {
         // Find the entry-point function.
         let fn_idx = module.functions.iter().position(|f| f.name == fn_name)
             .ok_or_else(|| VMError::UnknownOpcode(format!("function {fn_name:?}")))?;
+
+        // Load-time check: refuse a module with a function too big for a
+        // frame, naming it, before any output or side effect happens.
+        check_register_limits(module)?;
 
         let params = module.functions[fn_idx].params.clone();
         let reg_count = module.functions[fn_idx].register_count;
@@ -471,6 +483,9 @@ impl VMCore {
     ) -> Result<(Option<Value>, Vec<crate::trace::VMTrace>), VMError> {
         let fn_idx = module.functions.iter().position(|f| f.name == fn_name)
             .ok_or_else(|| VMError::UnknownOpcode(format!("function {fn_name:?}")))?;
+
+        // Same load-time register-limit check as `execute`.
+        check_register_limits(module)?;
 
         let params = module.functions[fn_idx].params.clone();
         let reg_count = module.functions[fn_idx].register_count;
@@ -654,11 +669,128 @@ impl std::fmt::Debug for VMCore {
     }
 }
 
+/// Check every function in `module` against the frame register limit.
+///
+/// This is vm-core's load-time check: [`VMCore::execute`] and
+/// [`VMCore::execute_traced`] call it before pushing the root frame.  It
+/// covers the whole module, not just the entry point, because callees get
+/// their frames from the `call` handler deep inside the dispatch loop — by
+/// then the program may already have printed output, and a callee over the
+/// limit used to be discovered only as a confusing `undefined variable`.
+///
+/// Cost: one pass over the instructions, with no allocation for any function
+/// that is obviously within the limit (see [`VMFrame::check_register_limit`]).
+///
+/// # Errors
+///
+/// [`VMError::RegisterLimitExceeded`] for the first function over the limit.
+pub fn check_register_limits(module: &IIRModule) -> Result<(), VMError> {
+    module.functions.iter().try_for_each(VMFrame::check_register_limit)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use interpreter_ir::function::IIRFunction;
     use interpreter_ir::instr::{IIRInstr, Operand};
+
+    // ------------------------------------------------------------------
+    // Frame register limit (VMFrame::MAX_FRAME_REGISTERS)
+    // ------------------------------------------------------------------
+
+    /// `n` `const` instructions into fresh registers `r0..r{n-1}` (each
+    /// holding its own index), then `ret r{n-1}` — the shape of a long
+    /// straight-line `main` from a frontend that gives every temporary a
+    /// fresh name.
+    fn fn_with_registers(name: &str, n: usize) -> IIRFunction {
+        let mut body: Vec<IIRInstr> = (0..n)
+            .map(|i| IIRInstr::new("const", Some(format!("r{i}")), vec![Operand::Int(i as i64)], "i64"))
+            .collect();
+        body.push(IIRInstr::new("ret", None, vec![Operand::Var(format!("r{}", n - 1))], "i64"));
+        IIRFunction::new(name, vec![], "i64", body)
+    }
+
+    fn module_of(fns: Vec<IIRFunction>) -> IIRModule {
+        let mut module = IIRModule::new("regs", "test");
+        for f in fns {
+            module.add_or_replace(f);
+        }
+        module
+    }
+
+    /// The boundary: a function with exactly 65,536 registers runs, and its
+    /// last register (index 65,535) holds its value — nothing was dropped.
+    #[test]
+    fn execute_runs_a_function_with_exactly_the_register_limit() {
+        let n = VMFrame::MAX_FRAME_REGISTERS;
+        let mut module = module_of(vec![fn_with_registers("main", n)]);
+        let result = VMCore::new().execute(&mut module, "main", &[]).unwrap();
+        assert_eq!(result, Some(Value::Int((n - 1) as i64)));
+    }
+
+    /// One register past the limit is refused up front with a typed error
+    /// naming the function — never the old `undefined variable "r65536"`,
+    /// and before a single instruction runs.
+    #[test]
+    fn execute_refuses_a_function_one_register_past_the_limit() {
+        let n = VMFrame::MAX_FRAME_REGISTERS + 1;
+        let mut module = module_of(vec![fn_with_registers("main", n)]);
+        let mut vm = VMCore::new();
+        let err = vm.execute(&mut module, "main", &[]).unwrap_err();
+        match &err {
+            VMError::RegisterLimitExceeded { function, registers, limit } => {
+                assert_eq!(function, "main");
+                assert_eq!(*registers, n);
+                assert_eq!(*limit, VMFrame::MAX_FRAME_REGISTERS);
+            }
+            other => panic!("expected RegisterLimitExceeded, got {other:?}"),
+        }
+        assert!(!err.to_string().contains("undefined variable"));
+        assert_eq!(vm.metrics_instrs(), 0, "no instruction may run");
+    }
+
+    /// The check covers callees too: `main` is tiny, but the module also
+    /// holds `big`, which is over the limit.  The whole module is refused
+    /// and the error names `big`.
+    #[test]
+    fn execute_refuses_a_module_whose_callee_is_past_the_limit() {
+        let main = IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new("call", Some("x".into()), vec![Operand::Var("big".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i64"),
+            ],
+        );
+        let big = fn_with_registers("big", VMFrame::MAX_FRAME_REGISTERS + 1);
+        let mut module = module_of(vec![main, big]);
+        let mut vm = VMCore::new();
+        let err = vm.execute(&mut module, "main", &[]).unwrap_err();
+        assert!(
+            matches!(&err, VMError::RegisterLimitExceeded { function, .. } if function == "big"),
+            "got {err:?}"
+        );
+        assert_eq!(vm.metrics_instrs(), 0);
+    }
+
+    /// `execute_traced` applies the same load-time check.
+    #[test]
+    fn execute_traced_refuses_a_function_past_the_limit() {
+        let mut module = module_of(vec![fn_with_registers("main", VMFrame::MAX_FRAME_REGISTERS + 1)]);
+        let err = VMCore::new().execute_traced(&mut module, "main", &[]).unwrap_err();
+        assert!(matches!(err, VMError::RegisterLimitExceeded { .. }), "got {err:?}");
+    }
+
+    /// An over-reported `register_count` is a hint, not a requirement: a
+    /// tiny function declaring `usize::MAX` registers still runs (the frame
+    /// clamps the pre-allocation instead of aborting on it).
+    #[test]
+    fn execute_tolerates_an_absurd_register_count_hint() {
+        let mut f = fn_with_registers("main", 2);
+        f.register_count = usize::MAX;
+        let mut module = module_of(vec![f]);
+        let result = VMCore::new().execute(&mut module, "main", &[]).unwrap();
+        assert_eq!(result, Some(Value::Int(1)));
+    }
 
     fn make_const_fn(value: i64) -> IIRModule {
         let fn_ = IIRFunction::new(

@@ -95,6 +95,20 @@ sizes it to at least the parameter count (`max(register_count, params.len())`) s
 the dispatcher can place call arguments at indices `0..params.len()` even when a
 frontend under-reports `register_count` (e.g. a hoisted McCarthy `LAMBDA` body).
 
+**Register limit.** A frame holds at most `VMFrame::MAX_FRAME_REGISTERS`
+(2¹⁶ = 65,536) distinct registers — the same bound as the `load_reg`/`store_reg`
+index range and twig-vm's `MAX_REGISTERS_PER_FRAME`. A function's registers are
+its parameters plus its instructions' `dest` names, so the count is known before
+the program runs: `VMCore::execute` (and `execute_traced`) check every function
+in the module first and refuse the module with
+`VMError::RegisterLimitExceeded { function, registers, limit }` —
+`function "main" needs 65537 registers, more than the 65536 a vm-core frame can
+hold` — before any instruction executes. `assign()` returns the same error as a
+run-time backstop (for a register a custom opcode invents on the fly). Earlier
+versions dropped the 65,537th register silently and failed later with a
+misleading `undefined variable`. `register_count` is only a pre-allocation hint
+and is clamped to the limit, so an absurd value cannot abort the process.
+
 ### `VMCore` — the execution API
 
 | Method | Description |
@@ -198,7 +212,9 @@ let handler: OpcodeHandler = Box::new(|ctx, _jit_handlers, instr| {
 vm.register_opcode("tetrad.move", handler);
 ```
 
-Custom opcodes shadow the standard table.
+Custom opcodes shadow the standard table. A handler that writes a register
+uses `frame.assign(name, value)?` — `assign` returns `Result` and fails with
+`RegisterLimitExceeded` rather than dropping a register past the frame limit.
 
 ---
 
