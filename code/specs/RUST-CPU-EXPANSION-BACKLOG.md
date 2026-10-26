@@ -68,7 +68,7 @@ architecture/core introduction era, not a claim about a particular chip.
 |---:|---|---|---|
 | 1 | Arm Cortex-M4 | Armv7E-M manuals | Cortex-M3 integer base plus documented DSP/FPU boundary. |
 | 2 | Arm Cortex-M7 | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
-| 3 | Arm Cortex-M23 | Armv8-M manuals | Baseline profile and security-state boundary. |
+| 3 | Arm Cortex-M23 (merged) | Armv8-M manuals | Bounded baseline/security-state cell complete; exclusive encodings and exceptions remain follow-up work. |
 | 4 | Arm Cortex-M33 | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
 | 5 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
 | 6 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
@@ -78,7 +78,7 @@ architecture/core introduction era, not a claim about a particular chip.
 | 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
 | 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
 | 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
-| 13 | AVR classic | published instruction-set manual | Complete locally: ATmega328P/`avr5` Harvard core, mapped register/I/O/data state, checked stack/control flow, all 26 typed undefined-overlap refusals, transactional traces/lifecycle, terminal-state restore round trips, whole-span two-byte call preflight, 32 release tests with exhaustive add/subtract flag oracles, and 97.32% line coverage (944/970). Gate partner remains queued. |
+| 13 | AVR classic (PR #18344) | published instruction-set manual | Complete: ATmega328P/`avr5` Harvard core, mapped register/I/O/data state, checked stack/control flow, all 26 typed undefined-overlap refusals, transactional traces/lifecycle, terminal-state restore round trips, whole-span two-byte call preflight, 32 release tests with exhaustive add/subtract flag oracles, and 97.32% line coverage (944/970). Squash auto-merge is armed; the gate partner remains queued. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
 
 ## Discovered follow-up work
@@ -100,7 +100,10 @@ architecture/core introduction era, not a claim about a particular chip.
   peripherals. Keep GPIO, timers, serial engines, ADC, interrupts, EEPROM,
   watchdog, clocking, and pins in later SoC cells rather than fabricating them
   inside the CPU oracle.
-
+- Extend the bounded Cortex-M23 core with source-backed Armv8-M-exclusive
+  instructions, encoded SG/BXNS/BLXNS transitions, exception stacking/return,
+  stack-limit registers, and MPU/IDAU composition. Keep NVIC, bus transactions,
+  debug, and timing in later SoC/integration cells.
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,
   bitfield, saturation, dual-register, byte/halfword exclusive, and remaining
   wide Thumb-2 encodings. This is non-blocking for the core lifecycle and SoC
