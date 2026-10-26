@@ -1,0 +1,11 @@
+[package]
+name = "ias-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "DFF-backed educational IAS gate-level simulator"
+license = "MIT"
+
+[dependencies]
+arithmetic = { path = "../arithmetic" }
+ias-simulator = { path = "../ias-simulator" }
+logic-gates = { path = "../logic-gates" }
