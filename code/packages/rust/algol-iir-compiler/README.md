@@ -258,7 +258,13 @@ multiple-root product may continue through ordered static `div` or `mod`, or
 through exact whole-number `/` when its conservative common divisor proves
 every quotient integral, including before another dynamic root that enters by
 multiplication. Zero or dynamic divisors, rooted divisors, and non-multiplying
-dynamic roots remain conservative. A checked variable-free integer
+dynamic roots remain conservative. When a sign-rooted reduction's magnitude
+equals its conservative common divisor, its possible values are limited to
+the negative magnitude, zero, and the positive magnitude. Static `div` and
+`mod` retain the exact reduced common divisor for that stable shape, including
+after multiplication by another stable sign root, so a later exact `/` may use
+the sharper divisibility proof. Broader quotient and remainder value sets stay
+conservative. A checked variable-free integer
 prefix may likewise use `*`, exact `/`, `div`, and `mod` before the first root
 when multiplication connects the folded result to that root. Zero divisors,
 inexact divisions, dynamic divisors, and rooted divisors remain conservative.
