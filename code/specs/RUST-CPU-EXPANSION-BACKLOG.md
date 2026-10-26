@@ -87,9 +87,22 @@ merged, while Cortex-M33 is already in review.
 | 9 | PA-RISC 1.1 | published architecture manuals | Local functional complete: checked bounded integer core, big-endian transport, both IA queues, PSW nibble carry/borrow state, delayed control, nullification, calls/returns, complete traces, typed atomic lifecycle, three allocation-seam unit tests, 19 integration tests, one doctest, and 92.80% line coverage (580/625). Gate work remains evidence/scope pending. |
 | 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
 | 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
-| 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
+| 12 | ARM7TDMI | published ARMv4T manuals | Complete locally: bounded ARMv4T ARM/Thumb integer core; all 31 physical GPRs and five SPSRs; pipeline-visible PC, bank/state exchange, checked memory and full-span control targets; exact transactional traces/lifecycle; 39 release tests; and 88.30% line coverage (1,389/1,573). Gate partner and SoC composition remain queued. |
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX6 | public Tensilica ISA manual plus ESP32 manuals | Functional cell complete locally as `Esp32Lx6IntegerV1`, pending independent implementation review: little-endian, 64 physical windowed ARs, mixed 16/24-bit core+density, lazy window checks, loops, complete traces/lifecycle, 29 release tests, and 90.09% line coverage (1,382/1,534). Proprietary/configuration-unknown extensions remain excluded. |
+| 15 | RCA CDP1802 | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: all documented encodings except unassigned 0x68, complete COSMAC state, and explicit I/O/DMA/interrupt transaction seams; independent implementation review is next. |
+
+CDP1802 is complete locally from its independently reviewed specification.
+The functional cell covers the complete register matrix, instruction table,
+reset/inhibit lifecycle, flags, ports, DMA, and interrupt response. Its
+explicit bus operations make it a high-value bridge from CPU execution toward
+the requested SoC data-movement simulations. A different reviewer's exact-head
+implementation PASS is the remaining publication gate. Educational-gate and
+source-backed SoC compositions remain separate bounded follow-ups.
+The local evidence is 31 release integration tests plus one doctest, including
+256-byte independent decode and execution sweeps, exhaustive 256x256x2 ALU
+relations, strict Clippy/rustdoc, lessons validation, affected BUILD, and
+87.76% line coverage (832/948).
 
 ## Discovered follow-up work
 

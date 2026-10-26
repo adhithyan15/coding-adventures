@@ -1,7 +1,9 @@
 # NN49: Six Native Dense Framework Conformance
 
-Status: specification committed before implementation; local all-thirty-direction
-runtime evidence passed; publication/exact-head CI/merge pending.
+Status: delivered in #18301 at exact reviewed head `8e93a7917131`, squash
+`d555c1091cd`. Actual all-thirty-direction CI receipt, real root Rust workspace,
+normal npm scripts, three-platform package BUILDs and all selected/required
+checks passed. No C CodeQL analyzer was configured; no C scanning is claimed.
 
 ## Selection and prerequisites
 
