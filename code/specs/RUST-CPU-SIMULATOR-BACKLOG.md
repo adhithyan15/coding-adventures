@@ -120,7 +120,7 @@ particular die. A functional cell must merge before its paired gate cell.
 | RCPU-071 / RCPU-072 | 2001 | Intel Itanium | Research | Specify a bounded architectural subset before selection |
 | RCPU-073 / RCPU-074 | 2005 | OpenSPARC T1 | Ready | Open RTL permits a source-backed educational gate model |
 | RCPU-075 / RCPU-076 | 2009 | ARM Cortex-M0 | Ready | Public ARMv6-M architecture; distinct microcontroller lifecycle |
-| RCPU-077 / RCPU-078 | 2019 | Microwatt / PowerISA | Ready | Open core and public ISA sources |
+| RCPU-077 / RCPU-078 | 2019 | Microwatt / PowerISA | Functional complete locally; gate ready | Spec 07bd implementation covers the pinned scalar fixed-point profile; the separately scoped source-backed gate cell remains next for this pair |
 | RCPU-079 / RCPU-080 | 2020 | LoongArch base integer ISA | Research | Confirm stable public specification and bounded initial profile |
 
 Apple M5/M6 are intentionally not queued as distinct microarchitectures: the

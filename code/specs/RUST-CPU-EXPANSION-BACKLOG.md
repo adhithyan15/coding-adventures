@@ -82,7 +82,7 @@ architecture/core introduction era, not a claim about a particular chip.
 | 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
-| 15 | Microwatt / Power ISA (RCPU-077 / RCPU-078) | Power ISA Version 3.0C plus pinned Microwatt VHDL | Spec 07bd pins a 64-bit little-endian scalar fixed-point boundary; functional implementation is next, followed by a separately scoped source-backed gate cell. |
+| 15 | Microwatt / Power ISA (RCPU-077 / RCPU-078) | Power ISA Version 3.0C plus pinned Microwatt VHDL | Spec 07bd functional implementation is complete locally with checked state, typed rollback, exact Microwatt word-result rules, exhaustive selector tests, and >80% line coverage. The separately scoped source-backed gate cell remains next. |
 
 ## Discovered follow-up work
 

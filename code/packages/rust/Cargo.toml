@@ -240,6 +240,7 @@ members = [
     "vax11-780-gatelevel",
     "alpha-axp-gatelevel",
     "powerpc601-simulator",
+    "microwatt-powerisa-simulator",
     "powerpc601-gatelevel",
     "sparc-v8-encoder",
     "sparc-v8-backend",
