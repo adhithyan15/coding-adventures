@@ -71,6 +71,11 @@ architecture/core introduction era, not a claim about a particular chip.
 
 ## Discovered follow-up work
 
+- Audit already-published educational gate packages for topology formulas and
+  host endian, event, or privilege selectors that contradict gate-derived
+  claims. Correct each finding in a bounded follow-up cell. Run this
+  gate-integrity audit after the current OpenSPARC/Cortex-M0/Cortex-M3
+  publication wave and before declaring the gate backlog fully complete.
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,
   bitfield, saturation, dual-register, byte/halfword exclusive, and remaining
   wide Thumb-2 encodings. This is non-blocking for the core lifecycle and SoC
