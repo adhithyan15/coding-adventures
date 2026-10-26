@@ -18072,7 +18072,7 @@ their six same-language prerequisites/dependents; its strict repository-wide
 orphan check is not meaningful in the sparse checkout, so publication still
 requires the normal full-tree CI gate.
 
-The branch is reconciled with `d555c1091cd9aa134e6eb4b702938772f7487231`
+The branch is reconciled with `d430af13f3fd55d79920d025ed11f1af9ba5059e`
 and remains local because PR #18293 owns the shared selector change. After that
 dependency lands, rebase current main, run the native and selector gates again,
 and require independent exact-head correctness/security review before
