@@ -101,9 +101,94 @@ internal sealed class InvalidBatchComponent : System.ComponentModel.ISupportInit
     public void EndInit() { Depth--; Ends++; }
 }
 
+internal sealed class ListComponent
+{
+    public IReadOnlyList<IReadOnlyList<string>>? Rows { get; set; }
+    public IReadOnlyList<double>? Numbers { get; set; }
+    public IReadOnlyList<bool>? Flags { get; set; }
+    public string[]? Array { get; set; }
+    public int Sets;
+    public IReadOnlyList<string>? Observed;
+    public IReadOnlyList<string>? Values { get => Observed; set { Sets++; Observed = value; } }
+    public int WriteOnlySets;
+    public IReadOnlyList<string>? WriteOnly { set { WriteOnlySets++; } }
+    public int ThrowingSets;
+    public IReadOnlyList<string> Throwing { get => throw new Exception("getter"); set { ThrowingSets++; } }
+}
+
+internal sealed class BrokenList : IReadOnlyList<string>
+{
+    public bool Infinite;
+    public int Moves;
+    public int Count => throw new Exception("count");
+    public string this[int index] => throw new Exception("index");
+    public IEnumerator<string> GetEnumerator()
+    {
+        while (true) { Moves++; if (!Infinite) throw new Exception("enumeration"); yield return "a"; }
+    }
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+}
+
 internal static class Driver
 {
     private static int failures;
+
+    private static void CaseListProps()
+    {
+        // Inject a response fixture into the real host, then exercise public
+        // ApplyProps. The conformance app has no list props; this isolates host
+        // conversion/assignment without changing its domain or faking setters.
+        MosaicRuntimeHost.LoadRequired();
+        var flags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+        var runtime = typeof(MosaicRuntimeHost).GetField("State",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!.GetValue(null)!;
+        var update = runtime.GetType().GetField("latestUpdate", flags)!;
+        var original = update.GetValue(runtime);
+        using var document = System.Text.Json.JsonDocument.Parse(
+            "{\"revision\":0,\"props\":{\"rows\":[[\"a\",\"b\"],[]],\"numbers\":[1,2],\"flags\":[true,false],\"array\":[\"a\"],\"values\":[\"a\"],\"writeOnly\":[\"a\"],\"throwing\":[\"a\"]}}");
+        try
+        {
+            update.SetValue(runtime, document.RootElement);
+            var component = new ListComponent();
+            MosaicRuntimeHost.ApplyProps(component);
+            var rows = component.Rows;
+            var numbers = component.Numbers;
+            var booleans = component.Flags;
+            var array = component.Array;
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(ReferenceEquals(rows, component.Rows) && ReferenceEquals(numbers, component.Numbers)
+                && ReferenceEquals(booleans, component.Flags), "equal nested and scalar lists keep identity");
+            Check(!ReferenceEquals(array, component.Array), "arrays retain ordinary assignment semantics");
+            Check(component.Sets == 2 && component.WriteOnlySets == 2 && component.ThrowingSets == 2,
+                "equal, write-only and throwing-getter setters still run");
+            ((List<string>)component.Rows![0])[0] = "local edit";
+            ((List<double>)component.Numbers!)[0] = 2;
+            ((List<bool>)component.Flags!)[0] = false;
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(!ReferenceEquals(rows, component.Rows) && component.Rows![0][0] == "a"
+                && component.Numbers![0] == 1 && component.Flags![0], "local list mutations are corrected");
+            component.Rows = new List<IReadOnlyList<string>> { new List<string> { "b", "a" }, new List<string>() };
+            component.Observed = new List<string> { "a", "extra" };
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(component.Rows![0][0] == "a" && component.Observed!.Count == 1, "order and extra elements are replaced");
+            component.Rows = new List<IReadOnlyList<string>> { new List<string> { "a" } };
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(component.Rows!.Count == 2 && component.Rows[0].Count == 2, "short and nested-short lists are replaced");
+            var broken = new BrokenList();
+            component.Observed = broken;
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(component.Observed![0] == "a" && !ReferenceEquals(broken, component.Observed), "enumeration failure falls back to incoming list");
+            var endless = new BrokenList { Infinite = true };
+            component.Observed = endless;
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(endless.Moves == 2 && !ReferenceEquals(endless, component.Observed), "existing enumeration is bounded by incoming length plus one");
+            using var nulls = System.Text.Json.JsonDocument.Parse("{\"revision\":1,\"props\":{\"rows\":null,\"values\":null}}");
+            update.SetValue(runtime, nulls.RootElement);
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(component.Rows is null && component.Observed is null, "null runtime lists clear current values");
+        }
+        finally { update.SetValue(runtime, original); }
+    }
 
     private static void Check(bool ok, string what)
     {
@@ -538,6 +623,7 @@ internal static class Driver
         var probeCase = Environment.GetEnvironmentVariable("MOSAIC_PROBE_CASE") ?? string.Empty;
         switch (probeCase)
         {
+            case "props-lists": CaseListProps(); break;
             case "profile-disabled":
                 var disabledProjection = new ProjectionProbe();
                 Check(MosaicRuntimeHost.BeginProfile("probe", disabledProjection) is null
