@@ -27,6 +27,10 @@ window-management fields `CWP`, `CANSAVE`, `CANRESTORE`, `CLEANWIN`,
 `OTHERWIN`, and `WSTATE` required by admitted `SAVE`, `RESTORE`, and `RETURN`
 operations.
 
+Y is stored in the package's 64-bit state shape, but only its low 32 bits are
+architectural. Its upper 32 bits always read as zero, snapshots canonicalize
+them to zero, and restore rejects a nonzero reserved upper half.
+
 The state also owns deterministic halt, installed-program origin and length,
 and every byte of flat 64 KiB teaching memory. Normal globals are the only
 global set. Privileged alternate/interrupt/MMU globals and privileged PSTATE,
@@ -93,14 +97,22 @@ product. `SDIVX` and `UDIVX` fault atomically only on a zero divisor: the
 `SDIVX` minimum-signed-value divided by minus one returns that minimum value,
 and every `UDIVX` quotient fits 64 bits. `POPC` counts all 64 operand bits.
 
-`UMUL` and `SMUL` multiply the low 32-bit operands, write the low 32 product
-bits zero-extended to `rd`, and write the high 32 bits to `Y`; their `cc`
-variants set the documented integer condition codes. `UDIV` and `SDIV` divide
-the 64-bit dividend formed from `Y` and the low 32 bits of `rs1`, saturate an
-out-of-range quotient to the architectural unsigned or signed 32-bit limit,
-set `icc.V` on saturation in the `cc` form, and leave `xcc.V` clear. Because Y
-is architecturally undefined after these divides, this deterministic oracle
-preserves its pre-instruction Y value and documents that choice in traces.
+`UMUL` and `SMUL` multiply the low 32-bit operands, write the complete 64-bit
+product to `rd`, and write product bits 63:32 to Y bits 31:0. Their `cc` forms
+set `icc.N` from product bit 31, `icc.Z` when product bits 31:0 are zero, and
+clear `icc.V/C`; they set `xcc.N` from product bit 63, `xcc.Z` when the whole
+product is zero, and clear `xcc.V/C`.
+
+`UDIV` and `SDIV` divide the 64-bit dividend formed from Y bits 31:0 and the low
+32 bits of `rs1`; signed division truncates toward zero. They saturate an
+out-of-range quotient to the architectural unsigned or signed 32-bit limit.
+`UDIV` zero-extends and `SDIV` sign-extends the selected 32-bit result into
+`rd`. Their `cc` forms set `icc.N/Z` from that 32-bit selected result, set
+`icc.V` exactly on saturation, and clear `icc.C`; they set `xcc.N/Z` from the
+extended 64-bit value in `rd` and clear `xcc.V/C`. Non-`cc` forms preserve both
+condition-code sets. Because Y is architecturally undefined after a successful
+legacy divide, this deterministic oracle preserves its pre-instruction low 32
+bits and documents that choice in traces.
 
 ## 5. Memory and atomicity
 
@@ -124,16 +136,18 @@ outside this cell. `MEMBAR` validates its reserved fields and emits an exact
 trace but needs no host fence because the model is single-threaded and
 sequentially executed.
 
-Every instruction preflights all source registers, window transitions, target
-alignment, and memory ranges before committing. A typed fault preserves every
-register, counter, condition bit, memory byte, PC/nPC value, halt bit, and image
-field.
+Every instruction preflights all source registers, window transitions, and
+memory ranges before committing. `JMPL` and `RETURN` additionally validate
+that their computed target's low two bits are zero before link, window, PC, or
+nPC mutation. A typed fault preserves every register, counter, condition bit,
+memory byte, PC/nPC value, halt bit, and image field.
 
 ## 6. Register windows and delayed control flow
 
 Logical outs of window `CWP` overlap the physical ins of window `CWP + 1`
-modulo four. `SAVE` increments CWP; it requires `CANSAVE != 0` and
-`CLEANWIN - CANRESTORE != 0`, then decrements CANSAVE and increments
+modulo four. `SAVE` increments CWP. It first returns a spill-window fault when
+`CANSAVE == 0`; only otherwise does it return a clean-window fault when
+`CLEANWIN - CANRESTORE == 0`. On success it decrements CANSAVE and increments
 CANRESTORE. `RESTORE` and `RETURN` decrement CWP; they require
 `CANRESTORE != 0`, then increment CANSAVE and decrement CANRESTORE. SAVE and
 RESTORE read source operands in the old window and write their destination in
@@ -144,9 +158,9 @@ A transition that would require a spill, fill, or clean-window trap returns a
 distinct typed window fault without changing state; this package does not
 synthesize a trap handler. Restored state requires each counter to be in
 `0..N-1`, `CANSAVE + CANRESTORE + OTHERWIN == N - 2`, and
-`CLEANWIN >= CANRESTORE` for `N = 4`. This single-context model makes no claim
-to implement cross-context window cleaning; it follows the relevant V9 erratum
-for its one configured context.
+`CLEANWIN >= CANRESTORE` for `N = 4`. This single-context model applies the
+published SAVE predicate. It makes no claim to implement the OS/WSTATE
+workaround or cross-context sanitization discussed by erratum 64.
 
 Ordinary execution advances `(PC,nPC)` to `(nPC,nPC+4)`. A taken delayed
 transfer installs its effective address in nPC so the instruction at old nPC
@@ -165,7 +179,9 @@ and may replace the following nPC with its own target. Excluded privileged
 a live slot halts only after that successful slot step; unknown and unsupported
 slot instructions return their ordinary typed errors.
 
-Target alignment and installed-image membership are checked when the target
+`JMPL` and `RETURN` alignment is checked by the control-transfer instruction
+itself. Branch and CALL targets are encoding-aligned. Installed-image and owned-
+memory membership for any scheduled target is checked only when that target
 becomes the next fetch. A failed slot `step` preserves the exact pre-slot state,
 including PC, nPC, and the already-installed pending transfer. A transactional
 `run` or `execute` failure instead rolls back that whole invocation. Successful
