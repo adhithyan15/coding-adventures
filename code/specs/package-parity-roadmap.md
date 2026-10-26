@@ -18129,3 +18129,39 @@ the previously reviewed `e60a15a73ed7ed2d090b996b0b184454e811b947` lease.
 Fresh hosted checks must then finish acceptably on the new head before guarded
 auto-merge is enabled. PR #18293 remains a separate owner and is not modified
 by this rebase.
+
+## October 26, 2026: Kotlin micro-qr build-front selection
+
+PR #18312 completed every reported final-head check acceptably and merged from
+exact head `b804a122612f4ae64d967efbff454af771bf6130` as
+`0be03745d775ffa9ee8c66ffda1700baa76ba58f` at
+`2026-10-26T11:52:29Z`. That receipt is an ancestor of the reconciled selection
+base, exact origin/main `eb5ff8791b4bcd2118f1c6b8060f01c804ed5fa1`, so the live
+parity PR set is now #18293 and #18324.
+
+The refreshed ready-owner prioritization selects
+`kotlin-micro-qr-build-front-and-gradle-metadata-coverage` next. This bounded
+repair restores an existing 123-test Kotlin package to repository discovery
+and scheduling, and its external Gradle consumer verifies that the public
+`ModuleGrid` return type is transitively available through the package API.
+That build-front and public-metadata work ranks ahead of the capability-only
+Swift PaintVmAscii repair. The prepared Bezier successors remain blocked on
+selector dependency PR #18293.
+
+The two local implementation commits were rebased conflict-free onto the exact
+selection base on branch
+`codex/parity-kotlin-micro-qr-build-front-20261026`. The tranche adds the
+Gradle package definition, fail-closed Unix and Windows BUILD fronts, empty
+capability declaration, and documentation; it does not change encoder source
+or behavior. The last mainline advance was an unrelated Rust System/360
+gate-routing change and has no path overlap. Neither live PR touches this
+Kotlin package. PR #18324 removes a different `code/BUILD-EXEMPTIONS` record,
+so later reconciliation must preserve both removals and both append-only
+lifecycle receipts.
+
+Reconciliation also removes one inherited duplicate `merged_at` key from the
+already-merged CommonMark fixture owner while retaining its canonical identical
+value. Publication remains prohibited until the final local head has passed
+the native Kotlin build, external-consumer compile, focused planner, capability
+schema, lesson, state-graph, diff-hygiene, and independent exact-head review
+gates.
