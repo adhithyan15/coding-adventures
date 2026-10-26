@@ -85,8 +85,11 @@ the following before M7 implementation starts:
 
 - fallible snapshot into caller-preallocated storage, without an intermediate
   infallible full-memory clone;
-- validated restore into a candidate and an explicit commit operation, so the
-  M7 wrapper can settle inherited and GE candidates before either clocks;
+- validated restore into a candidate and an explicit fallible commit
+  operation, so the M7 wrapper can settle inherited and GE candidates before
+  either clocks; because compatibility keeps candidate value mutation public,
+  commit must revalidate the complete inherited state immediately before the
+  first DFF clock;
 - a transactional delegated-step operation that writes an exact trace into
   caller-preallocated storage and leaves the inherited DFFs untouched on every
   error;
@@ -121,8 +124,10 @@ the four added operations.
 Load and restore validate the complete input before clocking any DFF. `step`
 executes against fallibly allocated candidate DFF state, captures instruction
 bytes before any self-modifying write, produces a complete trace, and clocks
-the settled candidate only after every check succeeds. Unknown encodings,
-reserved DSP operands, invalid restore/load/fetch/data/control operations,
+the settled candidate only after every check succeeds. Final inherited commit
+revalidates even a previously settled candidate, closing the public mutable
+candidate seam. Unknown encodings, reserved DSP operands, invalid
+restore/load/fetch/data/control operations, hostile post-settle mutations,
 halted/sleeping state, SVC, and non-sentinel BKPT preserve every DFF.
 
 `run` and `execute` retain the functional cell's maximum of 64 complete-state
