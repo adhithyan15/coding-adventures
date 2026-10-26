@@ -71,6 +71,12 @@ architecture/core introduction era, not a claim about a particular chip.
 
 ## Discovered follow-up work
 
+### Gate-integrity audit queue
+
+| Priority | Target | Finding / next action |
+|---:|---|---|
+| P1 active | PowerPC 601 conditional-branch authority | Replace the host-language BO/CTR/CR predicate with an explicit gate network. Preserve CTR update semantics, cover all BO and CR selector combinations against an independent truth table, and retain full lifecycle/differential conformance. The counted GPR/LR/CTR/XER/CR/CIA, memory, and HALT storage banks are already private stable-Q authority with no public host-state mirrors. |
+
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,
   bitfield, saturation, dual-register, byte/halfword exclusive, and remaining
   wide Thumb-2 encodings. This is non-blocking for the core lifecycle and SoC
