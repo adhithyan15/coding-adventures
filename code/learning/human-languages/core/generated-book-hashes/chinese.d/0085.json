@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:0083c19e2718a6a1",
+  "lessonIds": [
+    "ZH-C85-zai",
+    "ZH-W85-zai-at",
+    "ZH-C85-nar",
+    "ZH-C85-libian",
+    "ZH-C85-waibian",
+    "ZH-C85-practice"
+  ],
+  "tex": "chinese/book/chapters/ch85-where-things-are.tex"
+}

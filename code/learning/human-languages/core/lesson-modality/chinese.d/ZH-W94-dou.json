@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W94-dou",
+    "language": "chinese",
+    "chapter": 94,
+    "sequence": 7600,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:da89a0527823fbe7",
+    "detachableSegments": [
+      "Script — 者, then the ear on the right"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

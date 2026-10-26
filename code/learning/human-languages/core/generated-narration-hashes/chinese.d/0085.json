@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:46137cb11ffbbb6c",
+  "lessonIds": [
+    "ZH-C85-zai",
+    "ZH-W85-zai-at",
+    "ZH-C85-nar",
+    "ZH-C85-libian",
+    "ZH-C85-waibian",
+    "ZH-C85-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch85.txt",
+  "json": "chinese/narration/ch85.json",
+  "textHash": "fnv1a64:5be7fd704b82fe66",
+  "jsonHash": "fnv1a64:a63a04e9374960a3",
+  "findings": []
+}
