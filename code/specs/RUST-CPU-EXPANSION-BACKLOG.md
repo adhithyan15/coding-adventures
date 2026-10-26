@@ -71,6 +71,13 @@ architecture/core introduction era, not a claim about a particular chip.
 
 ## Discovered follow-up work
 
+### Gate-integrity audit queue
+
+| Priority | Target | Finding / next action |
+|---:|---|---|
+| P0 | MIPS R2000 gate HALT storage | In progress: the claimed HALT DFF is currently fed from and shadowed by a public host boolean that remains the real execution/snapshot authority, while the topology test only restates `FLIP_FLOP_COUNT`. Make HALT Q authoritative, retain the boolean only as a safely synchronized compatibility projection, publish an inventory derived from the physical storage containers, and add deliberate mirror-divergence plus restore/fault tests. |
+| P1 audit | Remaining completed gate packages with public halt fields | Audit each package before changing it. A public observation field is acceptable only when execution, snapshots, restore, and faults are driven by DFF Q; otherwise add one bounded repair cell and a non-tautological storage inventory. Candidate packages discovered by source scan include ARM1, SPARC V8, Motorola 68000, Intel 8051, Intel 8086, and OpenRISC 1000. |
+
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,
   bitfield, saturation, dual-register, byte/halfword exclusive, and remaining
   wide Thumb-2 encodings. This is non-blocking for the core lifecycle and SoC
