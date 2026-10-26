@@ -11,6 +11,13 @@ latch. Packed stable-Q storage reconstructs and clocks changed state through
 typed errors, traces, and transactional checked execution with the functional
 MIPS package, and passes its reproducible 218-vector Python full-state corpus.
 
+The HALT DFF's Q output is authoritative. `halted()` reads Q directly; the
+historical public `halted` boolean is retained only as a synchronized read
+mirror so existing callers continue to compile, and assigning that mirror
+cannot change the machine. `physical_storage_inventory()` derives the memory,
+register-file, and HALT counts from the concrete owned storage so callers can
+independently verify their sum against `FLIP_FLOP_COUNT`.
+
 ## Architecture
 
 The MIPS R2000 was the first commercial chip implementing the MIPS I
@@ -106,7 +113,7 @@ decoder.rs
   gate-level: all extraction from LSB-first bit arrays, no integer masks
 
 cpu.rs
-  CpuMipsR2000: 525,409-DFF rf + mem[64KB] + halted
+  CpuMipsR2000: 525,409-DFF rf + mem[64KB] + authoritative HALT Q
   execute(program, origin, max_steps) → Result<u32, MipsError>
   get_state/restore/load_checked/step_checked/run_checked
   Halt: SYSCALL (op=0, funct=0x0C)
@@ -183,7 +190,7 @@ let prog: &[u8] = &[
 ];
 cpu.execute(prog, 0, 100).unwrap();
 assert_eq!(cpu.rf.read_reg(10), 8); // $t2 = 5 + 3 = 8
-assert!(cpu.halted);
+assert!(cpu.halted());
 ```
 
 ## Covered instructions
