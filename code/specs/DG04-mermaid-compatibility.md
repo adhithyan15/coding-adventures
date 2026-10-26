@@ -155,9 +155,11 @@ as an exterior loop with canvas-aware backend-neutral geometry. Unicode symbols
 in unquoted entity identifiers, aliases, attribute text, and relationship roles
 survive semantic IR, layout, and backend-neutral paint. Attribute types follow
 Mermaid's block lexer boundary: key-prefixed words remain valid, while exact key
-markers, numeric tokens, and quoted strings do not become types. ER remains
-partial while the rest of the pinned upstream syntax and visual corpus is
-incomplete.
+markers, numeric tokens, and quoted strings do not become types.
+Attribute comments normalize Mermaid HTML break variants to semantic newlines,
+with line-aware structural measurement and backend-neutral text lowering. ER
+remains partial while the rest of the pinned upstream syntax and visual corpus
+is incomplete.
 
 ## Required New Semantic Families
 

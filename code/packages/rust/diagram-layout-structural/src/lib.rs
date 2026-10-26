@@ -256,12 +256,19 @@ fn node_width(node: &StructuralNode, architecture_config: Option<&ArchitectureCo
         .compartments
         .iter()
         .flat_map(|c| c.entries.iter())
-        .map(|e| e.len())
+        .flat_map(|entry| entry.split('\n'))
+        .map(str::len)
         .max()
         .unwrap_or(0);
     // Approximate 8 px/char + padding; header is the label
     let char_width = style.font_size * 0.57;
-    let text_w = (node.label.len().max(max_entry) as f64 * char_width + 24.0).ceil();
+    let label_width = node
+        .label
+        .split('\n')
+        .map(str::len)
+        .max()
+        .unwrap_or(0);
+    let text_w = (label_width.max(max_entry) as f64 * char_width + 24.0).ceil();
     let minimum_width = architecture_config.map_or(MIN_NODE_W, |config| {
         MIN_NODE_W * config.icon_size / 80.0
     });
@@ -281,7 +288,12 @@ fn node_height(node: &StructuralNode, architecture_config: Option<&ArchitectureC
     let row_height = ROW_H.max(font_size * 1.4);
     let mut h = header_height;
     for comp in &node.compartments {
-        h += COMP_PAD + comp.entries.len() as f64 * row_height + COMP_PAD;
+        let line_count = comp
+            .entries
+            .iter()
+            .map(|entry| entry.split('\n').count())
+            .sum::<usize>();
+        h += COMP_PAD + line_count as f64 * row_height + COMP_PAD;
     }
     h
 }
@@ -363,7 +375,12 @@ fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
         };
         let mut comps: Vec<LayoutedCompartment> = Vec::new();
         for comp in &node.compartments {
-            let ch = COMP_PAD + comp.entries.len() as f64 * row_height + COMP_PAD;
+            let line_count = comp
+                .entries
+                .iter()
+                .map(|entry| entry.split('\n').count())
+                .sum::<usize>();
+            let ch = COMP_PAD + line_count as f64 * row_height + COMP_PAD;
             comps.push(LayoutedCompartment {
                 y_offset: y_off,
                 height: ch,
@@ -1792,6 +1809,27 @@ mod tests {
 
         assert_eq!(layout.nodes[0].compartments[0].rows.len(), 3);
         assert!(layout.nodes[0].height > 70.0);
+    }
+
+    #[test]
+    fn multiline_attribute_comments_reserve_each_semantic_line() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.nodes[0].id = "ENTITY".into();
+        diagram.nodes[0].label = "ENTITY".into();
+        diagram.nodes[0].compartments[0].entries = vec![
+            "first: string - Primary\nidentifier".into(),
+            "second: string - Second\nline".into(),
+            "third: string [PK] - Third\nline".into(),
+        ];
+        diagram.relationships.clear();
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes[0].compartments[0].rows.len(), 3);
+        assert!(layout.nodes[0].height > 130.0);
+        assert!(layout.nodes[0].width < 300.0);
     }
 
     #[test]
