@@ -47,6 +47,18 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | Arm Cortex-M0 | merged | ready | Independent Armv6-M gate cell can start now. |
 | P0 | Arm Cortex-M3 | merged | ready | Independent Armv7-M gate cell can start now. |
 
+## P0 gate-integrity repair queue
+
+Independent review of the completed architecture matrix found a recurring
+storage-authority defect: some packages counted DFF banks in their physical
+topology while executing from parallel public host fields. These repairs
+outrank new architecture cells because a shadow bank makes the published gate
+claim unsound even when ISA differentials remain green.
+
+| Priority | Target | Status | Required boundary |
+|---:|---|---|---|
+| P0 | Motorola 68000 gate | local complete | All 560 register/PC/SR DFF Q outputs and the HALT DFF Q output are authoritative; public fields are synchronized observers. Concrete inventory, deliberate observer-divergence lifecycle regressions, 71 unit tests, all 82 differential vectors, 6 lifecycle tests, 7 doctests, strict checks, lessons, and 83.39% combined line coverage are green. |
+
 ## Independent functional queue
 
 This queue is re-costed after every merge or discovery. Dates indicate the

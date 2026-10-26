@@ -70,7 +70,11 @@ integral. If a sign-rooted reduction's magnitude equals that common divisor,
 its values are confined to the negative magnitude, zero, and the positive
 magnitude; `div` and `mod` preserve the exact reduced divisor for this stable
 shape, including across another stable multiplied root, and may thereby prove
-a later `/` exact. Wider value sets keep the conservative fallback.
+a later `/` exact. Wider value sets keep the conservative fallback. When the
+complete magnitude is below a static divisor, `div` instead proves a zero
+quotient and `mod` preserves the operand and its common divisor; these
+range-dominated reductions likewise compose through multiplied roots and
+later exact `/`.
 Checked exact-integer normalizers may provide the sign-rooted transform's
 nonnegative exponent when the right-associative chain stays within the power
 unroll cap. A zero result proves the complete power is exactly one; negative,

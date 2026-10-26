@@ -59,8 +59,10 @@ fixture sources into a disposable minimal workspace. This does not replace the
 real monorepo workspace validation in CI. No unrelated workspace members should
 be materialized merely to run a small local oracle.
 
-NN46's `python code/scripts/validate_neural_framework_interchange.py` from the
-repository root executes twenty directed exchanges with Python, TypeScript, Go and Ruby,
+NN49's `python code/scripts/validate_neural_framework_interchange.py --c-executable PATH`
+from the repository root executes thirty directed exchanges across six native
+lanes (Python, TypeScript, Rust, Go, Ruby and C). Build C using its ISO harness,
+then supply its trusted executable path. Comparisons cover complete models,
 including return-trip comparison at step 3002. Its selected reusable CI job must
 pass before claiming required conformance delivery. Native save/reload/resume
 alone is not proof of interchange. C ABI,

@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-205-A2-SABH",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can recognise and use one word for all in a bounded familiar frame.",
+  "prerequisites": [
+    "PA-EXT-204-A2-BACHCHIAN"
+  ]
+}
