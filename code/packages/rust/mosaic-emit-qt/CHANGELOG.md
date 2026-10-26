@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-26 (Fixed control width floors)
+
+- Preserve static scalar host-control widths paired with exact flex-shrink: 0
+  (#18394). Fill widths, conflicting constraints, and state geometry remain
+  excluded; unsupported-flex diagnostics remain unchanged.
+
 ## 2026-10-25 (Fixed text width floors)
 
 - Preserve static scalar text widths paired with exact flex-shrink: 0 (#18305).

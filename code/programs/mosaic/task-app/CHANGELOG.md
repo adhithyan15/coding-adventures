@@ -4,6 +4,11 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Fixed
+
+- Preserve the Qt due-date editor's authored 150-pixel non-shrinking width on
+  the control itself (#18394), without changing shared styles or flex diagnostics.
+
 Entries added after `task-app-v0.5.13` accumulate here until the next version is
 cut.
 

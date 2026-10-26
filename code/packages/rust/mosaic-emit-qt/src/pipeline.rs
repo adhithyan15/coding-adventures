@@ -6529,6 +6529,12 @@ fn host_control_style_qml_lines(
             lines.push(format!("implicitWidth: {width}"));
             lines.push(format!("Layout.preferredWidth: {width}"));
         }
+        // Preferred sizing alone permits the layout to shrink an editor.
+        // Keep the same narrow, validated bridge used by containers and text;
+        // fill geometry and general flex semantics remain outside its scope.
+        if let Some(minimum) = static_delegate_min_width(base, &state_layers) {
+            lines.push(format!("Layout.minimumWidth: {minimum}"));
+        }
     }
     let height = conditional_lowered_px_expr(base, &state_layers, "height", "0");
     if let Some(height) = height {
@@ -18081,6 +18087,30 @@ mod tests {
             "font.pixelSize: ( (size === \"sm\") ) ? 12 : 14",
         ] {
             assert!(out.contains(expected), "missing {expected:?}:\n{out}");
+        }
+    }
+
+    #[test]
+    fn host_input_static_non_shrinking_width_has_a_floor() {
+        let model = component("FixedInput", vec![], vec![]);
+        let layout = LayoutDef {
+            component_name: "FixedInput".into(),
+            root: LayoutNode {
+                tag: "HostInput".into(), part_name: Some("input".into()),
+                props: vec![lp("placeholder", LayoutPropValue::String("Due date".into()))],
+                children: vec![],
+            },
+        };
+        for (width, shrink, expected) in [("150", "0", true), ("150", "1", false), ("100%", "0", false)] {
+            let style = StyleDef {
+                component_name: "FixedInput".into(),
+                parts: vec![PartStyle {
+                    name: "input".into(), base: vec![sp("width", width), sp("flex-shrink", shrink)],
+                    states: vec![], transitions: vec![],
+                }],
+            };
+            let out = from_pipeline(&model, &layout, &style).unwrap().output;
+            assert_eq!(out.contains("Layout.minimumWidth: 150"), expected, "{out}");
         }
     }
 
