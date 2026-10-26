@@ -18231,3 +18231,125 @@ PR #18324's checks had already passed. Preserve both tranches by merging exact
 current main into the Python branch without rewriting its published history,
 then rerun exact-head independent review and hosted checks before re-enabling
 guarded auto-merge.
+
+## October 26, 2026: Swift PaintVmAscii capability preparation
+
+PR #18312 completed its final-head checks and merged from exact head
+`b804a122612f4ae64d967efbff454af771bf6130` as
+`0be03745d775ffa9ee8c66ffda1700baa76ba58f` at
+`2026-10-26T11:52:29Z`. That verified receipt is present on exact reconciled
+origin/main `d1730421d34c9fe6ebe9cc68473f505017659a5a`. The three
+authorized publication slots are now occupied by live PRs #18293, #18324, and
+#18355, so the PaintVmAscii owner remains pending and this work stays local.
+
+The existing branch
+`codex/parity-swift-paint-vm-ascii-capabilities-20261026` was rebased
+conflict-free onto that main revision while preserving the intervening
+append-only lifecycle and roadmap history. Its bounded change adds only an
+explicit schema-v1 empty capability profile plus documentation for the already
+merged Swift renderer. Production source, public API, dependencies, BUILD
+fronts, scene semantics, and terminal behavior do not change: the library
+still consumes an in-memory scene and returns a string, and only its caller may
+choose to print it.
+
+The three live PRs overlap this preparation only in shared lifecycle documents,
+not in the PaintVmAscii package or its changelog shard. Local validation passes
+all 34 PaintVmAscii tests and all 43 downstream cowsay tests. The production Go
+planner selects and executes only the six-package Swift closure containing
+PaintInstructions, PaintVmAscii, cli-builder, directed-graph, cowsay, and
+state-machine; no special CI suite is widened. Capability-schema, strict JSON,
+state-graph, lessons, changelog-shard, diff-hygiene, and artifact-cleanup gates
+remain required before recording the local preparation head. Publication and
+selection require a later slot-opening reprioritization and independent review.
+
+## October 26, 2026: Swift PaintVmAscii selection after Python merge
+
+Python gradient-descent PR #18324 completed every required check and merged
+from exact reviewed head `d34af356d621175dd8cc307d953ecb7a99d1b79a` as
+`1bb58a0d7ed8d818d622e69890234d96b6e26b3a` at
+`2026-10-26T15:37:25Z`. The receipt was exact current origin/main at selection
+time, and its clean
+completed worktree and local branch were removed. The only live parity PRs are
+now #18293 and #18355.
+
+The ready backlog was reprioritized before using the opened slot. Every
+prepared Bezier successor remains blocked on selector dependency PR #18293, so
+the independently reviewed, dependency-free Swift PaintVmAscii capability
+repair is the next eligible candidate. Its exact owner advances from pending
+to in-progress locally; this does not publish a branch or create a PR.
+
+The three preparation commits were rebased onto exact main while preserving
+the complete Swift-hash, Python-gradient, and other intervening append-only
+history. Shared state and roadmap conflicts retained both sides. The resulting
+product scope remains one empty capability manifest plus documentation and the
+canonical changelog filename correction; production code, public API, BUILD
+fronts, dependencies, and caller-owned terminal authority remain unchanged.
+Fresh focused validation and independent review of the final local head are
+required before publication.
+
+Before publication, unrelated PA-RISC PR #18342 advanced origin/main to
+`de088e2ddfacd2372fab3677d38b969eea602c00` without touching the parity state,
+roadmap, or PaintVmAscii scope. The still-unpublished four-commit series was
+rebased onto that exact tip. Range comparison confirms all four commits are
+patch-identical to the previously validated series; the lifecycle receipt now
+records `de088e2ddfacd2372fab3677d38b969eea602c00` as the exact reconciled base.
+
+## October 26, 2026: Swift PaintVmAscii draft publication
+
+Independent exact-head review passed at
+`0ecc1c018da921308dac726c91dab152d93bf753`. The reviewed branch was pushed
+normally without rewriting that head and opened as draft PR #18367 at
+`2026-10-26T15:52:35Z`. GitHub reports the exact draft head open and mergeable.
+The draft records the durable PR identity only; it must remain draft until this
+lifecycle-only receipt receives separate exact-head review, and no readiness,
+auto-merge, or merge action is authorized here.
+
+After the independent review, unrelated Japanese-book PR #18338 advanced
+origin/main to `eb841de8f43fd001bde8bdc7ece462a008779da0`. It has no path
+overlap with the PaintVmAscii tranche, and a three-way merge-tree check is
+conflict-free, so publication preserves the exact reviewed implementation head
+rather than rewriting it for unrelated content. The other live parity owners
+are #18293 at exact head `c7b1e98687d3c762a98a9beed61ad71f586ca484`
+and #18355 at exact head `f27058ffa18abe1fb7a7167237eb0b761414162f`;
+GitHub reports both open, non-draft, and mergeable. The live parity set is now
+exactly {18293, 18355, 18367}.
+
+## October 26, 2026: local Swift fenced-block rebase and reconciliation
+
+The `gfm-fenced-block-swift-contract-adoption` lifecycle mismatch is expected:
+origin/main still records the owner pending because neither its selection nor
+its implementation has ever been published, while this local-only preparation
+records it in progress. Its exact prerequisite,
+`gfm-language-neutral-conformance-fixture`, merged in PR #18118 as
+`83f1871e3d61e8151b0e9313337f5dc2c842a3e6`.
+
+All prepared Bezier successors remain blocked on PR #18293 and the three hosted
+slots are occupied by #18293 at
+`c7b1e98687d3c762a98a9beed61ad71f586ca484`, #18355 at
+`f27058ffa18abe1fb7a7167237eb0b761414162f`, and #18367 at
+`365f455bbaa57c41b1ff825f85fbca883d0cfb92`. The unpublished Swift branch was
+therefore rebased locally onto exact origin/main
+`79322a77c561c1c0cbe21a397a6cd7c41021c3a0` without opening a fourth PR. The
+rebase preserved current main, the verified Python #18324 merge receipt, and
+the complete append-only PaintVmAscii lifecycle history. The old C# receipt
+replay became empty because current main already carries its verified receipt.
+GitHub reports all three exact heads open, non-draft, and mergeable; their
+queued checks and merge responsibility remain outside this local preparation.
+
+Fresh native validation passes 96 document-AST, 62 CommonMark-parser, 63 HTML
+renderer, 30 CommonMark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade
+tests, plus release builds for all six packages. The production planner finds
+exactly three direct packages and their six-package Swift closure, selects only
+the Swift toolchain, and executes all six packages from its emitted plan. Its
+full repository orphan census still fails only because this intentionally
+sparse worktree omits unrelated roots listed by the shared exemption file; the
+bounded planner result remains exact when that global census is disabled.
+
+All three empty capability manifests validate against the current schema. The
+strict state graph has 1,547 unique owners and 2,616 complete acyclic edges,
+zero merged-to-unfinished edges, exactly one local in-progress owner, and the
+three exact live PR owners. All 1,595 lesson shards validate. Fresh root
+changelog validation also caught the preparation's old noncanonical shard
+name; the file now uses the uppercase heading slug and the exact SHA-256
+heading digest `7d765417`. This is preparation evidence only: independent
+exact-head review and a future hosted slot remain publication gates.

@@ -19,13 +19,14 @@
   "active_pr": 18293,
   "active_prs": [
     18293,
-    18324
+    18355,
+    18367
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-26T11:52:29Z",
-    "pr_number": 18312,
-    "head_revision": "b804a122612f4ae64d967efbff454af771bf6130",
-    "action": "Verified every exact-head check terminal acceptable and the reviewed head conflict-free, completed guarded squash merge as 0be03745d775ffa9ee8c66ffda1700baa76ba58f, verified the receipt on origin/main, and removed the clean completed Swift hash-functions worktree and local branch.",
+    "observed_at": "2026-10-26T15:37:25Z",
+    "pr_number": 18324,
+    "head_revision": "d34af356d621175dd8cc307d953ecb7a99d1b79a",
+    "action": "Verified PR #18324 merged from exact reviewed head d34af356d621175dd8cc307d953ecb7a99d1b79a as 1bb58a0d7ed8d818d622e69890234d96b6e26b3a at 2026-10-26T15:37:25Z, confirmed the receipt on origin/main, and removed its clean completed worktree and local branch.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -10250,10 +10251,32 @@
     {
       "id": "paint-vm-ascii-swift-lane-parity",
       "title": "Complete paint-vm-ascii parity in Swift",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-swift-paint-vm-ascii-capabilities-20261026",
+      "pr_number": 18367,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18367",
+      "pr_opened_at": "2026-10-26T15:52:35Z",
+      "publication_head": "365f455bbaa57c41b1ff825f85fbca883d0cfb92",
+      "draft_creation_head": "0ecc1c018da921308dac726c91dab152d93bf753",
+      "publication_notes": "GitHub reports PR #18367 open, non-draft, and mergeable at current exact head 365f455bbaa57c41b1ff825f85fbca883d0cfb92. Its independently reviewed implementation head remains recorded separately as 0ecc1c018da921308dac726c91dab152d93bf753; this local GFM preparation does not alter or supervise the PaintVmAscii owner.",
+      "final_review_revision": "0ecc1c018da921308dac726c91dab152d93bf753",
+      "final_review_notes": "Independent exact-head review passed the capability-only scope, empty authority declaration, package and downstream tests, exact planner closure, changelog identity, lifecycle metadata, state graph, lessons, diff hygiene, current-main relationship, and artifact-cleanliness gates with no findings.",
+      "prepared_at": "2026-10-26T14:25:33Z",
+      "selected_at": "2026-10-26T15:39:02Z",
+      "selection_revision": "1bb58a0d7ed8d818d622e69890234d96b6e26b3a",
+      "base_revision": "de088e2ddfacd2372fab3677d38b969eea602c00",
+      "implementation_revision": "6e1424d5e54f0861066f8e325f5dac6e7a2a1515",
+      "unreleased_note_fix_revision": "1eadecdcf57c8fde6abf18fb9e8b6a7b245f39cf",
+      "preparation_head_revision": "19dabb6971e7730971f6fe565e05b90ff0089eec",
+      "reconciled_main_revision": "de088e2ddfacd2372fab3677d38b969eea602c00",
+      "package_paths": [
+        "code/packages/swift/PaintVmAscii"
+      ],
+      "preparation_notes": "Prepared locally without selection or publication because the three authorized parity slots are occupied by PRs #18293, #18324, and #18355. The bounded tranche adds only the truthful empty capability manifest plus package and changelog documentation for the already-merged Swift renderer; production source, public API, package dependencies, BUILD fronts, and caller-owned terminal output remain unchanged.",
+      "selection_notes": "Selected only after verified guarded merge of Python gradient-descent PR #18324 opened a hosted slot. The already independently reviewed capability-only tranche is dependency-free and publication-ready after reconciliation, while every prepared Bezier successor remains blocked on live selector dependency PR #18293. Live PRs are now exactly {18293, 18355}; neither overlaps PaintVmAscii production, tests, package metadata, or its root changelog shard. Selection changes only lifecycle status from pending to in_progress and does not authorize publication before refreshed exact-head independent review.",
+      "reconciliation_notes": "Rebased the three local preparation commits onto exact origin/main 1bb58a0d7ed8d818d622e69890234d96b6e26b3a, then refreshed the still-unpublished four-commit series onto exact origin/main de088e2ddfacd2372fab3677d38b969eea602c00 after unrelated PA-RISC PR #18342 merged. The append-only state and roadmap conflicts were resolved by preserving main's complete Swift-hash and Python preparation history together with this pending PaintVmAscii receipt and the canonical changelog filename repair; the later refresh was patch-identical and touched no parity files. Recorded verified Python PR #18324 final head d34af356d621175dd8cc307d953ecb7a99d1b79a, merge timestamp 2026-10-26T15:37:25Z, and merge commit 1bb58a0d7ed8d818d622e69890234d96b6e26b3a; removed it from active PRs and retained live PRs {18293, 18355}.",
+      "validation_notes": "At the local preparation checkpoint, Swift 6.3.1 package validation passed all 34 PaintVmAscii tests and all 43 downstream cowsay tests. The production Go planner discovered 19 sparse-worktree packages, selected exactly the six-package Swift dependency closure {PaintInstructions, PaintVmAscii, cli-builder, directed-graph, cowsay, state-machine}, reported only the Swift toolchain and zero special suites, and executed all six BUILD fronts successfully from its emitted plan. The empty capability declaration validated against the repository schema. That checkpoint had one in-progress and two pr-open owners before this separate owner passed review and opened PR #18367; current lifecycle truth is recorded by the pr-open status, publication head, and publication notes above.",
       "notes": "The afa7975 inventory recorded new Dart, Java, and Kotlin paint-vm-ascii implementations, leaving Swift as the sole missing established slot. Merged external PR #12149 added the Swift implementation and closed the package-directory gap, but it omitted the required explicit empty capability metadata. Keep this owner pending until that truthful library profile is added and validated; do not duplicate the already merged renderer implementation or introduce terminal I/O into the library."
     },
     {
@@ -16421,10 +16444,14 @@
     {
       "id": "kotlin-micro-qr-build-front-and-gradle-metadata-coverage",
       "title": "Restore Kotlin micro-qr Gradle metadata and build-front coverage",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-kotlin-micro-qr-build-front-20261026",
+      "pr_number": 18355,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18355",
+      "pr_opened_at": "2026-10-26T13:52:05Z",
+      "publication_head": "f27058ffa18abe1fb7a7167237eb0b761414162f",
+      "publication_notes": "GitHub reports PR #18355 open, non-draft, and mergeable at exact pushed head f27058ffa18abe1fb7a7167237eb0b761414162f after normal main reconciliation. Its separate owner retains exact-head review and hosted-check responsibility; this Swift lifecycle receipt does not alter it.",
       "notes": "Discovered by the post-PR #16133 structural package-root audit. `code/packages/kotlin/micro-qr` has production and test sources plus package documentation but no Gradle package metadata and no BUILD front, so established-lane discovery cannot schedule or validate it. Add lane-consistent Gradle metadata, fail-closed cross-platform BUILD fronts, execution of the existing test suite, capability metadata, and documentation without widening the portable Micro QR contract."
     },
     {
@@ -16521,14 +16548,18 @@
     {
       "id": "python-gradient-descent-build-front-coverage",
       "title": "Add tested BUILD fronts for Python gradient-descent",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-python-gradient-descent-front-20261025",
       "pr_number": 18324,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18324",
       "pr_opened_at": "2026-10-26T09:06:48Z",
-      "publication_head": "773fb4cafe0033da22128682b3b14ae19a6cb4d2",
-      "publication_notes": "Draft PR #18324 opened from exact independently reviewed implementation head 773fb4cafe0033da22128682b3b14ae19a6cb4d2, and lifecycle head 9176757d3a1cebc015779131e1f41085bd833680 passed every hosted check. Swift hash-functions PR #18312 then advanced main and made the Python branch conflicting. Current main is merged into this published branch without rewriting history; the exact merge head requires independent review and fresh hosted checks before guarded auto-merge.",
+      "publication_head": "d34af356d621175dd8cc307d953ecb7a99d1b79a",
+      "publication_notes": "Every exact-head check reached a terminal acceptable conclusion at independently reviewed head d34af356d621175dd8cc307d953ecb7a99d1b79a, and guarded squash merge completed without bypassing review or checks.",
+      "merged_head_revision": "d34af356d621175dd8cc307d953ecb7a99d1b79a",
+      "merged_at": "2026-10-26T15:37:25Z",
+      "merge_revision": "1bb58a0d7ed8d818d622e69890234d96b6e26b3a",
+      "merge_notes": "GitHub reports PR #18324 merged from exact reviewed head d34af356d621175dd8cc307d953ecb7a99d1b79a as 1bb58a0d7ed8d818d622e69890234d96b6e26b3a at 2026-10-26T15:37:25Z. The receipt is exact current origin/main, and the clean completed worktree and local branch were removed after verification.",
       "selection_revision": "27dc687739ac74e8f5bbab70916a03d62a609743",
       "selection_notes": "Selected after the local Swift hash-functions tranche reached an exact-head independent PASS while the hosted parity queue remained full. Among dependency-ready portable owners, this bounded Python front ranks ahead of the Swift paint-vm-ascii capability-only repair because it removes one exact orphan exemption and unblocks two recorded descendants without changing SGD behavior. Scope is limited to truthful Unix and Windows BUILD fronts, production-only coverage, Ruff, existing ML02 behavior tests, publishable metadata, package documentation, and removal of the exact gradient-descent exemption. No training loop, randomness, convergence guarantee, model API, native runtime, or new host authority is introduced.",
       "reconciled_main_revision": "0be03745d775ffa9ee8c66ffda1700baa76ba58f",
@@ -20731,9 +20762,9 @@
       "pr_number": 18293,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18293",
       "pr_opened_at": "2026-10-26T04:49:54Z",
-      "publication_head": "a62b31f3543f6a09bbf5b9daf1363c10b5862bf4",
+      "publication_head": "c7b1e98687d3c762a98a9beed61ad71f586ca484",
       "notes": "Read-only twelve-lane audit found both .NET lanes use midpoint flatness and unbounded recursion; their tolerance guard rejects negatives but permits zero. Consume nine neutral cases dynamically, reject nonfinite controls/tolerance, enforce finite-segment bound and shared budgets, then run Bezier2D and dependent Arc2D suites. Raise both Bezier BUILD coverage floors from 80% to G2D02's >=95% line requirement within this owner.",
-      "publication_notes": "PR #18293 is open, non-draft, mergeable, and failure-free at its exact independently reviewed head. Required jobs remain queued or running, so guarded auto-merge is not yet enabled."
+      "publication_notes": "GitHub reports PR #18293 open, non-draft, and mergeable at current exact head c7b1e98687d3c762a98a9beed61ad71f586ca484. Its separate owner retains exact-head review and hosted-check responsibility; prepared Bezier successors remain blocked on this selector dependency."
     },
     {
       "id": "geometry-bezier2d-flattening-python-ruby-perl",
@@ -26059,10 +26090,12 @@
         "code/packages/swift/document-ast-to-html"
       ],
       "notes": "Swift currently lowers fences to code_block and has no fenced_block AST/renderer case. Adopt TE04 source-preserving name/info/value semantics and inert HTML fallback before adding the missing GFM parser root. Keep the sixteen-case GFM parser adoption itself downstream.",
-      "selection_notes": "Selected as the smallest dependency-ready Swift GFM prerequisite after a 2026-10-26 reprioritization. The older codex/parity-gfm-swift-20261024 preparation predates the three-owner decomposition and combines this contract with downstream parser work, so it is retained only as implementation evidence and is not publishable as one PR.",
-      "base_revision": "20ba82cbe644174616d85b05a314c8395772ad8f",
-      "validation_revision": "e8a9f98c80a90c74150864d407ac3048b047334c",
-      "validation_notes": "RED compilation proved the missing FencedBlockNode and BlockNode.fencedBlock surface. GREEN validation passes 96 document-AST tests, 62 CommonMark-parser tests, and 63 renderer tests; the complete affected Swift closure also passes 30 commonmark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade tests plus release builds for all six packages. Production coverage is 100% lines/functions for document-ast, 92.38% aggregate lines and 90.77% functions for document-ast-to-html with its AST dependency, and 81.91% aggregate lines for commonmark-parser including its pre-existing 77.66% InlineParser baseline; the changed BlockParser and Parser files measure 86.99% and 97.78% lines respectively. Current-source diff discovery identifies exactly three directly changed packages and the six-package manifest-confirmed closure before the expected sparse-only repository orphan check rejects hidden package roots. The sixteen-case GFM reader, tasks, tables, strikethrough, 652-example reconciliation, missing parser root, and facade remain downstream."
+      "selection_notes": "Selected locally as the smallest dependency-ready Swift GFM prerequisite after a 2026-10-26 reprioritization. The older codex/parity-gfm-swift-20261024 preparation predates the three-owner decomposition and combines this contract with downstream parser work, so it is retained only as implementation evidence and is not publishable as one PR. All prepared Bezier successors remain blocked on PR #18293, while hosted slots are full with live PRs #18293, #18355, and #18367; this owner therefore remains unpublished local-only preparation.",
+      "base_revision": "79322a77c561c1c0cbe21a397a6cd7c41021c3a0",
+      "validation_revision": "6501bf72b5efba02fc4746757ded9a08fcc4a19c",
+      "reconciled_main_revision": "79322a77c561c1c0cbe21a397a6cd7c41021c3a0",
+      "reconciliation_notes": "The apparent lifecycle mismatch is intentional and audited: origin/main still records this owner pending because the in-progress selection and implementation have never been published; only this local branch records the local preparation lifecycle. Its prerequisite gfm-language-neutral-conformance-fixture is merged as PR #18118 at 83f1871e3d61e8151b0e9313337f5dc2c842a3e6. The unpublished branch was rebased onto exact current origin/main 79322a77c561c1c0cbe21a397a6cd7c41021c3a0, preserving the verified Python #18324 merge receipt and exact live PR set {18293, 18355, 18367} at heads {c7b1e98687d3c762a98a9beed61ad71f586ca484, f27058ffa18abe1fb7a7167237eb0b761414162f, 365f455bbaa57c41b1ff825f85fbca883d0cfb92}. Fresh changelog validation exposed and corrected the preparation's pre-existing noncanonical root shard slug/digest without changing its heading or entry. No hosted slot is available, so no push or publication is authorized.",
+      "validation_notes": "RED compilation proved the missing FencedBlockNode and BlockNode.fencedBlock surface. Fresh post-rebase GREEN validation passes 96 document-AST tests, 62 CommonMark-parser tests, and 63 renderer tests; the complete affected Swift closure also passes 30 CommonMark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade tests, release builds for all six packages, and emitted-plan execution of exactly those six packages. Production coverage receipts remain patch-identical at 100% lines/functions for document-ast, 92.38% aggregate lines and 90.77% functions for document-ast-to-html with its AST dependency, and 81.91% aggregate lines for commonmark-parser including its pre-existing 77.66% InlineParser baseline; the changed BlockParser and Parser files measure 86.99% and 97.78% lines respectively. Current-source discovery identifies exactly three directly changed packages and the six-package manifest-confirmed closure with only the Swift toolchain; the expected sparse-only repository orphan check rejects hidden package roots, while the bounded planner succeeds with global build-file validation disabled. All three empty package capability manifests validate against the current schema. Strict JSON has 1,547 unique dependency-complete acyclic owners, 2,616 edges, zero merged-to-unfinished edges, exactly one local in-progress owner, and exactly three pr-open owners matching active PRs; 1,595 lesson shards validate with zero problems. The sixteen-case GFM reader, tasks, tables, strikethrough, 652-example reconciliation, missing parser root, and facade remain downstream."
     },
     {
       "id": "commonmark-parser-swift-652-reconciliation",
