@@ -28,7 +28,7 @@ tasks.withType<JavaCompile> {
 
 dependencies {
     implementation("com.codingadventures:gf256")
-    implementation("com.codingadventures:barcode-2d")
+    api("com.codingadventures:barcode-2d")
 
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
