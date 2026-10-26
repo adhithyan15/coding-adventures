@@ -186,6 +186,14 @@ props together. The runtime ends the batch on setter failure too; this is not
 a rollback of props already assigned. Handwritten components without the
 interface keep immediate assignment behavior.
 
+For `IReadOnlyList<T>` props with string, double or bool leaves (including nested
+lists), the host reuses the live property value when converted contents match.
+Setters still run, but unchanged dependency-property list references no longer
+force binding invalidation. Changed contents and local mutations are replaced by
+runtime values. Arrays and custom object lists keep normal conversion/assignment;
+unreadable or throwing getters fall back to the converted value. This preserves
+identity, not a guarantee of zero conversion allocation or a latency threshold.
+
 Set `MOSAIC_PROFILE_PATH` to a writable JSONL file before launching a generated
 XAML app. The host buffers up to 4096 timing samples and appends them on normal
 process exit; no log files are written on the click path. Unset the variable to
