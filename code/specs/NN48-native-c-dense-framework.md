@@ -1,6 +1,7 @@
 # NN48: Native C Dense Framework
 
-Status: specified before implementation; native implementation and CI pending.
+Status: specified before implementation; implemented and locally validated;
+independent final review, publication and exact-head repository CI/merge pending.
 
 ## Initial local implementation checkpoint
 
@@ -23,10 +24,29 @@ The expanded native suite also passes 1019 checks under cl and clang-cl.
 Real command tests, including oversized input and schema-valid wrong dataset
 dimensions, also pass Clang ASan/UBSan. Command gcov is 100% lines (45), 100%
 branches executed and 93.75% branches taken; Python validator coverage is 95%.
-Final boundary expansion, docs/trace, BUILD command execution, CI Windows selection integration,
-final independent review, publication and exact-head CI remain pending. No
-six-native interchange or repository CI completion is claimed. Shape-specific
-commands must check loaded input/output widths BEFORE passing fixed C buffers.
+The final expanded suite now passes 6857 checks under GCC/Clang/cl/clang-cl,
+including direct shared input/seed/XOR consumption, all six exact null IDs,
+duplicate/NUL/lexical metadata rejection, locale preservation and bit-exact
+extreme/subnormal/signed-zero parameters. Negative zero is emitted as -0.0,
+not integer -0. Current gcov is 97.11% library lines (415), 100% branches
+executed and 81.76% taken. ASan/UBSan and GCC analyzer pass. Both BUILD fronts
+compile and execute the native command plus boundary/full-resume validators for
+each shared-harness compiler. The latest installed consumer also passes.
+
+Scoped needs_c_neural_framework_windows retains the existing Windows runner,
+single MSVC bootstrap and required-build ownership; five actual-planner/wiring
+tests pass alongside six prior parser-planner tests, four gate tests and all
+55 OCaml contracts (two POSIX-only cases skip locally on Windows). Non-list
+macOS package collections now conservatively retain that runner after a real
+planner regression exposed an exception. The reviewed parsed planner digest
+is f3a80b5e408f17b46ef37b36a3e50a7d627e122c7d4fdc640b8adc3e47ef372a;
+OCaml toolchain/bootstrap/action/checksum/mutation rules remain unchanged.
+
+Final independent review, publication and exact-head CI/merge remain pending.
+No six-native interchange or repository CI completion is claimed. Shape-specific
+commands check loaded input/output widths BEFORE passing fixed C buffers. The
+POSIX front ran locally on Windows with an explicit trusted Python executable;
+actual Linux/macOS CI still supplies native platform proof.
 
 ## Reassessment after the C JSON prerequisite
 

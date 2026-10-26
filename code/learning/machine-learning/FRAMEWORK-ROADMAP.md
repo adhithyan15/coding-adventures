@@ -185,6 +185,12 @@ SGD training, inspection, and portable save/reload/resume.
   diagnostics, and include six cardinality/four flag-policy regressions.
 - [ ] C native framework (NN48): independent dense API/training/typed checkpoint
   acceptance above matrix, float-math and bounded-json; six-native exchange later.
+  Local native core/command/installed-consumer validation passes; 6857 library
+  checks across GCC/Clang/cl/clang-cl, all 55 schema cases, bit-exact extreme and
+  signed-zero round trips, active all-parameter gradients, actual XOR training
+  and full baseline/resume comparison through 3002. Library line coverage is
+  97.11%; command is 100% and Python validator 95%. Scoped Windows planning and
+  required-build ownership are tested. Publication/exact-head CI/merge pending.
 - [ ] C++ native framework.
 - [ ] C# native framework.
 - [ ] F# native framework.

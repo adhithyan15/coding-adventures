@@ -5,9 +5,8 @@ and `bounded-json` packages. No libm, foreign runtime, Rust binding, external
 JSON parser or ML engine supplies training. Six-native interchange is a
 separate pending tranche; this package alone does not prove it.
 
-NN48 is in progress: core, schema loader, actual installed consumer and
-shell-free native command validation pass locally; final BUILD/CI integration
-and repository CI remain pending.
+NN48 is locally implemented and validated. Publication, actual repository CI
+and confirmed exact-head merge remain required before delivery.
 
 ```c
 #include "neural_framework.h"
@@ -86,20 +85,27 @@ which discard duplicate evidence before schema loading.
 
 `sh tools/run.sh` or `powershell -File tools/run.ps1` invokes the existing shared
 ISO harness, not a new compiler scheduler. Linux CI requires GCC and Clang;
-macOS supplies Apple Clang; the Windows lane must execute cl/clang-cl when
-installed. Strict warnings and extension rejection remain enabled.
+macOS supplies Apple Clang; the scoped Windows step requires cl and clang-cl.
+Each front runs numerical/schema tests, builds the native command, and executes
+its boundary and full baseline/resume validators for every discovered compiler.
+Python is build/test tooling only: Unix uses python3 (trusted `PYTHON` override
+supported), Windows uses python. The installed C library has no Python runtime
+dependency. Strict warnings and extension rejection remain enabled.
 
-Initial local GCC and Clang ASan/UBSan each passed 943 checks: shared paper
+Current GCC, Clang, cl and clang-cl each pass 6857 checks: shared paper
 prediction/loss/every gradient/update at 1e-12, initialization oracle, active
 all-parameter central differences for all four activations in deep unequal-width
 multi-output models, ownership/bounds/atomicity, allocation faults, all 55 shared
 schema cases (3 accepted/52 rejected including six null cases), and 3000 XOR
-updates with loss 0.0002330712337828205. Initial gcov library line coverage is
-96.07% (407 executable lines). The expanded GCC suite passes 1019 checks,
-including full uninterrupted versus serialized/resumed native model comparison
-through 3001/3002. A separate CMake find_package consumer compiled/linked against
+updates with loss 0.0002330712337828205, full uninterrupted versus serialized/
+resumed models through 3001/3002, strict JSON metadata/duplicate/NUL fields,
+locale preservation and bit-exact extreme/subnormal/signed-zero parameters.
+Current gcov library coverage is 97.11% of 415 executable lines, 100% branches
+executed and 81.76% branches taken. Clang ASan/UBSan and GCC -fanalyzer pass.
+A separate CMake find_package consumer compiled/linked against
 the installed archive/headers and ran prediction, training and checkpoint resume.
-Further command/portability evidence remains pending.
+The POSIX front was also run on Windows using its trusted `PYTHON` override;
+that is not Linux/macOS execution evidence. Actual CI must supply those results.
 
 The fixed native command accepts only no arguments, `--resume`,
 `--baseline-3001` or `--baseline-3002`. Resume reads at most 4 MiB on stdin and
@@ -111,3 +117,26 @@ Run `python ../../../scripts/validate_neural_framework_c.py --executable PATH`
 with a trusted compiled command path to execute five children and compare full
 native baseline/resume state through 3002. No checkpoint content controls paths
 or argv. The validator explicitly reports six-language interchange pending.
+
+## Static-library installation
+
+CMake 3.20+ builds and installs `coding_adventures::neural_framework`. Its
+archive includes unchanged native dependency translation units as separate
+members and installs all four public headers under the target's unique include
+directory. Consumers need no repository-relative headers or runtime loader.
+
+```sh
+cmake -S . -B _build/cmake -DCMAKE_INSTALL_PREFIX="$PWD/_build/install"
+cmake --build _build/cmake
+cmake --install _build/cmake
+cmake -S tests/install -B _build/consumer -DCMAKE_PREFIX_PATH="$PWD/_build/install"
+cmake --build _build/consumer
+```
+
+The explicit payload includes headers, archive, exported target/config/version,
+MIT license, README/changelog/capability manifest and dependency documentation.
+Run the resulting `installed_consumer` executable (configuration subdirectory
+and `.exe` suffix depend on generator/platform). It trains and resumes a model
+using only the installed target. The separate
+[teaching trace](../../../learning/machine-learning/native-c-dense-framework.md)
+walks one hand-calculable update and explains the ownership boundary.

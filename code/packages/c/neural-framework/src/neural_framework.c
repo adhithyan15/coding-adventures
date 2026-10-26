@@ -523,7 +523,14 @@ static void number(Writer *w, double value) {
     const char *decimal;
     char *point;
     size_t before, after;
-    int length = snprintf(buffer, sizeof(buffer), "%.17g", value);
+    int length;
+    /* %.17g spells negative zero as -0, which NN47 correctly classifies as
+     * integer zero. Preserve binary64's sign by keeping this one a float token.
+     */
+    if (value == 0 && fm_copysign(1, value) < 0) {
+        append(w, "-0.0"); return;
+    }
+    length = snprintf(buffer, sizeof(buffer), "%.17g", value);
     if (!fm_isfinite(value) || length < 0 || (size_t)length >= sizeof(buffer)) {
         w->failed = 1; return;
     }

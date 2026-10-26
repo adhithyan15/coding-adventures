@@ -63,6 +63,13 @@ NN47 builds the [bounded C JSON prerequisite](./bounded-c-json-foundation.md)
 before native C dense training: typed values, explicit ownership and resource
 envelopes. Parsing JSON is not checkpoint-schema acceptance or training evidence.
 
+NN48 adds [independent native C dense training](./native-c-dense-framework.md):
+opaque ownership, full-network gradients and atomic candidate updates above the
+native matrix/math foundations. Its public typed checkpoint loader rejects all
+shared invalid cases, and native serialized resumes match complete uninterrupted
+baselines through 3002. Native training and installed-library evidence do not
+imply six-native interchange; that integration remains a separate tranche.
+
 Every model family below starts with the smallest example that needs its new
 idea.
 
