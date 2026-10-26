@@ -19,7 +19,8 @@
   "active_pr": 18293,
   "active_prs": [
     18293,
-    18324
+    18324,
+    18355
   ],
   "last_ci_action": {
     "pr_number": 18312,
@@ -16421,10 +16422,14 @@
     {
       "id": "kotlin-micro-qr-build-front-and-gradle-metadata-coverage",
       "title": "Restore Kotlin micro-qr Gradle metadata and build-front coverage",
-      "status": "in_progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/parity-kotlin-micro-qr-build-front-20261026",
-      "pr_number": null,
+      "pr_number": 18355,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18355",
+      "pr_opened_at": "2026-10-26T13:52:05Z",
+      "publication_head": "34c40e1eee79ccf526d6217e63d166b19f13e1e1",
+      "publication_notes": "Draft PR #18355 opened from the exact independently reviewed implementation and reconciliation head. GitHub reports the branch mergeable. The draft records its durable PR identity; this lifecycle-only receipt requires independent delta review before the PR is marked ready. Guarded auto-merge remains disabled until every exact-head check is terminal acceptable and the head remains conflict-free.",
       "selected_at": "2026-10-26T12:35:04Z",
       "base_revision": "9dce8120cfc6ed37c205d7a03f35de40b509260a",
       "implementation_revision": "28a9c35b08fe59795913b3076e47b422df3de6d6",
