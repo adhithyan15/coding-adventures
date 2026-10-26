@@ -29348,7 +29348,7 @@ fn javascript_rows_pass_the_lang83_check_on_all_nine_backends() {
                 }
                 (false, Err(refusal)) => {
                     assert!(
-                        refusal.refusals.iter().all(|r| ARITHMETIC.contains(&&*r.op)),
+                        refusal.refusals.iter().all(|r| ARITHMETIC.contains(&r.op)),
                         "{:?}: BEAM refused more than IEEE arithmetic: {refusal}",
                         program.case
                     );
