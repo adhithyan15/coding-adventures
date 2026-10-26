@@ -12,3 +12,5 @@
   lazy-window priority over `MOVSP` allocation faults.
 - Add generated family classification, semantic, lifecycle, atomicity, and
   coverage evidence.
+- Keep the portable package build independent of the optional local
+  `cargo-llvm-cov` reporting tool used to record coverage evidence.
