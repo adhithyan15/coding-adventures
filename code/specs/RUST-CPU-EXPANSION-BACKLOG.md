@@ -1,7 +1,7 @@
 # Rust CPU Expansion Backlog
 
 **Status:** active
-**Last reprioritized:** 2026-10-25
+**Last reprioritized:** 2026-10-26
 
 This is the live expansion queue after the original 07-series architecture
 matrix. The older `RUST-CPU-SIMULATOR-BACKLOG.md` remains the audit record for
@@ -46,6 +46,18 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | OpenSPARC T1 | PR #18176 | missing | Gate can descend through public OpenSPARC RTL. |
 | P0 | Arm Cortex-M0 | PR #18177 | missing | Gate waits for the Armv6-M oracle. |
 | P0 | Arm Cortex-M3 | local complete | missing | Publish this cell; then gate waits for merge. |
+
+## P0 gate-integrity repair queue
+
+Independent review of the completed architecture matrix found a recurring
+storage-authority defect: some packages counted DFF banks in their physical
+topology while executing from parallel public host fields. These repairs
+outrank new architecture cells because a shadow bank makes the published gate
+claim unsound even when ISA differentials remain green.
+
+| Priority | Target | Status | Required boundary |
+|---:|---|---|---|
+| P0 | Motorola 68000 gate | in progress | Make all 560 register/PC/SR DFF Q outputs and the HALT DFF Q output authoritative; retain public fields only as synchronized observers; prove topology from concrete storage and deliberate observer divergence. |
 
 ## Independent functional queue
 
