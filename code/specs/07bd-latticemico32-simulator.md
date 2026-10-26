@@ -1,7 +1,11 @@
 # Layer 07bd — LatticeMico32 Functional Simulator
 
-**Status:** proposed spec-only `RCPU-083`; implementation is blocked until a
-different reviewer accepts the exact clean spec commit. `RCPU-084`, the
+**Status:** `RCPU-083` is complete locally from the independently accepted
+specification: 26 release integration tests, 157 checked-in evidence rows
+including 32 operand seeds that drive 672 complete-state transitions, strict
+checks, and 93.83% measured release line coverage (867/924) pass. A different
+reviewer must still accept
+the exact clean implementation head before publication. `RCPU-084`, the
 dependent gate-level cell, begins only after the functional cell merges.
 
 ## 1. Authority and bounded target

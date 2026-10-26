@@ -91,7 +91,7 @@ merged, while Cortex-M33 is already in review.
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
 | 15 | RCA CDP1802 (`RCPU-081` / `RCPU-082`) | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: all documented encodings except unassigned 0x68, complete COSMAC state, and explicit I/O/DMA/interrupt transaction seams; independent implementation review is next. |
-| 16 | LatticeMico32 (`RCPU-083` / `RCPU-084`) | official LatticeMico32 Processor Reference Manual 3.8 plus vendor-origin open RTL at `84b3e3ca0ad9535acaef201c1482342871358b08` | `RCPU-083` functional is the next ready independent cell; `RCPU-084` gate depends on its merge and must use the pinned decoder/datapath/interrupt RTL as structural evidence. |
+| 16 | LatticeMico32 (`RCPU-083` / `RCPU-084`) | official LatticeMico32 Processor Reference Manual 3.8 plus vendor-origin open RTL at `84b3e3ca0ad9535acaef201c1482342871358b08` | `RCPU-083` is complete locally: full pinned base configuration, 26 release tests, 157 checked-in evidence rows driving 672 complete-state ALU transitions, strict checks, and 93.83% line coverage (867/924). Independent exact-head review is next. `RCPU-084` remains merge-dependent and must review the manual/RTL EBA bit-8 discrepancy before claiming state equality. |
 
 CDP1802 is complete locally from its independently reviewed specification.
 The functional cell covers the complete register matrix, instruction table,
@@ -114,6 +114,16 @@ retains the original decoder, register file, ALU, shifter, multiplier,
 multi-cycle divider, interrupt logic, top-level CPU, and instruction tests.
 The functional boundary is deliberately configuration-pinned; the dependent
 gate cell is not authorized to claim transistor accuracy or a complete SoC.
+The completed local functional cell owns all 32 mutable GPRs, complete 64 KiB
+memory/image state, every pinned instruction family, exact CFG/CSR behavior,
+DC.RE exception remapping, all 32 latched-pending interrupt inputs, complete
+post-state and bus-transaction traces, and atomic lifecycle/allocation seams.
+Its 26 release integration tests consume 157 checked-in evidence rows,
+including 32 operand seeds that drive 672 complete-state manual-oracle
+transitions; strict Clippy/rustdoc and 93.83% measured release line coverage
+(867/924) are green. A different
+reviewer's exact-clean-head implementation PASS is the remaining publication
+gate.
 
 ## Discovered follow-up work
 
