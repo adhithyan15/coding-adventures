@@ -472,3 +472,100 @@ fn malformed_snapshot_and_fetch_variants_remain_atomic() {
     ));
     assert_eq!(cpu.snapshot(), before);
 }
+
+#[test]
+fn exact_subfamily_mnemonics_prevent_decoder_aliases() {
+    let cases: &[(u16, &str)] = &[
+        (0x3120, "CMP/EQ"),
+        (0x3122, "CMP/HS"),
+        (0x3123, "CMP/GE"),
+        (0x3126, "CMP/HI"),
+        (0x3127, "CMP/GT"),
+        (0x4111, "CMP/PZ"),
+        (0x4115, "CMP/PL"),
+        (0x212c, "CMP/STR"),
+        (0x8801, "CMP/EQ"),
+        (0x4100, "SHLL"),
+        (0x4101, "SHLR"),
+        (0x4120, "SHAL"),
+        (0x4121, "SHAR"),
+        (0x4104, "ROTL"),
+        (0x4105, "ROTR"),
+        (0x4124, "ROTCL"),
+        (0x4125, "ROTCR"),
+        (0x4108, "SHLL2"),
+        (0x4118, "SHLL8"),
+        (0x4128, "SHLL16"),
+        (0x4109, "SHLR2"),
+        (0x4119, "SHLR8"),
+        (0x4129, "SHLR16"),
+        (0x212e, "MULU.W"),
+        (0x212f, "MULS.W"),
+        (0x0127, "MUL.L"),
+        (0x3125, "DMULU.L"),
+        (0x312d, "DMULS.L"),
+        (0x8901, "BT"),
+        (0x8b01, "BF"),
+        (0x8d01, "BT/S"),
+        (0x8f01, "BF/S"),
+        (0xa001, "BRA"),
+        (0xb001, "BSR"),
+        (0x0103, "BSRF"),
+        (0x0123, "BRAF"),
+        (0x410b, "JSR"),
+        (0x412b, "JMP"),
+        (0x000b, "RTS"),
+        (0x010a, "STS MACH"),
+        (0x011a, "STS MACL"),
+        (0x012a, "STS PR"),
+        (0x0112, "STC GBR"),
+        (0x410a, "LDS MACH"),
+        (0x411a, "LDS MACL"),
+        (0x412a, "LDS PR"),
+        (0x411e, "LDC GBR"),
+        (0x4102, "STS.L"),
+        (0x4113, "STC.L"),
+        (0x4106, "LDS.L"),
+        (0x4117, "LDC.L"),
+    ];
+    for &(word, expected) in cases {
+        let bytes = word.to_be_bytes();
+        let mut cpu = loaded(&[bytes[0], bytes[1], 0, 9, 0, 0x1b, 0, 9]);
+        install_state(&mut cpu, |s| {
+            s.registers.fill(0x200);
+            s.pr = DEFAULT_ORIGIN + 4;
+            s.memory[0x1f0..0x210].fill(1);
+        });
+        let trace = cpu.step().unwrap();
+        assert_eq!(trace.mnemonic, expected, "word {word:#06x}");
+    }
+}
+
+#[test]
+fn excluded_and_reserved_neighbors_fail_without_mutation() {
+    let unsupported = [
+        0x002b_u16, 0xc300, 0xc3ff, 0x411b, 0x410e, 0x412e, 0x4107, 0x4127, 0x0102, 0x0122, 0x4103,
+        0x4123,
+    ];
+    for word in unsupported {
+        let bytes = word.to_be_bytes();
+        let mut cpu = loaded(&[bytes[0], bytes[1]]);
+        let before = cpu.snapshot();
+        assert!(matches!(
+            cpu.step(),
+            Err(SuperH2Error::UnsupportedInstruction { .. })
+        ));
+        assert_eq!(cpu.snapshot(), before);
+    }
+    for word in [0x0000_u16, 0xffff, 0x8020, 0x400c] {
+        let bytes = word.to_be_bytes();
+        let mut cpu = loaded(&[bytes[0], bytes[1]]);
+        let before = cpu.snapshot();
+        let outcome = cpu.step();
+        assert!(
+            matches!(outcome, Err(SuperH2Error::UnknownInstruction { .. })),
+            "word {word:#06x}: {outcome:?}"
+        );
+        assert_eq!(cpu.snapshot(), before);
+    }
+}

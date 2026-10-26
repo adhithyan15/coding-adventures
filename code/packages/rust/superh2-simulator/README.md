@@ -32,5 +32,5 @@ The completion suite classifies every admitted encoding family and reserved or
 unsupported neighbors, and exercises arithmetic flags, addressing modes,
 multiplication/division, MAC alias ordering, delayed control flow, PC-relative
 delay-slot bases, complete-state lifecycle, and transactional rollback.
-All 18 tests, strict Clippy, rustdoc, and the package BUILD are green. Measured
-release line coverage is 92.77% (950/1,024).
+All 20 tests, strict Clippy, rustdoc, and the package BUILD are green. Measured
+release line coverage is 93.95% (962/1,024).
