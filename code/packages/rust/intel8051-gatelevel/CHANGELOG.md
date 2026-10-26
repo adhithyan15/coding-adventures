@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Made the owned HALT DFF Q output the sole architectural halt authority across
+  snapshots, restore, legacy and checked execution, bounded results, and fault
+  rollback. The public `halted` boolean remains a synchronized compatibility
+  observer, and an independently derived physical-storage inventory now proves
+  the published 1,050,641-DFF topology. The expanded eight-test lifecycle suite
+  passes with 97.32% package line coverage.
+
 ## [0.2.0] — 2026-08-28
 
 ### Changed

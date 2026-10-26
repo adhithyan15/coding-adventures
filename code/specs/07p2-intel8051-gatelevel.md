@@ -106,6 +106,6 @@ The required conformance boundary is:
 5. Pass formatting, Clippy with warnings denied, rustdoc with warnings denied,
    and at least 80% package line coverage.
 
-The audited implementation passes 70 unit tests, six lifecycle tests, one
+The audited implementation passes 70 unit tests, eight lifecycle tests, one
 aggregate all-256-opcode full-state differential, and 23 doctests. Coverage is
-97.51% overall and 97.01% for the CPU engine.
+97.32% overall and 97.13% for the CPU engine.

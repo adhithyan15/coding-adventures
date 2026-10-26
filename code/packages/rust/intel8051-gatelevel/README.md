@@ -119,6 +119,10 @@ cpu.rs
 
 The exact persistent topology is **1,050,641 D flip-flops**: 524,288 code
 bits, 524,288 XDATA bits, 2,048 IRAM/SFR bits, 16 PC bits, and one halt bit.
+`physical_storage_inventory()` derives those bank counts from the concrete
+owned storage. The halt DFF's Q output is the sole architectural authority;
+the legacy public `halted` boolean is retained only as a synchronized observer.
+Snapshots, restore, steps, bounded runs, results, and fault rollback all use Q.
 
 ### SUBB model
 
@@ -175,9 +179,9 @@ changing the machine and return complete before/after traces.
 
 The differential suite restores deterministic full Harvard states and checks
 one complete transition for every opcode byte against `intel8051-simulator`.
-The package has 70 unit tests, six lifecycle tests, one exhaustive differential
-test, and 23 doctests. Core line coverage is 97.51% overall and 97.01% in the
-CPU engine.
+The package has 70 unit tests, eight lifecycle tests, one exhaustive
+differential test, and 23 doctests. Line coverage is 97.32% overall and 97.13%
+in the CPU engine.
 
 ## Covered instructions
 

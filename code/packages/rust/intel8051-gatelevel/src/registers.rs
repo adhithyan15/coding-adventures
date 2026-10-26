@@ -153,6 +153,14 @@ impl RegisterFile8051 {
             .unwrap_or_else(|_| unreachable!("fixed 8051 IRAM size"))
     }
 
+    pub(crate) fn iram_dff_count(&self) -> usize {
+        self.iram.dff_count()
+    }
+
+    pub(crate) fn program_counter_dff_count(&self) -> usize {
+        self.pc_state.dff_count()
+    }
+
     #[cfg(test)]
     pub(crate) fn latched_pc(&self) -> u16 {
         self.pc_state.read()
