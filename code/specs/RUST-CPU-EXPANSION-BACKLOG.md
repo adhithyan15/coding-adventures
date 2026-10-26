@@ -93,6 +93,17 @@ merged, while Cortex-M33 is already in review.
 | 15 | RCA CDP1802 (merged) | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete: all documented encodings except unassigned 0x68, complete COSMAC state, and explicit I/O/DMA/interrupt transaction seams; PR #18354 landed. |
 | 16 | MSP430 classic (MSP430F2274 profile) | TI SLAU144K family guide and SLAS504G device data sheet | Functional cell repaired locally: source-pinned classic 16-bit von-Neumann CPU with the full documented 27-instruction core, source-only constant-generator enforcement, exact Format II trace roles, and injected allocation rollback; independent re-review/publication is next. MSP430X, peripherals, clocks, power, and timing stay outside this cell. |
 
+CDP1802 merged in PR #18354 after independent specification and implementation
+review. The functional cell covers the complete register matrix, instruction
+table, reset/inhibit lifecycle, flags, ports, DMA, and interrupt response. Its
+explicit bus operations make it a high-value bridge from CPU execution toward
+the requested SoC data-movement simulations. Educational-gate and source-backed
+SoC compositions remain separate bounded follow-ups. The publication evidence
+is 31 release integration tests plus one doctest, including 256-byte independent
+decode and execution sweeps, exhaustive 256x256x2 ALU relations, strict
+Clippy/rustdoc, lessons validation, affected BUILD, and 87.76% line coverage
+(832/948).
+
 MSP430 follows Xtensa rather than displacing an active item. TI's public
 SLAU144K chapter 3 gives a complete classic encoding, addressing, flag, and
 stack contract, while SLAS504G pins a real non-MSP430X implementation with 16
