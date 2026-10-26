@@ -33,9 +33,9 @@ The core also owns the complete 0x0000-0x08FF data address space:
 SREG at data address 0x005F and SPL/SPH at 0x005D/0x005E are authoritative
 memory-mapped bytes, not shadow fields. Register, flag, and stack-pointer API
 views derive from those bytes. SREG contains I, T, H, S, V, N, Z, and C. The
-16-bit stack pointer is valid only in 0x0100-0x08FF or the one-past-top reset
-value 0x0900; stack operations preflight their entire transfer before changing
-SP or memory.
+16-bit stack pointer is valid only in 0x0100-0x08FF. Reset selects the device's
+RAMEND value 0x08FF. Stack operations preflight their entire transfer before
+changing SP or memory.
 
 The complete state includes PC, program image and metadata, the entire data
 space, deterministic halt, and no hidden peripheral state. EEPROM is a third
@@ -105,11 +105,15 @@ its first word must lie in the installed image so its encoded width can be
 classified. Truncated two-word successors fault atomically instead of becoming
 one-word instructions.
 
-Calls push the word address of the following instruction using the device's
-two-byte return-address stack representation; returns reconstruct exactly that
-word address. `RETI` performs the same checked pop and then sets SREG.I. Indirect
-targets use Z, and every direct, relative, indirect, call, return, and skip
-target must select a complete installed instruction before the next step.
+`PUSH` and calls use the documented post-decrement stack: the first byte is
+written at current SP and SP is then decremented. A two-byte return address is
+the word address of the following instruction; its least-significant byte is
+written first at the higher address, followed by the high byte, leaving SP two
+lower. `POP` and returns perform the inverse pre-increment reads. Returns
+reconstruct exactly the saved word address. `RETI` performs the same checked
+pop and then sets SREG.I. Indirect targets use Z, and every direct, relative,
+indirect, call, return, and skip target must select a complete installed
+instruction before the next step.
 
 ## 6. Halt and excluded system instructions
 
