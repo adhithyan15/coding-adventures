@@ -70,10 +70,13 @@ in instruction execution. That guard parses the production Rust syntax,
 requires exactly one reviewed top-level definition for both qualifier networks
 and every multiply/divide qualification entry point, requires `exec_one` to
 dispatch directly through its instruction match, and locks the relevant
-consumer arms. Its adversarial fixtures must reject helper indirection,
+consumer arms. The crate root must also bind `execution` and `gate_networks`
+through their unique, attribute-free external module declarations so the
+reviewed source files cannot be replaced by path aliases, inline modules, or
+duplicate/dead routing. Its adversarial fixtures must reject helper indirection,
 shadowed gate results, unused gate anchors, direct high-word predicates,
 iterator `sum`/`count`/`min`, host equality/range variants, inactive `cfg`
-decoys, and later active duplicate definitions.
+decoys, later active duplicate definitions, and alternate module routing.
 
 ## Lifecycle and atomicity
 
