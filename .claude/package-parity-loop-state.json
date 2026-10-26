@@ -19,13 +19,13 @@
   "active_pr": 18293,
   "active_prs": [
     18293,
-    18324
+    18355
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-26T11:52:29Z",
-    "pr_number": 18312,
-    "head_revision": "b804a122612f4ae64d967efbff454af771bf6130",
-    "action": "Verified every exact-head check terminal acceptable and the reviewed head conflict-free, completed guarded squash merge as 0be03745d775ffa9ee8c66ffda1700baa76ba58f, verified the receipt on origin/main, and removed the clean completed Swift hash-functions worktree and local branch.",
+    "observed_at": "2026-10-26T15:37:25Z",
+    "pr_number": 18324,
+    "head_revision": "d34af356d621175dd8cc307d953ecb7a99d1b79a",
+    "action": "Verified PR #18324 merged from exact reviewed head d34af356d621175dd8cc307d953ecb7a99d1b79a as 1bb58a0d7ed8d818d622e69890234d96b6e26b3a at 2026-10-26T15:37:25Z, confirmed the receipt on origin/main, and removed its clean completed worktree and local branch.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -10252,8 +10252,19 @@
       "title": "Complete paint-vm-ascii parity in Swift",
       "status": "pending",
       "depends_on": [],
-      "branch": null,
+      "branch": "codex/parity-swift-paint-vm-ascii-capabilities-20261026",
       "pr_number": null,
+      "prepared_at": "2026-10-26T14:25:33Z",
+      "base_revision": "d1730421d34c9fe6ebe9cc68473f505017659a5a",
+      "implementation_revision": "24e1a8ca1d9e788b5758232ee02dce23e5b568e8",
+      "unreleased_note_fix_revision": "ab1b9a0291f3a9fa5560c7bd5abaa1a14b9d0f1a",
+      "reconciled_main_revision": "d1730421d34c9fe6ebe9cc68473f505017659a5a",
+      "package_paths": [
+        "code/packages/swift/PaintVmAscii"
+      ],
+      "preparation_notes": "Prepared locally without selection or publication because the three authorized parity slots are occupied by PRs #18293, #18324, and #18355. The bounded tranche adds only the truthful empty capability manifest plus package and changelog documentation for the already-merged Swift renderer; production source, public API, package dependencies, BUILD fronts, and caller-owned terminal output remain unchanged.",
+      "reconciliation_notes": "Rebased the two local documentation/metadata commits conflict-free onto exact origin/main d1730421d34c9fe6ebe9cc68473f505017659a5a while preserving current main's append-only state and roadmap history. Reconciled the verified PR #18312 final head b804a122612f4ae64d967efbff454af771bf6130, merge timestamp 2026-10-26T11:52:29Z, and merge commit 0be03745d775ffa9ee8c66ffda1700baa76ba58f; recorded live PRs {18293, 18324, 18355}. Those PRs overlap only the shared lifecycle documents, not PaintVmAscii production, tests, package metadata, or its root changelog shard.",
+      "validation_notes": "Swift 6.3.1 package validation passes all 34 PaintVmAscii tests and all 43 downstream cowsay tests. The production Go planner discovers 19 sparse-worktree packages, selects exactly the six-package Swift dependency closure {PaintInstructions, PaintVmAscii, cli-builder, directed-graph, cowsay, state-machine}, reports only the Swift toolchain and no special suites, and executes all six BUILD fronts successfully from its emitted plan. The empty capability declaration validates against the repository schema. Strict duplicate-key JSON, 1,547 unique dependency-complete acyclic owners, zero merged-to-unfinished edges, exactly three pr-open owners {18293, 18324, 18355}, 1,592 lesson shards with zero problems, the canonical root-changelog slug and digest, diff hygiene, ancestry, merge-tree, and artifact cleanup pass. The owner deliberately remains pending and has no PR.",
       "notes": "The afa7975 inventory recorded new Dart, Java, and Kotlin paint-vm-ascii implementations, leaving Swift as the sole missing established slot. Merged external PR #12149 added the Swift implementation and closed the package-directory gap, but it omitted the required explicit empty capability metadata. Keep this owner pending until that truthful library profile is added and validated; do not duplicate the already merged renderer implementation or introduce terminal I/O into the library."
     },
     {
@@ -16421,10 +16432,14 @@
     {
       "id": "kotlin-micro-qr-build-front-and-gradle-metadata-coverage",
       "title": "Restore Kotlin micro-qr Gradle metadata and build-front coverage",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-kotlin-micro-qr-build-front-20261026",
+      "pr_number": 18355,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18355",
+      "pr_opened_at": "2026-10-26T13:52:05Z",
+      "publication_head": "2687144fb38e534dc6d308864ef0eb6b1fb97a63",
+      "publication_notes": "GitHub reports PR #18355 open, non-draft, and mergeable at exact head 2687144fb38e534dc6d308864ef0eb6b1fb97a63. Its hosted checks and exact-head guarded merge gate remain owned by that branch; this pending Swift preparation does not alter it.",
       "notes": "Discovered by the post-PR #16133 structural package-root audit. `code/packages/kotlin/micro-qr` has production and test sources plus package documentation but no Gradle package metadata and no BUILD front, so established-lane discovery cannot schedule or validate it. Add lane-consistent Gradle metadata, fail-closed cross-platform BUILD fronts, execution of the existing test suite, capability metadata, and documentation without widening the portable Micro QR contract."
     },
     {

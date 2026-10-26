@@ -18202,3 +18202,33 @@ PR #18324's checks had already passed. Preserve both tranches by merging exact
 current main into the Python branch without rewriting its published history,
 then rerun exact-head independent review and hosted checks before re-enabling
 guarded auto-merge.
+
+## October 26, 2026: Swift PaintVmAscii capability preparation
+
+PR #18312 completed its final-head checks and merged from exact head
+`b804a122612f4ae64d967efbff454af771bf6130` as
+`0be03745d775ffa9ee8c66ffda1700baa76ba58f` at
+`2026-10-26T11:52:29Z`. That verified receipt is present on exact reconciled
+origin/main `d1730421d34c9fe6ebe9cc68473f505017659a5a`. The three
+authorized publication slots are now occupied by live PRs #18293, #18324, and
+#18355, so the PaintVmAscii owner remains pending and this work stays local.
+
+The existing branch
+`codex/parity-swift-paint-vm-ascii-capabilities-20261026` was rebased
+conflict-free onto that main revision while preserving the intervening
+append-only lifecycle and roadmap history. Its bounded change adds only an
+explicit schema-v1 empty capability profile plus documentation for the already
+merged Swift renderer. Production source, public API, dependencies, BUILD
+fronts, scene semantics, and terminal behavior do not change: the library
+still consumes an in-memory scene and returns a string, and only its caller may
+choose to print it.
+
+The three live PRs overlap this preparation only in shared lifecycle documents,
+not in the PaintVmAscii package or its changelog shard. Local validation passes
+all 34 PaintVmAscii tests and all 43 downstream cowsay tests. The production Go
+planner selects and executes only the six-package Swift closure containing
+PaintInstructions, PaintVmAscii, cli-builder, directed-graph, cowsay, and
+state-machine; no special CI suite is widened. Capability-schema, strict JSON,
+state-graph, lessons, changelog-shard, diff-hygiene, and artifact-cleanup gates
+remain required before recording the local preparation head. Publication and
+selection require a later slot-opening reprioritization and independent review.
