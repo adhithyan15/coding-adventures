@@ -445,10 +445,31 @@ How it behaves:
   stops an unbound name surviving into the consumer's scope, where it was
   captured by a same-named consumer slot or leaked into an expression as an
   undeclared identifier.
-- **Exemptions.** `node` and `list<node>` slots are filled by the caller's
-  children, not by a prop, and an unfilled mount is removed (UI29-2).
+- **The one exemption.** The slot that the layout's `slot: <name>` child
+  mount names is filled by the caller's children, not by a prop, and an
+  unfilled mount is removed (UI29-2). Every other `node` or `list<node>`
+  slot is read as a prop (`HostSurface ( content: slot: x )`), which
+  children cannot fill, so it is required like any other slot.
+- **Callee scope.** When a package component is loaded, two more names are
+  checked, because substitution cannot rewrite them and they would
+  otherwise be resolved in the consumer's scope:
+  - Every free name in its expressions must be a declared slot (kebab-case
+    or camelCase), a `For` `as:`/`index:` binding in scope, or
+    `true`/`false`. Names after `.` and string contents are not free.
+    Anything else is `UndeclaredExpressionIdentifier { package, component,
+    identifier, expression }`.
+  - The mount slot may be read only by the mount. A read anywhere else,
+    whether as a prop or inside an expression, is
+    `ChildMountSlotReferenced { package, component, slot }`.
+- **Bindings.** Only call-site props that name a declared slot or emit
+  become bindings. Inside a `For`, a bare name that matches the loop's
+  binding is the loop variable and is not rewritten (UI29 §3.4, "For
+  wins"). Reporting a call-site prop that names nothing is F2
+  (`UnknownSlotBinding`).
 - **Every error.** Every missing slot at every call site is reported in one
-  `Multiple` error. One missing slot is reported bare.
+  `Multiple` error, up to 100 of them, followed by "… and N more". One
+  missing slot is reported bare. A package that fails to load is reported
+  once, however many call sites name it.
 - **The message.** It names the package and component, and gives the fix.
   The "give it a default" half is offered only for `text`, `number` and
   `bool`, the types that can have one today.
