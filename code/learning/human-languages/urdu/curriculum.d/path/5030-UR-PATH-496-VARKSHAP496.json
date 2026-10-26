@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-496-VARKSHAP496",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "UR-EXT-496-VARKSHAP496"
+  ],
+  "after": []
+}

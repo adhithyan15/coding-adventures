@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Reject oversized byte transports before decoding them into a second buffer.
+
 ## [0.1.0] - 2026-09-19
 
 ### Added

@@ -1,0 +1,16 @@
+[package]
+name = "x509-ocsp-revocation-policy"
+version = "0.1.0"
+edition = "2021"
+description = "Exact OCSP CertID-bound revocation status and freshness policy"
+
+[dependencies]
+x509-ocsp-cert-id-binding = { path = "../x509-ocsp-cert-id-binding" }
+x509-ocsp-cert-status = { path = "../x509-ocsp-cert-status" }
+x509-revocation-policy = { path = "../x509-revocation-policy" }
+x509-time = { path = "../x509-time" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-certificate = { path = "../x509-certificate" }
+x509-ocsp-single-response = { path = "../x509-ocsp-single-response" }

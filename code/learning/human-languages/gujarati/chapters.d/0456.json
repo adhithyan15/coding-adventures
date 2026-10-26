@@ -1,0 +1,19 @@
+{
+  "chapter": 456,
+  "title": "Hurt Feelings",
+  "label": "ch:gu-hurt-feelings",
+  "canDo": "I can say when words hurt someone.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C456-thes",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 456: I can say when words hurt someone.",
+    "assesses": [
+      "GU-LEX-C456-DUBHA456-03",
+      "GU-LEX-C456-DUBHA456-04",
+      "GU-LEX-C456-DUBHA456-05"
+    ]
+  }
+}

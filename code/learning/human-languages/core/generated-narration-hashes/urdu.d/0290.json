@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:bb24378f375a1ba2",
+  "lessonIds": [
+    "UR-C290-afat",
+    "UR-C290-elan",
+    "UR-C290-khatra",
+    "UR-C290-ttalna",
+    "UR-C290-ehtiyat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch290.txt",
+  "json": "urdu/narration/ch290.json",
+  "textHash": "fnv1a64:26e9197de7ab4b2e",
+  "jsonHash": "fnv1a64:e8863c68b97f5c5a",
+  "findings": []
+}

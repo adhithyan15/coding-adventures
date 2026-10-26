@@ -1,0 +1,11 @@
+{
+  "id": "UR-C304-karfyu",
+  "pathSegment": "UR-PATH-304-FASAD304",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-304-FASAD304",
+      "order": 4
+    }
+  ]
+}

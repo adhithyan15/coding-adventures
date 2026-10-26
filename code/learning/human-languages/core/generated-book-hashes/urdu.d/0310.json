@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:c59e49002b1eb1bf",
+  "lessonIds": [
+    "UR-C310-talvar",
+    "UR-C310-dhal",
+    "UR-C310-bhala",
+    "UR-C310-kaman",
+    "UR-C310-lashkar"
+  ],
+  "tex": "urdu/book/chapters/ch310-swords-and-shields.tex"
+}

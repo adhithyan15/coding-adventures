@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "Trouble with the Skin",
+  "label": "ch:gu-trouble-with-the-skin",
+  "canDo": "I can describe a skin problem.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C480-upasvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can describe a skin problem.",
+    "assesses": [
+      "GU-LEX-C480-KHAS480-03",
+      "GU-LEX-C480-KHAS480-04",
+      "GU-LEX-C480-KHAS480-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:6ed78ffa23df6628",
+  "lessonIds": [
+    "GU-C535-sukan",
+    "GU-C535-vahem",
+    "GU-C535-sanket",
+    "GU-C535-grah",
+    "GU-C535-kalvu"
+  ],
+  "tex": "gujarati/book/chapters/ch535-signs-and-omens.tex"
+}

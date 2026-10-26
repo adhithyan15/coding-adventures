@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:b4f9e108f3df7755",
+  "lessonIds": [
+    "GU-C325-ajhadi",
+    "GU-C325-gulam",
+    "GU-C325-angrej",
+    "GU-C325-adolan",
+    "GU-C325-balvo"
+  ],
+  "tex": "gujarati/book/chapters/ch325-the-fight-for-freedom.tex"
+}

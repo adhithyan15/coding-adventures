@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:0517a2ca1ad1f4a2",
+  "lessonIds": [
+    "UR-C272-dar",
+    "UR-W272-ddal",
+    "UR-C272-main-khush-hun",
+    "UR-C272-banna",
+    "UR-C272-ummid",
+    "UR-C272-banna-chahti-hun",
+    "UR-R272-feelings-and-hopes"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "urdu/narration/ch272.txt",
+  "json": "urdu/narration/ch272.json",
+  "textHash": "fnv1a64:29708e34678e5ea2",
+  "jsonHash": "fnv1a64:9af4c4b41874c3aa",
+  "findings": []
+}

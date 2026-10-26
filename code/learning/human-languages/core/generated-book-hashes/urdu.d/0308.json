@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:d40868c14c253b49",
+  "lessonIds": [
+    "UR-C308-shahanshah",
+    "UR-C308-takht",
+    "UR-C308-taj",
+    "UR-C308-darbar",
+    "UR-C308-varis"
+  ],
+  "tex": "urdu/book/chapters/ch308-kings-and-emperors.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "Who Governs",
+  "label": "ch:gu-who-governs",
+  "canDo": "I can say who makes the rules.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C352-ghadvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can say who makes the rules.",
+    "assesses": [
+      "GU-LEX-C352-SARKAR352-03",
+      "GU-LEX-C352-SARKAR352-04",
+      "GU-LEX-C352-SARKAR352-05"
+    ]
+  }
+}

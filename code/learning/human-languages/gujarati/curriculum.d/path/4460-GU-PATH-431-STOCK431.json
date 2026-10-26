@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-431-STOCK431",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GU-EXT-431-STOCK431"
+  ],
+  "after": []
+}

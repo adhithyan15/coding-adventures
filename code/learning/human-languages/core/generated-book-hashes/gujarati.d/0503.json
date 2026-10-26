@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:364a7cf4b1df3f75",
+  "lessonIds": [
+    "GU-C503-rando",
+    "GU-C503-matharvu",
+    "GU-C503-gundar",
+    "GU-C503-tirad",
+    "GU-C503-cirvu"
+  ],
+  "tex": "gujarati/book/chapters/ch503-smooth-and-straight.tex"
+}

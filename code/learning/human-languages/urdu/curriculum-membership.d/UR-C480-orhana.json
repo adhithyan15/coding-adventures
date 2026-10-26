@@ -1,0 +1,11 @@
+{
+  "id": "UR-C480-orhana",
+  "pathSegment": "UR-PATH-480-CARE480",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-480-CARE480",
+      "order": 4
+    }
+  ]
+}

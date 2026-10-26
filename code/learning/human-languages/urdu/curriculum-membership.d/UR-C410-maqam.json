@@ -1,0 +1,11 @@
+{
+  "id": "UR-C410-maqam",
+  "pathSegment": "UR-PATH-410-IMARAT410",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-410-IMARAT410",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-394-PORTER394",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GU-EXT-394-PORTER394"
+  ],
+  "after": []
+}

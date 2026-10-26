@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-512-KYARI512",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "UR-EXT-512-KYARI512"
+  ],
+  "after": []
+}

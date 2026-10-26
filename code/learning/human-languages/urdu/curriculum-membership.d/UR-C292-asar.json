@@ -1,0 +1,11 @@
+{
+  "id": "UR-C292-asar",
+  "pathSegment": "UR-PATH-292-TUFAN292",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-292-TUFAN292",
+      "order": 4
+    }
+  ]
+}

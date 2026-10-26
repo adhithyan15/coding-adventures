@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:4fa74cd6f06f7eee",
+  "lessonIds": [
+    "UR-C402-masafat",
+    "UR-C402-rahnuma",
+    "UR-C402-thakana",
+    "UR-C402-sulana",
+    "UR-C402-jagana"
+  ],
+  "tex": "urdu/book/chapters/ch402-long-journeys.tex"
+}

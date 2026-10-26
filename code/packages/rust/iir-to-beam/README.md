@@ -459,3 +459,5 @@ module that uses a refused op at compile time, with a typed error. Since LANG83 
 against `MIN` and `MAX`; out of range raises `erlang:error('Trap.Overflow')`.
 
 LANG83 PR6a adds `write_f64_py` / `write_f64_js` → the helper function `'__iir_write_f64'/2`. It takes the shortest digits from `float_to_list(F, [short])` and prints Python's `repr` or JavaScript's `toString` layout through `io:put_chars/1`.
+
+LANG83 PR6c lowers `f64_signbit` (`is_lt x, 0.0`, then `is_eq_exact x, -0.0`; needs OTP 27) and **refuses** the IEEE `f64_add`/`f64_sub`/`f64_mul`/`f64_div`/`f64_neg` at compile time: an Erlang float has no ±Infinity or NaN, and float arithmetic raises `badarith` (`op_support::NO_IEEE_SPECIALS`).

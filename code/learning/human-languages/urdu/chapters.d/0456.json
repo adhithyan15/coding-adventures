@@ -1,0 +1,19 @@
+{
+  "chapter": 456,
+  "title": "Kind and Cruel",
+  "label": "ch:ur-kind-and-cruel",
+  "canDo": "I can say whether someone is kind or harsh.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C456-sitam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 456: I can say whether someone is kind or harsh.",
+    "assesses": [
+      "UR-LEX-C456-KIND456-03",
+      "UR-LEX-C456-KIND456-04",
+      "UR-LEX-C456-KIND456-05"
+    ]
+  }
+}

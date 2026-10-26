@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:b9e65d0f1df217cd",
+  "lessonIds": [
+    "UR-C539-zabardasti",
+    "UR-C539-mukhtar",
+    "UR-C539-naguzir",
+    "UR-C539-salah",
+    "UR-C539-jhukana"
+  ],
+  "tex": "urdu/book/chapters/ch539-free-to-choose.tex"
+}

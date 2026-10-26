@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:f15eb285d6144b04",
+  "lessonIds": [
+    "UR-C302-afvah",
+    "UR-C302-charcha",
+    "UR-C302-dahshat",
+    "UR-C302-bharkana",
+    "UR-C302-avam"
+  ],
+  "tex": "urdu/book/chapters/ch302-a-rumour-spreads.tex"
+}

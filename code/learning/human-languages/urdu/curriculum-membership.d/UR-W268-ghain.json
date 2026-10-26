@@ -1,0 +1,11 @@
+{
+  "id": "UR-W268-ghain",
+  "pathSegment": "UR-PATH-268-OPINION",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-268-OPINION",
+      "order": 3
+    }
+  ]
+}

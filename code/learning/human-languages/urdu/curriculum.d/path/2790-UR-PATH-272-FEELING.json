@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-272-FEELING",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "UR-EXT-272-FEELING"
+  ],
+  "after": []
+}

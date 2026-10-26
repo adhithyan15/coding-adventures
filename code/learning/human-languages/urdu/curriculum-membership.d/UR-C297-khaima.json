@@ -1,0 +1,11 @@
+{
+  "id": "UR-C297-khaima",
+  "pathSegment": "UR-PATH-297-RAHAT297",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-297-RAHAT297",
+      "order": 2
+    }
+  ]
+}

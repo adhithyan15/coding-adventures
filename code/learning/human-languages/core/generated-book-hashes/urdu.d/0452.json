@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:c28847a9163ac5fc",
+  "lessonIds": [
+    "UR-C452-ghurur",
+    "UR-C452-shekhi",
+    "UR-C452-itrana",
+    "UR-C452-nakhra",
+    "UR-C452-takabbur"
+  ],
+  "tex": "urdu/book/chapters/ch452-pride-and-showing-off.tex"
+}

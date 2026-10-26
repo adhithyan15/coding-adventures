@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C499-kapas",
+    "language": "urdu",
+    "chapter": 499,
+    "sequence": 29250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e119650b4b56e8db"
+  },
+  "findings": []
+}

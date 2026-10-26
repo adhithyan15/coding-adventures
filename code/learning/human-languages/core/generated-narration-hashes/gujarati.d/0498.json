@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:5f3bc8e9a3dd86cf",
+  "lessonIds": [
+    "GU-C498-viday",
+    "GU-C498-kanya",
+    "GU-C498-kunvaru",
+    "GU-C498-dahej",
+    "GU-C498-chutacheda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch498.txt",
+  "json": "gujarati/narration/ch498.json",
+  "textHash": "fnv1a64:eb4e4e06a779000c",
+  "jsonHash": "fnv1a64:eb9ba5999fe36ca6",
+  "findings": []
+}

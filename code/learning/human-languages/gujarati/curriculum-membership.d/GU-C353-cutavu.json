@@ -1,0 +1,11 @@
+{
+  "id": "GU-C353-cutavu",
+  "pathSegment": "GU-PATH-353-MATDAN353",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-353-MATDAN353",
+      "order": 4
+    }
+  ]
+}

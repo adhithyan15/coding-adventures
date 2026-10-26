@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:aab8f20fd7d848c5",
+  "lessonIds": [
+    "UR-C270-kitna",
+    "UR-C270-zara",
+    "UR-W270-zal",
+    "UR-C270-kaise-jate-hain",
+    "UR-R270-asking-the-way"
+  ],
+  "tex": "urdu/book/chapters/ch270-asking-the-way.tex"
+}

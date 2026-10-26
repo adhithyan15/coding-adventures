@@ -1,0 +1,11 @@
+{
+  "id": "GU-C412-galvu-spend",
+  "pathSegment": "GU-PATH-412-CAMP412",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-412-CAMP412",
+      "order": 4
+    }
+  ]
+}

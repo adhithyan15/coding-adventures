@@ -1,0 +1,19 @@
+{
+  "chapter": 459,
+  "title": "Generous and Mean",
+  "label": "ch:ur-generous-and-mean",
+  "canDo": "I can say whether someone is generous or mean.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C459-sadqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can say whether someone is generous or mean.",
+    "assesses": [
+      "UR-LEX-C459-GIVE459-03",
+      "UR-LEX-C459-GIVE459-04",
+      "UR-LEX-C459-GIVE459-05"
+    ]
+  }
+}

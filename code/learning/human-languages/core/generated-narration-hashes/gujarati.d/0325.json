@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:4f3c336af50b7933",
+  "lessonIds": [
+    "GU-C325-ajhadi",
+    "GU-C325-gulam",
+    "GU-C325-angrej",
+    "GU-C325-adolan",
+    "GU-C325-balvo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch325.txt",
+  "json": "gujarati/narration/ch325.json",
+  "textHash": "fnv1a64:2bea1e8d9eee4882",
+  "jsonHash": "fnv1a64:18bbe1aa3f467725",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C500-dattak",
+  "pathSegment": "GU-PATH-500-VARSO500",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-500-VARSO500",
+      "order": 3
+    }
+  ]
+}

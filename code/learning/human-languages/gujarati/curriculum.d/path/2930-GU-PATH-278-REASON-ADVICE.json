@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-278-REASON-ADVICE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GU-EXT-278-REASON-ADVICE"
+  ],
+  "after": []
+}

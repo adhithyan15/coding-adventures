@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:03dd2edd4dc17ac4",
+  "lessonIds": [
+    "GU-C539-makkam",
+    "GU-C539-tharavvu",
+    "GU-C539-kasoti",
+    "GU-C539-jhamplavvu",
+    "GU-C539-niscay"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch539.txt",
+  "json": "gujarati/narration/ch539.json",
+  "textHash": "fnv1a64:47080de71868a9a5",
+  "jsonHash": "fnv1a64:93c35c646bb22688",
+  "findings": []
+}

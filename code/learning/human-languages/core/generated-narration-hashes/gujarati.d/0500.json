@@ -1,0 +1,21 @@
+{
+  "language": "gujarati",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:f59bcd0357d9b4c5",
+  "lessonIds": [
+    "GU-C500-varso",
+    "GU-C500-vidhva",
+    "GU-C500-anath",
+    "GU-C500-dattak",
+    "GU-C500-tyajvu",
+    "GU-R500-review-494-500",
+    "GU-R500-review-final-500"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "gujarati/narration/ch500.txt",
+  "json": "gujarati/narration/ch500.json",
+  "textHash": "fnv1a64:1dfe54ee9ea883a2",
+  "jsonHash": "fnv1a64:be2749f4082c897f",
+  "findings": []
+}

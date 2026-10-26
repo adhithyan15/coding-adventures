@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C410-maqam",
+    "language": "urdu",
+    "chapter": 410,
+    "sequence": 24240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9e11c481e669dfe"
+  },
+  "findings": []
+}

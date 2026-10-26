@@ -1,0 +1,19 @@
+{
+  "chapter": 287,
+  "title": "Fire!",
+  "label": "ch:ur-fire",
+  "canDo": "I can say where a fire started and how it spread.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C287-jalna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 287: I can say where a fire started and how it spread.",
+    "assesses": [
+      "UR-LEX-C287-AAG287-03",
+      "UR-LEX-C287-AAG287-04",
+      "UR-LEX-C287-AAG287-05"
+    ]
+  }
+}

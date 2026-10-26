@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C524-fehrist",
+    "language": "urdu",
+    "chapter": 524,
+    "sequence": 30530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed892683d0a7c75e"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:af74ebe721f90991",
+  "lessonIds": [
+    "UR-C475-daimi",
+    "UR-C475-dama",
+    "UR-C475-falij",
+    "UR-C475-kainsar",
+    "UR-C475-mubtala"
+  ],
+  "tex": "urdu/book/chapters/ch475-long-illnesses.tex"
+}

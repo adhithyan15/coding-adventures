@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 368,
+  "title": "Luck and Fate",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ebfcc252f0ac9f4a",
+  "lessons": [
+    {
+      "id": "GU-C368-nasib",
+      "sequence": 20480,
+      "title": "નસીબ (nasīb) — luck",
+      "headword": "નસીબ",
+      "romanization": "nasīb",
+      "gloss": "luck",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39109aa29b49565f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an assumption, then the Gujarati for to assess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નસીબ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નસીબ — nasīb — \"luck\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો નસીબ સારું હશે તો આપણે જીતીશું. jo nasīb sārũ haśe to āpaṇe jītīśũ. If our luck holds, we will win."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નસીબ (nasīb) is usually traced to Arabic naṣīb, \"a share, a portion\", through Persian: the share life deals out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nasīb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nasīb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nasīb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nasīb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo nasīb sārũ haśe to āpaṇe jītīśũ. — If our luck holds, we will win.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo nasīb sārũ haśe to āpaṇe jītīśũ.* — If our luck holds, we will win.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an assumption, then the Gujarati for to assess, then say nasīb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an assumption, then the Gujarati for to assess, then say *nasīb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નસીબ (nasīb) mean? (\"Luck\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C368-bhagya",
+      "sequence": 20490,
+      "title": "ભાગ્ય (bhāgya) — destiny",
+      "headword": "ભાગ્ય",
+      "romanization": "bhāgya",
+      "gloss": "destiny",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d5cb6378e6d8d449",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to assess, then the Gujarati for luck."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ભાગ્ય",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભાગ્ય — bhāgya — \"destiny\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો ભાગ્ય સારું હોત તો તે આજે અમીર હોત. jo bhāgya sārũ hot to te āje amīr hot. If fate had been kind, he would be rich today."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભાગ્ય (bhāgya) is a tatsama, borrowed from Sanskrit bhāgya, \"fortune, fate\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāgya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāgya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāgya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāgya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo bhāgya sārũ hot to te āje amīr hot. — If fate had been kind, he would be rich today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo bhāgya sārũ hot to te āje amīr hot.* — If fate had been kind, he would be rich today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to assess, then the Gujarati for luck, then say bhāgya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to assess, then the Gujarati for luck, then say *bhāgya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ભાગ્ય (bhāgya) mean? (\"Destiny\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C368-sanyog",
+      "sequence": 20500,
+      "title": "સંયોગ (sanyog) — a coincidence",
+      "headword": "સંયોગ",
+      "romanization": "sanyog",
+      "gloss": "a coincidence",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17c8bff796b1f853",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for luck, then the Gujarati for destiny."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સંયોગ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંયોગ — sanyog — \"a coincidence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો આ સંયોગ ન હોત તો અમે એક જ ટ્રેનમાં ન હોત. jo ā sanyog na hot to ame ek ja ṭrenmā̃ na hot. But for this coincidence, we would not have been on the same train."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંયોગ (sanyog) is a tatsama, borrowed from Sanskrit saṃyoga, \"a joining, a connection\" (Monier-Williams). સંજોગ (sanjog), \"a circumstance\", is the same word in an older, inherited shape."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanyog",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanyog*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanyog, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanyog*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo ā sanyog na hot to ame ek ja ṭrenmā̃ na hot. — But for this coincidence, we would not have been on the same train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo ā sanyog na hot to ame ek ja ṭrenmā̃ na hot.* — But for this coincidence, we would not have been on the same train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for luck, then the Gujarati for destiny, then say sanyog again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for luck, then the Gujarati for destiny, then say *sanyog* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સંયોગ (sanyog) mean? (\"A coincidence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C368-phalvu",
+      "sequence": 20510,
+      "title": "ફળવું (phaḷvũ) — to bear fruit",
+      "headword": "ફળવું",
+      "romanization": "phaḷvũ",
+      "gloss": "to bear fruit",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dfa31aa3a8147e14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for destiny, then the Gujarati for a coincidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ફળવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ફળવું — phaḷvũ — \"to bear fruit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે સતત મહેનત કરશો તો તે ફળશે. jo tame satat mahenat karśo to te phaḷśe. If you keep working hard, it will pay off."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે કેરીનો છોડ ફળ્યો, te kerīno choḍ phaḷyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ફળવું (phaḷvũ) is inherited from Sanskrit phálati, \"bears fruit\"; CDIAL lists the Gujarati verb (CDIAL 9057)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phaḷvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phaḷvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phaḷvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phaḷvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame satat mahenat karśo to te phaḷśe. — If you keep working hard, it will pay off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame satat mahenat karśo to te phaḷśe.* — If you keep working hard, it will pay off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for destiny, then the Gujarati for a coincidence, then say phaḷvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for destiny, then the Gujarati for a coincidence, then say *phaḷvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ફળવું (phaḷvũ) mean? (\"To bear fruit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C368-nivadvu",
+      "sequence": 20520,
+      "title": "નીવડવું (nīvaḍvũ) — to turn out",
+      "headword": "નીવડવું",
+      "romanization": "nīvaḍvũ",
+      "gloss": "to turn out",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e84dee661572395f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a coincidence, then the Gujarati for to bear fruit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નીવડવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નીવડવું — nīvaḍvũ — \"to turn out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો આ દવા સારી નીવડશે તો ઘણા દર્દીઓ સાજા થશે. jo ā davā sārī nīvaḍśe to ghaṇā dardīo sājā thaśe. If this medicine turns out well, many patients will get better."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે વાત સાચી નીવડી, te vāt sācī nīvḍī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નીવડવું (nīvaḍvũ) CDIAL lists the Gujarati verb, \"to turn out, to come up\", under a reconstructed nirvarati, \"restrains\" (CDIAL 7392); how \"restrain\" became \"turn out\" is not explained there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīvaḍvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīvaḍvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīvaḍvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīvaḍvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo ā davā sārī nīvaḍśe to ghaṇā dardīo sājā thaśe. — If this medicine turns out well, many patients will get better.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo ā davā sārī nīvaḍśe to ghaṇā dardīo sājā thaśe.* — If this medicine turns out well, many patients will get better.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a coincidence, then the Gujarati for to bear fruit, then say nīvaḍvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a coincidence, then the Gujarati for to bear fruit, then say *nīvaḍvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નીવડવું (nīvaḍvũ) mean? (\"To turn out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

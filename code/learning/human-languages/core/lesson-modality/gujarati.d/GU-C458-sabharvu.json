@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C458-sabharvu",
+    "language": "gujarati",
+    "chapter": 458,
+    "sequence": 25600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d6a150d0e681f15"
+  },
+  "findings": []
+}

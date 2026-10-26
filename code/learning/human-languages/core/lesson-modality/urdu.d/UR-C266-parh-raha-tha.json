@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C266-parh-raha-tha",
+    "language": "urdu",
+    "chapter": 266,
+    "sequence": 16170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e6d86ffcb08a3e6"
+  },
+  "findings": []
+}

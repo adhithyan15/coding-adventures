@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C446-bharvad",
+    "language": "gujarati",
+    "chapter": 446,
+    "sequence": 24720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6edd9589e24a1c3d"
+  },
+  "findings": []
+}

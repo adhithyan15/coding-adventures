@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R370-review-363-370",
+    "language": "gujarati",
+    "chapter": 370,
+    "sequence": 20630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79c16fef3fbf0f94"
+  },
+  "findings": []
+}

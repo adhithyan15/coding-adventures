@@ -1,0 +1,3 @@
+oracle: pinned historical source, CPython v2.2, v2.4, v2.6 and v2.7.18 (no host python2; blob IDs in code/grammars/python/pair-evidence.csv)
+evidence: an l/L suffix makes parsenumber call PyLong_FromString; print writes str() of a long, and long_str (Objects/longobject.c) formats without the L that only long_repr adds; long_classic_div floors through l_divmod as i_divmod does for ints, so 7L / 2 is 3 and -7L / 2 is -4
+result: the subset prints exactly what CPython 2.2, 2.4, 2.6 and 2.7.18 print

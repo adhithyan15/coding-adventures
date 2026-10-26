@@ -1,5 +1,16 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.50.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
+
+- **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /
+  `f64_signbit`** on the textual `emit_il` path ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6c): `add`/`sub`/`mul`/
+  `div`/`neg` on `float64` (ECMA-335: IEEE, no throw), and
+  `BitConverter::DoubleToInt64Bits(float64); ldc.i4.s 63; shr.un`. Sources
+  must be `float64` homes and the dest `float64` (or `int64` for the sign
+  bit), else a compile error.
+- `op_support`: all six `Lowered`. New `tests/lang83_pr6c.rs` pins the IL
+  (structural; CoreCLR runs it in CI).
+
 ## Unreleased — LANG84 phase 4b — `IIRModule::release`
 
 - Every `IIRModule { .. }` struct literal (code, tests and doc examples)

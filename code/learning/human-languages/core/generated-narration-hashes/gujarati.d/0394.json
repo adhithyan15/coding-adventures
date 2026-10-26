@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:b7d4cdfbbc816253",
+  "lessonIds": [
+    "GU-C394-hamal",
+    "GU-C394-pataro",
+    "GU-C394-potlu",
+    "GU-C394-sarkavvu",
+    "GU-C394-jhalvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch394.txt",
+  "json": "gujarati/narration/ch394.json",
+  "textHash": "fnv1a64:bc499ae06d4bfd4b",
+  "jsonHash": "fnv1a64:129775e984014724",
+  "findings": []
+}

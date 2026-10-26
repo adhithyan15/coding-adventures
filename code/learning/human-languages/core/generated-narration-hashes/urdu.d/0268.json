@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:83def0f6a3abde89",
+  "lessonIds": [
+    "UR-C268-lagna",
+    "UR-C268-khayal",
+    "UR-C268-ghalat",
+    "UR-W268-ghain",
+    "UR-C268-mujhe-lagta-hai",
+    "UR-C268-ki-vajah-se",
+    "UR-R268-opinion-and-reason"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 3,
+  "text": "urdu/narration/ch268.txt",
+  "json": "urdu/narration/ch268.json",
+  "textHash": "fnv1a64:fffcba137c296abc",
+  "jsonHash": "fnv1a64:b727afd1e35e0391",
+  "findings": []
+}

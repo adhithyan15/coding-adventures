@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C423-riayat",
+    "language": "urdu",
+    "chapter": 423,
+    "sequence": 24920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c162d1414d4d769"
+  },
+  "findings": []
+}

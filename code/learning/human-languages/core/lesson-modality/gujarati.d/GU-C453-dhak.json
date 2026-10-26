@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C453-dhak",
+    "language": "gujarati",
+    "chapter": 453,
+    "sequence": 25310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06db8c0c76e2c3b9"
+  },
+  "findings": []
+}

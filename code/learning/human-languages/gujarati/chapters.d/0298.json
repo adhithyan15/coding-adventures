@@ -1,0 +1,19 @@
+{
+  "chapter": 298,
+  "title": "A Sad Day",
+  "label": "ch:gu-a-sad-day",
+  "canDo": "I can speak about a death and comfort a family.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C298-sahevu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 298: I can speak about a death and comfort a family.",
+    "assesses": [
+      "GU-LEX-C298-MRUTYU298-03",
+      "GU-LEX-C298-MRUTYU298-04",
+      "GU-LEX-C298-MRUTYU298-05"
+    ]
+  }
+}

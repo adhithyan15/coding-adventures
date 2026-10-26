@@ -1,0 +1,11 @@
+{
+  "id": "GU-C376-gaphlat",
+  "pathSegment": "GU-PATH-376-BHUL376",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-376-BHUL376",
+      "order": 1
+    }
+  ]
+}

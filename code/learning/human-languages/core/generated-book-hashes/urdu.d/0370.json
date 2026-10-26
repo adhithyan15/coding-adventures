@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:4aabc80761d41541",
+  "lessonIds": [
+    "UR-C370-jald-bazi",
+    "UR-C370-dhyan",
+    "UR-C370-sabr",
+    "UR-C370-phorna",
+    "UR-C370-masalna",
+    "UR-R370-review-363-370"
+  ],
+  "tex": "urdu/book/chapters/ch370-haste-and-care.tex"
+}

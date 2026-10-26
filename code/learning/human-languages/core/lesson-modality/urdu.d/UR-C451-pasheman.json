@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C451-pasheman",
+    "language": "urdu",
+    "chapter": 451,
+    "sequence": 26590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b972128b64375e5f"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:aff3473c3db18bd9",
+  "lessonIds": [
+    "GU-C476-ghorvu",
+    "GU-C476-nidar",
+    "GU-C476-jagran",
+    "GU-C476-podhvu",
+    "GU-C476-anidra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch476.txt",
+  "json": "gujarati/narration/ch476.json",
+  "textHash": "fnv1a64:ec375dc00e15b611",
+  "jsonHash": "fnv1a64:a527082be4b18cce",
+  "findings": []
+}

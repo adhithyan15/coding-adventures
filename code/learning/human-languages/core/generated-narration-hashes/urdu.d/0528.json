@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:dbd4a320407c38e4",
+  "lessonIds": [
+    "UR-C528-barkat",
+    "UR-C528-savab",
+    "UR-C528-taviz",
+    "UR-C528-nazrana",
+    "UR-C528-navazna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch528.txt",
+  "json": "urdu/narration/ch528.json",
+  "textHash": "fnv1a64:4e4aa830f65c1a61",
+  "jsonHash": "fnv1a64:8dfeec8df1073d92",
+  "findings": []
+}

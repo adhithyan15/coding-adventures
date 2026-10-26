@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:0bffec567a47bd1c",
+  "lessonIds": [
+    "PA-C204-child-return",
+    "PA-C204-bachchian",
+    "PA-C204-bachchian-review",
+    "PA-C204-with-children",
+    "PA-C204-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch204-with-children.tex"
+}

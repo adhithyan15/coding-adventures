@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:8e9333f576706514",
+  "lessonIds": [
+    "GU-C326-jhando",
+    "GU-C326-pharkavvu",
+    "GU-C326-santi",
+    "GU-C326-sarhad",
+    "GU-C326-sthapvu"
+  ],
+  "tex": "gujarati/book/chapters/ch326-the-flag-flies-high.tex"
+}

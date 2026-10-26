@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:6df6bf40791ad3cf",
+  "lessonIds": [
+    "UR-C382-inam",
+    "UR-C382-ezaz",
+    "UR-C382-tamgha",
+    "UR-C382-mustahiq",
+    "UR-C382-sanvarna"
+  ],
+  "tex": "urdu/book/chapters/ch382-prizes-and-rewards.tex"
+}

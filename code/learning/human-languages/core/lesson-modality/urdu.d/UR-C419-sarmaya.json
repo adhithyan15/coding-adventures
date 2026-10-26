@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C419-sarmaya",
+    "language": "urdu",
+    "chapter": 419,
+    "sequence": 24710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca9f0fd9c6f4bc8b"
+  },
+  "findings": []
+}

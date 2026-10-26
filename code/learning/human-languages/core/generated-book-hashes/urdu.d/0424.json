@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:2706bf54ce904a74",
+  "lessonIds": [
+    "UR-C424-mal",
+    "UR-C424-zakhira",
+    "UR-C424-bori",
+    "UR-C424-paikat",
+    "UR-C424-lapetna"
+  ],
+  "tex": "urdu/book/chapters/ch424-goods-and-sacks.tex"
+}

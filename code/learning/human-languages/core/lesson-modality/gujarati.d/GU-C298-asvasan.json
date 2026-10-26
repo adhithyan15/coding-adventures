@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C298-asvasan",
+    "language": "gujarati",
+    "chapter": 298,
+    "sequence": 16690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4eb038fffc0ad8e9"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C324-samrat",
+  "pathSegment": "GU-PATH-324-SAMRAT324",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-324-SAMRAT324",
+      "order": 1
+    }
+  ]
+}

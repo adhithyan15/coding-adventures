@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:877c4d95ca69d157",
+  "lessonIds": [
+    "GU-C542-samadhan",
+    "GU-C542-vataghat",
+    "GU-C542-madhyasthi",
+    "GU-C542-bhalaman",
+    "GU-C542-vinanti"
+  ],
+  "tex": "gujarati/book/chapters/ch542-meeting-halfway.tex"
+}

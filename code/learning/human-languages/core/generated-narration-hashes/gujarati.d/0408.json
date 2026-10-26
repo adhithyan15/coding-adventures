@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:e5c4d5fa291f6b27",
+  "lessonIds": [
+    "GU-C408-saphar",
+    "GU-C408-phero",
+    "GU-C408-ato",
+    "GU-C408-visamo",
+    "GU-C408-tahelvu",
+    "GU-R408-review-401-408"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch408.txt",
+  "json": "gujarati/narration/ch408.json",
+  "textHash": "fnv1a64:29894b971bd0ee1b",
+  "jsonHash": "fnv1a64:a9ea6367e305e204",
+  "findings": []
+}

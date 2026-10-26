@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:cda414d9f0479498",
+  "lessonIds": [
+    "UR-C294-qahat",
+    "UR-C294-faqa",
+    "UR-C294-vaba",
+    "UR-C294-sarna",
+    "UR-C294-haiza"
+  ],
+  "tex": "urdu/book/chapters/ch294-famine-and-sickness.tex"
+}

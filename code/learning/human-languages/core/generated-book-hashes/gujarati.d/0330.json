@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:e1af1ed322778927",
+  "lessonIds": [
+    "GU-C330-mandap",
+    "GU-C330-ghumvu",
+    "GU-C330-jhulvu",
+    "GU-C330-bhajan",
+    "GU-C330-bhakt"
+  ],
+  "tex": "gujarati/book/chapters/ch330-nine-nights-of-dance.tex"
+}

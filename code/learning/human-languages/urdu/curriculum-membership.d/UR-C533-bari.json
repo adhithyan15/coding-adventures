@@ -1,0 +1,11 @@
+{
+  "id": "UR-C533-bari",
+  "pathSegment": "UR-PATH-533-JUA533",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-533-JUA533",
+      "order": 2
+    }
+  ]
+}

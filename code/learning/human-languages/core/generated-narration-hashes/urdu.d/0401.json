@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:1339911a380629c5",
+  "lessonIds": [
+    "UR-C401-trali",
+    "UR-C401-muntazir",
+    "UR-C401-istiqbal",
+    "UR-C401-guldasta",
+    "UR-C401-hilana",
+    "UR-R401-review-394-401"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch401.txt",
+  "json": "urdu/narration/ch401.json",
+  "textHash": "fnv1a64:9e4893c7e44f5cf5",
+  "jsonHash": "fnv1a64:e49c27c13affdd36",
+  "findings": []
+}

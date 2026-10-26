@@ -1,4 +1,4 @@
-//! # Walking the `py-int-print` parse tree into IIR (LANG84 phase 7a)
+//! # Walking the `py-int-print` / `py2-int-print` parse tree into IIR (LANG84 phases 7a, 7c)
 //!
 //! This is the hand-written half of the LANG84 pipeline. Everything before
 //! it is generic and table-driven (`GrammarLexer` over
@@ -32,6 +32,24 @@
 //! └─ (more statements, or NEWLINE trivia)
 //! ```
 //!
+//! ## The Python 2 tree, for `print 1 + 2` (phase 7c slice 1)
+//!
+//! A `py2` pair adds one rule, `print_stmt`, because in Python 2 `print` is a
+//! keyword that starts a statement, not a function:
+//!
+//! ```text
+//! simple_stmt
+//! ├─ small_stmt ─ print_stmt
+//! │               ├─ KEYWORD "print"
+//! │               └─ expression ─ arith ─ … (the same arithmetic as above)
+//! └─ NEWLINE
+//! ```
+//!
+//! Which `print` a statement is comes from this **shape** (a `print_stmt`
+//! node or a call expression), never from the release ID (LANG84 C2). A
+//! Python 3 grammar has no `print_stmt` rule, and in a Python 2 grammar
+//! `print` is a keyword, so it can never be a call's callee.
+//!
 //! `arith` and `term` are **flat**: `1 - 2 - 3` is one `arith` with three
 //! `term` children and two operator tokens, not a nested tree. Left
 //! associativity is therefore a left fold over the children, done in a loop,
@@ -51,6 +69,9 @@
 //! | `a // -1`, `a % -1`   | `i64_neg_ovf a`, `const 0` (divisor known `-1`)   |
 //! | `print(a)`            | `call_builtin print_i64, a`                       |
 //! | `print()`             | `call_builtin putchar, 10` (one newline)          |
+//! | `print a` (Python 2)  | `call_builtin print_i64, a`                       |
+//! | `print` (Python 2)    | `call_builtin putchar, 10`                        |
+//! | `a / b` (`py2` only)  | as `a // b`: classic division floors on ints      |
 //! | end of module         | `const 0`, `ret` (a script that ends exits 0)     |
 //!
 //! There is no Python-named builtin anywhere (LANG84 C2), so every backend
@@ -96,7 +117,7 @@ use lexer::token::Token;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 use crate::frontend_error::FrontendError;
-use crate::profiles::{ReleaseProfile, Slash};
+use crate::profiles::{IntLiterals, ReleaseProfile, Slash};
 
 /// LANG84 C5: most IIR instructions one module may hold.
 pub const MAX_IIR_INSTRUCTIONS: usize = 1_000_000;
@@ -183,6 +204,15 @@ pub(crate) struct Lowering<'a> {
 }
 
 impl<'a> Lowering<'a> {
+    /// Whether this release's profile adds `rule` to its grammars
+    /// ([`crate::profiles::PROFILE_RULES`]). The lowering uses it to refuse a
+    /// tree shaped by another profile's grammar.
+    fn profile_owns_rule(&self, rule: &str) -> bool {
+        crate::profiles::PROFILE_RULES
+            .iter()
+            .any(|(profile, rules)| *profile == self.profile.name && rules.contains(&rule))
+    }
+
     pub(crate) fn new(release: &'a str, profile: &'a ReleaseProfile) -> Self {
         Self {
             release,
@@ -234,10 +264,26 @@ impl<'a> Lowering<'a> {
                 return Err(self.unsupported(simple, "nothing may follow a statement's NEWLINE"));
             }
             match child {
-                ASTNodeOrToken::Node(small) if small.rule_name == "small_stmt" => {
-                    let expression = self.only_child(small, "expression")?;
-                    self.lower_print_statement(small, expression)?;
-                }
+                ASTNodeOrToken::Node(small) if small.rule_name == "small_stmt" => match small.children.as_slice() {
+                    // Python 2: `small_stmt = print_stmt | expression`.
+                    [ASTNodeOrToken::Node(print)] if print.rule_name == "print_stmt" => {
+                        // A caller-supplied tree (`compile_cst`) may come from
+                        // another release's grammar. Only a profile whose
+                        // grammars define `print_stmt` may lower one: under
+                        // `py3`, `print x` is a SyntaxError, not output.
+                        if !self.profile_owns_rule("print_stmt") {
+                            return Err(self.unsupported(
+                                print,
+                                format!("a `print` statement is not in {}; this tree is not from this release's grammar", self.profile.subset),
+                            ));
+                        }
+                        self.lower_print_stmt(print)?;
+                    }
+                    _ => {
+                        let expression = self.only_child(small, "expression")?;
+                        self.lower_print_statement(small, expression)?;
+                    }
+                },
                 ASTNodeOrToken::Token(token) if token.effective_type_name() == "SEMICOLON" => {}
                 ASTNodeOrToken::Token(token) if is_newline(token) => ended = true,
                 ASTNodeOrToken::Token(token) => {
@@ -251,6 +297,87 @@ impl<'a> Lowering<'a> {
         Ok(())
     }
 
+    /// Python 2's `print` statement (`py2-int-print`):
+    ///
+    /// ```text
+    /// print_stmt = "print" [ expression { COMMA expression } [ COMMA ] ] ;
+    /// ```
+    ///
+    /// | source      | CPython 2 bytecode               | IIR                    |
+    /// |-------------|----------------------------------|------------------------|
+    /// | `print`     | PRINT_NEWLINE                    | `putchar 10`           |
+    /// | `print e`   | e; PRINT_ITEM; PRINT_NEWLINE     | e; `print_i64`         |
+    /// | `print a, b`| refused (softspace, see below)   |                        |
+    /// | `print a,`  | refused (softspace, see below)   |                        |
+    ///
+    /// `print a, b` and `print a,` leave the stream's softspace flag set
+    /// between items, and CPython 2 writes a pending softspace as `\n`
+    /// before an uncaught exception's traceback (`Py_FlushLine`). Without a
+    /// trap handler the compiler cannot reproduce that newline, so both forms
+    /// are `Unsupported` rather than subtly wrong.
+    fn lower_print_stmt(&mut self, print: &GrammarASTNode) -> Result<(), FrontendError> {
+        let mut parts = print.children.iter();
+        match parts.next() {
+            Some(ASTNodeOrToken::Token(keyword))
+                if keyword.effective_type_name() == "KEYWORD" && keyword.value == "print" => {}
+            _ => return Err(self.unsupported(print, "a print statement starts with the keyword `print`")),
+        }
+        let rest: Vec<&ASTNodeOrToken> = parts.collect();
+        match rest.as_slice() {
+            [] => self.emit_newline(),
+            [ASTNodeOrToken::Node(expression)] if expression.rule_name == "expression" => {
+                // The item is evaluated before PRINT_ITEM writes anything, so
+                // a trap inside it writes nothing for this statement.
+                let value = self.lower_expression(expression)?;
+                self.emit(
+                    "call_builtin",
+                    None,
+                    vec![Operand::Var("print_i64".into()), value.operand],
+                    "void",
+                )
+            }
+            [ASTNodeOrToken::Node(expression), ASTNodeOrToken::Token(comma)]
+                if expression.rule_name == "expression" && comma.effective_type_name() == "COMMA" =>
+            {
+                Err(self.unsupported_token(
+                    print,
+                    comma,
+                    format!(
+                        "`print x,` (no newline) is not in {}: it leaves softspace set, and CPython 2 \
+                         flushes softspace as a newline before an uncaught exception",
+                        self.profile.subset
+                    ),
+                ))
+            }
+            [ASTNodeOrToken::Node(expression), ASTNodeOrToken::Token(comma), ..]
+                if expression.rule_name == "expression" && comma.effective_type_name() == "COMMA" =>
+            {
+                Err(self.unsupported_token(
+                    print,
+                    comma,
+                    format!(
+                        "`print a, b` is not in {}: items are separated by softspace, which CPython 2 \
+                         flushes as a newline before an uncaught exception; print one value per statement",
+                        self.profile.subset
+                    ),
+                ))
+            }
+            _ => Err(self.unsupported(print, "expected `print` or `print <expression>`")),
+        }
+    }
+
+    /// One `\n` through LANG83 `putchar` (`print()` and a bare `print`).
+    fn emit_newline(&mut self) -> Result<(), FrontendError> {
+        let newline = self.register();
+        self.emit("const", Some(newline.clone()), vec![Operand::Int(NEWLINE_BYTE)], "i64")?;
+        self.emit(
+            "call_builtin",
+            None,
+            vec![Operand::Var("putchar".into()), Operand::Var(newline)],
+            "void",
+        )
+    }
+
     /// The only statement in `py-int-print`: `print(<expr>)` or `print()`.
     fn lower_print_statement(
         &mut self,
@@ -260,28 +387,36 @@ impl<'a> Lowering<'a> {
         let Some((callee, suffix)) = self.as_call(expression)? else {
             return Err(self.unsupported(
                 small,
-                "only `print(...)` statements are in py-int-print; a bare expression statement is not",
+                format!(
+                    "only print statements are in {}; a bare expression statement is not",
+                    self.profile.subset
+                ),
             ));
         };
         if callee.value != "print" {
             return Err(self.unsupported_token(
                 small,
                 callee,
-                format!("only `print` is in py-int-print, not {}", shown(&callee.value)),
+                format!("only `print` is in {}, not {}", self.profile.subset, shown(&callee.value)),
+            ));
+        }
+        // In a `py2` grammar `print` is a keyword, so a call-shaped `print(…)`
+        // can only reach here in a tree from a Python 3 grammar. Lowering it
+        // under `py2` would be wrong, not just lenient: Python 2 prints
+        // `print ()` as `()` and `print (1, 2)` as the tuple `(1, 2)`.
+        if self.profile_owns_rule("print_stmt") {
+            return Err(self.unsupported_token(
+                small,
+                callee,
+                format!(
+                    "`print` is a statement in {}; a call-form `print(…)` tree is not from this release's grammar",
+                    self.profile.subset
+                ),
             ));
         }
         match self.call_arguments(suffix)?.as_slice() {
-            [] => {
-                // `print()` writes one newline and nothing else.
-                let newline = self.register();
-                self.emit("const", Some(newline.clone()), vec![Operand::Int(NEWLINE_BYTE)], "i64")?;
-                self.emit(
-                    "call_builtin",
-                    None,
-                    vec![Operand::Var("putchar".into()), Operand::Var(newline)],
-                    "void",
-                )
-            }
+            // `print()` writes one newline and nothing else.
+            [] => self.emit_newline(),
             [argument] => {
                 // The argument is evaluated completely before `print`
                 // writes, so a trap inside it prints nothing for this call.
@@ -327,7 +462,7 @@ impl<'a> Lowering<'a> {
                 }
             }
             [ASTNodeOrToken::Node(atom), ASTNodeOrToken::Node(_), ..] if atom.rule_name == "atom" => {
-                Err(self.unsupported(node, "a call of a call's result is not in py-int-print"))
+                Err(self.unsupported(node, format!("a call of a call's result is not in {}", self.profile.subset)))
             }
             _ => Ok(None),
         }
@@ -433,14 +568,18 @@ impl<'a> Lowering<'a> {
                             self.profile.name
                         ),
                     ),
-                    Slash::Classic => self.unsupported_token(
-                        chain,
-                        token,
-                        "classic `/` division has no release pair yet (Python 2 is a later slice)",
-                    ),
+                    // Classic division on two ints is floor division
+                    // (`i_divmod` in Python 2's `Objects/intobject.c`).
+                    Slash::Classic => return Ok(BinOp::FloorDiv),
                 })
             }
-            _ => return Err(self.unsupported_token(chain, token, "not an operator of py-int-print")),
+            _ => {
+                return Err(self.unsupported_token(
+                    chain,
+                    token,
+                    format!("not an operator of {}", self.profile.subset),
+                ))
+            }
         })
     }
 
@@ -494,7 +633,10 @@ impl<'a> Lowering<'a> {
             [ASTNodeOrToken::Node(atom), ..] if atom.rule_name == "atom" => {
                 return Err(self.unsupported(
                     primary,
-                    "a call's result used as a value is not in py-int-print (`print(...)` returns None)",
+                    format!(
+                        "a call's result used as a value is not in {} (there are no functions to call)",
+                        self.profile.subset
+                    ),
                 ))
             }
             _ => return Err(self.unsupported(primary, "expected an atom")),
@@ -512,7 +654,11 @@ impl<'a> Lowering<'a> {
             [ASTNodeOrToken::Token(name)] if name.effective_type_name() == "NAME" => Err(self.unsupported_token(
                 atom,
                 name,
-                format!("names such as {} are not in py-int-print (no variables)", shown(&name.value)),
+                format!(
+                    "names such as {} are not in {} (no variables)",
+                    shown(&name.value),
+                    self.profile.subset
+                ),
             )),
             [ASTNodeOrToken::Node(paren)] if paren.rule_name == "paren_expr" => match paren.children.as_slice() {
                 [open, ASTNodeOrToken::Node(body), close]
@@ -573,60 +719,39 @@ impl<'a> Lowering<'a> {
     }
 
     /// Decode one `INT` token's value (LANG84 C1.4 allows decoding a single
-    /// token; it never splits one).
+    /// token; it never splits one). The profile's [`IntLiterals`] says which
+    /// spellings exist; a caller-supplied tree is not bound by the lexer, so
+    /// the spelling is checked again here against the *profile*, and a value
+    /// above `i64::MAX` is refused (CPython would keep it as a bigger int or a
+    /// long, which no integer subset has yet).
     ///
-    /// The release tokens spell a decimal integer as a non-zero digit and
-    /// more digits, or as zeros, with single `_` separators between digits
-    /// (PEP 515, where the release lexes them). A caller-supplied tree is not
-    /// bound by the lexer, so the spelling is checked again here:
-    ///
-    /// | token value   | value   | why                                       |
-    /// |---------------|---------|-------------------------------------------|
-    /// | `42`          | 42      |                                           |
-    /// | `1_000`       | 1000    | `_` separates digits                      |
-    /// | `00`, `0_0`   | 0       | Python allows any number of zeros         |
-    /// | `012`         | refused | leading zeros are a SyntaxError in Python 3 |
-    /// | `1__0`, `_1`, `1_` | refused | not a Python integer                |
-    /// | `-1`, `+1`    | refused | a sign is a separate token in Python      |
+    /// The check is per profile, not per release: lowering never branches on
+    /// the release ID (LANG84 C2). Spellings that only some releases of a
+    /// profile lex (PEP 3127's `0o`/`0b` from 2.6, PEP 515's `_` from 3.6)
+    /// are refused by that release's own lexer; a forged `compile_cst` tree
+    /// claiming 2.2 with `0o17` decodes to 15, the value every release that
+    /// can spell it gives. No input a release's lexer can produce decodes to
+    /// a wrong value.
     fn decode_integer(&self, atom: &GrammarASTNode, token: &Token) -> Result<i64, FrontendError> {
         let text = token.value.as_str();
-        let well_formed = !text.is_empty()
-            && text
-                .split('_')
-                .all(|group| !group.is_empty() && group.bytes().all(|b| b.is_ascii_digit()));
-        if !well_formed {
-            return Err(self.unsupported_token(atom, token, format!("{} is not a decimal integer", shown(text))));
-        }
-        let digits: String = text.chars().filter(|c| *c != '_').collect();
-        if digits.len() > 1 && digits.starts_with('0') && digits.bytes().any(|b| b != b'0') {
-            return Err(self.unsupported_token(
-                atom,
-                token,
-                "leading zeros in a non-zero decimal integer are a SyntaxError in Python 3",
-            ));
-        }
-        // Leading zeros are all zeros by now; strip them so the length test
-        // below measures the significant digits. 19 digits always fit in
-        // i128; more than 19 never fit in i64.
-        let significant = digits.trim_start_matches('0');
-        let value = if significant.is_empty() {
-            Some(0)
-        } else if significant.len() > 19 {
-            None
-        } else {
-            significant.parse::<i128>().ok().and_then(|v| i64::try_from(v).ok())
+        let decoded = match self.profile.int_literals {
+            IntLiterals::Decimal => decode_decimal(text),
+            IntLiterals::Python2 => decode_python2(text),
         };
-        value.ok_or_else(|| {
-            self.unsupported_token(
+        match decoded {
+            Ok(Some(value)) => Ok(value),
+            Ok(None) => Err(self.unsupported_token(
                 atom,
                 token,
                 format!(
                     "integer literal {} is outside i64; CPython would keep it as a bigger int, \
-                     which py-int-print does not have yet",
-                    shown(text)
+                     which {} does not have yet",
+                    shown(text),
+                    self.profile.subset
                 ),
-            )
-        })
+            )),
+            Err(why) => Err(self.unsupported_token(atom, token, why)),
+        }
     }
 
     /// The single child of `parent`, which must be a node named `rule`.
@@ -675,6 +800,81 @@ impl<'a> Lowering<'a> {
             message: message.into(),
         }
     }
+}
+
+/// Why a literal's spelling is refused (`Err`), or its value: `Some` when
+/// it fits `i64`, `None` when it does not.
+type Decoded = Result<Option<i64>, String>;
+
+/// `py3` literals ([`IntLiterals::Decimal`]): a non-zero digit and more
+/// digits, or zeros, with single `_` separators between digits (PEP 515,
+/// where the release lexes them).
+///
+/// | token value        | value   | why                                       |
+/// |--------------------|---------|-------------------------------------------|
+/// | `42`               | 42      |                                           |
+/// | `1_000`            | 1000    | `_` separates digits                      |
+/// | `00`, `0_0`        | 0       | Python 3 allows any number of zeros       |
+/// | `012`              | refused | a SyntaxError in every Python 3           |
+/// | `1__0`, `_1`, `1_` | refused | not a Python integer                      |
+/// | `0x1F`, `-1`, `+1` | refused | not in the subset; a sign is its own token |
+fn decode_decimal(text: &str) -> Decoded {
+    let well_formed = !text.is_empty()
+        && text
+            .split('_')
+            .all(|group| !group.is_empty() && group.bytes().all(|b| b.is_ascii_digit()));
+    if !well_formed {
+        return Err(format!("{} is not a decimal integer", shown(text)));
+    }
+    let digits: String = text.chars().filter(|c| *c != '_').collect();
+    if digits.len() > 1 && digits.starts_with('0') && digits.bytes().any(|b| b != b'0') {
+        return Err("leading zeros in a non-zero integer are a SyntaxError in Python 3 \
+                    (Python 2 read them as octal)"
+            .to_string());
+    }
+    Ok(digits_value(&digits, 10))
+}
+
+/// `py2` literals ([`IntLiterals::Python2`]), as `tok_get` lexes them and
+/// `parsenumber` reads them (see the `py2` profile in `profiles.rs`):
+///
+/// | token value          | value   | why                                    |
+/// |----------------------|---------|----------------------------------------|
+/// | `42`, `42L`, `42l`   | 42      | `L` makes a long; `str()` drops it      |
+/// | `0`, `00`, `0L`      | 0       | a lone `0` and `00` are octal zero      |
+/// | `010`                | 8       | a leading `0` means octal              |
+/// | `0x1F`, `0X1fL`      | 31      | hex                                    |
+/// | `0o17`, `0O17`       | 15      | octal, PEP 3127 (2.6 and later lex it) |
+/// | `0b101`, `0B101L`    | 5       | binary, PEP 3127 (2.6 and later)       |
+/// | `08`, `0x`, `0b2`    | refused | not a Python 2 integer                 |
+/// | `1_000`, `1LL`       | refused | no `_` in Python 2; one suffix         |
+///
+/// The prefix and suffix letters are ASCII, so slicing after them is safe.
+fn decode_python2(text: &str) -> Decoded {
+    let body = text.strip_suffix(['l', 'L']).unwrap_or(text);
+    let refused = || Err(format!("{} is not a Python 2 integer literal", shown(text)));
+    let (digits, radix) = match body.as_bytes() {
+        [b'0', b'x' | b'X', ..] => (&body[2..], 16),
+        [b'0', b'o' | b'O', ..] => (&body[2..], 8),
+        [b'0', b'b' | b'B', ..] => (&body[2..], 2),
+        [b'0', ..] => (body, 8),
+        [b'1'..=b'9', ..] => (body, 10),
+        _ => return refused(),
+    };
+    if digits.is_empty() || !digits.chars().all(|c| c.is_digit(radix)) {
+        return refused();
+    }
+    Ok(digits_value(digits, radix))
+}
+
+/// The value of a run of digits already checked to be in `radix`: `Some`
+/// when it fits `i64`, `None` when it does not. Checked accumulation keeps
+/// any number of leading zeros harmless.
+fn digits_value(digits: &str, radix: u32) -> Option<i64> {
+    digits.chars().try_fold(0_i64, |value, c| {
+        let digit = i64::from(c.to_digit(radix)?);
+        value.checked_mul(i64::from(radix))?.checked_add(digit)
+    })
 }
 
 fn fits_i64(value: i128) -> bool {

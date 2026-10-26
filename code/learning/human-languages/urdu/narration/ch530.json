@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 530,
+  "title": "Yes or No",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3f21e570b785f1ec",
+  "lessons": [
+    {
+      "id": "UR-C530-marzi",
+      "sequence": 30840,
+      "title": "مرضی (marzī) — one's own choice; consent",
+      "headword": "مرضی",
+      "romanization": "marzī",
+      "gloss": "one's own choice; consent",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4328ff5645cb5ac1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for complicated, then the Urdu for to tangle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مرضی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مرضی — marzī — \"one's own choice; consent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر آپ کی مرضی ہے تو ہم چلیں گے۔ agar āp kī marzī hai to ham chaleṅ ge. If you wish, we will go."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مرضی (marzī) is usually traced, through Persian, to Arabic marḍī, \"pleasing, approved\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marzī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marzī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marzī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marzī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar āp kī marzī hai to ham chaleṅ ge. — If you wish, we will go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar āp kī marzī hai to ham chaleṅ ge.* — If you wish, we will go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for complicated, then the Urdu for to tangle, then say marzī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for complicated, then the Urdu for to tangle, then say *marzī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مرضی (marzī) mean? (\"One's own choice; consent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C530-razi",
+      "sequence": 30850,
+      "title": "راضی (rāzī) — willing; agreed",
+      "headword": "راضی",
+      "romanization": "rāzī",
+      "gloss": "willing; agreed",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51c16b6604369f30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to tangle, then the Urdu for one's own choice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: راضی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "راضی — rāzī — \"willing; agreed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر ابو راضی ہوئے تو میں جاؤں گا۔ agar abbū rāzī hue to maiṅ jāūṅ gā. If my father agrees, I will go."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "راضی (rāzī) is usually traced, through Persian, to Arabic rāḍī, \"content, pleased\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāzī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāzī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāzī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāzī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar abbū rāzī hue to maiṅ jāūṅ gā. — If my father agrees, I will go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar abbū rāzī hue to maiṅ jāūṅ gā.* — If my father agrees, I will go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to tangle, then the Urdu for one's own choice, then say rāzī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to tangle, then the Urdu for one's own choice, then say *rāzī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does راضی (rāzī) mean? (\"Willing; agreed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C530-ikhtilaf",
+      "sequence": 30860,
+      "title": "اختلاف (ikhtilāf) — a disagreement; a difference of opinion",
+      "headword": "اختلاف",
+      "romanization": "ikhtilāf",
+      "gloss": "a disagreement; a difference of opinion",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75f87be120a27c80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for one's own choice, then the Urdu for willing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اختلاف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اختلاف — ikhtilāf — \"a disagreement; a difference of opinion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر کسی کو اختلاف ہے تو ابھی بتائیے۔ agar kisī ko ikhtilāf hai to abhī batāiye. If anyone disagrees, say so now."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اختلاف (ikhtilāf) is usually traced, through Persian, to Arabic ikhtilāf, \"differing, disagreement\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikhtilāf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikhtilāf*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikhtilāf, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikhtilāf*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar kisī ko ikhtilāf hai to abhī batāiye. — If anyone disagrees, say so now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar kisī ko ikhtilāf hai to abhī batāiye.* — If anyone disagrees, say so now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for one's own choice, then the Urdu for willing, then say ikhtilāf again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for one's own choice, then the Urdu for willing, then say *ikhtilāf* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اختلاف (ikhtilāf) mean? (\"A disagreement; a difference of opinion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C530-mustarad",
+      "sequence": 30870,
+      "title": "مسترد (mustarad) — rejected; turned down",
+      "headword": "مسترد",
+      "romanization": "mustarad",
+      "gloss": "rejected; turned down",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ed1ffc789abb177",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for willing, then the Urdu for a disagreement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مسترد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مسترد — mustarad — \"rejected; turned down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر یہ خط مسترد ہوا تو پھر لکھوں گا۔ agar yih khat mustarad huā to phir likhūṅ gā. If this letter is turned down, I'll write again."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مسترد (mustarad) is usually traced, through Persian, to Arabic mustaradd, \"taken back, returned\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mustarad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mustarad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mustarad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mustarad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar yih khat mustarad huā to phir likhūṅ gā. — If this letter is turned down, I'll write again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar yih khat mustarad huā to phir likhūṅ gā.* — If this letter is turned down, I'll write again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for willing, then the Urdu for a disagreement, then say mustarad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for willing, then the Urdu for a disagreement, then say *mustarad* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مسترد (mustarad) mean? (\"Rejected; turned down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C530-palatna",
+      "sequence": 30880,
+      "title": "پلٹنا (palaṭnā) — to turn back; to go back (on one's word)",
+      "headword": "پلٹنا",
+      "romanization": "palaṭnā",
+      "gloss": "to turn back; to go back (on one's word)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3f5f4af39028d19",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a disagreement, then the Urdu for turned down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پلٹنا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پلٹنا — palaṭnā — \"to turn back; to go back (on one's word)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر وہ اپنی بات سے پلٹا تو کیا ہو گا؟ agar voh apnī bāt se palṭā to kyā ho gā? If he goes back on his word, what will happen?"
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): وہ اپنی بات سے پلٹ گیا, voh apnī bāt se palaṭ gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پلٹنا (palaṭnā) is inherited: CDIAL lists the Hindi cousin palaṭnā, \"to overturn\", under pallaṭṭ, \"turn\", a form it reconstructs (CDIAL 7968)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palaṭnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palaṭnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palaṭnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palaṭnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar voh apnī bāt se palṭā to kyā ho gā? — If he goes back on his word, what will happen?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar voh apnī bāt se palṭā to kyā ho gā?* — If he goes back on his word, what will happen?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a disagreement, then the Urdu for turned down, then say palaṭnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a disagreement, then the Urdu for turned down, then say *palaṭnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پلٹنا (palaṭnā) mean? (\"To turn back; to go back (on one's word)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

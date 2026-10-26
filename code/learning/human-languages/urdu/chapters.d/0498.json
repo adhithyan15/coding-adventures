@@ -1,0 +1,19 @@
+{
+  "chapter": 498,
+  "title": "Clay and the Kiln",
+  "label": "ch:ur-clay-and-the-kiln",
+  "canDo": "I can describe how a potter shapes and fires pots.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C498-tapana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 498: I can describe how a potter shapes and fires pots.",
+    "assesses": [
+      "UR-LEX-C498-AVA498-03",
+      "UR-LEX-C498-AVA498-04",
+      "UR-LEX-C498-AVA498-05"
+    ]
+  }
+}

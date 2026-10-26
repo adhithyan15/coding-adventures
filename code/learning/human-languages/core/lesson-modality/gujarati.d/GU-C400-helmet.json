@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C400-helmet",
+    "language": "gujarati",
+    "chapter": 400,
+    "sequence": 22360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:365d9f7629215276"
+  },
+  "findings": []
+}

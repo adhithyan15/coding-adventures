@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:ac2b66e9a41bbee0",
+  "lessonIds": [
+    "UR-C456-zalim",
+    "UR-C456-sangdil",
+    "UR-C456-ehsan",
+    "UR-C456-karam",
+    "UR-C456-sitam"
+  ],
+  "tex": "urdu/book/chapters/ch456-kind-and-cruel.tex"
+}

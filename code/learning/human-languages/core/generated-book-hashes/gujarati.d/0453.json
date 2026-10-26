@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:1e11c281ae421749",
+  "lessonIds": [
+    "GU-C453-bivu",
+    "GU-C453-dhak",
+    "GU-C453-thatharvu",
+    "GU-C453-tras",
+    "GU-C453-bhiti"
+  ],
+  "tex": "gujarati/book/chapters/ch453-a-sudden-fright.tex"
+}

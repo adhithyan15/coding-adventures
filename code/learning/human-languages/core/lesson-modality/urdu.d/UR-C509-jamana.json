@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C509-jamana",
+    "language": "urdu",
+    "chapter": 509,
+    "sequence": 29780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a6d74049eb0edd0"
+  },
+  "findings": []
+}

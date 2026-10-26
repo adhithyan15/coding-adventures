@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C379-lagan",
+    "language": "urdu",
+    "chapter": 379,
+    "sequence": 22480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1064d768fb0086e0"
+  },
+  "findings": []
+}

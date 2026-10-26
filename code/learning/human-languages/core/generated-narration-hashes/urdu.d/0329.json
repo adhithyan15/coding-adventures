@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:2e52430622f3d7c3",
+  "lessonIds": [
+    "UR-C329-afsana",
+    "UR-C329-musannif",
+    "UR-C329-kirdar",
+    "UR-C329-bab",
+    "UR-C329-anjam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch329.txt",
+  "json": "urdu/narration/ch329.json",
+  "textHash": "fnv1a64:8eb254820a5f9b20",
+  "jsonHash": "fnv1a64:e9acc7c839f63ae6",
+  "findings": []
+}

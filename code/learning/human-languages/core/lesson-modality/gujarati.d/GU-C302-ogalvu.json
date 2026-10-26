@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C302-ogalvu",
+    "language": "gujarati",
+    "chapter": 302,
+    "sequence": 16900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64f4741d1296dfba"
+  },
+  "findings": []
+}

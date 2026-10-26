@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C441-shadman",
+    "language": "urdu",
+    "chapter": 441,
+    "sequence": 26070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea10404c9b791a8a"
+  },
+  "findings": []
+}

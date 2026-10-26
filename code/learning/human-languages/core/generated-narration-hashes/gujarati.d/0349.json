@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:38e92ec7c08c9bd3",
+  "lessonIds": [
+    "GU-C349-vajbi",
+    "GU-C349-bhedbhav",
+    "GU-C349-saman",
+    "GU-C349-tatasth",
+    "GU-C349-vartvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch349.txt",
+  "json": "gujarati/narration/ch349.json",
+  "textHash": "fnv1a64:0e7f97a5cd1e1854",
+  "jsonHash": "fnv1a64:0b0657c1eef947b2",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C540-sogand",
+    "language": "gujarati",
+    "chapter": 540,
+    "sequence": 30030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f337269ccc7461f"
+  },
+  "findings": []
+}

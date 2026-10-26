@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:7a753caec0f84ef7",
+  "lessonIds": [
+    "UR-C535-shagun",
+    "UR-C535-manhus",
+    "UR-C535-tona",
+    "UR-C535-najumi",
+    "UR-C535-zaicha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch535.txt",
+  "json": "urdu/narration/ch535.json",
+  "textHash": "fnv1a64:131518f13e6a732b",
+  "jsonHash": "fnv1a64:f42e30920e389b1e",
+  "findings": []
+}

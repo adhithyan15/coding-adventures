@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Learning to Sing",
+  "label": "ch:ur-learning-to-sing",
+  "canDo": "I can talk about voices, ragas and practice.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C518-gungunana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can talk about voices, ragas and practice.",
+    "assesses": [
+      "UR-LEX-C518-RIYAZ518-03",
+      "UR-LEX-C518-RIYAZ518-04",
+      "UR-LEX-C518-RIYAZ518-05"
+    ]
+  }
+}

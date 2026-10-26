@@ -1,0 +1,11 @@
+{
+  "id": "GU-C396-sakal",
+  "pathSegment": "GU-PATH-396-GUARD396",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-396-GUARD396",
+      "order": 2
+    }
+  ]
+}

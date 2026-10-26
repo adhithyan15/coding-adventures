@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:fa28b3948e5613cc",
+  "lessonIds": [
+    "GU-C480-khas",
+    "GU-C480-jhakham",
+    "GU-C480-paru",
+    "GU-C480-sadvu",
+    "GU-C480-upasvu"
+  ],
+  "tex": "gujarati/book/chapters/ch480-trouble-with-the-skin.tex"
+}

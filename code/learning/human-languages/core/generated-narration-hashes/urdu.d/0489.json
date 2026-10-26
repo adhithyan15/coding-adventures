@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:520f8025a60d3724",
+  "lessonIds": [
+    "UR-C489-devar",
+    "UR-C489-jeth",
+    "UR-C489-nanad",
+    "UR-C489-bhanja",
+    "UR-C489-navasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch489.txt",
+  "json": "urdu/narration/ch489.json",
+  "textHash": "fnv1a64:eecae8a54c9ea126",
+  "jsonHash": "fnv1a64:a0c32235ccdc4459",
+  "findings": []
+}

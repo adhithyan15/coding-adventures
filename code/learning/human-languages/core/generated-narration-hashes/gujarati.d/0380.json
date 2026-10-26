@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:31a36dceb5b0870d",
+  "lessonIds": [
+    "GU-C380-purtu",
+    "GU-C380-tangi",
+    "GU-C380-thodu",
+    "GU-C380-sahej",
+    "GU-C380-pahoci-valvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch380.txt",
+  "json": "gujarati/narration/ch380.json",
+  "textHash": "fnv1a64:918c421a9b877aca",
+  "jsonHash": "fnv1a64:c3a86a2a19b453ef",
+  "findings": []
+}

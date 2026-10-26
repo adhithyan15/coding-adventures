@@ -1,0 +1,11 @@
+{
+  "id": "GU-C417-deli",
+  "pathSegment": "GU-PATH-417-POL417",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-417-POL417",
+      "order": 1
+    }
+  ]
+}

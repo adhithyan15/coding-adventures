@@ -1,0 +1,19 @@
+{
+  "chapter": 395,
+  "title": "Berths and Reservations",
+  "label": "ch:gu-berths-and-reservations",
+  "canDo": "I can find my berth and stow my luggage.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C395-besadvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can find my berth and stow my luggage.",
+    "assesses": [
+      "GU-LEX-C395-BERTH395-03",
+      "GU-LEX-C395-BERTH395-04",
+      "GU-LEX-C395-BERTH395-05"
+    ]
+  }
+}

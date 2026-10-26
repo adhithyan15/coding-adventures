@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:0c162f26d7260cb5",
+  "lessonIds": [
+    "GU-C302-bambo",
+    "GU-C302-bujhavvu",
+    "GU-C302-dordu",
+    "GU-C302-ogalvu",
+    "GU-C302-bhadko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch302.txt",
+  "json": "gujarati/narration/ch302.json",
+  "textHash": "fnv1a64:3629b8919d5b5216",
+  "jsonHash": "fnv1a64:c0e7463fe208deeb",
+  "findings": []
+}

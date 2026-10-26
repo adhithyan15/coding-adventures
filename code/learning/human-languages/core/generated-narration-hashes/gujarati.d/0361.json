@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:f62e0691f2c51f7e",
+  "lessonIds": [
+    "GU-C361-ninda",
+    "GU-C361-tika",
+    "GU-C361-thapko",
+    "GU-C361-vagovvu",
+    "GU-C361-vinavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch361.txt",
+  "json": "gujarati/narration/ch361.json",
+  "textHash": "fnv1a64:94f6d784b37b5211",
+  "jsonHash": "fnv1a64:6455567f73919189",
+  "findings": []
+}

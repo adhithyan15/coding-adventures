@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:ce42f7ec79dc3633",
+  "lessonIds": [
+    "GU-C510-soni",
+    "GU-C510-ogaalvu",
+    "GU-C510-tabu",
+    "GU-C510-dhaalvu",
+    "GU-C510-ghadavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch510-at-the-goldsmith-s.tex"
+}

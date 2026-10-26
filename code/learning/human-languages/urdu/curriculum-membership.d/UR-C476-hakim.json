@@ -1,0 +1,11 @@
+{
+  "id": "UR-C476-hakim",
+  "pathSegment": "UR-PATH-476-DOCTOR476",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-476-DOCTOR476",
+      "order": 3
+    }
+  ]
+}

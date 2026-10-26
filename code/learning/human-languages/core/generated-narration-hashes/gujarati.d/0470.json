@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:0cf9d6521e62da81",
+  "lessonIds": [
+    "GU-C470-cahero",
+    "GU-C470-papan",
+    "GU-C470-cotlo",
+    "GU-C470-lat",
+    "GU-C470-pathi",
+    "GU-R470-review-463-470"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch470.txt",
+  "json": "gujarati/narration/ch470.json",
+  "textHash": "fnv1a64:23ca7ab1ff35f38f",
+  "jsonHash": "fnv1a64:60daee574fb61954",
+  "findings": []
+}

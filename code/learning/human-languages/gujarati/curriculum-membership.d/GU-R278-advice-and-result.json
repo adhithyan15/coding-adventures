@@ -1,0 +1,11 @@
+{
+  "id": "GU-R278-advice-and-result",
+  "pathSegment": "GU-PATH-278-REASON-ADVICE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-278-REASON-ADVICE",
+      "order": 3
+    }
+  ]
+}

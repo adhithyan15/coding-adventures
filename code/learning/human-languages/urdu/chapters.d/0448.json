@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "Bored or Curious",
+  "label": "ch:ur-bored-or-curious",
+  "canDo": "I can say what bores me and what interests me.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C448-tohna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can say what bores me and what interests me.",
+    "assesses": [
+      "UR-LEX-C448-CURIOUS448-03",
+      "UR-LEX-C448-CURIOUS448-04",
+      "UR-LEX-C448-CURIOUS448-05"
+    ]
+  }
+}

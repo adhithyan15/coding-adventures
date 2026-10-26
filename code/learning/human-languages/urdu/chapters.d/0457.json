@@ -1,0 +1,19 @@
+{
+  "chapter": 457,
+  "title": "Honest and False",
+  "label": "ch:ur-honest-and-false",
+  "canDo": "I can say whether someone can be trusted.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C457-vada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can say whether someone can be trusted.",
+    "assesses": [
+      "UR-LEX-C457-TRUST457-03",
+      "UR-LEX-C457-TRUST457-04",
+      "UR-LEX-C457-TRUST457-05"
+    ]
+  }
+}

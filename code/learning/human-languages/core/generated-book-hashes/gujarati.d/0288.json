@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:3f86cffe334810fb",
+  "lessonIds": [
+    "GU-C288-dharpakad",
+    "GU-C288-kabulvu",
+    "GU-C288-nakarvu",
+    "GU-C288-gunegar",
+    "GU-C288-jel"
+  ],
+  "tex": "gujarati/book/chapters/ch288-the-confession.tex"
+}

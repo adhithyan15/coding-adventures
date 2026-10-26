@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 481,
+  "title": "Cuts and Scrapes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cddb913164ca4444",
+  "lessons": [
+    {
+      "id": "GU-C481-kapavu",
+      "sequence": 26740,
+      "title": "કપાવું (kapāvũ) — to get cut",
+      "headword": "કપાવું",
+      "romanization": "kapāvũ",
+      "gloss": "to get cut",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ce87498abf3ea8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to rot, then the Gujarati for to puff up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કપાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કપાવું — kapāvũ — \"to get cut\"."
+            },
+            {
+              "kind": "speech",
+              "text": "છરીથી મારી આંગળી કપાઈ ગઈ. charīthī mārī ā̃gaḷī kapāī gaī. I cut my finger on the knife."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે આંગળી કપાઈ ગઈ, te ā̃gaḷī kapāī gaī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કપાવું (kapāvũ) is the intransitive partner of કાપવું (kāpvũ), \"to cut\", which goes back to Sanskrit kalpayati, \"trims, cuts\" (CDIAL 2944)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kapāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kapāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kapāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kapāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "charīthī mārī ā̃gaḷī kapāī gaī. — I cut my finger on the knife.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *charīthī mārī ā̃gaḷī kapāī gaī.* — I cut my finger on the knife.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to rot, then the Gujarati for to puff up, then say kapāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to rot, then the Gujarati for to puff up, then say *kapāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કપાવું (kapāvũ) mean? (\"To get cut\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C481-rujhavu",
+      "sequence": 26750,
+      "title": "રુઝાવું (rujhāvũ) — to heal (of a wound)",
+      "headword": "રુઝાવું",
+      "romanization": "rujhāvũ",
+      "gloss": "to heal (of a wound)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:473e4a80158ea036",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to puff up, then the Gujarati for to get cut."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: રુઝાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રુઝાવું — rujhāvũ — \"to heal (of a wound)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ ઘા એક અઠવાડિયામાં રુઝાઈ જશે. ā ghā ek aṭhvāḍiyāmā̃ rujhāī jaśe. This wound will heal in a week."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે ઘા રુઝાઈ ગયો, te ghā rujhāī gayo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રુઝાવું (rujhāvũ) is inherited from Sanskrit rudhyatē, \"is stopped, is obstructed\": a wound that closes. CDIAL lists the Gujarati verb, \"to be healed, of a wound\" (CDIAL 10779)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rujhāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rujhāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rujhāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rujhāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā ghā ek aṭhvāḍiyāmā̃ rujhāī jaśe. — This wound will heal in a week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā ghā ek aṭhvāḍiyāmā̃ rujhāī jaśe.* — This wound will heal in a week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to puff up, then the Gujarati for to get cut, then say rujhāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to puff up, then the Gujarati for to get cut, then say *rujhāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does રુઝાવું (rujhāvũ) mean? (\"To heal (of a wound)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C481-ghavavu",
+      "sequence": 26760,
+      "title": "ઘવાવું (ghavāvũ) — to be wounded",
+      "headword": "ઘવાવું",
+      "romanization": "ghavāvũ",
+      "gloss": "to be wounded",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68df22b3cdd5e2bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to get cut, then the Gujarati for to heal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઘવાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઘવાવું — ghavāvũ — \"to be wounded\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ગાડી અથડાઈ ત્યારે ડ્રાઈવર ઘવાયો. gāḍī athḍāī tyāre ḍrāīvar ghavāyo. When the car crashed, the driver was injured."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): તે ઘવાયો, te ghavāyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઘવાવું (ghavāvũ) is built on ઘા (ghā), \"a wound\", which goes back to Sanskrit ghāta, \"blow, bruise\" (CDIAL 4460), with the verb ending -vāvũ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghavāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghavāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghavāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghavāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāḍī athḍāī tyāre ḍrāīvar ghavāyo. — When the car crashed, the driver was injured.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāḍī athḍāī tyāre ḍrāīvar ghavāyo.* — When the car crashed, the driver was injured.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to get cut, then the Gujarati for to heal, then say ghavāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to get cut, then the Gujarati for to heal, then say *ghavāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઘવાવું (ghavāvũ) mean? (\"To be wounded\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C481-jharvu",
+      "sequence": 26770,
+      "title": "ઝરવું (jharvũ) — to ooze; to trickle",
+      "headword": "ઝરવું",
+      "romanization": "jharvũ",
+      "gloss": "to ooze; to trickle",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:023ed69955a150ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to heal, then the Gujarati for to be wounded."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઝરવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝરવું — jharvũ — \"to ooze; to trickle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ઘામાંથી હજી લોહી ઝરે છે. ghāmā̃thī hajī lohī jhare che. Blood is still oozing from the wound."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે લોહી ધીમે ઝર્યું, te lohī dhīme jharyũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઝરવું (jharvũ) goes back to a reconstructed jharati; CDIAL lists the Gujarati verb, \"to ooze, drip, shed, melt\" (CDIAL 5346)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jharvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jharvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jharvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jharvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghāmā̃thī hajī lohī jhare che. — Blood is still oozing from the wound.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghāmā̃thī hajī lohī jhare che.* — Blood is still oozing from the wound.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to heal, then the Gujarati for to be wounded, then say jharvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to heal, then the Gujarati for to be wounded, then say *jharvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઝરવું (jharvũ) mean? (\"To ooze; to trickle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C481-cholavu",
+      "sequence": 26780,
+      "title": "છોલાવું (cholāvũ) — to get grazed",
+      "headword": "છોલાવું",
+      "romanization": "cholāvũ",
+      "gloss": "to get grazed",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02eea6994c355531",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to be wounded, then the Gujarati for to ooze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: છોલાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છોલાવું — cholāvũ — \"to get grazed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અરુણ પડી ગયો અને તેનો ઘૂંટણ છોલાઈ ગયો. Aruṇ paḍī gayo ane teno ghū̃ṭaṇ cholāī gayo. Arun fell and grazed his knee."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે ઘૂંટણ છોલાઈ ગયો, te ghū̃ṭaṇ cholāī gayo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છોલાવું (cholāvũ) is the intransitive partner of છોલવું (cholvũ), \"to peel\", which goes back to a reconstructed chōll- (CDIAL 5073): skin that peels off."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cholāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cholāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cholāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cholāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aruṇ paḍī gayo ane teno ghū̃ṭaṇ cholāī gayo. — Arun fell and grazed his knee.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aruṇ paḍī gayo ane teno ghū̃ṭaṇ cholāī gayo.* — Arun fell and grazed his knee.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to be wounded, then the Gujarati for to ooze, then say cholāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to be wounded, then the Gujarati for to ooze, then say *cholāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does છોલાવું (cholāvũ) mean? (\"To get grazed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-W265-waw-hamza",
+  "pathSegment": "UR-PATH-265-FUTURE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-265-FUTURE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:ef78320df4051156",
+  "lessonIds": [
+    "UR-C314-khandar",
+    "UR-C314-khodna",
+    "UR-C314-mujassama",
+    "UR-C314-katba",
+    "UR-C314-asar"
+  ],
+  "tex": "urdu/book/chapters/ch314-ruins-of-the-past.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:4f67c864c81b2a46",
+  "lessonIds": [
+    "UR-C388-signal",
+    "UR-C388-jankshan",
+    "UR-C388-phatak",
+    "UR-C388-barth",
+    "UR-C388-takna"
+  ],
+  "tex": "urdu/book/chapters/ch388-signals-and-crossings.tex"
+}

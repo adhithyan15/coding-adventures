@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:c414ee2763b7942b",
+  "lessonIds": [
+    "UR-C448-bezar",
+    "UR-C448-dilchasp",
+    "UR-C448-tajassus",
+    "UR-C448-betab",
+    "UR-C448-tohna"
+  ],
+  "tex": "urdu/book/chapters/ch448-bored-or-curious.tex"
+}

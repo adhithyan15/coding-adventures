@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:febc0aceaf1793bf",
+  "lessonIds": [
+    "UR-C515-tasvir",
+    "UR-C515-musavvir",
+    "UR-C515-khaka",
+    "UR-C515-shahkar",
+    "UR-C515-jhalakna"
+  ],
+  "tex": "urdu/book/chapters/ch515-pictures-and-painters.tex"
+}

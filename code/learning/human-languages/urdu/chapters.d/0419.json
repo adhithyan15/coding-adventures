@@ -1,0 +1,19 @@
+{
+  "chapter": 419,
+  "title": "Profit and Loss",
+  "label": "ch:ur-profit-and-loss",
+  "canDo": "I can say whether a business made a profit or a loss, and what it owns.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C419-sametna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can say whether a business made a profit or a loss, and what it owns.",
+    "assesses": [
+      "UR-LEX-C419-MUNAFA419-03",
+      "UR-LEX-C419-MUNAFA419-04",
+      "UR-LEX-C419-MUNAFA419-05"
+    ]
+  }
+}

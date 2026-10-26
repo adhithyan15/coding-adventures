@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:06f1af5dd69382ad",
+  "lessonIds": [
+    "UR-C361-imkan",
+    "UR-C361-gunjaish",
+    "UR-C361-ittifaq",
+    "UR-C361-ehtimal",
+    "UR-C361-bitna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch361.txt",
+  "json": "urdu/narration/ch361.json",
+  "textHash": "fnv1a64:82451ff0db50abbe",
+  "jsonHash": "fnv1a64:e100361d38bad5d3",
+  "findings": []
+}

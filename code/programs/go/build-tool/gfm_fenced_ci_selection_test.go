@@ -15,6 +15,9 @@ import (
 )
 
 const gfmFencedTestPath = "code/specs/gfm-fenced-block-v1/cases.json"
+const gfmExtensionTestPath = "code/specs/fixtures/gfm-extension-v1/cases.json"
+
+var gfmTestPaths = []string{gfmFencedTestPath, gfmExtensionTestPath}
 
 func gfmFencedPackages(root string) []discovery.Package {
 	return []discovery.Package{
@@ -26,25 +29,29 @@ func gfmFencedPackages(root string) []discovery.Package {
 func TestGFMFencedFixtureExactSelection(t *testing.T) {
 	root := t.TempDir()
 	packages := gfmFencedPackages(root)
-	for _, platform := range []string{"linux", "darwin", "windows"} {
-		for _, lang := range []string{"all", "typescript", "rust"} {
-			got, err := changedPackageRootsForPlatformAndLanguage([]string{gfmFencedTestPath}, packages, root, platform, lang)
-			want := map[string]bool{}
-			if lang != "rust" {
-				want["typescript/gfm-parser"] = true
-			}
-			if err != nil || !reflect.DeepEqual(got, want) {
-				t.Fatalf("%s/%s got %v/%v", platform, lang, got, err)
+	for _, fixturePath := range gfmTestPaths {
+		for _, platform := range []string{"linux", "darwin", "windows"} {
+			for _, lang := range []string{"all", "typescript", "rust"} {
+				got, err := changedPackageRootsForPlatformAndLanguage([]string{fixturePath}, packages, root, platform, lang)
+				want := map[string]bool{}
+				if lang != "rust" {
+					want["typescript/gfm-parser"] = true
+				}
+				if err != nil || !reflect.DeepEqual(got, want) {
+					t.Fatalf("%s/%s/%s got %v/%v", fixturePath, platform, lang, got, err)
+				}
 			}
 		}
 	}
-	for _, path := range []string{strings.ToUpper(gfmFencedTestPath), strings.ReplaceAll(gfmFencedTestPath, "/", "\\"), gfmFencedTestPath + ".bak", strings.Replace(gfmFencedTestPath, "cases.json", "schema.json", 1), strings.Replace(gfmFencedTestPath, "cases.json", "README.md", 1), strings.Replace(gfmFencedTestPath, "cases.json", "nested/cases.json", 1)} {
-		got, err := changedPackageRootsForPlatform([]string{path}, packages, root, "linux")
-		if err != nil || len(got) != 0 {
-			t.Fatalf("lookalike %s: %v/%v", path, got, err)
+	for _, fixturePath := range gfmTestPaths {
+		for _, path := range []string{strings.ToUpper(fixturePath), strings.ReplaceAll(fixturePath, "/", "\\"), fixturePath + ".bak", strings.Replace(fixturePath, "cases.json", "schema.json", 1), strings.Replace(fixturePath, "cases.json", "README.md", 1), strings.Replace(fixturePath, "cases.json", "nested/cases.json", 1)} {
+			got, err := changedPackageRootsForPlatform([]string{path}, packages, root, "linux")
+			if err != nil || len(got) != 0 {
+				t.Fatalf("lookalike %s: %v/%v", path, got, err)
+			}
 		}
 	}
-	got, err := changedPackageRootsForPlatform([]string{gfmFencedTestPath, "code/packages/rust/extra/src/lib.rs"}, packages, root, "linux")
+	got, err := changedPackageRootsForPlatform([]string{gfmExtensionTestPath, "code/packages/rust/extra/src/lib.rs"}, packages, root, "linux")
 	if err != nil || len(got) != 2 || !got["typescript/gfm-parser"] || !got["rust/extra"] {
 		t.Fatalf("union %v/%v", got, err)
 	}
@@ -55,7 +62,7 @@ func TestGFMFencedFixtureExactSelection(t *testing.T) {
 		}
 	}
 	for _, lang := range []string{"all", "typescript", "rust"} {
-		got, err := changedPackageRootsForPlatformAndLanguage([]string{gfmFencedTestPath}, packages[1:], root, "linux", lang)
+		got, err := changedPackageRootsForPlatformAndLanguage([]string{gfmExtensionTestPath}, packages[1:], root, "linux", lang)
 		if lang == "rust" {
 			if err != nil || len(got) != 0 {
 				t.Fatal(got, err)
@@ -102,13 +109,13 @@ func TestGFMFencedFixturePlanAndAtomicity(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	changed, err := changedPackageRootsForPlatform([]string{gfmFencedTestPath}, packages, root, "linux")
+	changed, err := changedPackageRootsForPlatform([]string{gfmExtensionTestPath}, packages, root, "linux")
 	if err != nil {
 		t.Fatal(err)
 	}
 	affected := affectedForGraph(graph, changed, nil, false)
 	out := filepath.Join(root, "plan.json")
-	if code := emitBuildPlan(packages, graph, affected, changed, []string{gfmFencedTestPath}, false, nil, "origin/main", root, out, false, 0, false, "", "all"); code != 0 {
+	if code := emitBuildPlan(packages, graph, affected, changed, []string{gfmExtensionTestPath}, false, nil, "origin/main", root, out, false, 0, false, "", "all"); code != 0 {
 		t.Fatal(code)
 	}
 	data, err := os.ReadFile(out)
@@ -136,7 +143,7 @@ func TestGFMFencedFixturePlanAndAtomicity(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if code := emitBuildPlan(missing, g, nil, nil, []string{gfmFencedTestPath}, false, nil, "origin/main", root, out, false, 0, false, "", "all"); code == 0 {
+	if code := emitBuildPlan(missing, g, nil, nil, []string{gfmExtensionTestPath}, false, nil, "origin/main", root, out, false, 0, false, "", "all"); code == 0 {
 		t.Fatal("missing reader wrote plan")
 	}
 	if after, err := os.ReadFile(out); err != nil || string(after) != string(data) {
@@ -145,7 +152,7 @@ func TestGFMFencedFixturePlanAndAtomicity(t *testing.T) {
 	if err := os.Remove(out); err != nil {
 		t.Fatal(err)
 	}
-	if code := emitBuildPlan(missing, g, nil, nil, []string{gfmFencedTestPath}, false, nil, "origin/main", root, out, false, 0, false, "", "all"); code == 0 {
+	if code := emitBuildPlan(missing, g, nil, nil, []string{gfmExtensionTestPath}, false, nil, "origin/main", root, out, false, 0, false, "", "all"); code == 0 {
 		t.Fatal("missing reader created plan")
 	}
 	if _, err := os.Stat(out); !os.IsNotExist(err) {

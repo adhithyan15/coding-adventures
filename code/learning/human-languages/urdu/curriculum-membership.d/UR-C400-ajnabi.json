@@ -1,0 +1,11 @@
+{
+  "id": "UR-C400-ajnabi",
+  "pathSegment": "UR-PATH-400-PARDES400",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-400-PARDES400",
+      "order": 2
+    }
+  ]
+}

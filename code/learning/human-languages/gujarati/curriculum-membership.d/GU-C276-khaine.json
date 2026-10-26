@@ -1,0 +1,11 @@
+{
+  "id": "GU-C276-khaine",
+  "pathSegment": "GU-PATH-276-NARRATE-ORDER",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-276-NARRATE-ORDER",
+      "order": 0
+    }
+  ]
+}

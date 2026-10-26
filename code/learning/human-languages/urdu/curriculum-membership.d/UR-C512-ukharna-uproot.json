@@ -1,0 +1,11 @@
+{
+  "id": "UR-C512-ukharna-uproot",
+  "pathSegment": "UR-PATH-512-KYARI512",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-512-KYARI512",
+      "order": 4
+    }
+  ]
+}

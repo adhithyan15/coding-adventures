@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:8b088946d11fa610",
+  "lessonIds": [
+    "UR-C538-tazabzub",
+    "UR-C538-mutaraddid",
+    "UR-C538-guman",
+    "UR-C538-dagmagana",
+    "UR-C538-atal"
+  ],
+  "tex": "urdu/book/chapters/ch538-in-two-minds.tex"
+}

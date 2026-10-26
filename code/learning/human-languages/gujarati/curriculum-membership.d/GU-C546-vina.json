@@ -1,0 +1,11 @@
+{
+  "id": "GU-C546-vina",
+  "pathSegment": "GU-PATH-546-VAGAR546",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-546-VAGAR546",
+      "order": 1
+    }
+  ]
+}

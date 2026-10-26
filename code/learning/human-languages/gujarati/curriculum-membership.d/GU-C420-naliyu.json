@@ -1,0 +1,11 @@
+{
+  "id": "GU-C420-naliyu",
+  "pathSegment": "GU-PATH-420-HOUSE420",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-420-HOUSE420",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C361-gunjaish",
+    "language": "urdu",
+    "chapter": 361,
+    "sequence": 21540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6b7f3bb4e16dc30"
+  },
+  "findings": []
+}

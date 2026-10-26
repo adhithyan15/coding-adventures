@@ -595,10 +595,12 @@ func changedPackageRootsForPlatformAndLanguage(
 		}
 		changed["go/compiler-ir"] = true
 	}
-	// TE04's bounded fenced-node corpus is outside the reader package. Seed
-	// the actual TypeScript reader without statting the fixture so deletion
-	// and rename-old paths still exercise native tests and ordinary consumers.
-	if containsPath(changedFiles, "code/specs/gfm-fenced-block-v1/cases.json") && (language == "all" || language == "typescript") {
+	// TE04's bounded corpora are outside the reader package. Seed the actual
+	// TypeScript reader without statting either fixture so deletion and
+	// rename-old paths still exercise native tests and ordinary consumers.
+	gfmCorpusChanged := containsPath(changedFiles, "code/specs/gfm-fenced-block-v1/cases.json") ||
+		containsPath(changedFiles, "code/specs/fixtures/gfm-extension-v1/cases.json")
+	if gfmCorpusChanged && (language == "all" || language == "typescript") {
 		found := false
 		for _, pkg := range packages {
 			if pkg.Name == "typescript/gfm-parser" && pkg.Language == "typescript" {

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C495-khapana",
+    "language": "urdu",
+    "chapter": 495,
+    "sequence": 29090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f07c5e2ad6cec807"
+  },
+  "findings": []
+}

@@ -1,0 +1,23 @@
+{
+  "chapter": 267,
+  "title": "A Story in Order",
+  "label": "ch:ur-a-story-in-order",
+  "canDo": "I can tell what happened in order (pehle, phir, us ke bād, ākhir meṅ), join two actions with kar (khā kar soyā), and read a short story.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-R267-a-story-in-order",
+    "kind": "production",
+    "summary": "Complete UR-R267-a-story-in-order: tell what happened in order, joining the steps.",
+    "assesses": [
+      "UR-LEX-C267-BAD-01",
+      "UR-SCRIPT-C267-AIN-01",
+      "UR-GRAMMAR-C267-KAR-01",
+      "UR-GRAMMAR-C267-KAR-02",
+      "UR-GRAMMAR-C267-THEN-01",
+      "UR-GRAMMAR-C267-THEN-02",
+      "UR-SKILL-C267-READ-STORY-01"
+    ]
+  }
+}

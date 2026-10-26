@@ -1,0 +1,12 @@
+{
+  "language": "gujarati",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:efaff23d68806df4",
+  "lessonIds": [
+    "GU-C283-jo-to",
+    "GU-C283-jo-varsad-padshe",
+    "GU-C283-nahintar",
+    "GU-R283-if-and-otherwise"
+  ],
+  "tex": "gujarati/book/chapters/ch283-if-then-or-else.tex"
+}

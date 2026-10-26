@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-425-TARAZU425",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can watch my goods weighed, pay what I owe and collect my change.",
+  "prerequisites": []
+}

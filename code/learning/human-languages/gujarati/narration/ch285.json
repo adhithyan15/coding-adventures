@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 285,
+  "title": "A Thief in the Night",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a550e7cc9f8d4f90",
+  "lessons": [
+    {
+      "id": "GU-C285-cor",
+      "sequence": 16000,
+      "title": "ચોર (cor) — a thief",
+      "headword": "ચોર",
+      "romanization": "cor",
+      "gloss": "a thief",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88367051083e14a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to pester, then the Gujarati for to hope."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ચોર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચોર — cor — \"a thief\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ગઈકાલે રાત્રે એક ચોર અમારા ઘરમાં આવ્યો. gaīkāle rātre ek cor amārā gharmā̃ āvyo. Last night a thief got into our house."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine or feminine noun, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચોર (cor) is inherited from Sanskrit cōrá-, \"a thief\", and CDIAL lists the Gujarati word (CDIAL 4931). The verb ચોરવું, to steal, belongs to the same family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cor, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cor*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaīkāle rātre ek cor amārā gharmā̃ āvyo. — Last night a thief got into our house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaīkāle rātre ek cor amārā gharmā̃ āvyo.* — Last night a thief got into our house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to pester, then the Gujarati for to hope, then say cor again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to pester, then the Gujarati for to hope, then say *cor* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ચોર (cor) mean? (\"A thief\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C285-cori",
+      "sequence": 16010,
+      "title": "ચોરી (corī) — a theft",
+      "headword": "ચોરી",
+      "romanization": "corī",
+      "gloss": "a theft",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d29e41b8b2e370d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to hope, then the Gujarati for a thief."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ચોરી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચોરી — corī — \"a theft\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ગઈકાલે રાત્રે અમારી ગલીમાં ચોરી થઈ. gaīkāle rātre amārī galīmā̃ corī thaī. There was a theft in our lane last night."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "is inherited from Sanskrit caurikā, \"theft\" (CDIAL 4937). ચોર (cor) is the person and ચોરી (corī) what the person does; a theft takes place with થવું: ચોરી (corī) થઈ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "corī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *corī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "corī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *corī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaīkāle rātre amārī galīmā̃ corī thaī. — There was a theft in our lane last night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaīkāle rātre amārī galīmā̃ corī thaī.* — There was a theft in our lane last night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to hope, then the Gujarati for a thief, then say corī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to hope, then the Gujarati for a thief, then say *corī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ચોરી (corī) mean? (\"A theft\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C285-nasvu",
+      "sequence": 16020,
+      "title": "નાસવું (nāsvũ) — to flee",
+      "headword": "નાસવું",
+      "romanization": "nāsvũ",
+      "gloss": "to flee",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0028b4ce04921f1f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a thief, then the Gujarati for a theft."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નાસવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નાસવું — nāsvũ — \"to flee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ચોરે પાકીટ ચોર્યું અને તે નાસી ગયો. core pākīṭ coryũ ane te nāsī gayo. The thief stole the wallet and ran off."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): તે ચોર નાસી ગયો, te cor nāsī gayo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નાસવું (nāsvũ) is inherited from Sanskrit náśyati, \"is lost, runs away\", and CDIAL glosses the Gujarati verb \"to flee\" (CDIAL 7027). It is usually said with જવું: નાસી ગયો, he ran off."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāsvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāsvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāsvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāsvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "core pākīṭ coryũ ane te nāsī gayo. — The thief stole the wallet and ran off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *core pākīṭ coryũ ane te nāsī gayo.* — The thief stole the wallet and ran off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a thief, then the Gujarati for a theft, then say nāsvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a thief, then the Gujarati for a theft, then say *nāsvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નાસવું (nāsvũ) mean? (\"To flee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C285-pakadvu",
+      "sequence": 16030,
+      "title": "પકડવું (pakaḍvũ) — to catch",
+      "headword": "પકડવું",
+      "romanization": "pakaḍvũ",
+      "gloss": "to catch",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d07afe193230e38",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a theft, then the Gujarati for to flee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પકડવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પકડવું — pakaḍvũ — \"to catch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પોલીસે ચોરને બજારમાં પકડ્યો. polīse corne bajārmā̃ pakaḍyo. The police caught the thief in the market."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે ચોરને પકડ્યો, teṇe corne pakaḍyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પકડવું (pakaḍvũ) comes from pakkaḍ, \"to seize\", a form CDIAL reconstructs from its descendants, and CDIAL lists the Gujarati verb (CDIAL 7619). A person caught takes ને, and the verb agrees with him: ચોરને પકડ્યો."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakaḍvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakaḍvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakaḍvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakaḍvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polīse corne bajārmā̃ pakaḍyo. — The police caught the thief in the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polīse corne bajārmā̃ pakaḍyo.* — The police caught the thief in the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a theft, then the Gujarati for to flee, then say pakaḍvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a theft, then the Gujarati for to flee, then say *pakaḍvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પકડવું (pakaḍvũ) mean? (\"To catch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C285-loko",
+      "sequence": 16040,
+      "title": "લોકો (loko) — people",
+      "headword": "લોકો",
+      "romanization": "loko",
+      "gloss": "people",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81d437d1fdd3f729",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to flee, then the Gujarati for to catch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: લોકો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "લોકો — loko — \"people\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પોલીસનું કામ લોકો પર પણ આધાર રાખે છે. polīsnũ kām loko par paṇ ādhār rākhe che. The work of the police depends on people too."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun, used in the plural."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "લોકો (loko) is the plural of lok, from Sanskrit lōká-, \"open space, the world\", which later also meant \"people\" (CDIAL 11119). Gujarati uses it in the plural, and a verb with it is plural too: લોકો આવ્યા."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "loko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *loko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "loko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *loko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polīsnũ kām loko par paṇ ādhār rākhe che. — The work of the police depends on people too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polīsnũ kām loko par paṇ ādhār rākhe che.* — The work of the police depends on people too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to flee, then the Gujarati for to catch, then say loko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to flee, then the Gujarati for to catch, then say *loko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does લોકો (loko) mean? (\"People\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

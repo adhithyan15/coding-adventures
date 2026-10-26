@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C509-handi",
+    "language": "urdu",
+    "chapter": 509,
+    "sequence": 29790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20bf1098e92c0cfc"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "Bath Time for the Baby",
+  "label": "ch:gu-bath-time-for-the-baby",
+  "canDo": "I can say how I look after a baby.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C488-pivdavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can say how I look after a baby.",
+    "assesses": [
+      "GU-LEX-C488-NAVDAV488-03",
+      "GU-LEX-C488-NAVDAV488-04",
+      "GU-LEX-C488-NAVDAV488-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C406-jakat",
+  "pathSegment": "GU-PATH-406-BORDER406",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-406-BORDER406",
+      "order": 2
+    }
+  ]
+}

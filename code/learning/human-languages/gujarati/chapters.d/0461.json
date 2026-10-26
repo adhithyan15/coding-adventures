@@ -1,0 +1,19 @@
+{
+  "chapter": 461,
+  "title": "Saving and Spending",
+  "label": "ch:gu-saving-and-spending",
+  "canDo": "I can say how someone spends money.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C461-dan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can say how someone spends money.",
+    "assesses": [
+      "GU-LEX-C461-KRUPAN461-03",
+      "GU-LEX-C461-KRUPAN461-04",
+      "GU-LEX-C461-KRUPAN461-05"
+    ]
+  }
+}

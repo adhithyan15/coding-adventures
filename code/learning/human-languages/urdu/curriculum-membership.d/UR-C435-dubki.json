@@ -1,0 +1,11 @@
+{
+  "id": "UR-C435-dubki",
+  "pathSegment": "UR-PATH-435-KHALIJ435",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-435-KHALIJ435",
+      "order": 4
+    }
+  ]
+}

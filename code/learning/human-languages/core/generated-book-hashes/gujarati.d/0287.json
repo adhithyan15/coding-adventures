@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:2df21f8454297211",
+  "lessonIds": [
+    "GU-C287-bhal",
+    "GU-C287-paglu",
+    "GU-C287-khakhdavvu",
+    "GU-C287-santavu",
+    "GU-C287-todvu"
+  ],
+  "tex": "gujarati/book/chapters/ch287-clues-at-the-door.tex"
+}

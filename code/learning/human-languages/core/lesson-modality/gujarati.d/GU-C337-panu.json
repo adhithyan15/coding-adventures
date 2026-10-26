@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C337-panu",
+    "language": "gujarati",
+    "chapter": 337,
+    "sequence": 18660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3140f0bbae59e1d"
+  },
+  "findings": []
+}

@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { KINDS } from "@coding-adventures/forme-types";
 import {
   parseManifest,
   validateManifest,
@@ -81,6 +82,26 @@ subtypeOf = "ContentNode"
           id: "stream-stage",
           consumes: "Stream<ContentSource>",
           produces: "Stream<ContentNode>",
+        }],
+        kinds: [],
+      },
+    };
+    expect(() => validateManifest(m)).not.toThrow();
+  });
+
+  it("recognises exactly the kernel's exported built-in kind roster", () => {
+    expect([...RESERVED_KIND_NAMES].sort()).toEqual([...KINDS].sort());
+  });
+
+  it("accepts the shipped TerminalBuffer kind in plugin stages", () => {
+    const v = valid();
+    const m: Manifest = {
+      ...v,
+      contributes: {
+        stages: [{
+          id: "terminal-renderer",
+          consumes: "ContentNode",
+          produces: "TerminalBuffer",
         }],
         kinds: [],
       },
@@ -369,6 +390,34 @@ describe("validateManifest — rejections (one per FM02 §3.3 rule)", () => {
 });
 
 describe("validateManifest — security checks", () => {
+  it("does not let mutation of the exported reserved-kind view weaken admission", () => {
+    const injectedKind = "InjectedKind";
+    RESERVED_KIND_NAMES.add(injectedKind);
+
+    try {
+      const v = valid();
+      const stageManifest: Manifest = {
+        ...v,
+        contributes: {
+          stages: [{ id: "s", consumes: injectedKind, produces: "ContentNode" }],
+          kinds: [],
+        },
+      };
+      const subtypeManifest: Manifest = {
+        ...v,
+        contributes: {
+          stages: [],
+          kinds: [{ name: "ext:child", version: "1.0", subtypeOf: injectedKind }],
+        },
+      };
+
+      expect(() => validateManifest(stageManifest)).toThrowError(/unknown kind/);
+      expect(() => validateManifest(subtypeManifest)).toThrowError(/subtypeOf/);
+    } finally {
+      RESERVED_KIND_NAMES.delete(injectedKind);
+    }
+  });
+
   it("rejects FIRST_PARTY_ONLY in capabilities.optional too", () => {
     const v = valid();
     const m: Manifest = {

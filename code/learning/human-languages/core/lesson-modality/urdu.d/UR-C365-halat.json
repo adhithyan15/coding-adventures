@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C365-halat",
+    "language": "urdu",
+    "chapter": 365,
+    "sequence": 21740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16ecb0f7facc3bed"
+  },
+  "findings": []
+}

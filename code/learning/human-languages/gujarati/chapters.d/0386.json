@@ -1,0 +1,19 @@
+{
+  "chapter": 386,
+  "title": "Trust and Dependence",
+  "label": "ch:gu-trust-and-dependence",
+  "canDo": "I can say what will happen if someone leans on others.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C386-jhukvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can say what will happen if someone leans on others.",
+    "assesses": [
+      "GU-LEX-C386-AASTHA386-03",
+      "GU-LEX-C386-AASTHA386-04",
+      "GU-LEX-C386-AASTHA386-05"
+    ]
+  }
+}

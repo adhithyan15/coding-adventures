@@ -1,0 +1,11 @@
+{
+  "id": "GU-C444-kali",
+  "pathSegment": "GU-PATH-444-BUD444",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-444-BUD444",
+      "order": 2
+    }
+  ]
+}

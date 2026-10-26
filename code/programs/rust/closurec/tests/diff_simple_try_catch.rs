@@ -1,87 +1,43 @@
 //! Integration test for the `tests/diff/simple-try-catch/` fixture.
 //!
-//! Exercises `--compilation_level SIMPLE` optimization THROUGH a
-//! `try`/`catch`/`finally` statement (CLOC19). Before CLOC19, any
-//! program containing `try` failed the typed-AST parse and closurec
-//! fell back to WHITESPACE_ONLY (zero optimization). This fixture is
-//! the end-to-end oracle proving every SIMPLE pass now runs inside the
-//! try block, the catch handler, and the finally block:
+//! The pinned reference compiler (`closure-compiler-v20260915`) refuses this
+//! input with `JSC_PARSE_ERROR` ("Parse error. return must be inside function"): the `return` in its top-level `catch` handler is outside any function. Since CLOC44 slice 2
+//! (CCR-075, #15860), closurec refuses it the same way: `expected.stderr` and
+//! `expected.exit` were captured from the jar, the stderr must match byte for
+//! byte, and there must be no stdout. Before slice 2 closurec compiled this
+//! input, and this fixture pinned that output.
 //!
-//! ```text
-//! source ──parse──▶ grammar AST ──bridge──▶ typed Program (w/ TryStatement)
-//!        ──passes──▶ optimized Program ──emit──▶ JS text
-//! ```
-//!
-//! Specifically: the foldable arithmetic inside the try/catch blocks
-//! (`1 + 2`, `3 * 4`) collapses to `3`/`12`, the unreachable `dead(99)` after
-//! the catch's `return` is dropped by DCE, and `try`/`catch (e)`/`finally`
-//! (including the catch binding `e`) survive verbatim. `function log` is KEPT
-//! and `log(1)` stays a call — SIMPLE is open-world and never inlines or
-//! deletes an observable top-level name; that inline runs only at ADVANCED.
+//! The fixture was written (CLOC19) to show SIMPLE optimising through
+//! `try`/`catch`/`finally`. That coverage lives on in the ladder's
+//! `try_catch` rungs and `advanced-try-catch-rename`, whose inputs are valid.
 
 use std::process::Command;
 
 const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
+const DIR: &str = "tests/diff/simple-try-catch";
 
-fn read_flags() -> Vec<String> {
-    let raw =
-        std::fs::read_to_string("tests/diff/simple-try-catch/flags.txt").expect("read flags.txt");
-    raw.lines()
+#[test]
+fn simple_try_catch_is_refused_like_upstream() {
+    let flags: Vec<String> = std::fs::read_to_string(format!("{DIR}/flags.txt"))
+        .expect("read flags.txt")
+        .lines()
         .filter(|l| !l.is_empty())
-        .map(|s| s.to_string())
-        .collect()
-}
+        .map(str::to_string)
+        .collect();
+    let out = Command::new(BINARY).args(&flags).output().expect("run closurec");
 
-#[test]
-fn simple_try_catch_fixture_matches_expected_stdout() {
-    let flags = read_flags();
-    let out = Command::new(BINARY)
-        .args(&flags)
-        .output()
-        .expect("run closurec");
+    let want_exit: i32 = std::fs::read_to_string(format!("{DIR}/expected.exit"))
+        .expect("read expected.exit")
+        .trim()
+        .parse()
+        .expect("expected.exit is a number");
+    let want_stderr = std::fs::read(format!("{DIR}/expected.stderr")).expect("read expected.stderr");
 
-    assert!(
-        out.status.success(),
-        "exit: {:?}, stderr: {}",
-        out.status.code(),
-        String::from_utf8_lossy(&out.stderr),
-    );
-
-    let actual = String::from_utf8_lossy(&out.stdout);
-    let expected = std::fs::read_to_string("tests/diff/simple-try-catch/expected.stdout")
-        .expect("read expected.stdout");
+    assert_eq!(out.status.code(), Some(want_exit), "exit status");
+    assert!(out.stdout.is_empty(), "a refused input must produce no output");
     assert_eq!(
-        actual.trim_end_matches('\n'),
-        expected.trim_end_matches('\n'),
-        "mismatch.\nflags: {flags:?}\nactual:\n{actual}\nexpected:\n{expected}",
-    );
-}
-
-/// Regression guard: the output must NOT be the WHITESPACE_ONLY
-/// fallback. If try/catch ever stops being representable in the typed
-/// AST, the fixture above would still "pass" against a regenerated
-/// expected file, so we additionally assert an optimization that can ONLY
-/// come from the typed pipeline: the unreachable `dead(99)` after the
-/// catch's `return` is dropped by DCE (WHITESPACE_ONLY keeps it verbatim).
-/// We also assert `function log` is KEPT, since open-world SIMPLE must not
-/// inline or delete an observable top-level name.
-#[test]
-fn simple_try_catch_did_not_fall_back_to_whitespace_only() {
-    let out = Command::new(BINARY)
-        .args(read_flags())
-        .output()
-        .expect("run closurec");
-    let actual = String::from_utf8_lossy(&out.stdout);
-
-    assert!(
-        !actual.contains("dead"),
-        "expected the unreachable `dead(99)` after `return` to be dropped by \
-         DCE (proving the typed pipeline ran, not the whitespace fallback); \
-         got:\n{actual}",
-    );
-    assert!(
-        actual.contains("function log"),
-        "expected the top-level `log` declaration to be KEPT at open-world \
-         SIMPLE (never inlined/deleted); got:\n{actual}",
+        String::from_utf8_lossy(&out.stderr),
+        String::from_utf8_lossy(&want_stderr),
+        "diagnostics must match upstream byte for byte"
     );
 }

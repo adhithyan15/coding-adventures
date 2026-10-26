@@ -1,0 +1,19 @@
+{
+  "chapter": 507,
+  "title": "Making Rotis",
+  "label": "ch:ur-making-rotis",
+  "canDo": "I can say how bread is made at home.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C507-anch",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 507: I can say how bread is made at home.",
+    "assesses": [
+      "UR-LEX-C507-ROTI507-03",
+      "UR-LEX-C507-ROTI507-04",
+      "UR-LEX-C507-ROTI507-05"
+    ]
+  }
+}

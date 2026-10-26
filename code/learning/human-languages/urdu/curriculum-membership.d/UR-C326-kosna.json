@@ -1,0 +1,11 @@
+{
+  "id": "UR-C326-kosna",
+  "pathSegment": "UR-PATH-326-LANAT326",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-326-LANAT326",
+      "order": 1
+    }
+  ]
+}

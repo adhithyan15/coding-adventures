@@ -1,0 +1,11 @@
+{
+  "id": "PA-C201-class-label",
+  "pathSegment": "PA-PATH-201-A2-CLASS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-201-A2-CLASS",
+      "order": 3
+    }
+  ]
+}

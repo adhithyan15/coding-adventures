@@ -1,0 +1,19 @@
+{
+  "chapter": 543,
+  "title": "Fit for the Job",
+  "label": "ch:gu-fit-for-the-job",
+  "canDo": "I can say who is fit for something and when an exception is made.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C543-khas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 543: I can say who is fit for something and when an exception is made.",
+    "assesses": [
+      "GU-LEX-C543-APVAD543-03",
+      "GU-LEX-C543-APVAD543-04",
+      "GU-LEX-C543-APVAD543-05"
+    ]
+  }
+}

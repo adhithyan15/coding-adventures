@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:448dd63fd47b2e15",
+  "lessonIds": [
+    "GU-C488-navdavvu",
+    "GU-C488-khavdavvu",
+    "GU-C488-paheravvu",
+    "GU-C488-ramadvu",
+    "GU-C488-pivdavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch488-bath-time-for-the-baby.tex"
+}

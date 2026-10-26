@@ -1,0 +1,11 @@
+{
+  "id": "UR-C361-ehtimal",
+  "pathSegment": "UR-PATH-361-IMKAN361",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-361-IMKAN361",
+      "order": 3
+    }
+  ]
+}

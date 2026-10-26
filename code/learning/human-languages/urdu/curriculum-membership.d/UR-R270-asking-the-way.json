@@ -1,0 +1,11 @@
+{
+  "id": "UR-R270-asking-the-way",
+  "pathSegment": "UR-PATH-270-WAY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-270-WAY",
+      "order": 4
+    }
+  ]
+}

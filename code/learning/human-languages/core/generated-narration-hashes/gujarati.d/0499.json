@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:a49d8c4b454704ad",
+  "lessonIds": [
+    "GU-C499-maran",
+    "GU-C499-avsan",
+    "GU-C499-gujarvu",
+    "GU-C499-besnu",
+    "GU-C499-arpavu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch499.txt",
+  "json": "gujarati/narration/ch499.json",
+  "textHash": "fnv1a64:3097cb2c2a3b8c21",
+  "jsonHash": "fnv1a64:a2a0390295d4b4aa",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "Trees",
+  "label": "ch:gu-trees",
+  "canDo": "I can name the big trees of a Gujarati village.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C443-phutvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can name the big trees of a Gujarati village.",
+    "assesses": [
+      "GU-LEX-C443-TREE443-03",
+      "GU-LEX-C443-TREE443-04",
+      "GU-LEX-C443-TREE443-05"
+    ]
+  }
+}

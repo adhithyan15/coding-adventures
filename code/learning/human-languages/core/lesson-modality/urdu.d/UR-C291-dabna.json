@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C291-dabna",
+    "language": "urdu",
+    "chapter": 291,
+    "sequence": 17800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:728e5bca8828b334"
+  },
+  "findings": []
+}

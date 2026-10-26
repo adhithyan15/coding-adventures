@@ -1,0 +1,11 @@
+{
+  "id": "GU-C384-unnati",
+  "pathSegment": "GU-PATH-384-SAFAL384",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-384-SAFAL384",
+      "order": 1
+    }
+  ]
+}

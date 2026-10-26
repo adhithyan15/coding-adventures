@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER multi-key attribute constraint and comment vertical slice",
+  "fixtures": [
+    {
+      "name": "upstream-many-attribute-constraints-and-comments",
+      "source": "erDiagram\nCUSTOMER {\n  int customer_number PK, FK \"comment1\"\n  datetime customer_status_start_datetime PK,UK, FK\n  datetime customer_status_end_datetime PK , UK \"comment3\"\n  string customer_firstname\n  string customer_lastname \"comment5\"\n}"
+    }
+  ]
+}

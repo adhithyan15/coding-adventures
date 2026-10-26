@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-410-IMARAT410",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can give directions by landmarks: a building, a sign, a pole.",
+  "prerequisites": []
+}

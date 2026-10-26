@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 304,
+  "title": "The Flood",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0f2b78b1db4fabb2",
+  "lessons": [
+    {
+      "id": "GU-C304-tanavu",
+      "sequence": 16970,
+      "title": "તણાવું (taṇāvũ) — to be swept away",
+      "headword": "તણાવું",
+      "romanization": "taṇāvũ",
+      "gloss": "to be swept away",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1dcaa1bf97a3f9d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a hut, then the Gujarati for to lay waste."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: તણાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તણાવું — taṇāvũ — \"to be swept away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પૂરમાં અમારી ગાય તણાઈ ગઈ. pūrmā̃ amārī gāy taṇāī gaī. Our cow was swept away in the flood."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે ઝૂંપડું તણાઈ ગયું, te jhū̃pḍũ taṇāī gayũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તણાવું (taṇāvũ) goes back to Sanskrit tanṓti, \"stretches\", and CDIAL lists the Gujarati verb, \"to be dragged\" (CDIAL 5659): a flood drags things along with it. તણાઈ ગયું, it was swept away."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṇāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṇāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṇāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṇāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūrmā̃ amārī gāy taṇāī gaī. — Our cow was swept away in the flood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūrmā̃ amārī gāy taṇāī gaī.* — Our cow was swept away in the flood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a hut, then the Gujarati for to lay waste, then say taṇāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a hut, then the Gujarati for to lay waste, then say *taṇāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does તણાવું (taṇāvũ) mean? (\"To be swept away\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C304-dubadvu",
+      "sequence": 16980,
+      "title": "ડુબાડવું (ḍubāḍvũ) — to submerge; to flood",
+      "headword": "ડુબાડવું",
+      "romanization": "ḍubāḍvũ",
+      "gloss": "to submerge; to flood",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99bafdcd1b747d52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to lay waste, then the Gujarati for to be swept away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ડુબાડવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ડુબાડવું — ḍubāḍvũ — \"to submerge; to flood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "નદીએ આખું ગામ ડુબાડી દીધું. nadīe ākhũ gām ḍubāḍī dīdhũ. The river flooded the whole village."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે હોડી ડુબાડી, teṇe hoḍī ḍubāḍī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ડુબાડવું (ḍubāḍvũ) is the causative of ડૂબવું, to sink, from ḍubb, \"sink\", a form CDIAL reconstructs (CDIAL 5561): to make something go under. The long ū of ડૂબવું shortens in the longer verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍubāḍvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍubāḍvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍubāḍvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍubāḍvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nadīe ākhũ gām ḍubāḍī dīdhũ. — The river flooded the whole village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nadīe ākhũ gām ḍubāḍī dīdhũ.* — The river flooded the whole village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to lay waste, then the Gujarati for to be swept away, then say ḍubāḍvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to lay waste, then the Gujarati for to be swept away, then say *ḍubāḍvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ડુબાડવું (ḍubāḍvũ) mean? (\"To submerge; to flood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C304-nuksan",
+      "sequence": 16990,
+      "title": "નુકસાન (nuksān) — damage",
+      "headword": "નુકસાન",
+      "romanization": "nuksān",
+      "gloss": "damage",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4cd59c41e68c7298",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to be swept away, then the Gujarati for to submerge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નુકસાન",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નુકસાન — nuksān — \"damage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પૂરથી ગામને ખૂબ નુકસાન થયું. pūrthī gāmne khūb nuksān thayũ. The flood did the village a great deal of damage."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નુકસાન (nuksān) is usually traced, through Persian, to Arabic nuqṣān, \"a decrease, a loss\". Harm is done with થવું: નુકસાન થયું, there was damage."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nuksān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nuksān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nuksān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nuksān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūrthī gāmne khūb nuksān thayũ. — The flood did the village a great deal of damage.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūrthī gāmne khūb nuksān thayũ.* — The flood did the village a great deal of damage.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to be swept away, then the Gujarati for to submerge, then say nuksān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to be swept away, then the Gujarati for to submerge, then say *nuksān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નુકસાન (nuksān) mean? (\"Damage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C304-aphat",
+      "sequence": 17000,
+      "title": "આફત (āphat) — a calamity",
+      "headword": "આફત",
+      "romanization": "āphat",
+      "gloss": "a calamity",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c291d976bc51e4e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to submerge, then the Gujarati for damage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: આફત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આફત — āphat — \"a calamity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ગામના લોકો કહે છે કે આ સૌથી મોટી આફત હતી. gāmnā loko kahe che ke ā sauthī moṭī āphat hatī. The villagers say that this was the worst calamity they have known."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આફત (āphat) is usually traced, through Persian, to Arabic āfa, \"a blight, a calamity\". It is feminine: મોટી આફત, a great calamity; આફત આવી, disaster struck."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āphat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āphat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āphat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āphat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāmnā loko kahe che ke ā sauthī moṭī āphat hatī. — The villagers say that this was the worst calamity they have known.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāmnā loko kahe che ke ā sauthī moṭī āphat hatī.* — The villagers say that this was the worst calamity they have known.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to submerge, then the Gujarati for damage, then say āphat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to submerge, then the Gujarati for damage, then say *āphat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does આફત (āphat) mean? (\"A calamity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C304-sankat",
+      "sequence": 17010,
+      "title": "સંકટ (sankaṭ) — a crisis; danger",
+      "headword": "સંકટ",
+      "romanization": "sankaṭ",
+      "gloss": "a crisis; danger",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b3cac7266545005",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for damage, then the Gujarati for a calamity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સંકટ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંકટ — sankaṭ — \"a crisis; danger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પૂર પછી ગામમાં પાણીનું સંકટ હતું. pūr pachī gāmmā̃ pāṇīnũ sankaṭ hatũ. After the flood the village faced a water crisis."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંકટ (sankaṭ) is a tatsama, Sanskrit saṁkaṭá, \"narrow\", and as a noun \"a difficulty, a danger\" (CDIAL 12817). It is neuter: મોટું સંકટ, a grave crisis."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sankaṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sankaṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sankaṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sankaṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūr pachī gāmmā̃ pāṇīnũ sankaṭ hatũ. — After the flood the village faced a water crisis.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūr pachī gāmmā̃ pāṇīnũ sankaṭ hatũ.* — After the flood the village faced a water crisis.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for damage, then the Gujarati for a calamity, then say sankaṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for damage, then the Gujarati for a calamity, then say *sankaṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સંકટ (sankaṭ) mean? (\"A crisis; danger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:8506b4e59ab0fa1b",
+  "lessonIds": [
+    "GU-C343-teko",
+    "GU-C343-himayat",
+    "GU-C343-viruddh",
+    "GU-C343-sahmat",
+    "GU-C343-dhalvu"
+  ],
+  "tex": "gujarati/book/chapters/ch343-taking-sides.tex"
+}

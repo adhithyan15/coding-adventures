@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "Guards and Street Dogs",
+  "label": "ch:ur-guards-and-street-dogs",
+  "canDo": "I can talk about the guard at the gate and the dogs in the lane.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C414-bhagana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can talk about the guard at the gate and the dogs in the lane.",
+    "assesses": [
+      "UR-LEX-C414-GARD414-03",
+      "UR-LEX-C414-GARD414-04",
+      "UR-LEX-C414-GARD414-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C433-ghar",
+    "language": "urdu",
+    "chapter": 433,
+    "sequence": 25430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c929411f78a9cea8"
+  },
+  "findings": []
+}

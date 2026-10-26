@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 495,
+  "title": "A Baby on the Way",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a5f00a9203e4c47a",
+  "lessons": [
+    {
+      "id": "GU-C495-sagarbha",
+      "sequence": 27460,
+      "title": "સગર્ભા (sagarbhā) — pregnant; a pregnant woman",
+      "headword": "સગર્ભા",
+      "romanization": "sagarbhā",
+      "gloss": "pregnant; a pregnant woman",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b100e4f43ec352be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for elderly, then the Gujarati for an old people's home."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સગર્ભા",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સગર્ભા — sagarbhā — \"pregnant; a pregnant woman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મારી ભાભી સગર્ભા છે. mārī bhābhī sagarbhā che. My sister-in-law is pregnant."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સગર્ભા (sagarbhā) is a tatsama, Sanskrit sagarbhā, \"a pregnant woman\", as Monier-Williams records it: sa-, \"with\", and garbha, \"womb, child\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sagarbhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sagarbhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sagarbhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sagarbhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārī bhābhī sagarbhā che. — My sister-in-law is pregnant.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārī bhābhī sagarbhā che.* — My sister-in-law is pregnant.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for elderly, then the Gujarati for an old people's home, then say sagarbhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for elderly, then the Gujarati for an old people's home, then say *sagarbhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સગર્ભા (sagarbhā) mean? (\"Pregnant; a pregnant woman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C495-prasuti",
+      "sequence": 27470,
+      "title": "પ્રસૂતિ (prasūti) — childbirth; a delivery",
+      "headword": "પ્રસૂતિ",
+      "romanization": "prasūti",
+      "gloss": "childbirth; a delivery",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c85fc0f7e0a599fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for an old people's home, then the Gujarati for pregnant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પ્રસૂતિ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પ્રસૂતિ — prasūti — \"childbirth; a delivery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ભાભીની પ્રસૂતિ હોસ્પિટલમાં થઈ. bhābhīnī prasūti hospiṭalmā̃ thaī. My sister-in-law gave birth in hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પ્રસૂતિ (prasūti) is a tatsama, Sanskrit prasūti, \"procreation, birth\", as Monier-Williams records it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prasūti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prasūti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prasūti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prasūti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhābhīnī prasūti hospiṭalmā̃ thaī. — My sister-in-law gave birth in hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhābhīnī prasūti hospiṭalmā̃ thaī.* — My sister-in-law gave birth in hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for an old people's home, then the Gujarati for pregnant, then say prasūti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for an old people's home, then the Gujarati for pregnant, then say *prasūti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પ્રસૂતિ (prasūti) mean? (\"Childbirth; a delivery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C495-simant",
+      "sequence": 27480,
+      "title": "સીમંત (sīmant) — a baby-shower ceremony",
+      "headword": "સીમંત",
+      "romanization": "sīmant",
+      "gloss": "a baby-shower ceremony",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd293f9baf3ca004",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for pregnant, then the Gujarati for childbirth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સીમંત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સીમંત — sīmant — \"a baby-shower ceremony\"."
+            },
+            {
+              "kind": "speech",
+              "text": "સાતમા મહિને ભાભીનું સીમંત થયું. sātmā mahine bhābhīnũ sīmant thayũ. In her seventh month my sister-in-law had her baby-shower ceremony."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સીમંત (sīmant) is a tatsama: Monier-Williams gives Sanskrit sīmanta as \"the parting of the hair\" and also as the hair-parting rite held for a woman expecting a child; Gujarati uses the word for that ceremony."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīmant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīmant*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīmant, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīmant*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sātmā mahine bhābhīnũ sīmant thayũ. — In her seventh month my sister-in-law had her baby-shower ceremony.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sātmā mahine bhābhīnũ sīmant thayũ.* — In her seventh month my sister-in-law had her baby-shower ceremony.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for pregnant, then the Gujarati for childbirth, then say sīmant again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for pregnant, then the Gujarati for childbirth, then say *sīmant* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સીમંત (sīmant) mean? (\"A baby-shower ceremony\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C495-avtarvu",
+      "sequence": 27490,
+      "title": "અવતરવું (avtarvũ) — to come into the world; to be born",
+      "headword": "અવતરવું",
+      "romanization": "avtarvũ",
+      "gloss": "to come into the world; to be born",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5538e3b3a1f2c1f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for childbirth, then the Gujarati for a baby-shower ceremony."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: અવતરવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અવતરવું — avtarvũ — \"to come into the world; to be born\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ગઈકાલે રાતે અમારા ઘરે દીકરી અવતરી. gaīkāle rāte amārā ghare dīkrī avtarī. Last night a baby daughter was born in our home."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): તે બાળક અવતર્યું, te bāḷak avtaryũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અવતરવું (avtarvũ) goes back to Sanskrit ava-tṛ, \"to come down, to descend\" (Monier-Williams), the verb behind avatāra: a child who comes down into the world."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avtarvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avtarvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avtarvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avtarvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaīkāle rāte amārā ghare dīkrī avtarī. — Last night a baby daughter was born in our home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaīkāle rāte amārā ghare dīkrī avtarī.* — Last night a baby daughter was born in our home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for childbirth, then the Gujarati for a baby-shower ceremony, then say avtarvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for childbirth, then the Gujarati for a baby-shower ceremony, then say *avtarvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does અવતરવું (avtarvũ) mean? (\"To come into the world; to be born\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C495-janvu",
+      "sequence": 27500,
+      "title": "જણવું (jaṇvũ) — to give birth to",
+      "headword": "જણવું",
+      "romanization": "jaṇvũ",
+      "gloss": "to give birth to",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84e4602824be96eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a baby-shower ceremony, then the Gujarati for to come into the world."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: જણવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જણવું — jaṇvũ — \"to give birth to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ગાયે નાનું વાછરડું જણ્યું. gāye nānũ vācharḍũ jaṇyũ. The cow gave birth to a little calf."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે દીકરો જણ્યો, teṇe dīkro jaṇyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જણવું (jaṇvũ) is inherited from Sanskrit janayati, \"causes to be born, begets\"; CDIAL lists the Gujarati verb, \"to bear\" (CDIAL 5102)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaṇvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaṇvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaṇvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaṇvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāye nānũ vācharḍũ jaṇyũ. — The cow gave birth to a little calf.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāye nānũ vācharḍũ jaṇyũ.* — The cow gave birth to a little calf.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a baby-shower ceremony, then the Gujarati for to come into the world, then say jaṇvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a baby-shower ceremony, then the Gujarati for to come into the world, then say *jaṇvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does જણવું (jaṇvũ) mean? (\"To give birth to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

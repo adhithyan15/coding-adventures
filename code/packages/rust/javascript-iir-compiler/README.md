@@ -9,9 +9,10 @@ to execute programs.
 ## Pipeline: the compiler walks the parse tree
 
 ```text
-source ──javascript-lexer (GrammarLexer, es2020.tokens + F10 modes)──▶ tokens
+release ──resolve_release──▶ one edition, e.g. es2017 (default es2020)
+source ──javascript-lexer (GrammarLexer, es2017.tokens + F10 modes)──▶ tokens
        ──javascript-parser::parse_javascript_cst_bounded─────────────▶ GrammarASTNode (CST)
-             (GrammarParser over es2020.grammar + ASI + spine bound)        │
+             (GrammarParser over es2017.grammar + ASI + spine bound)        │
                                                                            │ compile_ast
                                               javascript-iir-compiler      ▼
                                                                        IIRModule ──▶ vm-core
@@ -19,7 +20,7 @@ source ──javascript-lexer (GrammarLexer, es2020.tokens + F10 modes)──▶
 
 Per LANG84 ("the IIR compiler walks the parse tree"), the compiler's only
 input is the `GrammarASTNode` that the shared grammar-driven parser builds from
-`code/grammars/ecmascript/es2020.grammar`. Since 0.3.0 it no longer goes
+one edition's `code/grammars/ecmascript/es<edition>.grammar`. Since 0.3.0 it no longer goes
 through the parser crate's typed `javascript_ast::Program` bridge, which
 remains available for other tools (closurec).
 
@@ -109,9 +110,38 @@ initializers are rejected at compile time.
 
 See [LANG78](../../../specs/LANG78-native-dynamic-iir-frontends.md).
 
+## Editions (LANG84 phase 6d)
+
+A release is a row of `code/grammars/ecmascript/releases.csv`, named by its
+exact ID. Ten editions claim the `es-number-log` subset:
+
+| Request | Result |
+| --- | --- |
+| `None` | `es2020` (`DEFAULT_RELEASE`, what the IIR path always parsed) |
+| `"es2016"` … `"es2025"` | that edition's `.tokens`/`.grammar` pair; the module records it in `IIRModule::release` |
+| `"es1"`, `"es3"`, `"es5"`, `"es2015"`, `"es2026"`, `"js1.x"` | `ReleaseNotAvailable` (a row that does not claim the subset yet) |
+| anything else (`"ES2020"`, `"2020"`, `""`) | `UnknownRelease`, with up to five suggestions |
+
+Nothing falls back to a neighbouring edition. Editions agree on what an
+accepted program means; they differ only in what they accept (numeric
+separators are ES2021, so es2016–es2020 refuse `1_000`). The corpus
+`code/grammars/ecmascript/corpus/es-number-log/` is the proof, and
+`release_classes.csv` records the two IIR-identity classes it yields.
+
+```rust
+let module = compile_source_at("console.log(1_000 / 8);", Some("es2021"), "m")?;
+assert_eq!(module.release.as_deref(), Some("es2021"));
+let error = compile_source_at("console.log(1_000 / 8);", Some("es2020"), "m").unwrap_err();
+assert_eq!(error.category(), "Parse");
+```
+
 ## API
 
-- `compile_source(src, module_name) -> Result<IIRModule, String>`
+- `compile_source_at(src, release, module_name) -> Result<IIRModule, FrontendError>`
+- `run_source_at(src, release) -> Result<String, JavaScriptRunError>`
+- `supported_releases()`, `resolve_release(release)`, `DEFAULT_RELEASE`, `SUBSET`
+- `compile_source(src, module_name) -> Result<IIRModule, String>` — the
+  default edition, with the pre-0.5 error text
 - `compile_ast(&GrammarASTNode, module_name) -> Result<IIRModule, String>` —
   for a `program` tree you already hold, from
   `parse_javascript_cst_bounded` or `parse_javascript_typed`

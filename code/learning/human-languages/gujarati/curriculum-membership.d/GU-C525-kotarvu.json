@@ -1,0 +1,11 @@
+{
+  "id": "GU-C525-kotarvu",
+  "pathSegment": "GU-PATH-525-SHILP525",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-525-SHILP525",
+      "order": 1
+    }
+  ]
+}

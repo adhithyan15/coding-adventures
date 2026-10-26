@@ -1,0 +1,19 @@
+{
+  "chapter": 409,
+  "title": "Lodgings",
+  "label": "ch:gu-lodgings",
+  "canDo": "I can talk about what a lodging offers.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C409-avkarvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can talk about what a lodging offers.",
+    "assesses": [
+      "GU-LEX-C409-LODGE409-03",
+      "GU-LEX-C409-LODGE409-04",
+      "GU-LEX-C409-LODGE409-05"
+    ]
+  }
+}

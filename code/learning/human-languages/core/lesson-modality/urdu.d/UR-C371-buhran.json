@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C371-buhran",
+    "language": "urdu",
+    "chapter": 371,
+    "sequence": 22050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ecb5458bee40cd4"
+  },
+  "findings": []
+}

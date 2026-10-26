@@ -1,0 +1,11 @@
+{
+  "id": "UR-C341-palisi",
+  "pathSegment": "UR-PATH-341-HUKMRAN341",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-341-HUKMRAN341",
+      "order": 1
+    }
+  ]
+}

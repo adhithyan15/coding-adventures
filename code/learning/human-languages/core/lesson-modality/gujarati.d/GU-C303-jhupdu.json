@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C303-jhupdu",
+    "language": "gujarati",
+    "chapter": 303,
+    "sequence": 16950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3122709489b7b819"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 536,
+  "title": "An Auspicious Hour",
+  "label": "ch:gu-an-auspicious-hour",
+  "canDo": "I can talk about choosing a lucky day and time.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C536-bhavi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 536: I can talk about choosing a lucky day and time.",
+    "assesses": [
+      "GU-LEX-C536-MUHURT536-03",
+      "GU-LEX-C536-MUHURT536-04",
+      "GU-LEX-C536-MUHURT536-05"
+    ]
+  }
+}

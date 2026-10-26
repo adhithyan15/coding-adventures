@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C504-khunti",
+    "language": "urdu",
+    "chapter": 504,
+    "sequence": 29540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f02ed5d0426ba47"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 540,
+  "title": "Weighing the Cost",
+  "label": "ch:ur-weighing-the-cost",
+  "canDo": "I can say what a choice might cost.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-R540-review-534-540",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 540: I can say what a choice might cost.",
+    "assesses": [
+      "UR-LEX-C540-GHATA540-01",
+      "UR-LEX-C540-GHATA540-02",
+      "UR-LEX-C540-GHATA540-03",
+      "UR-LEX-C540-GHATA540-04",
+      "UR-LEX-C540-GHATA540-05"
+    ]
+  }
+}

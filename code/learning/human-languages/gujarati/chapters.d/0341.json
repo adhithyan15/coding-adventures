@@ -1,0 +1,19 @@
+{
+  "chapter": 341,
+  "title": "Making a Point",
+  "label": "ch:gu-making-a-point",
+  "canDo": "I can make a point in a discussion and back it up.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C341-uthavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can make a point in a discussion and back it up.",
+    "assesses": [
+      "GU-LEX-C341-DALIL341-03",
+      "GU-LEX-C341-DALIL341-04",
+      "GU-LEX-C341-DALIL341-05"
+    ]
+  }
+}

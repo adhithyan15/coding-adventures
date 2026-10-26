@@ -1,0 +1,11 @@
+{
+  "id": "GU-C478-kharas",
+  "pathSegment": "GU-PATH-478-KAPH478",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-478-KAPH478",
+      "order": 2
+    }
+  ]
+}

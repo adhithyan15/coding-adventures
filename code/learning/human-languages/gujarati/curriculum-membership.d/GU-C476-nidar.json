@@ -1,0 +1,11 @@
+{
+  "id": "GU-C476-nidar",
+  "pathSegment": "GU-PATH-476-NINDAR476",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-476-NINDAR476",
+      "order": 1
+    }
+  ]
+}

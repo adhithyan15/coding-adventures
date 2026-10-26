@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:b31722e1f79aa4cb",
+  "lessonIds": [
+    "GU-C437-thar",
+    "GU-C437-jhakal",
+    "GU-C437-tadh",
+    "GU-C437-thijvu",
+    "GU-C437-thartharvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch437.txt",
+  "json": "gujarati/narration/ch437.json",
+  "textHash": "fnv1a64:476c88bb66093be7",
+  "jsonHash": "fnv1a64:1500c9a201fdcaeb",
+  "findings": []
+}

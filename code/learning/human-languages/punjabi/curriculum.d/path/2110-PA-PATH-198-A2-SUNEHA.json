@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-198-A2-SUNEHA",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "PA-EXT-198-A2-SUNEHA"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C365-vyavhar",
+    "language": "gujarati",
+    "chapter": 365,
+    "sequence": 20340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e680fede5eefb7f6"
+  },
+  "findings": []
+}

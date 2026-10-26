@@ -1,0 +1,11 @@
+{
+  "id": "GU-R280-at-the-station",
+  "pathSegment": "GU-PATH-280-TRAVEL-TICKET",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GU-EXT-280-TRAVEL-TICKET",
+      "order": 5
+    }
+  ]
+}

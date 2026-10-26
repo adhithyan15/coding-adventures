@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C454-shakhsiyat",
+    "language": "urdu",
+    "chapter": 454,
+    "sequence": 26750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6174a860c8057fbc"
+  },
+  "findings": []
+}

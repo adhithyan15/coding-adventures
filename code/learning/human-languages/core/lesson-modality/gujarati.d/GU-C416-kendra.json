@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C416-kendra",
+    "language": "gujarati",
+    "chapter": 416,
+    "sequence": 23170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:088c88eaa0b716da"
+  },
+  "findings": []
+}

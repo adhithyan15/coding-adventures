@@ -1,0 +1,12 @@
+[package]
+name = "intel8085-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "DFF-backed Intel 8085A gate-level simulator"
+license = "MIT"
+
+[dependencies]
+coding-adventures-intel8080-gatelevel = { path = "../intel8080-gatelevel" }
+intel8080-simulator = { path = "../intel8080-simulator" }
+intel8085-simulator = { path = "../intel8085-simulator" }
+logic-gates = { path = "../logic-gates" }

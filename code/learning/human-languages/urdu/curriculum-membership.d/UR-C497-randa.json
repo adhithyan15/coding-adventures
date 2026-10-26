@@ -1,0 +1,11 @@
+{
+  "id": "UR-C497-randa",
+  "pathSegment": "UR-PATH-497-TAKHTA497",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-497-TAKHTA497",
+      "order": 2
+    }
+  ]
+}

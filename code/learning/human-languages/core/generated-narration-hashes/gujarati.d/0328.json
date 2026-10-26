@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:f9a4a0382a267d84",
+  "lessonIds": [
+    "GU-C328-puja",
+    "GU-C328-arti",
+    "GU-C328-prasad",
+    "GU-C328-pragtavvu",
+    "GU-C328-dhup"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch328.txt",
+  "json": "gujarati/narration/ch328.json",
+  "textHash": "fnv1a64:1da36b1d92985824",
+  "jsonHash": "fnv1a64:6c95d483f45cf604",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C435-langar",
+  "pathSegment": "UR-PATH-435-KHALIJ435",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-435-KHALIJ435",
+      "order": 1
+    }
+  ]
+}

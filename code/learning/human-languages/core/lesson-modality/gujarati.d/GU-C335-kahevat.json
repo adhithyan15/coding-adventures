@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C335-kahevat",
+    "language": "gujarati",
+    "chapter": 335,
+    "sequence": 18590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6d87719869924de"
+  },
+  "findings": []
+}

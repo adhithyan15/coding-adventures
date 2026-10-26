@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "Very, Extremely",
+  "label": "ch:ur-very-extremely",
+  "canDo": "I can say how strong something will be if it happens.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C375-shadid",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can say how strong something will be if it happens.",
+    "assesses": [
+      "UR-LEX-C375-BAHUT375-03",
+      "UR-LEX-C375-BAHUT375-04",
+      "UR-LEX-C375-BAHUT375-05"
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "lesson": {
+    "id": "GU-W52-au-sign",
+    "language": "gujarati",
+    "chapter": 282,
+    "sequence": 15210,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:dda3de8001b26c97",
+    "detachableSegments": [
+      "Script you'll notice: ૌ",
+      "Writing — notice and trace",
+      "Writing — copy with the model",
+      "Writing — recall after hiding"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

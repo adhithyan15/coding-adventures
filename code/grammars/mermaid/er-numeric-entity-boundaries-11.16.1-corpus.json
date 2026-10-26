@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER right-hand numeric entity boundary vertical slice",
+  "fixtures": [
+    {
+      "name": "numeric-entity-after-one-cardinality",
+      "source": "erDiagram\na many to 1 1: label\na many to 1 12: label"
+    }
+  ]
+}

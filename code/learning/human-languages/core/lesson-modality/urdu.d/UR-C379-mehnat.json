@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C379-mehnat",
+    "language": "urdu",
+    "chapter": 379,
+    "sequence": 22460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:991934f06179723c"
+  },
+  "findings": []
+}

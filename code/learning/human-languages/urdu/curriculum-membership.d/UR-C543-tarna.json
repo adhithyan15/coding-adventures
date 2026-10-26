@@ -1,0 +1,11 @@
+{
+  "id": "UR-C543-tarna",
+  "pathSegment": "UR-PATH-543-ATKAL543",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-543-ATKAL543",
+      "order": 2
+    }
+  ]
+}

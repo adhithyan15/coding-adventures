@@ -1,0 +1,19 @@
+{
+  "chapter": 531,
+  "title": "When Plans Go Wrong",
+  "label": "ch:gu-when-plans-go-wrong",
+  "canDo": "I can say what we will do if something unexpected happens.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C531-bandobast",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can say what we will do if something unexpected happens.",
+    "assesses": [
+      "GU-LEX-C531-JHANJHAT531-03",
+      "GU-LEX-C531-JHANJHAT531-04",
+      "GU-LEX-C531-JHANJHAT531-05"
+    ]
+  }
+}

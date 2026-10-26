@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:028a41c981f345ba",
+  "lessonIds": [
+    "UR-C468-mahak",
+    "UR-C468-itr",
+    "UR-C468-lams",
+    "UR-C468-khujana",
+    "UR-C468-kharish"
+  ],
+  "tex": "urdu/book/chapters/ch468-smells-and-itches.tex"
+}

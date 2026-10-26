@@ -1,0 +1,19 @@
+{
+  "chapter": 397,
+  "title": "Distances and Passes",
+  "label": "ch:ur-distances-and-passes",
+  "canDo": "I can say how far a place is and which way to turn on a mountain road.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C397-ghumana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can say how far a place is and which way to turn on a mountain road.",
+    "assesses": [
+      "UR-LEX-C397-FASLA397-03",
+      "UR-LEX-C397-FASLA397-04",
+      "UR-LEX-C397-FASLA397-05"
+    ]
+  }
+}

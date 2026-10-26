@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:481b41161297fe71",
+  "lessonIds": [
+    "GU-C320-yuddh",
+    "GU-C320-sena",
+    "GU-C320-sainik",
+    "GU-C320-dusman",
+    "GU-C320-akraman"
+  ],
+  "tex": "gujarati/book/chapters/ch320-war-comes.tex"
+}

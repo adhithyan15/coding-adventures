@@ -1,0 +1,11 @@
+{
+  "id": "UR-C497-burada",
+  "pathSegment": "UR-PATH-497-TAKHTA497",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-497-TAKHTA497",
+      "order": 1
+    }
+  ]
+}

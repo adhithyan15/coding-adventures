@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C311-samacar",
+    "language": "gujarati",
+    "chapter": 311,
+    "sequence": 17330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0350534e38a1904"
+  },
+  "findings": []
+}

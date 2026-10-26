@@ -1,0 +1,11 @@
+{
+  "id": "UR-C341-tajviz",
+  "pathSegment": "UR-PATH-341-HUKMRAN341",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-341-HUKMRAN341",
+      "order": 2
+    }
+  ]
+}

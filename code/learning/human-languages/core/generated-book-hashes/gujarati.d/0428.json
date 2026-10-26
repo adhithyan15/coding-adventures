@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:e2cdda09df99fe9d",
+  "lessonIds": [
+    "GU-C428-devalu",
+    "GU-C428-lenu",
+    "GU-C428-uchinu",
+    "GU-C428-sahukar",
+    "GU-C428-thagvu"
+  ],
+  "tex": "gujarati/book/chapters/ch428-debts-and-moneylenders.tex"
+}

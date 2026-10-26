@@ -1,0 +1,11 @@
+{
+  "id": "GU-C339-paristhiti",
+  "pathSegment": "GU-PATH-339-ASAR339",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-339-ASAR339",
+      "order": 3
+    }
+  ]
+}

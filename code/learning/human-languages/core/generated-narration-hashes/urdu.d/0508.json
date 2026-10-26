@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:ffa4951cca3314f2",
+  "lessonIds": [
+    "UR-C508-bagharna",
+    "UR-C508-bhunna",
+    "UR-C508-dhakkan",
+    "UR-C508-dhanpna",
+    "UR-C508-kafgir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch508.txt",
+  "json": "urdu/narration/ch508.json",
+  "textHash": "fnv1a64:b445a162499c62b3",
+  "jsonHash": "fnv1a64:9fa7f2176b6839c5",
+  "findings": []
+}

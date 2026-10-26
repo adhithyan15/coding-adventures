@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C344-davo",
+    "language": "gujarati",
+    "chapter": 344,
+    "sequence": 19250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ebcd8901621d1333"
+  },
+  "findings": []
+}

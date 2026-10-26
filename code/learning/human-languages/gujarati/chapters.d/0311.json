@@ -1,0 +1,19 @@
+{
+  "chapter": 311,
+  "title": "The Morning News",
+  "label": "ch:gu-the-morning-news",
+  "canDo": "I can say what the news said this morning.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C311-janavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can say what the news said this morning.",
+    "assesses": [
+      "GU-LEX-C311-SAMACHAR311-03",
+      "GU-LEX-C311-SAMACHAR311-04",
+      "GU-LEX-C311-SAMACHAR311-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-519-SAGDI519",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GU-EXT-519-SAGDI519"
+  ],
+  "after": []
+}

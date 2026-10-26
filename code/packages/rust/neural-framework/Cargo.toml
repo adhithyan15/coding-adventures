@@ -1,0 +1,11 @@
+[package]
+name = "neural-framework"
+version = "0.1.0"
+edition = "2021"
+description = "Native dense neural network training with portable NN37 checkpoints"
+license = "MIT"
+readme = "README.md"
+
+[dependencies]
+matrix = { path = "../matrix", version = "0.3.0" }
+coding_adventures_bounded_json = { path = "../bounded-json", version = "0.1.0" }
