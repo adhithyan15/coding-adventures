@@ -71,11 +71,13 @@ architecture/core introduction era, not a claim about a particular chip.
 
 ## Discovered follow-up work
 
-- Audit already-published educational gate packages whose topology formulas or
-  host endian/event/privilege selectors may contradict gate-derived authority
-  claims. Correct each finding as a bounded gate-integrity cell after the
-  OpenSPARC/Cortex-M0/Cortex-M3 publication wave and before declaring the gate
-  backlog complete.
+### Gate-integrity audit queue
+
+| Priority | Target | Finding / next action |
+|---:|---|---|
+| P0 complete locally | MIPS R2000 gate HALT storage | HALT DFF Q is now the sole architectural halt authority; the public boolean remains only as a source-compatible observation mirror and is repaired by simulator mutations. The published storage inventory derives 524,288 memory bits, 1,120 register bits, and one HALT bit from the owned physical containers. Deliberate mirror-divergence, restore, and typed-fault atomicity tests pass alongside 33 unit tests, the 218-vector differential suite, nine lifecycle/integrity tests, and 20 doctests. Strict Clippy/rustdoc, the six-package affected build, and 94.50% line coverage (1,581/1,673) are green. |
+| P1 audit | Remaining completed gate packages with public halt fields | Audit each package before changing it. A public observation field is acceptable only when execution, snapshots, restore, and faults are driven by DFF Q; otherwise add one bounded repair cell and a non-tautological storage inventory. Candidate packages discovered by source scan include ARM1, SPARC V8, Motorola 68000, Intel 8051, Intel 8086, and OpenRISC 1000. |
+
 - Extend the bounded Cortex-M23 core with source-backed Armv8-M-exclusive
   instructions, encoded SG/BXNS/BLXNS transitions, exception stacking/return,
   stack-limit registers, and MPU/IDAU composition. Keep NVIC, bus transactions,
