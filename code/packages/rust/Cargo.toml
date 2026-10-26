@@ -1338,4 +1338,5 @@ members = [
   "x509-ocsp-authenticated-target-revocation",
   "x509-ocsp-reviewed-server-revocation-binding",
   "tls13-record-nonce",
+  "tls13-cipher-suite-policy",
 ]

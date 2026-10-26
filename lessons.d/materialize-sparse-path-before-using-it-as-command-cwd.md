@@ -1,4 +1,4 @@
-# Materialize a sparse path before using it as a command working directory
+# Materialize sparse path before using it as command cwd
 
 A command cannot start in a directory omitted by sparse checkout, even when
 its first shell operation would add that directory. The process working
