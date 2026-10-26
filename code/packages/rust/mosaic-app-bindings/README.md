@@ -98,8 +98,17 @@ already saved) changed nothing the app saves, so it writes nothing -- a window
 drag costs no disk writes -- unless an earlier save failed: while a `persistenceWarning` is
 pending, each ignored report retries the save (UI48 §7.12). Writes use a same-directory temporary file plus the platform's atomic
 replacement facility. Invalid JSON and runtime-incompatible snapshots are moved
-to `mosaic-state.v1.json.corrupt`; the app starts clean and exposes a
+to the first free quarantine name -- `mosaic-state.v1.json.corrupt`, then
+`.corrupt.1` to `.corrupt.9` -- and the app starts clean and exposes a
 `persistenceWarning` (or native status warning) instead of becoming unusable.
+A quarantine is never replaced or deleted, since it may hold the user's real
+data: a taken name is skipped, and each host moves with a primitive that refuses
+an existing target (`QFile::rename`, `FileManager.moveItem`, `Files.move`
+without `REPLACE_EXISTING`, `File.Move(..., overwrite: false)`; Flutter claims
+the name with `createSync(exclusive: true)` first, because `dart:io`'s rename
+replaces). If the move fails or all ten names are taken, the rejected file is
+still at the live path, so the host saves nothing for the rest of the session
+and its warning ends "This session will not be saved."
 Set `MOSAIC_APP_STATE_PATH` to an explicit file for tests or portable launches.
 Otherwise the generated application id selects these per-user locations:
 

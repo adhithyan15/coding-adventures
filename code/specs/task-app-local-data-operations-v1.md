@@ -48,11 +48,12 @@ workspace record (`web`). If IndexedDB cannot open, it explicitly says the sessi
 is temporary and that closing or reloading loses changes. A rejected engine
 snapshot is copied to the fixed `workspace/web-corrupt` record before the app
 starts fresh, and the warning names that recovery record. A newer rejection
-replaces the older recovery record, matching the desktop `.corrupt` sibling rule.
+replaces the older recovery record. (The native hosts no longer do: see the
+quarantine section below.)
 Background write failures also become persistent warnings rather than unhandled
 promises or console-only evidence.
 
-Native bindings continue to quarantine invalid bytes at the exact `.corrupt` path
+Native bindings quarantine invalid bytes at the first free `.corrupt` name
 described below. When the app declares the shared `storage-warning` slot, the host
 also injects that existing warning into the app's prop envelope so Qt, Flutter,
 Compose, SwiftUI, and WinUI all render it in the same focus-safe panel.
@@ -109,8 +110,9 @@ Linux/Windows application directory or `Trestle.app`. Reinstalling the same
 backend later reuses its live-state path.
 
 To purge local data, first make any wanted backup, then remove the application
-and that backend's live `mosaic-state.v1.json`, `mosaic-state.v1.json.tmp`, and
-`mosaic-state.v1.json.corrupt`. On Linux, also remove the explicitly selected
+and that backend's live `mosaic-state.v1.json`, `mosaic-state.v1.json.tmp`,
+`mosaic-state.v1.json.corrupt`, and any `mosaic-state.v1.json.corrupt.1` to
+`mosaic-state.v1.json.corrupt.9`. On Linux, also remove the explicitly selected
 `task-app/backups` directory if its pre-upgrade copies are no longer wanted.
 Delete only the exact backend paths from the table; do not recursively remove a
 broad platform data root.
@@ -118,14 +120,37 @@ broad platform data root.
 ## Corrupt-state quarantine and manual recovery
 
 Every generated host parses the JSON envelope and asks the Rust runtime to
-restore it. If either step rejects the file, the host preserves the rejected
-bytes as `mosaic-state.v1.json.corrupt`, reports a persistence warning, and
-starts a fresh workspace. A newer failure replaces an older `.corrupt` sibling,
-so copy a damaged file elsewhere before retrying repairs.
+restore it. If either step rejects the file, the host moves the rejected bytes
+to the first free quarantine name, reports a persistence warning, and starts a
+fresh workspace:
+
+| Rejection | Quarantined as                    |
+|-----------|-----------------------------------|
+| first     | `mosaic-state.v1.json.corrupt`    |
+| second    | `mosaic-state.v1.json.corrupt.1`  |
+| ...       | ...                               |
+| tenth     | `mosaic-state.v1.json.corrupt.9`  |
+
+A newer failure never replaces or deletes an older quarantine, because that one
+may hold the user's real data: startup can reject the real state, and a later
+rejection must not destroy it. A name is skipped when anything is already
+there, and the move itself refuses to replace a target (Qt `QFile::rename`,
+SwiftUI `FileManager.moveItem`, Compose `Files.move` without
+`REPLACE_EXISTING`, WinUI `File.Move(..., overwrite: false)`; Flutter claims the
+name with an exclusive create and then moves onto that empty placeholder,
+because `dart:io` has no move that refuses an existing target). On a fresh state
+directory the first quarantine is still exactly `mosaic-state.v1.json.corrupt`.
+
+If the move fails, or all ten names are taken, the rejected file stays at the
+live path. The host then saves nothing for the rest of that session, since a
+save would write over it, and its persistence warning ends "This session will
+not be saved." Move the quarantined files somewhere safe to let the next launch
+save again.
 
 Recovery is deliberately explicit:
 
-1. Close Trestle and copy the `.corrupt` file somewhere safe.
+1. Close Trestle and copy the `.corrupt` files somewhere safe. Unless some
+   were removed, the highest-numbered one is the most recent rejection.
 2. Prefer restoring the most recent known-good manual or Linux pre-upgrade
    backup to the exact live path.
 3. Keep the rejected file for forensic/manual extraction; never overwrite the

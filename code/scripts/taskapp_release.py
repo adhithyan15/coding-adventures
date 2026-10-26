@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import io
 import json
+import os
 import plistlib
 import re
 import struct
@@ -134,9 +135,14 @@ def verify_upgrade_state(fixture_path: Path, state_path: Path) -> None:
     fixture = _load_upgrade_fixture(fixture_path)
     if not state_path.is_file():
         raise ValueError(f"TaskApp upgrade state does not exist: {state_path}")
-    corrupt_path = Path(f"{state_path}.corrupt")
-    if corrupt_path.exists():
-        raise ValueError(f"TaskApp quarantined a compatible upgrade fixture: {corrupt_path}")
+    # A host quarantines to the first FREE name -- `.corrupt`, then `.corrupt.1`
+    # to `.corrupt.9` -- so a leftover `.corrupt` would push a fresh quarantine
+    # to `.corrupt.1`. Any of the ten means the fixture was refused.
+    for index in range(10):
+        suffix = ".corrupt" if index == 0 else f".corrupt.{index}"
+        corrupt_path = Path(f"{state_path}{suffix}")
+        if os.path.lexists(corrupt_path):
+            raise ValueError(f"TaskApp quarantined a compatible upgrade fixture: {corrupt_path}")
     snapshot = json.loads(state_path.read_text(encoding="utf-8"))
     if not isinstance(snapshot, dict):
         raise TypeError("TaskApp live state must be a JSON object")
@@ -392,14 +398,19 @@ release gate restores a committed v0.1.0 fixture from this same path.
 
 Uninstall while retaining data by deleting only the extracted application. To
 uninstall and purge, first make any wanted backup, then delete the application
-and the live state file, its `.tmp` sibling, its `.corrupt` sibling, and the
-`backups` directory documented below.
+and the live state file, its `.tmp` sibling, its `.corrupt` siblings
+(`.corrupt` and `.corrupt.1` to `.corrupt.9`), and the `backups` directory
+documented below.
 
 If JSON parsing or the Rust snapshot contract rejects the live file, Trestle
-renames it to `mosaic-state.v1.json.corrupt` and starts with an empty workspace.
-Close Trestle before inspecting that quarantined copy or restoring a known-good
-backup. Never overwrite the only copy of a damaged file while attempting manual
-recovery.
+moves it to the first free name of `mosaic-state.v1.json.corrupt`,
+`mosaic-state.v1.json.corrupt.1`, ... `mosaic-state.v1.json.corrupt.9` and
+starts with an empty workspace. It never replaces an earlier quarantined copy.
+If it cannot move the file, or all ten names are taken, it leaves the file in
+place and says this session will not be saved; move the quarantined copies
+somewhere safe to let it save again. Close Trestle before inspecting a
+quarantined copy or restoring a known-good backup. Never overwrite the only
+copy of a damaged file while attempting manual recovery.
 
 Automatic pre-upgrade backup: {automatic_backup}
 """

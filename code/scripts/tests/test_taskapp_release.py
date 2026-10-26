@@ -291,6 +291,8 @@ def test_archives_verified_linux_bundle_with_launcher_contract(tmp_path: Path) -
     assert "pre-v0.2.0-compose.json" in launcher
     assert "Application identifier: task-app" in operations
     assert "mosaic-state.v1.json.corrupt" in operations
+    assert "mosaic-state.v1.json.corrupt.9" in operations
+    assert "never replaces an earlier quarantined copy" in operations
     assert launcher_mode & 0o111
 
 
@@ -308,6 +310,13 @@ def test_materializes_and_verifies_v0_1_0_upgrade_fixture(tmp_path: Path) -> Non
 
     Path(f"{state}.corrupt").write_text("damaged", encoding="utf-8")
     with pytest.raises(ValueError, match="quarantined a compatible"):
+        verify_upgrade_state(UPGRADE_FIXTURE, state)
+
+    # Hosts quarantine to the first FREE name, so a leftover `.corrupt` pushes
+    # a fresh refusal to `.corrupt.1`; that must fail the check too.
+    Path(f"{state}.corrupt").unlink()
+    Path(f"{state}.corrupt.1").write_text("damaged", encoding="utf-8")
+    with pytest.raises(ValueError, match=r"quarantined a compatible.*\.corrupt\.1"):
         verify_upgrade_state(UPGRADE_FIXTURE, state)
 
 
