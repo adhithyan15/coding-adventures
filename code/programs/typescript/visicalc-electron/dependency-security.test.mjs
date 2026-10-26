@@ -12,7 +12,7 @@ import test from "node:test";
 const minimumSafe = [43, 8, 1];
 
 function numericVersion(value) {
-  const match = String(value).match(/^(?:\^|~)?(\d+)\.(\d+)\.(\d+)/u);
+  const match = String(value).match(/^(?:\^|~)?(\d+)\.(\d+)\.(\d+)$/u);
   assert.ok(match, `expected a numeric Electron version, received ${value}`);
   return match.slice(1).map(Number);
 }

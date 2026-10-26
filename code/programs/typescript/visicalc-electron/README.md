@@ -87,6 +87,8 @@ VISICALC_ELECTRON_DEBUG=1 npm run start:dev
 - `sandbox: true`
 - No preload script (no Node APIs exposed to the renderer)
 - No `webSecurity: false`, no `allowRunningInsecureContent: true`
+- Electron's declared floor is 43.8.1, the first release outside
+  GHSA-jr5w-w6x2-84p9; a package test guards both the declaration and lockfile.
 
 These are Electron's defence-in-depth defaults.  The React bundle
 runs in a sandboxed Chromium renderer that cannot reach `fs`,
@@ -110,4 +112,4 @@ That work belongs in a separate PR.
 ## Status
 
 `v0.1.0` — single `BrowserWindow` loading the React bundle.
-Tested locally on macOS arm64 against Electron 33.
+Tested locally on macOS arm64 against Electron 43.8.3.
