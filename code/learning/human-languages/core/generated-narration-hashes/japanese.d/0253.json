@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:489e1082329cbccc",
+  "lessonIds": [
+    "JA-C253-futte-imasu",
+    "JA-C253-toki",
+    "JA-C253-nenjuu",
+    "JA-W253-nen-kanji",
+    "JA-C253-kawa-no-hi",
+    "JA-R253-what-was-going-on"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "japanese/narration/ch253.txt",
+  "json": "japanese/narration/ch253.json",
+  "textHash": "fnv1a64:e048eb31472f9960",
+  "jsonHash": "fnv1a64:d4e58d05d77319e9",
+  "findings": []
+}

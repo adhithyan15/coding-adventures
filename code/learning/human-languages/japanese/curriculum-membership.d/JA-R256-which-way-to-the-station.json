@@ -1,0 +1,11 @@
+{
+  "id": "JA-R256-which-way-to-the-station",
+  "pathSegment": "JA-PATH-256-TRAVEL256",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-256-TRAVEL256",
+      "order": 5
+    }
+  ]
+}

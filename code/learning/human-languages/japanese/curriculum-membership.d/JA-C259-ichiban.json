@@ -1,0 +1,11 @@
+{
+  "id": "JA-C259-ichiban",
+  "pathSegment": "JA-PATH-259-EXPERIENCE259",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-259-EXPERIENCE259",
+      "order": 2
+    }
+  ]
+}

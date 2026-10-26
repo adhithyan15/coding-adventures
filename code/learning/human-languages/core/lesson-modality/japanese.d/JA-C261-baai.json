@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C261-baai",
+    "language": "japanese",
+    "chapter": 261,
+    "sequence": 15580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82718f4ee3858b8f"
+  },
+  "findings": []
+}
