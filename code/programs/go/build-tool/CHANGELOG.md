@@ -12,6 +12,12 @@
   `[components]` exports, `[host_assets].dependencies` third-party
   coordinates, external names and self-references never create edges;
   multi-line values are tracked by bracket depth (`internal/resolver/mosaic.go`).
+- The Mosaic reader fails closed (`MosaicManifestError`), because a dropped
+  edge silently skips a dependent's tests on every later PR: a root-level
+  `dependencies` key or inline table, a multi-line string, an escape in a
+  key, a manifest that is not a regular file or exceeds 1 MiB, and two Mosaic
+  packages of the same kind claiming one name (`checkMosaicNameCollisions`)
+  all stop `ResolveDependencies` with an error. None occurs in the repository.
 - New `repository_inputs.go`: a table of *repository input consumers*,
   packages whose tests walk the whole tree. Its first entry selects
   `rust/mosaic-package-resolver` (`every_repository_requirement_is_satisfied`

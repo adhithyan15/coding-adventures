@@ -538,7 +538,11 @@ ordinary graph nodes: the resolver reads the keys of the root
 within the Mosaic scope, by directory basename or `[package].name`. Editing
 or bumping `mosaic-pkg-toolkit` therefore re-runs every Mosaic package and app
 that requires it. Requirement strings, `[components]` exports and unrelated
-tables such as `[host_assets].dependencies` never create edges.
+tables such as `[host_assets].dependencies` never create edges. The reader
+fails closed: a manifest shape it does not model (a root-level
+`dependencies` key or inline table, a multi-line string, an escaped key), a
+symlinked or oversized manifest, and two Mosaic libraries (or two apps)
+claiming one name stop the plan with an error rather than dropping edges.
 
 Some tests read the whole tree rather than their own directory. These
 *repository input consumers* are listed in `repository_inputs.go` together

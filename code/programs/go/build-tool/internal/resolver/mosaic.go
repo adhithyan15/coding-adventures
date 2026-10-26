@@ -48,8 +48,28 @@ package resolver
 // the build tool has no TOML dependency, the manifests are machine-checked by
 // `mosaic-package-manifest` (so they are always valid TOML in practice), and
 // every other manifest reader in this package takes the same approach.
+//
+// Because a missed edge silently skips a dependent's tests, the reader FAILS
+// CLOSED: a manifest written in a valid TOML shape it does not model returns a
+// *MosaicManifestError, which stops the whole plan instead of dropping edges.
+// Those shapes are
+//
+//	dependencies = { mosaic-pkg-toolkit = "0.16.0" }   # root inline table
+//	dependencies.mosaic-pkg-toolkit = "0.16.0"         # root dotted key
+//	description = """…"""                              # multi-line string
+//	"mosaic-pkg-\u0074oolkit" = "0.16.0"              # escape in a key
+//
+// None appears in the repository; a manifest that needs one can be rewritten
+// in the plain `[dependencies]` form the reader understands. The same goes
+// for a manifest that is not a regular file (a symlink) or is implausibly
+// large, and for two Mosaic packages of the same kind claiming one name
+// (checkMosaicNameCollisions), which would otherwise point every dependent's
+// edge at whichever package discovery happened to see last.
 
 import (
+	"bytes"
+	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"sort"
@@ -60,6 +80,52 @@ import (
 
 // mosaicManifestName is the one file that makes a directory a Mosaic package.
 const mosaicManifestName = "mosaic-package.toml"
+
+// maxMosaicManifestBytes caps a manifest read. Real manifests are a few
+// hundred bytes; anything past this is refused rather than read into memory.
+const maxMosaicManifestBytes = 1 << 20
+
+// MosaicManifestError reports a manifest the resolver refuses to guess about.
+// Returning it (rather than resolving no edges) keeps change detection from
+// failing open.
+type MosaicManifestError struct {
+	Path   string
+	Reason string
+}
+
+func (err *MosaicManifestError) Error() string {
+	return fmt.Sprintf("%s: %s; write dependencies as keys of a plain [dependencies] table", err.Path, err.Reason)
+}
+
+// readMosaicManifestBytes returns the manifest's bytes, found=false when the
+// package has no manifest, or an error when the manifest is not a regular
+// file or exceeds maxMosaicManifestBytes.
+func readMosaicManifestBytes(pkgPath string) (data []byte, found bool, err error) {
+	path := filepath.Join(pkgPath, mosaicManifestName)
+	info, statErr := os.Lstat(path)
+	if statErr != nil {
+		if os.IsNotExist(statErr) {
+			return nil, false, nil
+		}
+		return nil, false, &MosaicManifestError{Path: path, Reason: statErr.Error()}
+	}
+	if !info.Mode().IsRegular() {
+		return nil, false, &MosaicManifestError{Path: path, Reason: "is not a regular file"}
+	}
+	file, openErr := os.Open(path)
+	if openErr != nil {
+		return nil, false, &MosaicManifestError{Path: path, Reason: openErr.Error()}
+	}
+	defer file.Close()
+	data, readErr := io.ReadAll(io.LimitReader(file, maxMosaicManifestBytes+1))
+	if readErr != nil {
+		return nil, false, &MosaicManifestError{Path: path, Reason: readErr.Error()}
+	}
+	if len(data) > maxMosaicManifestBytes {
+		return nil, false, &MosaicManifestError{Path: path, Reason: fmt.Sprintf("is larger than %d bytes", maxMosaicManifestBytes)}
+	}
+	return data, true, nil
+}
 
 // readMosaicManifestTables reads pkgPath/mosaic-package.toml and returns, for
 // each top-level table header, the keys assigned directly inside it. Keys of
@@ -83,10 +149,20 @@ const mosaicManifestName = "mosaic-package.toml"
 // element that begins with `[` is never mistaken for a table header. Array
 // of tables (`[[x]]`) headers end the current table and are otherwise
 // ignored: no Mosaic manifest field the resolver reads uses them.
-func readMosaicManifestTables(pkgPath string) (keys map[string][]string, values map[string]string, ok bool) {
-	data, err := os.ReadFile(filepath.Join(pkgPath, mosaicManifestName))
-	if err != nil {
-		return nil, nil, false
+//
+// It returns found=false when there is no manifest, and a *MosaicManifestError
+// for any shape listed at the top of this file.
+func readMosaicManifestTables(pkgPath string) (keys map[string][]string, values map[string]string, found bool, err error) {
+	data, found, err := readMosaicManifestBytes(pkgPath)
+	if err != nil || !found {
+		return nil, nil, found, err
+	}
+	path := filepath.Join(pkgPath, mosaicManifestName)
+	refuse := func(reason string) (map[string][]string, map[string]string, bool, error) {
+		return nil, nil, true, &MosaicManifestError{Path: path, Reason: reason}
+	}
+	if bytes.Contains(data, []byte(`"""`)) || bytes.Contains(data, []byte("'''")) {
+		return refuse("uses a multi-line string")
 	}
 
 	keys = make(map[string][]string)
@@ -134,6 +210,9 @@ func readMosaicManifestTables(pkgPath string) (keys map[string][]string, values 
 		if eq < 0 {
 			continue
 		}
+		if strings.Contains(line[:eq], "\\") {
+			return refuse("uses an escape sequence in a key")
+		}
 		path := splitTomlKeyPath(line[:eq])
 		value := strings.TrimSpace(line[eq+1:])
 		depth = tomlBracketDelta(value)
@@ -143,19 +222,25 @@ func readMosaicManifestTables(pkgPath string) (keys map[string][]string, values 
 		if len(path) == 0 {
 			continue
 		}
+		if table == "" && path[0] == "dependencies" {
+			return refuse("declares dependencies as a root-level key or inline table")
+		}
 		keys[table] = append(keys[table], path[0])
 		if len(path) == 1 {
 			values[table+"."+path[0]] = tomlBasicStringValue(value)
 		}
 	}
-	return keys, values, true
+	return keys, values, true, nil
 }
 
 // readMosaicPackageName returns the manifest's `[package].name`, lowercased,
 // or "" when the manifest is absent or names nothing.
+//
+// A manifest the reader refuses also names nothing here; parseMosaicDeps
+// reports the error for the same package, so the plan still stops.
 func readMosaicPackageName(pkgPath string) string {
-	_, values, ok := readMosaicManifestTables(pkgPath)
-	if !ok {
+	_, values, found, err := readMosaicManifestTables(pkgPath)
+	if err != nil || !found {
 		return ""
 	}
 	return strings.ToLower(strings.TrimSpace(values["package.name"]))
@@ -166,10 +251,13 @@ func readMosaicPackageName(pkgPath string) string {
 // unique. A dependency that names pkg itself is dropped rather than turned
 // into a self-loop (the manifest validator reports that case; the build
 // graph must stay acyclic regardless).
-func parseMosaicDeps(pkg discovery.Package, knownNames map[string]string) []string {
-	keys, _, ok := readMosaicManifestTables(pkg.Path)
-	if !ok {
-		return nil
+func parseMosaicDeps(pkg discovery.Package, knownNames map[string]string) ([]string, error) {
+	keys, _, found, err := readMosaicManifestTables(pkg.Path)
+	if err != nil {
+		return nil, err
+	}
+	if !found {
+		return nil, nil
 	}
 
 	seen := make(map[string]bool)
@@ -184,7 +272,43 @@ func parseMosaicDeps(pkg discovery.Package, knownNames map[string]string) []stri
 		deps = append(deps, dependency)
 	}
 	sort.Strings(deps)
-	return deps
+	return deps, nil
+}
+
+// checkMosaicNameCollisions refuses two Mosaic packages of the same kind (two
+// libraries, or two programs) that claim one name, by directory basename or
+// by `[package].name`. The name table keeps one entry per name, so without
+// this check a package declaring `name = "mosaic-pkg-toolkit"` would capture
+// every edge meant for the real toolkit, and toolkit edits would stop
+// selecting its dependents. A library and a program sharing a name stay
+// allowed: the library wins, as it does in every other ecosystem here.
+func checkMosaicNameCollisions(packages []discovery.Package) error {
+	type claim struct{ pkg, path string }
+	claims := make(map[string]claim)
+	for _, pkg := range packages {
+		if pkg.Language != "mosaic" {
+			continue
+		}
+		tier := "library"
+		if strings.Contains(filepath.ToSlash(pkg.Path), "/programs/") {
+			tier = "program"
+		}
+		names := []string{strings.ToLower(filepath.Base(pkg.Path))}
+		if manifestName := readMosaicPackageName(pkg.Path); manifestName != "" && manifestName != names[0] {
+			names = append(names, manifestName)
+		}
+		for _, name := range names {
+			key := tier + ":" + name
+			if existing, taken := claims[key]; taken && existing.pkg != pkg.Name {
+				return &MosaicManifestError{
+					Path:   filepath.Join(pkg.Path, mosaicManifestName),
+					Reason: fmt.Sprintf("claims the Mosaic package name %q, which %s (%s) already has", name, existing.pkg, existing.path),
+				}
+			}
+			claims[key] = claim{pkg: pkg.Name, path: pkg.Path}
+		}
+	}
+	return nil
 }
 
 // stripTomlComment removes a '#' comment that is not inside a quoted string.

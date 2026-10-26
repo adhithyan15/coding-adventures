@@ -2292,6 +2292,12 @@ func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, er
 		graph.AddNode(pkg.Name)
 	}
 
+	// A Mosaic name claimed twice would silently redirect edges; refuse it
+	// before any table is built (see checkMosaicNameCollisions).
+	if err := checkMosaicNameCollisions(packages); err != nil {
+		return nil, err
+	}
+
 	// Build the ecosystem-specific name mapping table.
 	knownNamesByLanguage := make(map[string]map[string]string)
 	knownGradlePathsByLanguage := make(map[string]map[string]string)
@@ -2347,7 +2353,11 @@ func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, er
 		case "dotnet", "csharp", "fsharp":
 			deps = parseDotnetDeps(pkg, knownDotnetProjectPaths)
 		case "mosaic":
-			deps = parseMosaicDeps(pkg, knownNames)
+			var err error
+			deps, err = parseMosaicDeps(pkg, knownNames)
+			if err != nil {
+				return nil, err
+			}
 		}
 		deps = append(deps, parseBuildToolDeps(pkg, knownPackageNames)...)
 

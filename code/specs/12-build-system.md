@@ -153,7 +153,12 @@ other build-tool implementations to). Only the keys of the root
 `[dependencies]` table (or a `[dependencies.<name>]` sub-table header) are
 candidates; the requirement string is version data. Lookup is scoped to
 Mosaic packages, libraries win over programs on a shared name, and
-self-references are dropped. The resolver builds a directed graph where an edge from A to B means "B depends on A" (A must build before B).
+self-references are dropped. Because a
+missed edge silently skips a dependent's tests, the reader fails closed: a
+manifest in a valid TOML shape it does not model (a root-level
+`dependencies` key or inline table, a multi-line string, an escape in a
+key), a manifest that is not a regular file or exceeds 1 MiB, and two Mosaic
+packages of the same kind claiming one name are errors that stop the plan. The resolver builds a directed graph where an edge from A to B means "B depends on A" (A must build before B).
 
 ## BUILD Validation
 

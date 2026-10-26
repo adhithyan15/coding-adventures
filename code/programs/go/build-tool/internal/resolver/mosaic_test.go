@@ -1,8 +1,11 @@
 package resolver
 
 import (
+	"errors"
+	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
@@ -149,7 +152,10 @@ mosaic-pkg-sheet = "0.1.0"
 		t.Run(tc.name, func(t *testing.T) {
 			_, packages := mosaicWorld(t, tc.manifest)
 			known := buildKnownNamesForLanguage(packages, "mosaic")
-			got := parseMosaicDeps(packages[3], known)
+			got, err := parseMosaicDeps(packages[3], known)
+			if err != nil {
+				t.Fatalf("parseMosaicDeps: %v", err)
+			}
 			if !reflect.DeepEqual(got, tc.want) {
 				t.Fatalf("parseMosaicDeps = %v, want %v", got, tc.want)
 			}
@@ -159,11 +165,92 @@ mosaic-pkg-sheet = "0.1.0"
 
 func TestParseMosaicDepsWithoutAManifest(t *testing.T) {
 	pkg := discovery.Package{Name: "mosaic/empty", Path: t.TempDir(), Language: "mosaic"}
-	if got := parseMosaicDeps(pkg, map[string]string{"x": "mosaic/x"}); len(got) != 0 {
-		t.Fatalf("expected no dependencies without a manifest, got %v", got)
+	if got, err := parseMosaicDeps(pkg, map[string]string{"x": "mosaic/x"}); err != nil || len(got) != 0 {
+		t.Fatalf("expected no dependencies and no error without a manifest, got %v, %v", got, err)
 	}
 	if got := readMosaicPackageName(pkg.Path); got != "" {
 		t.Fatalf("expected no manifest name, got %q", got)
+	}
+}
+
+// TestParseMosaicDepsFailsClosedOnShapesItDoesNotModel: each row is valid
+// TOML that declares (or could hide) a dependency in a shape the line reader
+// does not model. Resolving no edge there would silently skip the dependent's
+// tests on every later PR, so each must be an error that stops the plan.
+func TestParseMosaicDepsFailsClosedOnShapesItDoesNotModel(t *testing.T) {
+	cases := []struct{ name, manifest, reason string }{
+		{"plain form (control)", "[package]\nname = \"task-app\"\n", ""},
+		{"root inline table", "dependencies = { mosaic-pkg-sheet = \"0.1.0\" }\n[package]\nname = \"task-app\"\n", "root-level"},
+		{"root dotted key", "dependencies.mosaic-pkg-sheet = \"0.1.0\"\n[package]\nname = \"task-app\"\n", "root-level"},
+		{"basic multi-line string", "[package]\nname = \"task-app\"\ndescription = \"\"\"\nx = [\n\"\"\"\n[dependencies]\nmosaic-pkg-sheet = \"0.1.0\"\n", "multi-line"},
+		{"literal multi-line string", "[package]\nname = \"task-app\"\nnotes = \x27\x27\x27\n[dependencies]\n\x27\x27\x27\n", "multi-line"},
+		{"escaped key", "[package]\nname = \"task-app\"\n[dependencies]\n\"mosaic-pkg-\\u0073heet\" = \"0.1.0\"\n", "escape"},
+	}
+	for index, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			_, packages := mosaicWorld(t, tc.manifest)
+			known := buildKnownNamesForLanguage(packages, "mosaic")
+			_, err := parseMosaicDeps(packages[3], known)
+			if index == 0 {
+				// Control: the plain form still parses.
+				if err != nil {
+					t.Fatalf("plain manifest refused: %v", err)
+				}
+				return
+			}
+			var manifestErr *MosaicManifestError
+			if !errors.As(err, &manifestErr) || !strings.Contains(err.Error(), tc.reason) {
+				t.Fatalf("expected a MosaicManifestError mentioning %q, got %v", tc.reason, err)
+			}
+			if _, resolveErr := ResolveDependencies(packages); resolveErr == nil {
+				t.Fatal("ResolveDependencies must stop on a refused manifest")
+			}
+		})
+	}
+}
+
+// TestParseMosaicDepsRefusesASymlinkedOrHugeManifest: the manifest is read
+// only as a bounded regular file.
+func TestParseMosaicDepsRefusesASymlinkedOrHugeManifest(t *testing.T) {
+	dir := t.TempDir()
+	target := filepath.Join(t.TempDir(), "elsewhere.toml")
+	if err := os.WriteFile(target, []byte("[package]\nname = \"x\"\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(target, filepath.Join(dir, mosaicManifestName)); err != nil {
+		t.Skipf("symlinks unavailable: %v", err)
+	}
+	pkg := discovery.Package{Name: "mosaic/linked", Path: dir, Language: "mosaic"}
+	if _, err := parseMosaicDeps(pkg, nil); err == nil || !strings.Contains(err.Error(), "not a regular file") {
+		t.Fatalf("expected a symlinked manifest to be refused, got %v", err)
+	}
+
+	big := t.TempDir()
+	huge := "[package]\nname = \"big\"\n# " + strings.Repeat("x", maxMosaicManifestBytes) + "\n"
+	if err := os.WriteFile(filepath.Join(big, mosaicManifestName), []byte(huge), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	pkg = discovery.Package{Name: "mosaic/big", Path: big, Language: "mosaic"}
+	if _, err := parseMosaicDeps(pkg, nil); err == nil || !strings.Contains(err.Error(), "larger than") {
+		t.Fatalf("expected an oversized manifest to be refused, got %v", err)
+	}
+}
+
+// TestResolveDependenciesRefusesACapturedMosaicName: a second library that
+// claims the toolkit's name must stop the plan, not silently take over the
+// edges of everything that requires the toolkit.
+func TestResolveDependenciesRefusesACapturedMosaicName(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"code/packages/mosaic/mosaic-pkg-toolkit/mosaic-package.toml": "[package]\nname = \"mosaic-pkg-toolkit\"\n",
+		"code/packages/mosaic/zzz/mosaic-package.toml":                "[package]\nname = \"mosaic-pkg-toolkit\"\n",
+	})
+	packages := []discovery.Package{
+		{Name: "mosaic/mosaic-pkg-toolkit", Path: filepath.Join(root, "code/packages/mosaic/mosaic-pkg-toolkit"), Language: "mosaic"},
+		{Name: "mosaic/zzz", Path: filepath.Join(root, "code/packages/mosaic/zzz"), Language: "mosaic"},
+	}
+	_, err := ResolveDependencies(packages)
+	if err == nil || !strings.Contains(err.Error(), `claims the Mosaic package name "mosaic-pkg-toolkit"`) {
+		t.Fatalf("expected a name-collision error, got %v", err)
 	}
 }
 
