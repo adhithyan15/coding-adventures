@@ -66,17 +66,18 @@ already public.
 This queue is re-costed after every merge or discovery. Dates indicate the
 architecture/core introduction era, not a claim about a particular chip.
 
-Cortex-M4 is complete locally and awaiting publication. Its checked Armv7E-M
+Cortex-M4 functional merged in PR #18313. Its checked Armv7E-M
 boundary explicitly classifies all 20 inherited Cortex-M3 instruction
 families, differentially witnesses inherited integer, privilege, IT, memory,
 exclusive, branch, power, and lifecycle state, and covers the bounded DSP and
 optional FPv4-SP extension. All 30 release tests, strict Clippy/rustdoc, and
-92.81% line coverage (994/1071) are green. Cortex-M7 and Cortex-M23 are
+92.81% line coverage (994/1071) are green. Its educational gate companion is
+now specified as an independent 526,013-DFF cell. Cortex-M7 and Cortex-M23 are
 merged, while Cortex-M33 is already in review.
 
 | Order | Target | Public basis | Planned boundary |
 |---:|---|---|---|
-| 1 | Arm Cortex-M4 (in publication) | Armv7E-M manuals | Cortex-M3 integer base plus documented DSP/FPU boundary. |
+| 1 | Arm Cortex-M4 (functional merged; gate specified locally) | Armv7E-M manuals | Cortex-M3 gate base plus gate-derived DSP and optional FPv4-SP boundary; no vendor MCU or timing claims. |
 | 2 | Arm Cortex-M7 (merged) | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
 | 3 | Arm Cortex-M23 (merged) | Armv8-M manuals | Bounded baseline/security-state cell complete; exclusive encodings and exceptions remain follow-up work. |
 | 4 | Arm Cortex-M33 (in review) | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
