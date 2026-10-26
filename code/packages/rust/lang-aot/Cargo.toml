@@ -29,6 +29,10 @@ perl-iir-compiler = { path = "../perl-iir-compiler" }
 # (+ - * = LANG83 PR4 *_ovf ops, // % = i64_div_floor/i64_mod_floor,
 # print = print_i64).
 python-iir-compiler = { path = "../python-iir-compiler" }
+# LANG84 phase 6e: JavaScript's es-number-log subset on the es2016–es2025
+# edition grammars (+ - * / = LANG83 PR6c f64_* ops, console.log =
+# write_f64_js + putchar, ReferenceError = trap "Trap.ReferenceError").
+javascript-iir-compiler = { path = "../javascript-iir-compiler" }
 interpreter-ir        = { path = "../interpreter-ir" }
 cli-builder           = { path = "../cli-builder" }
 iir-to-llvm           = { path = "../iir-to-llvm" }
