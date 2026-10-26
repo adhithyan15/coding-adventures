@@ -12,6 +12,10 @@
 - Lock the normalized qualifier, entry-point, and consumer bodies and exercise
   adversarial helper-shadow, iterator, high-word, and dead-anchor fixtures so
   alternate spellings cannot bypass that structural guard.
+- Parse the production Rust syntax so locked functions must be unique
+  top-level definitions and the instruction consumers must belong to the
+  direct `exec_one` dispatch; reject inactive `cfg` decoys and later active
+  host-wide duplicates.
 - Document the reproducible all-target coverage command and its 88.40%
   (1,357/1,535) package result.
 

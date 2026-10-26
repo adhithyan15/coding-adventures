@@ -1,3 +1,6 @@
+use quote::ToTokens;
+use syn::{Expr, ExprMatch, Item, ItemFn, Stmt};
+
 const UNSIGNED_ENTRY: &str = r#"
 pub(crate) fn multiply_unsigned(a: u64, b: u64) -> QualifiedWideResult {
     qualify_unsigned(&u128_to_bits(multiply_unsigned_wide(a, b)))
@@ -156,96 +159,145 @@ Instr::Div { divisor, signed } => {
 }
 "#;
 
-fn normalize(source: &str) -> String {
-    source
-        .lines()
-        .map(|line| line.split_once("//").map_or(line, |(code, _)| code))
-        .flat_map(str::chars)
-        .filter(|character| !character.is_whitespace())
-        .collect()
+fn canonical(node: &impl ToTokens) -> String {
+    node.to_token_stream().to_string()
 }
 
-fn region<'a>(source: &'a str, start: &str, end: &str) -> &'a str {
-    let start_index = source
-        .find(start)
-        .unwrap_or_else(|| panic!("missing structural-contract start marker: {start}"));
-    let tail = &source[start_index..];
-    let end_index = tail
-        .find(end)
-        .unwrap_or_else(|| panic!("missing structural-contract end marker: {end}"));
-    &tail[..end_index]
+fn unique_top_level_function<'a>(file: &'a syn::File, name: &str) -> Result<&'a ItemFn, String> {
+    let matches: Vec<_> = file
+        .items
+        .iter()
+        .filter_map(|item| match item {
+            Item::Fn(function) if function.sig.ident == name => Some(function),
+            _ => None,
+        })
+        .collect();
+    if matches.len() != 1 {
+        return Err(format!(
+            "expected exactly one top-level function named {name}, found {}",
+            matches.len()
+        ));
+    }
+    Ok(matches[0])
 }
 
-fn matches_contract(actual: &str, expected: &str) -> bool {
-    normalize(actual) == normalize(expected)
+fn validate_function(source: &str, name: &str, expected: &str) -> Result<(), String> {
+    let file = syn::parse_file(source).map_err(|error| error.to_string())?;
+    let actual = unique_top_level_function(&file, name)?;
+    let expected: ItemFn = syn::parse_str(expected).map_err(|error| error.to_string())?;
+    if canonical(actual) != canonical(&expected) {
+        return Err(format!("top-level function {name} changed"));
+    }
+    Ok(())
 }
 
-fn assert_region(source: &str, start: &str, end: &str, expected: &str) {
-    let actual = region(source, start, end);
+fn parse_expected_arms(source: &str) -> Result<Vec<syn::Arm>, String> {
+    let expression: Expr = syn::parse_str(&format!("match __contract_subject {{ {source} }}"))
+        .map_err(|error| error.to_string())?;
+    let Expr::Match(dispatch) = expression else {
+        return Err("expected fixture did not parse as a match".to_owned());
+    };
+    Ok(dispatch.arms)
+}
+
+fn direct_instruction_dispatch(function: &ItemFn) -> Result<&ExprMatch, String> {
+    if function
+        .attrs
+        .iter()
+        .any(|attribute| !attribute.path().is_ident("doc"))
+    {
+        return Err("exec_one carries a non-documentation attribute".to_owned());
+    }
+    let [Stmt::Expr(Expr::Match(dispatch), None)] = function.block.stmts.as_slice() else {
+        return Err("exec_one must consist solely of its instruction match".to_owned());
+    };
+    if canonical(dispatch.expr.as_ref()) != "ins" {
+        return Err("exec_one no longer dispatches directly on ins".to_owned());
+    }
+    if dispatch.arms.len() != 47 {
+        return Err(format!(
+            "expected all 47 direct instruction arms, found {}",
+            dispatch.arms.len()
+        ));
+    }
+    for arm in &dispatch.arms {
+        if !arm.attrs.is_empty() || arm.guard.is_some() {
+            return Err("exec_one arms must not use attributes or guards".to_owned());
+        }
+        if !matches!(
+            arm.pat,
+            syn::Pat::Path(_) | syn::Pat::Struct(_) | syn::Pat::TupleStruct(_)
+        ) {
+            return Err("exec_one arms must directly name one Instr variant".to_owned());
+        }
+    }
+    Ok(dispatch)
+}
+
+fn validate_instruction_arms(source: &str, expected: &str) -> Result<(), String> {
+    let file = syn::parse_file(source).map_err(|error| error.to_string())?;
+    let function = unique_top_level_function(&file, "exec_one")?;
+    let dispatch = direct_instruction_dispatch(function)?;
+    for expected_arm in parse_expected_arms(expected)? {
+        let pattern = canonical(&expected_arm.pat);
+        let matches: Vec<_> = dispatch
+            .arms
+            .iter()
+            .filter(|arm| canonical(&arm.pat) == pattern)
+            .collect();
+        if matches.len() != 1 {
+            return Err(format!(
+                "expected exactly one exec_one arm for {pattern}, found {}",
+                matches.len()
+            ));
+        }
+        if canonical(matches[0]) != canonical(&expected_arm) {
+            return Err(format!("exec_one arm for {pattern} changed"));
+        }
+    }
+    Ok(())
+}
+
+fn validate_gate_contracts(source: &str) -> Result<(), String> {
+    for (name, expected) in [
+        ("multiply_unsigned", UNSIGNED_ENTRY),
+        ("multiply_signed", SIGNED_ENTRY),
+        ("divide_unsigned", UNSIGNED_DIVISION_ENTRY),
+        ("divide_signed", SIGNED_DIVISION_ENTRY),
+        ("qualify_unsigned", UNSIGNED_QUALIFIER),
+        ("qualify_signed", SIGNED_QUALIFIER),
+    ] {
+        validate_function(source, name, expected)?;
+    }
+    Ok(())
+}
+
+fn validate_execution_contracts(source: &str) -> Result<(), String> {
+    validate_instruction_arms(source, MULTIPLY_CONSUMERS)?;
+    validate_instruction_arms(source, DIVIDE_CONSUMER)
+}
+
+fn replace_once(source: &str, old: &str, new: &str) -> String {
     assert_eq!(
-        normalize(actual),
-        normalize(expected),
-        "gate-integrity contract changed between {start:?} and {end:?}"
+        source.matches(old).count(),
+        1,
+        "fixture mutation must be exact"
     );
+    source.replacen(old, new, 1)
 }
 
 #[test]
 fn production_qualification_call_paths_match_the_reviewed_contract() {
     let gates = include_str!("../src/gate_networks.rs");
-    assert_region(
-        gates,
-        "pub(crate) fn multiply_unsigned",
-        "fn multiply_unsigned_wide",
-        UNSIGNED_ENTRY,
-    );
-    assert_region(
-        gates,
-        "pub(crate) fn multiply_signed",
-        "pub(crate) fn divide_unsigned",
-        SIGNED_ENTRY,
-    );
-    assert_region(
-        gates,
-        "pub(crate) fn divide_unsigned",
-        "fn divide_unsigned_wide",
-        UNSIGNED_DIVISION_ENTRY,
-    );
-    assert_region(
-        gates,
-        "pub(crate) fn divide_signed",
-        "pub(crate) fn address",
-        SIGNED_DIVISION_ENTRY,
-    );
-    assert_region(
-        gates,
-        "fn qualify_unsigned",
-        "fn qualify_signed",
-        UNSIGNED_QUALIFIER,
-    );
-    assert_region(
-        gates,
-        "fn qualify_signed",
-        "fn u128_to_bits",
-        SIGNED_QUALIFIER,
-    );
+    validate_gate_contracts(gates).expect("gate qualification contract");
 
     let execution = include_str!("../src/execution.rs");
-    assert_region(
-        execution,
-        "Instr::Imul { dst, src }",
-        "Instr::IncDec { dst, decrement }",
-        MULTIPLY_CONSUMERS,
-    );
-    assert_region(
-        execution,
-        "Instr::Div { divisor, signed }",
-        "Instr::MovsdLoad { xmm, src }",
-        DIVIDE_CONSUMER,
-    );
+    validate_execution_contracts(execution).expect("instruction consumer contract");
 }
 
 #[test]
 fn structural_contract_rejects_helper_shadow_and_iterator_bypasses() {
+    let gates = include_str!("../src/gate_networks.rs");
     let unsigned_shadow = UNSIGNED_QUALIFIER.replace(
         "QualifiedWideResult {",
         "let any_high = host_nonzero(bits); QualifiedWideResult {",
@@ -258,23 +310,59 @@ fn structural_contract_rejects_helper_shadow_and_iterator_bypasses() {
         "QualifiedWideResult {",
         "let differs_from_sign = bits[64..].iter().filter(|bit| **bit != sign).count().min(1) as u8; QualifiedWideResult {",
     );
-    assert!(!matches_contract(&unsigned_shadow, UNSIGNED_QUALIFIER));
-    assert!(!matches_contract(&unsigned_sum, UNSIGNED_QUALIFIER));
-    assert!(!matches_contract(&signed_shadow, SIGNED_QUALIFIER));
+    assert!(
+        validate_gate_contracts(&replace_once(gates, UNSIGNED_QUALIFIER, &unsigned_shadow))
+            .is_err()
+    );
+    assert!(
+        validate_gate_contracts(&replace_once(gates, UNSIGNED_QUALIFIER, &unsigned_sum)).is_err()
+    );
+    assert!(
+        validate_gate_contracts(&replace_once(gates, SIGNED_QUALIFIER, &signed_shadow)).is_err()
+    );
 }
 
 #[test]
 fn structural_contract_rejects_dead_anchors_and_host_wide_consumers() {
-    let multiply_bypass = MULTIPLY_CONSUMERS.replacen(
+    let execution = include_str!("../src/execution.rs");
+    let multiply_bypass = execution.replacen(
         "let truncated = product.overflow != 0;",
         "let truncated = product.high.count_ones() != 0; let _anchor = product.overflow != 0;",
         1,
     );
-    let divide_bypass = DIVIDE_CONSUMER.replacen(
+    let divide_bypass = execution.replacen(
         "if division.quotient.overflow != 0 {",
         "let _anchor = division.quotient.overflow != 0; if division.quotient.high > 0 {",
         1,
     );
-    assert!(!matches_contract(&multiply_bypass, MULTIPLY_CONSUMERS));
-    assert!(!matches_contract(&divide_bypass, DIVIDE_CONSUMER));
+    assert_ne!(multiply_bypass, execution);
+    assert_ne!(divide_bypass, execution);
+    assert!(validate_execution_contracts(&multiply_bypass).is_err());
+    assert!(validate_execution_contracts(&divide_bypass).is_err());
+}
+
+#[test]
+fn structural_contract_rejects_inactive_decoy_and_active_duplicate() {
+    let gates = include_str!("../src/gate_networks.rs");
+    let inactive_decoy = replace_once(
+        gates,
+        "fn qualify_unsigned(bits: &[u8; 128]) -> QualifiedWideResult {",
+        "#[cfg(any())]\nfn qualify_unsigned(bits: &[u8; 128]) -> QualifiedWideResult {",
+    );
+    let bypass = format!(
+        r#"{inactive_decoy}
+fn qualify_unsigned(bits: &[u8; 128]) -> QualifiedWideResult {{
+    let low = bits_to_u64(&bits[..64]);
+    let high = bits_to_u64(&bits[64..]);
+    QualifiedWideResult {{
+        low,
+        high,
+        overflow: u8::from(high != 0),
+    }}
+}}
+"#
+    );
+    syn::parse_file(&bypass).expect("hostile fixture remains valid Rust syntax");
+    let error = validate_gate_contracts(&bypass).expect_err("duplicate must be rejected");
+    assert!(error.contains("exactly one top-level function named qualify_unsigned"));
 }
