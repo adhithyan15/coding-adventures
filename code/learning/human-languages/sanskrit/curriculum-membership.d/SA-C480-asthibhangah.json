@@ -1,0 +1,11 @@
+{
+  "id": "SA-C480-asthibhangah",
+  "pathSegment": "SA-PATH-480-DAMSA480",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-480-DAMSA480",
+      "order": 3
+    }
+  ]
+}

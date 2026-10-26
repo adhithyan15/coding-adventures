@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:a4693955b983c6f6",
+  "lessonIds": [
+    "SA-C496-mangalasutram",
+    "SA-C496-vadhuh",
+    "SA-C496-parinayati",
+    "SA-C496-mandapah",
+    "SA-C496-saptapadi"
+  ],
+  "tex": "sanskrit/book/chapters/ch496-a-wedding.tex"
+}

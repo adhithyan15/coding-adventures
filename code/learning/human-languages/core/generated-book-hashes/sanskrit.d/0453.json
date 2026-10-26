@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:2eff6297a9082cb4",
+  "lessonIds": [
+    "SA-C453-utkantha",
+    "SA-C453-vidhurah",
+    "SA-C453-pravasati",
+    "SA-C453-suhrd",
+    "SA-C453-sandisati"
+  ],
+  "tex": "sanskrit/book/chapters/ch453-missing-someone.tex"
+}

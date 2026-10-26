@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:fd778c5623ffec9a",
+  "lessonIds": [
+    "SA-C436-abhram",
+    "SA-C436-vrstih",
+    "SA-C436-pravarsati",
+    "SA-C436-klidyati",
+    "SA-C436-picchilah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch436.txt",
+  "json": "sanskrit/narration/ch436.json",
+  "textHash": "fnv1a64:2aaed852d5ffd1ac",
+  "jsonHash": "fnv1a64:b3657fb6f601ac43",
+  "findings": []
+}

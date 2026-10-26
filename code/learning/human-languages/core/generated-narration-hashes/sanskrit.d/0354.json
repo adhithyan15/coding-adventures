@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:34888563a8ce4d77",
+  "lessonIds": [
+    "SA-C354-nagarikah",
+    "SA-C354-janata",
+    "SA-C354-samajah",
+    "SA-C354-svatantrah",
+    "SA-C354-sanghatayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch354.txt",
+  "json": "sanskrit/narration/ch354.json",
+  "textHash": "fnv1a64:d2c65b2794d68487",
+  "jsonHash": "fnv1a64:74187957ae48bc69",
+  "findings": []
+}

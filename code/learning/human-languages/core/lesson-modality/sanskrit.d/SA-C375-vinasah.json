@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C375-vinasah",
+    "language": "sanskrit",
+    "chapter": 375,
+    "sequence": 21810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3995979d133c0491"
+  },
+  "findings": []
+}

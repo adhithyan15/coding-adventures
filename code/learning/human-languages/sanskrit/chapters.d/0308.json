@@ -1,0 +1,19 @@
+{
+  "chapter": 308,
+  "title": "Lending a Hand",
+  "label": "ch:sa-lending-a-hand",
+  "canDo": "I can say who helped and what they shared.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C308-sahayah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can say who helped and what they shared.",
+    "assesses": [
+      "SA-LEX-C308-SAMUHA308-03",
+      "SA-LEX-C308-SAMUHA308-04",
+      "SA-LEX-C308-SAMUHA308-05"
+    ]
+  }
+}

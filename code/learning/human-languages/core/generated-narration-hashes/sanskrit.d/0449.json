@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:805f22b0e4ad9d55",
+  "lessonIds": [
+    "SA-C449-avegah",
+    "SA-C449-vismayate",
+    "SA-C449-ascaryam",
+    "SA-C449-tosayati",
+    "SA-C449-romancah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch449.txt",
+  "json": "sanskrit/narration/ch449.json",
+  "textHash": "fnv1a64:352612b78b52b46b",
+  "jsonHash": "fnv1a64:04ca396b46d121b9",
+  "findings": []
+}

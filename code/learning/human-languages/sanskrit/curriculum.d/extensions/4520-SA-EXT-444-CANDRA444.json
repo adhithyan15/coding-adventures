@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-444-CANDRA444",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what the moon is doing this fortnight.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C520-ragah",
+    "language": "sanskrit",
+    "chapter": 520,
+    "sequence": 29930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd2f7f73b13cf75a"
+  },
+  "findings": []
+}

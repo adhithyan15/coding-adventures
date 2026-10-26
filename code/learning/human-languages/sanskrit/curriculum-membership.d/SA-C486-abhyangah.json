@@ -1,0 +1,11 @@
+{
+  "id": "SA-C486-abhyangah",
+  "pathSegment": "SA-PATH-486-UPAVASA486",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-486-UPAVASA486",
+      "order": 3
+    }
+  ]
+}

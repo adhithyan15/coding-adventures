@@ -1,0 +1,11 @@
+{
+  "id": "SA-C419-utsah",
+  "pathSegment": "SA-PATH-419-VAPI419",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-419-VAPI419",
+      "order": 1
+    }
+  ]
+}

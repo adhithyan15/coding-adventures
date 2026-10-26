@@ -1,0 +1,11 @@
+{
+  "id": "SA-C296-sphulingah",
+  "pathSegment": "SA-PATH-296-DAVAGNI296",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-296-DAVAGNI296",
+      "order": 2
+    }
+  ]
+}

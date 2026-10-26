@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 543,
+  "title": "Free to Choose",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bc0a3dbb979d8b14",
+  "lessons": [
+    {
+      "id": "SA-C543-sveccha",
+      "sequence": 31100,
+      "title": "स्वेच्छा (svecchā) — free will",
+      "headword": "स्वेच्छा",
+      "romanization": "svecchā",
+      "gloss": "free will",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f93c03eed66d0705",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for pleasing, then the Sanskrit for neutral."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्वेच्छा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्वेच्छा — svecchā — \"free will\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि सः स्वेच्छया आगच्छति, तर्हि वयं प्रसन्नाः स्मः। yadi saḥ svecchayā āgacchati, tarhi vayaṃ prasannāḥ smaḥ. If he comes of his own free will, we are glad."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्वेच्छा (svecchā) is built from sva, \"own\", and icchā, \"a wish\", from the root √iṣ, \"to wish\", which also gives icchati; MW gives svecchā as one's own wish, free will (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svecchā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svecchā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svecchā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svecchā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi saḥ svecchayā āgacchati, tarhi vayaṃ prasannāḥ smaḥ. — If he comes of his own free will, we are glad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi saḥ svecchayā āgacchati, tarhi vayaṃ prasannāḥ smaḥ.* — If he comes of his own free will, we are glad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for pleasing, then the Sanskrit for neutral, then say svecchā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for pleasing, then the Sanskrit for neutral, then say *svecchā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्वेच्छा (svecchā) mean? (\"Free will\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C543-vivasah",
+      "sequence": 31110,
+      "title": "विवशः (vivaśaḥ) — helpless",
+      "headword": "विवशः",
+      "romanization": "vivaśaḥ",
+      "gloss": "helpless",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fa20e887d42ec37",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for neutral, then the Sanskrit for free will."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विवशः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विवशः — vivaśaḥ — \"helpless\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि सः विवशः अस्ति, तर्हि तस्य साहाय्यं करोतु। yadi saḥ vivaśaḥ asti, tarhi tasya sāhāyyaṃ karotu. If he is helpless, please help him."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विवशः (vivaśaḥ) is built on vi, \"without\", and vaśa, \"will, control\"; MW gives vivaśa as deprived of will, powerless, helpless (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vivaśaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vivaśaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vivaśaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vivaśaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi saḥ vivaśaḥ asti, tarhi tasya sāhāyyaṃ karotu. — If he is helpless, please help him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi saḥ vivaśaḥ asti, tarhi tasya sāhāyyaṃ karotu.* — If he is helpless, please help him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for neutral, then the Sanskrit for free will, then say vivaśaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for neutral, then the Sanskrit for free will, then say *vivaśaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विवशः (vivaśaḥ) mean? (\"Helpless\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C543-hathah",
+      "sequence": 31120,
+      "title": "हठः (haṭhaḥ) — obstinacy",
+      "headword": "हठः",
+      "romanization": "haṭhaḥ",
+      "gloss": "obstinacy",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f12ac92cab9a8fb1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for free will, then the Sanskrit for helpless."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हठः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हठः — haṭhaḥ — \"obstinacy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि बालः हठं करोति, तर्हि माता कुपिता भवति। yadi bālaḥ haṭhaṃ karoti, tarhi mātā kupitā bhavati. If the child is stubborn, my mother gets angry."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हठः (haṭhaḥ) is the word MW gives for violence, force, and obstinacy, pertinacity; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṭhaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṭhaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṭhaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṭhaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bālaḥ haṭhaṃ karoti, tarhi mātā kupitā bhavati. — If the child is stubborn, my mother gets angry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bālaḥ haṭhaṃ karoti, tarhi mātā kupitā bhavati.* — If the child is stubborn, my mother gets angry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for free will, then the Sanskrit for helpless, then say haṭhaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for free will, then the Sanskrit for helpless, then say *haṭhaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हठः (haṭhaḥ) mean? (\"Obstinacy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C543-agrahah",
+      "sequence": 31130,
+      "title": "आग्रहः (āgrahaḥ) — insistence",
+      "headword": "आग्रहः",
+      "romanization": "āgrahaḥ",
+      "gloss": "insistence",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3bc149808dd91fba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for helpless, then the Sanskrit for obstinacy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आग्रहः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आग्रहः — āgrahaḥ — \"insistence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि भवतः आग्रहः अस्ति, तर्हि अहम् आगच्छामि। yadi bhavataḥ āgrahaḥ asti, tarhi aham āgacchāmi. If you insist, I will come."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आग्रहः (āgrahaḥ) is built on ā and the root √grah, \"to seize\"; MW gives āgraha as insisting on, a strong inclination, obstinacy (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgrahaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgrahaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āgrahaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āgrahaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bhavataḥ āgrahaḥ asti, tarhi aham āgacchāmi. — If you insist, I will come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bhavataḥ āgrahaḥ asti, tarhi aham āgacchāmi.* — If you insist, I will come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for helpless, then the Sanskrit for obstinacy, then say āgrahaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for helpless, then the Sanskrit for obstinacy, then say *āgrahaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आग्रहः (āgrahaḥ) mean? (\"Insistence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C543-svayam",
+      "sequence": 31140,
+      "title": "स्वयम् (svayam) — by oneself",
+      "headword": "स्वयम्",
+      "romanization": "svayam",
+      "gloss": "by oneself",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05c5a5ca77494ab3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for obstinacy, then the Sanskrit for insistence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्वयम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्वयम् — svayam — \"by oneself\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि त्वं स्वयं पठसि, तर्हि त्वं शीघ्रं शिक्षसे। yadi tvaṃ svayaṃ paṭhasi, tarhi tvaṃ śīghraṃ śikṣase. If you study by yourself, you learn fast."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्वयम् (svayam) probably comes from an old nominative of sva, \"own\", as MW takes it; MW gives svayam as self, by oneself, of one's own accord (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svayam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svayam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svayam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svayam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi tvaṃ svayaṃ paṭhasi, tarhi tvaṃ śīghraṃ śikṣase. — If you study by yourself, you learn fast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi tvaṃ svayaṃ paṭhasi, tarhi tvaṃ śīghraṃ śikṣase.* — If you study by yourself, you learn fast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for obstinacy, then the Sanskrit for insistence, then say svayam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for obstinacy, then the Sanskrit for insistence, then say *svayam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्वयम् (svayam) mean? (\"By oneself\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

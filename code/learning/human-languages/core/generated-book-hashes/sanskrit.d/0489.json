@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:03e1a9daf03dfa68",
+  "lessonIds": [
+    "SA-C489-vyasanam",
+    "SA-C489-samyamah",
+    "SA-C489-dhumapanam",
+    "SA-C489-parityajati",
+    "SA-C489-madyam"
+  ],
+  "tex": "sanskrit/book/chapters/ch489-habits-and-self-control.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:12440db94f563644",
+  "lessonIds": [
+    "SA-C424-paryatati",
+    "SA-C424-darsaniyah",
+    "SA-C424-ramaniyah",
+    "SA-C424-drsyam",
+    "SA-C424-viharati"
+  ],
+  "tex": "sanskrit/book/chapters/ch424-sights-worth-seeing.tex"
+}

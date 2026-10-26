@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 376,
+  "title": "Who Can Do It",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:20c4cefb481b1914",
+  "lessons": [
+    {
+      "id": "SA-C376-yogyah",
+      "sequence": 21840,
+      "title": "योग्यः (yogyaḥ) — qualified; fit",
+      "headword": "योग्यः",
+      "romanization": "yogyaḥ",
+      "gloss": "qualified; fit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b69c848259667879",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a drought, then the Sanskrit for remedies."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: योग्यः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "योग्यः — yogyaḥ — \"qualified; fit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि अरुणः योग्यः अस्ति, तर्हि सः नायकः भवेत्। yadi aruṇaḥ yogyaḥ asti, tarhi saḥ nāyakaḥ bhavet. If Arun is qualified, he should be the leader."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "योग्यः (yogyaḥ) is built on yoga, \"a yoking, union\", from the root √yuj, \"to join\"; MW gives yogya \"fit for the yoke\" and \"useful, proper, qualified, able\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yogyaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yogyaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yogyaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yogyaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi aruṇaḥ yogyaḥ asti, tarhi saḥ nāyakaḥ bhavet. — If Arun is qualified, he should be the leader.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi aruṇaḥ yogyaḥ asti, tarhi saḥ nāyakaḥ bhavet.* — If Arun is qualified, he should be the leader.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a drought, then the Sanskrit for remedies, then say yogyaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a drought, then the Sanskrit for remedies, then say *yogyaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does योग्यः (yogyaḥ) mean? (\"Qualified; fit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C376-samarthah",
+      "sequence": 21850,
+      "title": "समर्थः (samarthaḥ) — capable; able",
+      "headword": "समर्थः",
+      "romanization": "samarthaḥ",
+      "gloss": "capable; able",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:890a9494f01c73b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for remedies, then the Sanskrit for qualified."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: समर्थः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समर्थः — samarthaḥ — \"capable; able\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि सः समर्थः, तर्हि कार्यं करिष्यति। yadi saḥ samarthaḥ, tarhi kāryaṃ kariṣyati. If he is capable, he will do the work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समर्थः (samarthaḥ) is built from sam, \"together\", and artha, \"aim\"; MW gives sam-artha \"having a suitable aim\" and \"competent, capable, able\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samarthaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samarthaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samarthaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samarthaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi saḥ samarthaḥ, tarhi kāryaṃ kariṣyati. — If he is capable, he will do the work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi saḥ samarthaḥ, tarhi kāryaṃ kariṣyati.* — If he is capable, he will do the work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for remedies, then the Sanskrit for qualified, then say samarthaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for remedies, then the Sanskrit for qualified, then say *samarthaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does समर्थः (samarthaḥ) mean? (\"Capable; able\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C376-niyacchati",
+      "sequence": 21860,
+      "title": "नियच्छति (niyacchati) — controls; restrains",
+      "headword": "नियच्छति",
+      "romanization": "niyacchati",
+      "gloss": "controls; restrains",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:055eb77d603a0fbc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for qualified, then the Sanskrit for capable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नियच्छति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नियच्छति — niyacchati — \"controls; restrains\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि भवान् मनः नियच्छति, तर्हि शान्तिः भविष्यति। yadi bhavān manaḥ niyacchati, tarhi śāntiḥ bhaviṣyati. If you control your mind, there will be peace."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः क्रोधं नियतवान्, saḥ krodhaṃ niyatavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नियच्छति (niyacchati) is built on ni, \"down\", and the root √yam, \"to hold, to restrain\"; MW gives ni-√yam \"to restrain, to curb, to control, to govern\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyacchati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyacchati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyacchati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyacchati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bhavān manaḥ niyacchati, tarhi śāntiḥ bhaviṣyati. — If you control your mind, there will be peace.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bhavān manaḥ niyacchati, tarhi śāntiḥ bhaviṣyati.* — If you control your mind, there will be peace.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for qualified, then the Sanskrit for capable, then say niyacchati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for qualified, then the Sanskrit for capable, then say *niyacchati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नियच्छति (niyacchati) mean? (\"Controls; restrains\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C376-niyantranam",
+      "sequence": 21870,
+      "title": "नियन्त्रणम् (niyantraṇam) — control; restraint",
+      "headword": "नियन्त्रणम्",
+      "romanization": "niyantraṇam",
+      "gloss": "control; restraint",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86cec14e5abcd5e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for capable, then the Sanskrit for controls."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नियन्त्रणम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नियन्त्रणम् — niyantraṇam — \"control; restraint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि चालकस्य नियन्त्रणं न अस्ति, तर्हि भयम् अस्ति। yadi cālakasya niyantraṇaṃ na asti, tarhi bhayam asti. If the driver has no control, there is danger."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नियन्त्रणम् (niyantraṇam) is built on ni and the root √yantr, \"to restrain, to bind\"; MW gives ni-yantraṇa \"restraining, checking, governing\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyantraṇam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyantraṇam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niyantraṇam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niyantraṇam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi cālakasya niyantraṇaṃ na asti, tarhi bhayam asti. — If the driver has no control, there is danger.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi cālakasya niyantraṇaṃ na asti, tarhi bhayam asti.* — If the driver has no control, there is danger.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for capable, then the Sanskrit for controls, then say niyantraṇam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for capable, then the Sanskrit for controls, then say *niyantraṇam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नियन्त्रणम् (niyantraṇam) mean? (\"Control; restraint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C376-asrayate",
+      "sequence": 21880,
+      "title": "आश्रयते (āśrayate) — takes refuge in; leans on",
+      "headword": "आश्रयते",
+      "romanization": "āśrayate",
+      "gloss": "takes refuge in; leans on",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ad2ffb0e7e782d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for controls, then the Sanskrit for control."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आश्रयते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आश्रयते — āśrayate — \"takes refuge in; leans on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि संकटम् अस्ति, तर्हि बालः मातरम् आश्रयते। yadi saṅkaṭam asti, tarhi bālaḥ mātaram āśrayate. If there is danger, the child takes refuge in its mother."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः मित्रम् आश्रितवान्, saḥ mitram āśritavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आश्रयते (āśrayate) is built on ā and the root √śri, \"to lean on\"; MW gives ā-√śri \"to seek refuge in\" and \"to depend on\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśrayate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśrayate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśrayate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśrayate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi saṅkaṭam asti, tarhi bālaḥ mātaram āśrayate. — If there is danger, the child takes refuge in its mother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi saṅkaṭam asti, tarhi bālaḥ mātaram āśrayate.* — If there is danger, the child takes refuge in its mother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for controls, then the Sanskrit for control, then say āśrayate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for controls, then the Sanskrit for control, then say *āśrayate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आश्रयते (āśrayate) mean? (\"Takes refuge in; leans on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

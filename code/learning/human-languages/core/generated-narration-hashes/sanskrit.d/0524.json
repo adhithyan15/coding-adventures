@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:962d835e66264d9b",
+  "lessonIds": [
+    "SA-C524-spardha",
+    "SA-C524-praksipati",
+    "SA-C524-vijeta",
+    "SA-C524-parajitah",
+    "SA-C524-praharati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch524.txt",
+  "json": "sanskrit/narration/ch524.json",
+  "textHash": "fnv1a64:1c42dc543aa91925",
+  "jsonHash": "fnv1a64:14ef137edfac18a1",
+  "findings": []
+}

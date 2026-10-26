@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:f1ab1cb6406d834b",
+  "lessonIds": [
+    "SA-C344-pratipaksah",
+    "SA-C344-virodhah",
+    "SA-C344-samarthayati",
+    "SA-C344-anumanyate",
+    "SA-C344-nanu"
+  ],
+  "tex": "sanskrit/book/chapters/ch344-taking-sides.tex"
+}

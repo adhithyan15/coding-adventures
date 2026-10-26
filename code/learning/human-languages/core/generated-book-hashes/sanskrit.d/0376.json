@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:b33999043a1b5bcc",
+  "lessonIds": [
+    "SA-C376-yogyah",
+    "SA-C376-samarthah",
+    "SA-C376-niyacchati",
+    "SA-C376-niyantranam",
+    "SA-C376-asrayate"
+  ],
+  "tex": "sanskrit/book/chapters/ch376-who-can-do-it.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-355-SANSAD355",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say who sits in a parliament and what they do there.",
+  "prerequisites": []
+}

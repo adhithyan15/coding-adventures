@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C303-mlayati",
+    "language": "sanskrit",
+    "chapter": 303,
+    "sequence": 17910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9dc0d22cf679e20"
+  },
+  "findings": []
+}

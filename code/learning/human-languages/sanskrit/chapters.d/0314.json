@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "A Brave Deed",
+  "label": "ch:sa-a-brave-deed",
+  "canDo": "I can tell of a brave deed and how it was honoured.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C314-abhinandati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can tell of a brave deed and how it was honoured.",
+    "assesses": [
+      "SA-LEX-C314-SHAURYA314-03",
+      "SA-LEX-C314-SHAURYA314-04",
+      "SA-LEX-C314-SHAURYA314-05"
+    ]
+  }
+}

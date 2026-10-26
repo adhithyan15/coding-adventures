@@ -1,0 +1,11 @@
+{
+  "id": "SA-C538-ganakah",
+  "pathSegment": "SA-PATH-538-SAKUNA538",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-538-SAKUNA538",
+      "order": 3
+    }
+  ]
+}

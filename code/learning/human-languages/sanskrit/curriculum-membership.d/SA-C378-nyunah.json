@@ -1,0 +1,11 @@
+{
+  "id": "SA-C378-nyunah",
+  "pathSegment": "SA-PATH-378-LESHA378",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-378-LESHA378",
+      "order": 3
+    }
+  ]
+}

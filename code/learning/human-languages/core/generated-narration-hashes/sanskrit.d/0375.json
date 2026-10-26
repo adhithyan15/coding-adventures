@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:04dadf1dc859d4e0",
+  "lessonIds": [
+    "SA-C375-vipattih",
+    "SA-C375-apad",
+    "SA-C375-vinasah",
+    "SA-C375-anavrstih",
+    "SA-C375-pratikaroti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch375.txt",
+  "json": "sanskrit/narration/ch375.json",
+  "textHash": "fnv1a64:ed58872e7f10a082",
+  "jsonHash": "fnv1a64:097b5a728d7288de",
+  "findings": []
+}

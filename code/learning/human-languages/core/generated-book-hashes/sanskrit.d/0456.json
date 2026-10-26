@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:f5dcbe945a76e31a",
+  "lessonIds": [
+    "SA-C456-ksubhyati",
+    "SA-C456-prasadayati",
+    "SA-C456-samahitah",
+    "SA-C456-mardayati",
+    "SA-C456-ekantah"
+  ],
+  "tex": "sanskrit/book/chapters/ch456-calm-and-composure.tex"
+}

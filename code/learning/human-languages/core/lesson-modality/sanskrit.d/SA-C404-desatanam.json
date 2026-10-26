@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C404-desatanam",
+    "language": "sanskrit",
+    "chapter": 404,
+    "sequence": 23530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4df6beeda815a5dc"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C470-amasayah",
+  "pathSegment": "SA-PATH-470-PHUPPHUSA470",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-470-PHUPPHUSA470",
+      "order": 3
+    }
+  ]
+}

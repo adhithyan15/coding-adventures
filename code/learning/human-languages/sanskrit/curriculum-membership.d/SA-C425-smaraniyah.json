@@ -1,0 +1,11 @@
+{
+  "id": "SA-C425-smaraniyah",
+  "pathSegment": "SA-PATH-425-SMARAKA425",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-425-SMARAKA425",
+      "order": 4
+    }
+  ]
+}

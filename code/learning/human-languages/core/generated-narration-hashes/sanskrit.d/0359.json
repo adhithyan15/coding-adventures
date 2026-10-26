@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:3401a37dbec05761",
+  "lessonIds": [
+    "SA-C359-tyagah",
+    "SA-C359-paropakarah",
+    "SA-C359-svarthah",
+    "SA-C359-trsna",
+    "SA-C359-samarpayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch359.txt",
+  "json": "sanskrit/narration/ch359.json",
+  "textHash": "fnv1a64:52dc307ec23e19bf",
+  "jsonHash": "fnv1a64:3d170aafe4101353",
+  "findings": []
+}

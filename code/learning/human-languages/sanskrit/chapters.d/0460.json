@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "Character and Conduct",
+  "label": "ch:sa-character-and-conduct",
+  "canDo": "I can describe someone's character.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C460-dustah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can describe someone's character.",
+    "assesses": [
+      "SA-LEX-C460-SVABHAVA460-03",
+      "SA-LEX-C460-SVABHAVA460-04",
+      "SA-LEX-C460-SVABHAVA460-05"
+    ]
+  }
+}

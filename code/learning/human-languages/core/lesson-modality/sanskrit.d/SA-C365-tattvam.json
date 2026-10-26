@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C365-tattvam",
+    "language": "sanskrit",
+    "chapter": 365,
+    "sequence": 21290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6905e95b291bb871"
+  },
+  "findings": []
+}

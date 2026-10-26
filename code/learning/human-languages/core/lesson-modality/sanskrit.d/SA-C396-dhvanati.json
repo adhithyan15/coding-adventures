@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C396-dhvanati",
+    "language": "sanskrit",
+    "chapter": 396,
+    "sequence": 23100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7791f6e3049e85e3"
+  },
+  "findings": []
+}

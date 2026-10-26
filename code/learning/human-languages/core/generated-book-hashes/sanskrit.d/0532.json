@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:d1f12fcad7428f80",
+  "lessonIds": [
+    "SA-C532-upayanam",
+    "SA-C532-gucchah",
+    "SA-C532-dukulam",
+    "SA-C532-mekhala",
+    "SA-C532-upaharati"
+  ],
+  "tex": "sanskrit/book/chapters/ch532-choosing-a-gift.tex"
+}

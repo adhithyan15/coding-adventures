@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:b238659780535c12",
+  "lessonIds": [
+    "SA-C350-bandhanam",
+    "SA-C350-muktih",
+    "SA-C350-nirdharayati",
+    "SA-C350-pratyarpayati",
+    "SA-C350-prayascittam"
+  ],
+  "tex": "sanskrit/book/chapters/ch350-release.tex"
+}

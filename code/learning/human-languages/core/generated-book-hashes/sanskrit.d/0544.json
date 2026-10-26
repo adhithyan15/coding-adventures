@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:658d14d81f296a81",
+  "lessonIds": [
+    "SA-C544-parasparam",
+    "SA-C544-yugapat",
+    "SA-C544-mithah",
+    "SA-C544-prthak",
+    "SA-C544-samprati"
+  ],
+  "tex": "sanskrit/book/chapters/ch544-each-in-turn.tex"
+}

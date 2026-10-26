@@ -1,0 +1,11 @@
+{
+  "id": "SA-C296-gadhah",
+  "pathSegment": "SA-PATH-296-DAVAGNI296",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-296-DAVAGNI296",
+      "order": 3
+    }
+  ]
+}

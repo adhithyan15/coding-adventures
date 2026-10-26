@@ -1,0 +1,11 @@
+{
+  "id": "SA-C471-smasru",
+  "pathSegment": "SA-PATH-471-MASTISKA471",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-471-MASTISKA471",
+      "order": 2
+    }
+  ]
+}

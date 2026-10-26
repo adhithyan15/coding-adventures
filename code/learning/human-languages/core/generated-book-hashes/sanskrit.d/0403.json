@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:4d9950e72dc1b363",
+  "lessonIds": [
+    "SA-C403-panthah",
+    "SA-C403-dirghah",
+    "SA-C403-durgamah",
+    "SA-C403-padatih",
+    "SA-C403-vicarati"
+  ],
+  "tex": "sanskrit/book/chapters/ch403-the-long-road.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C276-sah-gatavan",
+    "language": "sanskrit",
+    "chapter": 276,
+    "sequence": 16230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef3f0fbaebd816a0"
+  },
+  "findings": []
+}

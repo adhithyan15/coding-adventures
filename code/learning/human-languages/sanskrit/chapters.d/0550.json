@@ -1,0 +1,19 @@
+{
+  "chapter": 550,
+  "title": "Sharing Out",
+  "label": "ch:sa-sharing-out",
+  "canDo": "I can say how things will be shared if everyone agrees.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C550-vitaranam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 550: I can say how things will be shared if everyone agrees.",
+    "assesses": [
+      "SA-LEX-C550-AMSA550-03",
+      "SA-LEX-C550-AMSA550-04",
+      "SA-LEX-C550-AMSA550-05"
+    ]
+  }
+}

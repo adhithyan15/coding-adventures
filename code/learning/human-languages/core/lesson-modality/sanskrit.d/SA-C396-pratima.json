@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C396-pratima",
+    "language": "sanskrit",
+    "chapter": 396,
+    "sequence": 23120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54732f270d5ac3be"
+  },
+  "findings": []
+}

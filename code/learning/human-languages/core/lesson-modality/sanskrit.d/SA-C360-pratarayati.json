@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C360-pratarayati",
+    "language": "sanskrit",
+    "chapter": 360,
+    "sequence": 21060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e285bc818e3db494"
+  },
+  "findings": []
+}

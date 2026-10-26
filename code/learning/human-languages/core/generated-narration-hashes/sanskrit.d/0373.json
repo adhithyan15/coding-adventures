@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:9a31e6977be02919",
+  "lessonIds": [
+    "SA-C373-anumatih",
+    "SA-C373-nisedhati",
+    "SA-C373-pratibandhah",
+    "SA-C373-apavadah",
+    "SA-C373-anivaryah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch373.txt",
+  "json": "sanskrit/narration/ch373.json",
+  "textHash": "fnv1a64:9bb74fab9c2e03a2",
+  "jsonHash": "fnv1a64:00f5492ad67f8b71",
+  "findings": []
+}

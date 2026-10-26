@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "In Court",
+  "label": "ch:sa-in-court",
+  "canDo": "I can follow what happens to a defendant in court.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C349-sapathah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can follow what happens to a defendant in court.",
+    "assesses": [
+      "SA-LEX-C349-NYAYALAYA349-03",
+      "SA-LEX-C349-NYAYALAYA349-04",
+      "SA-LEX-C349-NYAYALAYA349-05"
+    ]
+  }
+}

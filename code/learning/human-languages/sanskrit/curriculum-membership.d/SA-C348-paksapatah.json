@@ -1,0 +1,11 @@
+{
+  "id": "SA-C348-paksapatah",
+  "pathSegment": "SA-PATH-348-AUCITYA348",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-348-AUCITYA348",
+      "order": 3
+    }
+  ]
+}

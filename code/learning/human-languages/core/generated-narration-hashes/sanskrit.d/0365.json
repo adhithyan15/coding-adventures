@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:a4562cea0b1e8216",
+  "lessonIds": [
+    "SA-C365-siddhantah",
+    "SA-C365-tattvam",
+    "SA-C365-prajna",
+    "SA-C365-jijnasa",
+    "SA-C365-upalaksayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch365.txt",
+  "json": "sanskrit/narration/ch365.json",
+  "textHash": "fnv1a64:003476ea875b137c",
+  "jsonHash": "fnv1a64:21ac7905db2cf0e8",
+  "findings": []
+}

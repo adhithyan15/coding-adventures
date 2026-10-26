@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-443-ASTA443",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say when the sun sets and the dark night comes.",
+  "prerequisites": []
+}

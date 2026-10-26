@@ -1,0 +1,21 @@
+{
+  "chapter": 371,
+  "title": "Other Options",
+  "label": "ch:sa-other-options",
+  "canDo": "I can say what to do if the first plan does not work.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-R371-review-364-371",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can say what to do if the first plan does not work.",
+    "assesses": [
+      "SA-LEX-C371-VIKALPA371-01",
+      "SA-LEX-C371-VIKALPA371-02",
+      "SA-LEX-C371-VIKALPA371-03",
+      "SA-LEX-C371-VIKALPA371-04",
+      "SA-LEX-C371-VIKALPA371-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 373,
+  "title": "Permission First",
+  "label": "ch:sa-permission-first",
+  "canDo": "I can say what is allowed, what is forbidden and what is required.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C373-anivaryah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can say what is allowed, what is forbidden and what is required.",
+    "assesses": [
+      "SA-LEX-C373-ANUMATI373-03",
+      "SA-LEX-C373-ANUMATI373-04",
+      "SA-LEX-C373-ANUMATI373-05"
+    ]
+  }
+}
