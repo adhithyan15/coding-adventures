@@ -46,4 +46,4 @@ transfer widths and addressing modes, full-span multiple/stack operations,
 exact traces, typed failures, and transactional lifecycle behavior. The
 release suite, strict Clippy, rustdoc, Rustfmt, BUILD recipe, and lessons
 validation pass across 38 tests. Current package line coverage is
-**88.12% (1,387/1,574)**.
+**88.10% (1,385/1,572)**.

@@ -11,4 +11,4 @@
 - Add complete-state traces, typed errors, full-span target/memory preflight,
   and transactional step/run/execute behavior.
 - Add the completion contract, package BUILD front, workspace registration,
-  and documentation with 38 tests and **88.12% (1,387/1,574)** line coverage.
+  and documentation with 38 tests and **88.10% (1,385/1,572)** line coverage.
