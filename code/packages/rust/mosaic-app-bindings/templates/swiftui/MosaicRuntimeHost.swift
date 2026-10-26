@@ -772,7 +772,10 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
   /// follow a final symbolic link, so it sees a file, a directory, and a link,
   /// even a dangling one, where `fileExists` would follow the link and report
   /// nothing. `moveItem` fails rather than replace an item already at its
-  /// destination, so one that appears after the check is not replaced either.
+  /// destination. Foundation checks and then renames, so an item another
+  /// process creates at the same name in that instant could still be replaced
+  /// (by another rejected file, never truncated). That race needs a second
+  /// instance quarantining at the same moment, and is accepted.
   private static func moveStateAside(_ url: URL) -> String? {
     let manager = FileManager.default
     for index in 0..<maxQuarantinedStates {

@@ -103,10 +103,12 @@ to the first free quarantine name -- `mosaic-state.v1.json.corrupt`, then
 `persistenceWarning` (or native status warning) instead of becoming unusable.
 A quarantine is never replaced or deleted, since it may hold the user's real
 data: a taken name is skipped, and each host moves with a primitive that refuses
-an existing target (`QFile::rename`, `FileManager.moveItem`, `Files.move`
-without `REPLACE_EXISTING`, `File.Move(..., overwrite: false)`; Flutter claims
-the name with `createSync(exclusive: true)` first, because `dart:io`'s rename
-replaces). If the move fails or all ten names are taken, the rejected file is
+an existing target (`FileManager.moveItem`, `Files.move` without
+`REPLACE_EXISTING`, `File.Move(..., overwrite: false)`). Flutter and Qt claim
+the name first with an exclusive create (`createSync(exclusive: true)`,
+`QIODevice::NewOnly`) and then rename onto that empty placeholder: `dart:io`'s
+rename replaces, and `QFile::rename` falls back to a truncating copy when its
+native no-replace rename fails. If the move fails or all ten names are taken, the rejected file is
 still at the live path, so the host saves nothing for the rest of the session
 and its warning ends "This session will not be saved."
 Set `MOSAIC_APP_STATE_PATH` to an explicit file for tests or portable launches.

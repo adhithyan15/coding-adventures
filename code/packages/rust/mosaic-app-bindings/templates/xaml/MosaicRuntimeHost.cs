@@ -1424,8 +1424,11 @@ public static class MosaicRuntimeHost
         ///
         /// A name is skipped when anything is there, file or directory, and
         /// <c>File.Move(..., overwrite: false)</c> throws rather than replace
-        /// one that appears after that check. Nothing is deleted first, so a
-        /// move that fails halfway loses nothing either.
+        /// one that is already there: atomically on Windows, and through
+        /// link/unlink on Unix (a file system without hard links falls back to
+        /// check-then-rename, where a second instance quarantining at the same
+        /// moment could replace one rejected file with another). Nothing is
+        /// deleted first, so a move that fails halfway loses nothing either.
         ///
         /// If the move fails, or all ten names are taken, the rejected file is
         /// still at the live path, and the next save would write over it. So

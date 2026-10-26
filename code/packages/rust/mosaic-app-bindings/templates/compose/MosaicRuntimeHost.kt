@@ -737,8 +737,13 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) :
      * host does. A name is skipped when anything is there: with
      * `NOFOLLOW_LINKS` that includes a symbolic link, even a dangling one.
      * `Files.move` without `REPLACE_EXISTING` throws
-     * `FileAlreadyExistsException` rather than replace a target, so one that
-     * appears after the check is not replaced either.
+     * `FileAlreadyExistsException` rather than replace a target that is
+     * already there. That is atomic on Windows; on Linux and Android the JDK
+     * checks and then calls rename(2), so a file another process creates at
+     * the same name in that instant could still be replaced (by another
+     * rejected file, never truncated). The Qt and Flutter hosts close that
+     * window by claiming the name first; here the race needs a second
+     * instance quarantining at the same moment, and is accepted.
      */
     private fun moveStateAside(file: File): String? {
         for (index in 0 until MOSAIC_MAX_QUARANTINED_STATES) {

@@ -11,6 +11,8 @@
 #include <QJsonObject>
 #include <QThread>
 #include <cmath>
+#include <filesystem>
+#include <system_error>
 #include <QJsonParseError>
 #include <QLocale>
 #include <QSaveFile>
@@ -987,8 +989,12 @@ QVariant MosaicHost::loadPersistedSnapshot()
     if (path.isEmpty() || !QFile::exists(path)) return QVariant();
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly)) {
-        persistenceWarning_ = QStringLiteral("Could not read Mosaic state at %1: %2")
-            .arg(path, file.errorString());
+        // A state file that cannot be read is still the user's data, and the
+        // first save would rename fresh state over it (QSaveFile needs only
+        // the directory to be writable). Treat it like a rejected file: move
+        // it aside, or switch saving off if it cannot be moved.
+        quarantinePersistedState(
+            QStringLiteral("Could not read Mosaic state: %1").arg(file.errorString()));
         return QVariant();
     }
     QJsonParseError parseError;
@@ -1018,8 +1024,18 @@ constexpr int MaxQuarantinedStates = 10;
 //
 // A name is skipped when anything is there: a file, a directory, or a
 // symbolic link, even a dangling one (which QFileInfo::exists reports as
-// absent, hence isSymLink). QFile::rename refuses an existing target rather
-// than replace it, so one that appears after the check is not replaced either.
+// absent, hence isSymLink).
+//
+// QFile::rename is NOT used for the move. When its native no-replace rename
+// fails (including because a file appeared at the name after the check), it
+// falls back to copying, opening the target with WriteOnly | Truncate, which
+// would truncate exactly the quarantine this is protecting. Instead the name
+// is first claimed with QIODevice::NewOnly (O_CREAT | O_EXCL, CREATE_NEW on
+// Windows), which fails rather than touch anything already there, and the
+// rejected file is then renamed onto that empty placeholder with
+// std::filesystem::rename: an atomic replace (rename(2), MoveFileExW with
+// MOVEFILE_REPLACE_EXISTING) whose only victim is the placeholder this host
+// just made. If the rename fails the placeholder is removed again.
 QString moveStateAside(const QString &path)
 {
     for (int index = 0; index < MaxQuarantinedStates; ++index) {
@@ -1027,9 +1043,22 @@ QString moveStateAside(const QString &path)
         if (index > 0) candidate += QStringLiteral(".%1").arg(index);
         const QFileInfo existing(candidate);
         if (existing.exists() || existing.isSymLink()) continue;
-        QFile file(path);
-        if (file.rename(candidate)) return {};
-        return QStringLiteral("Could not move it aside to %1: %2").arg(candidate, file.errorString());
+        QFile placeholder(candidate);
+        if (!placeholder.open(QIODevice::WriteOnly | QIODevice::NewOnly)) {
+            const QFileInfo raced(candidate);
+            if (raced.exists() || raced.isSymLink()) continue;
+            return QStringLiteral("Could not move it aside to %1: %2")
+                .arg(candidate, placeholder.errorString());
+        }
+        placeholder.close();
+        std::error_code error;
+        std::filesystem::rename(std::filesystem::path(path.toStdU16String()),
+                                std::filesystem::path(candidate.toStdU16String()),
+                                error);
+        if (!error) return {};
+        if (QFileInfo(candidate).size() == 0) QFile::remove(candidate);
+        return QStringLiteral("Could not move it aside to %1: %2")
+            .arg(candidate, QString::fromStdString(error.message()));
     }
     return QStringLiteral("All %1 quarantine names beside it are taken; move them away to save again")
         .arg(MaxQuarantinedStates);

@@ -134,11 +134,13 @@ fresh workspace:
 A newer failure never replaces or deletes an older quarantine, because that one
 may hold the user's real data: startup can reject the real state, and a later
 rejection must not destroy it. A name is skipped when anything is already
-there, and the move itself refuses to replace a target (Qt `QFile::rename`,
-SwiftUI `FileManager.moveItem`, Compose `Files.move` without
-`REPLACE_EXISTING`, WinUI `File.Move(..., overwrite: false)`; Flutter claims the
-name with an exclusive create and then moves onto that empty placeholder,
-because `dart:io` has no move that refuses an existing target). On a fresh state
+there, and the move itself refuses to replace a target (SwiftUI
+`FileManager.moveItem`, Compose `Files.move` without `REPLACE_EXISTING`, WinUI
+`File.Move(..., overwrite: false)`; Flutter and Qt claim the name with an
+exclusive create and then rename onto that empty placeholder, because `dart:io`
+has no move that refuses an existing target and `QFile::rename` falls back to a
+truncating copy). A state file the Qt host cannot open at all is quarantined
+the same way. On a fresh state
 directory the first quarantine is still exactly `mosaic-state.v1.json.corrupt`.
 
 If the move fails, or all ten names are taken, the rejected file stays at the

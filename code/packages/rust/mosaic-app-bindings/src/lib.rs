@@ -2208,7 +2208,8 @@ mod tests {
     /// | SwiftUI | `FileManager.moveItem`                         |
     /// | XAML    | `File.Move(..., overwrite: false)`             |
     /// | Flutter | `createSync(exclusive: true)` claims the name  |
-    /// | Qt      | `QFile::rename`                                |
+    /// | Qt      | `NewOnly` claims the name, then an atomic      |
+    /// |         | `std::filesystem::rename` onto the placeholder |
     #[test]
     fn emitted_native_bindings_never_replace_a_quarantined_state_file() {
         let application_id = "com.example.tasks";
@@ -2319,15 +2320,17 @@ mod tests {
                     "constexpr int MaxQuarantinedStates = 10;",
                 ],
                 skip: "if (existing.exists() || existing.isSymLink()) continue;",
-                no_replace: "if (file.rename(candidate)) return {};",
+                no_replace: "if (!placeholder.open(QIODevice::WriteOnly | QIODevice::NewOnly)) {",
                 disable: "persistenceDisabled_ = true;",
                 guard: [
                     "void MosaicHost::persistSnapshot()",
                     "if (persistenceDisabled_) return;",
                 ],
+                // QFile::rename falls back to a truncating copy when its native
+                // no-replace rename fails, so it must not do this move.
                 retired: [
                     "QFile::remove(corrupt);",
-                    "QFile::rename(path, corrupt)",
+                    "file.rename(candidate)",
                 ],
             },
         ];
