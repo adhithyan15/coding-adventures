@@ -24,6 +24,36 @@ fn loaded_fpu(halfwords: &[u16]) -> CortexM4Simulator {
     simulator
 }
 
+fn lr_extension_cases() -> Vec<([u16; 2], &'static str)> {
+    vec![
+        (qadd(14, 1, 2), "qadd"),
+        (qadd(0, 14, 2), "qadd"),
+        (qadd(0, 1, 14), "qadd"),
+        (qsub(14, 1, 2), "qsub"),
+        (qsub(0, 14, 2), "qsub"),
+        (qsub(0, 1, 14), "qsub"),
+        (ssat(14, 8, 1), "ssat"),
+        (ssat(0, 8, 14), "ssat"),
+        (usat(14, 8, 1), "usat"),
+        (usat(0, 8, 14), "usat"),
+        (sadd8(14, 1, 2), "sadd8"),
+        (sadd8(0, 14, 2), "sadd8"),
+        (sadd8(0, 1, 14), "sadd8"),
+        (uadd8(14, 1, 2), "uadd8"),
+        (uadd8(0, 14, 2), "uadd8"),
+        (uadd8(0, 1, 14), "uadd8"),
+        (smuad(14, 1, 2), "smuad"),
+        (smuad(0, 14, 2), "smuad"),
+        (smuad(0, 1, 14), "smuad"),
+        (smlad(14, 1, 2, 3), "smlad"),
+        (smlad(0, 14, 2, 3), "smlad"),
+        (smlad(0, 1, 14, 3), "smlad"),
+        (smlad(0, 1, 2, 14), "smlad"),
+        (vmrs(14), "vmrs"),
+        (vmsr(14), "vmsr"),
+    ]
+}
+
 #[test]
 fn decode_families_are_explicit_and_inherited() {
     let cases = [
@@ -545,6 +575,46 @@ fn reserved_extension_operands_are_typed_and_atomic() {
             Err(CortexM4Error::UnknownInstruction32 { .. })
         ));
         assert_eq!(simulator.get_state(), before);
+    }
+}
+
+#[test]
+fn lr_is_valid_in_every_extension_gpr_position() {
+    for ([first, second], expected_mnemonic) in lr_extension_cases() {
+        let mut simulator = loaded(&[first, second]);
+        simulator.set_fpu_enabled(true);
+        simulator.write_register(0, 3).unwrap();
+        simulator.write_register(1, 4).unwrap();
+        simulator.write_register(2, 5).unwrap();
+        simulator.write_register(3, 6).unwrap();
+        simulator.write_register(14, 6).unwrap();
+
+        let trace = simulator.step().unwrap();
+        assert_eq!(trace.mnemonic, expected_mnemonic);
+        assert_eq!(trace.pc_after, ORIGIN + 4);
+    }
+}
+
+#[test]
+fn false_it_accepts_lr_in_every_extension_gpr_position() {
+    for ([first, second], _) in lr_extension_cases() {
+        let mut simulator = loaded(&[movs(0, 1), it(0, 8), first, second]);
+        simulator.set_fpu_enabled(true);
+        simulator.write_register(1, 4).unwrap();
+        simulator.write_register(2, 5).unwrap();
+        simulator.write_register(3, 6).unwrap();
+        simulator.write_register(14, 6).unwrap();
+        simulator.step().unwrap();
+        simulator.step().unwrap();
+        let before = simulator.get_state();
+
+        let trace = simulator.step().unwrap();
+        let mut expected = before;
+        expected.core.pc = expected.core.pc.wrapping_add(4);
+        expected.core.itstate = 0;
+        assert_eq!(trace.mnemonic, "it-skip");
+        assert_eq!(trace.state_after, expected);
+        assert_eq!(simulator.get_state(), expected);
     }
 }
 

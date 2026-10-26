@@ -983,7 +983,10 @@ fn require_general_registers(
     pc: u32,
     registers: &[u8],
 ) -> Result<(), CortexM4Error> {
-    if registers.iter().all(|register| *register <= 12) {
+    if registers
+        .iter()
+        .all(|register| !matches!(*register, SP | PC))
+    {
         Ok(())
     } else {
         Err(unknown(first, second, pc))
