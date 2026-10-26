@@ -185,6 +185,9 @@ func TestParseMosaicDepsFailsClosedOnShapesItDoesNotModel(t *testing.T) {
 		{"basic multi-line string", "[package]\nname = \"task-app\"\ndescription = \"\"\"\nx = [\n\"\"\"\n[dependencies]\nmosaic-pkg-sheet = \"0.1.0\"\n", "multi-line"},
 		{"literal multi-line string", "[package]\nname = \"task-app\"\nnotes = \x27\x27\x27\n[dependencies]\n\x27\x27\x27\n", "multi-line"},
 		{"escaped key", "[package]\nname = \"task-app\"\n[dependencies]\n\"mosaic-pkg-\\u0073heet\" = \"0.1.0\"\n", "escape"},
+		{"escaped header", "[package]\nname = \"task-app\"\n[\"dependenci\\u0065s\"]\nmosaic-pkg-sheet = \"0.1.0\"\n", "escape"},
+		{"escaped package name", "[package]\nname = \"task-\\u0061pp\"\n[dependencies]\nmosaic-pkg-sheet = \"0.1.0\"\n", "escape"},
+		{"BOM before a root inline table", "\xEF\xBB\xBFdependencies = { mosaic-pkg-sheet = \"0.1.0\" }\n[package]\nname = \"task-app\"\n", "root-level"},
 	}
 	for index, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -206,6 +209,20 @@ func TestParseMosaicDepsFailsClosedOnShapesItDoesNotModel(t *testing.T) {
 				t.Fatal("ResolveDependencies must stop on a refused manifest")
 			}
 		})
+	}
+}
+
+// TestParseMosaicDepsStripsALeadingByteOrderMark: TOML allows a UTF-8 BOM
+// (toml_edit strips it), so it must not hide the first table header.
+func TestParseMosaicDepsStripsALeadingByteOrderMark(t *testing.T) {
+	_, packages := mosaicWorld(t, "\xEF\xBB\xBF[dependencies]\nmosaic-pkg-sheet = \"0.1.0\"\n[package]\nname = \"task-app\"\n")
+	known := buildKnownNamesForLanguage(packages, "mosaic")
+	got, err := parseMosaicDeps(packages[3], known)
+	if err != nil {
+		t.Fatalf("parseMosaicDeps: %v", err)
+	}
+	if want := []string{"mosaic/mosaic-pkg-sheet"}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("parseMosaicDeps = %v, want %v", got, want)
 	}
 }
 
@@ -301,6 +318,22 @@ func TestBuildKnownNamesMosaicPrefersPackagesOverPrograms(t *testing.T) {
 	known := buildKnownNamesForLanguage(packages, "mosaic")
 	if known["notes"] != "mosaic/notes" {
 		t.Fatalf("expected the library to own the name, got %q", known["notes"])
+	}
+}
+
+// TestResolveDependenciesRefusesALibraryTakingAProgramName: a library that
+// declares an app's name would silently win every edge meant for the app.
+func TestResolveDependenciesRefusesALibraryTakingAProgramName(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"code/programs/mosaic/task-app/mosaic-package.toml": "[package]\nname = \"task-app\"\n",
+		"code/packages/mosaic/impostor/mosaic-package.toml": "[package]\nname = \"task-app\"\n",
+	})
+	packages := []discovery.Package{
+		{Name: "mosaic/programs/task-app", Path: filepath.Join(root, "code/programs/mosaic/task-app"), Language: "mosaic"},
+		{Name: "mosaic/impostor", Path: filepath.Join(root, "code/packages/mosaic/impostor"), Language: "mosaic"},
+	}
+	if _, err := ResolveDependencies(packages); err == nil || !strings.Contains(err.Error(), `claims the Mosaic package name "task-app"`) {
+		t.Fatalf("expected a name-collision error, got %v", err)
 	}
 }
 

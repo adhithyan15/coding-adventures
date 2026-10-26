@@ -5,8 +5,8 @@
 - The resolver reads `mosaic-package.toml` for language-`mosaic` packages
   (`code/packages/mosaic/*`, `code/programs/mosaic/*`). Keys of the root
   `[dependencies]` table (and `[dependencies.<name>]` sub-table headers)
-  resolve within the Mosaic scope by directory basename or `[package].name`,
-  libraries winning over programs. Before this, Mosaic packages had no edges,
+  resolve within the Mosaic scope by directory basename or `[package].name`
+  (each name owned by exactly one package). Before this, Mosaic packages had no edges,
   so bumping or editing `mosaic-pkg-toolkit` never re-ran task-app, engram-app,
   journal-app or the packages built on it. Requirement strings, comments,
   `[components]` exports, `[host_assets].dependencies` third-party
@@ -14,10 +14,12 @@
   multi-line values are tracked by bracket depth (`internal/resolver/mosaic.go`).
 - The Mosaic reader fails closed (`MosaicManifestError`), because a dropped
   edge silently skips a dependent's tests on every later PR: a root-level
-  `dependencies` key or inline table, a multi-line string, an escape in a
-  key, a manifest that is not a regular file or exceeds 1 MiB, and two Mosaic
-  packages of the same kind claiming one name (`checkMosaicNameCollisions`)
-  all stop `ResolveDependencies` with an error. None occurs in the repository.
+  `dependencies` key or inline table, a multi-line string, any backslash
+  escape (keys, headers and `[package].name` alike), a manifest that is not a
+  regular file or exceeds 1 MiB, and two Mosaic packages claiming one name —
+  including a library taking an app's name (`checkMosaicNameCollisions`) — all
+  stop `ResolveDependencies` with an error. None occurs in the repository. A
+  leading UTF-8 byte-order mark is stripped, as `toml_edit` does.
 - New `repository_inputs.go`: a table of *repository input consumers*,
   packages whose tests walk the whole tree. Its first entry selects
   `rust/mosaic-package-resolver` (`every_repository_requirement_is_satisfied`

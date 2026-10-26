@@ -57,12 +57,12 @@ package resolver
 //	dependencies = { mosaic-pkg-toolkit = "0.16.0" }   # root inline table
 //	dependencies.mosaic-pkg-toolkit = "0.16.0"         # root dotted key
 //	description = """…"""                              # multi-line string
-//	"mosaic-pkg-\u0074oolkit" = "0.16.0"              # escape in a key
+//	["dependenci\u0065s"]                              # any backslash escape
 //
 // None appears in the repository; a manifest that needs one can be rewritten
 // in the plain `[dependencies]` form the reader understands. The same goes
 // for a manifest that is not a regular file (a symlink) or is implausibly
-// large, and for two Mosaic packages of the same kind claiming one name
+// large, and for two Mosaic packages claiming one name
 // (checkMosaicNameCollisions), which would otherwise point every dependent's
 // edge at whichever package discovery happened to see last.
 
@@ -161,8 +161,17 @@ func readMosaicManifestTables(pkgPath string) (keys map[string][]string, values 
 	refuse := func(reason string) (map[string][]string, map[string]string, bool, error) {
 		return nil, nil, true, &MosaicManifestError{Path: path, Reason: reason}
 	}
+	// A leading UTF-8 byte-order mark is valid TOML (toml_edit strips it), and
+	// left in place it would hide the first table header from this reader.
+	data = bytes.TrimPrefix(data, []byte("\xEF\xBB\xBF"))
 	if bytes.Contains(data, []byte(`"""`)) || bytes.Contains(data, []byte("'''")) {
 		return refuse("uses a multi-line string")
+	}
+	// No manifest in the repository needs a backslash. Escapes can spell any
+	// key, header or `[package].name` (`["dependenci\u0065s"]`) in a form this
+	// reader would not decode, so any backslash at all is refused.
+	if bytes.ContainsRune(data, '\\') {
+		return refuse("uses a backslash escape")
 	}
 
 	keys = make(map[string][]string)
@@ -209,9 +218,6 @@ func readMosaicManifestTables(pkgPath string) (keys map[string][]string, values 
 		eq := tomlKeyValueSplit(line)
 		if eq < 0 {
 			continue
-		}
-		if strings.Contains(line[:eq], "\\") {
-			return refuse("uses an escape sequence in a key")
 		}
 		path := splitTomlKeyPath(line[:eq])
 		value := strings.TrimSpace(line[eq+1:])
@@ -275,13 +281,14 @@ func parseMosaicDeps(pkg discovery.Package, knownNames map[string]string) ([]str
 	return deps, nil
 }
 
-// checkMosaicNameCollisions refuses two Mosaic packages of the same kind (two
-// libraries, or two programs) that claim one name, by directory basename or
-// by `[package].name`. The name table keeps one entry per name, so without
-// this check a package declaring `name = "mosaic-pkg-toolkit"` would capture
-// every edge meant for the real toolkit, and toolkit edits would stop
-// selecting its dependents. A library and a program sharing a name stay
-// allowed: the library wins, as it does in every other ecosystem here.
+// checkMosaicNameCollisions refuses two Mosaic packages that claim one name,
+// by directory basename or by `[package].name`. The name table keeps one
+// entry per name, so without this check a package declaring
+// `name = "mosaic-pkg-toolkit"` would capture every edge meant for the real
+// toolkit, and toolkit edits would stop selecting its dependents. Unlike
+// other ecosystems here, a library and a program may not share a name either:
+// the library would silently win every edge meant for the program, and no
+// Mosaic package or app in the repository shares a name today.
 func checkMosaicNameCollisions(packages []discovery.Package) error {
 	type claim struct{ pkg, path string }
 	claims := make(map[string]claim)
@@ -289,16 +296,12 @@ func checkMosaicNameCollisions(packages []discovery.Package) error {
 		if pkg.Language != "mosaic" {
 			continue
 		}
-		tier := "library"
-		if strings.Contains(filepath.ToSlash(pkg.Path), "/programs/") {
-			tier = "program"
-		}
 		names := []string{strings.ToLower(filepath.Base(pkg.Path))}
 		if manifestName := readMosaicPackageName(pkg.Path); manifestName != "" && manifestName != names[0] {
 			names = append(names, manifestName)
 		}
 		for _, name := range names {
-			key := tier + ":" + name
+			key := name
 			if existing, taken := claims[key]; taken && existing.pkg != pkg.Name {
 				return &MosaicManifestError{
 					Path:   filepath.Join(pkg.Path, mosaicManifestName),
