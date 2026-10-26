@@ -29,6 +29,11 @@ The public primary sources are:
   It is normative here only for the ESP32 choice of little-endian instruction
   and data buses and for the fact that ordinary ESP32 data-bus byte,
   half-word, and word accesses may be unaligned.
+- Espressif Systems, ESP-IDF `xtensa/config/core-isa.h` for the ESP32 target,
+  at
+  <https://github.com/espressif/esp-idf/blob/master/components/xtensa/esp32/include/xtensa/config/core-isa.h>.
+  It is the public configuration cross-check for the LX6 option profile named
+  below; instruction semantics continue to come from the Xtensa ISA manual.
 
 The named, immutable package profile is `Esp32Lx6IntegerV1`:
 
@@ -235,12 +240,12 @@ register-window check or semantic evaluation:
 - each included 24-bit conditional-branch format rejects the encoded signed
   displacement values `-3`, `-2`, `-1`, and `0`;
 - `EXTUI` rejects `sa + op2 > 31`; and
-- `MOV.N` and `MOVSP` reject equal encoded source and destination logical ARs.
+- `MOV.N` rejects equal encoded source and destination logical ARs.
 
 These tests are part of exact decoding; they may not be deferred until an
 address, condition, or result is evaluated. Legal neighboring encodings at
-`-4` and `1`, `EXTUI sa + op2 = 31`, and distinct-register `MOV.N`/`MOVSP`
-must remain accepted.
+`-4` and `1`, `EXTUI sa + op2 = 31`, distinct-register `MOV.N`, and both
+same- and distinct-register `MOVSP` must remain accepted as encodings.
 
 The ISA separately describes the following operations as undefined after a
 valid encoding has been identified. They return
@@ -325,8 +330,16 @@ Instructions with no AR reference perform no window check.
   logical `a0`, reconstructs the target within the current 1 GiB PC region,
   validates the `WindowStart` relation, rotates back, and clears the departing
   window bit only on success.
-- `MOVSP` performs the architectural window availability check before its
-  register move.
+- `MOVSP` first performs the ordinary lazy `WindowCheck` for its referenced
+  source and destination fields. It then inspects the three caller-window bits
+  `WindowStart[WindowBase - 3]`, `WindowStart[WindowBase - 2]`, and
+  `WindowStart[WindowBase - 1]`, with subtraction wrapping modulo 16. If all
+  three bits are zero, it returns the distinct typed `AllocaCause` error
+  atomically. Otherwise it copies the pre-state source AR to the destination
+  AR. Equal source and destination fields are legal: the instruction remains
+  an availability probe followed by a self-move, so it can still report
+  `WindowOverflow` or `AllocaCause` before succeeding without changing the
+  register value.
 
 An architectural overflow or underflow that would enter an exception handler
 is reported as typed `WindowOverflow { increment }` or
@@ -339,10 +352,11 @@ Fault precedence is therefore deterministic: halt and fetch/width failures
 precede decode; raw reserved encodings precede window checks; a lazy
 `WindowOverflow` precedes register reads, false conditions, memory checks, and
 the `UndefinedOperation` cases above; then instruction-specific
-window-underflow/undefined checks precede ordinary semantics. In particular,
+window-underflow/undefined/allocation checks precede ordinary semantics. In particular,
 the ISA-ordered `ENTRY WindowCheck(0, CALLINC, 0)` precedes
-`InvalidEntrySource`, while the branch, `EXTUI`, `MOV.N`, and `MOVSP` raw
-reserved relations never reach `WindowCheck`. Every failure preserves all
+`InvalidEntrySource`; the branch, `EXTUI`, and `MOV.N` raw reserved relations
+never reach `WindowCheck`; and a legal `MOVSP` reports lazy `WindowOverflow`
+before its instruction-specific `AllocaCause`. Every failure preserves all
 physical ARs, window state, special registers, memory, PC, and halt state.
 
 ### 6.3 Zero-overhead loops
@@ -443,6 +457,8 @@ least:
 - `DataOutOfRange { address, width }`;
 - `InvalidLoop`, `WindowOverflow { increment }`, and
   `WindowUnderflow { increment }`;
+- `AllocaCause` for a `MOVSP` whose three caller-window availability bits are
+  all clear;
 - `InvalidState`;
 - `Halted`, `TraceLimitExceeded`, `StepLimitExceeded`; and
 - allocation failure for every fallible snapshot/trace path.
@@ -489,11 +505,17 @@ The implementation cell is incomplete until independent tests cover:
    allocation-failure seams, and exact complete-state equality.
 8. **Reserved/undefined precedence:** exhaustive `ENTRY s = 4..15`, every
    `EXTUI` pair on both sides of `sa + op2 = 31`, same/different-register
-   `MOV.N` and `MOVSP`, all six-bit SAR values for each affected shift, and all
-   RETW increments plus all eight combinations of the three preceding
-   `WindowStart` bits. Combined-fault cases must prove raw reserved decode
-   before `WindowCheck`, `WindowOverflow` before `InvalidEntrySource` and the
-   other `UndefinedOperation`/semantic memory/control checks, and atomic state
+   `MOV.N`, same- and different-register `MOVSP`, all six-bit SAR values for
+   each affected shift, and all RETW increments plus all eight combinations of
+   the three preceding `WindowStart` bits. The `MOVSP` matrix must separately
+   exhaust all eight combinations of
+   `WindowStart[WindowBase - 3..WindowBase - 1]`: only `000` reports
+   `AllocaCause`, while every other combination permits the move after the
+   lazy check. It must include same-register self-moves and combined witnesses
+   where a lazy `WindowOverflow` masks `AllocaCause`. Combined-fault cases must
+   prove raw reserved decode before `WindowCheck`, `WindowOverflow` before
+   `InvalidEntrySource`, `AllocaCause`, and the other
+   `UndefinedOperation`/semantic memory/control checks, and atomic state
    preservation for every typed result.
 
 Release line coverage for the package must exceed 80%. Completion additionally
