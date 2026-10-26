@@ -814,7 +814,13 @@ class WorkflowTests(unittest.TestCase):
     def test_publication_rechecks_the_tag_and_targets_the_validated_commit(self) -> None:
         publish = self.jobs["publish"]
         self.assertIn("git ls-remote --exit-code --tags origin", publish)
-        self.assertIn('--target "$RELEASE_COMMIT"', publish)
+        # The tag is created atomically at the validated commit, read back,
+        # and only then released with --verify-tag. `--target` is gone: for a
+        # tag that appeared in the meantime it would be silently ignored.
+        self.assertIn('-f ref="refs/tags/$RELEASE_TAG" -f sha="$RELEASE_COMMIT"', publish)
+        self.assertIn('[[ "$tagged_commit" != "$RELEASE_COMMIT" ]]', publish)
+        self.assertIn("--verify-tag", publish)
+        self.assertNotIn("--target", publish.rsplit("gh release create", 1)[1])
         self.assertIn("--latest=false", publish)
         self.assertIn("write-checksums", publish)
         self.assertIn("sha256sum --check SHA256SUMS", publish)

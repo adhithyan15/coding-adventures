@@ -600,7 +600,13 @@ jobs:
             exit 1
           fi
 
-      # `--target` creates the tag at the validated commit. `--latest=false`
+      # The tag is created first, atomically, at the validated commit: the
+      # refs API refuses (422) a ref that already exists, so a tag pushed
+      # between the revalidation above and this step cannot be adopted (for an
+      # existing tag, `gh release create --target` would silently ignore the
+      # target and attach the release to whatever that tag points at). The
+      # tag is read back and compared, then the release is created with
+      # `--verify-tag`, which only ever uses an existing tag. `--latest=false`
       # because this repository releases many products, and one product's
       # release must not become the repository's "latest".
       - name: Publish the release and all payloads exactly once
@@ -621,9 +627,16 @@ jobs:
           if [[ "$version_core" == *-* ]]; then
             release_flags+=(--prerelease)
           fi
+          gh api --method POST "repos/$REPOSITORY/git/refs" \
+            -f ref="refs/tags/$RELEASE_TAG" -f sha="$RELEASE_COMMIT" >/dev/null
+          tagged_commit="$(gh api "repos/$REPOSITORY/git/ref/tags/$RELEASE_TAG" --jq .object.sha)"
+          if [[ "$tagged_commit" != "$RELEASE_COMMIT" ]]; then
+            echo "::error::Tag $RELEASE_TAG points at $tagged_commit, not the validated $RELEASE_COMMIT."
+            exit 1
+          fi
           gh release create "$RELEASE_TAG" "${assets[@]}" \
             --repo "$REPOSITORY" \
-            --target "$RELEASE_COMMIT" \
+            --verify-tag \
             --title "Journal v$RELEASE_VERSION" \
             --notes-file release-notes.md \
             "${release_flags[@]}"

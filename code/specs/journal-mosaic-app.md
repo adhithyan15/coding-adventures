@@ -304,7 +304,11 @@ There is no tag-push trigger, the same choice the two sibling workflows made.
 A pushed tag publishes whatever commit it points at. A dispatch names the
 version and tag first, so they are checked against each other, the changelog
 and the manifest before anything is built. The workflow then creates the tag
-itself, at the validated commit.
+itself, at the validated commit. It does so atomically, through the refs API,
+which refuses a tag that already exists, and it reads the tag back before
+running `gh release create --verify-tag`. A tag pushed in the gap after the
+last availability check therefore fails the run rather than being adopted.
+(For a tag that already exists, `--target` would be silently ignored.)
 
 A dispatch is refused if:
 
