@@ -231,6 +231,9 @@ fn topology_and_combinational_networks_are_exact() {
     }
     assert_eq!(gates::sign_extend_8(0x80), 0xffff_ff80);
     assert_eq!(gates::sign_extend_16(0x8000), 0xffff_8000);
+    assert_eq!(gates::bits_to_u8(&[1; 64]), u8::MAX);
+    assert_eq!(gates::bits_to_u16(&[1; 64]), u16::MAX);
+    assert_eq!(gates::bits_to_u32(&[1; 64]), u32::MAX);
     assert_eq!(gates::reverse_bits_32(1), 0x8000_0000);
     assert_eq!(gates::leading_zeros_32(0x0010_0000), 11);
     assert_eq!(gates::reverse_bytes(0x1122_3344), 0x4433_2211);
