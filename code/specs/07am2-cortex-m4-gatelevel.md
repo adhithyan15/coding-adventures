@@ -104,3 +104,16 @@ The cell is complete only when it:
    package BUILD, lessons validation, affected-package checks, independent
    specification and implementation review, and more than 80% line coverage
    with a target above 95%.
+
+## 6. Local implementation evidence
+
+The bounded package is implemented locally with the accepted Cortex-M3 gate
+machine as its sole inherited executor and an exact 526,013-DFF inventory.
+Twelve behavioral tests cover all inherited primary classifications, complete
+inherited/extension state preservation, every bounded DSP/FPU family, reserved
+neighbours, binary32 edge cases, and typed atomic lifecycle rollback. Two unit
+allocation seams prove candidate and final-snapshot failures roll back. Two
+full-source parsed-syntax tests exact-lock production and reject compile-valid
+hostile executor, oracle, raw-decode, host-DSP, host-float, mirror, and shadow
+mutations. The measured baseline is 90.86% line coverage (1,590/1,750); final
+strict checks and independent implementation review remain publication gates.
