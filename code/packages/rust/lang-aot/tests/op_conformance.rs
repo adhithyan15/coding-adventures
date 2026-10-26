@@ -710,10 +710,16 @@ const IEEE_EDGES: &[(&str, &[f64], bool)] = &[
 ];
 
 /// `(class, digits, exp10)` of `x`, computed on the host and independently
-/// of vm-core: the class from `f64::classify`, the digits and exponent
-/// from Rust's own shortest round-trip `{:e}` spelling (`3.0000000000000004e-1`
-/// is digits `30000000000000004`, exp10 `-1`). 0 for both unless the class
-/// is 1 (finite, non-zero), as the PR7b ops define.
+/// of vm-core: the class from `f64::classify`; the digits and exponent from
+/// the fewest significant digits whose correctly rounded spelling
+/// (`{:.*e}`) reads back as `x` (`3.0000000000000004e-1` is digits
+/// `30000000000000004`, exp10 `-1`). 0 for both unless the class is 1
+/// (finite, non-zero), as the PR7b ops define.
+///
+/// Not Rust's shortest `{:e}`: when two shortest spellings are equally near
+/// `x`, that one rounds the tie up, while the PR7b digits (and Python's
+/// `repr`) take the correctly rounded one, half to even. `2⁻²⁵` is the
+/// table's case: `{:e}` gives `…695313e-8`, `repr` `…695312e-8`.
 fn host_float_parts(x: f64) -> (i64, i64, i64) {
     use std::num::FpCategory;
     match x.classify() {
@@ -721,7 +727,10 @@ fn host_float_parts(x: f64) -> (i64, i64, i64) {
         FpCategory::Infinite => (2, 0, 0),
         FpCategory::Nan => (3, 0, 0),
         FpCategory::Normal | FpCategory::Subnormal => {
-            let spelled = format!("{:e}", x.abs());
+            let spelled = (0..17)
+                .map(|decimals| format!("{:.*e}", decimals, x.abs()))
+                .find(|s| s.parse::<f64>() == Ok(x.abs()))
+                .expect("17 significant digits always round-trip");
             let (mantissa, exp10) = spelled.split_once('e').expect("`{:e}` has an exponent");
             let digits: String = mantissa.chars().filter(|c| *c != '.').collect();
             (1, digits.parse().expect("digits"), exp10.parse().expect("exp10"))
