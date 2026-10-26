@@ -1,0 +1,11 @@
+{
+  "id": "SA-C340-nimittam",
+  "pathSegment": "SA-PATH-340-KARANA340",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-340-KARANA340",
+      "order": 0
+    }
+  ]
+}

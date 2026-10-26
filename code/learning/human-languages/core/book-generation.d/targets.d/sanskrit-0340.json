@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 340,
+  "output": "sanskrit/book/chapters/ch340-why-it-happened.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

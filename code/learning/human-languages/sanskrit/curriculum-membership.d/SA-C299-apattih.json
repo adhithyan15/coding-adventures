@@ -1,0 +1,11 @@
+{
+  "id": "SA-C299-apattih",
+  "pathSegment": "SA-PATH-299-GHOSHANA299",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-299-GHOSHANA299",
+      "order": 4
+    }
+  ]
+}

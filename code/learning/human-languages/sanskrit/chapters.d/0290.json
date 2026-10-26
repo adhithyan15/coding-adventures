@@ -1,0 +1,19 @@
+{
+  "chapter": 290,
+  "title": "Robbers on the Road",
+  "label": "ch:sa-robbers-on-the-road",
+  "canDo": "I can tell what robbers did and say what happens if they come.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C290-balat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: I can tell what robbers did and say what happens if they come.",
+    "assesses": [
+      "SA-LEX-C290-DASYU290-03",
+      "SA-LEX-C290-DASYU290-04",
+      "SA-LEX-C290-DASYU290-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C478-atisarah",
+  "pathSegment": "SA-PATH-478-VEDANA478",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-478-VEDANA478",
+      "order": 2
+    }
+  ]
+}

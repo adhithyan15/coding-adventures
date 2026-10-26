@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:1f32cb5d5862829f",
+  "lessonIds": [
+    "SA-C502-karmasala",
+    "SA-C502-taksakah",
+    "SA-C502-taksati",
+    "SA-C502-krakacah",
+    "SA-C502-tankah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch502.txt",
+  "json": "sanskrit/narration/ch502.json",
+  "textHash": "fnv1a64:b399e4209eb83bf8",
+  "jsonHash": "fnv1a64:9def92020aec29c8",
+  "findings": []
+}

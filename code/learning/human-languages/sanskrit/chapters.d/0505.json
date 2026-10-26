@@ -1,0 +1,19 @@
+{
+  "chapter": 505,
+  "title": "Clay and Fire",
+  "label": "ch:sa-clay-and-fire",
+  "canDo": "I can talk about how a potter works.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C505-akarah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can talk about how a potter works.",
+    "assesses": [
+      "SA-LEX-C505-MRD505-03",
+      "SA-LEX-C505-MRD505-04",
+      "SA-LEX-C505-MRD505-05"
+    ]
+  }
+}

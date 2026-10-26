@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:0bdd784a9801e3b0",
+  "lessonIds": [
+    "SA-C434-uttamarnah",
+    "SA-C434-adhamarnah",
+    "SA-C434-kusidam",
+    "SA-C434-niksepah",
+    "SA-C434-niryatayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch434-loans-and-deposits.tex"
+}

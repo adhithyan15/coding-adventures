@@ -1,0 +1,19 @@
+{
+  "chapter": 287,
+  "title": "The Chase",
+  "label": "ch:sa-the-chase",
+  "canDo": "I can say who ran after the thief and what would have stopped him.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C287-kolahalah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 287: I can say who ran after the thief and what would have stopped him.",
+    "assesses": [
+      "SA-LEX-C287-ANUDHAVANA287-03",
+      "SA-LEX-C287-ANUDHAVANA287-04",
+      "SA-LEX-C287-ANUDHAVANA287-05"
+    ]
+  }
+}

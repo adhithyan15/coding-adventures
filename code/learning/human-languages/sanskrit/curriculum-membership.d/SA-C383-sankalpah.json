@@ -1,0 +1,11 @@
+{
+  "id": "SA-C383-sankalpah",
+  "pathSegment": "SA-PATH-383-SANKALPA383",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-383-SANKALPA383",
+      "order": 0
+    }
+  ]
+}

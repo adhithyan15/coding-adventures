@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S229-letter-ii",
+    "language": "sanskrit",
+    "chapter": 283,
+    "sequence": 16580,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8a36a38ed8ee7c75",
+    "detachableSegments": [
+      "Script you'll notice: ई",
+      "Writing: ई"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

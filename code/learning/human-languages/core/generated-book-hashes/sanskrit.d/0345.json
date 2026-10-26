@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:cd5bd74a29a7c0c6",
+  "lessonIds": [
+    "SA-C345-pratyayah",
+    "SA-C345-saksyam",
+    "SA-C345-tathyam",
+    "SA-C345-sadhayati",
+    "SA-C345-niscayah"
+  ],
+  "tex": "sanskrit/book/chapters/ch345-evidence.tex"
+}

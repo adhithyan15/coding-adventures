@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:6125b387607f8489",
+  "lessonIds": [
+    "SA-C408-vahah",
+    "SA-C408-bharavahah",
+    "SA-C408-adhoranah",
+    "SA-C408-ankusah",
+    "SA-C408-asvasala"
+  ],
+  "tex": "sanskrit/book/chapters/ch408-beasts-of-burden.tex"
+}

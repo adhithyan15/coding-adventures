@@ -1,0 +1,19 @@
+{
+  "chapter": 399,
+  "title": "Holy Pools and Gateways",
+  "label": "ch:sa-holy-pools-and-gateways",
+  "canDo": "I can describe a holy pool and the gate before a shrine.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C399-pataka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can describe a holy pool and the gate before a shrine.",
+    "assesses": [
+      "SA-LEX-C399-HRADA399-03",
+      "SA-LEX-C399-HRADA399-04",
+      "SA-LEX-C399-HRADA399-05"
+    ]
+  }
+}

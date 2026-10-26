@@ -1,0 +1,11 @@
+{
+  "id": "SA-C445-yapayati",
+  "pathSegment": "SA-PATH-445-ULKA445",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-445-ULKA445",
+      "order": 4
+    }
+  ]
+}

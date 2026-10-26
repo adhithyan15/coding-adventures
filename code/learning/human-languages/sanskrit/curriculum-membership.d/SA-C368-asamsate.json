@@ -1,0 +1,11 @@
+{
+  "id": "SA-C368-asamsate",
+  "pathSegment": "SA-PATH-368-SHANKA368",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-368-SHANKA368",
+      "order": 2
+    }
+  ]
+}

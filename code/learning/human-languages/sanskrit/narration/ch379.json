@@ -1,0 +1,842 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 379,
+  "title": "More Than Enough",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:88e2b273079af7a5",
+  "lessons": [
+    {
+      "id": "SA-C379-adhikah",
+      "sequence": 21990,
+      "title": "अधिकः (adhikaḥ) — more; additional",
+      "headword": "अधिकः",
+      "romanization": "adhikaḥ",
+      "gloss": "more; additional",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1cdc390e8e7cdfcf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for falling short, then the Sanskrit for dwindles."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अधिकः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अधिकः — adhikaḥ — \"more; additional\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि अधिकं धनम् अस्ति, तर्हि दरिद्राय ददातु। yadi adhikaṃ dhanam asti, tarhi daridrāya dadātu. If there is extra money, give it to a poor man."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अधिकः (adhikaḥ) MW gives adhika \"additional\" and \"surpassing in number or quantity, more numerous\"; MW gives no derivation here, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhikaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhikaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhikaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhikaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi adhikaṃ dhanam asti, tarhi daridrāya dadātu. — If there is extra money, give it to a poor man.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi adhikaṃ dhanam asti, tarhi daridrāya dadātu.* — If there is extra money, give it to a poor man.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for falling short, then the Sanskrit for dwindles, then say adhikaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for falling short, then the Sanskrit for dwindles, then say *adhikaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अधिकः (adhikaḥ) mean? (\"More; additional\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C379-paryaptah",
+      "sequence": 22000,
+      "title": "पर्याप्तः (paryāptaḥ) — sufficient",
+      "headword": "पर्याप्तः",
+      "romanization": "paryāptaḥ",
+      "gloss": "sufficient",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c753c3646c2511c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for dwindles, then the Sanskrit for additional."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पर्याप्तः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पर्याप्तः — paryāptaḥ — \"sufficient\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि अन्नं पर्याप्तम्, तर्हि अतिथिः अपि खादिष्यति। yadi annaṃ paryāptam, tarhi atithiḥ api khādiṣyati. If there is enough food, the guest will eat too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पर्याप्तः (paryāptaḥ) is built on pari, \"around\", and the root √āp, \"to reach, to obtain\"; MW gives pary-āpta \"sufficient for\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paryāptaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paryāptaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paryāptaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paryāptaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi annaṃ paryāptam, tarhi atithiḥ api khādiṣyati. — If there is enough food, the guest will eat too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi annaṃ paryāptam, tarhi atithiḥ api khādiṣyati.* — If there is enough food, the guest will eat too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for dwindles, then the Sanskrit for additional, then say paryāptaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for dwindles, then the Sanskrit for additional, then say *paryāptaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पर्याप्तः (paryāptaḥ) mean? (\"Sufficient\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C379-pracurah",
+      "sequence": 22010,
+      "title": "प्रचुरः (pracuraḥ) — plentiful",
+      "headword": "प्रचुरः",
+      "romanization": "pracuraḥ",
+      "gloss": "plentiful",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a38a1f948ea77f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for additional, then the Sanskrit for sufficient."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रचुरः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रचुरः — pracuraḥ — \"plentiful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि वर्षा प्रचुरा, तर्हि धान्यम् अपि प्रचुरं भविष्यति। yadi varṣā pracurā, tarhi dhānyam api pracuraṃ bhaviṣyati. If the rain is plentiful, the grain will be plentiful too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रचुरः (pracuraḥ) MW gives pracura \"much, many, abundant, plentiful\" and gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pracuraḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pracuraḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pracuraḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pracuraḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi varṣā pracurā, tarhi dhānyam api pracuraṃ bhaviṣyati. — If the rain is plentiful, the grain will be plentiful too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi varṣā pracurā, tarhi dhānyam api pracuraṃ bhaviṣyati.* — If the rain is plentiful, the grain will be plentiful too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for additional, then the Sanskrit for sufficient, then say pracuraḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for additional, then the Sanskrit for sufficient, then say *pracuraḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रचुरः (pracuraḥ) mean? (\"Plentiful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C379-vipulah",
+      "sequence": 22020,
+      "title": "विपुलः (vipulaḥ) — ample; abundant",
+      "headword": "विपुलः",
+      "romanization": "vipulaḥ",
+      "gloss": "ample; abundant",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b8f5f03a16cdd97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for sufficient, then the Sanskrit for plentiful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विपुलः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विपुलः — vipulaḥ — \"ample; abundant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि धनं विपुलम्, तर्हि ग्रामः सुखी भविष्यति। yadi dhanaṃ vipulam, tarhi grāmaḥ sukhī bhaviṣyati. If there is ample money, the village will be happy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विपुलः (vipulaḥ) is built on vi and pula, which MW takes to be probably the same as pura, \"full\"; MW gives vi-pula \"large, extensive, abundant\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vipulaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vipulaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vipulaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vipulaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi dhanaṃ vipulam, tarhi grāmaḥ sukhī bhaviṣyati. — If there is ample money, the village will be happy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi dhanaṃ vipulam, tarhi grāmaḥ sukhī bhaviṣyati.* — If there is ample money, the village will be happy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for sufficient, then the Sanskrit for plentiful, then say vipulaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for sufficient, then the Sanskrit for plentiful, then say *vipulaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विपुलः (vipulaḥ) mean? (\"Ample; abundant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C379-vardhayati",
+      "sequence": 22030,
+      "title": "वर्धयति (vardhayati) — increases (something)",
+      "headword": "वर्धयति",
+      "romanization": "vardhayati",
+      "gloss": "increases (something)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ffd83d7bfe9ff16",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for plentiful, then the Sanskrit for ample."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वर्धयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वर्धयति — vardhayati — \"increases (something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि वणिक् मूल्यं वर्धयति, तर्हि जनाः अल्पं क्रीणन्ति। yadi vaṇik mūlyaṃ vardhayati, tarhi janāḥ alpaṃ krīṇanti. If the merchant raises the price, people buy less."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः मूल्यं वर्धितवान्, saḥ mūlyaṃ vardhitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वर्धयति (vardhayati) comes from the root √vṛdh, \"to grow\", in its causative form; MW gives vardhita \"increased, grown, augmented\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vardhayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vardhayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vardhayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vardhayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi vaṇik mūlyaṃ vardhayati, tarhi janāḥ alpaṃ krīṇanti. — If the merchant raises the price, people buy less.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi vaṇik mūlyaṃ vardhayati, tarhi janāḥ alpaṃ krīṇanti.* — If the merchant raises the price, people buy less.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for plentiful, then the Sanskrit for ample, then say vardhayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for plentiful, then the Sanskrit for ample, then say *vardhayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वर्धयति (vardhayati) mean? (\"Increases (something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R379-review-372-379",
+      "sequence": 22040,
+      "title": "Looking back: from What Stands in the Way to More Than Enough",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from What Stands in the Way to More Than Enough",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a87dd3653e23a132",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for an obstacle and a hindrance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an obstacle, a hindrance, hinders, holds up, removes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an obstacle, a hindrance, hinders, holds up, removes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "permission, forbids, a restriction, an exception, compulsory",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: permission, forbids, a restriction, an exception, compulsory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "attentive, carelessness, avoids, a mishap, ceases",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: attentive, carelessness, avoids, a mishap, ceases]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adversity, a calamity, destruction, a drought, remedies",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: adversity, a calamity, destruction, a drought, remedies]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qualified, capable, controls, control, takes refuge in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: qualified, capable, controls, control, takes refuge in]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exceedingly, extremely, intense, completely, exceeds",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: exceedingly, extremely, intense, completely, exceeds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tiny portion, in a small degree, a half, falling short, dwindles",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tiny portion, in a small degree, a half, falling short, dwindles]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "additional, sufficient, plentiful, ample, increases (something)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: additional, sufficient, plentiful, ample, increases (something)]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An obstacle? (विघ्नः, vighnaḥ.) A hindrance? (बाधा, bādhā.) Hinders? (बाधते, bādhate.) Holds up? (विलम्बयति, vilambayati.) Removes? (अपनयति, apanayati.) Permission? (अनुमतिः, anumatiḥ.) Forbids? (निषेधति, niṣedhati.) A restriction? (प्रतिबन्धः, pratibandhaḥ.) An exception? (अपवादः, apavādaḥ.) Compulsory? (अनिवार्यः, anivāryaḥ.) Attentive? (अवहितः, avahitaḥ.) Carelessness? (प्रमादः, pramādaḥ.) Avoids? (परिहरति, pariharati.) A mishap? (अनर्थः, anarthaḥ.) Ceases? (विरमति, viramati.) Adversity? (विपत्तिः, vipattiḥ.) A calamity? (आपद्, āpad.) Destruction? (विनाशः, vināśaḥ.) A drought? (अनावृष्टिः, anāvṛṣṭiḥ.) Remedies? (प्रतिकरोति, pratikaroti.) Qualified? (योग्यः, yogyaḥ.) Capable? (समर्थः, samarthaḥ.) Controls? (नियच्छति, niyacchati.) Control? (नियन्त्रणम्, niyantraṇam.) Takes refuge in? (आश्रयते, āśrayate.) Exceedingly? (अतीव, atīva.) Extremely? (अत्यन्तम्, atyantam.) Intense? (तीव्रः, tīvraḥ.) Completely? (नितराम्, nitarām.) Exceeds? (अतिक्रामति, atikrāmati.) A tiny portion? (लेशः, leśaḥ.) In a small degree? (मनाक्, manāk.) A half? (अर्धम्, ardham.) Falling short? (न्यूनः, nyūnaḥ.) Dwindles? (ह्रसति, hrasati.) Additional? (अधिकः, adhikaḥ.) Sufficient? (पर्याप्तः, paryāptaḥ.) Plentiful? (प्रचुरः, pracuraḥ.) Ample? (विपुलः, vipulaḥ.) Increases (something)? (वर्धयति, vardhayati.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

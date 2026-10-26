@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C378-ardham",
+    "language": "sanskrit",
+    "chapter": 378,
+    "sequence": 21960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acc8a812525d817f"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C454-jugupsate",
+  "pathSegment": "SA-PATH-454-IRSYA454",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-454-IRSYA454",
+      "order": 1
+    }
+  ]
+}

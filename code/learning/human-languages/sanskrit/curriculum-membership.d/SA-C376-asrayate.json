@@ -1,0 +1,11 @@
+{
+  "id": "SA-C376-asrayate",
+  "pathSegment": "SA-PATH-376-YOGYA376",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-376-YOGYA376",
+      "order": 4
+    }
+  ]
+}

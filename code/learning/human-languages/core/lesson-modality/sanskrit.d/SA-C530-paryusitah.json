@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C530-paryusitah",
+    "language": "sanskrit",
+    "chapter": 530,
+    "sequence": 30470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12243a357660679c"
+  },
+  "findings": []
+}

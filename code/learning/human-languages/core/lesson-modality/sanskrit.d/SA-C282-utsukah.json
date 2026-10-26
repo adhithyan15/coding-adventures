@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C282-utsukah",
+    "language": "sanskrit",
+    "chapter": 282,
+    "sequence": 16530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba813b6f2b012b9d"
+  },
+  "findings": []
+}

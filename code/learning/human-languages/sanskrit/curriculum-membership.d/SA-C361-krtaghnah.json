@@ -1,0 +1,11 @@
+{
+  "id": "SA-C361-krtaghnah",
+  "pathSegment": "SA-PATH-361-SHRADDHA361",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-361-SHRADDHA361",
+      "order": 3
+    }
+  ]
+}

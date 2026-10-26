@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 549,
+  "sourceHash": "fnv1a64:a5d5c4bb13533108",
+  "lessonIds": [
+    "SA-C549-sprhayati",
+    "SA-C549-lalasa",
+    "SA-C549-pratiksa",
+    "SA-C549-didrksa",
+    "SA-C549-samihate"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "sanskrit/narration/ch549.txt",
+  "json": "sanskrit/narration/ch549.json",
+  "textHash": "fnv1a64:85e6a80e277ec1c6",
+  "jsonHash": "fnv1a64:034880c777f0caf5",
+  "findings": []
+}

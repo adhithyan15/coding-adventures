@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-375-VIPATTI375",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "SA-EXT-375-VIPATTI375"
+  ],
+  "after": []
+}

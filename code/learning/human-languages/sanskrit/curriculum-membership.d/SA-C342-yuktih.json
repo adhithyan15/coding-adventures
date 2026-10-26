@@ -1,0 +1,11 @@
+{
+  "id": "SA-C342-yuktih",
+  "pathSegment": "SA-PATH-342-ADHARA342",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-342-ADHARA342",
+      "order": 1
+    }
+  ]
+}

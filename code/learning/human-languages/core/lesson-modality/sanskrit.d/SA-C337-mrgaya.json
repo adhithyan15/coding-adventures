@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C337-mrgaya",
+    "language": "sanskrit",
+    "chapter": 337,
+    "sequence": 19650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c9d422f8b3832a9"
+  },
+  "findings": []
+}

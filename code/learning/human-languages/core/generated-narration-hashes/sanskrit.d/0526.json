@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:55d2370a46ed3abd",
+  "lessonIds": [
+    "SA-C526-vyayamabhumih",
+    "SA-C526-dhavakah",
+    "SA-C526-ksiprah",
+    "SA-C526-langhayati",
+    "SA-C526-dalam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch526.txt",
+  "json": "sanskrit/narration/ch526.json",
+  "textHash": "fnv1a64:9d21cd420de878d4",
+  "jsonHash": "fnv1a64:ba9d460c77f75dd3",
+  "findings": []
+}

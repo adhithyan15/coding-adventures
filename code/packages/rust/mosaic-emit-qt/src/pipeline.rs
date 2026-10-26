@@ -3495,7 +3495,14 @@ fn qml_text_width_lines(props: &[StyleProp], layers: &[StateLayer<'_>]) -> Vec<S
     let width = conditional_scalar_expr(
         style_prop(props, "width").and_then(scalar), layers, "width", "0", scalar,
     ).expect("validated base width");
-    vec![format!("width: {width}"), format!("Layout.preferredWidth: {width}")]
+    let mut lines = vec![format!("width: {width}"), format!("Layout.preferredWidth: {width}")];
+    // A preferred width remains shrinkable in Qt Quick Layouts. Only the
+    // conservative static non-shrink subset supplies an actual width floor;
+    // general flex semantics remain diagnosed rather than claimed supported.
+    if let Some(minimum) = static_delegate_min_width(props, layers) {
+        lines.push(format!("Layout.minimumWidth: {minimum}"));
+    }
+    lines
 }
 
 fn qml_text_part_style_lines(props: &[StyleProp]) -> Vec<String> {
@@ -19243,6 +19250,25 @@ mod tests {
             vec!["Layout.fillWidth: true"]);
         assert_eq!(qml_text_width_lines(&[sp("width", "190px")], &[]),
             vec!["width: 190", "Layout.preferredWidth: 190"]);
+    }
+
+    #[test]
+    fn text_static_non_shrinking_width_has_a_floor() {
+        let base = [sp("width", "150"), sp("flex-shrink", "0")];
+        assert_eq!(qml_text_width_lines(&base, &[]),
+            vec!["width: 150", "Layout.preferredWidth: 150", "Layout.minimumWidth: 150"]);
+        for conflict in ["min-width", "max-width", "flex", "flex-basis"] {
+            let mut props = base.to_vec();
+            props.push(sp(conflict, "1"));
+            assert!(!qml_text_width_lines(&props, &[]).iter()
+                .any(|line| line.starts_with("Layout.minimumWidth:")));
+        }
+        for property in ["width", "flex-shrink"] {
+            let overrides = [sp(property, "1")];
+            let layers = [StateLayer { cond_expr: "active".into(), props: &overrides }];
+            assert!(!qml_text_width_lines(&base, &layers).iter()
+                .any(|line| line.starts_with("Layout.minimumWidth:")));
+        }
     }
 
     #[test]

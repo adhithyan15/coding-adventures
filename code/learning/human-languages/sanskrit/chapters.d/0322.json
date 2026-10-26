@@ -1,0 +1,19 @@
+{
+  "chapter": 322,
+  "title": "Ancestors",
+  "label": "ch:sa-ancestors",
+  "canDo": "I can tell the story of a family line.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C322-pravartayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can tell the story of a family line.",
+    "assesses": [
+      "SA-LEX-C322-PURVAJA322-03",
+      "SA-LEX-C322-PURVAJA322-04",
+      "SA-LEX-C322-PURVAJA322-05"
+    ]
+  }
+}

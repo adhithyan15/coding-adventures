@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Setting Out on Pilgrimage",
+  "label": "ch:sa-setting-out-on-pilgrimage",
+  "canDo": "I can say when and how I set out on a pilgrimage.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C394-kamandaluh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can say when and how I set out on a pilgrimage.",
+    "assesses": [
+      "SA-LEX-C394-TIRTHA394-03",
+      "SA-LEX-C394-TIRTHA394-04",
+      "SA-LEX-C394-TIRTHA394-05"
+    ]
+  }
+}

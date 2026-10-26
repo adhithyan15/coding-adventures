@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C311-atankah",
+    "language": "sanskrit",
+    "chapter": 311,
+    "sequence": 18290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd61ec20482666d7"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-349-NYAYALAYA349",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow what happens to a defendant in court.",
+  "prerequisites": []
+}

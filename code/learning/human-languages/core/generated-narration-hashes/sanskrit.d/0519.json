@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:0d822513f22de9d4",
+  "lessonIds": [
+    "SA-C519-murtih",
+    "SA-C519-utkirati",
+    "SA-C519-silpam",
+    "SA-C519-krtih",
+    "SA-C519-nirmati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch519.txt",
+  "json": "sanskrit/narration/ch519.json",
+  "textHash": "fnv1a64:c85bdbc7d7d4b19c",
+  "jsonHash": "fnv1a64:c5f735fae69a17c1",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C333-prasidati",
+    "language": "sanskrit",
+    "chapter": 333,
+    "sequence": 19440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32eccb9fa77c9b39"
+  },
+  "findings": []
+}

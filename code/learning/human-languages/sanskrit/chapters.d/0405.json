@@ -1,0 +1,19 @@
+{
+  "chapter": 405,
+  "title": "Hurry and Speed",
+  "label": "ch:sa-hurry-and-speed",
+  "canDo": "I can say who is in a hurry and who arrives last.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C405-ayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can say who is in a hurry and who arrives last.",
+    "assesses": [
+      "SA-LEX-C405-JAVA405-03",
+      "SA-LEX-C405-JAVA405-04",
+      "SA-LEX-C405-JAVA405-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 416,
+  "title": "Boatmen",
+  "label": "ch:sa-boatmen",
+  "canDo": "I can say who steers and rows the boat and where we land.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C416-uttarati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can say who steers and rows the boat and where we land.",
+    "assesses": [
+      "SA-LEX-C416-NAVIKA416-03",
+      "SA-LEX-C416-NAVIKA416-04",
+      "SA-LEX-C416-NAVIKA416-05"
+    ]
+  }
+}

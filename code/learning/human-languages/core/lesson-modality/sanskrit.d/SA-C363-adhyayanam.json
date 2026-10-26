@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C363-adhyayanam",
+    "language": "sanskrit",
+    "chapter": 363,
+    "sequence": 21170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1d3c93c2b0df776"
+  },
+  "findings": []
+}

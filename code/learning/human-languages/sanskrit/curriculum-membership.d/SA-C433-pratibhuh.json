@@ -1,0 +1,11 @@
+{
+  "id": "SA-C433-pratibhuh",
+  "pathSegment": "SA-PATH-433-AYA433",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-433-AYA433",
+      "order": 4
+    }
+  ]
+}

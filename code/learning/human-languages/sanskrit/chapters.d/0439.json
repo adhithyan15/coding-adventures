@@ -1,0 +1,19 @@
+{
+  "chapter": 439,
+  "title": "Winds and Storms",
+  "label": "ch:sa-winds-and-storms",
+  "canDo": "I can say how the wind blows and what it sets swaying.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C439-mandanilah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 439: I can say how the wind blows and what it sets swaying.",
+    "assesses": [
+      "SA-LEX-C439-PAVANA439-03",
+      "SA-LEX-C439-PAVANA439-04",
+      "SA-LEX-C439-PAVANA439-05"
+    ]
+  }
+}

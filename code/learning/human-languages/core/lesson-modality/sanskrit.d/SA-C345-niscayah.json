@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C345-niscayah",
+    "language": "sanskrit",
+    "chapter": 345,
+    "sequence": 20290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36fdc6cfca06a6be"
+  },
+  "findings": []
+}

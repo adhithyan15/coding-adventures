@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:bc0a3dbb979d8b14",
+  "lessonIds": [
+    "SA-C543-sveccha",
+    "SA-C543-vivasah",
+    "SA-C543-hathah",
+    "SA-C543-agrahah",
+    "SA-C543-svayam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch543.txt",
+  "json": "sanskrit/narration/ch543.json",
+  "textHash": "fnv1a64:b80e680704816f91",
+  "jsonHash": "fnv1a64:f90fe2fc2a34e55a",
+  "findings": []
+}

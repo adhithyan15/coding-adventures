@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C431-arghah",
+    "language": "sanskrit",
+    "chapter": 431,
+    "sequence": 24890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:935f71c77675bbd2"
+  },
+  "findings": []
+}

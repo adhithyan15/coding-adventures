@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:0f4e277888f4d856",
+  "lessonIds": [
+    "SA-C492-garbhini",
+    "SA-C492-prasute",
+    "SA-C492-janma",
+    "SA-C492-navajatah",
+    "SA-C492-dola"
+  ],
+  "tex": "sanskrit/book/chapters/ch492-a-new-baby.tex"
+}

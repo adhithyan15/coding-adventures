@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 527,
+  "title": "Aim and Shoot",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b7234491b7de248d",
+  "lessons": [
+    {
+      "id": "SA-C527-dhanurdharah",
+      "sequence": 30280,
+      "title": "धनुर्धरः (dhanurdharaḥ) — an archer",
+      "headword": "धनुर्धरः",
+      "romanization": "dhanurdharaḥ",
+      "gloss": "an archer",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0589c78f6b87924",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for leaps over, then the Sanskrit for a team."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धनुर्धरः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धनुर्धरः — dhanurdharaḥ — \"an archer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "धनुर्धरः धनुः गृह्णाति। dhanurdharaḥ dhanuḥ gṛhṇāti. The archer takes up his bow."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धनुर्धरः (dhanurdharaḥ) is built from dhanus, \"a bow\", and dhara, \"holding\", from the root √dhṛ, \"to hold\"; MW gives dhanurdhara as a bow-holder, an archer (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhanurdharaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhanurdharaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhanurdharaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhanurdharaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhanurdharaḥ dhanuḥ gṛhṇāti. — The archer takes up his bow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhanurdharaḥ dhanuḥ gṛhṇāti.* — The archer takes up his bow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for leaps over, then the Sanskrit for a team, then say dhanurdharaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for leaps over, then the Sanskrit for a team, then say *dhanurdharaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धनुर्धरः (dhanurdharaḥ) mean? (\"An archer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C527-ekagrah",
+      "sequence": 30290,
+      "title": "एकाग्रः (ekāgraḥ) — focused; intent",
+      "headword": "एकाग्रः",
+      "romanization": "ekāgraḥ",
+      "gloss": "focused; intent",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc27fd67ecdd9044",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a team, then the Sanskrit for an archer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: एकाग्रः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "एकाग्रः — ekāgraḥ — \"focused; intent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "धनुर्धरः एकाग्रः तिष्ठति। dhanurdharaḥ ekāgraḥ tiṣṭhati. The archer stands focused."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "एकाग्रः (ekāgraḥ) is built from eka, \"one\", and agra, \"a point, a tip\"; MW gives ekāgra as fixing one's attention on one point, intent (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekāgraḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekāgraḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekāgraḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekāgraḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhanurdharaḥ ekāgraḥ tiṣṭhati. — The archer stands focused.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhanurdharaḥ ekāgraḥ tiṣṭhati.* — The archer stands focused.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a team, then the Sanskrit for an archer, then say ekāgraḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a team, then the Sanskrit for an archer, then say *ekāgraḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does एकाग्रः (ekāgraḥ) mean? (\"Focused; intent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C527-prahinoti",
+      "sequence": 30300,
+      "title": "प्रहिणोति (prahiṇoti) — shoots; sends forth",
+      "headword": "प्रहिणोति",
+      "romanization": "prahiṇoti",
+      "gloss": "shoots; sends forth",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61eef7cf31fb5adf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for an archer, then the Sanskrit for focused."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रहिणोति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रहिणोति — prahiṇoti — \"shoots; sends forth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "धनुर्धरः लक्ष्यं प्रति बाणं प्रहिणोति। dhanurdharaḥ lakṣyaṃ prati bāṇaṃ prahiṇoti. The archer shoots an arrow at the target."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः बाणं प्रहितवान्, saḥ bāṇaṃ prahitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रहिणोति (prahiṇoti) is built on pra, \"forth\", and the root √hi, \"to send, to impel\"; MW gives prahi as to urge on, to send, to hurl; its past participle is prahita (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prahiṇoti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prahiṇoti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prahiṇoti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prahiṇoti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhanurdharaḥ lakṣyaṃ prati bāṇaṃ prahiṇoti. — The archer shoots an arrow at the target.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhanurdharaḥ lakṣyaṃ prati bāṇaṃ prahiṇoti.* — The archer shoots an arrow at the target.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for an archer, then the Sanskrit for focused, then say prahiṇoti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for an archer, then the Sanskrit for focused, then say *prahiṇoti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रहिणोति (prahiṇoti) mean? (\"Shoots; sends forth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C527-utsahayati",
+      "sequence": 30310,
+      "title": "उत्साहयति (utsāhayati) — cheers on; encourages",
+      "headword": "उत्साहयति",
+      "romanization": "utsāhayati",
+      "gloss": "cheers on; encourages",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:29cd3ea7b79ef9e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for focused, then the Sanskrit for shoots."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उत्साहयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उत्साहयति — utsāhayati — \"cheers on; encourages\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गुरुः शिष्यम् उत्साहयति। guruḥ śiṣyam utsāhayati. The teacher encourages the pupil."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः शिष्यम् उत्साहितवान्, saḥ śiṣyam utsāhitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उत्साहयति (utsāhayati) is built on ud, \"up\", and the causative of the root √sah, \"to bear, to be able\"; MW gives utsāhayati as to animate, to encourage (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utsāhayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utsāhayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utsāhayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utsāhayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guruḥ śiṣyam utsāhayati. — The teacher encourages the pupil.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guruḥ śiṣyam utsāhayati.* — The teacher encourages the pupil.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for focused, then the Sanskrit for shoots, then say utsāhayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for focused, then the Sanskrit for shoots, then say *utsāhayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उत्साहयति (utsāhayati) mean? (\"Cheers on; encourages\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C527-jya",
+      "sequence": 30320,
+      "title": "ज्या (jyā) — a bowstring",
+      "headword": "ज्या",
+      "romanization": "jyā",
+      "gloss": "a bowstring",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a09b5d715553ceb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for shoots, then the Sanskrit for cheers on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ज्या",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज्या — jyā — \"a bowstring\"."
+            },
+            {
+              "kind": "speech",
+              "text": "धनुर्धरः ज्यां कर्षति। dhanurdharaḥ jyāṃ karṣati. The archer draws the bowstring."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज्या (jyā) is the word MW records for a bowstring, and MW compares Greek bios, \"a bow\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhanurdharaḥ jyāṃ karṣati. — The archer draws the bowstring.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhanurdharaḥ jyāṃ karṣati.* — The archer draws the bowstring.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for shoots, then the Sanskrit for cheers on, then say jyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for shoots, then the Sanskrit for cheers on, then say *jyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ज्या (jyā) mean? (\"A bowstring\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

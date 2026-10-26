@@ -1,0 +1,19 @@
+{
+  "chapter": 334,
+  "title": "Gods and Demons",
+  "label": "ch:sa-gods-and-demons",
+  "canDo": "I can tell a story of gods and demons.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C334-nigirati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can tell a story of gods and demons.",
+    "assesses": [
+      "SA-LEX-C334-RAKSHASA334-03",
+      "SA-LEX-C334-RAKSHASA334-04",
+      "SA-LEX-C334-RAKSHASA334-05"
+    ]
+  }
+}

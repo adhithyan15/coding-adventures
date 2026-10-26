@@ -1,0 +1,11 @@
+{
+  "id": "SA-C304-krosati",
+  "pathSegment": "SA-PATH-304-RASHI304",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-304-RASHI304",
+      "order": 2
+    }
+  ]
+}

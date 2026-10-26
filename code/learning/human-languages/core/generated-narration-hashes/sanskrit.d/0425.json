@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:58aa107a63e639c4",
+  "lessonIds": [
+    "SA-C425-adbhutah",
+    "SA-C425-smarakam",
+    "SA-C425-preksakah",
+    "SA-C425-gavaksah",
+    "SA-C425-smaraniyah",
+    "SA-R425-review-418-425"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch425.txt",
+  "json": "sanskrit/narration/ch425.json",
+  "textHash": "fnv1a64:02c90e77f150efc5",
+  "jsonHash": "fnv1a64:1926ec216b8f688e",
+  "findings": []
+}

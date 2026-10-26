@@ -1,6 +1,6 @@
 import { dialog } from "electron";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { constants, copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, extname, join } from "node:path";
 import { homedir } from "node:os";
 import { fileURLToPath } from "node:url";
@@ -14,6 +14,22 @@ const snapshotPath =
 const sidecarPath =
   process.env.ENGRAM_HOST_CLI ??
   join(here, process.platform === "win32" ? "engram-host-cli.exe" : "engram-host-cli");
+
+// A snapshot this build cannot load is someone's study history, not garbage.
+// Before the demo deck is saved in its place it is copied aside, and a copy
+// never replaces an earlier one, because that earlier one may be the real
+// history (startup rejects it, then an import reload rejects the result):
+//
+//   first rejection    <snapshot>.corrupt      (the generated hosts' name)
+//   second             <snapshot>.corrupt.1
+//   ...                ...
+//   tenth              <snapshot>.corrupt.9
+//
+// If the copy fails, or all ten names are taken, saving is switched off for
+// the session: an unsaved session is recoverable, an overwritten snapshot is
+// not.
+const MAX_QUARANTINED_SNAPSHOTS = 10;
+let persistenceDisabled = false;
 
 export async function createMosaicHost() {
   const engine = createEngramEngine(readFileSync(wasmPath), {
@@ -146,10 +162,42 @@ function loadPersistedSnapshot(engine) {
   } catch (error) {
     console.warn("Engram could not read persisted snapshot", error);
   }
+  quarantineSnapshot();
   return false;
 }
 
+function quarantineSnapshot() {
+  for (let index = 0; index < MAX_QUARANTINED_SNAPSHOTS; index += 1) {
+    const corruptPath =
+      index === 0 ? `${snapshotPath}.corrupt` : `${snapshotPath}.corrupt.${index}`;
+    try {
+      // COPYFILE_EXCL fails with EEXIST instead of replacing what is there.
+      copyFileSync(snapshotPath, corruptPath, constants.COPYFILE_EXCL);
+      console.warn(`Engram copied the unreadable snapshot to ${corruptPath}`);
+      return;
+    } catch (error) {
+      if (error?.code === "EEXIST") {
+        continue;
+      }
+      persistenceDisabled = true;
+      console.warn(
+        "Engram could not copy the unreadable snapshot aside; this session will not be saved",
+        error,
+      );
+      return;
+    }
+  }
+  persistenceDisabled = true;
+  console.warn(
+    `Engram already holds ${MAX_QUARANTINED_SNAPSHOTS} unreadable snapshots beside ` +
+      `${snapshotPath}; this session will not be saved until they are cleared`,
+  );
+}
+
 function persistSnapshot(engine) {
+  if (persistenceDisabled) {
+    return;
+  }
   const snapshot = engine.snapshot();
   if (snapshot.ok !== true || snapshot.state === undefined) {
     console.warn("Engram snapshot could not be persisted", snapshot.error);

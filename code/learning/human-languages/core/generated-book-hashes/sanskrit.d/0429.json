@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:4e7f5aaf7be43ae3",
+  "lessonIds": [
+    "SA-C429-udghatayati",
+    "SA-C429-ghatika",
+    "SA-C429-avasathah",
+    "SA-C429-argalah",
+    "SA-C429-avakrayah"
+  ],
+  "tex": "sanskrit/book/chapters/ch429-opening-hours-and-rent.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:0acd56aae7842246",
+  "lessonIds": [
+    "SA-C329-puja",
+    "SA-C329-ghanta",
+    "SA-C329-dhupah",
+    "SA-C329-aratrikam",
+    "SA-C329-prarthayate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch329.txt",
+  "json": "sanskrit/narration/ch329.json",
+  "textHash": "fnv1a64:8b429b6eb080768d",
+  "jsonHash": "fnv1a64:1b200760db579d26",
+  "findings": []
+}

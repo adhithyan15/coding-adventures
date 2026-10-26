@@ -1,0 +1,19 @@
+{
+  "chapter": 527,
+  "title": "Aim and Shoot",
+  "label": "ch:sa-aim-and-shoot",
+  "canDo": "I can talk about archery, aim and encouragement.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C527-jya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can talk about archery, aim and encouragement.",
+    "assesses": [
+      "SA-LEX-C527-DHANURDHARA527-03",
+      "SA-LEX-C527-DHANURDHARA527-04",
+      "SA-LEX-C527-DHANURDHARA527-05"
+    ]
+  }
+}

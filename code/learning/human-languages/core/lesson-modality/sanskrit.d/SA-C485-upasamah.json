@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C485-upasamah",
+    "language": "sanskrit",
+    "chapter": 485,
+    "sequence": 27920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b325b655a9df884"
+  },
+  "findings": []
+}

@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 305,
+  "output": "sanskrit/book/chapters/ch305-the-rescue.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

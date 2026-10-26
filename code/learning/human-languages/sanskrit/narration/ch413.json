@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 413,
+  "title": "Packing for the Road",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cdb36823db981fd8",
+  "lessons": [
+    {
+      "id": "SA-C413-unnayati",
+      "sequence": 23970,
+      "title": "उन्नयति (unnayati) — raises up; lifts",
+      "headword": "उन्नयति",
+      "romanization": "unnayati",
+      "gloss": "raises up; lifts",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb04cffed4a2d966",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for passes by, then the Sanskrit for a kos."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उन्नयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उन्नयति — unnayati — \"raises up; lifts\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भारवाहः भूमेः भारम् उन्नयति। bhāravāhaḥ bhūmeḥ bhāram unnayati. The porter lifts the load from the ground."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः भारम् उन्नीतवान्, saḥ bhāram unnītavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उन्नयति (unnayati) is built from ud, \"up\", and the root √nī, \"to lead\", which also gives nayati, \"leads\"; MW gives un-nī as to lead up and to raise or lift up, with the participle unnīta (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unnayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unnayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unnayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unnayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāravāhaḥ bhūmeḥ bhāram unnayati. — The porter lifts the load from the ground.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāravāhaḥ bhūmeḥ bhāram unnayati.* — The porter lifts the load from the ground.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for passes by, then the Sanskrit for a kos, then say unnayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for passes by, then the Sanskrit for a kos, then say *unnayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उन्नयति (unnayati) mean? (\"Raises up; lifts\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C413-sannahyati",
+      "sequence": 23980,
+      "title": "सन्नह्यति (sannahyati) — gets ready; equips oneself",
+      "headword": "सन्नह्यति",
+      "romanization": "sannahyati",
+      "gloss": "gets ready; equips oneself",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1892e7ab6c1a3878",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a kos, then the Sanskrit for raises up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सन्नह्यति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सन्नह्यति — sannahyati — \"gets ready; equips oneself\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यात्री प्रातः यात्रायै सन्नह्यति। yātrī prātaḥ yātrāyai sannahyati. The traveller gets ready for the journey in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः यात्रायै सन्नद्धवान्, saḥ yātrāyai sannaddhavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सन्नह्यति (sannahyati) is built from sam, \"together\", and the root √nah, \"to bind, to tie\": MW gives saṃ-nah as to bind together or gird on and to arm oneself or prepare for a task, with the participle saṃnaddha, \"girt, equipped\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sannahyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sannahyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sannahyati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sannahyati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātrī prātaḥ yātrāyai sannahyati. — The traveller gets ready for the journey in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātrī prātaḥ yātrāyai sannahyati.* — The traveller gets ready for the journey in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a kos, then the Sanskrit for raises up, then say sannahyati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a kos, then the Sanskrit for raises up, then say *sannahyati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सन्नह्यति (sannahyati) mean? (\"Gets ready; equips oneself\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C413-goni",
+      "sequence": 23990,
+      "title": "गोणी (goṇī) — a sack",
+      "headword": "गोणी",
+      "romanization": "goṇī",
+      "gloss": "a sack",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49fe07dc94bbc46a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for raises up, then the Sanskrit for gets ready."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गोणी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गोणी — goṇī — \"a sack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भारवाहः गोणीं पृष्ठे वहति। bhāravāhaḥ goṇīṃ pṛṣṭhe vahati. The porter carries the sack on his back."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गोणी (goṇī) is the word MW gives for a sack, in Pāṇini's examples and later texts; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goṇī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goṇī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goṇī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goṇī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāravāhaḥ goṇīṃ pṛṣṭhe vahati. — The porter carries the sack on his back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāravāhaḥ goṇīṃ pṛṣṭhe vahati.* — The porter carries the sack on his back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for raises up, then the Sanskrit for gets ready, then say goṇī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for raises up, then the Sanskrit for gets ready, then say *goṇī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गोणी (goṇī) mean? (\"A sack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C413-prapayati",
+      "sequence": 24000,
+      "title": "प्रापयति (prāpayati) — delivers; takes to",
+      "headword": "प्रापयति",
+      "romanization": "prāpayati",
+      "gloss": "delivers; takes to",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:480e6a0be2eb3de9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for gets ready, then the Sanskrit for a sack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रापयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रापयति — prāpayati — \"delivers; takes to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भारवाहः गोणीं धूमयानं प्रापयति। bhāravāhaḥ goṇīṃ dhūmayānaṃ prāpayati. The porter takes the sack to the train."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः गोणीं प्रापितवान्, saḥ goṇīṃ prāpitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रापयति (prāpayati) is built from pra, \"forth\", and the causative of the root √āp, \"to reach\", which gives prāpnoti, \"reaches\"; MW gives its participle prāpita as conveyed or brought to (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prāpayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prāpayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prāpayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prāpayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāravāhaḥ goṇīṃ dhūmayānaṃ prāpayati. — The porter takes the sack to the train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāravāhaḥ goṇīṃ dhūmayānaṃ prāpayati.* — The porter takes the sack to the train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for gets ready, then the Sanskrit for a sack, then say prāpayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for gets ready, then the Sanskrit for a sack, then say *prāpayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रापयति (prāpayati) mean? (\"Delivers; takes to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C413-sampadayati",
+      "sequence": 24010,
+      "title": "सम्पादयति (sampādayati) — arranges; procures",
+      "headword": "सम्पादयति",
+      "romanization": "sampādayati",
+      "gloss": "arranges; procures",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f8718329c7d5031",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a sack, then the Sanskrit for delivers."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सम्पादयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सम्पादयति — sampādayati — \"arranges; procures\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पिता यात्रायै यानपत्राणि सम्पादयति। pitā yātrāyai yānapatrāṇi sampādayati. Father arranges the tickets for the journey."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः यानपत्राणि सम्पादितवान्, saḥ yānapatrāṇi sampāditavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सम्पादयति (sampādayati) is built from sam, \"together\", and the causative of the root √pad, \"to go, to fall\"; MW gives its participle sampādita as brought about, accomplished (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampādayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampādayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampādayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampādayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pitā yātrāyai yānapatrāṇi sampādayati. — Father arranges the tickets for the journey.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pitā yātrāyai yānapatrāṇi sampādayati.* — Father arranges the tickets for the journey.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a sack, then the Sanskrit for delivers, then say sampādayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a sack, then the Sanskrit for delivers, then say *sampādayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सम्पादयति (sampādayati) mean? (\"Arranges; procures\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

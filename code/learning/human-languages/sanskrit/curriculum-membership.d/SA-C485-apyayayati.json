@@ -1,0 +1,11 @@
+{
+  "id": "SA-C485-apyayayati",
+  "pathSegment": "SA-PATH-485-SUSRUSA485",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-485-SUSRUSA485",
+      "order": 2
+    }
+  ]
+}

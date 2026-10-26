@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-498-AGRAJA498",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say who is older and who is younger.",
+  "prerequisites": []
+}

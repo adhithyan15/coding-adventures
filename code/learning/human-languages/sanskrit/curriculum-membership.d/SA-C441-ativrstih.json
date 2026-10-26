@@ -1,0 +1,11 @@
+{
+  "id": "SA-C441-ativrstih",
+  "pathSegment": "SA-PATH-441-DURDINA441",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-441-DURDINA441",
+      "order": 2
+    }
+  ]
+}

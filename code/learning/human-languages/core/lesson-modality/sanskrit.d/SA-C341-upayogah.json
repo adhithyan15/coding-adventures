@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C341-upayogah",
+    "language": "sanskrit",
+    "chapter": 341,
+    "sequence": 20070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a00da73a2e5787a"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:41bbe9ef6370ad89",
+  "lessonIds": [
+    "SA-C351-satkarma",
+    "SA-C351-vivekah",
+    "SA-C351-anuvartate",
+    "SA-C351-anusarati",
+    "SA-C351-maryada"
+  ],
+  "tex": "sanskrit/book/chapters/ch351-right-and-wrong.tex"
+}

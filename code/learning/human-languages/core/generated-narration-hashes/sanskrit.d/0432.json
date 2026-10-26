@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:91f57bfd4883e1a8",
+  "lessonIds": [
+    "SA-C432-vyayah",
+    "SA-C432-apavyayah",
+    "SA-C432-vyayati",
+    "SA-C432-sancinoti",
+    "SA-C432-sancayah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch432.txt",
+  "json": "sanskrit/narration/ch432.json",
+  "textHash": "fnv1a64:677f0553eea77f7c",
+  "jsonHash": "fnv1a64:89fd5e905a71a607",
+  "findings": []
+}

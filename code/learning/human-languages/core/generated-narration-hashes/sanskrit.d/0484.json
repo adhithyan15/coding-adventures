@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:6b15457f44219c67",
+  "lessonIds": [
+    "SA-C484-ayurvedah",
+    "SA-C484-vatah",
+    "SA-C484-pittam",
+    "SA-C484-kaphah",
+    "SA-C484-pathyam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch484.txt",
+  "json": "sanskrit/narration/ch484.json",
+  "textHash": "fnv1a64:406e74e1163745ec",
+  "jsonHash": "fnv1a64:d6be276dd2d8031c",
+  "findings": []
+}

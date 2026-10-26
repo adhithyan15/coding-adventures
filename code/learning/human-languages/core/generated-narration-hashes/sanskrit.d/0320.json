@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:a57b1c74cb51af4c",
+  "lessonIds": [
+    "SA-C320-praja",
+    "SA-C320-dasah",
+    "SA-C320-viplavah",
+    "SA-C320-niskasayati",
+    "SA-C320-svatantryam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch320.txt",
+  "json": "sanskrit/narration/ch320.json",
+  "textHash": "fnv1a64:5ee27e7ee5dcb8b6",
+  "jsonHash": "fnv1a64:70208c0ebf64b459",
+  "findings": []
+}

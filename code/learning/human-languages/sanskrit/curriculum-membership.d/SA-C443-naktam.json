@@ -1,0 +1,11 @@
+{
+  "id": "SA-C443-naktam",
+  "pathSegment": "SA-PATH-443-ASTA443",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-443-ASTA443",
+      "order": 4
+    }
+  ]
+}

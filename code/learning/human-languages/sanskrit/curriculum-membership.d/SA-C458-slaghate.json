@@ -1,0 +1,11 @@
+{
+  "id": "SA-C458-slaghate",
+  "pathSegment": "SA-PATH-458-DARPA458",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-458-DARPA458",
+      "order": 1
+    }
+  ]
+}
