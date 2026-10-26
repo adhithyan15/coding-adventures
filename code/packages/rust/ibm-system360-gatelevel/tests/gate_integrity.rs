@@ -293,13 +293,40 @@ mod compile_checked_hostile_shapes {
         raw[0] == 0x05
     }
 
+    pub fn raw_range(raw: &[u8]) -> bool {
+        (0x40..=0x7f).contains(&raw[0])
+    }
+
     pub fn duplicate_decode(opcode: u8) -> ([u8; 256], [u8; 256]) {
         (gates::decode_byte(opcode), gates::decode_byte(opcode))
+    }
+
+    pub fn dead_decode(opcode: u8) -> [u8; 256] {
+        if false {
+            let _ = gates::decode_byte(opcode);
+        }
+        [0; 256]
+    }
+
+    pub fn secondary_decode(raw: &[u8]) -> [u8; 256] {
+        gates::decode_byte(raw[0])
     }
 
     pub fn inactive_read(memory: &[u8], selected: bool) -> Option<u8> {
         let eager = memory[0];
         selected.then_some(eager)
+    }
+
+    pub fn oracle_dispatch<T: Clone>(oracle_next: &T) -> T {
+        oracle_next.clone()
+    }
+
+    mod fake_gates {
+        pub(super) use ibm_system360_gatelevel::gates::decode_byte;
+    }
+
+    pub fn shadowed_decode(opcode: u8) -> [u8; 256] {
+        fake_gates::decode_byte(opcode)
     }
 
     pub fn post_overwrite(mut selected: u32, old: u32) -> u32 {
