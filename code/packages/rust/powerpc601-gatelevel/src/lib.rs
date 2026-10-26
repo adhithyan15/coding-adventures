@@ -11,6 +11,7 @@ mod cpu;
 pub mod decoder;
 mod register_file;
 mod state;
+pub mod status;
 
 pub use cpu::{PowerPc601GateSimulator, FLIP_FLOP_COUNT};
 pub use powerpc601_simulator::{ExecutionResult, PowerPcError, PowerPcState, StepTrace};
