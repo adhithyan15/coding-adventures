@@ -145,6 +145,38 @@ exit:
     assert!(assert_full_scan_loop(false_pass).is_err());
 }
 
+#[test]
+fn structural_gate_rejects_a_wide_load_preheader_bypass() {
+    let false_pass = r#"
+define i1 @ct_eq_equal_length(ptr %a.0, i64 %a.1, ptr %b.0, i64 %b.1) {
+start:
+  %acc = alloca i8
+  %first_a = load i64, ptr %a.0
+  %first_b = load i64, ptr %b.0
+  %different = icmp ne i64 %first_a, %first_b
+  br i1 %different, label %exit, label %loop
+loop:
+  %i = phi i64 [ 0, %start ], [ %next, %loop ]
+  %left_ptr = getelementptr i8, ptr %a.0, i64 %i
+  %right_ptr = getelementptr i8, ptr %b.0, i64 %i
+  %old = load volatile i8, ptr %acc
+  %left = load volatile i8, ptr %left_ptr
+  %right = load volatile i8, ptr %right_ptr
+  %combined = or i8 %old, %left
+  store volatile i8 %combined, ptr %acc
+  %next = add i64 %i, 1
+  %done = icmp eq i64 %next, %a.1
+  br i1 %done, label %exit, label %loop
+exit:
+  %result = load volatile i8, ptr %acc
+  %equal = icmp eq i8 %result, 0
+  ret i1 %equal
+}
+"#;
+
+    assert!(assert_full_scan_loop(false_pass).is_err());
+}
+
 fn assert_full_scan_loop(scan: &str) -> Result<(), String> {
     if scan.matches("load volatile i8").count() != 4 {
         return Err("expected three loop reads and one final accumulator read".into());
@@ -237,6 +269,11 @@ fn assert_full_scan_loop(scan: &str) -> Result<(), String> {
 
     let definitions = ssa_definitions(scan);
     let tainted = volatile_taint(&definitions);
+    let block_names = blocks
+        .iter()
+        .map(|block| format!("%{}", block.name))
+        .collect::<HashSet<_>>();
+    let public_lengths = HashSet::from(["%a.1".to_owned(), "%b.1".to_owned()]);
     // Inspect every block, not only the loop SCC. A data-dependent preheader
     // must not be able to bypass a perfectly formed volatile loop and converge
     // on its single return.
@@ -251,8 +288,8 @@ fn assert_full_scan_loop(scan: &str) -> Result<(), String> {
                     block.name
                 ));
             }
-            if line.contains("load i8") && !line.contains("load volatile i8") {
-                return Err(format!("ordinary byte load inside comparison: {line}"));
+            if ordinary_load(line) {
+                return Err(format!("ordinary load inside comparison: {line}"));
             }
             if (line.starts_with("call ") || line.contains(" call "))
                 && !line.contains("@llvm.lifetime.")
@@ -274,6 +311,17 @@ fn assert_full_scan_loop(scan: &str) -> Result<(), String> {
             if !definition.contains("icmp ") || !definition.contains(" i64 ") {
                 return Err(format!(
                     "comparison branch is not an induction/length comparison: {line}"
+                ));
+            }
+            if !public_control(
+                condition,
+                &definitions,
+                &block_names,
+                &public_lengths,
+                &mut HashSet::new(),
+            ) {
+                return Err(format!(
+                    "comparison branch is not derived only from public lengths: {line}"
                 ));
             }
         }
@@ -467,4 +515,49 @@ fn ssa_values(text: &str) -> impl Iterator<Item = &str> {
 fn branch_condition(line: &str) -> Option<&str> {
     let rest = line.strip_prefix("br i1 ")?;
     Some(rest.split(',').next()?.trim())
+}
+
+fn ordinary_load(line: &str) -> bool {
+    line.trim_start()
+        .split_once(" = ")
+        .is_some_and(|(_, expression)| {
+            expression.starts_with("load ") && !expression.starts_with("load volatile ")
+        })
+}
+
+fn public_control(
+    value: &str,
+    definitions: &HashMap<String, String>,
+    block_names: &HashSet<String>,
+    public_lengths: &HashSet<String>,
+    visiting: &mut HashSet<String>,
+) -> bool {
+    if public_lengths.contains(value) {
+        return true;
+    }
+    if !visiting.insert(value.to_owned()) {
+        // Induction variables form a phi/add dependency cycle. The remaining
+        // dependencies still have to terminate at public lengths or constants.
+        return true;
+    }
+    let Some(expression) = definitions.get(value) else {
+        visiting.remove(value);
+        return false;
+    };
+    let opcode = expression.split_whitespace().next().unwrap_or_default();
+    let allowed_operation =
+        matches!(opcode, "icmp" | "phi" | "add" | "sub") && expression.contains(" i64 ");
+    let allowed_dependencies = ssa_values(expression)
+        .filter(|dependency| !block_names.contains(*dependency))
+        .all(|dependency| {
+            public_control(
+                dependency,
+                definitions,
+                block_names,
+                public_lengths,
+                visiting,
+            )
+        });
+    visiting.remove(value);
+    allowed_operation && allowed_dependencies
 }
