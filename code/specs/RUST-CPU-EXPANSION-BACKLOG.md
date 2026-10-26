@@ -74,7 +74,7 @@ architecture/core introduction era, not a claim about a particular chip.
 | 4 | Arm Cortex-M33 | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
 | 5 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
 | 6 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
-| 7 | IBM System/370 | published Principles of Operation | Functional merged in PR #18336. A P0 source-correctness repair is specified before the gate partner: destructive-overlap `MVCL` must suppress storage movement and preserve length registers while clearing the ignored high byte of both address registers, including condition-code-3 completion. |
+| 7 | IBM System/370 | published Principles of Operation | Functional merged in PR #18336. P0 source-correctness repair complete locally: destructive-overlap `MVCL` suppresses storage movement, preserves both lengths and low 24-bit addresses, and clears the ignored high byte of both address registers for condition-code-3 completion. The gate partner remains blocked until this repair merges. |
 | 8 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
 | 9 | PA-RISC 1.1 | published architecture manuals | Checked integer core and delayed-control boundary. |
 | 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
