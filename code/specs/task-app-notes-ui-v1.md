@@ -138,3 +138,58 @@ whole save with a console error, mirroring the Sheet Labels column's
 (`row[13]`, appended after the dependency list's `row[12]`) then reads
 `Note.attached_task` for the open task — the read side this addendum
 was blocked on.
+
+## Addendum (v1.2): a refused Save says why, and drafts are bounded
+
+Mosaic backlog item E5, from the editor convergence audit
+(`mosaic-editor-convergence-audit-v1.md`, risks R4 and R5). Both hosts
+had two gaps, and both are closed the way Journal already closes them.
+
+**A refused Save is visible.** v1.1's "a miss aborts the whole save with a
+console error" left the person typing with nothing to see: Save did
+nothing, and only a developer console knew why (the native adapter,
+`task-mosaic-app`, did not even log). Now a Save that names no task in the
+active project:
+
+- writes nothing, and keeps the whole draft — title, body and the typed
+  task name — exactly as it was, so the person can correct the name;
+- sets the new `note-error` slot to a one-line reason, and announces the
+  same reason politely to assistive technology;
+- is cleared by **any other event** (typing, switching notes, changing
+  view), and by the next Save that succeeds. A new Save sets or clears it
+  again. Like Journal's `draft-error`, it describes the last attempt, not
+  the data, so it is not part of the snapshot.
+
+`note-error` is a TaskApp slot, not a `Notes` one. TaskApp renders it as
+a `Text [ note-error ]` directly above the `Notes` mount, exactly as
+Journal composes `draft-error` above `DraftEditor`. That keeps the change
+additive: `Notes` gains no slot, so no other consumer of it has to bind
+one (the unbound-package-slot question is the audit's E6), and E3's move
+of `Notes` onto `DraftEditor` is unaffected. The audit records that
+composing the error outside the editor "costs nothing".
+
+**Drafts are capped as typed**, with Journal's limits and Journal's
+semantics:
+
+| Field | Cap | Measured in |
+| --- | --- | --- |
+| title | 512 | characters (Unicode scalar values) |
+| body | 1 MiB (1,048,576) | UTF-8 bytes |
+
+An edit past the cap is **refused, not truncated**: the event fails, the
+draft keeps its previous value, and the field shows that value again.
+Truncating would silently drop the end of a paste; refusing it shows the
+person that the paste did not land. Bytes for the body, because the cap
+exists to bound the state file, not to count prose.
+
+**Stored notes are never cut down.** A note saved before this change may
+be larger than the cap. It still restores, still opens in the editor
+whole, and still saves. Journal can refuse such a snapshot outright,
+because its caps have always existed; Trestle's have not. The one
+difference from Journal follows from that: an edit to an over-cap draft is
+refused only if it would make the draft *longer*. A legacy note can be
+edited down towards the cap, but never grown past it.
+
+The task-name field is not capped by this addendum. Task names themselves
+have no limit anywhere in TaskApp yet, so a cap on the name typed to find
+one would be arbitrary.
