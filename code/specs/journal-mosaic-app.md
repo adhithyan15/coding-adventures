@@ -357,6 +357,9 @@ packages:
 
 - Qt needs Qt 6.8 libraries on the machine.
 - The Compose app image bundles its own JVM.
+- Each one carries an `INSTALL.txt`. It says how to run the app, that it is
+  unsigned, and that `MOSAIC_APP_STATE_PATH` chooses where the state file
+  lives.
 
 Every archive has one top-level directory named after the file. It contains
 a `SOURCE_COMMIT` file and is written by `engram_release.py`'s hardened
