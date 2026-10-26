@@ -304,7 +304,8 @@ viewport shift. A bounded callback confirms the exact new offset before
 activating a realized cell, preserves the column, and cancels on newer input or
 unload. Editors and other tables retain their focus. See
 `code/specs/mosaic-xaml-keyboard-viewport-edge-20261026.md` for validation status;
-native interaction acceptance for this continuation is still pending.
+native Debug interaction confirms both edges, repeated crossing, formula editing
+and snapshot restart. Broader accessibility and release acceptance remain open.
 
 Native table cell automation names use the authored row-header label, including
 reactive list/index labels for virtual windows. GridItem row indices remain local
