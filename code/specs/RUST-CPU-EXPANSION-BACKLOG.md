@@ -37,15 +37,15 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | DEC PDP-8 / PDP-8/E | merged | merged | Complete; PR #18120 landed. |
 | P0 | EDSAC | merged | merged | Complete; gate PR #18166 landed. |
 | P0 | IAS machine | merged | merged | Complete; gate PR #18266 landed. |
-| P0 | IBM System/360 | merged | merged | Complete. |
-| P0 | Motorola MC6800 | merged | merged | Complete. |
-| P0 | Intel 8085 | merged | merged | Complete. |
+| P0 | IBM System/360 | merged | merged | Complete; gate PR #18181 landed. |
+| P0 | Motorola MC6800 | merged | merged | Complete; gate PR #18182 landed. |
+| P0 | Intel 8085 | merged | merged | Complete; gate PR #18257 landed. |
 | P0 | DEC VAX-11/780 | merged | merged | Complete; gate PR #18263 landed. |
 | P0 | Motorola 6809 | merged | merged | Complete; gate PR #18269 landed. |
 | P0 | OpenRISC 1000 | merged | merged | Complete; gate PR #18276 landed. |
-| P0 | OpenSPARC T1 | merged | in progress | Gate specification descends from public OpenSPARC T1 RTL. |
-| P0 | Arm Cortex-M0 | merged | ready | Independent Armv6-M gate cell can start now. |
-| P0 | Arm Cortex-M3 | merged | ready | Independent Armv7-M gate cell can start now. |
+| P0 | OpenSPARC T1 | merged | merged | Complete; gate PR #18295 landed. |
+| P0 | Arm Cortex-M0 | merged | PR #18296 | Conflict reconciliation in progress; squash auto-merge remains armed. |
+| P0 | Arm Cortex-M3 | merged | merged | Complete; gate PR #18297 landed. |
 
 ## P0 gate-integrity repair queue
 
