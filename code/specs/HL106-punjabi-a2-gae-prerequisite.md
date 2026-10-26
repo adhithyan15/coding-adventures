@@ -13,17 +13,24 @@ Chapter 206 closes that one-form gap through one deliberately narrow frame:
 **ਉਹ ਗਏ** means “they went” here, with the same masculine plural form also
 available for a respectful masculine singular referent. The voice-first opener
 retrieves only already-owned **ਉਹ** and **ਜਾਣਾ**. One lesson directly owns exact
-**ਗਏ**, an immediate lesson retrieves its sound, meaning, and script, a bounded
-frame lesson places it after familiar **ਉਹ**, and a four-skill payoff retrieves
-the complete frame again. The target has one direct owner and three later
+**ਗਏ**, a short model-visible script lesson isolates **ਏ** from that now-known
+word without claiming unverified stroke order, an immediate lesson retrieves
+the word's sound, meaning, and script, a bounded frame lesson places it after
+familiar **ਉਹ**, and a four-skill payoff retrieves the complete frame again.
+The target has one direct owner and four later
 retrievals. It must not leak into authored, generated-book, or narration copy
 before its owner.
 
-The new atom is `PA-GRAM-GAE-206`. The direct owner presents **ਗਏ** as the
+The new atoms are `PA-GRAM-GAE-206` and `PA-SCRIPT-RECOG-E-206`. The direct
+owner presents **ਗਏ** as the
 irregular masculine plural perfective form of already-owned **ਜਾਣਾ**, then uses
 only the bounded “went” reading needed for **ਉਹ ਗਏ**. It does not teach the
 whole perfective or agreement system, open ergative alignment, add oblique use,
-or introduce the neighbouring forms **ਗਿਆ**, **ਗਈ**, and **ਗਈਆਂ**.
+or introduce the neighbouring forms **ਗਿਆ**, **ਗਈ**, and **ਗਈਆਂ**. The script
+owner follows the known word, keeps the printed model visible, and cites the
+Unicode Gurmukhi chart for the modern character identity; it explicitly defers
+stroke order because the inventory has no verified stroke-order source for
+**ਏ**.
 
 Punjabi University Patiala's lexical statistics identifies **ਗਏ** as the
 masculine plural perfect form of **ਜਾ**, “go / went”:
