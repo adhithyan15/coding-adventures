@@ -7,8 +7,9 @@ This specification defines a checked instruction-level model of the classic
 device profile, not a generic model of every PIC16 part and not a complete
 PIC16F84A microcontroller.
 
-**Status:** spec-only, awaiting independent review. No implementation may
-begin until this specification-only commit passes that review.
+**Status:** independently reviewed specification; implementation authorized.
+The exact reviewed spec-only head was
+`c7da48941de5ab6bb7d0949bd4ba081c018f5d3b`.
 
 The public primary sources are:
 
