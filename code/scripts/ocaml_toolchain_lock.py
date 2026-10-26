@@ -130,9 +130,9 @@ GENERIC_BOOTSTRAP_RUN_SHA256 = (
     "da5d03fbce1c2766acb87fc9c381292704bf18b7b8b4a5bbf164c2e3922dbe56"
 )
 GENERIC_MATRIX_PLAN_RUN_SHA256 = (
-    # NN47 adds only the bounded C JSON Windows requirement; OCaml predicates,
-    # bootstrap identities and fail-closed mutation checks remain unchanged.
-    "056461d8f8ad299aab669cfe19405a4f1c4194f74958e5698826d1ecfa279381"
+    # NN48 adds native C training's Windows requirement and conservative non-list
+    # macOS plan guards. OCaml predicates/bootstrap/mutation rejection stay pinned.
+    "f3a80b5e408f17b46ef37b36a3e50a7d627e122c7d4fdc640b8adc3e47ef372a"
 )
 EXPECTED_RUN_METADATA = {
     "contract.validate": {"shell": None, "env": None},
