@@ -44,7 +44,7 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | Motorola 6809 | merged | merged | Complete; gate PR #18269 landed. |
 | P0 | OpenRISC 1000 | merged | merged | Complete; gate PR #18276 landed. |
 | P0 | OpenSPARC T1 | merged | merged | Complete; gate PR #18295 landed. |
-| P0 | Arm Cortex-M0 | merged | PR #18296 | Conflict reconciliation in progress; squash auto-merge remains armed. |
+| P0 | Arm Cortex-M0 | merged | merged | Complete; gate PR #18296 landed. |
 | P0 | Arm Cortex-M3 | merged | merged | Complete; gate PR #18297 landed. |
 
 ## P0 gate-integrity repair queue
@@ -57,6 +57,7 @@ already public.
 
 | Priority | Target | Status | Required boundary |
 |---:|---|---|---|
+| P0 | Cortex-M APSR MSR masks | local complete | Repaired inherited Cortex-M3 functional/gate mask classification and Cortex-M7 GE/NZCVQ group isolation before Cortex-M7 gate composition. Non-DSP Cortex-M3 accepts only mask `10`; Cortex-M7 accepts `01`, `10`, and `11` with group isolation; `00`, unavailable-extension masks, and non-APSR aliases fault atomically. All 82 affected release tests, strict checks, docs, affected builds, exact functional/gate differentials, and 93.24% combined line coverage (4,251/4,559) are green; corrected independent exact-head review remains before publication. |
 | P0 complete locally | x86-64 multiply/divide qualification | ready | The fixed-round multiplier/divider returns gate-qualified wide results; exact signed/unsigned fit boundaries, atomic divide faults, discarded high wires, parsed-syntax anti-bypass fixtures including inactive decoys, duplicate definitions, and exact production module routing, strict checks, all affected builds, and 88.40% line coverage are green. |
 | P0 | Motorola 68000 gate | local complete | All 560 register/PC/SR DFF Q outputs and the HALT DFF Q output are authoritative; public fields are synchronized observers. Concrete inventory, deliberate observer-divergence lifecycle regressions, 71 unit tests, all 82 differential vectors, 6 lifecycle tests, 7 doctests, strict checks, lessons, and 83.39% combined line coverage are green. |
 | P1 audit | Remaining completed gate packages | queued | Search architecturally visible arithmetic, flags, fault qualification, decode, state selection, and storage authority for host-language shortcuts; record and repair one bounded cell at a time. Address/control bookkeeping permitted by the educational boundary is not itself a defect. |
