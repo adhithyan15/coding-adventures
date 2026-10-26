@@ -3,7 +3,7 @@
   "automation_id": "package-parity-pr-loop",
   "started": "2026-07-29",
   "policy": {
-    "maximum_active_parity_prs": 1,
+    "maximum_active_parity_prs": 3,
     "merge_authority": "auto-merge-after-required-checks",
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass",
@@ -17,6 +17,11 @@
     ]
   },
   "active_pr": 18183,
+  "active_prs": [
+    18183,
+    18260,
+    18293
+  ],
   "last_ci_action": {
     "pr_number": 18183,
     "head": "e04acc841ef2de4f61a56b5ae671a3927c81a38f",

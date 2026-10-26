@@ -15,6 +15,16 @@ dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4"]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build]
+exclude = [
+    "/.coverage",
+    "/.pytest_cache",
+    "/.ruff_cache",
+    "/.venv*",
+    "/dist",
+    "**/__pycache__",
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/gradient_descent"]
 

@@ -17990,7 +17990,7 @@ owner; its four directly executed native tests grant no build-front credit.
 
 ## October 25: serial CommonMark foundation recovery
 
-PR #18147 externally merged its bounded sixteen-case TypeScript adoption as `e0f73e7d56b6a9f2fec1f5ca4ab760d7e7094d89`. The unpublished sixty-seven-case GFM draft remains separate. Existing CommonMark foundation PR #18174 is the sole active recovery under the current one-PR ceiling; Haskell opcode PR #18183 remains untouched serial backlog.
+PR #18147 externally merged its bounded sixteen-case TypeScript adoption as `e0f73e7d56b6a9f2fec1f5ca4ab760d7e7094d89`. The unpublished sixty-seven-case GFM draft remains separate. At this historical recovery checkpoint, CommonMark foundation PR #18174 was the sole active recovery under a temporary one-PR ceiling; Haskell opcode PR #18183 remained untouched serial backlog. The later operator-authorized policy restores the three-PR ceiling recorded in the operational state.
 
 The private operational journal has reconciled all 103 pinned audits and eleven new pending classifications after a full collision-clean inventory: 1,559 identities and 4,846 established-lane slots across fifteen languages at `d6ce5d38efeca48e0aa6d5366102c756b6d508ea`. OCaml remains emerging with five packages. These structural counts grant no native qualification or reviewed exception. Neural-framework delivery retains separate roadmap coordination, and OCSP policy composition remains documentary and blocked from security delivery.
 
