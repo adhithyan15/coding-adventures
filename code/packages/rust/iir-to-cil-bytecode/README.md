@@ -327,3 +327,5 @@ flush. The binary path refuses these too.
 LANG83 PR6a adds `write_f64_py` / `write_f64_js` on the textual path → the module's `__iir_write_f64(float64, int32)` IL helper. It takes the shortest digits from `double.ToString("R", InvariantCulture)` and prints Python's `repr` or JavaScript's `toString` layout.
 
 LANG83 PR6c adds the non-trapping IEEE `f64_add`/`f64_sub`/`f64_mul`/`f64_div`/`f64_neg` → `add` … `neg` on `float64`, and `f64_signbit` → `BitConverter::DoubleToInt64Bits(float64); ldc.i4.s 63; shr.un`.
+
+LANG83 PR7b moves the `"R"` digit parse into its own IL method, `string __iir_f64_shortest(float64, int32&)`, shared by the writer and the new `int64 __iir_f64_digits(float64)` / `__iir_f64_exp10(float64)` (`f64_digits` / `f64_exp10`). `f64_class` is inline: three `cgt.un`s on the masked raw bits, summed.

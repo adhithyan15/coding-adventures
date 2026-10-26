@@ -331,3 +331,5 @@ kind and does not flush.
 LANG83 PR6a adds `write_f64_py` / `write_f64_js` → the class's private static `__iir_write_f64(DI)V`. It finds the shortest round-trip digits itself, by rounding the double's exact `BigDecimal` value to 1, 2, … 17 significant digits (`FLOOR` and `CEILING`) until one reads back, and prints Python's `repr` or JavaScript's `toString` layout. It uses Java 5 APIs only, so the output is the same on every JVM that loads a version-49 class (it does not use `Double.toString`, which is shortest only on JDK 19+).
 
 LANG83 PR6c adds the non-trapping IEEE `f64_add`/`f64_sub`/`f64_mul`/`f64_div`/`f64_neg` → `dadd` … `dneg`, and `f64_signbit` → `Double.doubleToRawLongBits(D)J; bipush 63; lushr`.
+
+LANG83 PR7b moves the digit search into its own synthetic method, `__iir_f64_shortest(D)Ljava/math/BigDecimal;`, shared by the writer and the new `__iir_f64_digits(D)J` / `__iir_f64_exp10(D)J` (`f64_digits` / `f64_exp10`). `f64_class` is inline: `lcmp(m, 0) + lcmp(m, +Infinity's bits) + 1` on the masked raw bits.

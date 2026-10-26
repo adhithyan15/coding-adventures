@@ -83,6 +83,12 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("f64_div", Lowered),
     ("f64_neg", Lowered),
     ("f64_signbit", Lowered),
+    // LANG83 PR7b — `f64_class` inline (three `cgt.un`s on the bits);
+    // `f64_digits` / `f64_exp10` call the class's synthetic helpers, which
+    // share the PR6a `"R"` digit parse (textual IL path only).
+    ("f64_class", Lowered),
+    ("f64_digits", Lowered),
+    ("f64_exp10", Lowered),
     // ── Conversions ─────────────────────────────────────────────────────────
     ("int_to_real", Lowered),
     ("real_to_int_trunc", Lowered),

@@ -1,5 +1,20 @@
 # Changelog — iir-to-beam
 
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- The PR6a `float_to_list(F, [short])` parse is its own function,
+  `'__iir_f64_shortest'(F) -> [Neg, E | D]`, called by `'__iir_write_f64'/2`
+  (output unchanged) and by the new `'__iir_f64_digits'/1`
+  (`list_to_integer(D)`) and `'__iir_f64_exp10'/1` (`E`), each emitted and
+  exported only when used; 0 for ±0.0 (BEAM has no infinities or NaN).
+- `f64_class` is inline: two `is_eq_exact` tests against the literal-table
+  ±0.0 (classes 2 and 3 cannot occur). `f64_digits` / `f64_exp10` are a
+  local `call` and join the live-across-call list.
+- Tests: the opcode-and-BIF model now runs local calls, `test_heap` and
+  `put_list`; it runs the writer (unchanged output) and the three ops,
+  alone and with a value live across both calls, over every finite PR6a
+  value in four `float_to_list` layouts. Structural here: there is no `erl`.
+
 ## Unreleased — non-finite float constants are refused (LANG84 6e review)
 
 - `validate_for_beam` rejects an `f64` `const` whose value is `±Infinity` or

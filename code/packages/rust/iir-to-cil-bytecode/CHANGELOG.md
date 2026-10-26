@@ -1,5 +1,21 @@
 # Changelog — iir-to-cil-bytecode
 
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- The PR6a `"R"` digit parse is its own IL method,
+  `string __iir_f64_shortest(float64 ax, int32& e10)` (it returns `D` and
+  stores the exponent through the managed pointer), called by
+  `__iir_write_f64` (output unchanged) and by the new
+  `int64 __iir_f64_digits(float64)` (`Int64.Parse(D)`) and
+  `int64 __iir_f64_exp10(float64)`, each emitted only when used; 0 for ±0,
+  ±Infinity and NaN.
+- `f64_class` is inline: three `cgt.un`s on the masked raw bits, summed.
+- Tests: the IL model now follows `call`s between the helpers (with the
+  `int32&` write-back, `stind.i4`, `ldc.i8`, `and`, `cgt.un`, `conv.i8`,
+  `pop`) and compares integers exactly; it runs the writer (unchanged
+  output), both queries and the inline `f64_class` over the PR6a table in
+  every `"R"` layout. Structural here: there is no `dotnet`.
+
 ## [0.50.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
 
 - **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /

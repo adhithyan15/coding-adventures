@@ -461,3 +461,5 @@ against `MIN` and `MAX`; out of range raises `erlang:error('Trap.Overflow')`.
 LANG83 PR6a adds `write_f64_py` / `write_f64_js` → the helper function `'__iir_write_f64'/2`. It takes the shortest digits from `float_to_list(F, [short])` and prints Python's `repr` or JavaScript's `toString` layout through `io:put_chars/1`.
 
 LANG83 PR6c lowers `f64_signbit` (`is_lt x, 0.0`, then `is_eq_exact x, -0.0`; needs OTP 27) and **refuses** the IEEE `f64_add`/`f64_sub`/`f64_mul`/`f64_div`/`f64_neg` at compile time: an Erlang float has no ±Infinity or NaN, and float arithmetic raises `badarith` (`op_support::NO_IEEE_SPECIALS`).
+
+LANG83 PR7b moves the `float_to_list(F, [short])` parse into its own function, `'__iir_f64_shortest'(F) -> [Neg, E | D]`, shared by the writer and the new `'__iir_f64_digits'/1` / `'__iir_f64_exp10'/1` (`f64_digits` / `f64_exp10`). `f64_class` is inline: two `is_eq_exact` tests against ±0.0, since a BEAM float is always finite (class 0 or 1).

@@ -80,6 +80,12 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("f64_div", Lowered),
     ("f64_neg", Lowered),
     ("f64_signbit", Lowered),
+    // LANG83 PR7b — `f64_class` inline (raw bits, two `lcmp`s); `f64_digits`
+    // / `f64_exp10` call the class's synthetic `__iir_f64_digits(D)J` /
+    // `__iir_f64_exp10(D)J`, which share the PR6a BigDecimal digit search.
+    ("f64_class", Lowered),
+    ("f64_digits", Lowered),
+    ("f64_exp10", Lowered),
     // ── Conversions ─────────────────────────────────────────────────────────
     ("int_to_real", Lowered),
     ("real_to_int_trunc", Lowered),

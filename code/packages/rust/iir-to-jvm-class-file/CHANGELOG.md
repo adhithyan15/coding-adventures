@@ -1,5 +1,20 @@
 # Changelog — iir-to-jvm-class-file
 
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- The PR6a BigDecimal digit search is its own synthetic method,
+  `private static BigDecimal __iir_f64_shortest(double)`, called by
+  `__iir_write_f64` (output unchanged) and by the new
+  `__iir_f64_digits(D)J` (`unscaledValue().longValue()`) and
+  `__iir_f64_exp10(D)J` (`len(D) - 1 - scale()`), each emitted only when
+  used. Both return 0 for ±0, ±Infinity and NaN.
+- `f64_class` is inline and branch-free: `lcmp(m, 0) + lcmp(m, 0x7FF0…0) + 1`
+  on the masked raw bits. `f64_exp10` / `f64_class` narrow exactly into an
+  `int` dest; `f64_digits` (up to 10^17) refuses one.
+- The reserved-name check covers all four synthetic methods.
+- Tests: shapes, and the three ops over the PR6a table on real `java`
+  (verifier on) against host `python3`.
+
 ## Unreleased — LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`
 
 - **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /

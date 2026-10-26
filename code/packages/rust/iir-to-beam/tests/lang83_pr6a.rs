@@ -40,6 +40,8 @@ const OP_IS_NIL: u8 = 52;
 const OP_JUMP: u8 = 61;
 const OP_MOVE: u8 = 64;
 const OP_GET_LIST: u8 = 65;
+const OP_TEST_HEAP: u8 = 16;
+const OP_PUT_LIST: u8 = 69;
 const OP_GC_BIF1: u8 = 124;
 const OP_GC_BIF2: u8 = 125;
 
@@ -205,18 +207,34 @@ fn digits_of(py: &str) -> (String, i32) {
 /// Run `'__iir_write_f64'(F, Js)` on the model; returns what `io:put_chars`
 /// printed. `short` is the model's `float_to_list(F, [short])`.
 fn run_helper(m: &BEAMModule, f: f64, js: i64, short: &dyn Fn(f64) -> String) -> String {
+    let mut out = String::new();
+    run_fn(m, "__iir_write_f64", &[Val::Float(f), Val::Int(js)], &mut out, short);
+    out
+}
+
+/// Run the module function `name` with `args` in x0.. on the model; output
+/// is appended to `out` and the return value (x0 at `return`) is returned.
+/// A local `call` runs its callee the same way, with a frame of its own, and
+/// clobbers every X register but the result.
+fn run_fn(m: &BEAMModule, name: &str, args: &[Val], out: &mut String, short: &dyn Fn(f64) -> String) -> Val {
+    let code: &[BEAMInstruction] = &m.instructions;
+    let fi = code
+        .iter()
+        .position(|i| i.opcode == OP_FUNC_INFO && atom(m, i.operands[1].value) == name)
+        .unwrap_or_else(|| panic!("{name}'s func_info"));
+    assert_eq!(code[fi].operands[2].value, args.len() as u64, "{name}'s arity");
+    run_at(m, fi + 2, args, out, short)
+}
+
+/// Run from `pc` (a function's entry) with `args` in x0..; see [`run_fn`].
+fn run_at(m: &BEAMModule, entry: usize, args: &[Val], out: &mut String, short: &dyn Fn(f64) -> String) -> Val {
     let code: &[BEAMInstruction] = &m.instructions;
     let labels: HashMap<u64, usize> =
         code.iter().enumerate().filter(|(_, i)| i.opcode == OP_LABEL).map(|(pc, i)| (i.operands[0].value, pc)).collect();
-    let fi = code
-        .iter()
-        .position(|i| i.opcode == OP_FUNC_INFO && atom(m, i.operands[1].value) == "__iir_write_f64")
-        .expect("the helper's func_info");
-    assert_eq!(code[fi].operands[2].value, 2, "arity 2");
-    let mut pc = fi + 2;
-    let mut x: HashMap<u64, Val> = HashMap::from([(0, Val::Float(f)), (1, Val::Int(js))]);
+    let mut pc = entry;
+    let mut x: HashMap<u64, Val> = args.iter().cloned().enumerate().map(|(i, v)| (i as u64, v)).collect();
     let mut y: Vec<Val> = Vec::new();
-    let mut out = String::new();
+    let mut allocated = false;
     let lit = |idx: u64| decode_literal(&m.literals[idx as usize]);
     for _ in 0..100_000 {
         let ins = &code[pc];
@@ -253,10 +271,29 @@ fn run_helper(m: &BEAMModule, f: f64, js: i64, short: &dyn Fn(f64) -> String) ->
         };
         match ins.opcode {
             OP_LABEL => {}
-            OP_ALLOCATE => y = vec![Val::Garbage; ops[0].value as usize],
+            OP_ALLOCATE => {
+                y = vec![Val::Garbage; ops[0].value as usize];
+                allocated = true;
+            }
             OP_DEALLOCATE => {
+                assert!(allocated, "deallocate without a frame");
                 assert_eq!(y.len() as u64, ops[0].value, "deallocate matches allocate");
                 y.clear();
+                allocated = false;
+            }
+            // LANG83 PR7b: the shared parse returns `[Neg, E | D]`.
+            OP_TEST_HEAP => {
+                let live = ops[1].value;
+                for (reg, val) in x.iter_mut() {
+                    if *reg >= live {
+                        *val = Val::Garbage;
+                    }
+                }
+            }
+            OP_PUT_LIST => {
+                let (h, at) = read(&x, &y, 0);
+                let (t, at) = read(&x, &y, at);
+                write(&mut x, &mut y, &ops[at], Val::Cons(Box::new(h), Box::new(t)));
             }
             OP_MOVE => {
                 let (val, at) = read(&x, &y, 0);
@@ -365,10 +402,24 @@ fn run_helper(m: &BEAMModule, f: f64, js: i64, short: &dyn Fn(f64) -> String) ->
                 x.insert(0, result);
             }
             OP_RETURN => {
-                assert!(y.is_empty(), "return with a live frame");
-                return out;
+                assert!(!allocated, "return with a live frame");
+                let result = x.get(&0).cloned().unwrap_or(Val::Garbage);
+                assert_ne!(result, Val::Garbage, "return of a clobbered x0");
+                return result;
             }
-            OP_CALL => panic!("the helper makes no local calls"),
+            OP_CALL => {
+                // Since OTP 24 `call` keeps the return address on the stack
+                // itself, so a frameless caller is fine (user functions with
+                // nothing live across a call have no frame, as for PR6a's
+                // writer call); the helpers allocate one anyway, like erlc.
+                let arity = ops[0].value;
+                let callee = labels[&ops[1].value];
+                let args: Vec<Val> = (0..arity).map(|i| x.get(&i).cloned().unwrap_or(Val::Garbage)).collect();
+                assert!(args.iter().all(|a| *a != Val::Garbage), "call with a clobbered argument: {args:?}");
+                let result = run_at(m, callee, &args, out, short);
+                x.clear();
+                x.insert(0, result);
+            }
             other => panic!("opcode {other} not modelled (pc {})", pc - 1),
         }
     }
@@ -505,7 +556,8 @@ fn call_site_passes_the_float_and_layout_then_calls_the_local_helper() {
         let helper = m.exports.iter().find(|e| atom(&m, u64::from(e.function_atom_index)) == "__iir_write_f64");
         assert!(matches!(helper, Some(e) if e.arity == 2 && u64::from(e.label) == entry));
         assert_eq!(m.exports.len(), m.instructions.iter().filter(|i| i.opcode == OP_FUNC_INFO).count());
-        assert_eq!(m.instructions.iter().filter(|i| i.opcode == OP_FUNC_INFO).count(), 2, "main + one helper");
+        // main + the shared parse '__iir_f64_shortest'/1 + the writer.
+        assert_eq!(m.instructions.iter().filter(|i| i.opcode == OP_FUNC_INFO).count(), 3, "main + two helpers");
     }
 }
 
@@ -548,4 +600,92 @@ fn a_function_named_like_the_helper_is_refused() {
         IIRInstr::new("ret", None, vec![v("z")], "i64"),
     ]));
     assert!(lower_iir_to_beam(&module, &IIRBeamConfig::new("clash")).is_err());
+}
+
+// ── LANG83 PR7b: f64_class / f64_digits / f64_exp10 ─────────────────────────
+
+/// `(class, D, e10)` read off host python3's `repr` (finite values only:
+/// BEAM has no infinities or NaN).
+fn repr_digits(py: &str) -> (i64, i64, i64) {
+    if py.trim_start_matches('-') == "0.0" {
+        return (0, 0, 0);
+    }
+    let (d, e) = digits_of(py);
+    (1, d.parse().unwrap(), i64::from(e))
+}
+
+/// `q_class(x)`, `q_digits(x)`, `q_exp10(x)` each return their op of the
+/// `f64` parameter; `q_sum(x)` returns `class + exp10 + digits`, so the class
+/// must survive BOTH helper calls (the live-across-call spill).
+fn digit_module() -> BEAMModule {
+    let one = |name: &str, op: &str| {
+        IIRFunction::new(name, vec![("x".into(), "f64".into())], "i64", vec![
+            IIRInstr::new(op, Some("r".into()), vec![v("x")], "i64"),
+            IIRInstr::new("ret", None, vec![v("r")], "i64"),
+        ])
+    };
+    let sum = IIRFunction::new("q_sum", vec![("x".into(), "f64".into())], "i64", vec![
+        IIRInstr::new("f64_class", Some("c".into()), vec![v("x")], "i64"),
+        IIRInstr::new("f64_digits", Some("d".into()), vec![v("x")], "i64"),
+        IIRInstr::new("f64_exp10", Some("e".into()), vec![v("x")], "i64"),
+        IIRInstr::new("add", Some("s".into()), vec![v("c"), v("e")], "i64"),
+        IIRInstr::new("add", Some("t".into()), vec![v("s"), v("d")], "i64"),
+        IIRInstr::new("ret", None, vec![v("t")], "i64"),
+    ]);
+    let module = IIRModule {
+        name: "digits".into(),
+        functions: vec![one("q_class", "f64_class"), one("q_digits", "f64_digits"), one("q_exp10", "f64_exp10"), sum],
+        entry_point: Some("q_sum".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+        release: None,
+    };
+    assert!(validate_for_beam(&module).is_empty(), "{:?}", validate_for_beam(&module));
+    lower_iir_to_beam(&module, &IIRBeamConfig::new("digits")).expect("lowers")
+}
+
+/// The helpers are emitted once each, exported, and share one parse; a
+/// module without the writer carries no writer.
+#[test]
+fn pr7b_digit_helpers_share_the_parse_and_are_exported() {
+    let m = digit_module();
+    let fis: Vec<&str> =
+        m.instructions.iter().filter(|i| i.opcode == OP_FUNC_INFO).map(|i| atom(&m, i.operands[1].value)).collect();
+    for helper in ["__iir_f64_shortest", "__iir_f64_digits", "__iir_f64_exp10"] {
+        assert_eq!(fis.iter().filter(|n| **n == helper).count(), 1, "{helper} in {fis:?}");
+    }
+    assert!(!fis.contains(&"__iir_write_f64"), "no writer when nothing prints a float");
+    assert_eq!(m.exports.len(), fis.len(), "every func_info is exported");
+    // f64_class is inline: no call in q_class.
+    let start = m.instructions.iter().position(|i| i.opcode == OP_FUNC_INFO && atom(&m, i.operands[1].value) == "q_class").unwrap();
+    let end = start + 1 + m.instructions[start + 1..].iter().position(|i| i.opcode == OP_FUNC_INFO).unwrap();
+    assert!(m.instructions[start..end].iter().all(|i| i.opcode != OP_CALL && i.opcode != OP_CALL_EXT));
+}
+
+/// On the model, over every finite table value and every Erlang-plausible
+/// `float_to_list` layout: the three ops give host python3's digits, alone
+/// and together.
+#[test]
+fn pr7b_digit_queries_match_python_repr_on_the_model() {
+    let m = digit_module();
+    let by_bits: HashMap<u64, &str> = FLOAT_TABLE.iter().map(|(b, py, _)| (*b, *py)).collect();
+    for style in [Short::Sci, Short::SciPlus, Short::Bare, Short::Fixed] {
+        let short = |f: f64| {
+            let (d, e) = if f == 0.0 { (String::new(), 0) } else { digits_of(by_bits[&f.to_bits()]) };
+            short_string(&d, e, f.is_sign_negative(), style)
+        };
+        for &(bits, py, _) in FLOAT_TABLE.iter().filter(|(b, _, _)| f64::from_bits(*b).is_finite()) {
+            let f = f64::from_bits(bits);
+            let mut out = String::new();
+            let mut q = |name: &str| match run_fn(&m, name, &[Val::Float(f)], &mut out, &short) {
+                Val::Int(n) => n,
+                other => panic!("{name}({f:e}) returned {other:?}"),
+            };
+            let (c, d, e) = repr_digits(py);
+            assert_eq!((q("q_class"), q("q_digits"), q("q_exp10")), (c, d, e), "{style:?} {f:e} ({py})");
+            assert_eq!(q("q_sum"), c + e + d, "{style:?} {f:e}: the class survives both calls");
+            assert!(out.is_empty(), "the queries print nothing");
+        }
+    }
 }

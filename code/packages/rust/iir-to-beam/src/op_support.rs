@@ -97,6 +97,13 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("f64_div", Refused(NO_IEEE_SPECIALS)),
     ("f64_neg", Refused(NO_IEEE_SPECIALS)),
     ("f64_signbit", Lowered),
+    // LANG83 PR7b — all three lower: `f64_class` is two exact compares with
+    // ±0.0 (a BEAM float is finite, so only classes 0 and 1 occur);
+    // `f64_digits` / `f64_exp10` call module-local helpers sharing the PR6a
+    // `float_to_list(F, [short])` parse.
+    ("f64_class", Lowered),
+    ("f64_digits", Lowered),
+    ("f64_exp10", Lowered),
     // ── Conversions ─────────────────────────────────────────────────────────
     ("int_to_real", Lowered),
     ("real_to_int_trunc", Lowered),
