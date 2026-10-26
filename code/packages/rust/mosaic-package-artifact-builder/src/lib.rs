@@ -10080,8 +10080,13 @@ fn resolve_layout_package_references(
         });
     }
 
+    // Every error, not the first: an inlined tree can fail validation at
+    // several call sites at once. One error keeps its old, unwrapped form.
     let resolved_parts = moslayout_compiler::validate(&layout_out.def, Some(descriptor_json))
-        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+        .map_err(|errs| match errs.as_slice() {
+            [only] => pipeline_err(component, only),
+            all => pipeline_err(component, &all),
+        })?;
     layout_out.parts = resolved_parts;
     layout_out.part_map_json =
         moslayout_compiler::emit_part_map_json(&layout_out.def.component_name, &layout_out.parts);
@@ -18776,6 +18781,102 @@ style FocusField {
             html.contains("#abcdef"),
             "dependency text style should be present in emitted HTML:\n{html}"
         );
+    }
+
+    /// A two-package workspace for the binding tests below: `mosaic-pkg-accent`
+    /// exporting `Accent` (`slot label : text ;`, required) and
+    /// `mosaic-pkg-shell` exporting `Shell` with the given layout.
+    fn accent_shell_workspace(shell_mil: &str, shell_mll: &str) -> (TempDir, PathBuf) {
+        let workspace = TempDir::new().unwrap();
+        let child = workspace.path().join("mosaic-pkg-accent");
+        let parent = workspace.path().join("mosaic-pkg-shell");
+        write_package_manifest(&child, "mosaic-pkg-accent", &["Accent"], &[]);
+        write_component_sources(
+            &child,
+            "Accent",
+            r#"component Accent { slot label : text ; }"#,
+            r#"layout Accent {
+  Box [ accent-panel ] {
+    Text [ accent-label ] ( content : slot: label )
+  }
+}"#,
+            "style Accent { }",
+        );
+        write_package_manifest(
+            &parent,
+            "mosaic-pkg-shell",
+            &["Shell"],
+            &[("mosaic-pkg-accent", "0.1.0")],
+        );
+        write_component_sources(&parent, "Shell", shell_mil, shell_mll, "style Shell { }");
+        (workspace, parent)
+    }
+
+    fn build_html(package_root: PathBuf) -> Result<BuildResult, BuildError> {
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root,
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Html,
+            emit_project: false,
+            theme: None,
+        })
+    }
+
+    /// E6 F1, probe P3 through a real build. `Shell` has a `label` of its
+    /// own and mounts `Accent` without binding `Accent`'s required `label`.
+    /// This used to build, with `Shell`'s label silently rendered inside
+    /// `Accent`. It now fails naming the dependency, not `Shell`.
+    #[test]
+    fn an_unbound_dependency_slot_fails_naming_the_dependency() {
+        let (_workspace, parent) = accent_shell_workspace(
+            r#"component Shell { slot label : text ; }"#,
+            r#"layout Shell {
+  Column [ shell-root ] {
+    Text [ shell-label ] ( content : slot: label )
+    pkg::mosaic-pkg-accent::Accent
+  }
+}"#,
+        );
+
+        let error = build_html(parent).expect_err("Accent's label is unbound");
+        let BuildError::PackageReferenceError { component, error } = &error else {
+            panic!("expected PackageReferenceError, got {error:?}");
+        };
+        assert_eq!(component, "Shell");
+        assert_eq!(
+            error,
+            "`Shell` mounts `pkg::mosaic-pkg-accent::Accent` at \
+             Column[shell-root] > pkg::mosaic-pkg-accent::Accent#2 without binding its \
+             required slot `label`; bind `label` at the call site, or give it a default \
+             in Accent.mil (`slot label : <type> = <value> ;`)"
+        );
+    }
+
+    /// Validation of the inlined tree reports every error, not `errs[0]`.
+    /// Here both of `Accent`'s parts clash with parts `Shell` already has.
+    #[test]
+    fn every_validation_error_after_inlining_is_reported() {
+        let (_workspace, parent) = accent_shell_workspace(
+            r#"component Shell { slot label : text ; }"#,
+            r#"layout Shell {
+  Column [ shell-root ] {
+    Box [ accent-panel ] { }
+    Text [ accent-label ] ( content : slot: label )
+    pkg::mosaic-pkg-accent::Accent ( label : slot: label )
+  }
+}"#,
+        );
+
+        let error = build_html(parent).expect_err("two duplicate parts");
+        let BuildError::PipelineError { error, .. } = &error else {
+            panic!("expected PipelineError, got {error:?}");
+        };
+        assert!(
+            error.starts_with('[') && error.matches("DuplicatePart").count() == 2,
+            "both clashes should be reported: {error}"
+        );
+        assert!(error.contains("accent-panel") && error.contains("accent-label"));
     }
 
     #[test]

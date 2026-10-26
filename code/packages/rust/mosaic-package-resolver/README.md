@@ -85,6 +85,44 @@ Unknown-tag-at-resolve-time is **not** an error — `resolve()` returns
 `None` and lets the *compiler* decide what to do (typically: emit a
 "no such component `Foo` (did you mean `Bar`?)" diagnostic).
 
+## Inlining `pkg::P::C` call sites: required slots
+
+`LayoutPackageResolver` replaces each `pkg::P::C ( … )` node in a compiled
+layout with `C`'s own layout, rewriting `C`'s `slot:` references to the
+values bound at the call site (UI34 §5.1).
+
+Before it substitutes anything, it checks every call site against `C`'s
+interface. Each slot `C.mil` declares without a default must be bound
+(UI13 §1). Otherwise the result is `SlotBindingMissing` (UI34 §7):
+
+```
+// mosaic-pkg-lib/src/Card.mil       // ProbeApp.mll
+component Card {                     layout ProbeApp { Column [ app-root ] {
+  slot title : text ;                  pkg::mosaic-pkg-lib::Card ( title: slot: heading )
+  slot hint  : text ;      ← required } }
+  slot tone  : text = "" ; ← optional
+}
+
+`ProbeApp` mounts `pkg::mosaic-pkg-lib::Card` at Column[app-root] >
+pkg::mosaic-pkg-lib::Card#1 without binding its required slot `hint`;
+bind `hint` at the call site, or give it a default in Card.mil
+(`slot hint : <type> = <value> ;`)
+```
+
+- An omitted slot with a default takes the default.
+- `node` and `list<node>` slots are filled by the caller's children, so they
+  need no binding.
+- An emit the call site does not forward is dropped.
+- Every miss in the whole tree is reported at once, as
+  `LayoutResolveError::Multiple`. That includes misses inside the layouts
+  of the packages it reaches.
+
+The check reads the interface rather than the layout, because an unbound
+name that survives substitution means a slot of the *consumer*. It was
+then either silently captured by a consumer slot with the same name, or
+left in generated code as an undeclared identifier.
+(`mosaic-unbound-slot-semantics-v1.md` §1.3 has the probes.)
+
 ## Kernel set
 
 The kernel is frozen per UI29 §2.4.  This crate hard-codes it as

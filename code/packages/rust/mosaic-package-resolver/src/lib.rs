@@ -527,6 +527,48 @@ pub enum LayoutResolveError {
         attempted: PathBuf,
         canonical: PathBuf,
     },
+    /// A `pkg::P::C` call site left a required slot of `C` unbound
+    /// (UI34 §7, UI13 §1: a slot with no default is required).
+    ///
+    /// ```text
+    /// // DraftEditor.mil                 // JournalApp.mll
+    /// slot body-placeholder : text ;     pkg::mosaic-pkg-draft-editor::DraftEditor (
+    ///                                       body-value: slot: body )   ← no body-placeholder
+    /// ```
+    ///
+    /// Before this check existed, the unbound `slot: body-placeholder` was
+    /// left in the inlined tree, where it named a slot of the *consumer*.
+    /// Depending on luck that was a misleading `UnknownSlot` against the
+    /// consumer, a silent capture of an unrelated same-named consumer slot,
+    /// or an undeclared identifier in generated code
+    /// (mosaic-unbound-slot-semantics-v1 §1.3, probes P1, P3 and P12).
+    SlotBindingMissing {
+        /// The component whose layout holds the call site: the layout being
+        /// resolved (`JournalApp`), or `pkg::P::C` for a reference nested
+        /// inside another package component's own layout.
+        consumer: String,
+        /// The package that declares the slot.
+        package: String,
+        /// The component that declares the slot.
+        component: String,
+        /// The unbound slot, as declared (kebab-case).
+        slot: String,
+        /// Where the call site is in `consumer`'s layout. The layout IR has
+        /// no source spans, so this is a path of `Tag[part]` (named) or
+        /// `Tag#n` (the n-th child, unnamed) segments from the root, e.g.
+        /// `Column[app-root] > Row#2 > pkg::mosaic-pkg-lib::Card`.
+        call_site: String,
+        /// Whether the slot's type can declare a default today (`text`,
+        /// `number`, `bool`; UI13 §5 rule 3). Decides whether the message
+        /// offers "or give it a default" as a fix.
+        defaultable: bool,
+    },
+    /// Several independent errors, reported together so one build shows
+    /// every call site to fix rather than the first. Never nested, never
+    /// empty, never a single error (that is reported bare).
+    Multiple {
+        errors: Vec<LayoutResolveError>,
+    },
 }
 
 impl std::fmt::Display for LayoutResolveError {
@@ -601,6 +643,34 @@ impl std::fmt::Display for LayoutResolveError {
                 attempted.display(),
                 canonical.display()
             ),
+            Self::SlotBindingMissing {
+                consumer,
+                package,
+                component,
+                slot,
+                call_site,
+                defaultable,
+            } => {
+                write!(
+                    f,
+                    "`{consumer}` mounts `pkg::{package}::{component}` at {call_site} without binding its required slot `{slot}`; bind `{slot}` at the call site"
+                )?;
+                if *defaultable {
+                    write!(
+                        f,
+                        ", or give it a default in {component}.mil (`slot {slot} : <type> = <value> ;`)"
+                    )
+                } else {
+                    write!(f, " (a slot of this type cannot have a default)")
+                }
+            }
+            Self::Multiple { errors } => {
+                write!(f, "{} errors resolving package references:", errors.len())?;
+                for (index, error) in errors.iter().enumerate() {
+                    write!(f, "\n  {}. {error}", index + 1)?;
+                }
+                Ok(())
+            }
         }
     }
 }
@@ -642,6 +712,10 @@ struct ResolveState {
 struct ResolvedComponent {
     layout: LayoutDef,
     default_bindings: HashMap<String, LayoutPropValue>,
+    /// The component's interface: every slot its `.mil` declares. The
+    /// required-binding check reads this, never the layout (§ "Required
+    /// bindings" below).
+    slots: Vec<mosmodel_compiler::SlotDecl>,
 }
 
 impl LayoutPackageResolver {
@@ -667,6 +741,11 @@ impl LayoutPackageResolver {
         &self,
         layout: &mut LayoutDef,
     ) -> Result<Vec<PartRename>, LayoutResolveError> {
+        // Every call site's required slots are checked before anything is
+        // substituted: once substitution starts, an unbound callee slot is
+        // indistinguishable from a reference to the consumer's own slot.
+        self.check_required_bindings(layout)?;
+
         let mut state = ResolveState {
             visiting: Vec::new(),
             mounts: HashMap::new(),
@@ -840,9 +919,137 @@ impl LayoutPackageResolver {
         let resolved = ResolvedComponent {
             layout: layout_out.def,
             default_bindings: build_default_binding_map(&mosmodel_out.component.slots),
+            slots: mosmodel_out.component.slots,
         };
         self.cache.lock().unwrap().insert(key, resolved.clone());
         Ok(resolved)
+    }
+
+    // -----------------------------------------------------------------------
+    // Required bindings (UI34 §7 `SlotBindingMissing`, UI13 §1)
+    // -----------------------------------------------------------------------
+    //
+    // UI13 §1: a slot with a default is optional; a slot without one is
+    // required, and "the compiler rejects a component instantiation that
+    // omits a required slot". This is that rejection.
+    //
+    // Why it must look at the interface and run before substitution. The
+    // inliner works by text substitution: `slot: hint` inside the callee
+    // becomes whatever the call site bound to `hint`. When the call site
+    // bound nothing, `slot: hint` is left as it is, and after inlining it
+    // sits in the *consumer's* tree, where it means the consumer's slot:
+    //
+    //   callee binds?   consumer has `hint`?   result before this check
+    //   ─────────────   ────────────────────   ───────────────────────────
+    //   yes             either                 correct
+    //   no              no                     UnknownSlot, naming the consumer
+    //   no              yes                    builds; consumer's value leaks in
+    //   no (expr only)  no                     builds; undeclared identifier
+    //                                          in the generated Swift and TS
+    //
+    // So the question has to be asked while the callee's names are still
+    // the callee's, and about every slot the callee declares, not only the
+    // slots its layout happens to read: a layout that reads `hint` only
+    // inside `If ( when: hint > 0 )` would otherwise slip through, which is
+    // the last row.
+    //
+    // The walk visits the consumer's tree and, once each, the layout of
+    // every package component reachable from it, so a missing binding deep
+    // inside a package is found in the same build. Every miss is collected
+    // and reported together.
+
+    /// Check every `pkg::P::C` call site reachable from `layout` binds every
+    /// required slot of `C`. Returns all misses (and any package that could
+    /// not be loaded along the way) as one error.
+    fn check_required_bindings(&self, layout: &LayoutDef) -> Result<(), LayoutResolveError> {
+        let mut walk = BindingCheck {
+            errors: Vec::new(),
+            checked: HashSet::new(),
+        };
+        let scope = CallScope {
+            consumer: layout.component_name.clone(),
+            local_package: None,
+        };
+        let mut path = Vec::new();
+        self.check_tree(&layout.root, None, &scope, &mut path, &mut walk);
+
+        let mut errors = walk.errors;
+        match errors.len() {
+            0 => Ok(()),
+            1 => Err(errors.remove(0)),
+            _ => Err(LayoutResolveError::Multiple { errors }),
+        }
+    }
+
+    /// Visit `node` (the `position`-th child of its parent; `None` for a
+    /// layout root) and its subtree, in the scope of `scope.consumer`.
+    fn check_tree(
+        &self,
+        node: &LayoutNode,
+        position: Option<usize>,
+        scope: &CallScope,
+        path: &mut Vec<String>,
+        walk: &mut BindingCheck,
+    ) {
+        path.push(call_site_segment(node, position));
+
+        if let Some((pkg, comp)) = scope.call_target(node) {
+            match self.resolve_component(&pkg, &comp) {
+                Ok(resolved) => {
+                    for slot in missing_required_slots(&resolved.slots, &node.props) {
+                        walk.push(LayoutResolveError::SlotBindingMissing {
+                            consumer: scope.consumer.clone(),
+                            package: pkg.clone(),
+                            component: comp.clone(),
+                            slot: slot.name.clone(),
+                            call_site: path.join(" > "),
+                            defaultable: is_defaultable(&slot.r#type),
+                        });
+                    }
+                    // The callee's own layout is checked once, however many
+                    // times it is mounted: its call sites, and so its
+                    // misses, are the same every time. The set also ends the
+                    // walk on a cycle, which substitution then reports.
+                    if walk.checked.insert((pkg.clone(), comp.clone())) {
+                        self.check_component_layout(&pkg, &comp, &resolved.layout, walk);
+                    }
+                }
+                Err(error) => walk.push(error),
+            }
+        }
+
+        // Children written at the call site are the consumer's, so they stay
+        // in this scope even though they will be spliced into the callee.
+        for (index, child) in node.children.iter().enumerate() {
+            self.check_tree(child, Some(index), scope, path, walk);
+        }
+        path.pop();
+    }
+
+    /// Check the call sites inside package component `pkg::comp`'s own
+    /// layout. Inside a package an unqualified tag naming one of the
+    /// package's exports is a call site too: the inliner qualifies it
+    /// (`qualify_local_refs`) only after substitution.
+    fn check_component_layout(
+        &self,
+        pkg: &str,
+        comp: &str,
+        layout: &LayoutDef,
+        walk: &mut BindingCheck,
+    ) {
+        let exports = match self.package_exports(pkg) {
+            Ok(exports) => exports,
+            Err(error) => {
+                walk.push(error);
+                return;
+            }
+        };
+        let scope = CallScope {
+            consumer: format!("pkg::{pkg}::{comp}"),
+            local_package: Some((pkg.to_string(), exports)),
+        };
+        let mut path = Vec::new();
+        self.check_tree(&layout.root, None, &scope, &mut path, walk);
     }
 
     fn package_exports(&self, pkg: &str) -> Result<Vec<String>, LayoutResolveError> {
@@ -987,6 +1194,122 @@ fn build_default_binding_map(
         }
     }
     bindings
+}
+
+/// What the required-binding walk has found so far.
+struct BindingCheck {
+    /// Every error, in walk order, without duplicates.
+    errors: Vec<LayoutResolveError>,
+    /// The package components whose own layouts have been checked.
+    checked: HashSet<(String, String)>,
+}
+
+impl BindingCheck {
+    /// Record `error` unless it is already recorded. A package that cannot
+    /// be found is reached from every call site that names it, and one
+    /// report is enough.
+    fn push(&mut self, error: LayoutResolveError) {
+        if !self.errors.contains(&error) {
+            self.errors.push(error);
+        }
+    }
+}
+
+/// Whose layout the walk is in, which decides two things: who a miss is
+/// reported against, and whether a bare tag can be a call site.
+struct CallScope {
+    /// `JournalApp`, or `pkg::P::C` inside a package component.
+    consumer: String,
+    /// Inside a package component, that package and its exports.
+    local_package: Option<(String, Vec<String>)>,
+}
+
+impl CallScope {
+    /// The `(package, component)` that `node` mounts, if it mounts one.
+    ///
+    /// ```text
+    /// pkg::mosaic-pkg-grid::Cell     → (mosaic-pkg-grid, Cell)   anywhere
+    /// Cell                           → (mosaic-pkg-grid, Cell)   inside mosaic-pkg-grid,
+    ///                                                            which exports Cell
+    /// Column                         → None                      a kernel primitive
+    /// ```
+    fn call_target(&self, node: &LayoutNode) -> Option<(String, String)> {
+        if let Some((pkg, comp)) = node.package_ref() {
+            return Some((pkg.to_string(), comp.to_string()));
+        }
+        let (pkg, exports) = self.local_package.as_ref()?;
+        exports
+            .iter()
+            .any(|export| export == &node.tag)
+            .then(|| (pkg.clone(), node.tag.clone()))
+    }
+}
+
+/// One step of a call-site path: `Tag[part]` for a named node, `Tag#n` for
+/// the n-th (1-based) child of its parent, and the bare tag for an unnamed
+/// root. A part name is the stable handle an author searches for; a
+/// position is the fallback.
+fn call_site_segment(node: &LayoutNode, position: Option<usize>) -> String {
+    match (&node.part_name, position) {
+        (Some(part), _) => format!("{}[{part}]", node.tag),
+        (None, Some(index)) => format!("{}#{}", node.tag, index + 1),
+        (None, None) => node.tag.clone(),
+    }
+}
+
+/// The required slots of `slots` that `call_props` does not bind, in
+/// declaration order.
+///
+/// A slot is required when it has no default (UI13 §1), except a `node` or
+/// `list<node>` slot: that is filled by the caller's children, never by a
+/// prop, and an unfilled child mount is removed (UI29-2).
+///
+/// A prop binds a slot only under the slot's declared (kebab-case) name.
+/// `build_binding_map` also files each binding under its camelCase
+/// spelling, but that is for identifiers inside expressions: a `slot:
+/// body-value` prop is looked up as `body-value`, so a call site binding
+/// `bodyValue:` would leave it unbound. Accepting that spelling here would
+/// reopen the hole this check closes.
+///
+/// ```text
+/// slot title : text ;         bound as  title: "Inbox"      → bound
+/// slot hint  : text ;         not bound                     → MISSING
+/// slot tone  : text = "" ;    not bound                     → default, fine
+/// slot body  : list<node> ;   not bound                     → mount, fine
+/// ```
+fn missing_required_slots<'a>(
+    slots: &'a [mosmodel_compiler::SlotDecl],
+    call_props: &[LayoutProp],
+) -> Vec<&'a mosmodel_compiler::SlotDecl> {
+    let bound: HashSet<&str> = call_props.iter().map(|prop| prop.name.as_str()).collect();
+    slots
+        .iter()
+        .filter(|slot| {
+            slot.required
+                && !is_child_content_slot(&slot.r#type)
+                && !bound.contains(slot.name.as_str())
+        })
+        .collect()
+}
+
+/// `node` and `list<node>`: slots the caller fills with children.
+fn is_child_content_slot(slot_type: &mosmodel_compiler::SlotType) -> bool {
+    use mosmodel_compiler::{ListInnerType, SlotType};
+    match slot_type {
+        SlotType::Node => true,
+        SlotType::List(inner) => matches!(**inner, ListInnerType::Node),
+        _ => false,
+    }
+}
+
+/// The slot types that can declare a default today (UI13 §5 rule 3;
+/// `SlotDefault` has exactly these three variants).
+fn is_defaultable(slot_type: &mosmodel_compiler::SlotType) -> bool {
+    use mosmodel_compiler::SlotType;
+    matches!(
+        slot_type,
+        SlotType::Text | SlotType::Number | SlotType::Bool
+    )
 }
 
 fn rewrite_bindings(node: &mut LayoutNode, bindings: &HashMap<String, LayoutPropValue>) {
@@ -2355,5 +2678,594 @@ version = "1"
             ]
         );
         moslayout_compiler::validate(&layout, None).expect("unique part names");
+    }
+
+    // ---- Required bindings: SlotBindingMissing (UI34 §7, E6 F1) ----
+    //
+    // Each test names the probe of mosaic-unbound-slot-semantics-v1 §1.3 it
+    // pins. Every fixture is one package, `mosaic-pkg-lib`, exporting `Card`,
+    // and a consumer layout that mounts it.
+
+    /// `mosaic-pkg-lib` exporting `Card` with the given `.mil` and `.mll`.
+    fn card_package(mil: &str, mll: &str) -> (TempDir, LayoutPackageResolver) {
+        let tmp = TempDir::new().unwrap();
+        let pkgs = tmp.path().join("packages");
+        fs::create_dir_all(&pkgs).unwrap();
+        let lib = make_pkg(&pkgs, "mosaic-pkg-lib", "mosaic-pkg-lib", &["Card"]);
+        write_component(&lib, "Card", mil, mll);
+        (tmp, LayoutPackageResolver::new(vec![pkgs]))
+    }
+
+    /// The `(component, slot)` of every `SlotBindingMissing` in `error`.
+    fn missing_slots(error: &LayoutResolveError) -> Vec<(String, String)> {
+        let errors = match error {
+            LayoutResolveError::Multiple { errors } => errors.as_slice(),
+            single => std::slice::from_ref(single),
+        };
+        errors
+            .iter()
+            .map(|error| match error {
+                LayoutResolveError::SlotBindingMissing {
+                    component, slot, ..
+                } => (component.clone(), slot.clone()),
+                other => panic!("expected SlotBindingMissing, got {other:?}"),
+            })
+            .collect()
+    }
+
+    fn pair(component: &str, slot: &str) -> (String, String) {
+        (component.to_string(), slot.to_string())
+    }
+
+    /// P1: a required slot the call site omits is an error naming the
+    /// package's component and slot, not the consumer's `UnknownSlot`.
+    #[test]
+    fn an_unbound_required_slot_is_slot_binding_missing() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot title : text ; slot hint : text ; }",
+            r#"layout Card { Column [ card ] {
+  Text [ card-title ] ( content: slot: title )
+  Text [ card-hint ] ( content: slot: hint )
+} }"#,
+        );
+        let mut layout = consumer_layout(
+            r#"layout ProbeApp { Column [ app-root ] {
+  pkg::mosaic-pkg-lib::Card ( title: slot: heading )
+} }"#,
+        );
+
+        let error = resolver.resolve(&mut layout).expect_err("hint is unbound");
+        assert_eq!(
+            error,
+            LayoutResolveError::SlotBindingMissing {
+                consumer: "ProbeApp".to_string(),
+                package: "mosaic-pkg-lib".to_string(),
+                component: "Card".to_string(),
+                slot: "hint".to_string(),
+                call_site: "Column[app-root] > pkg::mosaic-pkg-lib::Card#1".to_string(),
+                defaultable: true,
+            }
+        );
+        // Reported before substitution: the consumer's tree is untouched.
+        assert_eq!(
+            first_qualified_tag(&layout.root),
+            Some("pkg::mosaic-pkg-lib::Card")
+        );
+    }
+
+    /// The message names the package, the component and the slot, says
+    /// where the call site is, and gives both fixes.
+    #[test]
+    fn slot_binding_missing_message_names_the_package_and_component() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot hint : text ; }",
+            "layout Card { Text [ card-hint ] ( content: slot: hint ) }",
+        );
+        let mut layout = consumer_layout("layout ProbeApp { pkg::mosaic-pkg-lib::Card [ hero ] }");
+
+        let message = resolver
+            .resolve(&mut layout)
+            .expect_err("hint is unbound")
+            .to_string();
+        assert_eq!(
+            message,
+            "`ProbeApp` mounts `pkg::mosaic-pkg-lib::Card` at \
+             pkg::mosaic-pkg-lib::Card[hero] without binding its required slot `hint`; \
+             bind `hint` at the call site, or give it a default in Card.mil \
+             (`slot hint : <type> = <value> ;`)"
+        );
+    }
+
+    /// A slot whose type cannot have a default (here `list<text>`, P5b) is
+    /// told only to bind it.
+    #[test]
+    fn a_non_defaultable_slot_is_only_told_to_bind() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot tags : list<text> ; }",
+            r#"layout Card { Column [ card ] {
+  For ( each: slot: tags , as: tag ) { Text ( content: tag ) }
+} }"#,
+        );
+        let mut layout = consumer_layout("layout ProbeApp { pkg::mosaic-pkg-lib::Card }");
+
+        let error = resolver.resolve(&mut layout).expect_err("tags is unbound");
+        assert!(matches!(
+            &error,
+            LayoutResolveError::SlotBindingMissing { slot, defaultable: false, .. }
+                if slot == "tags"
+        ));
+        assert!(error
+            .to_string()
+            .ends_with("bind `tags` at the call site (a slot of this type cannot have a default)"));
+    }
+
+    /// Every miss is reported in one build, across slots and across call
+    /// sites, in walk order.
+    #[test]
+    fn every_missing_binding_is_reported_together() {
+        let (_tmp, resolver) = card_package(
+            r#"component Card {
+  slot title : text ;
+  slot count : number ;
+  slot compact : bool ;
+}"#,
+            r#"layout Card { Column [ card ] {
+  Text ( content: slot: title )
+  If ( when: slot: compact ) { Text ( content: "compact" ) }
+} }"#,
+        );
+        let mut layout = consumer_layout(
+            r#"layout ProbeApp { Column [ app-root ] {
+  pkg::mosaic-pkg-lib::Card ( title: "first" )
+  Row [ second-row ] { pkg::mosaic-pkg-lib::Card }
+} }"#,
+        );
+
+        let error = resolver.resolve(&mut layout).expect_err("four misses");
+        assert_eq!(
+            missing_slots(&error),
+            vec![
+                pair("Card", "count"),
+                pair("Card", "compact"),
+                pair("Card", "title"),
+                pair("Card", "count"),
+                pair("Card", "compact"),
+            ]
+        );
+        let LayoutResolveError::Multiple { errors } = &error else {
+            panic!("expected Multiple, got {error:?}");
+        };
+        assert!(matches!(
+            &errors[2],
+            LayoutResolveError::SlotBindingMissing { call_site, .. }
+                if call_site == "Column[app-root] > Row[second-row] > pkg::mosaic-pkg-lib::Card#1"
+        ));
+        let message = error.to_string();
+        assert!(message.starts_with("5 errors resolving package references:\n  1. "));
+        assert!(message.contains("\n  5. `ProbeApp` mounts `pkg::mosaic-pkg-lib::Card`"));
+    }
+
+    /// P2, P9b and D-default: an omitted slot with a default takes it, as
+    /// before. P11: an unfilled `list<node>` mount needs no binding. P8: an
+    /// unforwarded emit needs none either.
+    #[test]
+    fn defaulted_slots_child_mounts_and_emits_need_no_binding() {
+        let (_tmp, resolver) = card_package(
+            r#"component Card {
+  slot title : text ;
+  slot hint : text = "" ;
+  slot compact : bool = false ;
+  slot count : number = 0 ;
+  slot children : list<node> ;
+  emit onPick ;
+}"#,
+            r#"layout Card { Column [ card ] {
+  Text [ card-title ] ( content: slot: title )
+  Text [ card-hint ] ( content: slot: hint )
+  If ( when: slot: compact ) { Text ( content: "compact" ) }
+  Box [ card-body ] { slot: children }
+} }"#,
+        );
+        let mut layout =
+            consumer_layout(r#"layout ProbeApp { pkg::mosaic-pkg-lib::Card ( title: "Inbox" ) }"#);
+
+        resolver
+            .resolve(&mut layout)
+            .expect("only title is required");
+        assert!(first_qualified_tag(&layout.root).is_none());
+        assert_eq!(
+            layout.root.children[1].props,
+            vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::String(String::new()),
+            }]
+        );
+    }
+
+    /// P3, the silent capture: the consumer happens to declare its own
+    /// `hint`. Before, the package's unbound `slot: hint` became the
+    /// consumer's `hint` after inlining and the build succeeded.
+    #[test]
+    fn an_unbound_slot_is_never_captured_by_a_same_named_consumer_slot() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot title : text ; slot hint : text ; }",
+            r#"layout Card { Column [ card ] {
+  Text [ card-title ] ( content: slot: title )
+  Text [ card-hint ] ( content: slot: hint )
+} }"#,
+        );
+        // The consumer's own `hint` slot is in scope here, and it is used.
+        let mut layout = consumer_layout(
+            r#"layout ProbeApp { Column [ app-root ] {
+  Text [ app-hint ] ( content: slot: hint )
+  pkg::mosaic-pkg-lib::Card ( title: slot: heading )
+} }"#,
+        );
+
+        let error = resolver
+            .resolve(&mut layout)
+            .expect_err("the consumer's hint must not fill the package's");
+        assert_eq!(missing_slots(&error), vec![pair("Card", "hint")]);
+    }
+
+    /// P12, the expression leak: `count` is read only inside an expression,
+    /// so no `slot: count` prop was ever left behind to fail validation, and
+    /// the generated code named an undeclared `count`.
+    #[test]
+    fn a_slot_read_only_in_an_expression_must_still_be_bound() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot count : number ; }",
+            r#"layout Card { Column [ card ] {
+  If ( when: ( count > 0 ) ) { Text ( content: "some" ) }
+} }"#,
+        );
+        let mut layout = consumer_layout("layout ProbeApp { pkg::mosaic-pkg-lib::Card }");
+
+        let error = resolver.resolve(&mut layout).expect_err("count is unbound");
+        assert_eq!(missing_slots(&error), vec![pair("Card", "count")]);
+    }
+
+    /// The interface is the contract (spec Q6): a required slot the layout
+    /// never reads must still be bound.
+    #[test]
+    fn a_required_slot_the_layout_never_reads_must_still_be_bound() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot title : text ; slot unused : text ; }",
+            "layout Card { Text ( content: slot: title ) }",
+        );
+        let mut layout =
+            consumer_layout(r#"layout ProbeApp { pkg::mosaic-pkg-lib::Card ( title: "x" ) }"#);
+
+        let error = resolver
+            .resolve(&mut layout)
+            .expect_err("unused is unbound");
+        assert_eq!(missing_slots(&error), vec![pair("Card", "unused")]);
+    }
+
+    /// A binding counts only under the slot's declared name. Substitution
+    /// looks a `slot: body-value` prop up as `body-value`, so `bodyValue:`
+    /// would leave it in the tree unbound; the check must not accept it.
+    #[test]
+    fn a_binding_counts_only_under_the_declared_slot_name() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot body-value : text ; }",
+            "layout Card { Text ( content: slot: body-value ) }",
+        );
+        let mut camel =
+            consumer_layout(r#"layout ProbeApp { pkg::mosaic-pkg-lib::Card ( bodyValue: "x" ) }"#);
+        let error = resolver
+            .resolve(&mut camel)
+            .expect_err("bodyValue is not body-value");
+        assert_eq!(missing_slots(&error), vec![pair("Card", "body-value")]);
+
+        let mut kebab =
+            consumer_layout(r#"layout ProbeApp { pkg::mosaic-pkg-lib::Card ( body-value: "x" ) }"#);
+        resolver.resolve(&mut kebab).expect("body-value is bound");
+        assert_eq!(
+            kebab.root.props[0].value,
+            LayoutPropValue::String("x".to_string())
+        );
+    }
+
+    /// A miss inside a package component's own layout, through a sibling
+    /// referenced without `pkg::`, is reported against that component, not
+    /// against the app. Caller-authored children are checked in the
+    /// caller's scope.
+    #[test]
+    fn nested_and_caller_authored_call_sites_are_reported_against_their_author() {
+        let tmp = TempDir::new().unwrap();
+        let pkgs = tmp.path().join("packages");
+        fs::create_dir_all(&pkgs).unwrap();
+        let lib = make_pkg(
+            &pkgs,
+            "mosaic-pkg-lib",
+            "mosaic-pkg-lib",
+            &["Panel", "Badge"],
+        );
+        write_component(
+            &lib,
+            "Badge",
+            "component Badge { slot label : text ; }",
+            "layout Badge { Text [ badge ] ( content: slot: label ) }",
+        );
+        write_component(
+            &lib,
+            "Panel",
+            "component Panel { slot children : list<node> ; }",
+            // `Badge`, unqualified, mounted without its `label`.
+            "layout Panel { Column [ panel ] { Badge  Box [ panel-body ] { slot: children } } }",
+        );
+        let resolver = LayoutPackageResolver::new(vec![pkgs]);
+        let mut layout = consumer_layout(
+            r#"layout ProbeApp { pkg::mosaic-pkg-lib::Panel {
+  pkg::mosaic-pkg-lib::Badge
+} }"#,
+        );
+
+        let error = resolver.resolve(&mut layout).expect_err("two misses");
+        let LayoutResolveError::Multiple { errors } = &error else {
+            panic!("expected Multiple, got {error:?}");
+        };
+        let sites: Vec<(&str, &str)> = errors
+            .iter()
+            .map(|error| match error {
+                LayoutResolveError::SlotBindingMissing {
+                    consumer,
+                    call_site,
+                    ..
+                } => (consumer.as_str(), call_site.as_str()),
+                other => panic!("expected SlotBindingMissing, got {other:?}"),
+            })
+            .collect();
+        assert_eq!(
+            sites,
+            vec![
+                ("pkg::mosaic-pkg-lib::Panel", "Column[panel] > Badge#1"),
+                (
+                    "ProbeApp",
+                    "pkg::mosaic-pkg-lib::Panel > pkg::mosaic-pkg-lib::Badge#1"
+                ),
+            ]
+        );
+    }
+
+    /// A component mounted twice has its own layout checked once: the misses
+    /// inside it are the same for every mount.
+    #[test]
+    fn a_package_layout_is_checked_once_however_often_it_is_mounted() {
+        let tmp = TempDir::new().unwrap();
+        let pkgs = tmp.path().join("packages");
+        fs::create_dir_all(&pkgs).unwrap();
+        let lib = make_pkg(
+            &pkgs,
+            "mosaic-pkg-lib",
+            "mosaic-pkg-lib",
+            &["Panel", "Badge"],
+        );
+        write_component(
+            &lib,
+            "Badge",
+            "component Badge { slot label : text ; }",
+            "layout Badge { Text [ badge ] ( content: slot: label ) }",
+        );
+        write_component(
+            &lib,
+            "Panel",
+            "component Panel { }",
+            "layout Panel { Column [ panel ] { Badge } }",
+        );
+        let resolver = LayoutPackageResolver::new(vec![pkgs]);
+        let mut layout = consumer_layout(
+            r#"layout ProbeApp { Column {
+  pkg::mosaic-pkg-lib::Panel
+  pkg::mosaic-pkg-lib::Panel
+} }"#,
+        );
+
+        let error = resolver.resolve(&mut layout).expect_err("one miss");
+        assert_eq!(missing_slots(&error), vec![pair("Badge", "label")]);
+    }
+
+    /// A package that cannot be found is reported once, beside any misses,
+    /// however many call sites name it.
+    #[test]
+    fn load_errors_are_reported_once_beside_missing_bindings() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot title : text ; }",
+            "layout Card { Text ( content: slot: title ) }",
+        );
+        let mut layout = consumer_layout(
+            r#"layout ProbeApp { Column {
+  pkg::mosaic-pkg-gone::Thing
+  pkg::mosaic-pkg-lib::Card
+  pkg::mosaic-pkg-gone::Thing
+} }"#,
+        );
+
+        let error = resolver.resolve(&mut layout).expect_err("two errors");
+        let LayoutResolveError::Multiple { errors } = &error else {
+            panic!("expected Multiple, got {error:?}");
+        };
+        assert_eq!(errors.len(), 2);
+        assert_eq!(
+            errors[0],
+            LayoutResolveError::PackageNotFound {
+                package: "mosaic-pkg-gone".to_string()
+            }
+        );
+        assert!(matches!(
+            &errors[1],
+            LayoutResolveError::SlotBindingMissing { slot, .. } if slot == "title"
+        ));
+    }
+
+    // ---- The repository's own packages and apps ----
+
+    /// `code/` in this checkout: this crate is `code/packages/rust/<crate>`.
+    fn repository_code_root() -> PathBuf {
+        Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../..")
+            .canonicalize()
+            .expect("code/ exists")
+    }
+
+    /// Every `mosaic-package.toml` under `dir`, skipping build output and
+    /// installed dependencies (which may hold copies of the same files).
+    fn collect_manifests(dir: &Path, out: &mut Vec<PathBuf>) {
+        let Ok(entries) = fs::read_dir(dir) else {
+            return;
+        };
+        for entry in entries.flatten() {
+            let path = entry.path();
+            let name = entry.file_name();
+            let name = name.to_string_lossy();
+            let Ok(file_type) = entry.file_type() else {
+                continue;
+            };
+            if file_type.is_dir() {
+                if name.starts_with('.')
+                    || name == "target"
+                    || name.starts_with("target-")
+                    || name == "node_modules"
+                    || name == "build"
+                    || name == "dist"
+                {
+                    continue;
+                }
+                collect_manifests(&path, out);
+            } else if file_type.is_file() && name == "mosaic-package.toml" {
+                out.push(path);
+            }
+        }
+    }
+
+    /// Every layout of every exported component in the repository binds
+    /// every required slot of every package component it mounts.
+    ///
+    /// The latent-capture guard: before `SlotBindingMissing`, a consumer
+    /// could leave a required slot unbound and still build, if it happened
+    /// to have a slot of the same name (P3) or the package read the slot
+    /// only in an expression (P12). This runs the check on each layout
+    /// (`<C>.mll` and every `<C>.<variant>.mll`) as a package build sees it:
+    /// local sibling references qualified first, then searched for in the
+    /// package's parent directory, `code/packages` and `code/packages/mosaic`.
+    /// The check descends into every package layout it reaches, so packages
+    /// are covered as callees as well as consumers.
+    ///
+    /// When it was added, it found no layout in the repository relying on
+    /// an unbound required slot.
+    #[test]
+    fn every_repository_layout_binds_every_required_slot() {
+        let code = repository_code_root();
+        let mut manifests = Vec::new();
+        collect_manifests(&code, &mut manifests);
+        manifests.sort();
+        assert!(
+            manifests.len() >= 40,
+            "expected the repository's ~50 manifests, found {} under {}",
+            manifests.len(),
+            code.display()
+        );
+
+        let packages = code.join("packages");
+        let mut resolved_layouts = 0;
+        let mut call_sites = 0;
+        let mut failures = Vec::new();
+        for manifest_path in &manifests {
+            let Ok(manifest) = mosaic_package_manifest::parse_path(manifest_path) else {
+                // Unparseable manifests are another test's business.
+                continue;
+            };
+            let package_root = manifest_path.parent().unwrap();
+            let src = package_root.join("src");
+            let resolver = LayoutPackageResolver::new(vec![
+                package_root.parent().unwrap().to_path_buf(),
+                packages.clone(),
+                packages.join("mosaic"),
+            ]);
+            for component in &manifest.components.exports {
+                // A component that does not compile on its own is its package
+                // build's failure to report; here it is skipped. The count
+                // assertions below catch a walk that skips everything.
+                let Ok(mil) = fs::read_to_string(src.join(format!("{component}.mil"))) else {
+                    continue;
+                };
+                let Ok(model) = mosmodel_compiler::compile(&mil) else {
+                    continue;
+                };
+                let mut layouts: Vec<PathBuf> = fs::read_dir(&src)
+                    .into_iter()
+                    .flatten()
+                    .flatten()
+                    .map(|entry| entry.path())
+                    .filter(|path| {
+                        let name = path.file_name().unwrap().to_string_lossy();
+                        name == format!("{component}.mll")
+                            || (name.starts_with(&format!("{component}."))
+                                && name.ends_with(".mll")
+                                && name.matches('.').count() == 2)
+                    })
+                    .collect();
+                layouts.sort();
+                for layout_path in layouts {
+                    let source = fs::read_to_string(&layout_path).unwrap();
+                    let Ok(mut out) =
+                        moslayout_compiler::compile(&source, Some(&model.descriptor_json))
+                    else {
+                        continue;
+                    };
+                    qualify_local_refs_except(
+                        &mut out.def.root,
+                        component,
+                        &manifest.package.name,
+                        &manifest.components.exports,
+                    );
+                    resolved_layouts += 1;
+                    call_sites += count_package_refs(&out.def.root);
+                    if let Err(e) = resolver.check_required_bindings(&out.def) {
+                        failures.push(format!("{}:\n  {e}", layout_path.display()));
+                    }
+                }
+            }
+        }
+
+        assert!(
+            resolved_layouts >= 80,
+            "expected the repository's ~90 exported layouts, checked {resolved_layouts}"
+        );
+        assert!(
+            call_sites >= 50,
+            "expected the repository's ~57 package call sites, found {call_sites}"
+        );
+        assert!(
+            failures.is_empty(),
+            "layouts with unbound required slots:\n{}",
+            failures.join("\n")
+        );
+    }
+
+    /// The `pkg::` call sites written directly in `node`'s tree.
+    fn count_package_refs(node: &LayoutNode) -> usize {
+        usize::from(node.package_ref().is_some())
+            + node.children.iter().map(count_package_refs).sum::<usize>()
+    }
+
+    /// The artifact builder's `qualify_local_component_references`: a
+    /// package's own layout names its sibling exports without `pkg::`.
+    fn qualify_local_refs_except(
+        node: &mut LayoutNode,
+        current: &str,
+        pkg: &str,
+        exports: &[String],
+    ) {
+        if node.package_ref().is_none()
+            && node.tag != current
+            && exports.iter().any(|export| export == &node.tag)
+        {
+            node.tag = format!("pkg::{pkg}::{}", node.tag);
+        }
+        for child in &mut node.children {
+            qualify_local_refs_except(child, current, pkg, exports);
+        }
     }
 }

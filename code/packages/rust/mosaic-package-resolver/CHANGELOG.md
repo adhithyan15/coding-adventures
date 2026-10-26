@@ -2,6 +2,61 @@
 
 ## Unreleased
 
+### Added — `SlotBindingMissing`: a required slot must be bound (UI34 §7, E6 F1)
+
+UI13 §1 says a slot without a default is required, and that the compiler
+rejects a call site that omits one. Nothing checked that. An unbound
+`slot: x` was left in the inlined tree, where it named a slot of the
+*consumer*. Depending on the consumer, that was:
+
+- a misleading `UnknownSlot` naming the consumer (probe P1);
+- a silent capture of an unrelated consumer slot with the same name (P3);
+- an undeclared identifier in the generated Swift and TypeScript, when the
+  slot was read only inside an expression (P12).
+
+See `mosaic-unbound-slot-semantics-v1.md` §1.3 for the probes.
+
+What changed:
+
+- **The check.** `resolve` and `resolve_with_renames` now check every
+  `pkg::P::C` call site before substituting anything, against the callee's
+  interface (its `.mil`), not against what its layout reads.
+  - Every slot with no default must be bound under its declared name.
+  - `node` and `list<node>` slots are exempt, because the caller's children
+    fill them.
+  - Defaulted slots keep their default, as before.
+  - The walk covers the consumer's tree and, once each, every package
+    component layout it reaches, including sibling references written
+    without `pkg::`. A miss in a package's own layout is reported against
+    that component.
+- **New variant `LayoutResolveError::SlotBindingMissing`**, with fields
+  `consumer`, `package`, `component`, `slot`, `call_site` and
+  `defaultable`.
+  - The layout IR has no source spans, so `call_site` is a path such as
+    `Column[app-root] > Row#2 > pkg::mosaic-pkg-lib::Card`.
+  - The message names the package and component and gives the fix. It
+    offers "give it a default" only for `text`, `number` and `bool`.
+- **New variant `LayoutResolveError::Multiple`.** Every miss, plus any
+  package that failed to load along the way, is reported in one error.
+  A single error is still reported bare.
+- **A binding counts only under the slot's kebab-case name.** A
+  `bodyValue:` binding never filled a `slot: body-value` prop, so it does
+  not satisfy the check either.
+
+**Tests:**
+
+- One test per probe: P1, P3, P5b and P12 now fail, while P2, P8, P9b and
+  P11 still pass.
+- Several misses reported together; the exact message; a required slot
+  the layout never reads; nested and caller-authored call sites; a
+  component mounted twice; load errors reported beside misses.
+- `every_repository_layout_binds_every_required_slot` runs the check on
+  every exported layout in `code/`: 93 layouts and 57 call sites. It found
+  no consumer relying on an unbound slot. Removing JournalApp's
+  `selected-key` binding from its `RecordList` makes it fail. Before this
+  check, that omission would have built: JournalApp declares its own
+  `selected-key`, which would have been captured.
+
 ### Added — a component can be mounted more than once (UI34 §5 step 4)
 
 - The resolver counts mounts per `(package, component)` across the whole
