@@ -19,9 +19,12 @@ overfull. In every case a justified line ended just before a long kana word
 at the spaces the lessons put between words, so the line had to stretch its few
 spaces.
 
-The real fix was in the book: `\ja` now sets `\XeTeXlinebreaklocale "ja"` and a
-small `\XeTeXlinebreakskip`, local to the snippet, so a line may break between
-kana and kanji under the Japanese kinsoku rules. The scan went to 0 in every
+The real fix was in the book: `\japanesefont` now also sets
+`\XeTeXlinebreaklocale "ja"` and a small `\XeTeXlinebreakskip`, local to each
+snippet's group, so a line may break between kana and kanji under the Japanese
+kinsoku rules. The setting rides on the font command, not on `\ja`, because the
+glyph-coverage gate reads `\ja`'s one-line `{{\japanesefont #1}}` shape to learn
+which font renders a snippet; a two-line `\ja` hid the font from it. The scan went to 0 in every
 class. `\hbadness`, `\hfuzz`, `\tolerance` and the baseline were not touched.
 
 Do differently: run `check-book-compile.sh --strict <track>` and the warning scan
