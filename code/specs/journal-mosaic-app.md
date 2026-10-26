@@ -123,6 +123,40 @@ The package's tests enforce the contract from both sides:
 - the app's start props are exactly the slots;
 - every declared emit is routed, and an undeclared one is rejected.
 
+## Timeline rows on Card (proposed, blocked)
+
+Mosaic backlog item 4 asks for `mosaic-pkg-card` to get a real consumer
+(product program §5) by drawing the timeline's rows as Cards. It was
+designed and prototyped on 2026-10-26, and it is **not adopted**: the timeline
+is still a `RecordList`, and nothing in this crate or the package changed.
+The probes, the design and seven misfits are recorded in
+[`journal-component-demand-audit-v1.md`](journal-component-demand-audit-v1.md),
+"Card as the timeline row". The prototype is kept on the local branch
+`wip/journal-timeline-on-card-impl`, which is not pushed.
+
+The design, for when it is unblocked:
+
+- **The package** depends on `mosaic-pkg-card = "0.2.0"` and replaces the
+  timeline's `RecordList` mount with a `For` over `timeline-rows`. Each row
+  is:
+  - the day heading (`row[1]`, a `Text` with the heading role);
+  - a `Card` (`title` ← `row[2]`, `body-text` ← `row[3]`, `footer` ←
+    `row[4]`);
+  - an *Open* button (`a11y-label` ← `row[6]`, `selected` when
+    `row[0] == selected-key`, `onClick` → `onSelectEntry`), with `row[5]`
+    (the `★`) beside it.
+
+  The open entry's row gets `-selected` parts.
+- **This crate** would append a seventh row field, `open-label` =
+  `Open {title}`, to every row list, because a layout expression cannot join
+  strings. `RecordList` ignores it.
+- **It is blocked** by misfit M7. In the declared 1100×760 window, a Card row
+  plus its Open button is about 1.8× as tall as a `RecordList` row (measured
+  on Compose: about 220px against 124px). The pane does not scroll on any
+  native backend (JO-5), so Compose's `JournalUiTest` cannot see the second
+  entry. Fix JO-5 first. Then either EM-8, which retires the Open button's
+  extra line, or a denser Card variant.
+
 ## Native hosts (J5a)
 
 The first native host is **Qt on Linux**, in CI's "Round-trip Rust engine
