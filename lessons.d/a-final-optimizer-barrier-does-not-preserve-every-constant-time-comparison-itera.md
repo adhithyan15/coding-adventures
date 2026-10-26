@@ -14,9 +14,12 @@ source-level full scan.
 For repository constant-work comparisons, preserve the boundary at every
 iteration. The fix uses volatile reads of both input bytes and the accumulator,
 plus a volatile accumulator write, behind small audited safe wrappers. Add a
-release-optimized LLVM-IR regression test that fails if those volatile
-operations disappear or the scan lowers to `memcmp`/`bcmp`; functional tests
-alone cannot detect this class of optimizer rewrite.
+release-optimized LLVM-IR regression test that proves every loop cycle passes
+through those operations and that loop exits do not depend on values derived
+from the volatile reads. Merely counting `volatile` tokens or rejecting
+`memcmp`/`bcmp` can false-pass when the operations execute once outside the
+loop or a direct data-dependent exit remains. Functional tests alone cannot
+detect this class of optimizer rewrite.
 
 Keep the claim narrow. Volatile operations establish compiler-observable work;
 they do not establish resistance to cache, speculative-execution, power, or

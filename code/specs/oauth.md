@@ -1690,9 +1690,10 @@ The repository-owned Rust `ct-compare` primitive is now hardened as a future
 HMAC-verification prerequisite. Equal-length comparisons retain an observable
 volatile accumulator operation for every byte, so an optimizing compiler may
 not replace the full scan with a data-dependent early exit. An optimized
-LLVM-IR regression gate verifies that the volatile operations survive release
-optimization. Length remains public and mismatched lengths are rejected
-directly. This hardening does not migrate the existing generic `hmac` verifier
+LLVM-IR regression gate verifies that every optimized loop cycle crosses those
+operations and that loop exits remain independent of their values. Length
+remains public and mismatched lengths are rejected directly. This hardening
+does not migrate the existing generic `hmac` verifier
 away from its external dependency, make generic HMAC fixed-memory, add
 HMAC-SHA-384, review hash selection for TLS, or implement HKDF, a TLS key
 schedule, record protection, handshake processing, certificate validation,
