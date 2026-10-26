@@ -29,15 +29,18 @@
 //! 1. Tries to read `<package_root>/mosaic-package.toml`.  Absent is
 //!    fine — a manifest-less user package can still consult the kernel
 //!    primitives.
-//! 2. For each `(dep_name, _ver)` in the manifest's `[dependencies]`:
+//! 2. For each `(dep_name, requirement)` in the manifest's `[dependencies]`,
+//!    in name order:
 //!    a. Search each path in `search_paths` for a child directory.  We
 //!    try `mosaic-pkg-<dep_name>` first (the UI29 §4.1 convention),
 //!    then fall back to the literal `<dep_name>`.
 //!    b. Read that dep's `mosaic-package.toml` via
 //!    `mosaic_package_manifest::parse_path`.
-//!    c. For each entry in its `[components].exports`, register a
+//!    c. Check its `[package].version` against `requirement` → else
+//!    `VersionMismatch` (see "Version requirements" below).
+//!    d. For each entry in its `[components].exports`, register a
 //!    `Resolution::Component { … }` keyed by the component name.
-//!    d. If two dependencies export the same name → `DuplicateExport`.
+//!    e. If two dependencies export the same name → `DuplicateExport`.
 //! 3. Build the kernel set from [`KERNEL_PRIMITIVES`].
 //!
 //! ## Why two name forms (`mosaic-pkg-<name>` and `<name>`)?
@@ -49,6 +52,35 @@
 //! named the same as the dep key.  Trying both is cheap and keeps the
 //! UX forgiving.
 //!
+//! ## Version requirements (mosaic-package-publishing-v1 §7.4)
+//!
+//! A requirement is a bare version (caret: `"0.16.0"` accepts
+//! `>=0.16.0, <0.17.0`) or `=version` (exact); the manifest parser has
+//! already refused every other form. Both locators compare it with the
+//! `[package].version` of the package they actually found, and a miss is
+//! an error, never a warning:
+//!
+//! ```text
+//!   consumer                         dependency on disk
+//!   mosaic-pkg-toolkit = "0.11.0"    mosaic-pkg-toolkit 0.16.0
+//!            │                                 │
+//!            └──── >=0.11.0, <0.12.0 ∌ 0.16.0 ─┘ → VersionMismatch
+//! ```
+//!
+//! A requirement that does not describe what the build compiles against
+//! is a comment that looks like a promise. Failing loudly is what keeps
+//! the strings truthful.
+//!
+//! **One version per package per build.** Lookup is by name and returns
+//! one directory, so a build never holds two versions of one package;
+//! every requirer is checked against that one.
+//!
+//! - [`build`] checks the consumer's direct dependencies.
+//! - [`LayoutPackageResolver`] checks every package it inlines from against
+//!   that package's own `[dependencies]`, so a requirement anywhere in the
+//!   `pkg::` graph is checked. [`LayoutPackageResolver::check_dependencies`]
+//!   checks the consuming package itself, which the inliner never sees.
+//!
 //! ## Error surface
 //!
 //! ```text
@@ -56,6 +88,7 @@
 //!         │
 //!         ├── DependencyNotFound    ← name not in any search path
 //!         ├── BadDependencyManifest ← dep's TOML didn't parse
+//!         ├── VersionMismatch       ← dep's version fails the requirement
 //!         ├── DuplicateExport       ← two deps export same name
 //!         └── Io                    ← read_dir / canonicalize failed
 //! ```
@@ -66,7 +99,7 @@ use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 
-use mosaic_package_manifest::MosaicPackage;
+use mosaic_package_manifest::{MosaicPackage, Version, VersionReq};
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
 use mosmodel_compiler::SlotDefault;
 
@@ -220,6 +253,99 @@ pub enum Resolution {
     },
 }
 
+/// A dependency's version does not satisfy the requirement a package
+/// declared for it (mosaic-package-publishing-v1 §7.4).
+///
+/// Shared by both locators' error types, so the diagnostic reads the same
+/// whichever one found the package:
+///
+/// ```text
+/// task-app requires mosaic-pkg-toolkit "0.15.0" (>=0.15.0, <0.16.0), but found
+/// mosaic-pkg-toolkit 0.16.0 at …/mosaic-pkg-toolkit; help: update the
+/// requirement in …/task-app/mosaic-package.toml
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct VersionMismatch {
+    /// The requiring package's `[package].name`.
+    pub dependent: String,
+    /// The requiring package's `mosaic-package.toml`, where the fix goes.
+    pub dependent_manifest: PathBuf,
+    /// The dependency's name, as written under `[dependencies]`.
+    pub dependency: String,
+    /// The requirement as written there.
+    pub requirement: VersionReq,
+    /// The `[package].version` of the package the locator found.
+    pub found: String,
+    /// Where the locator found it.
+    pub found_at: PathBuf,
+}
+
+impl std::fmt::Display for VersionMismatch {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{} requires {} \"{}\" ({}), but found {} {} at {}; help: update the requirement in {}",
+            self.dependent,
+            self.dependency,
+            self.requirement,
+            self.requirement.range(),
+            self.dependency,
+            self.found,
+            self.found_at.display(),
+            self.dependent_manifest.display()
+        )
+    }
+}
+
+/// Why [`check_requirement`] refused a dependency.
+enum RequirementFailure {
+    /// The found version does not satisfy the requirement.
+    Mismatch(Box<VersionMismatch>),
+    /// A requirement or version string did not parse. Manifests from
+    /// `mosaic_package_manifest::parse` are already validated, so this is
+    /// reachable only through a hand-built [`MosaicPackage`]; each caller
+    /// files it under its own "bad manifest" variant.
+    Invalid(String),
+}
+
+/// Compare one `[dependencies]` entry with the package a locator found.
+///
+/// The caret and exact rules themselves live in
+/// [`mosaic_package_manifest::VersionReq::matches`]; this only gathers what
+/// a diagnostic needs to name both ends of the edge.
+fn check_requirement(
+    dependent: &MosaicPackage,
+    dependent_manifest: &Path,
+    dependency: &str,
+    requirement: &str,
+    found: &MosaicPackage,
+    found_at: &Path,
+) -> Result<(), RequirementFailure> {
+    let parsed_requirement = VersionReq::parse(requirement).map_err(|e| {
+        RequirementFailure::Invalid(format!(
+            "{} declares an unusable requirement {dependency} = \"{requirement}\" ({e:?})",
+            dependent.package.name
+        ))
+    })?;
+    let found_version = Version::parse(&found.package.version).ok_or_else(|| {
+        RequirementFailure::Invalid(format!(
+            "{dependency} declares an invalid version `{}`",
+            found.package.version
+        ))
+    })?;
+    if parsed_requirement.matches(&found_version) {
+        return Ok(());
+    }
+    Err(RequirementFailure::Mismatch(Box::new(VersionMismatch {
+        dependent: dependent.package.name.clone(),
+        dependent_manifest: dependent_manifest.to_path_buf(),
+        dependency: dependency.to_string(),
+        requirement: parsed_requirement,
+        found: found.package.version.clone(),
+        found_at: found_at.to_path_buf(),
+    })))
+}
+
 /// Build-time errors.  See crate-level docs for the full surface.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ResolveError {
@@ -238,6 +364,10 @@ pub enum ResolveError {
         /// stringified.
         error: String,
     },
+    /// A dependency was found, but its `[package].version` does not satisfy
+    /// the requirement the consumer declared for it. Boxed: it is the
+    /// largest variant, and every `Result` would otherwise carry its size.
+    VersionMismatch(Box<VersionMismatch>),
     /// Two dependencies export the same component name.
     DuplicateExport {
         component: String,
@@ -264,6 +394,7 @@ impl std::fmt::Display for ResolveError {
                     "dependency `{package}` has a malformed manifest: {error}"
                 )
             }
+            Self::VersionMismatch(mismatch) => write!(f, "{mismatch}"),
             Self::DuplicateExport {
                 component,
                 package_a,
@@ -395,7 +526,11 @@ pub fn build(package_root: &Path, search_paths: &[PathBuf]) -> Result<Resolver, 
     let mut export_origin: HashMap<String, String> = HashMap::new();
 
     if let Some(manifest) = user_manifest {
-        for dep_name in manifest.dependencies.keys() {
+        // Name order, so the first error reported is the same on every run
+        // (a `HashMap` iterates in a different order each process).
+        let mut dependencies: Vec<(&String, &String)> = manifest.dependencies.iter().collect();
+        dependencies.sort();
+        for (dep_name, requirement) in dependencies {
             // ----- locate the dep on disk -----
             let dep_root = locate_dependency(dep_name, search_paths)?;
             // Canonicalize so `package_path` is absolute regardless of
@@ -412,6 +547,23 @@ pub fn build(package_root: &Path, search_paths: &[PathBuf]) -> Result<Resolver, 
                         error: e.to_string(),
                     }
                 })?;
+
+            // ----- check the version it declares (§7.4) -----
+            check_requirement(
+                &manifest,
+                &manifest_path,
+                dep_name,
+                requirement,
+                &dep_manifest,
+                &dep_root,
+            )
+            .map_err(|failure| match failure {
+                RequirementFailure::Mismatch(mismatch) => ResolveError::VersionMismatch(mismatch),
+                RequirementFailure::Invalid(error) => ResolveError::BadDependencyManifest {
+                    package: dep_name.clone(),
+                    error,
+                },
+            })?;
 
             // ----- register each export -----
             for component in &dep_manifest.components.exports {
@@ -606,6 +758,11 @@ pub enum LayoutResolveError {
         /// and left out of `errors`.
         omitted: usize,
     },
+    /// A package in the `pkg::` graph — or the consumer, through
+    /// [`LayoutPackageResolver::check_dependencies`] — requires a version of
+    /// a dependency that the search path does not hold. Boxed, as in
+    /// [`ResolveError::VersionMismatch`].
+    VersionMismatch(Box<VersionMismatch>),
 }
 
 /// At most this many errors are kept in one [`LayoutResolveError::Multiple`].
@@ -738,6 +895,7 @@ impl std::fmt::Display for LayoutResolveError {
                 }
                 Ok(())
             }
+            Self::VersionMismatch(mismatch) => write!(f, "{mismatch}"),
         }
     }
 }
@@ -757,6 +915,13 @@ pub struct LayoutPackageResolver {
     failed: Mutex<HashMap<(String, String), LayoutResolveError>>,
     /// Interfaces (`.mil` slots) loaded for `check_callee_scope`.
     interfaces: Mutex<HashMap<(String, String), Option<Interface>>>,
+    /// Package name → the directory `locate_package` found it in. Every
+    /// lookup otherwise re-scans and re-parses every manifest on the search
+    /// path, and version checks add one lookup per declared dependency.
+    located: Mutex<HashMap<String, PathBuf>>,
+    /// Packages whose own `[dependencies]` have already been checked, so a
+    /// package inlined from many times is checked once.
+    checked: Mutex<HashSet<String>>,
 }
 
 /// A component's declared slots, as its `.mil` lists them.
@@ -804,7 +969,78 @@ impl LayoutPackageResolver {
             cache: Mutex::new(HashMap::new()),
             failed: Mutex::new(HashMap::new()),
             interfaces: Mutex::new(HashMap::new()),
+            located: Mutex::new(HashMap::new()),
+            checked: Mutex::new(HashSet::new()),
         }
+    }
+
+    /// Check a package's `[dependencies]` requirements against the packages
+    /// this resolver's search path holds (mosaic-package-publishing-v1 §7.4).
+    ///
+    /// [`Self::resolve`] already does this for every package it inlines
+    /// from. What it cannot see is the *consumer* — the package whose layout
+    /// it was handed — so a package build calls this once with the
+    /// consumer's own manifest before resolving any layout.
+    ///
+    /// `dependent_manifest` is where `dependent` was read from; it is named
+    /// in the error as the file to fix.
+    ///
+    /// A declared dependency that the search path does not hold is skipped
+    /// here, exactly as before this check existed: the build fails with
+    /// [`LayoutResolveError::PackageNotFound`] if a layout actually
+    /// references it. Requiring every declaration to resolve is a separate
+    /// rule (spec §10, Phase 1b/3), not a version question.
+    pub fn check_dependencies(
+        &self,
+        dependent: &MosaicPackage,
+        dependent_manifest: &Path,
+    ) -> Result<(), LayoutResolveError> {
+        // Name order, so the first error is the same on every run.
+        let mut dependencies: Vec<(&String, &String)> = dependent.dependencies.iter().collect();
+        dependencies.sort();
+        for (dependency, requirement) in dependencies {
+            let found_at = match self.locate_package(dependency) {
+                Ok(root) => root,
+                Err(LayoutResolveError::PackageNotFound { .. }) => continue,
+                Err(other) => return Err(other),
+            };
+            let found = self.read_manifest(dependency, &found_at)?;
+            check_requirement(
+                dependent,
+                dependent_manifest,
+                dependency,
+                requirement,
+                &found,
+                &found_at,
+            )
+            .map_err(|failure| match failure {
+                RequirementFailure::Mismatch(mismatch) => {
+                    LayoutResolveError::VersionMismatch(mismatch)
+                }
+                RequirementFailure::Invalid(detail) => LayoutResolveError::ManifestParseError {
+                    package: dependent.package.name.clone(),
+                    path: dependent_manifest.to_path_buf(),
+                    detail,
+                },
+            })?;
+        }
+        Ok(())
+    }
+
+    /// [`Self::check_dependencies`] for a package found on the search path,
+    /// at most once per package per resolver.
+    fn check_dependencies_once(
+        &self,
+        pkg: &str,
+        pkg_root: &Path,
+        manifest: &MosaicPackage,
+    ) -> Result<(), LayoutResolveError> {
+        if self.checked.lock().unwrap().contains(pkg) {
+            return Ok(());
+        }
+        self.check_dependencies(manifest, &pkg_root.join("mosaic-package.toml"))?;
+        self.checked.lock().unwrap().insert(pkg.to_string());
+        Ok(())
     }
 
     /// Mutate `layout` in place, replacing every `pkg::P::C` node with the
@@ -994,6 +1230,9 @@ impl LayoutPackageResolver {
     ) -> Result<(PathBuf, PathBuf), LayoutResolveError> {
         let pkg_root = self.locate_package(pkg)?;
         let manifest = self.read_manifest(pkg, &pkg_root)?;
+        // Inlining from `pkg` means compiling against whatever `pkg` itself
+        // inlines from, so its requirements must hold too (§7.4).
+        self.check_dependencies_once(pkg, &pkg_root, &manifest)?;
 
         if !manifest.components.exports.iter().any(|e| e == comp) {
             return Err(LayoutResolveError::ComponentNotExported {
@@ -1264,6 +1503,18 @@ impl LayoutPackageResolver {
     }
 
     fn locate_package(&self, pkg: &str) -> Result<PathBuf, LayoutResolveError> {
+        if let Some(found) = self.located.lock().unwrap().get(pkg) {
+            return Ok(found.clone());
+        }
+        let found = self.scan_for_package(pkg)?;
+        self.located
+            .lock()
+            .unwrap()
+            .insert(pkg.to_string(), found.clone());
+        Ok(found)
+    }
+
+    fn scan_for_package(&self, pkg: &str) -> Result<PathBuf, LayoutResolveError> {
         for search_root in &self.search_paths {
             let candidate_dirs = match std::fs::read_dir(search_root) {
                 Ok(it) => it,
@@ -2135,7 +2386,11 @@ fn fold_constant_children(node: &mut LayoutNode) {
         fold_constant_children(child);
     }
 
-    if node.children.iter().any(|child| literal_condition(child).is_some()) {
+    if node
+        .children
+        .iter()
+        .any(|child| literal_condition(child).is_some())
+    {
         let mut folded = Vec::with_capacity(node.children.len());
         let mut children = std::mem::take(&mut node.children).into_iter().peekable();
         while let Some(child) = children.next() {
@@ -2731,6 +2986,17 @@ mod tests {
 
     /// Write a `mosaic-package.toml` into `dir` with the given fields.
     fn write_manifest(dir: &Path, name: &str, exports: &[&str], deps: &[(&str, &str)]) {
+        write_versioned_manifest(dir, name, "0.1.0", exports, deps);
+    }
+
+    /// [`write_manifest`] with an explicit `[package].version`.
+    fn write_versioned_manifest(
+        dir: &Path,
+        name: &str,
+        version: &str,
+        exports: &[&str],
+        deps: &[(&str, &str)],
+    ) {
         let deps_block: String = deps
             .iter()
             .map(|(k, v)| format!("{k} = \"{v}\"\n"))
@@ -2744,7 +3010,7 @@ mod tests {
             r#"
 [package]
 name = "{name}"
-version = "0.1.0"
+version = "{version}"
 description = "test package"
 license = "MIT"
 
@@ -3546,7 +3812,11 @@ version = "1"
                 .iter()
                 .map(|child| (child.tag.as_str(), child.part_name.as_deref()))
                 .collect();
-            let (tag, part) = if literal == "true" { ("Column", kept) } else { ("Row", kept) };
+            let (tag, part) = if literal == "true" {
+                ("Column", kept)
+            } else {
+                ("Row", kept)
+            };
             assert_eq!(
                 parts,
                 vec![(tag, Some(part)), ("Text", Some("caption"))],
@@ -3561,31 +3831,52 @@ version = "1"
 }"#,
         );
         resolver.resolve(&mut layout).expect("layout resolves");
-        let tags: Vec<_> = layout.root.children.iter().map(|c| c.tag.as_str()).collect();
+        let tags: Vec<_> = layout
+            .root
+            .children
+            .iter()
+            .map(|c| c.tag.as_str())
+            .collect();
         assert_eq!(tags, vec!["If", "Else", "Text"]);
     }
 
     #[test]
     fn constant_fold_drops_an_unmatched_false_branch_and_keeps_expressions() {
-        let node = |tag: &str, when: Option<LayoutPropValue>, children: Vec<LayoutNode>| LayoutNode {
-            tag: tag.to_string(),
-            part_name: None,
-            props: when
-                .into_iter()
-                .map(|value| LayoutProp { name: "when".to_string(), value })
-                .collect(),
-            children,
-        };
+        let node =
+            |tag: &str, when: Option<LayoutPropValue>, children: Vec<LayoutNode>| LayoutNode {
+                tag: tag.to_string(),
+                part_name: None,
+                props: when
+                    .into_iter()
+                    .map(|value| LayoutProp {
+                        name: "when".to_string(),
+                        value,
+                    })
+                    .collect(),
+                children,
+            };
         let leaf = |tag: &str| node(tag, None, vec![]);
         let mut root = node(
             "Column",
             None,
             vec![
-                node("If", Some(LayoutPropValue::Keyword("false".into())), vec![leaf("A")]),
+                node(
+                    "If",
+                    Some(LayoutPropValue::Keyword("false".into())),
+                    vec![leaf("A")],
+                ),
                 leaf("B"),
-                node("If", Some(LayoutPropValue::Expr(" true ".into())), vec![leaf("C"), leaf("D")]),
+                node(
+                    "If",
+                    Some(LayoutPropValue::Expr(" true ".into())),
+                    vec![leaf("C"), leaf("D")],
+                ),
                 node("Else", None, vec![leaf("E")]),
-                node("If", Some(LayoutPropValue::Expr("i == 0".into())), vec![leaf("F")]),
+                node(
+                    "If",
+                    Some(LayoutPropValue::Expr("i == 0".into())),
+                    vec![leaf("F")],
+                ),
             ],
         );
         fold_constant_conditionals(&mut root);
@@ -3600,14 +3891,32 @@ version = "1"
         let when = |value: LayoutPropValue| LayoutNode {
             tag: "If".to_string(),
             part_name: None,
-            props: vec![LayoutProp { name: "when".to_string(), value }],
+            props: vec![LayoutProp {
+                name: "when".to_string(),
+                value,
+            }],
             children: vec![],
         };
-        assert_eq!(literal_condition(&when(LayoutPropValue::String(String::new()))), Some(false));
-        assert_eq!(literal_condition(&when(LayoutPropValue::String("Inbox".into()))), Some(true));
-        assert_eq!(literal_condition(&when(LayoutPropValue::Number(0.0))), Some(false));
-        assert_eq!(literal_condition(&when(LayoutPropValue::Number(3.0))), Some(true));
-        assert_eq!(literal_condition(&when(LayoutPropValue::SlotRef("s".into()))), None);
+        assert_eq!(
+            literal_condition(&when(LayoutPropValue::String(String::new()))),
+            Some(false)
+        );
+        assert_eq!(
+            literal_condition(&when(LayoutPropValue::String("Inbox".into()))),
+            Some(true)
+        );
+        assert_eq!(
+            literal_condition(&when(LayoutPropValue::Number(0.0))),
+            Some(false)
+        );
+        assert_eq!(
+            literal_condition(&when(LayoutPropValue::Number(3.0))),
+            Some(true)
+        );
+        assert_eq!(
+            literal_condition(&when(LayoutPropValue::SlotRef("s".into()))),
+            None
+        );
     }
 
     #[test]
@@ -4978,7 +5287,216 @@ version = "1"
         }
     }
 
-    // ---- The repository's own packages and apps ----
+    // ---- Version requirements (mosaic-package-publishing-v1 §7.4) ----
+
+    /// A search path holding `mosaic-pkg-kit` at `kit_version`, and a
+    /// consumer at `<tmp>/user` that requires it as `requirement`.
+    fn versioned_world(kit_version: &str, requirement: &str) -> (TempDir, PathBuf, PathBuf) {
+        let tmp = TempDir::new().unwrap();
+        let pkgs = tmp.path().join("packages");
+        let kit = pkgs.join("mosaic-pkg-kit");
+        fs::create_dir_all(&kit).unwrap();
+        write_versioned_manifest(&kit, "mosaic-pkg-kit", kit_version, &["Kit"], &[]);
+        write_component(
+            &kit,
+            "Kit",
+            "component Kit { }",
+            "layout Kit { Text [ kit ] ( content: \"kit\" ) }",
+        );
+        let user = tmp.path().join("user");
+        fs::create_dir_all(&user).unwrap();
+        write_manifest(&user, "user-app", &[], &[("mosaic-pkg-kit", requirement)]);
+        (tmp, pkgs, user)
+    }
+
+    fn build_mismatch(kit_version: &str, requirement: &str) -> VersionMismatch {
+        let (_tmp, pkgs, user) = versioned_world(kit_version, requirement);
+        match build(&user, &[pkgs]) {
+            Err(ResolveError::VersionMismatch(mismatch)) => *mismatch,
+            other => panic!("expected VersionMismatch, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn build_accepts_a_caret_compatible_dependency() {
+        for (found, requirement) in [
+            ("0.16.0", "0.16.0"),
+            ("0.16.3", "0.16.0"),
+            ("1.9.0", "1.2.3"),
+            ("0.16.0", "=0.16.0"),
+            ("1.0.0", "1.0.0-rc.1"),
+        ] {
+            let (_tmp, pkgs, user) = versioned_world(found, requirement);
+            let r = build(&user, &[pkgs])
+                .unwrap_or_else(|e| panic!("{requirement:?} should accept {found}: {e}"));
+            assert!(r.knows("Kit"));
+        }
+    }
+
+    #[test]
+    fn build_rejects_a_caret_incompatible_dependency_and_names_both_ends() {
+        // The exact shape of the stale toolkit pins this check exists for.
+        let mismatch = build_mismatch("0.16.0", "0.11.0");
+        assert_eq!(mismatch.dependent, "user-app");
+        assert_eq!(mismatch.dependency, "mosaic-pkg-kit");
+        assert_eq!(mismatch.requirement.to_string(), "0.11.0");
+        assert_eq!(mismatch.found, "0.16.0");
+        assert!(mismatch.found_at.ends_with("mosaic-pkg-kit"));
+        assert!(mismatch.found_at.is_absolute());
+        assert!(mismatch
+            .dependent_manifest
+            .ends_with("user/mosaic-package.toml"));
+
+        let message = ResolveError::VersionMismatch(Box::new(mismatch)).to_string();
+        for needle in [
+            "user-app requires mosaic-pkg-kit \"0.11.0\" (>=0.11.0, <0.12.0)",
+            "found mosaic-pkg-kit 0.16.0",
+            "update the requirement in",
+        ] {
+            assert!(
+                message.contains(needle),
+                "{needle:?} missing from: {message}"
+            );
+        }
+
+        // An older dependency than required fails too, and so does crossing
+        // a major version.
+        assert_eq!(build_mismatch("0.15.9", "0.16.0").found, "0.15.9");
+        assert_eq!(build_mismatch("2.0.0", "1.2.3").found, "2.0.0");
+    }
+
+    #[test]
+    fn build_rejects_an_exact_mismatch() {
+        let mismatch = build_mismatch("0.16.1", "=0.16.0");
+        assert_eq!(mismatch.requirement.range(), "=0.16.0");
+        assert!(mismatch.to_string().contains("\"=0.16.0\" (=0.16.0)"));
+    }
+
+    #[test]
+    fn build_never_matches_an_unrequested_pre_release() {
+        let mismatch = build_mismatch("0.17.0-rc.1", "0.16.0");
+        assert_eq!(mismatch.found, "0.17.0-rc.1");
+        build_mismatch("0.16.1-beta", "0.16.0");
+    }
+
+    #[test]
+    fn build_still_reports_a_missing_dependency_as_not_found() {
+        let (_tmp, _pkgs, user) = versioned_world("0.1.0", "0.1.0");
+        let err = build(&user, &[]).expect_err("nothing on the search path");
+        assert!(
+            matches!(err, ResolveError::DependencyNotFound { ref package, .. } if package == "mosaic-pkg-kit"),
+            "got {err:?}"
+        );
+    }
+
+    #[test]
+    fn check_dependencies_covers_the_consumer() {
+        for (found, requirement, ok) in [
+            ("0.16.3", "0.16.0", true),
+            ("0.16.0", "=0.16.0", true),
+            ("0.16.0", "0.11.0", false),
+            ("0.16.1", "=0.16.0", false),
+        ] {
+            let (_tmp, pkgs, user) = versioned_world(found, requirement);
+            let manifest_path = user.join("mosaic-package.toml");
+            let manifest = mosaic_package_manifest::parse_path(&manifest_path).unwrap();
+            let result = LayoutPackageResolver::new(vec![pkgs])
+                .check_dependencies(&manifest, &manifest_path);
+            match (ok, result) {
+                (true, Ok(())) => {}
+                (false, Err(LayoutResolveError::VersionMismatch(mismatch))) => {
+                    assert_eq!(mismatch.dependent, "user-app");
+                    assert_eq!(mismatch.found, found);
+                    assert_eq!(mismatch.dependent_manifest, manifest_path);
+                }
+                (ok, other) => panic!("{requirement:?} vs {found}: ok={ok}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn check_dependencies_leaves_a_missing_dependency_to_the_reference() {
+        // Not on the search path: no version to compare, and no error until a
+        // layout actually references it (that is Phase 1b's rule to change).
+        let (_tmp, _pkgs, user) = versioned_world("0.1.0", "0.1.0");
+        let manifest_path = user.join("mosaic-package.toml");
+        let manifest = mosaic_package_manifest::parse_path(&manifest_path).unwrap();
+        LayoutPackageResolver::new(vec![])
+            .check_dependencies(&manifest, &manifest_path)
+            .expect("a missing dependency is not a version mismatch");
+
+        let mut layout = consumer_layout("layout Demo { pkg::mosaic-pkg-kit::Kit }");
+        let err = LayoutPackageResolver::new(vec![])
+            .resolve(&mut layout)
+            .expect_err("the reference still fails");
+        assert!(
+            matches!(err, LayoutResolveError::PackageNotFound { ref package } if package == "mosaic-pkg-kit"),
+            "got {err:?}"
+        );
+    }
+
+    /// `mosaic-pkg-mid` (exports `Mid`, which mounts `pkg::mosaic-pkg-leaf::Leaf`)
+    /// requires `mosaic-pkg-leaf` as `requirement`; the leaf is at
+    /// `leaf_version`.
+    fn transitive_world(leaf_version: &str, requirement: &str) -> (TempDir, PathBuf) {
+        let tmp = TempDir::new().unwrap();
+        let pkgs = tmp.path().join("packages");
+        let leaf = pkgs.join("mosaic-pkg-leaf");
+        fs::create_dir_all(&leaf).unwrap();
+        write_versioned_manifest(&leaf, "mosaic-pkg-leaf", leaf_version, &["Leaf"], &[]);
+        write_component(
+            &leaf,
+            "Leaf",
+            "component Leaf { }",
+            "layout Leaf { Text [ leaf ] ( content: \"leaf\" ) }",
+        );
+        let mid = pkgs.join("mosaic-pkg-mid");
+        fs::create_dir_all(&mid).unwrap();
+        write_manifest(
+            &mid,
+            "mosaic-pkg-mid",
+            &["Mid"],
+            &[("mosaic-pkg-leaf", requirement)],
+        );
+        write_component(
+            &mid,
+            "Mid",
+            "component Mid { }",
+            "layout Mid { Column [ mid ] { pkg::mosaic-pkg-leaf::Leaf } }",
+        );
+        (tmp, pkgs)
+    }
+
+    #[test]
+    fn the_layout_inliner_checks_every_package_it_inlines_from() {
+        let (_tmp, pkgs) = transitive_world("0.2.0", "0.2.0");
+        let mut layout = consumer_layout("layout Demo { pkg::mosaic-pkg-mid::Mid }");
+        LayoutPackageResolver::new(vec![pkgs])
+            .resolve(&mut layout)
+            .expect("a satisfied requirement inlines as before");
+        assert!(first_qualified_tag(&layout.root).is_none());
+
+        for (leaf_version, requirement) in [("0.3.0", "0.2.0"), ("0.2.1", "=0.2.0")] {
+            let (_tmp, pkgs) = transitive_world(leaf_version, requirement);
+            let mut layout = consumer_layout("layout Demo { pkg::mosaic-pkg-mid::Mid }");
+            let err = LayoutPackageResolver::new(vec![pkgs])
+                .resolve(&mut layout)
+                .expect_err("the middle package's requirement is not met");
+            match err {
+                LayoutResolveError::VersionMismatch(mismatch) => {
+                    assert_eq!(mismatch.dependent, "mosaic-pkg-mid");
+                    assert_eq!(mismatch.dependency, "mosaic-pkg-leaf");
+                    assert_eq!(mismatch.found, leaf_version);
+                    assert!(mismatch
+                        .dependent_manifest
+                        .ends_with("mosaic-pkg-mid/mosaic-package.toml"));
+                }
+                other => panic!("expected VersionMismatch, got {other:?}"),
+            }
+        }
+    }
+
+    // ---- The repository's own packages, apps and manifests ----
 
     /// `code/` in this checkout: this crate is `code/packages/rust/<crate>`.
     fn repository_code_root() -> PathBuf {
@@ -5165,5 +5683,80 @@ version = "1"
         for child in &mut node.children {
             qualify_local_refs_except(child, current, pkg, exports);
         }
+    }
+
+    /// Every `[dependencies]` requirement in the repository is satisfied by
+    /// the package a build would find, under both locators.
+    ///
+    /// The stale-pin guard: before §7.4 a requirement was never compared, and
+    /// five drifted (`mosaic-pkg-toolkit = "0.11.0"` against 0.16.0). A
+    /// dependency release that breaks the caret range, or a requirement that
+    /// names a version not on disk, now fails here with the file to fix.
+    ///
+    /// Search paths are the ones `mosaic-package-artifact-builder` derives
+    /// for a package: its parent directory, `code/packages` and
+    /// `code/packages/mosaic`.
+    #[test]
+    fn every_repository_requirement_is_satisfied() {
+        let code = repository_code_root();
+        let mut manifests = Vec::new();
+        collect_manifests(&code, &mut manifests);
+        manifests.sort();
+        assert!(
+            manifests.len() >= 40,
+            "expected the repository's ~50 manifests, found {} under {}",
+            manifests.len(),
+            code.display()
+        );
+
+        let packages = code.join("packages");
+        let mut checked_requirements = 0;
+        let mut failures = Vec::new();
+        for manifest_path in &manifests {
+            let manifest = match mosaic_package_manifest::parse_path(manifest_path) {
+                Ok(manifest) => manifest,
+                Err(e) => {
+                    failures.push(format!("{}: {e}", manifest_path.display()));
+                    continue;
+                }
+            };
+            if manifest.dependencies.is_empty() {
+                continue;
+            }
+            checked_requirements += manifest.dependencies.len();
+            let package_root = manifest_path.parent().unwrap();
+            let search_paths = vec![
+                package_root.parent().unwrap().to_path_buf(),
+                packages.clone(),
+                packages.join("mosaic"),
+            ];
+
+            // Directory-name locator (`build`, every declared dependency).
+            if let Err(e) = build(package_root, &search_paths) {
+                failures.push(format!("build({}): {e}", package_root.display()));
+            }
+            // Manifest-name locator (what a package build inlines through).
+            // It skips a dependency it cannot find, so also require that
+            // every declared dependency is found by name.
+            let layout = LayoutPackageResolver::new(search_paths);
+            if let Err(e) = layout.check_dependencies(&manifest, manifest_path) {
+                failures.push(format!("layout({}): {e}", package_root.display()));
+            }
+            for dependency in manifest.dependencies.keys() {
+                if let Err(e) = layout.locate_package(dependency) {
+                    failures.push(format!("layout({}): {e}", package_root.display()));
+                }
+            }
+        }
+
+        assert!(
+            checked_requirements >= 20,
+            "expected the repository's ~26 requirements, checked {checked_requirements}"
+        );
+        assert!(
+            failures.is_empty(),
+            "unsatisfied or unparseable manifests:\n{}",
+            failures.join("\n")
+        );
     }
 }
