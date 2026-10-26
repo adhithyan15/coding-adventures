@@ -35,7 +35,8 @@ All notable changes to the `coding-adventures-ruby-parser` crate will be documen
 
 ### Added
 
-- `tests/r1b_line_start.rs` has 15 tests:
+- `tests/r1b_line_start.rs` has 17 tests (the last two are the F1 and F2
+  refusal tests above):
   - the word rule, CRLF, input edges, line numbers after a document, and
     line continuation;
   - every `__END__` form, and an unterminated document;
