@@ -18,6 +18,9 @@ All notable changes to this package will be documented in this file.
   `step`/`run`/`execute` bridge; adversarial helper rewrites, dead dispatch,
   oracle substitution, expectation shadowing, and post-dispatch overwrites are
   rejected.
+- Lock the crate's file-backed `executor` module binding and reject attributed,
+  aliased, duplicate, or inline oracle-backed routing modules that leave the
+  reviewed executor source dead.
 
 ## [0.1.0] - 2026-10-24
 

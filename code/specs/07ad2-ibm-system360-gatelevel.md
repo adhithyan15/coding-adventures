@@ -105,5 +105,8 @@ helper-rewrite, dead-dispatch, expectation-shadowing, oracle-substitution, and
 post-dispatch-overwrite fixtures. The complete public `step`, `run`, and
 `execute` bridge is exact-locked so only the independently computed,
 validated, oracle-compared gate result reaches the DFF commit path.
+The crate root must bind `executor` directly to the reviewed file-backed
+module; attributed paths, aliases, duplicate routing modules, and inline
+oracle-backed replacements are structural-test failures.
 Rustfmt, strict Clippy, rustdoc, lesson validation, and the
 package BUILD are green. Package line coverage is 93.01% (1,662/1,787).

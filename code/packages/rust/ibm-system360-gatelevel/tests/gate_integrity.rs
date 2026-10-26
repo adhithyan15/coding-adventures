@@ -288,6 +288,25 @@ fn verify_branch_structure(networks: &str, executor: &str, validator: &str) -> R
     }
 
     let validator_tokens = rust_tokens(validator);
+    let executor_modules: Vec<_> = validator_tokens
+        .windows(3)
+        .enumerate()
+        .filter_map(|(index, tokens)| {
+            (tokens[0] == "mod" && tokens[1] == "executor").then_some((index, &tokens[2]))
+        })
+        .collect();
+    if executor_modules.len() != 1
+        || executor_modules[0].1 != ";"
+        || executor_modules[0].0 == 0
+        || validator_tokens[executor_modules[0].0 - 1] != ";"
+        || validator_tokens
+            .windows(2)
+            .any(|tokens| tokens == ["as", "executor"])
+    {
+        return Err(
+            "validator executor-module binding is shadowed, attributed, or aliased".to_owned(),
+        );
+    }
     let gate_modules: Vec<_> = validator_tokens
         .windows(4)
         .enumerate()
@@ -887,4 +906,39 @@ fn structural_verifier_rejects_adversarial_host_shortcuts_and_dead_anchors() {
         1,
     );
     assert!(verify_branch_structure(networks, executor, &bypassed_execute).is_err());
+
+    let inline_oracle_executor = validator.replacen(
+        "mod executor;",
+        r#"#[path = "executor.rs"]
+mod gate_executor;
+mod executor {
+    use super::{StepTrace, System360Error, System360Simulator, System360State};
+
+    pub(crate) fn execute(
+        before: &System360State,
+        _trace: &StepTrace,
+    ) -> Result<System360State, System360Error> {
+        let mut oracle = System360Simulator::new();
+        oracle.restore(before.clone())?;
+        let _ = oracle.step()?;
+        Ok(oracle.get_state())
+    }
+}"#,
+        1,
+    );
+    assert!(verify_branch_structure(networks, executor, &inline_oracle_executor).is_err());
+
+    let attributed_executor = validator.replacen(
+        "mod executor;",
+        "#[path = \"executor.rs\"]\nmod executor;",
+        1,
+    );
+    assert!(verify_branch_structure(networks, executor, &attributed_executor).is_err());
+
+    let aliased_executor = validator.replacen(
+        "mod executor;",
+        "#[path = \"executor.rs\"]\nmod routed_executor;\nuse routed_executor as executor;",
+        1,
+    );
+    assert!(verify_branch_structure(networks, executor, &aliased_executor).is_err());
 }
