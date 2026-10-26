@@ -18232,3 +18232,27 @@ state-machine; no special CI suite is widened. Capability-schema, strict JSON,
 state-graph, lessons, changelog-shard, diff-hygiene, and artifact-cleanup gates
 remain required before recording the local preparation head. Publication and
 selection require a later slot-opening reprioritization and independent review.
+
+## October 26, 2026: Swift PaintVmAscii selection after Python merge
+
+Python gradient-descent PR #18324 completed every required check and merged
+from exact reviewed head `d34af356d621175dd8cc307d953ecb7a99d1b79a` as
+`1bb58a0d7ed8d818d622e69890234d96b6e26b3a` at
+`2026-10-26T15:37:25Z`. The receipt is exact current origin/main, and its clean
+completed worktree and local branch were removed. The only live parity PRs are
+now #18293 and #18355.
+
+The ready backlog was reprioritized before using the opened slot. Every
+prepared Bezier successor remains blocked on selector dependency PR #18293, so
+the independently reviewed, dependency-free Swift PaintVmAscii capability
+repair is the next eligible candidate. Its exact owner advances from pending
+to in-progress locally; this does not publish a branch or create a PR.
+
+The three preparation commits were rebased onto exact main while preserving
+the complete Swift-hash, Python-gradient, and other intervening append-only
+history. Shared state and roadmap conflicts retained both sides. The resulting
+product scope remains one empty capability manifest plus documentation and the
+canonical changelog filename correction; production code, public API, BUILD
+fronts, dependencies, and caller-owned terminal authority remain unchanged.
+Fresh focused validation and independent review of the final local head are
+required before publication.
