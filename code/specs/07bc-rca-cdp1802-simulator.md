@@ -50,6 +50,8 @@ or electrical claim is part of this functional profile.
 - all 65,536 memory bytes;
 - installed-image `origin: Option<u16>` and `length: u32`, allowing a full
   65,536-byte image;
+- `first_instruction_pending: bool`, the reset sequencer latch that suppresses
+  interrupt recognition until one instruction has completed; and
 - `idle: bool`.
 
 There is no duplicate PC or data pointer: PC is always `registers[p]` and the
@@ -62,7 +64,11 @@ FN1441 reset leaves several programmer registers unspecified. For a
 deterministic simulator, `new` and `reset` zero the complete register matrix,
 D, DF, T, Q, memory, inputs, and image metadata; select P=X=0; set IE; and
 clear idle. This contains the documented reset/initialize values and chooses
-zero only for unspecified fields. `restore` validates all ranges and image
+zero only for unspecified fields. Reset and successful load set
+`first_instruction_pending`; DMA service leaves it set, every failed step
+leaves it set, and the first successful instruction clears it after that
+instruction completes. This includes IDL: entering idle completes the first
+instruction and removes the inhibit. `restore` validates all ranges and image
 invariants before committing.
 
 ## 3. Memory, installation, fetch, and traces
@@ -71,7 +77,8 @@ Memory is byte-addressed and naturally wraps modulo 2^16 for architectural
 register arithmetic. `load(program, origin)` accepts a nonempty byte slice
 only when the half-open host range fits without wrapping. It validates first,
 performs deterministic reset, copies the bytes, records origin/length, places
-origin in R0, and leaves P=X=0, IE=true, and idle=false.
+origin in R0, and leaves P=X=0, IE=true,
+`first_instruction_pending=true`, and idle=false.
 
 Instruction fetch reads at `R(P)`, then increments that selected register
 modulo 2^16 before execution. The opcode and every required following operand
@@ -131,11 +138,15 @@ D zero/nonzero, DF, Q, and each sampled EF input with the exact active-low
 truth named in Table 4. BR is always taken; NBR/SKP always advances.
 
 Long branches consume high byte then low byte. Taken branches replace the
-complete selected R(P); false branches advance over both bytes. Long skips
-advance two bytes only when their D/DF/Q/IE condition is true, but never fetch
-or retain those discarded bytes and therefore do not require them to be in
-the installed image. LBR always loads, NLBR/LSKP always advances two, and C4
-NOP consumes no operand while retaining the documented extra execution cycle.
+complete selected R(P); false branches advance over both bytes. A taken long
+skip performs the two S1 memory-read cycles shown by FN1441 Table 5, reading at
+R(P) and incrementing after each read. A false long skip performs both reads at
+the unchanged R(P). Those reads are real bus activity but the bytes are not
+instruction operands: the CPU-only trace does not retain them and the
+installed-image contract does not validate them. The later SoC cell exposes
+the two ordinary memory-read strobes and values. LBR always loads, NLBR/LSKP
+always performs the taken two-increment form, and C4 NOP consumes no operand
+while retaining the documented extra execution cycle.
 
 `SEP N` changes P after opcode fetch, so the next fetch uses R(N) without
 modifying it. `SEX N` changes X. `SEQ`/`REQ` set/clear Q. `SAV` stores T at
@@ -165,9 +176,12 @@ External bus service is exposed through typed atomic operations:
   a DMA-in transaction;
 - `dma_out()` reads M(R0), increments R0, clears idle, and returns the byte and
   a DMA-out transaction; and
-- `interrupt()` requires IE=true, sets T=(X<<4)|P, then X=2, P=1, IE=false,
-  clears idle, and returns an interrupt-acknowledge transaction. If IE is
-  false it returns `InterruptMasked` unchanged.
+- `interrupt()` requires IE=true and `first_instruction_pending=false`, sets
+  T=(X<<4)|P, then X=2, P=1, IE=false, clears idle, and returns an
+  interrupt-acknowledge transaction. If IE is false it returns
+  `InterruptMasked` unchanged. If the reset inhibit is still set it returns
+  `InterruptInhibited` unchanged, even after any number of pre-instruction DMA
+  cycles.
 
 These calls model one acknowledged S2 or S3 cycle. Simultaneous-request
 priority, WAIT/CLEAR pins, bus arbitration, devices, and elapsed clocks belong
@@ -183,11 +197,11 @@ bounded to 64 and all fallible allocations are preflighted.
 
 Stable typed errors distinguish empty/oversized/overflowing image, no image,
 fetch outside image, truncated instruction, unknown 0x68, invalid state,
-idling, masked interrupt, trace limit, step limit, allocation failure, and a
-source-preserving execution wrapper. Validation, fetch, decode, all reads,
-transaction allocation, and candidate updates precede commit. Every failure
-preserves registers, selectors, flags, inputs, memory, image metadata, and
-idle state exactly.
+idling, masked interrupt, reset-inhibited interrupt, trace limit, step limit,
+allocation failure, and a source-preserving execution wrapper. Validation,
+fetch, decode, all reads, transaction allocation, and candidate updates
+precede commit. Every failure preserves registers, selectors, flags, inputs,
+memory, image metadata, reset inhibit, and idle state exactly.
 
 ## 9. Completion gate
 
@@ -201,7 +215,9 @@ Implementation is incomplete until it provides:
 4. every short/long branch and skip condition true/false, all EF inputs,
    low-byte page retention, 0xFFFF wrapping, and truncation shape;
 5. all seven port inputs/outputs, self-modifying traces, Q, IDL/resume,
-   DMA-in/out, masked/accepted interrupt, T packing, and R0 wrap;
+   DMA-in/out, masked/inhibited/accepted interrupt, T packing, and R0 wrap,
+   including reset/load inhibit, DMA before first fetch, first-step fault, and
+   first-instruction IDL witnesses;
 6. reset/load/snapshot/restore/run/execute rollback and injected allocation
    failures with exact complete-state equality;
 7. package docs, BUILD integration, lessons validation, release tests,
