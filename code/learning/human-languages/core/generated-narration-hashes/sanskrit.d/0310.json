@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:a97bcc72bc02a608",
+  "lessonIds": [
+    "SA-C310-ghatana",
+    "SA-C310-apatati",
+    "SA-C310-vivaranam",
+    "SA-C310-prakasayati",
+    "SA-C310-visesah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch310.txt",
+  "json": "sanskrit/narration/ch310.json",
+  "textHash": "fnv1a64:6860e895f250dab7",
+  "jsonHash": "fnv1a64:7b4f2f0565467483",
+  "findings": []
+}

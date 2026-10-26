@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:c5739c3beac8f668",
+  "lessonIds": [
+    "SA-C405-javah",
+    "SA-C405-satvaram",
+    "SA-C405-pradhavati",
+    "SA-C405-antimah",
+    "SA-C405-ayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch405-hurry-and-speed.tex"
+}

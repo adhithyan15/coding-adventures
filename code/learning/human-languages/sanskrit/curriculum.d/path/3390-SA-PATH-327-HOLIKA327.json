@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-327-HOLIKA327",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "SA-EXT-327-HOLIKA327"
+  ],
+  "after": []
+}

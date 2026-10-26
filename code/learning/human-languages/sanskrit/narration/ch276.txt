@@ -1,0 +1,189 @@
+Sanskrit, chapter 276: What Happened, and What Was Going On.
+5 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 5.
+सः गतवान् (saḥ gatavān) — the past that follows the doer.
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say "the boy went", with the past you know. (bālaḥ agacchat.) Then say "yesterday". (hyaḥ.) This lesson gives a second past, the one the stories in this book are told in.
+
+You'll want to know: गतवान्, गतवती.
+सः गतवान्। saḥ gatavān. — "He went."
+सा गतवती। sā gatavatī. — "She went."
+गतवान् (gatavān), "went", is a describing word made from the verb: -vān for a man, -vatī for a woman.
+सः ह्यः गृहं गतवान्। saḥ hyaḥ gṛhaṃ gatavān. — "He went home yesterday."
+मीरा ह्यः आपणं गतवती। mīrā hyaḥ āpaṇaṃ gatavatī. — "Mira went to the shop yesterday."
+For several people, गतवन्तः (gatavantaḥ); for two, गतवन्तौ (gatavantau):
+ते ह्यः ग्रामं गतवन्तः। te hyaḥ grāmaṃ gatavantaḥ. — "They went to the village yesterday."
+It needs no अस्मि: a man says ahaṃ gatavān, "I went", a woman ahaṃ gatavatī.
+
+You'll want to know: the stem under it.
+The part before -vat- is the verb's -ta form, which describes on its own: गतः (gataḥ), "gone". Each verb has its own, given with it in the dictionary:
+[a table of 6 rows, read aloud]
+the verb: "does". the past (a man): कृतवान् (kṛtavān).
+the verb: पठति. the past (a man): पठितवान् (paṭhitavān).
+the verb: खादति. the past (a man): खादितवान् (khāditavān).
+the verb: लिखति. the past (a man): लिखितवान् (likhitavān).
+the verb: पश्यति. the past (a man): दृष्टवान् (dṛṣṭavān).
+the verb: आगच्छति. the past (a man): आगतवान् (āgatavān).
+The thing done stays as it was:
+सः अन्नं खादितवान्। saḥ annaṃ khāditavān. — "He ate the food."
+मीरा पुस्तकं पठितवती। mīrā pustakaṃ paṭhitavatī. — "Mira read the book."
+"Said" comes from the other "say" root, √vac: उक्तवान् (uktavān; Monier-Williams gives ukta there).
+सा किम् उक्तवती? sā kim uktavatī? — "What did she say?"
+The past you know still stands: agacchat and gatavān both say "went", and both are correct. This book tells its stories with gatavān, one shape for every verb (Pāṇini 1.1.26 names -ta and -tavat together).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "He came home" — saḥ gṛham āgatavān]
+[pause 8 seconds for the answer]
+[your turn — say: "She came home" — sā gṛham āgatavatī]
+[pause 8 seconds for the answer]
+[your turn — say: "They came home" — te gṛham āgatavantaḥ]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 22 seconds]
+Say that Mira went to the shop, then that Arun read the book.
+
+Wrap-up Recall.
+[pause 3 seconds]
+"She went"? (सा गतवती.) "I did the work", said by a man? (अहं कार्यं कृतवान्.) Who decides -vān or -vatī? (The one who did it.)
+
+
+Lesson 2 of 5.
+सः पठति स्म (saḥ paṭhati sma) — what was going on.
+
+Warm-up.
+[pause 2 seconds]
+Say "he read the book". (saḥ pustakaṃ paṭhitavān.) That tells one finished event. This lesson tells the scene around it.
+
+You'll want to know: the present with स्म.
+सः पठति स्म। saḥ paṭhati sma. — "He was reading."
+स्म (sma) after a present puts it in the past: "he was reading", or "he used to read". The verb keeps its present ending. Lanman's vocabulary describes it as a present that tells the past (he cites Whitney §778).
+बालाः क्रीडन्ति स्म। bālāḥ krīḍanti sma. — "The children were playing."
+सा प्रतिदिनं पठति स्म। sā pratidinaṃ paṭhati sma. — "She used to read every day."
+
+You'll want to know: यदा … तदा.
+यदा (yadā) is "when", opening the scene; तदा (tadā), "then", opens what broke into it. The scene takes स्म, the event the past:
+यदा अहं पठामि स्म, yadā ahaṃ paṭhāmi sma, तदा मीरा आगतवती। tadā mīrā āgatavatī. — "When I was reading, Mira came."
+यदा सः खादति स्म, yadā saḥ khādati sma, तदा अहं गतवान्। tadā ahaṃ gatavān. — "While he was eating, I left."
+[a table of 2 rows, read aloud]
+the sentence: सः पठितवान्. what it tells: one event: he read.
+the sentence: सः पठति स्म (saḥ paṭhati sma). what it tells: the scene: he was reading.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "I was reading" — ahaṃ paṭhāmi sma]
+[pause 8 seconds for the answer]
+[your turn — say: "I was eating" — ahaṃ khādāmi sma]
+[pause 8 seconds for the answer]
+[your turn — say: "I was writing" — ahaṃ likhāmi sma]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 26 seconds]
+Say that the children were playing, then that Mira came while you were reading.
+
+Wrap-up Recall.
+[pause 3 seconds]
+"He was playing"? (सः क्रीडति स्म.) "When I was reading, Arun came"? (यदा अहं पठामि स्म, तदा अरुणः आगतवान्.) Which form tells the scene? (The present with स्म.)
+
+
+Lesson 3 of 5.
+घटते (ghaṭate) — happens.
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say "when I was reading, Mira came". (yadā ahaṃ paṭhāmi sma, tadā mīrā āgatavatī.)
+
+You'll want to know: घटते.
+घटते — ghaṭate — "happens". It ends in -te, as रोचते (rocate) does.
+अत्र किं घटते? atra kiṃ ghaṭate? — "What is happening here?"
+एतत् प्रतिदिनं घटते। etat pratidinaṃ ghaṭate. — "This happens every day."
+"It happened" is its -ta form, घटितम् (ghaṭitam), the way गतः says "gone":
+ह्यः किं घटितम्? hyaḥ kiṃ ghaṭitam? — "What happened yesterday?"
+
+The word, taken apart.
+घटते (ghaṭate) is built on the root √ghaṭ. Monier-Williams gives its first sense as being busy with something or striving for it, and a later one as happening, taking place; he gives ghaṭita as "happened". It lives on as Marathi ghaḍṇẽ, "to happen" (CDIAL 4407).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ghaṭate]
+[pause 8 seconds for the answer]
+[your turn — say: "What is happening here?" — atra kiṃ ghaṭate?]
+[pause 8 seconds for the answer]
+[your turn — say: "What happened yesterday?" — hyaḥ kiṃ ghaṭitam?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does घटते (ghaṭate) mean? ("Happens".) "What happened?" (किं घटितम्?)
+
+
+Lesson 4 of 5.
+घ (gha) — one character, met first in घटते (ghaṭate).
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: घ and Guided Practice.
+
+Warm-up.
+[pause 1 second]
+Before the new one: say घटते (ghaṭate), "happens". Then say the sounds of ग and ध. (ga, dha.)
+[pause 2 seconds]
+One character this time: the one that opens घटते (ghaṭate).
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: घ.
+घ — gha.
+It is a consonant: g with a breath after it, as ध is d with a breath.
+What it is made of:
+a continuous upper curl, middle hook, lower bowl, and rising right side.
+a short descending lower stem.
+the top shirorekhā.
+You have met it here:
+घटते ghaṭate — happens.
+
+Writing: घ.
+1. start below the headline at the upper-left, curve down and clockwise around the upper curl, turn back left through the middle hook, continue clockwise around the lower bowl, and rise along the right side to the headline.
+2. without lifting, come back down the right side to the lower junction.
+3. descend the short stem below the bowl.
+4. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 1. The pen comes up 1 time and no more.
+The source shows three movements; native writers draw घ (gha) as two pen-down strokes (83% of HP Labs India's native-writer samples, 68 of 82). This ductus follows the three movements in order and direction, lifting only before the headline: after rising to the headline the pen comes back down the right side into the short lower stem.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-घ (gha)-order.gif’, strokes 1–3, Wikimedia Commons, 9 May 2009.
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — look: at this, and find घ (gha) in it]
+घटते (ghaṭate).
+[once you have stopped driving — trace: घ three times, saying gha as you finish each one]
+[once you have stopped driving — look: at किं घटितम्? and find घ (gha) once more]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — घ? What sound does it carry? (gha.) Which word did it come from? (घटते (ghaṭate), "happens".)
+
+
+Lesson 5 of 5.
+Review — what happened, and what was going on.
+
+Warm-up.
+[pause 2 seconds]
+Say "they will go" and "I will see the city". (te gamiṣyanti, ahaṃ nagaraṃ drakṣyāmi.)
+
+Guided Practice.
+[pause 2 seconds after each]
+[your turn — say: Yesterday Mira went to the shop.]
+[pause 8 seconds for the answer]
+[your turn — say: Arun ate the food, and Mira read the book.]
+[pause 8 seconds for the answer]
+[your turn — say: The children were playing.]
+[pause 8 seconds for the answer]
+[your turn — say: When I was reading, Mira came.]
+[pause 8 seconds for the answer]
+[your turn — say: What happened yesterday?]
+[pause 8 seconds for the answer]
+[once you have stopped driving — read: घटते (ghaṭate) and किं घटितम्? aloud]
+
+Wrap-up Recall.
+[pause 3 seconds]
+गतवती: a man or a woman? (A woman.) सः पठति स्म (saḥ paṭhati sma): one event, or the scene? (The scene.) Now the other way round: "she read the book"? (सा पुस्तकं पठितवती.) "What did he say?" (सः किम् उक्तवान्?)

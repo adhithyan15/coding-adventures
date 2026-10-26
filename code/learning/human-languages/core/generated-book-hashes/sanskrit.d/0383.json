@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:efb0ad1ffb1aaf0d",
+  "lessonIds": [
+    "SA-C383-sankalpah",
+    "SA-C383-akanksa",
+    "SA-C383-akanksati",
+    "SA-C383-abhilasah",
+    "SA-C383-uttarottaram"
+  ],
+  "tex": "sanskrit/book/chapters/ch383-setting-a-goal.tex"
+}

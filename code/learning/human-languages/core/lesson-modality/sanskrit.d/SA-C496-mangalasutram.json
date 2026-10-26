@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C496-mangalasutram",
+    "language": "sanskrit",
+    "chapter": 496,
+    "sequence": 28460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c6b09292fda8d39"
+  },
+  "findings": []
+}

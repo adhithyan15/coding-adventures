@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:de0e27ca19992891",
+  "lessonIds": [
+    "SA-C528-ayojayati",
+    "SA-C528-samagri",
+    "SA-C528-sambharah",
+    "SA-C528-upakalpayati",
+    "SA-C528-pancangam"
+  ],
+  "tex": "sanskrit/book/chapters/ch528-making-a-plan.tex"
+}

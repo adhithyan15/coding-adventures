@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C328-naivedyam",
+    "language": "sanskrit",
+    "chapter": 328,
+    "sequence": 19170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bce2e1d2237230d7"
+  },
+  "findings": []
+}

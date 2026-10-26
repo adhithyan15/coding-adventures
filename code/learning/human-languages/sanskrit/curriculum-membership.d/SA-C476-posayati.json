@@ -1,0 +1,11 @@
+{
+  "id": "SA-C476-posayati",
+  "pathSegment": "SA-PATH-476-SAKTI476",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-476-SAKTI476",
+      "order": 4
+    }
+  ]
+}

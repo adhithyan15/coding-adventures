@@ -1,0 +1,11 @@
+{
+  "id": "SA-C374-avahitah",
+  "pathSegment": "SA-PATH-374-PRAMADA374",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-374-PRAMADA374",
+      "order": 0
+    }
+  ]
+}

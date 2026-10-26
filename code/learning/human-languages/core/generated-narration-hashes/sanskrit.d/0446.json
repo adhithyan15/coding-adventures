@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:60528751e71b0ca4",
+  "lessonIds": [
+    "SA-C446-adhityaka",
+    "SA-C446-sikharam",
+    "SA-C446-gulmah",
+    "SA-C446-kusah",
+    "SA-C446-pallavah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch446.txt",
+  "json": "sanskrit/narration/ch446.json",
+  "textHash": "fnv1a64:a17173732f0c6bb7",
+  "jsonHash": "fnv1a64:e8e4766b06f787b2",
+  "findings": []
+}

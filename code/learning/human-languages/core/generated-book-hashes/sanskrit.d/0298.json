@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:39fbe68165e98ff5",
+  "lessonIds": [
+    "SA-C298-ksatih",
+    "SA-C298-nasayati",
+    "SA-C298-bhagnah",
+    "SA-C298-paurah",
+    "SA-C298-sesah"
+  ],
+  "tex": "sanskrit/book/chapters/ch298-after-the-fire.tex"
+}

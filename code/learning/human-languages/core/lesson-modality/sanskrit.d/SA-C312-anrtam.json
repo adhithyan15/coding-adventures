@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C312-anrtam",
+    "language": "sanskrit",
+    "chapter": 312,
+    "sequence": 18360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8651bea96bfa721b"
+  },
+  "findings": []
+}

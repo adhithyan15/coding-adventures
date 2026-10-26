@@ -1,0 +1,19 @@
+{
+  "chapter": 500,
+  "title": "In-Laws and Ancestors",
+  "label": "ch:sa-in-laws-and-ancestors",
+  "canDo": "I can name my in-laws and my ancestors.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C500-santatih",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can name my in-laws and my ancestors.",
+    "assesses": [
+      "SA-LEX-C500-DEVARA500-03",
+      "SA-LEX-C500-DEVARA500-04",
+      "SA-LEX-C500-DEVARA500-05"
+    ]
+  }
+}

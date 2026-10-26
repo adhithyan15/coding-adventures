@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 420,
+  "title": "Water for the Traveller",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b9f4cda99757a9a9",
+  "lessons": [
+    {
+      "id": "SA-C420-prapa",
+      "sequence": 24330,
+      "title": "प्रपा (prapā) — a roadside water shed",
+      "headword": "प्रपा",
+      "romanization": "prapā",
+      "gloss": "a roadside water shed",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a85cf82041880484",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a water channel, then the Sanskrit for a puddle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रपा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रपा — prapā — \"a roadside water shed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ग्रीष्मे मार्गे प्रपा अस्ति। grīṣme mārge prapā asti. In summer there is a water shed by the road."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रपा (prapā) is built from pra and the root √pā, \"to drink\", which also gives pibati, \"drinks\"; MW gives prapā as a place for watering cattle and a shed by the road where water is given to travellers (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prapā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prapā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prapā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prapā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grīṣme mārge prapā asti. — In summer there is a water shed by the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grīṣme mārge prapā asti.* — In summer there is a water shed by the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a water channel, then the Sanskrit for a puddle, then say prapā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a water channel, then the Sanskrit for a puddle, then say *prapā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रपा (prapā) mean? (\"A roadside water shed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C420-payayati",
+      "sequence": 24340,
+      "title": "पाययति (pāyayati) — gives a drink to",
+      "headword": "पाययति",
+      "romanization": "pāyayati",
+      "gloss": "gives a drink to",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39cd2b8263db2cae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a puddle, then the Sanskrit for a roadside water shed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पाययति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाययति — pāyayati — \"gives a drink to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नारी प्रपायां पथिकान् जलं पाययति। nārī prapāyāṃ pathikān jalaṃ pāyayati. At the water shed a woman gives the wayfarers water to drink."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): सा पथिकान् जलं पायितवती, sā pathikān jalaṃ pāyitavatī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाययति (pāyayati) is built on the root √pā, \"to drink\", which gives pibati, \"drinks\"; its causative, \"makes drink\", is to give a drink to, and KRM gives the causative participle pāyita (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāyayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāyayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāyayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāyayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nārī prapāyāṃ pathikān jalaṃ pāyayati. — At the water shed a woman gives the wayfarers water to drink.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nārī prapāyāṃ pathikān jalaṃ pāyayati.* — At the water shed a woman gives the wayfarers water to drink.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a puddle, then the Sanskrit for a roadside water shed, then say pāyayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a puddle, then the Sanskrit for a roadside water shed, then say *pāyayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पाययति (pāyayati) mean? (\"Gives a drink to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C420-mrgatrsna",
+      "sequence": 24350,
+      "title": "मृगतृष्णा (mṛgatṛṣṇā) — a mirage",
+      "headword": "मृगतृष्णा",
+      "romanization": "mṛgatṛṣṇā",
+      "gloss": "a mirage",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:484374fcecfffb3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a roadside water shed, then the Sanskrit for gives a drink to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मृगतृष्णा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मृगतृष्णा — mṛgatṛṣṇā — \"a mirage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मृगतृष्णा जलं न अस्ति। mṛgatṛṣṇā jalaṃ na asti. A mirage is not water."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मृगतृष्णा (mṛgatṛṣṇā) is built from mṛga, \"a deer, a wild animal\", and tṛṣṇā, \"thirst\": the water a thirsty animal runs after; MW gives the compound as a mirage (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mṛgatṛṣṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mṛgatṛṣṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mṛgatṛṣṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mṛgatṛṣṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mṛgatṛṣṇā jalaṃ na asti. — A mirage is not water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mṛgatṛṣṇā jalaṃ na asti.* — A mirage is not water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a roadside water shed, then the Sanskrit for gives a drink to, then say mṛgatṛṣṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a roadside water shed, then the Sanskrit for gives a drink to, then say *mṛgatṛṣṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मृगतृष्णा (mṛgatṛṣṇā) mean? (\"A mirage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C420-asadayati",
+      "sequence": 24360,
+      "title": "आसादयति (āsādayati) — comes upon; reaches",
+      "headword": "आसादयति",
+      "romanization": "āsādayati",
+      "gloss": "comes upon; reaches",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:403faf2990037090",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for gives a drink to, then the Sanskrit for a mirage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आसादयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आसादयति — āsādayati — \"comes upon; reaches\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सायं पथिकः प्रपाम् आसादयति। sāyaṃ pathikaḥ prapām āsādayati. In the evening the wayfarer comes upon a water shed."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः प्रपाम् आसादितवान्, saḥ prapām āsāditavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आसादयति (āsādayati) is built from ā and the causative of the root √sad, \"to sit\"; MW gives its participle āsādita as reached (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsādayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsādayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsādayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsādayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāyaṃ pathikaḥ prapām āsādayati. — In the evening the wayfarer comes upon a water shed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāyaṃ pathikaḥ prapām āsādayati.* — In the evening the wayfarer comes upon a water shed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for gives a drink to, then the Sanskrit for a mirage, then say āsādayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for gives a drink to, then the Sanskrit for a mirage, then say *āsādayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आसादयति (āsādayati) mean? (\"Comes upon; reaches\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C420-tarpayati",
+      "sequence": 24370,
+      "title": "तर्पयति (tarpayati) — refreshes; satisfies",
+      "headword": "तर्पयति",
+      "romanization": "tarpayati",
+      "gloss": "refreshes; satisfies",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9118d11b02262e23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a mirage, then the Sanskrit for comes upon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तर्पयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तर्पयति — tarpayati — \"refreshes; satisfies\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शीतलं जलं श्रान्तं पथिकं तर्पयति। śītalaṃ jalaṃ śrāntaṃ pathikaṃ tarpayati. Cool water refreshes the tired wayfarer."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): जलं पथिकं तर्पितवत्, jalaṃ pathikaṃ tarpitavat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तर्पयति (tarpayati) is built on the root √tṛp, \"to be satisfied\", in its causative, \"to satisfy, to refresh\"; MW gives the participle tarpita, \"satisfied\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarpayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarpayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarpayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarpayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śītalaṃ jalaṃ śrāntaṃ pathikaṃ tarpayati. — Cool water refreshes the tired wayfarer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śītalaṃ jalaṃ śrāntaṃ pathikaṃ tarpayati.* — Cool water refreshes the tired wayfarer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a mirage, then the Sanskrit for comes upon, then say tarpayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a mirage, then the Sanskrit for comes upon, then say *tarpayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तर्पयति (tarpayati) mean? (\"Refreshes; satisfies\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

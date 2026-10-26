@@ -1,0 +1,11 @@
+{
+  "id": "SA-C426-sulkasthanam",
+  "pathSegment": "SA-PATH-426-VIDESHA426",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-426-VIDESHA426",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C349-nigrhnati",
+  "pathSegment": "SA-PATH-349-NYAYALAYA349",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-349-NYAYALAYA349",
+      "order": 3
+    }
+  ]
+}

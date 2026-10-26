@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 389,
+  "title": "Can It Be Done?",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:da9ab5f76375e364",
+  "lessons": [
+    {
+      "id": "SA-C389-sakyah",
+      "sequence": 22510,
+      "title": "शक्यः (śakyaḥ) — possible; able to be done",
+      "headword": "शक्यः",
+      "romanization": "śakyaḥ",
+      "gloss": "possible; able to be done",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2168be37cb4275a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for in vain, then the Sanskrit for an ideal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शक्यः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शक्यः — śakyaḥ — \"possible; able to be done\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि समयः अस्ति, तर्हि एतत् कार्यं शक्यम्। yadi samayaḥ asti, tarhi etat kāryaṃ śakyam. If there is time, this work can be done."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शक्यः (śakyaḥ) comes from the root √śak, \"to be able\"; MW gives śakya \"able, possible, practicable\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śakyaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śakyaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śakyaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śakyaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi samayaḥ asti, tarhi etat kāryaṃ śakyam. — If there is time, this work can be done.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi samayaḥ asti, tarhi etat kāryaṃ śakyam.* — If there is time, this work can be done.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for in vain, then the Sanskrit for an ideal, then say śakyaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for in vain, then the Sanskrit for an ideal, then say *śakyaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शक्यः (śakyaḥ) mean? (\"Possible; able to be done\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C389-sadhyah",
+      "sequence": 22520,
+      "title": "साध्यः (sādhyaḥ) — achievable",
+      "headword": "साध्यः",
+      "romanization": "sādhyaḥ",
+      "gloss": "achievable",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c552410a073e3a33",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for an ideal, then the Sanskrit for possible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: साध्यः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "साध्यः — sādhyaḥ — \"achievable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि योजना उत्तमा, तर्हि लक्ष्यं साध्यम्। yadi yojanā uttamā, tarhi lakṣyaṃ sādhyam. If the plan is good, the goal is achievable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "साध्यः (sādhyaḥ) comes from the root √sidh, \"to succeed\", in the stem sādh-; MW gives sādhya \"to be accomplished\" and \"practicable, feasible, attainable\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhyaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhyaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhyaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhyaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi yojanā uttamā, tarhi lakṣyaṃ sādhyam. — If the plan is good, the goal is achievable.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi yojanā uttamā, tarhi lakṣyaṃ sādhyam.* — If the plan is good, the goal is achievable.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for an ideal, then the Sanskrit for possible, then say sādhyaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for an ideal, then the Sanskrit for possible, then say *sādhyaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does साध्यः (sādhyaḥ) mean? (\"Achievable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C389-kalpayati",
+      "sequence": 22530,
+      "title": "कल्पयति (kalpayati) — imagines; supposes",
+      "headword": "कल्पयति",
+      "romanization": "kalpayati",
+      "gloss": "imagines; supposes",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14daddbbe1c28afa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for possible, then the Sanskrit for achievable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कल्पयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कल्पयति — kalpayati — \"imagines; supposes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि बालः एकाकी, तर्हि सः मित्राणि कल्पयति। yadi bālaḥ ekākī, tarhi saḥ mitrāṇi kalpayati. If the child is alone, he imagines friends."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः नूतनं जगत् कल्पितवान्, saḥ nūtanaṃ jagat kalpitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कल्पयति (kalpayati) comes from the root √kḷp, \"to be fit\", in its causative form; MW gives the senses \"to frame, to form, to invent\" and \"to imagine\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalpayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalpayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalpayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalpayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bālaḥ ekākī, tarhi saḥ mitrāṇi kalpayati. — If the child is alone, he imagines friends.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bālaḥ ekākī, tarhi saḥ mitrāṇi kalpayati.* — If the child is alone, he imagines friends.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for possible, then the Sanskrit for achievable, then say kalpayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for possible, then the Sanskrit for achievable, then say *kalpayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कल्पयति (kalpayati) mean? (\"Imagines; supposes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C389-kalpana",
+      "sequence": 22540,
+      "title": "कल्पना (kalpanā) — imagination; a fancy",
+      "headword": "कल्पना",
+      "romanization": "kalpanā",
+      "gloss": "imagination; a fancy",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9dbe65214c64423",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for achievable, then the Sanskrit for imagines."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कल्पना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कल्पना — kalpanā — \"imagination; a fancy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि कल्पना न अभविष्यत्, तर्हि कविः काव्यं न अकरिष्यत्। yadi kalpanā na abhaviṣyat, tarhi kaviḥ kāvyaṃ na akariṣyat. Had there been no imagination, the poet would have made no poem."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कल्पना (kalpanā) comes from the root √kḷp, \"to be fit, to form\"; MW gives kalpanā \"creating in the mind, assuming anything to be real, fiction\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalpanā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalpanā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalpanā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalpanā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi kalpanā na abhaviṣyat, tarhi kaviḥ kāvyaṃ na akariṣyat. — Had there been no imagination, the poet would have made no poem.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi kalpanā na abhaviṣyat, tarhi kaviḥ kāvyaṃ na akariṣyat.* — Had there been no imagination, the poet would have made no poem.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for achievable, then the Sanskrit for imagines, then say kalpanā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for achievable, then the Sanskrit for imagines, then say *kalpanā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कल्पना (kalpanā) mean? (\"Imagination; a fancy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C389-yatharthah",
+      "sequence": 22550,
+      "title": "यथार्थः (yathārthaḥ) — true to fact; real",
+      "headword": "यथार्थः",
+      "romanization": "yathārthaḥ",
+      "gloss": "true to fact; real",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c75f2f707c318ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for imagines, then the Sanskrit for imagination."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: यथार्थः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "यथार्थः — yathārthaḥ — \"true to fact; real\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि वार्ता यथार्था, तर्हि सः श्वः गमिष्यति। yadi vārtā yathārthā, tarhi saḥ śvaḥ gamiṣyati. If the news is true, he will go tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "यथार्थः (yathārthaḥ) is built from yathā, \"as\", and artha, \"meaning\"; MW gives yathārtha \"accordant with reality, conformable to truth, true, genuine\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yathārthaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yathārthaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yathārthaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yathārthaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi vārtā yathārthā, tarhi saḥ śvaḥ gamiṣyati. — If the news is true, he will go tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi vārtā yathārthā, tarhi saḥ śvaḥ gamiṣyati.* — If the news is true, he will go tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for imagines, then the Sanskrit for imagination, then say yathārthaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for imagines, then the Sanskrit for imagination, then say *yathārthaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does यथार्थः (yathārthaḥ) mean? (\"True to fact; real\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

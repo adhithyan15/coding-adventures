@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "Sunset and Night",
+  "label": "ch:sa-sunset-and-night",
+  "canDo": "I can say when the sun sets and the dark night comes.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C443-naktam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can say when the sun sets and the dark night comes.",
+    "assesses": [
+      "SA-LEX-C443-ASTA443-03",
+      "SA-LEX-C443-ASTA443-04",
+      "SA-LEX-C443-ASTA443-05"
+    ]
+  }
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 395,
+  "title": "Caravans and Companions",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1b268c892a64098e",
+  "lessons": [
+    {
+      "id": "SA-C395-sarthah",
+      "sequence": 23050,
+      "title": "सार्थः (sārthaḥ) — a caravan",
+      "headword": "सार्थः",
+      "romanization": "sārthaḥ",
+      "gloss": "a caravan",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80a256909cfb9504",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for travels, then the Sanskrit for an ascetic's water-pot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सार्थः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सार्थः — sārthaḥ — \"a caravan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सार्थः ग्रामात् ग्रामं गच्छति। sārthaḥ grāmāt grāmaṃ gacchati. The caravan goes from village to village."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सार्थः (sārthaḥ) is built from sa, \"with\", and artha, \"an aim, business\": MW gives sārtha first as having a purpose, then as a travelling company of traders or pilgrims, a caravan (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārthaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārthaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārthaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārthaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārthaḥ grāmāt grāmaṃ gacchati. — The caravan goes from village to village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārthaḥ grāmāt grāmaṃ gacchati.* — The caravan goes from village to village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for travels, then the Sanskrit for an ascetic's water-pot, then say sārthaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for travels, then the Sanskrit for an ascetic's water-pot, then say *sārthaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सार्थः (sārthaḥ) mean? (\"A caravan\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C395-sarthavahah",
+      "sequence": 23060,
+      "title": "सार्थवाहः (sārthavāhaḥ) — a caravan leader",
+      "headword": "सार्थवाहः",
+      "romanization": "sārthavāhaḥ",
+      "gloss": "a caravan leader",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ffcd802e5fa9955",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for an ascetic's water-pot, then the Sanskrit for a caravan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सार्थवाहः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सार्थवाहः — sārthavāhaḥ — \"a caravan leader\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सार्थवाहः मार्गं सम्यक् जानाति। sārthavāhaḥ mārgaṃ samyak jānāti. The caravan leader knows the road well."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सार्थवाहः (sārthavāhaḥ) is built from sārtha, \"a caravan\", and vāha, \"bearing, leading\", from the root √vah, \"to carry\"; MW gives the compound as the leader of a caravan, a merchant (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārthavāhaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārthavāhaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārthavāhaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārthavāhaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārthavāhaḥ mārgaṃ samyak jānāti. — The caravan leader knows the road well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārthavāhaḥ mārgaṃ samyak jānāti.* — The caravan leader knows the road well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for an ascetic's water-pot, then the Sanskrit for a caravan, then say sārthavāhaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for an ascetic's water-pot, then the Sanskrit for a caravan, then say *sārthavāhaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सार्थवाहः (sārthavāhaḥ) mean? (\"A caravan leader\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C395-anuyati",
+      "sequence": 23070,
+      "title": "अनुयाति (anuyāti) — goes along with; follows",
+      "headword": "अनुयाति",
+      "romanization": "anuyāti",
+      "gloss": "goes along with; follows",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:464671b866725792",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a caravan, then the Sanskrit for a caravan leader."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अनुयाति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुयाति — anuyāti — \"goes along with; follows\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मम मित्रं माम् अनुयाति। mama mitraṃ mām anuyāti. My friend goes along with me."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः माम् अनुयातवान्, saḥ mām anuyātavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुयाति (anuyāti) is built from anu, \"after, along\", and the root √yā, \"to go\"; MW gives anu-yā as to go after or follow, with the participle anuyāta (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anuyāti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anuyāti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anuyāti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anuyāti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mama mitraṃ mām anuyāti. — My friend goes along with me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mama mitraṃ mām anuyāti.* — My friend goes along with me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a caravan, then the Sanskrit for a caravan leader, then say anuyāti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a caravan, then the Sanskrit for a caravan leader, then say *anuyāti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अनुयाति (anuyāti) mean? (\"Goes along with; follows\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C395-aprcchate",
+      "sequence": 23080,
+      "title": "आपृच्छते (āpṛcchate) — takes leave; says goodbye",
+      "headword": "आपृच्छते",
+      "romanization": "āpṛcchate",
+      "gloss": "takes leave; says goodbye",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad443b7e6b190ab0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a caravan leader, then the Sanskrit for goes along with."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आपृच्छते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आपृच्छते — āpṛcchate — \"takes leave; says goodbye\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यात्री मातरम् आपृच्छते। yātrī mātaram āpṛcchate. The traveller takes leave of his mother."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः मातरम् आपृष्टवान्, saḥ mātaram āpṛṣṭavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आपृच्छते (āpṛcchate) is built from ā, \"towards\", and the root √prach, \"to ask\", which also gives pṛcchati, \"asks\"; in the middle voice MW gives ā-prach as to take leave, to bid farewell (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpṛcchate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpṛcchate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpṛcchate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpṛcchate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātrī mātaram āpṛcchate. — The traveller takes leave of his mother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātrī mātaram āpṛcchate.* — The traveller takes leave of his mother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a caravan leader, then the Sanskrit for goes along with, then say āpṛcchate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a caravan leader, then the Sanskrit for goes along with, then say *āpṛcchate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आपृच्छते (āpṛcchate) mean? (\"Takes leave; says goodbye\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C395-parivrajakah",
+      "sequence": 23090,
+      "title": "परिव्राजकः (parivrājakaḥ) — a wandering ascetic",
+      "headword": "परिव्राजकः",
+      "romanization": "parivrājakaḥ",
+      "gloss": "a wandering ascetic",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4acae0e92b8b6b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for goes along with, then the Sanskrit for takes leave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: परिव्राजकः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिव्राजकः — parivrājakaḥ — \"a wandering ascetic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "परिव्राजकः ग्रामे एकां रात्रिं वसति। parivrājakaḥ grāme ekāṃ rātriṃ vasati. The wandering ascetic stays one night in a village."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिव्राजकः (parivrājakaḥ) is built from pari, \"around\", and the root √vraj, \"to walk, to go\", with the agent ending -aka; MW gives parivrājaka as a wandering religious mendicant (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parivrājakaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parivrājakaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parivrājakaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parivrājakaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parivrājakaḥ grāme ekāṃ rātriṃ vasati. — The wandering ascetic stays one night in a village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parivrājakaḥ grāme ekāṃ rātriṃ vasati.* — The wandering ascetic stays one night in a village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for goes along with, then the Sanskrit for takes leave, then say parivrājakaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for goes along with, then the Sanskrit for takes leave, then say *parivrājakaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does परिव्राजकः (parivrājakaḥ) mean? (\"A wandering ascetic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

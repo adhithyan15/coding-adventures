@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:e6c1b841c8348010",
+  "lessonIds": [
+    "SA-C302-jalaughah",
+    "SA-C302-plavayati",
+    "SA-C302-pravahah",
+    "SA-C302-nimajjati",
+    "SA-C302-kramasah"
+  ],
+  "tex": "sanskrit/book/chapters/ch302-the-water-rose.tex"
+}

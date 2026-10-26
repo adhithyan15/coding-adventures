@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C363-adhite",
+    "language": "sanskrit",
+    "chapter": 363,
+    "sequence": 21200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0953b1f1308ec776"
+  },
+  "findings": []
+}

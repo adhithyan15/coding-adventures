@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C532-mekhala",
+    "language": "sanskrit",
+    "chapter": 532,
+    "sequence": 30560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c28f7f67880c532"
+  },
+  "findings": []
+}

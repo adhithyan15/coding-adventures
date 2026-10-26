@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:4f45d39184e536df",
+  "lessonIds": [
+    "SA-C411-rathya",
+    "SA-C411-apayati",
+    "SA-C411-sanketah",
+    "SA-C411-rodhah",
+    "SA-C411-varjayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch411.txt",
+  "json": "sanskrit/narration/ch411.json",
+  "textHash": "fnv1a64:9035e4b556059653",
+  "jsonHash": "fnv1a64:2b28e48589b306f1",
+  "findings": []
+}

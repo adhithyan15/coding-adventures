@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:d00e75c2fb283b44",
+  "lessonIds": [
+    "SA-C443-suryastah",
+    "SA-C443-astam-gacchati",
+    "SA-C443-godhulih",
+    "SA-C443-tamisra",
+    "SA-C443-naktam"
+  ],
+  "tex": "sanskrit/book/chapters/ch443-sunset-and-night.tex"
+}

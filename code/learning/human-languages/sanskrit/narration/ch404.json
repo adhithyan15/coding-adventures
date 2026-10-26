@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 404,
+  "title": "Lonely Roads and Wild Places",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d85ddede909ccf5f",
+  "lessons": [
+    {
+      "id": "SA-C404-prantaram",
+      "sequence": 23510,
+      "title": "प्रान्तरम् (prāntaram) — a long lonely road",
+      "headword": "प्रान्तरम्",
+      "romanization": "prāntaram",
+      "gloss": "a long lonely road",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4abd439851f92cce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a traveller on foot, then the Sanskrit for roams."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रान्तरम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रान्तरम् — prāntaram — \"a long lonely road\"."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रान्तरे कः अपि न अस्ति। prāntare kaḥ api na asti. There is nobody at all on the lonely road."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रान्तरम् (prāntaram) is built from pra, \"forth\", and antara, \"an interval, the space between\"; MW gives prāntara as a long desolate road and as the country between two villages (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prāntaram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prāntaram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prāntaram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prāntaram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prāntare kaḥ api na asti. — There is nobody at all on the lonely road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prāntare kaḥ api na asti.* — There is nobody at all on the lonely road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a traveller on foot, then the Sanskrit for roams, then say prāntaram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a traveller on foot, then the Sanskrit for roams, then say *prāntaram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रान्तरम् (prāntaram) mean? (\"A long lonely road\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C404-kantarah",
+      "sequence": 23520,
+      "title": "कान्तारः (kāntāraḥ) — a wilderness; a forest track",
+      "headword": "कान्तारः",
+      "romanization": "kāntāraḥ",
+      "gloss": "a wilderness; a forest track",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a650471554f9cfb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for roams, then the Sanskrit for a long lonely road."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कान्तारः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कान्तारः — kāntāraḥ — \"a wilderness; a forest track\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कान्तारे सिंहाः वृकाः च वसन्ति। kāntāre siṃhāḥ vṛkāḥ ca vasanti. Lions and wolves live in the wilderness."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कान्तारः (kāntāraḥ) is the word MW gives for a large wood or wilderness and for a difficult road through a forest; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāntāraḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāntāraḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāntāraḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāntāraḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāntāre siṃhāḥ vṛkāḥ ca vasanti. — Lions and wolves live in the wilderness.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāntāre siṃhāḥ vṛkāḥ ca vasanti.* — Lions and wolves live in the wilderness.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for roams, then the Sanskrit for a long lonely road, then say kāntāraḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for roams, then the Sanskrit for a long lonely road, then say *kāntāraḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कान्तारः (kāntāraḥ) mean? (\"A wilderness; a forest track\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C404-desatanam",
+      "sequence": 23530,
+      "title": "देशाटनम् (deśāṭanam) — travel through the country",
+      "headword": "देशाटनम्",
+      "romanization": "deśāṭanam",
+      "gloss": "travel through the country",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4df6beeda815a5dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a long lonely road, then the Sanskrit for a wilderness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: देशाटनम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "देशाटनम् — deśāṭanam — \"travel through the country\"."
+            },
+            {
+              "kind": "speech",
+              "text": "देशाटनेन ज्ञानं वर्धते। deśāṭanena jñānaṃ vardhate. Knowledge grows by travelling through the country."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "देशाटनम् (deśāṭanam) is built from deśa, \"a country\", and aṭana, \"roaming\", from the root √aṭ, \"to roam\", which also gives paryaṭaka, \"a tourist\"; MW gives the compound as roaming through a land, travelling (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "deśāṭanam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *deśāṭanam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "deśāṭanam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *deśāṭanam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "deśāṭanena jñānaṃ vardhate. — Knowledge grows by travelling through the country.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *deśāṭanena jñānaṃ vardhate.* — Knowledge grows by travelling through the country.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a long lonely road, then the Sanskrit for a wilderness, then say deśāṭanam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a long lonely road, then the Sanskrit for a wilderness, then say *deśāṭanam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does देशाटनम् (deśāṭanam) mean? (\"Travel through the country\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C404-niliyate",
+      "sequence": 23540,
+      "title": "निलीयते (nilīyate) — takes cover; hides oneself",
+      "headword": "निलीयते",
+      "romanization": "nilīyate",
+      "gloss": "takes cover; hides oneself",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28e4f8dcea0421b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a wilderness, then the Sanskrit for travel through the country."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निलीयते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निलीयते — nilīyate — \"takes cover; hides oneself\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पथिकः सिंहात् गुहायां निलीयते। pathikaḥ siṃhāt guhāyāṃ nilīyate. The wayfarer takes cover from the lion in a cave."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः गुहायां निलीनवान्, saḥ guhāyāṃ nilīnavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निलीयते (nilīyate) is built from ni, \"down\", and the root √lī, \"to cling, to settle\"; MW gives ni-lī as to settle down or alight and to hide oneself from something (in the ablative), and KRM gives the participle līna (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nilīyate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nilīyate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nilīyate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nilīyate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pathikaḥ siṃhāt guhāyāṃ nilīyate. — The wayfarer takes cover from the lion in a cave.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pathikaḥ siṃhāt guhāyāṃ nilīyate.* — The wayfarer takes cover from the lion in a cave.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a wilderness, then the Sanskrit for travel through the country, then say nilīyate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a wilderness, then the Sanskrit for travel through the country, then say *nilīyate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निलीयते (nilīyate) mean? (\"Takes cover; hides oneself\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C404-sunyah",
+      "sequence": 23550,
+      "title": "शून्यः (śūnyaḥ) — deserted; empty",
+      "headword": "शून्यः",
+      "romanization": "śūnyaḥ",
+      "gloss": "deserted; empty",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0eeb55d51fc6b95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for travel through the country, then the Sanskrit for takes cover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शून्यः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शून्यः — śūnyaḥ — \"deserted; empty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात्रौ मार्गः शून्यः भवति। rātrau mārgaḥ śūnyaḥ bhavati. At night the road is deserted."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शून्यः (śūnyaḥ) is the word MW gives for empty, void, deserted; MW gives no sure derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śūnyaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śūnyaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śūnyaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śūnyaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātrau mārgaḥ śūnyaḥ bhavati. — At night the road is deserted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātrau mārgaḥ śūnyaḥ bhavati.* — At night the road is deserted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for travel through the country, then the Sanskrit for takes cover, then say śūnyaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for travel through the country, then the Sanskrit for takes cover, then say *śūnyaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शून्यः (śūnyaḥ) mean? (\"Deserted; empty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

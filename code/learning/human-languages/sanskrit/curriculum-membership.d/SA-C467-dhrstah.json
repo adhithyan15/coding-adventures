@@ -1,0 +1,11 @@
+{
+  "id": "SA-C467-dhrstah",
+  "pathSegment": "SA-PATH-467-SISTA467",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-467-SISTA467",
+      "order": 2
+    }
+  ]
+}

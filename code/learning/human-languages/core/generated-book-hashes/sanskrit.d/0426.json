@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:80b53788251d6d65",
+  "lessonIds": [
+    "SA-C426-videsah",
+    "SA-C426-janakirnah",
+    "SA-C426-sulkasthanam",
+    "SA-C426-avatisthate",
+    "SA-C426-pratisrayah"
+  ],
+  "tex": "sanskrit/book/chapters/ch426-abroad.tex"
+}

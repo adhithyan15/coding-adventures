@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:1ceb02e46ecd333f",
+  "lessonIds": [
+    "SA-C315-visphotah",
+    "SA-C315-pratidhvanih",
+    "SA-C315-akasmikah",
+    "SA-C315-udvijate",
+    "SA-C315-tvarate"
+  ],
+  "tex": "sanskrit/book/chapters/ch315-a-blast.tex"
+}

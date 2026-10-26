@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "Loans and Deposits",
+  "label": "ch:sa-loans-and-deposits",
+  "canDo": "I can talk about lending, borrowing and paying back.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C434-niryatayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can talk about lending, borrowing and paying back.",
+    "assesses": [
+      "SA-LEX-C434-RNA434-03",
+      "SA-LEX-C434-RNA434-04",
+      "SA-LEX-C434-RNA434-05"
+    ]
+  }
+}

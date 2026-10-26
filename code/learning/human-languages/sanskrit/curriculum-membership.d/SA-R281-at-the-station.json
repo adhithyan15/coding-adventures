@@ -1,0 +1,11 @@
+{
+  "id": "SA-R281-at-the-station",
+  "pathSegment": "SA-PATH-281-TRAVEL281",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-281-TRAVEL281",
+      "order": 5
+    }
+  ]
+}

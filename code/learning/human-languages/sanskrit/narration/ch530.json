@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 530,
+  "title": "Planning a Feast",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cd0c1238dbde1453",
+  "lessons": [
+    {
+      "id": "SA-C530-bhojyam",
+      "sequence": 30430,
+      "title": "भोज्यम् (bhojyam) — eatables; food",
+      "headword": "भोज्यम्",
+      "romanization": "bhojyam",
+      "gloss": "eatables; food",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9ec8858ee948f0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for hurries along, then the Sanskrit for haste."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भोज्यम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भोज्यम् — bhojyam — \"eatables; food\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि अतिथयः आगच्छन्ति, तर्हि बहु भोज्यं पचामः। yadi atithayaḥ āgacchanti, tarhi bahu bhojyaṃ pacāmaḥ. If the guests come, we will cook a lot of food."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भोज्यम् (bhojyam) comes from the root √bhuj, \"to enjoy, to eat\", with the ending -ya; MW gives bhojya as eatable, what is eaten (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhojyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhojyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhojyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhojyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi atithayaḥ āgacchanti, tarhi bahu bhojyaṃ pacāmaḥ. — If the guests come, we will cook a lot of food.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi atithayaḥ āgacchanti, tarhi bahu bhojyaṃ pacāmaḥ.* — If the guests come, we will cook a lot of food.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for hurries along, then the Sanskrit for haste, then say bhojyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for hurries along, then the Sanskrit for haste, then say *bhojyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भोज्यम् (bhojyam) mean? (\"Eatables; food\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C530-peyam",
+      "sequence": 30440,
+      "title": "पेयम् (peyam) — a drink",
+      "headword": "पेयम्",
+      "romanization": "peyam",
+      "gloss": "a drink",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4226515a2d632813",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for haste, then the Sanskrit for eatables."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पेयम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पेयम् — peyam — \"a drink\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि ग्रीष्मः अस्ति, तर्हि शीतलं पेयं ददातु। yadi grīṣmaḥ asti, tarhi śītalaṃ peyaṃ dadātu. If it is summer, please give a cold drink."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पेयम् (peyam) comes from the root √pā, \"to drink\", which also gives pibati; MW gives peya as to be drunk, drinkable (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi grīṣmaḥ asti, tarhi śītalaṃ peyaṃ dadātu. — If it is summer, please give a cold drink.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi grīṣmaḥ asti, tarhi śītalaṃ peyaṃ dadātu.* — If it is summer, please give a cold drink.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for haste, then the Sanskrit for eatables, then say peyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for haste, then the Sanskrit for eatables, then say *peyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पेयम् (peyam) mean? (\"A drink\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C530-laddukah",
+      "sequence": 30450,
+      "title": "लड्डुकः (laḍḍukaḥ) — a laddu",
+      "headword": "लड्डुकः",
+      "romanization": "laḍḍukaḥ",
+      "gloss": "a laddu",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a72f60dfb31ca01a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for eatables, then the Sanskrit for a drink."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लड्डुकः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लड्डुकः — laḍḍukaḥ — \"a laddu\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि उत्सवः भवति, तर्हि माता लड्डुकान् पचति। yadi utsavaḥ bhavati, tarhi mātā laḍḍukān pacati. If there is a festival, my mother makes laddus."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लड्डुकः (laḍḍukaḥ) is the word MW gives, beside laḍḍu, for a sweet made of ground pulse or flour with sugar and spice, fried in ghee; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laḍḍukaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laḍḍukaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laḍḍukaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laḍḍukaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi utsavaḥ bhavati, tarhi mātā laḍḍukān pacati. — If there is a festival, my mother makes laddus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi utsavaḥ bhavati, tarhi mātā laḍḍukān pacati.* — If there is a festival, my mother makes laddus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for eatables, then the Sanskrit for a drink, then say laḍḍukaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for eatables, then the Sanskrit for a drink, then say *laḍḍukaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लड्डुकः (laḍḍukaḥ) mean? (\"A laddu\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C530-panakam",
+      "sequence": 30460,
+      "title": "पानकम् (pānakam) — a sherbet; a cool drink",
+      "headword": "पानकम्",
+      "romanization": "pānakam",
+      "gloss": "a sherbet; a cool drink",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1617706916392c6d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a drink, then the Sanskrit for a laddu."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पानकम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पानकम् — pānakam — \"a sherbet; a cool drink\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि अतिथिः श्रान्तः अस्ति, तर्हि तस्मै पानकं ददातु। yadi atithiḥ śrāntaḥ asti, tarhi tasmai pānakaṃ dadātu. If the guest is tired, please give him a sherbet."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पानकम् (pānakam) is built on pāna, \"drinking\", from the root √pā, \"to drink\"; MW gives pānaka as a draught, a drink, a beverage (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pānakam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pānakam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pānakam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pānakam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi atithiḥ śrāntaḥ asti, tarhi tasmai pānakaṃ dadātu. — If the guest is tired, please give him a sherbet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi atithiḥ śrāntaḥ asti, tarhi tasmai pānakaṃ dadātu.* — If the guest is tired, please give him a sherbet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a drink, then the Sanskrit for a laddu, then say pānakam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a drink, then the Sanskrit for a laddu, then say *pānakam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पानकम् (pānakam) mean? (\"A sherbet; a cool drink\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C530-paryusitah",
+      "sequence": 30470,
+      "title": "पर्युषितः (paryuṣitaḥ) — stale",
+      "headword": "पर्युषितः",
+      "romanization": "paryuṣitaḥ",
+      "gloss": "stale",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:12243a357660679c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a laddu, then the Sanskrit for a sherbet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पर्युषितः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पर्युषितः — paryuṣitaḥ — \"stale\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि अन्नं पर्युषितम् अस्ति, तर्हि अहं न खादामि। yadi annaṃ paryuṣitam asti, tarhi ahaṃ na khādāmi. If the food is stale, I do not eat it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पर्युषितः (paryuṣitaḥ) is built on pari and the root √vas, \"to stay, to pass the night\", as its past participle: kept overnight; MW gives paryuṣita as not fresh, stale (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paryuṣitaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paryuṣitaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paryuṣitaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paryuṣitaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi annaṃ paryuṣitam asti, tarhi ahaṃ na khādāmi. — If the food is stale, I do not eat it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi annaṃ paryuṣitam asti, tarhi ahaṃ na khādāmi.* — If the food is stale, I do not eat it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a laddu, then the Sanskrit for a sherbet, then say paryuṣitaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a laddu, then the Sanskrit for a sherbet, then say *paryuṣitaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पर्युषितः (paryuṣitaḥ) mean? (\"Stale\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

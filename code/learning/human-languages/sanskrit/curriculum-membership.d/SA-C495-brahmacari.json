@@ -1,0 +1,11 @@
+{
+  "id": "SA-C495-brahmacari",
+  "pathSegment": "SA-PATH-495-YAUVANA495",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-495-YAUVANA495",
+      "order": 4
+    }
+  ]
+}

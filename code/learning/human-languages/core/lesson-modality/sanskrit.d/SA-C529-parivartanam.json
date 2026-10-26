@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C529-parivartanam",
+    "language": "sanskrit",
+    "chapter": 529,
+    "sequence": 30380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8aacb82a10d648ea"
+  },
+  "findings": []
+}

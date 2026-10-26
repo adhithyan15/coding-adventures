@@ -1,0 +1,19 @@
+{
+  "chapter": 536,
+  "title": "A Stroke of Luck",
+  "label": "ch:sa-a-stroke-of-luck",
+  "canDo": "I can talk about luck and what happens by chance.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C536-sampadyate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 536: I can talk about luck and what happens by chance.",
+    "assesses": [
+      "SA-LEX-C536-ADRSTA536-03",
+      "SA-LEX-C536-ADRSTA536-04",
+      "SA-LEX-C536-ADRSTA536-05"
+    ]
+  }
+}

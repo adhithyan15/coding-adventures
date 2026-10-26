@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:79066a3eb7064907",
+  "lessonIds": [
+    "SA-C474-sira",
+    "SA-C474-snayuh",
+    "SA-C474-pesi",
+    "SA-C474-mamsam",
+    "SA-C474-spandate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch474.txt",
+  "json": "sanskrit/narration/ch474.json",
+  "textHash": "fnv1a64:c45316febf0ccea0",
+  "jsonHash": "fnv1a64:2e650bc5bfb0a0ee",
+  "findings": []
+}

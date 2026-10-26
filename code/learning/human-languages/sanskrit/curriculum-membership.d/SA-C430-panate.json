@@ -1,0 +1,11 @@
+{
+  "id": "SA-C430-panate",
+  "pathSegment": "SA-PATH-430-HATTA430",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-430-HATTA430",
+      "order": 4
+    }
+  ]
+}

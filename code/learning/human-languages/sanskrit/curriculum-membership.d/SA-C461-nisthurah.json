@@ -1,0 +1,11 @@
+{
+  "id": "SA-C461-nisthurah",
+  "pathSegment": "SA-PATH-461-SATPURUSA461",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-461-SATPURUSA461",
+      "order": 3
+    }
+  ]
+}

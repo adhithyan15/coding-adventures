@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-523-NATA523",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "SA-EXT-523-NATA523"
+  ],
+  "after": []
+}

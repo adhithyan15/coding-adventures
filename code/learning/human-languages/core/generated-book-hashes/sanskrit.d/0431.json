@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:7cb1498e0c10f1fc",
+  "lessonIds": [
+    "SA-C431-arghah",
+    "SA-C431-maharghah",
+    "SA-C431-samarghah",
+    "SA-C431-misrayati",
+    "SA-C431-nikasah"
+  ],
+  "tex": "sanskrit/book/chapters/ch431-dear-and-cheap.tex"
+}

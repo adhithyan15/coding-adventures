@@ -1,0 +1,11 @@
+{
+  "id": "SA-C522-karatalika",
+  "pathSegment": "SA-PATH-522-PADANYASA522",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-522-PADANYASA522",
+      "order": 4
+    }
+  ]
+}

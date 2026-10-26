@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "Trapped",
+  "label": "ch:sa-trapped",
+  "canDo": "I can say who was trapped and how they called for help.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C304-nihsarayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can say who was trapped and how they called for help.",
+    "assesses": [
+      "SA-LEX-C304-RASHI304-03",
+      "SA-LEX-C304-RASHI304-04",
+      "SA-LEX-C304-RASHI304-05"
+    ]
+  }
+}

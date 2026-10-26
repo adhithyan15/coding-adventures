@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C385-pratidvandvi",
+    "language": "sanskrit",
+    "chapter": 385,
+    "sequence": 22310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e1bfdd4f2b728dc"
+  },
+  "findings": []
+}
