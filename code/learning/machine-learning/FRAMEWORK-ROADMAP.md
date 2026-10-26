@@ -213,14 +213,20 @@ SGD training, inspection, and portable save/reload/resume.
   All three platform BUILDs, selected workflows and final required gates passed.
   CodeQL had no configured C analyzer. See the
   [teaching trace](./six-native-dense-conformance.md).
-- [ ] C++ bounded JSON prerequisite (NN50): native owned, strict, resource-bounded
+- [x] C++ bounded JSON prerequisite (NN50): native owned, strict, resource-bounded
   parser above the shared ISO harness, before native C++ checkpoint loading.
   Specification committed before implementation; not training or a C binding.
   Native parser passes local GCC/Clang, Clang ASan, 98.71% library line coverage
   and an actual installed CMake consumer. Scoped Windows scheduling and existing
   OCaml contract regressions pass; local MSVC is blocked by a missing SDK header.
-  Independent security review and exact-head CI/merge remain pending.
-- [ ] C++ native framework.
+  Independent review passed exact head `099b92b29744`; #18333 merged it as
+  `cbf9c2e89534` after all five workflows and required gates passed. Actual
+  Windows cl/clang-cl each passed 498 checks; Linux/macOS package BUILDs each
+  reported 2.4s and Windows 4.3s. No C++ CodeQL analyzer was configured. ASan
+  passed locally; the separate UBSan attempt could not link its runtime.
+- [ ] C++ native framework (NN51): independent bounded dense API/training and
+  strict copied V1 checkpoints above native matrix/math/bounded-json. Specified
+  before implementation; seven-native exchange remains a separate tranche.
 - [ ] C# native framework.
 - [ ] F# native framework.
 - [ ] Java native framework.
