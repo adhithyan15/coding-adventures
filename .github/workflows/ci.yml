@@ -843,7 +843,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up reviewed OCaml compiler and repository
-        uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
+        uses: ocaml/setup-ocaml@93303b622b2522e4411e295f9e77411a24912ac7
         # Avoid opam/opam#7031 while opam inspects its Git-backed repository.
         env:
           GIT_CONFIG_COUNT: '1'
@@ -950,7 +950,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -982,7 +982,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        uses: ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec # v1.334.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1010,7 +1010,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -1042,7 +1042,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        uses: ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec # v1.334.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1070,7 +1070,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -1102,7 +1102,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        uses: ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec # v1.334.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1137,7 +1137,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -1169,7 +1169,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        uses: ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec # v1.334.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1202,7 +1202,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        uses: ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec # v1.334.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -3518,7 +3518,7 @@ jobs:
 
       - name: Install uv
         if: needs.detect.outputs.needs_python == 'true'
-        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -3616,7 +3616,7 @@ jobs:
 
       - name: Set up LuaRocks (Unix)
         if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
-        uses: leafo/gh-actions-luarocks@35d062def313a7699a0d513e996bcf4352f05389 # v6.1.0
+        uses: leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce # v6.1.1
 
       - name: Set up LuaRocks (Windows)
         if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
@@ -3658,7 +3658,7 @@ jobs:
       - name: Set up Ruby
         if: needs.detect.outputs.needs_ruby == 'true'
         id: setup-ruby
-        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        uses: ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec # v1.334.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -4125,7 +4125,7 @@ jobs:
       - name: Set up reviewed OCaml compiler and repository
         id: setup-ocaml
         if: needs.detect.outputs.needs_ocaml == 'true' && (matrix.sharded != true || contains(matrix.languages, 'ocaml'))
-        uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
+        uses: ocaml/setup-ocaml@93303b622b2522e4411e295f9e77411a24912ac7
         # Avoid opam/opam#7031 while opam inspects its Git-backed repository.
         env:
           GIT_CONFIG_COUNT: '1'
