@@ -2,7 +2,7 @@ use cortex_m33_simulator::{
     CortexM33Error, CortexM33Simulator, SauRegion, SecurityAttribute, SecurityState,
     MAX_RETAINED_STEPS,
 };
-use cortex_m3_simulator::encoding::{bl, ldrex, movw, mrs, tbb};
+use cortex_m3_simulator::encoding::{bl, ldrex, movw, mrs, msr, tbb};
 use cortex_m3_simulator::CortexM3Error;
 
 fn bytes(halfwords: &[u16]) -> Vec<u8> {
@@ -27,8 +27,10 @@ fn reset_and_sau_attribution_cover_security_configurations() {
     assert_eq!(secure.security_state(), SecurityState::Secure);
     assert_eq!(secure.attribute(0x200), SecurityAttribute::Secure);
 
-    secure.set_sau_control(true, true).unwrap();
+    secure.set_sau_control(false, true).unwrap();
     assert_eq!(secure.attribute(0x200), SecurityAttribute::NonSecure);
+    secure.set_sau_control(true, true).unwrap();
+    assert_eq!(secure.attribute(0x200), SecurityAttribute::Secure);
     secure
         .configure_sau_region(0, region(0x100, 0x11f, true))
         .unwrap();
@@ -41,6 +43,21 @@ fn reset_and_sau_attribution_cover_security_configurations() {
         .unwrap();
     assert_eq!(secure.attribute(0x100), SecurityAttribute::Secure);
     assert_eq!(secure.attribute(0x120), SecurityAttribute::NonSecure);
+    secure
+        .configure_sau_region(0, region(0x100, 0x11f, false))
+        .unwrap();
+    assert_eq!(secure.attribute(0x100), SecurityAttribute::NonSecure);
+    secure
+        .configure_sau_region(1, region(0x100, 0x13f, true))
+        .unwrap();
+    assert_eq!(secure.attribute(0x100), SecurityAttribute::Secure);
+    secure
+        .configure_sau_region(0, region(0x100, 0x11f, true))
+        .unwrap();
+    assert_eq!(
+        secure.attribute(0x100),
+        SecurityAttribute::NonSecureCallable
+    );
 
     let plain = CortexM33Simulator::new(false);
     assert_eq!(plain.security_state(), SecurityState::NonSecure);
@@ -362,6 +379,33 @@ fn direct_nonsecure_access_rejects_secure_and_nsc_memory() {
 }
 
 #[test]
+fn secure_fetch_requires_secure_or_nsc_attribution() {
+    let mut cpu = CortexM33Simulator::new(true);
+    cpu.load(&bytes(&[0xbe00]), 0x20).unwrap();
+    cpu.set_sau_control(true, false).unwrap();
+    cpu.configure_sau_region(0, region(0x20, 0x3f, false))
+        .unwrap();
+
+    // Secure data can address Non-secure memory, but an instruction fetch may
+    // cross to Non-secure only through the explicit transition hook.
+    assert_eq!(cpu.read_memory(0x20, 2).unwrap(), 0xbe00);
+    let before = cpu.get_state().unwrap();
+    assert!(matches!(
+        cpu.step(),
+        Err(CortexM33Error::SecurityAccessViolation {
+            address: 0x20,
+            width: 2,
+            attribute: SecurityAttribute::NonSecure,
+        })
+    ));
+    assert_eq!(cpu.get_state().unwrap(), before);
+
+    cpu.configure_sau_region(0, region(0x20, 0x3f, true))
+        .unwrap();
+    assert_eq!(cpu.step().unwrap().mnemonic, "bkpt 0");
+}
+
+#[test]
 fn stack_limits_and_restore_fail_atomically() {
     let mut round_trip = CortexM33Simulator::new(false);
     round_trip.load(&bytes(&[0xb081, 0xbe00]), 0).unwrap(); // sub sp,#4
@@ -430,6 +474,52 @@ fn stack_limits_and_restore_fail_atomically() {
         ));
         assert_eq!(cpu.get_state().unwrap(), before);
     }
+
+    let mut inactive = CortexM33Simulator::new(false);
+    let mut inactive_state = inactive.get_state().unwrap();
+    inactive_state.core.psp = 0x100;
+    inactive_state.non_secure_bank.psp = 0x100;
+    inactive.restore(inactive_state).unwrap();
+    let inactive_before = inactive.get_state().unwrap();
+    assert_eq!(
+        inactive.set_stack_limits(0, 0x108),
+        Err(CortexM33Error::StackLimitViolation {
+            stack_pointer: 0x100,
+            limit: 0x108,
+        })
+    );
+    assert_eq!(inactive.get_state().unwrap(), inactive_before);
+    inactive.restore(inactive_before).unwrap();
+
+    let write_psp = msr(0, 9);
+    let mut inherited = CortexM33Simulator::new(false);
+    inherited.load(&bytes(&write_psp), 0).unwrap();
+    inherited.write_register(0, 0x100).unwrap();
+    inherited.set_stack_limits(0, 0x108).unwrap();
+    let inherited_before = inherited.get_state().unwrap();
+    assert_eq!(
+        inherited.step(),
+        Err(CortexM33Error::StackLimitViolation {
+            stack_pointer: 0x100,
+            limit: 0x108,
+        })
+    );
+    assert_eq!(inherited.get_state().unwrap(), inherited_before);
+
+    let mut unprivileged_non_secure = CortexM33Simulator::new(false);
+    let mut unprivileged_state = unprivileged_non_secure.get_state().unwrap();
+    unprivileged_state.core.control = 1;
+    unprivileged_state.non_secure_bank.control = 1;
+    unprivileged_non_secure.restore(unprivileged_state).unwrap();
+    let unprivileged_before = unprivileged_non_secure.get_state().unwrap();
+    assert_eq!(
+        unprivileged_non_secure.set_stack_limits(0, 0),
+        Err(CortexM33Error::PrivilegeViolation)
+    );
+    assert_eq!(
+        unprivileged_non_secure.get_state().unwrap(),
+        unprivileged_before
+    );
 }
 
 #[test]
@@ -503,5 +593,5 @@ fn extension_and_transition_errors_are_typed() {
     ));
     assert!(CortexM33Error::PrivilegeViolation
         .to_string()
-        .contains("privileged Secure"));
+        .contains("privileged execution"));
 }

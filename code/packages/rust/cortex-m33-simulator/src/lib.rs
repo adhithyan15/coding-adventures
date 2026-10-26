@@ -144,7 +144,7 @@ impl fmt::Display for CortexM33Error {
                 formatter.write_str("Cortex-M33 Security Extension is unavailable")
             }
             Self::PrivilegeViolation => {
-                formatter.write_str("operation requires privileged Secure state")
+                formatter.write_str("operation requires privileged execution")
             }
             Self::InvalidSauRegion { reason } => write!(formatter, "invalid SAU region: {reason}"),
             Self::InvalidSecurityTransition { reason } => {
@@ -156,7 +156,7 @@ impl fmt::Display for CortexM33Error {
                 attribute,
             } => write!(
                 formatter,
-                "Non-secure {width}-byte access at {address:#010x} targets {attribute:?} memory"
+                "disallowed {width}-byte access at {address:#010x} targets {attribute:?} memory"
             ),
             Self::StackLimitViolation {
                 stack_pointer,
@@ -256,7 +256,7 @@ impl CortexM33Simulator {
         self.reset();
         self.state.core = core.get_state();
         load_active_bank(&mut self.state);
-        if let Err(error) = self.authorize_range(origin, program.len()) {
+        if let Err(error) = self.authorize_fetch_range(origin, program.len()) {
             self.state = before;
             return Err(error);
         }
@@ -299,10 +299,7 @@ impl CortexM33Simulator {
 
     /// Set the active security bank's stack-limit registers.
     pub fn set_stack_limits(&mut self, msplim: u32, psplim: u32) -> Result<(), CortexM33Error> {
-        if self.state.security_state == SecurityState::Secure
-            && !self.state.core.handler_mode
-            && self.state.core.control & 1 != 0
-        {
+        if !self.state.core.handler_mode && self.state.core.control & 1 != 0 {
             return Err(CortexM33Error::PrivilegeViolation);
         }
         if msplim & 7 != 0
@@ -314,14 +311,11 @@ impl CortexM33Simulator {
                 reason: "stack limits must be 8-byte aligned and inside memory",
             }));
         }
-        let previous = active_bank(&self.state);
-        let bank = active_bank_mut(&mut self.state);
+        let mut bank = active_bank(&self.state);
         bank.msplim = msplim;
         bank.psplim = psplim;
-        if let Err(error) = validate_active_stack_limit(&self.state) {
-            *active_bank_mut(&mut self.state) = previous;
-            return Err(error);
-        }
+        validate_bank_stack_limits(bank)?;
+        *active_bank_mut(&mut self.state) = bank;
         Ok(())
     }
 
@@ -392,7 +386,7 @@ impl CortexM33Simulator {
     }
 
     pub fn read_memory(&self, address: u32, width: usize) -> Result<u32, CortexM33Error> {
-        self.authorize_range(address, width)?;
+        self.authorize_data_range(address, width)?;
         let range = checked_range(address, width)?;
         let mut bytes = [0; 4];
         bytes[..width].copy_from_slice(&self.state.core.memory[range]);
@@ -405,7 +399,7 @@ impl CortexM33Simulator {
         width: usize,
         value: u32,
     ) -> Result<(), CortexM33Error> {
-        self.authorize_range(address, width)?;
+        self.authorize_data_range(address, width)?;
         let range = checked_range(address, width)?;
         self.state.core.memory[range].copy_from_slice(&value.to_le_bytes()[..width]);
         self.state.core.exclusive_address = None;
@@ -430,7 +424,7 @@ impl CortexM33Simulator {
     pub fn step(&mut self) -> Result<StepTrace, CortexM33Error> {
         let before = try_clone_state(&self.state)?;
         let (first, second, width) = fetch_instruction(&before.core)?;
-        self.authorize_range(before.core.pc, width)?;
+        self.authorize_fetch_range(before.core.pc, width)?;
 
         let mut core = CortexM3Simulator::new();
         core.restore(before.core.clone())?;
@@ -438,7 +432,7 @@ impl CortexM33Simulator {
 
         if inherited.mnemonic != "it-skip" {
             for (address, access_width) in memory_accesses(&before.core, first, second)? {
-                self.authorize_range(address, access_width)?;
+                self.authorize_data_range(address, access_width)?;
             }
         }
 
@@ -446,6 +440,8 @@ impl CortexM33Simulator {
         next.core = inherited.state_after;
         save_active_bank(&mut next);
         validate_active_stack_limit(&next)?;
+        validate_bank_stack_limits(active_bank(&next))?;
+        validate_bank(active_bank(&next))?;
         let after = try_clone_state(&next)?;
         let trace = StepTrace {
             pc_before: before.core.pc,
@@ -536,11 +532,32 @@ impl CortexM33Simulator {
         Ok(())
     }
 
-    fn authorize_range(&self, address: u32, width: usize) -> Result<(), CortexM33Error> {
+    fn authorize_data_range(&self, address: u32, width: usize) -> Result<(), CortexM33Error> {
         checked_owned_range(address, width)?;
         if self.state.security_state == SecurityState::Secure {
             return Ok(());
         }
+        self.require_range_attribute(address, width, |attribute| {
+            attribute == SecurityAttribute::NonSecure
+        })
+    }
+
+    fn authorize_fetch_range(&self, address: u32, width: usize) -> Result<(), CortexM33Error> {
+        checked_owned_range(address, width)?;
+        self.require_range_attribute(address, width, |attribute| {
+            match self.state.security_state {
+                SecurityState::Secure => attribute != SecurityAttribute::NonSecure,
+                SecurityState::NonSecure => attribute == SecurityAttribute::NonSecure,
+            }
+        })
+    }
+
+    fn require_range_attribute(
+        &self,
+        address: u32,
+        width: usize,
+        allowed: impl Fn(SecurityAttribute) -> bool,
+    ) -> Result<(), CortexM33Error> {
         let end = address
             .checked_add(width as u32)
             .ok_or(CortexM33Error::Core(CortexM3Error::DataOutOfRange {
@@ -549,7 +566,7 @@ impl CortexM33Simulator {
             }))?;
         for current in address..end {
             let attribute = self.attribute(current);
-            if attribute != SecurityAttribute::NonSecure {
+            if !allowed(attribute) {
                 return Err(CortexM33Error::SecurityAccessViolation {
                     address,
                     width,
@@ -674,26 +691,47 @@ fn validate_bank(bank: SecurityBank) -> Result<(), CortexM33Error> {
     Ok(())
 }
 
+fn validate_bank_stack_limits(bank: SecurityBank) -> Result<(), CortexM33Error> {
+    for (stack_pointer, limit) in [(bank.msp, bank.msplim), (bank.psp, bank.psplim)] {
+        if limit != 0 && stack_pointer < limit {
+            return Err(CortexM33Error::StackLimitViolation {
+                stack_pointer,
+                limit,
+            });
+        }
+    }
+    Ok(())
+}
+
 fn attribute(state: &CortexM33State, address: u32) -> SecurityAttribute {
     if !state.security_extension {
         return SecurityAttribute::NonSecure;
     }
-    let mut matches = state.sau_regions.iter().filter(|region| {
-        state.sau_enabled && region.enabled && address >= region.base && address <= region.limit
-    });
-    let Some(first) = matches.next() else {
+    if !state.sau_enabled {
         return if state.sau_all_non_secure {
             SecurityAttribute::NonSecure
         } else {
             SecurityAttribute::Secure
         };
-    };
-    if matches.next().is_some() {
-        SecurityAttribute::Secure
-    } else if first.non_secure_callable {
-        SecurityAttribute::NonSecureCallable
-    } else {
-        SecurityAttribute::NonSecure
+    }
+    let mut saw_non_secure = false;
+    let mut saw_nsc = false;
+    for region in state
+        .sau_regions
+        .iter()
+        .filter(|region| region.enabled && address >= region.base && address <= region.limit)
+    {
+        if region.non_secure_callable {
+            saw_nsc = true;
+        } else {
+            saw_non_secure = true;
+        }
+    }
+    match (saw_non_secure, saw_nsc) {
+        (false, false) => SecurityAttribute::Secure,
+        (true, false) => SecurityAttribute::NonSecure,
+        (false, true) => SecurityAttribute::NonSecureCallable,
+        (true, true) => SecurityAttribute::Secure,
     }
 }
 

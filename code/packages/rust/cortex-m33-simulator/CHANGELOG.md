@@ -8,5 +8,10 @@
   stack-limit registers, eight-region SAU attribution, checked security
   transitions, complete traces, and transactional lifecycle operations.
 - Keep 4-byte-aligned stack pointers restorable independently of 8-byte-aligned
-  stack-limit registers, enforce Secure-bank privilege, and roll back a run if
-  its fallible final-state snapshot cannot be allocated.
+  stack-limit registers, enforce privileged limit writes and both MSP/PSP limit
+  pairs in either security bank, and roll back a run if its fallible final-state
+  snapshot cannot be allocated.
+- Apply ALLNS only while the SAU is disabled, reduce overlapping region matches
+  to the most-secure attribute, and distinguish Secure data access from Secure
+  instruction fetch so ordinary Non-secure code requires an explicit checked
+  transition.

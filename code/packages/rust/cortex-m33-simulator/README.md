@@ -26,7 +26,8 @@ RUSTDOCFLAGS="-D warnings" cargo doc -p cortex-m33-simulator --no-deps
 cargo llvm-cov -p cortex-m33-simulator --all-features --summary-only
 ```
 
-The completed 0.1.0 cell has 91.03% line coverage (680/747 covered
-source lines) under that exact all-feature command. Its release suite includes
-an exact complete-core-state differential witness for every inherited
-Cortex-M3 decode family.
+The completed 0.1.0 cell has 91.44% line coverage (716/783 covered
+source lines) under that exact all-feature command. Its 3 unit and 11
+integration tests include an exact complete-core-state differential witness
+for every inherited Cortex-M3 decode family plus the SAU, fetch/data, banked
+stack-limit, transition, atomicity, and lifecycle boundaries.

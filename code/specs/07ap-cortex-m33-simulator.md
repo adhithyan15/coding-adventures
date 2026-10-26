@@ -36,7 +36,7 @@ oracle:
   FAULTMASK, and CONTROL;
 - eight 32-byte-granular SAU region descriptors plus ENABLE and ALLNS control;
 - deterministic Secure, Non-secure, and Non-secure Callable (NSC) address
-  attribution, including overlap-to-Secure resolution;
+  attribution, including most-secure overlap reduction;
 - checked Secure-to-Non-secure and NSC-gateway transition hooks for later
   encoded-transition and exception cells; and
 - attribution checks for instruction fetch, inherited data accesses, and
@@ -65,31 +65,38 @@ stack pointers start at the top of owned memory and all stack limits start at
 zero.
 
 Restore validates memory size, PC and 4-byte stack-pointer alignment,
-8-byte stack-limit alignment,
-Thumb state, mode/IPSR agreement, selected-stack consistency, stack-limit
-alignment and ordering, installed-image range, extension/security consistency,
-SAU availability and region count, 32-byte granularity, inclusive limits, and
+8-byte stack-limit alignment, Thumb state, mode/IPSR agreement,
+selected-stack consistency, both MSP/MSPLIM and PSP/PSPLIM pairs in both
+security banks, installed-image range, extension/security consistency, SAU
+availability and region count, 32-byte granularity, inclusive limits, and
 owned-memory bounds before committing any state.
 
 ## 4. Security attribution and access rules
 
 An enabled SAU region has a 32-byte-aligned base and an inclusive limit whose
-low five bits are one. One matching region returns Non-secure or NSC. Two or
-more matching enabled regions return Secure. With no match, ALLNS selects
-Non-secure when set and Secure otherwise. A core without the Security
-Extension always returns Non-secure.
+low five bits are one. When the SAU is disabled, ALLNS selects Non-secure when
+set and Secure otherwise. ALLNS has no effect while the SAU is enabled: an
+address with no enabled-region match is Secure. Matching regions reduce to
+the most-secure result: one or more plain Non-secure matches are Non-secure,
+one or more NSC matches are NSC, and a conflicting plain/NSC overlap is
+Secure. A core without the Security Extension always returns Non-secure.
 
-Secure execution may fetch and access any attributed region. A Non-secure
-normal fetch or data access requires the complete byte range to be
-Non-secure. NSC is accepted only by the explicit secure-gateway transition.
-Attribution, privilege, stack-limit, alignment, and bounds checks settle on a
-candidate transition before state commits. Any failure is typed and preserves
-the complete prior state.
+Secure data access may address any attributed region, but Secure instruction
+fetch accepts only Secure or NSC bytes. Entering ordinary Non-secure code
+therefore requires the explicit Secure-to-Non-secure transition hook. A
+Non-secure normal fetch or data access requires the complete byte range to be
+Non-secure; NSC becomes executable only after the explicit gateway hook has
+entered Secure state. Attribution, privilege, stack-limit, alignment, and
+bounds checks settle on a candidate transition before state commits. Any
+failure is typed and preserves the complete prior state.
 
 Only privileged Secure software may configure the SAU or Secure banks.
-Non-secure software can observe and update only the active Non-secure banks.
-Switching security state saves the active special registers to their bank and
-loads the target bank without changing the shared R0-R12 data registers.
+MSPLIM and PSPLIM writes require privileged execution in both security states,
+and a candidate limit update must leave both stack pointers in the active bank
+valid even when one is not selected. Non-secure software can observe and
+update only the active Non-secure bank. Switching security state saves the
+active special registers to their bank and loads the target bank without
+changing the shared R0-R12 data registers.
 
 ## 5. Checked lifecycle and traces
 
@@ -97,7 +104,8 @@ Program load is nonempty, halfword aligned, in range, and resets the selected
 configuration before installing bytes. Direct register, banked-register,
 memory, attribution, and transition APIs are checked. `step` executes against
 a candidate complete state and commits only after fetch, decode, attribution,
-data-access, stack-limit, and inherited-core validation succeeds.
+data-access, both active-bank stack-limit pairs, and inherited-core validation
+succeeds.
 
 Every successful `StepTrace` includes exact raw bytes, width, mnemonic,
 PC-before/after, security state before/after, and complete M33 before/after
@@ -111,10 +119,11 @@ load and bounded run.
 The bounded cell is complete only when it has:
 
 1. exact differential witnesses for every inherited Cortex-M3 decode family;
-2. Secure/Non-secure reset, bank switching, stack-limit, SAU default,
-   one-region, disabled, ALLNS, overlap, NSC, privilege, and no-extension tests;
-3. fetch and inherited memory-family attribution witnesses with typed atomic
-   failures;
+2. Secure/Non-secure reset, bank switching, both active/inactive stack-limit
+   pairs, SAU default, enabled/disabled ALLNS, no-match, same-attribute and
+   conflicting overlap, NSC, privilege, and no-extension tests;
+3. separate Secure-data, Secure-fetch, Non-secure-fetch, and inherited
+   memory-family attribution witnesses with typed atomic failures;
 4. validated restore, load, direct access, transition, halt/sleep, retention,
    run rollback, and execute rollback tests;
 5. package README, changelog, BUILD, workspace membership, and backlog status;
