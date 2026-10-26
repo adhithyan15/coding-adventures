@@ -18079,3 +18079,26 @@ the misspelled value previously printed in DT17. It also makes the established
 polynomial helper and entropy-free portable analysis rule explicit. This owner
 does not claim downstream Swift package execution, filesystem, process,
 environment, network, clock, credential, or other host authority.
+
+## October 25, 2026: Swift hash-functions publication reprioritization
+
+PR #18260 merged through guarded squash auto-merge from exact reviewed head
+`ae365a1cdcc7c98b7d575a07e91b04a577281924` as
+`fd5ee771aa2ae14e9bd639eba25e7b41baf8a4dc`, opening one of the three hosted
+parity slots. Its completed worktree was clean and has been removed. PRs
+#18183 and #18293 remain active, conflict-free, and failure-free at their
+reviewed heads.
+
+The ready backlog was reprioritized before filling the slot. Swift
+hash-functions remains first because it is dependency-ready and unlocks the
+explicit Swift Bloom-filter, hash-map, hash-set, and HyperLogLog owners. The
+independently reviewed Python gradient-descent build front remains next. Every
+prepared Bezier flattening successor is still blocked on PR #18293 and is not
+eligible to publish yet.
+
+The Swift branch rebased without conflict onto exact current main
+`fd5ee771aa2ae14e9bd639eba25e7b41baf8a4dc`. Publication requires the native
+test, release-build, coverage, capability-schema, package-planner, and exact-
+head independent-review gates to pass again after that rebase. The post-merge
+reconciliation also records the verified #18259 and #18260 receipts and removes
+#18260 from the live active-PR list; it changes no package behavior.
