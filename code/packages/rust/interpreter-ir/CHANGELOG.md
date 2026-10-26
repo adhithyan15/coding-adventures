@@ -1,5 +1,18 @@
 # Changelog — interpreter-ir
 
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- **Registry:** three new type-first Ops, `introduced_by: "LANG83 PR7b"`
+  (`LANG83_PR7B`, `OpSpec::is_pr7b`), each `f64 → i64`, pure and never
+  trapping: `f64_class` (0 for ±0, 1 finite non-zero, 2 ±Infinity, 3 NaN),
+  `f64_digits` (the shortest round-trip significand `D` of `|x|`, no
+  trailing zeros, 0 unless class 1) and `f64_exp10` (the exponent of `D`'s
+  leading digit, 0 unless class 1). They are the digits every PR6a float
+  writer already computes, exposed so a compiler can lay a float out in its
+  own language's style (spec "PR7 — language neutrality"). Family `Float`
+  with an integer result, like `f64_signbit`.
+- **New test `pr7b_set_is_exactly_the_neutral_float_primitives`.**
+
 ## Unreleased (LANG84 phase 6e — `Trap.ReferenceError`)
 
 - **`exception_kind::TRAP_REFERENCE_ERROR`** (`"Trap.ReferenceError"`) joins

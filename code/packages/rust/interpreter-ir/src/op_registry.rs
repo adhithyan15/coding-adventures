@@ -81,7 +81,9 @@
 //! PR6a's float writers `write_f64_py` / `write_f64_js` (shortest round-trip
 //! digits in Python's and JavaScript's layouts), and PR6c's non-trapping IEEE
 //! `f64_add`/`f64_sub`/`f64_mul`/`f64_div`/`f64_neg` with `f64_signbit` (lowered
-//! on the eight IEEE backends; BEAM refuses the arithmetic at compile time).
+//! on the eight IEEE backends; BEAM refuses the arithmetic at compile time),
+//! and PR7b's language-neutral float primitives `f64_class`, `f64_digits` and
+//! `f64_exp10` (the shortest round-trip digits as integers, on all nine).
 //! Instructions that are not registry entries
 //! (control flow, calls, memory, heap, bitwise, the `dyn_*` lisp builtins, …)
 //! are simply not gated by the registry; their existing validators still apply.
@@ -180,6 +182,14 @@ pub const LANG83_PR6A: &str = "LANG83 PR6a";
 /// are always finite, refuses the five arithmetic ops at compile time.
 pub const LANG83_PR6C: &str = "LANG83 PR6c";
 
+/// The `introduced_by` tag of the language-neutral float primitives (LANG83
+/// PR7b): `f64_class`, `f64_digits`, `f64_exp10`. They expose the *digits*
+/// every PR6a float writer already computes — the shortest round-trip decimal
+/// significand and the exponent of its leading digit — as plain integers, so
+/// a compiler can lay a float out in its own language's style with integer
+/// ops and `putchar`, and no backend needs to know which language that is.
+pub const LANG83_PR7B: &str = "LANG83 PR7b";
+
 /// One registered operation.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct OpSpec {
@@ -227,6 +237,12 @@ impl OpSpec {
     /// `true` if this entry is one of the LANG83 PR6c IEEE `f64` ops.
     pub fn is_pr6c(&self) -> bool {
         self.introduced_by == LANG83_PR6C
+    }
+
+    /// `true` if this entry is one of the LANG83 PR7b neutral float
+    /// primitives (`f64_class`, `f64_digits`, `f64_exp10`).
+    pub fn is_pr7b(&self) -> bool {
+        self.introduced_by == LANG83_PR7B
     }
 }
 
@@ -349,6 +365,34 @@ pub const STANDARD_OPS: &[OpSpec] = &[
     // The sign bit as an integer 0/1 — the only way to tell `-0` from `0`
     // without dividing by it (JavaScript's `console.log(-0)` prints `-0`).
     spec("f64_signbit", Op, Float, 1, true, UN_F64, NO_TRAP, LANG83_PR6C),
+    // LANG83 PR7b — the language-neutral float primitives. Each takes one
+    // `f64` and returns an INTEGER (like `f64_signbit`, a Float-family op
+    // whose result is not a float). None traps, so all three are pure.
+    //
+    //   f64_class x    0 for ±0, 1 finite non-zero (subnormals too),
+    //                  2 for ±Infinity, 3 for NaN
+    //   f64_digits x   class 1: the shortest round-trip significand D of |x|
+    //                  (shortest, then closest, ties to even — PR6a's rule),
+    //                  no trailing zeros, 1 <= D < 10^17; otherwise 0
+    //   f64_exp10 x    class 1: e10, the exponent of D's leading digit, so
+    //                  |x| = D × 10^(e10 − n + 1) with n = digits of D;
+    //                  otherwise 0
+    //
+    //   x        class  digits             exp10
+    //   1.5      1      15                 0
+    //   100.0    1      1                  2
+    //   0.1      1      1                  -1
+    //   5e-324   1      5                  -324
+    //   1e21     1      1                  21
+    //   -0.0     0      0                  0
+    //   -inf     2      0                  0
+    //   nan      3      0                  0
+    //
+    // With `f64_signbit` these identify every value a float writer prints;
+    // where the point goes is the compiler's business (spec "PR7").
+    spec("f64_class", Op, Float, 1, true, UN_F64, NO_TRAP, LANG83_PR7B),
+    spec("f64_digits", Op, Float, 1, true, UN_F64, NO_TRAP, LANG83_PR7B),
+    spec("f64_exp10", Op, Float, 1, true, UN_F64, NO_TRAP, LANG83_PR7B),
     // ── Conversions (LANG-FULL E8) ──────────────────────────────────────────
     spec("int_to_real", Op, Conversion, 1, true, &["int"], NO_TRAP, "LANG-FULL E8"),
     spec("real_to_int_trunc", Op, Conversion, 1, true, UN_F64, CONV_RANGE_ONLY, "LANG-FULL E8"),
@@ -652,6 +696,24 @@ mod tests {
             assert!(spec.operand_types.iter().all(|t| *t == "f64"), "{name} takes f64 operands");
             let unary = matches!(name, "f64_neg" | "f64_signbit");
             assert_eq!(spec.arity, if unary { 1 } else { 2 }, "{name}");
+        }
+    }
+
+    #[test]
+    fn pr7b_set_is_exactly_the_neutral_float_primitives() {
+        let mut pr7b: Vec<&str> = STANDARD_OPS.iter().filter(|s| s.is_pr7b()).map(|s| s.name).collect();
+        pr7b.sort_unstable();
+        assert_eq!(pr7b, ["f64_class", "f64_digits", "f64_exp10"]);
+        for name in pr7b {
+            let spec = lookup(name).unwrap();
+            // Ops, not Builtins: each reads one f64, writes an integer dest,
+            // writes nothing else and never traps — so DCE may drop one.
+            assert_eq!(spec.kind, OpKind::Op, "{name}");
+            assert_eq!(spec.family, OpFamily::Float, "{name}");
+            assert!(spec.dest, "{name} writes a dest");
+            assert_eq!(spec.operand_types, ["f64"], "{name}");
+            assert!(spec.may_trap.is_empty(), "{name} never traps");
+            assert!(!crate::opcodes::has_side_effects(name), "{name} is pure");
         }
     }
 

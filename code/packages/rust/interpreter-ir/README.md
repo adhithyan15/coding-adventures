@@ -72,7 +72,9 @@ backend must lower or refuse — output builtins (`print_i64`, `putchar`,
 `write_i64`, and since PR6a `write_f64_py` / `write_f64_js`, which print an `f64` as
 the shortest round-trip decimal in Python's or JavaScript's layout), `print_str` and the string ops, arithmetic and comparison (since PR6c also the
 non-trapping IEEE `f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` and
-the sign test `f64_signbit`), `f64` math,
+the sign test `f64_signbit`; since PR7b the language-neutral float primitives
+`f64_class`, `f64_digits` and `f64_exp10`, which give a float's class and its
+shortest round-trip digits as integers), `f64` math,
 conversions and `trap`. Each backend crate publishes an `OP_SUPPORT` table of
 `OpSupport::{Lowered, Refused(reason)}` and checks it with
 `op_registry::check_op_support_table`, so adding a registry op fails CI in every
