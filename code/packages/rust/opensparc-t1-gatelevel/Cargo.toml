@@ -1,0 +1,17 @@
+[package]
+name = "opensparc-t1-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "DFF-backed architectural gate-level simulator for one OpenSPARC T1 strand"
+license = "MIT"
+
+[lib]
+name = "opensparc_t1_gatelevel"
+path = "src/lib.rs"
+
+[dependencies]
+arithmetic = { path = "../arithmetic" }
+logic-gates = { path = "../logic-gates" }
+
+[dev-dependencies]
+opensparc-t1-simulator = { path = "../opensparc-t1-simulator" }
