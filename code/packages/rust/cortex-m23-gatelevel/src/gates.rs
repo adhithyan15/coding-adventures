@@ -210,8 +210,10 @@ pub fn select_32(d0: u32, d1: u32, select: u8) -> u32 {
 #[must_use]
 pub fn select_bit_32(value: u32, index: u32) -> u8 {
     let bits = u32_to_bits(value);
+    let in_range = is_zero_32(field(index, 5, 27));
     (0..32).fold(0, |output, bit| {
-        or_gate(output, and_gate(bits[bit], selected(index, bit as u32, 5)))
+        let decoded = and_gate(selected(index, bit as u32, 5), in_range);
+        or_gate(output, and_gate(bits[bit], decoded))
     })
 }
 

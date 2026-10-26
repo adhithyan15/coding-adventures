@@ -2,8 +2,8 @@ use quote::ToTokens;
 use std::collections::{BTreeMap, BTreeSet};
 use syn::visit::{self, Visit};
 use syn::{
-    BinOp, Expr, ExprAssign, ExprBinary, ExprCall, ExprIf, ExprMatch, ExprMethodCall, File,
-    ImplItem, Item, ItemFn, Lit, PatIdent,
+    BinOp, Expr, ExprAssign, ExprBinary, ExprCall, ExprIf, ExprMatch, ExprMethodCall, File, Item,
+    ItemFn, Lit, PatIdent,
 };
 
 const LIB: &str = include_str!("../src/lib.rs");
@@ -11,6 +11,66 @@ const ENGINE: &str = include_str!("../src/engine.rs");
 const GATES: &str = include_str!("../src/gates.rs");
 const STATE: &str = include_str!("../src/state.rs");
 const MANIFEST: &str = include_str!("../Cargo.toml");
+const THIS_TEST: &str = include_str!("gate_integrity.rs");
+const COMMIT_TRANSITION_LOCK: u64 = 0x2ee8_e471_8637_5eea;
+const SELECT_BIT_32_LOCK: u64 = 0x758a_723d_49f3_095e;
+const RESTORE_REGISTERS_AND_CONTROL_LOCK: u64 = 0xfd9a_7454_2eb8_48be;
+const RESTORE_VALIDATED_LOCK: u64 = 0xe4ae_655f_7787_c9d2;
+const CLOCK_BITS_LOCK: u64 = 0x6436_6416_c7c9_28fe;
+const CLOCK_BIT_LOCK: u64 = 0x5cd8_5142_e647_7ac1;
+const MEMORY_WRITE_LOCK: u64 = 0x9104_bd6e_d0c2_6446;
+
+// These are deliberately compiled as part of this integration test. They
+// model the precise bypass that a required-call-only audit used to miss: the
+// DFF network is evaluated, then a direct assignment replaces its stable Q.
+#[allow(dead_code)]
+mod compile_valid_hostile_fixtures {
+    use logic_gates::sequential::{register, FlipFlopState};
+
+    fn stable_state(q: u8) -> FlipFlopState {
+        FlipFlopState {
+            master_q: q,
+            master_q_bar: q ^ 1,
+            slave_q: q,
+            slave_q_bar: q ^ 1,
+        }
+    }
+
+    pub fn hostile_clock_bits_bypass<const WIDTH: usize>(q: &mut [u8; WIDTH], value: u64) {
+        let input: [u8; WIDTH] = std::array::from_fn(|bit| ((value >> bit) & 1) as u8);
+        let mut state: [FlipFlopState; WIDTH] = std::array::from_fn(|bit| stable_state(q[bit]));
+        register(&input, 0, &mut state);
+        q.copy_from_slice(&register(&input, 1, &mut state));
+        q.copy_from_slice(&input);
+    }
+
+    pub fn hostile_clock_bit_bypass(q: &mut u8, value: bool) {
+        let input = [u8::from(value)];
+        let mut state = [stable_state(*q)];
+        register(&input, 0, &mut state);
+        *q = register(&input, 1, &mut state)[0];
+        *q = input[0];
+    }
+
+    pub struct HostileMemory {
+        q: Vec<u8>,
+    }
+
+    impl HostileMemory {
+        pub fn hostile_memory_write_bypass(&mut self, address: usize, value: u8) {
+            let old = self.q[address];
+            let input: [u8; 8] = std::array::from_fn(|bit| (value >> bit) & 1);
+            let mut state: [FlipFlopState; 8] =
+                std::array::from_fn(|bit| stable_state((old >> bit) & 1));
+            register(&input, 0, &mut state);
+            self.q[address] = register(&input, 1, &mut state)
+                .iter()
+                .enumerate()
+                .fold(0, |byte, (bit, q)| byte | (q << bit));
+            self.q[address] = value;
+        }
+    }
+}
 
 #[derive(Default)]
 struct BodyFacts {
@@ -96,26 +156,37 @@ fn parse(source: &str) -> Result<File, String> {
     syn::parse_file(source).map_err(|error| error.to_string())
 }
 
+#[derive(Default)]
+struct FunctionBodies<'a> {
+    wanted: &'a str,
+    matches: Vec<syn::Block>,
+}
+
+impl<'ast> Visit<'ast> for FunctionBodies<'_> {
+    fn visit_item_fn(&mut self, node: &'ast ItemFn) {
+        if node.sig.ident == self.wanted {
+            self.matches.push((*node.block).clone());
+        }
+        visit::visit_item_fn(self, node);
+    }
+
+    fn visit_impl_item_fn(&mut self, node: &'ast syn::ImplItemFn) {
+        if node.sig.ident == self.wanted {
+            self.matches.push(node.block.clone());
+        }
+        visit::visit_impl_item_fn(self, node);
+    }
+}
+
 fn function_body(source: &str, function: &str) -> Result<syn::Block, String> {
     let file = parse(source)?;
-    let mut matches = Vec::new();
-    for item in file.items {
-        match item {
-            Item::Fn(item) if item.sig.ident == function => matches.push(*item.block),
-            Item::Impl(item) => {
-                for member in item.items {
-                    if let ImplItem::Fn(method) = member {
-                        if method.sig.ident == function {
-                            matches.push(method.block);
-                        }
-                    }
-                }
-            }
-            _ => {}
-        }
-    }
-    match matches.len() {
-        1 => Ok(matches.remove(0)),
+    let mut bodies = FunctionBodies {
+        wanted: function,
+        ..FunctionBodies::default()
+    };
+    bodies.visit_file(&file);
+    match bodies.matches.len() {
+        1 => Ok(bodies.matches.remove(0)),
         count => Err(format!("expected one {function} body, found {count}")),
     }
 }
@@ -176,6 +247,28 @@ fn function_fingerprint(source: &str, function: &str) -> Result<u64, String> {
         .fold(0xcbf2_9ce4_8422_2325_u64, |hash, byte| {
             (hash ^ u64::from(*byte)).wrapping_mul(0x0000_0100_0000_01b3)
         }))
+}
+
+fn assert_body_lock(source: &str, function: &str, expected: u64) -> Result<(), String> {
+    let actual = function_fingerprint(source, function)?;
+    if actual == expected {
+        Ok(())
+    } else {
+        Err(format!(
+            "{function} body changed: expected {expected:#018x}, found {actual:#018x}"
+        ))
+    }
+}
+
+fn replace_once(source: &str, anchor: &str, replacement: &str) -> String {
+    assert_eq!(
+        source.matches(anchor).count(),
+        1,
+        "hostile fixture anchor must identify exactly one production fragment"
+    );
+    let mutated = source.replacen(anchor, replacement, 1);
+    parse(&mutated).expect("anchored hostile fixture must remain valid Rust syntax");
+    mutated
 }
 
 #[derive(Default)]
@@ -365,6 +458,13 @@ fn production_routing_storage_and_gate_authority_are_structural() {
     )
     .unwrap();
     audit_function(GATES, "sub_32", &["add_32", "not_gate"], &["sub"]).unwrap();
+    audit_function(
+        GATES,
+        "select_bit_32",
+        &["field", "is_zero_32", "selected", "and_gate", "or_gate"],
+        &["and", "or"],
+    )
+    .unwrap();
     audit_function(
         GATES,
         "multiply_32",
@@ -583,7 +683,27 @@ fn critical_decode_to_commit_bodies_are_exactly_locked() {
         (ENGINE, "step_state", 0x4a27_89b6_2615_be22),
         (GATES, "shift_immediate_network", 0xbb7f_b93c_6f3e_98f0),
         (GATES, "shift_register_network", 0x14d7_a3c8_0d88_8e6e),
-        (LIB, "commit_transition", 0x2ee8_e471_8637_5eea),
+        (GATES, "select_bit_32", SELECT_BIT_32_LOCK),
+        (LIB, "commit_transition", COMMIT_TRANSITION_LOCK),
+        (
+            LIB,
+            "restore_registers_and_control",
+            RESTORE_REGISTERS_AND_CONTROL_LOCK,
+        ),
+        (LIB, "restore_validated", RESTORE_VALIDATED_LOCK),
+        (LIB, "reset", 0xf862_a5b2_bd94_bfa9),
+        (LIB, "load", 0xc14c_37a4_aa3a_8bb1),
+        (LIB, "write_register", 0xb15a_8456_dc34_a702),
+        (LIB, "write_memory", 0x3079_1d0f_217d_cd1b),
+        (LIB, "signal_event", 0x7e6a_e298_6e56_a9c6),
+        (LIB, "step", 0x3aa2_7897_5b43_f0d1),
+        (LIB, "run", 0x77bd_e445_639d_00b9),
+        (LIB, "execute", 0x59fd_f7d2_1460_60a3),
+        (STATE, "clock_bits", CLOCK_BITS_LOCK),
+        (STATE, "clock_bit", CLOCK_BIT_LOCK),
+        (STATE, "restore_snapshot", 0x10da_57ec_9213_8692),
+        (STATE, "clear", 0x4d1e_959e_8ba0_313f),
+        (STATE, "write", MEMORY_WRITE_LOCK),
     ];
     let actual = locks
         .into_iter()
@@ -602,6 +722,17 @@ fn critical_decode_to_commit_bodies_are_exactly_locked() {
 }
 
 #[test]
+fn one_hot_bit_selection_deasserts_every_line_outside_the_word() {
+    assert_eq!(cortex_m23_gatelevel::gates::select_bit_32(1 << 31, 31), 1);
+    assert_eq!(cortex_m23_gatelevel::gates::select_bit_32(u32::MAX, 32), 0);
+    assert_eq!(cortex_m23_gatelevel::gates::select_bit_32(u32::MAX, 33), 0);
+    assert_eq!(
+        cortex_m23_gatelevel::gates::select_bit_32(u32::MAX, usize::MAX as u32),
+        0
+    );
+}
+
+#[test]
 fn structural_guard_rejects_hostile_backends_and_confusers() {
     let host_multiply = "fn multiply_32(left:u32,right:u32)->u32{left*right}";
     assert!(audit_function(host_multiply, "multiply_32", &["add_32"], &["mul"]).is_err());
@@ -614,12 +745,78 @@ fn structural_guard_rejects_hostile_backends_and_confusers() {
         "fn step_state(left:u32,right:u32)->u32{let _=add_32(left,right,0);left+right}";
     assert!(audit_function(post_gate_overwrite, "step_state", &["add_32"], &["add"]).is_err());
 
+    // These fixtures are real, type-checked Rust functions above. The former
+    // required-call audit accepts them because each still invokes `register`;
+    // the exact stable-Q body locks must reject their direct overwrite.
+    for (function, expected) in [
+        ("hostile_clock_bits_bypass", CLOCK_BITS_LOCK),
+        ("hostile_clock_bit_bypass", CLOCK_BIT_LOCK),
+        ("hostile_memory_write_bypass", MEMORY_WRITE_LOCK),
+    ] {
+        assert!(audit_function(THIS_TEST, function, &["register"], &[]).is_ok());
+        assert!(assert_body_lock(THIS_TEST, function, expected).is_err());
+    }
+
     let oracle_substitution =
         "fn step_state()->u32{cortex_m23_simulator::CortexM23Simulator::new();0}";
     assert!(audit_function(oracle_substitution, "step_state", &["execute_decoded"], &[]).is_err());
 
-    let direct_q = "fn write(&mut self,address:usize,value:u8){self.q[address]=value}";
-    assert!(audit_function(direct_q, "write", &["register"], &[]).is_err());
+    let clock_bits_bypass = replace_once(
+        STATE,
+        "    q.copy_from_slice(&register(&input, 1, &mut state));",
+        "    q.copy_from_slice(&register(&input, 1, &mut state));\n    q.copy_from_slice(&input);",
+    );
+    assert!(assert_body_lock(&clock_bits_bypass, "clock_bits", CLOCK_BITS_LOCK).is_err());
+
+    let clock_bit_bypass = replace_once(
+        STATE,
+        "    *q = register(&input, 1, &mut state)[0];",
+        "    *q = register(&input, 1, &mut state)[0];\n    *q = input[0];",
+    );
+    assert!(assert_body_lock(&clock_bit_bypass, "clock_bit", CLOCK_BIT_LOCK).is_err());
+
+    let memory_q_bypass = replace_once(
+        STATE,
+        "            .fold(0, |byte, (bit, q)| byte | (q << bit));",
+        "            .fold(0, |byte, (bit, q)| byte | (q << bit));\n        self.q[address] = value;",
+    );
+    assert!(assert_body_lock(&memory_q_bypass, "write", MEMORY_WRITE_LOCK).is_err());
+
+    let architectural_dff_bypass = replace_once(
+        LIB,
+        "        self.restore_registers_and_control(next);",
+        "        self.restore_registers_and_control(next);\n        self.pc = [0; 32];",
+    );
+    assert!(assert_body_lock(
+        &architectural_dff_bypass,
+        "commit_transition",
+        COMMIT_TRANSITION_LOCK
+    )
+    .is_err());
+
+    let register_commit_bypass = replace_once(
+        LIB,
+        "        clock_bits(&mut self.loaded_len, next.loaded_len as u64);",
+        "        clock_bits(&mut self.loaded_len, next.loaded_len as u64);\n        self.loaded_len = [0; 17];",
+    );
+    assert!(assert_body_lock(
+        &register_commit_bypass,
+        "restore_registers_and_control",
+        RESTORE_REGISTERS_AND_CONTROL_LOCK
+    )
+    .is_err());
+
+    let rollback_dff_bypass = replace_once(
+        LIB,
+        "        clock_bits(&mut self.loaded_len, snapshot.loaded_len as u64);",
+        "        clock_bits(&mut self.loaded_len, snapshot.loaded_len as u64);\n        self.loaded_len = [0; 17];",
+    );
+    assert!(assert_body_lock(
+        &rollback_dff_bypass,
+        "restore_validated",
+        RESTORE_VALIDATED_LOCK
+    )
+    .is_err());
 
     assert!(assert_external_modules("mod engine{} pub mod gates{} mod state{}").is_err());
     assert!(

@@ -10,9 +10,11 @@
   differential coverage for every implemented instruction subfamily.
 - Add AST-based topology and module-routing checks with hostile native-host,
   oracle-substitution, helper-indirection, post-dispatch overwrite,
-  direct-Q-write, macro, string, and attribute confusers, plus exact locks for
-  every critical decode-to-commit body.
+  compile-valid direct-Q-write, macro, string, and attribute confusers, plus
+  exact locks for every critical decode-to-commit and stable-Q mutation body.
+- Deassert every one-hot bit-selection line for indices outside 0 through 31,
+  including the 32, 33, and maximum host-index boundaries.
 - Exercise every condition and shift-boundary outcome, arithmetic and
   multiply edges, and the register/immediate memory-addressing overlap matrix.
-- Reach 93.64% combined Rust line coverage (1,825 of 1,949 lines) across 34
+- Reach 93.64% combined Rust line coverage (1,827 of 1,951 lines) across 35
   release tests.
