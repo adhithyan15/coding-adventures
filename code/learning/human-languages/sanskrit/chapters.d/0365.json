@@ -1,0 +1,19 @@
+{
+  "chapter": 365,
+  "title": "Theory and Practice",
+  "label": "ch:sa-theory-and-practice",
+  "canDo": "I can say whether an idea holds up in practice.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C365-upalaksayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 365: I can say whether an idea holds up in practice.",
+    "assesses": [
+      "SA-LEX-C365-SIDDHANTA365-03",
+      "SA-LEX-C365-SIDDHANTA365-04",
+      "SA-LEX-C365-SIDDHANTA365-05"
+    ]
+  }
+}

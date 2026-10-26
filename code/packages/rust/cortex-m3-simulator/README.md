@@ -11,6 +11,8 @@ bounded run, and execute are typed and transactional. Successful traces retain
 exact raw bytes, instruction width, mnemonic, and complete before/after
 snapshots. Executed instructions use conventional mnemonics; a condition-
 failed IT member uses the explicit synthetic `it-skip` marker.
+Composed cores can use `try_get_state` to obtain the same complete snapshot
+with typed allocation failure.
 
 The core is intentionally separate from NVIC, SysTick, debug, AHB-Lite timing,
 and vendor peripherals. Those compose around this package in later gate and SoC

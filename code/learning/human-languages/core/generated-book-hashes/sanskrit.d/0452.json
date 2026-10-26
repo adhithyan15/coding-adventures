@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:c83a77713117ceb9",
+  "lessonIds": [
+    "SA-C452-udvegah",
+    "SA-C452-hatasah",
+    "SA-C452-visidati",
+    "SA-C452-vyagrah",
+    "SA-C452-dinah"
+  ],
+  "tex": "sanskrit/book/chapters/ch452-worry-and-despair.tex"
+}

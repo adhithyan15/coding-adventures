@@ -1,0 +1,21 @@
+{
+  "chapter": 548,
+  "title": "Fears and Reassurance",
+  "label": "ch:sa-fears-and-reassurance",
+  "canDo": "I can comfort someone who is afraid of what might happen.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-R548-review-542-548",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 548: I can comfort someone who is afraid of what might happen.",
+    "assesses": [
+      "SA-LEX-C548-SANTVANA548-01",
+      "SA-LEX-C548-SANTVANA548-02",
+      "SA-LEX-C548-SANTVANA548-03",
+      "SA-LEX-C548-SANTVANA548-04",
+      "SA-LEX-C548-SANTVANA548-05"
+    ]
+  }
+}

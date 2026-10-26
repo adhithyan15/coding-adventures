@@ -1,0 +1,19 @@
+{
+  "chapter": 491,
+  "title": "Old Age and Death",
+  "label": "ch:sa-old-age-and-death",
+  "canDo": "I can talk about growing old and a death in the family.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C491-sraddham",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can talk about growing old and a death in the family.",
+    "assesses": [
+      "SA-LEX-C491-JARA491-03",
+      "SA-LEX-C491-JARA491-04",
+      "SA-LEX-C491-JARA491-05"
+    ]
+  }
+}

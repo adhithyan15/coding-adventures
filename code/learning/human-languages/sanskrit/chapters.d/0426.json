@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "Abroad",
+  "label": "ch:sa-abroad",
+  "canDo": "I can talk about being abroad, the crowds and the customs house.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C426-pratisrayah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can talk about being abroad, the crowds and the customs house.",
+    "assesses": [
+      "SA-LEX-C426-VIDESHA426-03",
+      "SA-LEX-C426-VIDESHA426-04",
+      "SA-LEX-C426-VIDESHA426-05"
+    ]
+  }
+}

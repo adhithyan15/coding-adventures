@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R447-review-final-447",
+    "language": "sanskrit",
+    "chapter": 447,
+    "sequence": 25770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:764ace0e9e345b42"
+  },
+  "findings": []
+}

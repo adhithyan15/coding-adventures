@@ -1,0 +1,19 @@
+{
+  "chapter": 292,
+  "title": "The Investigation",
+  "label": "ch:sa-the-investigation",
+  "canDo": "I can say what the investigator found and what happens if there is proof.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C292-prakatayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: I can say what the investigator found and what happens if there is proof.",
+    "assesses": [
+      "SA-LEX-C292-CARA292-03",
+      "SA-LEX-C292-CARA292-04",
+      "SA-LEX-C292-CARA292-05"
+    ]
+  }
+}

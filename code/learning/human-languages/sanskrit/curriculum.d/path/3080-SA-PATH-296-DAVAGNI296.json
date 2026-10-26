@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-296-DAVAGNI296",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "SA-EXT-296-DAVAGNI296"
+  ],
+  "after": []
+}

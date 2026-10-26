@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 336,
+  "output": "sanskrit/book/chapters/ch336-fables.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

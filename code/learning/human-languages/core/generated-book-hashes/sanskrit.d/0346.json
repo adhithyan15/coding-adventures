@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:e40e7f6a3b4ad73d",
+  "lessonIds": [
+    "SA-C346-aksepah",
+    "SA-C346-khandayati",
+    "SA-C346-nirasyati",
+    "SA-C346-samsayah",
+    "SA-C346-vastutah"
+  ],
+  "tex": "sanskrit/book/chapters/ch346-saying-no-to-a-claim.tex"
+}

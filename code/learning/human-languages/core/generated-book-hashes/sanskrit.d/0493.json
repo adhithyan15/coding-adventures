@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:6ac9e4d775fa29a8",
+  "lessonIds": [
+    "SA-C493-samskarah",
+    "SA-C493-namakaranam",
+    "SA-C493-annaprasanam",
+    "SA-C493-cudakaranam",
+    "SA-C493-upanayanam"
+  ],
+  "tex": "sanskrit/book/chapters/ch493-rites-of-childhood.tex"
+}

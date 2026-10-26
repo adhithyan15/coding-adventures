@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C304-artah",
+    "language": "sanskrit",
+    "chapter": 304,
+    "sequence": 17930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c105a8a6d12a176"
+  },
+  "findings": []
+}

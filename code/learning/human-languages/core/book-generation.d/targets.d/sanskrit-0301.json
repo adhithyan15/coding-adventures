@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 301,
+  "output": "sanskrit/book/chapters/ch301-the-storm.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

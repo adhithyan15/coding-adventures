@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:9d4e1006915c5080",
+  "lessonIds": [
+    "SA-C366-niskarsah",
+    "SA-C366-samiksa",
+    "SA-C366-ganana",
+    "SA-C366-vicarayati",
+    "SA-C366-niscinoti"
+  ],
+  "tex": "sanskrit/book/chapters/ch366-reaching-a-conclusion.tex"
+}

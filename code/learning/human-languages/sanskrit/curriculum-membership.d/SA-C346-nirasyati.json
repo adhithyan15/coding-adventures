@@ -1,0 +1,11 @@
+{
+  "id": "SA-C346-nirasyati",
+  "pathSegment": "SA-PATH-346-AKSHEPA346",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-346-AKSHEPA346",
+      "order": 2
+    }
+  ]
+}

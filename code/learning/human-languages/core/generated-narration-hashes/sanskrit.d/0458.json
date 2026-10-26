@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:c8e6d5f73bb11648",
+  "lessonIds": [
+    "SA-C458-darpah",
+    "SA-C458-slaghate",
+    "SA-C458-adambarah",
+    "SA-C458-uddhatah",
+    "SA-C458-vinitah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch458.txt",
+  "json": "sanskrit/narration/ch458.json",
+  "textHash": "fnv1a64:5241f8ad56bf60de",
+  "jsonHash": "fnv1a64:acd04966bdfa8e48",
+  "findings": []
+}

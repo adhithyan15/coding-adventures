@@ -1,0 +1,11 @@
+{
+  "id": "SA-C361-pratisrnoti",
+  "pathSegment": "SA-PATH-361-SHRADDHA361",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-361-SHRADDHA361",
+      "order": 4
+    }
+  ]
+}

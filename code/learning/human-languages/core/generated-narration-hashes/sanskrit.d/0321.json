@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:bdf2bdc8385479eb",
+  "lessonIds": [
+    "SA-C321-abhisekah",
+    "SA-C321-purohitah",
+    "SA-C321-mantrah",
+    "SA-C321-abhisincati",
+    "SA-C321-uccarayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch321.txt",
+  "json": "sanskrit/narration/ch321.json",
+  "textHash": "fnv1a64:f6cbb329f75fb61f",
+  "jsonHash": "fnv1a64:629aa341fe4bee48",
+  "findings": []
+}

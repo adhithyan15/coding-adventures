@@ -1,0 +1,11 @@
+{
+  "id": "SA-C366-ganana",
+  "pathSegment": "SA-PATH-366-NISHKARSHA366",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-366-NISHKARSHA366",
+      "order": 2
+    }
+  ]
+}

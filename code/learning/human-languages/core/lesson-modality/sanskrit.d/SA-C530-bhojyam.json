@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C530-bhojyam",
+    "language": "sanskrit",
+    "chapter": 530,
+    "sequence": 30430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9ec8858ee948f0b"
+  },
+  "findings": []
+}

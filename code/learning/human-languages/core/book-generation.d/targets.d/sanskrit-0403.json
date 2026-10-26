@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 403,
+  "output": "sanskrit/book/chapters/ch403-the-long-road.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

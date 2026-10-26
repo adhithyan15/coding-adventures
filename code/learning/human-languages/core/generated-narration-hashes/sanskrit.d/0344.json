@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:d8843efb31181199",
+  "lessonIds": [
+    "SA-C344-pratipaksah",
+    "SA-C344-virodhah",
+    "SA-C344-samarthayati",
+    "SA-C344-anumanyate",
+    "SA-C344-nanu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch344.txt",
+  "json": "sanskrit/narration/ch344.json",
+  "textHash": "fnv1a64:7548412ab05d625a",
+  "jsonHash": "fnv1a64:c46f64a41df619db",
+  "findings": []
+}

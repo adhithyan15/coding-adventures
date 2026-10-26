@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
-          # Cargo's repository workspace references crates outside the five
+          # Cargo's repository workspace references crates outside the six
           # small native lanes. CI must validate that real workspace as well.
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
@@ -33,6 +33,14 @@ jobs:
         with:
           ruby-version: '3.4'
           bundler-cache: false
+      - name: Validate native C framework with the shared ISO harness
+        working-directory: code/packages/c/neural-framework
+        env:
+          CI: "true"
+          ISO_REQUIRE: "gcc clang"
+        run: |
+          sh tools/run.sh
+          python -m unittest discover -s ../../../scripts/tests -p test_neural_framework_c.py
       - name: Validate native Ruby framework and matrix foundation
         working-directory: code/packages/ruby/neural-framework
         run: |
@@ -87,4 +95,4 @@ jobs:
       - name: Execute training and exchange portable checkpoints both ways
         run: |
           python -m unittest discover -s code/scripts/tests -p test_neural_framework_interchange.py
-          python code/scripts/validate_neural_framework_interchange.py
+          python code/scripts/validate_neural_framework_interchange.py --c-executable code/packages/c/neural-framework/_build/gcc-native-xor

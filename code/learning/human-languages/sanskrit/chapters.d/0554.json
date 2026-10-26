@@ -1,0 +1,19 @@
+{
+  "chapter": 554,
+  "title": "Looking Ahead",
+  "label": "ch:sa-looking-ahead",
+  "canDo": "I can say what I intend and what the future may bring.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C554-arambhah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 554: I can say what I intend and what the future may bring.",
+    "assesses": [
+      "SA-LEX-C554-BHAVI554-03",
+      "SA-LEX-C554-BHAVI554-04",
+      "SA-LEX-C554-BHAVI554-05"
+    ]
+  }
+}

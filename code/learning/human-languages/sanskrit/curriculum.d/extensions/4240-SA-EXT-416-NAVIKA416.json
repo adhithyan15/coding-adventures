@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-416-NAVIKA416",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say who steers and rows the boat and where we land.",
+  "prerequisites": []
+}

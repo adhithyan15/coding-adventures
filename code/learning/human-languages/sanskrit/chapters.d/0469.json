@@ -1,0 +1,19 @@
+{
+  "chapter": 469,
+  "title": "The Senses",
+  "label": "ch:sa-the-senses",
+  "canDo": "I can talk about seeing, touching and smelling.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C469-jighrati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can talk about seeing, touching and smelling.",
+    "assesses": [
+      "SA-LEX-C469-INDRIYA469-03",
+      "SA-LEX-C469-INDRIYA469-04",
+      "SA-LEX-C469-INDRIYA469-05"
+    ]
+  }
+}

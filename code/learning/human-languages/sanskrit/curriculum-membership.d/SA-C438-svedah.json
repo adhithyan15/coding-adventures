@@ -1,0 +1,11 @@
+{
+  "id": "SA-C438-svedah",
+  "pathSegment": "SA-PATH-438-NIDAGHA438",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-438-NIDAGHA438",
+      "order": 3
+    }
+  ]
+}

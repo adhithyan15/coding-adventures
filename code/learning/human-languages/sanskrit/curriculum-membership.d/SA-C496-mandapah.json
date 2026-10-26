@@ -1,0 +1,11 @@
+{
+  "id": "SA-C496-mandapah",
+  "pathSegment": "SA-PATH-496-VIVAHA496",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-496-VIVAHA496",
+      "order": 3
+    }
+  ]
+}

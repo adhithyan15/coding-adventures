@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "Harm and No Harm",
+  "label": "ch:sa-harm-and-no-harm",
+  "canDo": "I can talk about violence, harm and forbearance.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C352-ksama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can talk about violence, harm and forbearance.",
+    "assesses": [
+      "SA-LEX-C352-AHIMSA352-03",
+      "SA-LEX-C352-AHIMSA352-04",
+      "SA-LEX-C352-AHIMSA352-05"
+    ]
+  }
+}

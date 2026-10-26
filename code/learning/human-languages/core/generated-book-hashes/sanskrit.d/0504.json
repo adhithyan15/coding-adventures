@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:05deb2a844bd5b60",
+  "lessonIds": [
+    "SA-C504-avedanam",
+    "SA-C504-niyuktih",
+    "SA-C504-pratibha",
+    "SA-C504-upajivati",
+    "SA-C504-pravinah"
+  ],
+  "tex": "sanskrit/book/chapters/ch504-looking-for-work.tex"
+}

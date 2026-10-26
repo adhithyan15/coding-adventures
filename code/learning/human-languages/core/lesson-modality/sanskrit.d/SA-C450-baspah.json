@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C450-baspah",
+    "language": "sanskrit",
+    "chapter": 450,
+    "sequence": 26130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94eb82bf9579d63f"
+  },
+  "findings": []
+}

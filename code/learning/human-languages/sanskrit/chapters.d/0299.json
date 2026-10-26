@@ -1,0 +1,19 @@
+{
+  "chapter": 299,
+  "title": "A Warning",
+  "label": "ch:sa-a-warning",
+  "canDo": "I can pass on a warning and say what to be careful of.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C299-apattih",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can pass on a warning and say what to be careful of.",
+    "assesses": [
+      "SA-LEX-C299-GHOSHANA299-03",
+      "SA-LEX-C299-GHOSHANA299-04",
+      "SA-LEX-C299-GHOSHANA299-05"
+    ]
+  }
+}

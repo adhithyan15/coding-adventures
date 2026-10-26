@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 330,
+  "output": "sanskrit/book/chapters/ch330-old-customs.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

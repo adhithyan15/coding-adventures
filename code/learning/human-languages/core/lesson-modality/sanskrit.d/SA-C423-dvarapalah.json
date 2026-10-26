@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C423-dvarapalah",
+    "language": "sanskrit",
+    "chapter": 423,
+    "sequence": 24520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd996ab2e744b859"
+  },
+  "findings": []
+}

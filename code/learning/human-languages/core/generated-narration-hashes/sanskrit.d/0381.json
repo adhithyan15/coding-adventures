@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:c47b223cfea49207",
+  "lessonIds": [
+    "SA-C381-samanyatah",
+    "SA-C381-visesatah",
+    "SA-C381-sarvatha",
+    "SA-C381-bahusah",
+    "SA-C381-sanksipati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch381.txt",
+  "json": "sanskrit/narration/ch381.json",
+  "textHash": "fnv1a64:d46f9ac399393e6a",
+  "jsonHash": "fnv1a64:4ccabb374395ad16",
+  "findings": []
+}

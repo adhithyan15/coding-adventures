@@ -1,0 +1,11 @@
+{
+  "id": "SA-C418-suktih",
+  "pathSegment": "SA-PATH-418-JALA418",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-418-JALA418",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:b6c1e2721de375d4",
+  "lessonIds": [
+    "SA-C488-pratibudhyate",
+    "SA-C488-tandra",
+    "SA-C488-prabodhayati",
+    "SA-C488-unnidrah",
+    "SA-C488-praharah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch488.txt",
+  "json": "sanskrit/narration/ch488.json",
+  "textHash": "fnv1a64:d69f9696bd135fab",
+  "jsonHash": "fnv1a64:c1360b420cf026ed",
+  "findings": []
+}

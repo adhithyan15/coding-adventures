@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 378,
+  "title": "A Little",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cf6cca33a5d0575d",
+  "lessons": [
+    {
+      "id": "SA-C378-lesah",
+      "sequence": 21940,
+      "title": "लेशः (leśaḥ) — a tiny portion; a little bit",
+      "headword": "लेशः",
+      "romanization": "leśaḥ",
+      "gloss": "a tiny portion; a little bit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae038b73bed4df27",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for completely, then the Sanskrit for exceeds."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लेशः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लेशः — leśaḥ — \"a tiny portion; a little bit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि दोषस्य लेशः अपि अस्ति, तर्हि पुनः चिन्तयतु। yadi doṣasya leśaḥ api asti, tarhi punaḥ cintayatu. If there is even a little of a mistake in it, think again."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लेशः (leśaḥ) MW gives leśa \"a small part or portion, a particle, a little bit\" and gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "leśaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *leśaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "leśaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *leśaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi doṣasya leśaḥ api asti, tarhi punaḥ cintayatu. — If there is even a little of a mistake in it, think again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi doṣasya leśaḥ api asti, tarhi punaḥ cintayatu.* — If there is even a little of a mistake in it, think again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for completely, then the Sanskrit for exceeds, then say leśaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for completely, then the Sanskrit for exceeds, then say *leśaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लेशः (leśaḥ) mean? (\"A tiny portion; a little bit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C378-manak",
+      "sequence": 21950,
+      "title": "मनाक् (manāk) — a little; in a small degree",
+      "headword": "मनाक्",
+      "romanization": "manāk",
+      "gloss": "a little; in a small degree",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f328971c6aafe38c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for exceeds, then the Sanskrit for a tiny portion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मनाक्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मनाक् — manāk — \"a little; in a small degree\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि सः मनाक् अपि यतते, तर्हि सफलतां प्राप्नोति। yadi saḥ manāk api yatate, tarhi saphalatāṃ prāpnoti. If he tries even a little, he succeeds."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मनाक् (manāk) MW says manāk probably comes from manā and the root √añc (\"perceivably\"), and gives \"a little, slightly, in a small degree\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manāk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manāk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manāk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manāk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi saḥ manāk api yatate, tarhi saphalatāṃ prāpnoti. — If he tries even a little, he succeeds.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi saḥ manāk api yatate, tarhi saphalatāṃ prāpnoti.* — If he tries even a little, he succeeds.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for exceeds, then the Sanskrit for a tiny portion, then say manāk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for exceeds, then the Sanskrit for a tiny portion, then say *manāk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मनाक् (manāk) mean? (\"A little; in a small degree\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C378-ardham",
+      "sequence": 21960,
+      "title": "अर्धम् (ardham) — a half",
+      "headword": "अर्धम्",
+      "romanization": "ardham",
+      "gloss": "a half",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:acc8a812525d817f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a tiny portion, then the Sanskrit for in a small degree."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अर्धम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अर्धम् — ardham — \"a half\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि भवान् अर्धं खादति, तर्हि अर्धं मह्यं ददातु। yadi bhavān ardhaṃ khādati, tarhi ardhaṃ mahyaṃ dadātu. If you eat half, give half to me."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अर्धम् (ardham) MW gives ardha \"half, halved\" and, as a noun, \"the half\"; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ardham",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ardham*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ardham, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ardham*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bhavān ardhaṃ khādati, tarhi ardhaṃ mahyaṃ dadātu. — If you eat half, give half to me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bhavān ardhaṃ khādati, tarhi ardhaṃ mahyaṃ dadātu.* — If you eat half, give half to me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a tiny portion, then the Sanskrit for in a small degree, then say ardham again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a tiny portion, then the Sanskrit for in a small degree, then say *ardham* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अर्धम् (ardham) mean? (\"A half\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C378-nyunah",
+      "sequence": 21970,
+      "title": "न्यूनः (nyūnaḥ) — less; falling short",
+      "headword": "न्यूनः",
+      "romanization": "nyūnaḥ",
+      "gloss": "less; falling short",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ec9f26e5a201d06",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for in a small degree, then the Sanskrit for a half."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: न्यूनः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "न्यूनः — nyūnaḥ — \"less; falling short\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि अन्नं न्यूनम्, तर्हि अहं न खादिष्यामि। yadi annaṃ nyūnam, tarhi ahaṃ na khādiṣyāmi. If there is too little food, I will not eat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "न्यूनः (nyūnaḥ) is built from ni and ūna, \"wanting, deficient\"; MW gives ny-ūna \"less, diminished, defective, deficient\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyūnaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyūnaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyūnaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyūnaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi annaṃ nyūnam, tarhi ahaṃ na khādiṣyāmi. — If there is too little food, I will not eat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi annaṃ nyūnam, tarhi ahaṃ na khādiṣyāmi.* — If there is too little food, I will not eat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for in a small degree, then the Sanskrit for a half, then say nyūnaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for in a small degree, then the Sanskrit for a half, then say *nyūnaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does न्यूनः (nyūnaḥ) mean? (\"Less; falling short\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C378-hrasati",
+      "sequence": 21980,
+      "title": "ह्रसति (hrasati) — dwindles; grows less",
+      "headword": "ह्रसति",
+      "romanization": "hrasati",
+      "gloss": "dwindles; grows less",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b325bfbe21bb35ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a half, then the Sanskrit for falling short."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ह्रसति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ह्रसति — hrasati — \"dwindles; grows less\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि वर्षा न भवति, तर्हि नद्याः जलं ह्रसति। yadi varṣā na bhavati, tarhi nadyāḥ jalaṃ hrasati. If it does not rain, the river's water dwindles."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): जलं ह्रसितवत्, jalaṃ hrasitavat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ह्रसति (hrasati) comes from the root √hras, \"to become short or small, to be diminished\"; MW gives hrasita \"shortened, curtailed, diminished\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hrasati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hrasati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hrasati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hrasati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi varṣā na bhavati, tarhi nadyāḥ jalaṃ hrasati. — If it does not rain, the river's water dwindles.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi varṣā na bhavati, tarhi nadyāḥ jalaṃ hrasati.* — If it does not rain, the river's water dwindles.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a half, then the Sanskrit for falling short, then say hrasati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a half, then the Sanskrit for falling short, then say *hrasati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ह्रसति (hrasati) mean? (\"Dwindles; grows less\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

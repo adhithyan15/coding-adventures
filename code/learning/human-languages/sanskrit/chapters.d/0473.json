@@ -1,0 +1,19 @@
+{
+  "chapter": 473,
+  "title": "Arms and Legs",
+  "label": "ch:sa-arms-and-legs",
+  "canDo": "I can name parts of the arms and legs.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C473-akuncayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can name parts of the arms and legs.",
+    "assesses": [
+      "SA-LEX-C473-ANGA473-03",
+      "SA-LEX-C473-ANGA473-04",
+      "SA-LEX-C473-ANGA473-05"
+    ]
+  }
+}

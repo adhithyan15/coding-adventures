@@ -1,0 +1,11 @@
+{
+  "id": "SA-C289-varnayati",
+  "pathSegment": "SA-PATH-289-SAKSHYA289",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-289-SAKSHYA289",
+      "order": 1
+    }
+  ]
+}

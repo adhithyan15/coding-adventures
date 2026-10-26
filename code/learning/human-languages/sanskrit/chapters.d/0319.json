@@ -1,0 +1,19 @@
+{
+  "chapter": 319,
+  "title": "Victory and Defeat",
+  "label": "ch:sa-victory-and-defeat",
+  "canDo": "I can say who won a battle and what became of the losers.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C319-abhibhavati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can say who won a battle and what became of the losers.",
+    "assesses": [
+      "SA-LEX-C319-VIJAYA319-03",
+      "SA-LEX-C319-VIJAYA319-04",
+      "SA-LEX-C319-VIJAYA319-05"
+    ]
+  }
+}

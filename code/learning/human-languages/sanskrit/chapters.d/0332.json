@@ -1,0 +1,21 @@
+{
+  "chapter": 332,
+  "title": "A Tale of Long Ago",
+  "label": "ch:sa-a-tale-of-long-ago",
+  "canDo": "I can begin and tell a traditional tale.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-R332-review-326-332",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can begin and tell a traditional tale.",
+    "assesses": [
+      "SA-LEX-C332-AKHYANA332-01",
+      "SA-LEX-C332-AKHYANA332-02",
+      "SA-LEX-C332-AKHYANA332-03",
+      "SA-LEX-C332-AKHYANA332-04",
+      "SA-LEX-C332-AKHYANA332-05"
+    ]
+  }
+}

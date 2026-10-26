@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C474-spandate",
+    "language": "sanskrit",
+    "chapter": 474,
+    "sequence": 27370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf587ee141661b99"
+  },
+  "findings": []
+}

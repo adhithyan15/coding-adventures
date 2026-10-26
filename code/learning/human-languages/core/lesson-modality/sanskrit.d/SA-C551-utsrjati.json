@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C551-utsrjati",
+    "language": "sanskrit",
+    "chapter": 551,
+    "sequence": 31550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:677823e8d64c7f3e"
+  },
+  "findings": []
+}

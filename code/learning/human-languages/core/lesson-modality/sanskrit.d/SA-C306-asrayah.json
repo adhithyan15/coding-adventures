@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C306-asrayah",
+    "language": "sanskrit",
+    "chapter": 306,
+    "sequence": 18030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a7932c1d4a6c7b91"
+  },
+  "findings": []
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 444,
+  "title": "The Moon's Fortnights",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:87cea32273284653",
+  "lessons": [
+    {
+      "id": "SA-C444-purnima",
+      "sequence": 25560,
+      "title": "पूर्णिमा (pūrṇimā) — the full-moon day",
+      "headword": "पूर्णिमा",
+      "romanization": "pūrṇimā",
+      "gloss": "the full-moon day",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5dd7e34617eabf5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a dark night, then the Sanskrit for by night."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पूर्णिमा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पूर्णिमा — pūrṇimā — \"the full-moon day\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पूर्णिमायां चन्द्रः पूर्णः भवति। pūrṇimāyāṃ candraḥ pūrṇaḥ bhavati. On the full-moon day the moon is full."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पूर्णिमा (pūrṇimā) is built on pūrṇa, \"full\"; MW gives pūrṇimā as the day of full moon (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūrṇimā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūrṇimā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūrṇimā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūrṇimā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūrṇimāyāṃ candraḥ pūrṇaḥ bhavati. — On the full-moon day the moon is full.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūrṇimāyāṃ candraḥ pūrṇaḥ bhavati.* — On the full-moon day the moon is full.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a dark night, then the Sanskrit for by night, then say pūrṇimā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a dark night, then the Sanskrit for by night, then say *pūrṇimā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पूर्णिमा (pūrṇimā) mean? (\"The full-moon day\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C444-amavasya",
+      "sequence": 25570,
+      "title": "अमावास्या (amāvāsyā) — the new-moon night",
+      "headword": "अमावास्या",
+      "romanization": "amāvāsyā",
+      "gloss": "the new-moon night",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc83b55f24bdc02b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for by night, then the Sanskrit for the full-moon day."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अमावास्या",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अमावास्या — amāvāsyā — \"the new-moon night\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अमावास्यायाम् आकाशे चन्द्रः न अस्ति। amāvāsyāyām ākāśe candraḥ na asti. On the new-moon night there is no moon in the sky."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अमावास्या (amāvāsyā) is built from amā, \"at home, together\", and the root √vas, \"to dwell\": the night when sun and moon dwell together; MW gives amāvāsyā as the night of new moon; it lives on as Hindi amāwas, \"the night of the new moon\" (MW; CDIAL 565)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amāvāsyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amāvāsyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amāvāsyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amāvāsyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amāvāsyāyām ākāśe candraḥ na asti. — On the new-moon night there is no moon in the sky.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amāvāsyāyām ākāśe candraḥ na asti.* — On the new-moon night there is no moon in the sky.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for by night, then the Sanskrit for the full-moon day, then say amāvāsyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for by night, then the Sanskrit for the full-moon day, then say *amāvāsyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अमावास्या (amāvāsyā) mean? (\"The new-moon night\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C444-suklapaksah",
+      "sequence": 25580,
+      "title": "शुक्लपक्षः (śuklapakṣaḥ) — the bright fortnight",
+      "headword": "शुक्लपक्षः",
+      "romanization": "śuklapakṣaḥ",
+      "gloss": "the bright fortnight",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b072dc32666db892",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for the full-moon day, then the Sanskrit for the new-moon night."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शुक्लपक्षः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शुक्लपक्षः — śuklapakṣaḥ — \"the bright fortnight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शुक्लपक्षे चन्द्रः प्रतिदिनं वर्धते। śuklapakṣe candraḥ pratidinaṃ vardhate. In the bright fortnight the moon grows every day."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शुक्लपक्षः (śuklapakṣaḥ) is built from śukla, \"bright, white\", and pakṣa, \"a wing, a side\", which MW also gives as the half of a lunar month; MW gives the compound as the light half of the month (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śuklapakṣaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śuklapakṣaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śuklapakṣaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śuklapakṣaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śuklapakṣe candraḥ pratidinaṃ vardhate. — In the bright fortnight the moon grows every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śuklapakṣe candraḥ pratidinaṃ vardhate.* — In the bright fortnight the moon grows every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for the full-moon day, then the Sanskrit for the new-moon night, then say śuklapakṣaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for the full-moon day, then the Sanskrit for the new-moon night, then say *śuklapakṣaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शुक्लपक्षः (śuklapakṣaḥ) mean? (\"The bright fortnight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C444-krsnapaksah",
+      "sequence": 25590,
+      "title": "कृष्णपक्षः (kṛṣṇapakṣaḥ) — the dark fortnight",
+      "headword": "कृष्णपक्षः",
+      "romanization": "kṛṣṇapakṣaḥ",
+      "gloss": "the dark fortnight",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b521e60e1ce2102",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for the new-moon night, then the Sanskrit for the bright fortnight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कृष्णपक्षः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कृष्णपक्षः — kṛṣṇapakṣaḥ — \"the dark fortnight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कृष्णपक्षे रात्रौ अन्धकारः भवति। kṛṣṇapakṣe rātrau andhakāraḥ bhavati. In the dark fortnight there is darkness at night."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कृष्णपक्षः (kṛṣṇapakṣaḥ) is built from kṛṣṇa, \"dark, black\", and pakṣa, \"a wing, a side, a half-month\"; MW gives the compound as the dark half of the month, when the moon wanes (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṛṣṇapakṣaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṛṣṇapakṣaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṛṣṇapakṣaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṛṣṇapakṣaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṛṣṇapakṣe rātrau andhakāraḥ bhavati. — In the dark fortnight there is darkness at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṛṣṇapakṣe rātrau andhakāraḥ bhavati.* — In the dark fortnight there is darkness at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for the new-moon night, then the Sanskrit for the bright fortnight, then say kṛṣṇapakṣaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for the new-moon night, then the Sanskrit for the bright fortnight, then say *kṛṣṇapakṣaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कृष्णपक्षः (kṛṣṇapakṣaḥ) mean? (\"The dark fortnight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C444-rajate",
+      "sequence": 25600,
+      "title": "राजते (rājate) — gleams; shines brightly",
+      "headword": "राजते",
+      "romanization": "rājate",
+      "gloss": "gleams; shines brightly",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbab344e29abbd2f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for the bright fortnight, then the Sanskrit for the dark fortnight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: राजते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "राजते — rājate — \"gleams; shines brightly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अमावास्यायाः अनन्तरं चन्द्रः पुनः राजते। amāvāsyāyāḥ anantaraṃ candraḥ punaḥ rājate. After the new moon the moon gleams again."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): चन्द्रः पुनः राजितवान्, candraḥ punaḥ rājitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "राजते (rājate) comes from the root √rāj, \"to shine, to be splendid\", which MW also gives as to reign, and thinks was perhaps two roots at first; MW gives the participle rājita, \"resplendent\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amāvāsyāyāḥ anantaraṃ candraḥ punaḥ rājate. — After the new moon the moon gleams again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amāvāsyāyāḥ anantaraṃ candraḥ punaḥ rājate.* — After the new moon the moon gleams again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for the bright fortnight, then the Sanskrit for the dark fortnight, then say rājate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for the bright fortnight, then the Sanskrit for the dark fortnight, then say *rājate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does राजते (rājate) mean? (\"Gleams; shines brightly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

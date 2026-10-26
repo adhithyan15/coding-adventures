@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C459-avamanyate",
+    "language": "sanskrit",
+    "chapter": 459,
+    "sequence": 26570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ef5c9c2e25d2676"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:adb750152b1f8929",
+  "lessonIds": [
+    "SA-C419-vapi",
+    "SA-C419-utsah",
+    "SA-C419-puskarini",
+    "SA-C419-kulya",
+    "SA-C419-palvalam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch419.txt",
+  "json": "sanskrit/narration/ch419.json",
+  "textHash": "fnv1a64:cb06fa5fa79b5265",
+  "jsonHash": "fnv1a64:cb276a19de1e2c2c",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:37de8fc722aeee44",
+  "lessonIds": [
+    "SA-C435-kapardakah",
+    "SA-C435-niskah",
+    "SA-C435-dinarah",
+    "SA-C435-vinimayah",
+    "SA-C435-bhandagaram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch435.txt",
+  "json": "sanskrit/narration/ch435.json",
+  "textHash": "fnv1a64:c4894af2c443ea63",
+  "jsonHash": "fnv1a64:aab643fb985824ba",
+  "findings": []
+}

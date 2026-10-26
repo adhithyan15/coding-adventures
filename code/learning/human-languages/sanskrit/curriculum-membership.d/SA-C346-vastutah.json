@@ -1,0 +1,11 @@
+{
+  "id": "SA-C346-vastutah",
+  "pathSegment": "SA-PATH-346-AKSHEPA346",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-346-AKSHEPA346",
+      "order": 4
+    }
+  ]
+}

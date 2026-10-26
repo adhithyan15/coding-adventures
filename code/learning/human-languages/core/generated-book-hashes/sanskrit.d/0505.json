@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:8ca2de0ebe5fd2d0",
+  "lessonIds": [
+    "SA-C505-mrd",
+    "SA-C505-mrnmayah",
+    "SA-C505-mrdnati",
+    "SA-C505-apakah",
+    "SA-C505-akarah"
+  ],
+  "tex": "sanskrit/book/chapters/ch505-clay-and-fire.tex"
+}

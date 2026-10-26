@@ -1,0 +1,11 @@
+{
+  "id": "SA-C295-apatkalah",
+  "pathSegment": "SA-PATH-295-CETANA295",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-295-CETANA295",
+      "order": 3
+    }
+  ]
+}

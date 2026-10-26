@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C399-snapayati",
+    "language": "sanskrit",
+    "chapter": 399,
+    "sequence": 23260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bafeced22fb8e0ac"
+  },
+  "findings": []
+}
