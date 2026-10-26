@@ -150,14 +150,17 @@ Dependencies on external packages (not in the monorepo) are silently ignored.
 Mosaic is a domain language, not an implementation lane, so only the Go
 reference tool resolves it (the conformance contract does not require the
 other build-tool implementations to). Only the keys of the root
-`[dependencies]` table (or a `[dependencies.<name>]` sub-table header) are
+`[dependencies]` table are
 candidates; the requirement string is version data. Lookup is scoped to
 Mosaic packages, and
-self-references are dropped. Because a
+self-references are dropped. A key without the `mosaic-pkg-` prefix also
+depends on `mosaic-pkg-<key>`, matching the resolver's directory locator. Because a
 missed edge silently skips a dependent's tests, the reader fails closed: a
-manifest in a valid TOML shape it does not model (any root-level key or
-inline table, such as `package.name = ...` or `dependencies = { ... }`; a multi-line string, any backslash
-escape), a manifest that is not a regular file or exceeds 1 MiB, and two Mosaic
+manifest outside the plain subset it reads (any root-level key; any table
+header other than a one-part `[package]`, `[dependencies]`, `[components]`,
+`[kernel]`, `[styles]`, `[app]`, `[host_assets]` or `[host_effects]`; a
+quoted or dotted key, or a non-string value, in `[package]` or
+`[dependencies]`; a multi-line string; any backslash), a manifest that is not a regular file or exceeds 1 MiB, and two Mosaic
 packages (libraries or apps) claiming one name are errors that stop the plan.
 A leading UTF-8 byte-order mark is stripped, as TOML allows. The resolver builds a directed graph where an edge from A to B means "B depends on A" (A must build before B).
 

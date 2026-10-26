@@ -74,17 +74,17 @@ mosaic-pkg-sheet = "0.1.0"
 			want: []string{"mosaic/mosaic-pkg-sheet", "mosaic/mosaic-pkg-toolkit"},
 		},
 		{
-			name: "quoted key, trailing comment, and a manifest-name alias",
-			manifest: `[dependencies]
-"mosaic-pkg-toolkit" = "0.16.0"   # caret requirement
-mosaic-pkg-calendar = "0.1.0"
+			name: "trailing comment, literal string, and a manifest-name alias",
+			manifest: `[dependencies]   # what task-app inlines
+mosaic-pkg-toolkit = "0.16.0"   # caret requirement
+mosaic-pkg-calendar = '0.1.0'
 `,
 			want: []string{"mosaic/calendar", "mosaic/mosaic-pkg-toolkit"},
 		},
 		{
-			name: "dotted sub-table header names a dependency",
-			manifest: `[dependencies.mosaic-pkg-sheet]
-version = "0.1.0"
+			name: "an unprefixed key also depends on mosaic-pkg-<key>",
+			manifest: `[dependencies]
+sheet = "0.1.0"
 `,
 			want: []string{"mosaic/mosaic-pkg-sheet"},
 		},
@@ -126,23 +126,16 @@ version = "1"
 			want: []string{},
 		},
 		{
-			name: "a multi-line value in dependencies does not swallow the next key",
-			manifest: `[dependencies]
-mosaic-pkg-sheet = { version = "0.1.0", note = [
+			name: "a multi-line value in another table does not swallow the next key",
+			manifest: `[components]
+exports = [
   "[not-a-header]",
-] }
+  ["[dependencies]"],
+]
+[dependencies]
 mosaic-pkg-toolkit = "0.16.0"
 [kernel]
 mosaic-pkg-calendar = "never a dependency"
-`,
-			want: []string{"mosaic/mosaic-pkg-sheet", "mosaic/mosaic-pkg-toolkit"},
-		},
-		{
-			name: "an array-of-tables header ends the dependencies table",
-			manifest: `[dependencies]
-mosaic-pkg-toolkit = "0.16.0"
-[[screens]]
-mosaic-pkg-sheet = "0.1.0"
 `,
 			want: []string{"mosaic/mosaic-pkg-toolkit"},
 		},
@@ -189,6 +182,16 @@ func TestParseMosaicDepsFailsClosedOnShapesItDoesNotModel(t *testing.T) {
 		{"escaped package name", "[package]\nname = \"task-\\u0061pp\"\n[dependencies]\nmosaic-pkg-sheet = \"0.1.0\"\n", "escape"},
 		{"root dotted package name", "package.name = \"task-app\"\n[dependencies]\nmosaic-pkg-sheet = \"0.1.0\"\n", "root-level"},
 		{"root inline package table", "package = { name = \"task-app\", version = \"0.1.0\" }\n[dependencies]\nmosaic-pkg-sheet = \"0.1.0\"\n", "root-level"},
+		{"dotted package sub-table", "[package]\nname = \"task-app\"\n[package.meta]\nname = \"decoy\"\n[dependencies]\nmosaic-pkg-sheet = \"0.1.0\"\n", "table header"},
+		{"dotted dependency header", "[package]\nname = \"task-app\"\n[dependencies.mosaic-pkg-sheet]\nversion = \"0.1.0\"\n", "table header"},
+		{"array of tables", "[package]\nname = \"task-app\"\n[[screens]]\nname = \"x\"\n", "table header"},
+		{"quoted header", "[package]\nname = \"task-app\"\n[\"dependencies\"]\nmosaic-pkg-sheet = \"0.1.0\"\n", "table header"},
+		{"spaced header", "[package]\nname = \"task-app\"\n[ dependencies ]\nmosaic-pkg-sheet = \"0.1.0\"\n", "table header"},
+		{"unknown table", "[package]\nname = \"task-app\"\n[extras]\nx = \"1\"\n", "table header"},
+		{"quoted dependency key", "[package]\nname = \"task-app\"\n[dependencies]\n\"mosaic-pkg-sheet\" = \"0.1.0\"\n", "bare key"},
+		{"dotted package key", "[package]\nname.first = \"task-app\"\n", "bare key"},
+		{"inline-table dependency", "[package]\nname = \"task-app\"\n[dependencies]\nmosaic-pkg-sheet = { version = \"0.1.0\" }\n", "one-line string"},
+		{"non-string package name", "[package]\nname = [\"task-app\"]\n", "one-line string"},
 		{"BOM before a root inline table", "\xEF\xBB\xBFdependencies = { mosaic-pkg-sheet = \"0.1.0\" }\n[package]\nname = \"task-app\"\n", "root-level"},
 	}
 	for index, tc := range cases {

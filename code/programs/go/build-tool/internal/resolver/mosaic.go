@@ -59,6 +59,11 @@ package resolver
 //	package.name = "mosaic-pkg-toolkit"                #   dotted key
 //	description = """…"""                              # multi-line string
 //	["dependenci\u0065s"]                              # any backslash escape
+//	[package.meta]                                     # any header but a
+//	                                                   #   plain known table
+//	"mosaic-pkg-toolkit" = "0.16.0"                    # a quoted or dotted key
+//	                                                   #   in [package] or
+//	                                                   #   [dependencies]
 //
 // None appears in the repository; a manifest that needs one can be rewritten
 // in the plain `[dependencies]` form the reader understands. The same goes
@@ -81,6 +86,50 @@ import (
 
 // mosaicManifestName is the one file that makes a directory a Mosaic package.
 const mosaicManifestName = "mosaic-package.toml"
+
+// mosaicManifestTables are the only table headers the reader accepts: every
+// table any manifest in the repository declares (UI29 §4.2). A manifest that
+// adds a new table must add it here too, and any other header, including
+// dotted sub-tables such as `[package.meta]`, is refused. Accepting only this
+// plain subset is what lets a line reader agree with the real TOML parser
+// instead of chasing every spelling TOML allows.
+var mosaicManifestTables = map[string]bool{
+	"package":      true,
+	"dependencies": true,
+	"components":   true,
+	"kernel":       true,
+	"styles":       true,
+	"app":          true,
+	"host_assets":  true,
+	"host_effects": true,
+}
+
+// mosaicManifestTableList renders mosaicManifestTables for error messages.
+func mosaicManifestTableList() string {
+	names := make([]string, 0, len(mosaicManifestTables))
+	for name := range mosaicManifestTables {
+		names = append(names, "["+name+"]")
+	}
+	sort.Strings(names)
+	return strings.Join(names, ", ")
+}
+
+// isBareTomlKey reports whether key is a TOML bare key: ASCII letters,
+// digits, '-' and '_' only, so no quoting and no dots.
+func isBareTomlKey(key string) bool {
+	if key == "" {
+		return false
+	}
+	for _, character := range key {
+		switch {
+		case character >= 'a' && character <= 'z', character >= 'A' && character <= 'Z',
+			character >= '0' && character <= '9', character == '-', character == '_':
+		default:
+			return false
+		}
+	}
+	return true
+}
 
 // maxMosaicManifestBytes caps a manifest read. Real manifests are a few
 // hundred bytes; anything past this is refused rather than read into memory.
@@ -129,27 +178,25 @@ func readMosaicManifestBytes(pkgPath string) (data []byte, found bool, err error
 }
 
 // readMosaicManifestTables reads pkgPath/mosaic-package.toml and returns, for
-// each top-level table header, the keys assigned directly inside it. Keys of
-// a dotted sub-table header such as `[dependencies.mosaic-pkg-card]` are
-// reported as the key "mosaic-pkg-card" of the "dependencies" table, which is
-// how TOML itself defines that spelling.
+// each table header (one of mosaicManifestTables), the keys assigned directly
+// inside it.
 //
 // Example — for
 //
 //	[package]
 //	name = "card"           # comment
 //	[dependencies]
-//	"mosaic-pkg-grid" = "0.1.0"
-//	[dependencies.mosaic-pkg-sheet]
-//	version = "0.1.0"
+//	mosaic-pkg-grid = "0.1.0"
+//	mosaic-pkg-sheet = "0.1.0"
 //
 // it returns {"package": {"name"}, "dependencies": {"mosaic-pkg-grid",
 // "mosaic-pkg-sheet"}} and the value of each key in values["package.name"].
 //
 // Multi-line arrays are tracked by bracket depth outside strings, so an array
-// element that begins with `[` is never mistaken for a table header. Array
-// of tables (`[[x]]`) headers end the current table and are otherwise
-// ignored: no Mosaic manifest field the resolver reads uses them.
+// element that begins with `[` is never mistaken for a table header. Any
+// other line that starts with `[` must be a plain header from
+// mosaicManifestTables; in [package] and [dependencies] every key must be bare
+// and every dependency (and `name`) a one-line string.
 //
 // It returns found=false when there is no manifest, and a *MosaicManifestError
 // for any shape listed at the top of this file.
@@ -195,24 +242,17 @@ func readMosaicManifestTables(pkgPath string) (keys map[string][]string, values 
 			continue
 		}
 
-		if strings.HasPrefix(line, "[[") {
-			table = "[[array-of-tables]]"
-			continue
-		}
-		if strings.HasPrefix(line, "[") && strings.HasSuffix(line, "]") {
-			path := splitTomlKeyPath(line[1 : len(line)-1])
-			if len(path) == 0 {
-				table = "[[malformed]]"
-				continue
+		if strings.HasPrefix(line, "[") {
+			// Only a plain one-part header naming a known table is read. A
+			// dotted (`[package.meta]`), quoted, spaced or array-of-tables
+			// header could assign keys to a table this reader would then
+			// misattribute, so every other spelling is refused.
+			name, plain := strings.CutPrefix(line, "[")
+			name, closed := strings.CutSuffix(name, "]")
+			if !plain || !closed || !mosaicManifestTables[name] {
+				return refuse(fmt.Sprintf("uses the table header %q; only %s are read", line, mosaicManifestTableList()))
 			}
-			table = path[0]
-			if len(path) == 2 {
-				// [dependencies.mosaic-pkg-x] declares key mosaic-pkg-x.
-				keys[table] = append(keys[table], path[1])
-			}
-			if len(path) > 2 {
-				table = "[[nested]]"
-			}
+			table = name
 			continue
 		}
 
@@ -234,6 +274,21 @@ func readMosaicManifestTables(pkgPath string) (keys map[string][]string, values 
 			// root-level key. Spelled at the root (`package.name = ...`,
 			// `dependencies = { ... }`), a field would be invisible here.
 			return refuse("declares a root-level key or inline table")
+		}
+		if table == "package" || table == "dependencies" {
+			// The two tables that name things: a bare key and a one-line
+			// string value, exactly as every manifest in the repository
+			// writes them. A quoted or dotted key, or any other value shape,
+			// is refused rather than guessed at.
+			key := strings.TrimSpace(line[:eq])
+			if !isBareTomlKey(key) {
+				return refuse(fmt.Sprintf("uses the key %q in [%s]; write it as a bare key", key, table))
+			}
+			if table == "dependencies" || key == "name" {
+				if tomlBasicStringValue(value) == "" && value != `""` && value != "''" {
+					return refuse(fmt.Sprintf("gives [%s] %s a value that is not a one-line string", table, key))
+				}
+			}
 		}
 		keys[table] = append(keys[table], path[0])
 		if len(path) == 1 {
@@ -272,8 +327,19 @@ func parseMosaicDeps(pkg discovery.Package, knownNames map[string]string) ([]str
 
 	seen := make(map[string]bool)
 	for _, key := range keys["dependencies"] {
-		if dependency, found := knownNames[strings.ToLower(key)]; found && dependency != pkg.Name {
-			seen[dependency] = true
+		key = strings.ToLower(key)
+		candidates := []string{key}
+		if !strings.HasPrefix(key, "mosaic-pkg-") {
+			// The resolver's directory locator tries `mosaic-pkg-<key>`
+			// first, so `toolkit = "..."` can compile against
+			// mosaic-pkg-toolkit. Depend on both; an extra edge only makes
+			// the plan stricter.
+			candidates = append(candidates, "mosaic-pkg-"+key)
+		}
+		for _, candidate := range candidates {
+			if dependency, found := knownNames[candidate]; found && dependency != pkg.Name {
+				seen[dependency] = true
+			}
 		}
 	}
 
