@@ -1,4 +1,15 @@
 # Changelog — `twig-aot`
+## Unreleased — LANG83 PR7b — native runtime digit helpers
+
+- **`__iir_f64_digits(int64_t bits)` / `__iir_f64_exp10(int64_t bits)`** in
+  `runtime/twig_runtime.c`: the shortest round-trip significand `D` (no
+  trailing zeros) and the exponent of its leading digit, 0 for ±0, ±Infinity
+  and NaN. Both run `twig_f64_digits`, the core `__twig_write_f64_*` print
+  from, so the native backends' `f64_digits` / `f64_exp10` share it. Checked
+  against host `python3` on 122 108 values (every power of two, the
+  subnormal and finite edges, random bit patterns and short decimals) under
+  ASan/UBSan.
+
 ## Unreleased (LANG84 phase 6e — `Trap.ReferenceError`)
 
 - `__twig_trap`'s kind table (`TWIG_TRAP_KINDS`) gains

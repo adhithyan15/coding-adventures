@@ -941,6 +941,64 @@ fn emit_instr(
         asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
         return Ok(());
     }
+    // LANG83 PR7b — the language-neutral float primitives, on the raw bits.
+    //
+    // `f64_class` is three compares on the magnitude (the bits with bit 63
+    // cleared), each contributing 0 or 1 — no branch:
+    //
+    //   class = (mag != 0) + (mag >= 0x7FF0…0) + (mag > 0x7FF0…0)
+    //
+    //   ±0           0 + 0 + 0 = 0
+    //   finite ≠ 0   1 + 0 + 0 = 1     (subnormals included: mag > 0)
+    //   ±Infinity    1 + 1 + 0 = 2     (mag == 0x7FF0…0 exactly)
+    //   NaN          1 + 1 + 1 = 3     (exponent all ones, fraction ≠ 0)
+    //
+    //   mov rax,[a]; shl rax,1; shr rax,1           ; rax = mag
+    //   mov rcx,0x7FF0000000000000
+    //   test rax,rax; setne dl;  movzx rdx,dl       ; rdx  = mag != 0
+    //   cmp rax,rcx;  setae r8b; movzx r8,r8b; add rdx,r8
+    //   cmp rax,rcx;  seta r8b;  movzx r8,r8b; add rdx,r8
+    //   mov [d],rdx
+    //
+    // `f64_digits` / `f64_exp10` are the shortest-digits search: a call into
+    // the native runtime (`twig_runtime.c`), which runs the same C core the
+    // PR6a writers print from. The bits go in the first integer argument
+    // register (`rdi` SysV / `rcx` MS x64), the result comes back in `rax`:
+    //
+    //   mov rdi,[a]; call __iir_f64_digits; mov [d],rax
+    //
+    // Every source is read before `[d]` is written, so `d == a` is safe.
+    if op == "f64_class" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_f64_bits(asm, alloc, Reg::Rax, src)?;            // rax = bits of a
+        asm.shl_imm8(Reg::Rax, 1);                             // drop the sign bit…
+        asm.shr_imm8(Reg::Rax, 1);                             // …rax = magnitude
+        asm.mov_r64_imm64(Reg::Rcx, 0x7FF0_0000_0000_0000);    // +Infinity's bits
+        asm.test_(Reg::Rax, Reg::Rax);
+        asm.setcc(Cond::Ne, Reg::Rdx);
+        asm.movzx_r64_r8(Reg::Rdx, Reg::Rdx);                  // rdx = mag != 0
+        for cond in [Cond::Ae, Cond::A] {                      // unsigned >=, >
+            asm.cmp(Reg::Rax, Reg::Rcx);
+            asm.setcc(cond, Reg::R8);
+            asm.movzx_r64_r8(Reg::R8, Reg::R8);
+            asm.add(Reg::Rdx, Reg::R8);
+        }
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rdx);
+        return Ok(());
+    }
+    if op == "f64_digits" || op == "f64_exp10" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_f64_bits(asm, alloc, abi.arg_regs()[0], src)?;   // first arg = bits
+        asm.call_rel32(&format!("__iir_{op}"), ExternalRelocKind::PltRel32);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
     // AL8 sqrt — `SQRTSD xmm0,xmm0` (SSE2; single hardware FP instruction, no libm).
     //   f64_sqrt dest <- src  →  movsd xmm0,[src]; sqrtsd xmm0,xmm0; movsd [dest],xmm0
     // NaN propagates; negative input → NaN (IEEE-754 / matches VM `f64::sqrt`).
@@ -3476,6 +3534,61 @@ mod tests {
         assert!(compile_function(&ctx, &ir, X86_64Abi::SysV).is_err());
         let no_dest = vec![instr("f64_signbit", None, vec![Op::Var("a".into())])];
         assert!(compile_function(&ctx, &no_dest, X86_64Abi::SysV).is_err());
+    }
+
+    // ---- LANG83 PR7b: the neutral float primitives ----
+
+    /// `f64_class` is branch-free integer code on the magnitude: three
+    /// `setcc`s summed, no call and no SSE instruction.
+    #[test]
+    fn f64_class_is_three_compares_on_the_magnitude() {
+        let bytes = pr6c_fn("f64_class", vec![Op::Var("a".into())]);
+        position(&bytes, &[0x48, 0xC1, 0xE0, 1]); // shl rax, 1
+        position(&bytes, &[0x48, 0xC1, 0xE8, 1]); // shr rax, 1
+        let mut inf = vec![0x48, 0xB9]; // movabs rcx, 0x7FF0…0
+        inf.extend_from_slice(&0x7FF0_0000_0000_0000u64.to_le_bytes());
+        position(&bytes, &inf);
+        for cc in [0x95u8, 0x93, 0x97] {
+            // setne / setae / seta (REX 0F 9x C?)
+            assert!(bytes.windows(2).any(|w| w[0] == 0x0F && w[1] == cc), "setcc {cc:#x}");
+        }
+        let ctx = fn_ctx("f", &[], "void");
+        let ir = vec![
+            instr("const_f64", Some("a"), vec![Op::Float(1.5)]),
+            instr("f64_class", Some("r"), vec![Op::Var("a".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let (_, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        assert!(relocs.is_empty(), "f64_class is inline: {relocs:?}");
+        let ir = vec![instr("f64_class", Some("r"), vec![Op::Int(1)]), instr("ret_void", None, vec![])];
+        assert!(compile_function(&ctx, &ir, X86_64Abi::SysV).is_err(), "an integer literal is not float bits");
+    }
+
+    /// `f64_digits` / `f64_exp10` call the runtime's `__iir_f64_*` with the
+    /// raw bits in the ABI's first integer register and store `rax`.
+    #[test]
+    fn f64_digits_and_exp10_call_the_runtime_with_the_bits() {
+        for op in ["f64_digits", "f64_exp10"] {
+            let ctx = fn_ctx("f", &[], "void");
+            let ir = vec![
+                instr("const_f64", Some("x"), vec![Op::Float(1.5)]),
+                instr(op, Some("d"), vec![Op::Var("x".into())]),
+                instr("ret_void", None, vec![]),
+            ];
+            for (abi, modrm_reg) in [(X86_64Abi::SysV, 7u8), (X86_64Abi::MsX64, 1)] {
+                let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, abi).unwrap();
+                let reloc = relocs.iter().find(|r| r.symbol == format!("__iir_{op}")).expect(op);
+                let call = reloc.patch_offset - 1;
+                assert_eq!(bytes[call], 0xE8, "{op}: call rel32");
+                // mov rdi|rcx, [slot] (REX.W 8B, ModRM.reg = the arg register).
+                assert!(
+                    bytes[..call].windows(3).any(|w| w[0] == 0x48 && w[1] == 0x8B && (w[2] >> 3) & 7 == modrm_reg),
+                    "{op} {abi:?}: the bits in the first argument register"
+                );
+                // The result is stored from rax: mov [rbp+disp], rax (REX.W 89, reg = 0).
+                assert!(bytes[call + 5..].windows(3).any(|w| w[0] == 0x48 && w[1] == 0x89 && (w[2] >> 3) & 7 == 0), "{op}");
+            }
+        }
     }
 
     // ---- Type assert ----

@@ -948,6 +948,60 @@ fn emit_instr(
         asm.str_(Reg::X0, Reg::Sp, slot)?;
         return Ok(());
     }
+    // LANG83 PR7b — the language-neutral float primitives, on the raw bits.
+    //
+    // `f64_class` is branch-free: one compare of the magnitude (the bits with
+    // bit 63 shifted out) against +Infinity's bits, and three `cset`s summed:
+    //
+    //   class = (mag != 0) + (mag >= 0x7FF0…0) + (mag > 0x7FF0…0)
+    //           ±0 → 0   finite ≠ 0 → 1   ±Infinity → 2   NaN → 3
+    //
+    //   ldr x0,[a]; mov x1,#1; lsl x0,x0,x1; lsr x0,x0,x1   ; x0 = mag
+    //   mov x2,#0;  cmp x0,x2; cset x3,ne                    ; x3 = mag != 0
+    //   mov x1,#0x7FF0000000000000; cmp x0,x1
+    //   cset x2,hs; add x3,x3,x2                             ; + (mag >= inf)
+    //   cset x2,hi; add x3,x3,x2                             ; + (mag >  inf)
+    //   str x3,[d]
+    //
+    // (`cset` and a plain `add` leave the flags alone, so one `cmp` feeds
+    // both unsigned tests.)
+    //
+    // `f64_digits` / `f64_exp10` call the native runtime's shortest-digits
+    // search (`twig_runtime.c`, the PR6a C core): the bits in `x0`, the
+    // integer result back in `x0`:
+    //
+    //   ldr x0,[a]; bl __iir_f64_digits; str x0,[d]
+    if op == "f64_class" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_f64_bits(asm, alloc, Reg::X0, src)?;   // x0 = bits of a
+        asm.mov_imm64(Reg::X1, 1);
+        asm.lsl_reg(Reg::X0, Reg::X0, Reg::X1);     // drop the sign bit…
+        asm.lsr_reg(Reg::X0, Reg::X0, Reg::X1);     // …x0 = magnitude
+        asm.mov_imm64(Reg::X2, 0);
+        asm.cmp(Reg::X0, Reg::X2);
+        asm.cset(Reg::X3, Cond::Ne);                // x3 = mag != 0
+        asm.mov_imm64(Reg::X1, 0x7FF0_0000_0000_0000);
+        asm.cmp(Reg::X0, Reg::X1);
+        asm.cset(Reg::X2, Cond::Hs);                // unsigned >=
+        asm.add(Reg::X3, Reg::X3, Reg::X2);
+        asm.cset(Reg::X2, Cond::Hi);                // unsigned >
+        asm.add(Reg::X3, Reg::X3, Reg::X2);
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X3, Reg::Sp, slot)?;
+        return Ok(());
+    }
+    if op == "f64_digits" || op == "f64_exp10" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_f64_bits(asm, alloc, Reg::X0, src)?;   // x0 = bits of a
+        asm.bl_external(format!("__iir_{op}"));
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, slot)?;
+        return Ok(());
+    }
     // AL8 sqrt — `FSQRT Dd, Dn` (single hardware FP instruction, no libm).
     //   f64_sqrt dest <- src  →  ldr_d D0,[src]; fsqrt D0,D0; str_d D0,[dest]
     // NaN propagates; negative input → NaN (IEEE-754 / matches VM `f64::sqrt`).
@@ -3706,6 +3760,50 @@ mod tests {
         let bad = vec![CIRInstr { op: "f64_neg".into(), dest: Some("r".into()),
                                   srcs: vec![CIROperand::Int(1)], ty: "f64".into(), deopt_to: None }];
         assert!(compile(&ctx("f", &params, "void"), &bad).is_err());
+    }
+
+    // ── LANG83 PR7b: the neutral float primitives ────────────────────────────
+
+    /// `f64_class` is the magnitude compared once against +Infinity's bits
+    /// and three `cset`s summed — inline, no call.
+    #[test]
+    fn f64_class_is_three_csets_on_the_magnitude() {
+        let ws = pr6c_fn("f64_class", vec![CIROperand::Var("a".into())]);
+        let one = pos(&ws, word_of(|a| a.movz(Reg::X1, 1, 0)));
+        assert_eq!(ws[one + 1], word_of(|a| a.lsl_reg(Reg::X0, Reg::X0, Reg::X1)));
+        assert_eq!(ws[one + 2], word_of(|a| a.lsr_reg(Reg::X0, Reg::X0, Reg::X1)));
+        pos(&ws, word_of(|a| a.cset(Reg::X3, Cond::Ne)));
+        let hs = pos(&ws, word_of(|a| a.cset(Reg::X2, Cond::Hs)));
+        assert_eq!(ws[hs + 1], word_of(|a| a.add(Reg::X3, Reg::X3, Reg::X2)));
+        assert_eq!(ws[hs + 2], word_of(|a| a.cset(Reg::X2, Cond::Hi)));
+        assert_eq!(ws[hs + 3], word_of(|a| a.add(Reg::X3, Reg::X3, Reg::X2)));
+        let params: [(String, String); 0] = [];
+        let bad = vec![CIRInstr { op: "f64_class".into(), dest: Some("r".into()),
+                                  srcs: vec![CIROperand::Int(1)], ty: "i64".into(), deopt_to: None }];
+        assert!(compile(&ctx("f", &params, "void"), &bad).is_err(), "an integer literal is not float bits");
+    }
+
+    /// `f64_digits` / `f64_exp10` are `bl __iir_f64_*` with the bits in x0,
+    /// and the result is stored from x0 right after the call.
+    #[test]
+    fn f64_digits_and_exp10_call_the_runtime_with_the_bits() {
+        for op in ["f64_digits", "f64_exp10"] {
+            let cir = |op: &str, dest: Option<&str>, srcs: Vec<CIROperand>, ty: &str| CIRInstr {
+                op: op.into(), dest: dest.map(Into::into), srcs, ty: ty.into(), deopt_to: None,
+            };
+            let params: [(String, String); 0] = [];
+            let body = vec![
+                cir("const_f64", Some("a"), vec![CIROperand::Float(1.5)], "f64"),
+                cir(op, Some("d"), vec![CIROperand::Var("a".into())], "i64"),
+                cir("ret_void", None, vec![], "void"),
+            ];
+            let (bytes, relocs) = compile_with_relocs(&ctx("f", &params, "void"), &body).unwrap();
+            let ws = words(&bytes);
+            let call = relocs.iter().find(|r| r.symbol == format!("__iir_{op}")).expect(op).word_idx;
+            assert_eq!(ws[call] & 0xFC00_0000, 0x9400_0000, "{op}: bl");
+            // The word after the call stores x0 (STR Xt, Rt = 0).
+            assert_eq!(ws[call + 1] & 0xFFC0_001F, 0xF900_0000, "{op}: str x0, [sp, #slot]");
+        }
     }
 
     #[test]

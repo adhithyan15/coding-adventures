@@ -36,6 +36,8 @@
  * | `__twig_write_i64`    | LANG83: print a signed 64-bit integer, no newline. |
  * | `__twig_write_f64_py` | LANG83 PR6a: a double as Python `repr`, no newline. |
  * | `__twig_write_f64_js` | LANG83 PR6a: a double as JS `Number#toString`, no newline. |
+ * | `__iir_f64_digits`    | LANG83 PR7b `f64_digits`: shortest round-trip significand D. |
+ * | `__iir_f64_exp10`     | LANG83 PR7b `f64_exp10`: exponent of D's leading digit.      |
  * | `__twig_trap`         | LANG83: flush stdout, report the trap kind on stderr, abort. |
  * | `__twig_putchar`      | Write one byte to stdout.                    |
  * | `__twig_getchar`      | Read one byte from stdin (-1 on EOF).        |
@@ -406,6 +408,62 @@ void __twig_write_f64_py(int64_t bits) {
  * `Number#toString`, no newline. */
 void __twig_write_f64_js(int64_t bits) {
     twig_write_f64(bits, 1);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LANG83 PR7b — the digits on their own
+ * ─────────────────────────────────────────────────────────────────────────
+ *
+ * The layout above is a language's rule (Python's `1e+16` against
+ * JavaScript's `10000000000000000`); the digits are not. So the registry
+ * also exposes them as two language-neutral integer ops, which the native
+ * backends lower to calls of these helpers (argument: the raw bits in
+ * `rdi` / `x0`, as for `__twig_write_f64_*`; result in `rax` / `x0`):
+ *
+ *   __iir_f64_digits(bits)  D, the shortest round-trip significand of |x|,
+ *                           with no trailing zeros (1 <= D < 10^17)
+ *   __iir_f64_exp10(bits)   e10 = k - 1, the exponent of D's leading digit,
+ *                           so |x| = D × 10^(e10 - n + 1), n = digits of D
+ *
+ *      x        D                    e10
+ *      1.5      15                   0
+ *      0.1      1                    -1
+ *      5e-324   5                    -324
+ *      2^-25    29802322387695312    -8      (ties to even, as above)
+ *
+ * Both return 0 for ±0, ±Infinity and NaN (f64_class 0, 2, 3), which have
+ * no digits. The third op, f64_class, is a few compares on the bits and is
+ * emitted inline by the backends. Both helpers run `twig_f64_digits`, the
+ * same core `twig_write_f64` prints from, so an op and a writer can never
+ * disagree on a digit. Each call runs the search once; nothing is cached. */
+
+/* `mag` is |x|'s bits; 1 when it has digits (finite and non-zero). */
+static int twig_f64_has_digits(uint64_t mag) {
+    return mag != 0 && mag < 0x7FF0000000000000ull;
+}
+
+int64_t __iir_f64_digits(int64_t bits) {
+    uint64_t mag = (uint64_t)bits & 0x7FFFFFFFFFFFFFFFull;
+    if (!twig_f64_has_digits(mag)) return 0;
+    unsigned char d[32];
+    int64_t k;
+    int n = twig_f64_digits(mag, d, &k);
+    /* At most 17 digits, so D < 10^17 < 2^63: no overflow. */
+    int64_t D = 0;
+    for (int i = 0; i < n; i++) D = D * 10 + d[i];
+    /* The shortest digits never end in 0 (a shorter prefix would already
+     * have stopped the search); stripping keeps the contract explicit. */
+    while (D != 0 && D % 10 == 0) D /= 10;
+    return D;
+}
+
+int64_t __iir_f64_exp10(int64_t bits) {
+    uint64_t mag = (uint64_t)bits & 0x7FFFFFFFFFFFFFFFull;
+    if (!twig_f64_has_digits(mag)) return 0;
+    unsigned char d[32];
+    int64_t k;
+    (void)twig_f64_digits(mag, d, &k);
+    return k - 1;   /* x = 0.D × 10^k, so the leading digit's exponent is k - 1 */
 }
 
 /* The closed LANG83 trap-kind table, indexed by stable id

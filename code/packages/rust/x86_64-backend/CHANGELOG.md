@@ -1,5 +1,14 @@
 # Changelog — `x86_64-backend`
 
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- `f64_class` lowers inline and branch-free on the raw bits: `shl`/`shr`
+  drop the sign, then `(mag != 0) + (mag >= 0x7FF0…0) + (mag > 0x7FF0…0)`
+  with three `setcc`s. `f64_digits` / `f64_exp10` pass the bits in the ABI's
+  first integer register (`rdi` SysV, `rcx` MS x64) to the runtime's
+  `__iir_f64_digits` / `__iir_f64_exp10` and store `rax`. All three
+  `Lowered` in `OP_SUPPORT`; byte-shape tests for both.
+
 ## Unreleased — f64 negation flips the sign bit
 
 ### Fixed

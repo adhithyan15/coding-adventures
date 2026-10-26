@@ -1,5 +1,13 @@
 # Changelog — `aarch64-backend`
 
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- `f64_class` lowers inline: `lsl`/`lsr` by 1 drop the sign, one `cmp`
+  against +Infinity's bits feeds `cset hs` and `cset hi`, plus `cset ne`
+  against zero, summed. `f64_digits` / `f64_exp10` are `bl __iir_f64_*`
+  with the bits in `x0` and the result stored from `x0`. All three
+  `Lowered`; word-shape tests (structural: no AArch64 host here).
+
 ## Unreleased — f64 negation flips the sign bit
 
 ### Fixed

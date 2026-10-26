@@ -163,3 +163,5 @@ call, then the store (a wrapped value never reaches the destination).
 LANG83 PR6a adds `write_f64_py` / `write_f64_js`: plain V1 builtin calls to the native runtime's `__twig_write_f64_py` / `__twig_write_f64_js`, with the f64 slot's raw bits in `rdi`. Those functions print Python's `repr` or JavaScript's `toString` of the value: shortest round-trip digits, no newline.
 
 LANG83 PR6c adds the non-trapping IEEE `f64_add`/`f64_sub`/`f64_mul`/`f64_div` (SSE2 `addsd` … `divsd` with masked exceptions) and, on the raw bits in `rax`, `f64_neg` (`xor` with the sign mask) and `f64_signbit` (`shr rax, 63`).
+
+LANG83 PR7b adds `f64_class` (inline: the magnitude compared with +Infinity's bits, three `setcc`s summed) and `f64_digits` / `f64_exp10` (a call to the native runtime's `__iir_f64_digits` / `__iir_f64_exp10` with the raw bits in the first integer argument register).
