@@ -83,14 +83,27 @@ merged, while Cortex-M33 is in open PR #18326.
 | 4 | Arm Cortex-M33 (PR #18326) | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
 | 5 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
 | 6 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
-| 7 | IBM System/370 | published Principles of Operation | Local functional cell complete: owned checked state and lifecycle, the complete modeled System/360 surface through a private adapter, and source-backed MVCL/CLCL/CLM/STCM/ICM semantics, including one-byte zero-mask validation for CLM/ICM and the architecturally exception-free zero-mask STCM. Fourteen tests, strict checks, and 98.78% line coverage (568/575) are green; gate partner follows only after merge. |
+| 7 | IBM System/370 | published Principles of Operation | Functional merged in PR #18336. P0 source-correctness repair complete locally: destructive-overlap `MVCL` suppresses storage movement, preserves both lengths and low 24-bit addresses, and clears the ignored high byte of both address registers for condition-code-3 completion. The gate partner remains blocked until this repair merges. |
 | 8 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
 | 9 | PA-RISC 1.1 | published architecture manuals | Local functional complete: checked bounded integer core, big-endian transport, both IA queues, PSW nibble carry/borrow state, delayed control, nullification, calls/returns, complete traces, typed atomic lifecycle, three allocation-seam unit tests, 19 integration tests, one doctest, and 92.80% line coverage (580/625). Gate work remains evidence/scope pending. |
 | 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
 | 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
-| 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
+| 12 | ARM7TDMI | published ARMv4T manuals | Complete locally: bounded ARMv4T ARM/Thumb integer core; all 31 physical GPRs and five SPSRs; pipeline-visible PC, bank/state exchange, checked memory and full-span control targets; exact transactional traces/lifecycle; 39 release tests; and 88.30% line coverage (1,389/1,573). Gate partner and SoC composition remain queued. |
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
+| 15 | RCA CDP1802 | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: all documented encodings except unassigned 0x68, complete COSMAC state, and explicit I/O/DMA/interrupt transaction seams; independent implementation review is next. |
+
+CDP1802 is complete locally from its independently reviewed specification.
+The functional cell covers the complete register matrix, instruction table,
+reset/inhibit lifecycle, flags, ports, DMA, and interrupt response. Its
+explicit bus operations make it a high-value bridge from CPU execution toward
+the requested SoC data-movement simulations. A different reviewer's exact-head
+implementation PASS is the remaining publication gate. Educational-gate and
+source-backed SoC compositions remain separate bounded follow-ups.
+The local evidence is 31 release integration tests plus one doctest, including
+256-byte independent decode and execution sweeps, exhaustive 256x256x2 ALU
+relations, strict Clippy/rustdoc, lessons validation, affected BUILD, and
+87.76% line coverage (832/948).
 
 ## Discovered follow-up work
 
@@ -98,6 +111,7 @@ merged, while Cortex-M33 is in open PR #18326.
 
 | Priority | Target | Finding / next action |
 |---:|---|---|
+| P0 complete locally | SPARC V8 gate HALT storage | HALT DFF Q is now the sole architectural authority; the public boolean is only a synchronized compatibility observer. The published storage inventory derives 524,288 memory bits, 1,896 register/control bits, and one HALT bit from owned containers. Deliberate mirror-divergence, restore, run/result, and typed-fault atomicity tests pass alongside 42 unit tests, the 248-vector differential, and eight lifecycle/integrity tests. Strict Clippy/rustdoc/fmt, lessons validation, the six-package affected build, and clean all-target 94.68% line coverage (1,691/1,786) are green. |
 | P1 merged | AArch64 gate 32-bit carry authority | PR #18317 landed. The 32-bit ADD/SUB flag path now takes carry and overflow directly from exact-width ripple networks; host sum comparisons are gone. Width-edge tests, all seven topology/datapath tests, six lifecycle suites, all 836 Python differential vectors, strict checks, and 97.79% line coverage pass. Follow-up audits still need to cost host decode and fetch assembly separately. |
 | P1 merged | PowerPC 601 conditional-branch authority | PR #18319 landed. The host-language BO/CTR/CR predicate is replaced by explicit gate ALU, 32:1 CR mux, polarity, bypass-mux, and final-AND networks. Exhaustive tests cover every BO value and CR selector, both selected-bit polarities, and CTR zero/nonzero boundaries against an independent truth table. Three gate/topology suites, three lifecycle suites, all 239 differential vectors, strict checks, and 94.58% line coverage pass. The counted GPR/LR/CTR/XER/CR/CIA, memory, and HALT storage banks remain private stable-Q authority with no public host-state mirrors. |
 | P1 in PR #18373 | PowerPC 601 CR/XER update authority | The explicit relation/mask/mux/gate authority repair is in publication; do not duplicate it. |
@@ -108,7 +122,7 @@ merged, while Cortex-M33 is in open PR #18326.
 | P1 queued | IBM System/360 divide qualification | The restoring divider uses gate subtraction per round but host equality detects zero and host `quotient > limit` decides the architectural divide fault. Replace both with exact-width gate reductions/comparison and pin signed fit boundaries. |
 | P1 queued | IBM System/360 DFF transition discipline | Register banks are private stable-Q authority, but main-storage reset and snapshot restore write the packed Q bytes directly despite Spec 07ad2 promising sequential primitives. Decide and enforce a scalable clocked-restore boundary without weakening the topology claim. |
 | P2 queued | IBM System/360 shifts and hexadecimal floating control | Shift movement/count bounds and substantial HFP zero/sign/exponent/normalization control still use host comparisons and native shifts. Split these broad surfaces into independently reviewable gate-network cells. |
-| P1 audit | Remaining completed gate packages with public halt fields | Audit each package before changing it. A public observation field is acceptable only when execution, snapshots, restore, and faults are driven by DFF Q; otherwise add one bounded repair cell and a non-tautological storage inventory. Candidate packages discovered by source scan include ARM1, SPARC V8, Motorola 68000, Intel 8051, Intel 8086, and OpenRISC 1000. |
+| P1 audit | Remaining completed gate packages with public halt fields | Audit each package before changing it. A public observation field is acceptable only when execution, snapshots, restore, and faults are driven by DFF Q; otherwise add one bounded repair cell and a non-tautological storage inventory. Candidate packages discovered by source scan include ARM1, Intel 8051, Intel 8086, and OpenRISC 1000. |
 
 - Extend the bounded Cortex-M23 core with source-backed Armv8-M-exclusive
   instructions, encoded SG/BXNS/BLXNS transitions, exception stacking/return,
