@@ -15,7 +15,10 @@
 package validator
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -161,6 +164,7 @@ func ValidateBuildFilesAgainst(packages, known []discovery.Package, graph *direc
 	}
 	problems = append(problems, validateNoSilentlyTruncatedCommands(packages)...)
 	problems = append(problems, validateWindowsEnvAssignments(packages)...)
+	problems = append(problems, validateWindowsBuildLines(packages)...)
 	problems = append(problems, validateLuaIsolatedBuildFiles(packages)...)
 	problems = append(problems, validatePerlBuildFiles(packages)...)
 	problems = append(problems, validateRustWorkspaceMembers(packages)...)
@@ -666,6 +670,217 @@ func validateWindowsEnvAssignments(packages []discovery.Package) []string {
 		}
 	}
 	return problems
+}
+
+// validateWindowsBuildLines rejects `BUILD_windows` lines that cannot run as
+// the build tool runs them.
+//
+// Every non-comment line of a BUILD file is its own `cmd /C` invocation on
+// Windows (`executor.shellCommandForOS`), started in the package directory.
+// That is not a PowerShell session and not a batch file, and two kinds of
+// line written as if it were one fail there:
+//
+//   - PowerShell (`$env:X = "y"`, `$ErrorActionPreference = "Stop"`,
+//     `Set-Location ..`, `Write-Host`, `if (-not $?) { ... }`): cmd.exe reads
+//     the line as a program name and fails ("The filename, directory name, or
+//     volume label syntax is incorrect").
+//   - `%~dp0` (the batch file's own directory): it expands only inside a .bat
+//     file, so `pushd %~dp0..` fails ("The system cannot find the path
+//     specified").
+//
+// Neither shows up until Windows CI happens to rebuild the package, which for
+// a leaf package can be months later and on someone else's PR (a change to
+// the shared `parser` crate rebuilt ~735 packages and found five). So this
+// reads `BUILD_windows` directly, on every host, rather than only the BUILD
+// file chosen for the current one.
+//
+// Harmless leftovers are allowed: `rem`, `@echo off` and `if errorlevel` run
+// under `cmd /C` without failing (they only do nothing useful).
+func validateWindowsBuildLines(packages []discovery.Package) []string {
+	var problems []string
+	for _, pkg := range packages {
+		if pkg.IsStarlark {
+			continue
+		}
+		path := filepath.Join(pkg.Path, "BUILD_windows")
+		data, problem := readWindowsBuildFile(path)
+		if problem != "" {
+			problems = append(problems, fmt.Sprintf("%s (BUILD_windows): %s", pkg.Name, problem))
+		}
+		if data == nil {
+			continue
+		}
+		// A file saved by a Windows editor can start with a UTF-8 byte-order
+		// mark; TrimSpace keeps U+FEFF, which would hide the first line's `$`.
+		data = bytes.TrimPrefix(data, []byte("\xEF\xBB\xBF"))
+		for number, line := range strings.Split(string(data), "\n") {
+			trimmed := strings.TrimSpace(line)
+			if trimmed == "" || strings.HasPrefix(trimmed, "#") {
+				continue
+			}
+			if reason := windowsBuildLineProblem(trimmed); reason != "" {
+				problems = append(problems, fmt.Sprintf(
+					"%s (BUILD_windows line %d): %s: %q. Each line runs as its own `cmd /C` "+
+						"from the package directory; write one command per line, and "+
+						"`cd <dir> && <command>` for a step elsewhere.",
+					pkg.Name, number+1, reason, truncateForMessage(trimmed),
+				))
+			}
+		}
+	}
+	return problems
+}
+
+// maxWindowsBuildFileBytes bounds what the check reads: a BUILD file is a
+// handful of commands, so anything larger is not one worth parsing.
+const maxWindowsBuildFileBytes = 1 << 20
+
+// readWindowsBuildFile reads a package's BUILD_windows for checking. A missing
+// file is no file (nil, ""). Anything else that stops the check (a symlink,
+// which could point at /dev/zero or a FIFO, a non-regular file, an oversized
+// file, a read error) is reported rather than passed: failing open would let
+// exactly the broken file this check exists for slip through.
+func readWindowsBuildFile(path string) ([]byte, string) {
+	info, err := os.Lstat(path)
+	if errors.Is(err, fs.ErrNotExist) {
+		return nil, ""
+	}
+	if err != nil {
+		return nil, fmt.Sprintf("cannot inspect: %v", err)
+	}
+	if !info.Mode().IsRegular() {
+		return nil, "is not a regular file (a symlink or device); write the commands in the file itself"
+	}
+	if info.Size() > maxWindowsBuildFileBytes {
+		return nil, fmt.Sprintf("is %d bytes, over the %d-byte limit for a BUILD file", info.Size(), maxWindowsBuildFileBytes)
+	}
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Sprintf("cannot read: %v", err)
+	}
+	return data, ""
+}
+
+// powershellCmdlet matches a PowerShell Verb-Noun cmdlet as cmdlets are
+// written: a verb, a hyphen and a capitalised noun (`Remove-Item`,
+// `Test-Path`, `Invoke-WebRequest`, `Import-Module`). The capital keeps
+// ordinary hyphenated programs (`test-runner`, `copy-tool`) out; a script
+// writing cmdlets in lower case is rare and fails loudly under cmd anyway.
+var powershellCmdlet = regexp.MustCompile(`^(?i:[a-z]+)-[A-Z][A-Za-z]+\b`)
+
+// powershellVariable matches the PowerShell variables a build line would lean
+// on, braced or not, anywhere in a command: `$env:X`, `${env:X}`,
+// `$LASTEXITCODE`, `$null`, `$global:`/`$script:` scoped names.
+// (`$?` is left out: POSIX shells share it.)
+// `$_` and `$PWD` are left out too: POSIX shells define both.
+var powershellVariable = regexp.MustCompile(`(?i)\$\{?(env:|global:|script:|lastexitcode\b|null\b|true\b|false\b|psscriptroot\b|psversiontable\b)`)
+
+// batchSelfReference matches a batch file's reference to itself (`%0`,
+// `%~dp0`, `%~f0`, `%~dpnx0`), which expands only inside a .bat file.
+var batchSelfReference = regexp.MustCompile(`(?i)%(~[a-z]*)?0`)
+
+// shellHandOff matches a command that hands its work to another shell, where
+// `$` and cmdlets belong to that shell: `powershell -Command "..."`,
+// `pwsh -File ...`, `bash -c "..."`, `sh -c "..."`.
+var shellHandOff = regexp.MustCompile(`(?i)^(powershell|pwsh|bash|sh)(\.exe)?(\s|$)`)
+
+// bareScript matches a command that is a `.ps1` script run directly: cmd runs
+// it through the file association (an editor, by default), not PowerShell.
+var bareScript = regexp.MustCompile(`(?i)^\S*\.ps1\b`)
+
+// cmdCommands splits a line into the commands cmd runs, at the `&&`, `||`,
+// `&` and `|` that are outside double quotes. A quoted payload
+// (`powershell -Command "a && b"`) stays inside its own command.
+func cmdCommands(line string) []string {
+	var commands []string
+	start, quoted := 0, false
+	for i := 0; i < len(line); i++ {
+		switch c := line[i]; {
+		case c == '"':
+			quoted = !quoted
+		case !quoted && (c == '&' || c == '|'):
+			commands = append(commands, line[start:i])
+			if i+1 < len(line) && line[i+1] == c {
+				i++
+			}
+			start = i + 1
+		}
+	}
+	return append(commands, line[start:])
+}
+
+// unquoted returns a command with its double-quoted spans removed, so a `;`
+// inside an argument (`node -e "a; if (b) c"`) is not read as cmd's.
+func unquoted(command string) string {
+	var out strings.Builder
+	quoted := false
+	for _, r := range command {
+		if r == '"' {
+			quoted = !quoted
+			continue
+		}
+		if !quoted {
+			out.WriteRune(r)
+		}
+	}
+	return out.String()
+}
+
+// powershellAfterSemicolon matches a PowerShell statement after a `;`:
+// `if (` or a Verb-Noun cmdlet in any case. PowerShell variables are caught by
+// powershellVariable wherever they are; a bare `$` or `exit` after `;` is as
+// likely POSIX. (A POSIX `if ...; then ...; fi` also has `;`s;
+// BUILD_windows files written that way are a separate, shell-specific
+// problem this check leaves alone.)
+var powershellAfterSemicolon = regexp.MustCompile(`(?i);\s*(if\s*\(|[a-z]+-[a-z]+\b)`)
+
+// windowsBuildLineProblem says why a `BUILD_windows` line cannot run under
+// `cmd /C`, or returns "" when it can.
+//
+// The line is checked command by command. A command that hands its work to
+// another shell (`powershell -Command "..."`, `bash -c "..."`) is exempt: its
+// `$` belongs to that shell; the site BUILD files use PowerShell this way and
+// several TypeScript packages use bash. Every other command is cmd's to run,
+// including one after such a hand-off (`powershell ... && cargo test $env:F`).
+func windowsBuildLineProblem(line string) string {
+	for _, command := range cmdCommands(line) {
+		command = strings.TrimSpace(strings.TrimPrefix(strings.TrimSpace(command), "("))
+		if command == "" || shellHandOff.MatchString(command) {
+			continue
+		}
+		if problem := windowsCommandProblem(command); problem != "" {
+			return problem
+		}
+	}
+	return ""
+}
+
+// windowsCommandProblem checks one command of a `BUILD_windows` line.
+func windowsCommandProblem(command string) string {
+	lower := strings.ToLower(command)
+	switch {
+	case strings.HasPrefix(command, "$"):
+		return "PowerShell variable or assignment"
+	case powershellVariable.MatchString(command):
+		return "PowerShell variable"
+	case strings.Count(command, `"`)%2 != 0:
+		return "an unclosed `\"` (cmd reads the rest of the line as one argument)"
+	case powershellAfterSemicolon.MatchString(unquoted(command)):
+		// cmd has no `;` separator: `npm test; exit 1` hands `; exit 1` to npm
+		// as arguments, so the second statement never runs.
+		return "a PowerShell statement after `;`, which is not a command separator under cmd (use `&&`)"
+	case powershellCmdlet.MatchString(command),
+		strings.HasPrefix(lower, "if (-not"),
+		strings.HasPrefix(lower, "if ($"),
+		strings.HasPrefix(lower, "if (test-path"),
+		strings.HasPrefix(command, "["):
+		return "PowerShell command"
+	case bareScript.MatchString(command):
+		return "a .ps1 script run directly (cmd opens it with its file association, not PowerShell; use `powershell -File`)"
+	case batchSelfReference.MatchString(command):
+		return "`%0` / `%~dp0`-style references expand only inside a batch file"
+	}
+	return ""
 }
 
 // continuationCharForBuildFile returns the line-continuation character of the
