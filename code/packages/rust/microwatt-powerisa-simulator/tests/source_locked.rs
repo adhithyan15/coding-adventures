@@ -122,3 +122,95 @@ fn register_shift_counts_do_not_use_host_masking() {
     cpu.step().unwrap();
     assert_eq!(cpu.read_register(5).unwrap(), 0);
 }
+
+#[test]
+fn word_arithmetic_shifts_sign_extend_and_record_the_full_result() {
+    for (raw, count, expected) in [
+        (x_form(31, 3, 5, 4, 792, true), 1, 0xffff_ffff_c000_0000),
+        (x_form(31, 3, 5, 4, 792, true), 32, u64::MAX),
+        (x_form(31, 3, 5, 1, 824, true), 0, 0xffff_ffff_c000_0000),
+        (x_form(31, 3, 5, 31, 824, true), 0, u64::MAX),
+    ] {
+        let mut cpu = loaded(raw);
+        cpu.write_register(3, 0x0000_0000_8000_0001).unwrap();
+        cpu.write_register(4, count).unwrap();
+        let trace = cpu.step().unwrap();
+        assert_eq!(cpu.read_register(5).unwrap(), expected, "raw={raw:#010x}");
+        assert_eq!(trace.state_after.cr >> 28, 0b1000, "raw={raw:#010x}");
+    }
+}
+
+#[test]
+fn parity_uses_byte_lsbs_and_word_halves_are_independent() {
+    let mut cpu = loaded(x_form(31, 3, 5, 0, 154, false));
+    cpu.write_register(3, 0x0102_0408_0102_0304).unwrap();
+    cpu.step().unwrap();
+    assert_eq!(cpu.read_register(5).unwrap(), 0x0000_0001_0000_0000);
+
+    let mut cpu = loaded(x_form(31, 3, 5, 0, 186, false));
+    cpu.write_register(3, 0x02).unwrap();
+    cpu.step().unwrap();
+    assert_eq!(cpu.read_register(5).unwrap(), 0);
+
+    let mut cpu = loaded(x_form(31, 3, 5, 0, 186, false));
+    cpu.write_register(3, 0x0102_0408_0102_0304).unwrap();
+    cpu.step().unwrap();
+    assert_eq!(cpu.read_register(5).unwrap(), 1);
+}
+
+#[test]
+fn fixed_rc_and_reserved_control_encodings_are_illegal_and_atomic() {
+    let mut raws = vec![
+        x_form(31, 3, 5, 4, 122, true),
+        x_form(31, 3, 5, 4, 154, true),
+        x_form(31, 3, 5, 4, 186, true),
+        x_form(31, 3, 5, 4, 378, true),
+        x_form(31, 3, 5, 4, 506, true),
+        (31 << 26) | (3 << 21) | (1 << 20) | (144 << 1),
+    ];
+    for bit in 12..=20 {
+        raws.push((31 << 26) | (3 << 21) | (1 << bit) | (19 << 1));
+    }
+    for raw in raws {
+        let mut cpu = loaded(raw);
+        cpu.write_register(3, 0xdead_beef_cafe_babe).unwrap();
+        let before = cpu.get_state();
+        assert_eq!(
+            cpu.step(),
+            Err(Error::IllegalInstruction { cia: 0x100, raw })
+        );
+        assert_eq!(cpu.get_state(), before, "raw={raw:#010x}");
+    }
+}
+
+#[test]
+fn multiplier_overflow_drives_both_ov_bits_and_sticky_so() {
+    for (a, b, overflow) in [
+        (0x7fff_u64, 2_u64, false),
+        (0x7fff_ffff, 2, true),
+        (0x8000_0000, 2, true),
+    ] {
+        let mut cpu = loaded(xo_form(5, 3, 4, true, 235, true));
+        cpu.write_register(3, a).unwrap();
+        cpu.write_register(4, b).unwrap();
+        let trace = cpu.step().unwrap();
+        assert_eq!(trace.state_after.xer.ov, overflow);
+        assert_eq!(trace.state_after.xer.ov32, overflow);
+        assert_eq!(trace.state_after.xer.so, overflow);
+        assert_eq!((trace.state_after.cr >> 28) & 1 != 0, overflow);
+    }
+
+    for (a, b, overflow) in [
+        (0x7fff_ffff_u64, 2_u64, false),
+        (0x7fff_ffff_ffff_ffff, 2, true),
+        (0x8000_0000_0000_0000, 2, true),
+    ] {
+        let mut cpu = loaded(xo_form(5, 3, 4, true, 233, false));
+        cpu.write_register(3, a).unwrap();
+        cpu.write_register(4, b).unwrap();
+        let trace = cpu.step().unwrap();
+        assert_eq!(trace.state_after.xer.ov, overflow);
+        assert_eq!(trace.state_after.xer.ov32, overflow);
+        assert_eq!(trace.state_after.xer.so, overflow);
+    }
+}

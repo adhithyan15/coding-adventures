@@ -1,0 +1,10 @@
+microwatt_commit=f341bed306a9a7281bf65200df8cc1f0a002617d
+ghdl_version=GHDL 6.0.0 (6.0.0.r0.ge589c698c) [Dunoon edition]
+ghdl_release_url=https://github.com/ghdl/ghdl/releases/download/v6.0.0/ghdl-llvm-6.0.0-macos15-aarch64.tar.gz
+ghdl_release_sha256=69beb5913a490b5971980bd045af6a63b6f52e861b444fa990bffac436587478
+harness_sha256=ab139921cdd2841e77b09c1051eb10e1e5e519eddf141e30039cad181c970522
+generator_sha256=dc9fbe07bd72ab68492f1101db803f976324eff65b8cac66b4ab5079e30d37ab
+command=python3 tests/rtl/generate.py --microwatt <exact-checkout> --ghdl <verified-ghdl>
+seed=0x07bd5a1720261026
+row_count=164
+vectors_sha256=3d5ff0536b4120b0d4693b9f4a4d176e2d3f510146f1037e22491565e8e5f803

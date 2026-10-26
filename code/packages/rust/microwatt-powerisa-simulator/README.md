@@ -48,6 +48,10 @@ The checked-in tests exhaust primary selectors and relevant extended-selector
 spaces, cover reserved and recognized-but-unsupported neighbors, and exercise
 the complete transactional lifecycle. Source-locked Microwatt semantic witness
 rows cover the reviewed SO, word multiply/divide shaping/Rc, branch, memory,
-and synchronization boundaries. GHDL is optional locally; no GHDL result is
-claimed when that tool is absent. The exact oracle availability record and
-future pinned-harness requirements are in [`tests/README.md`](tests/README.md).
+and synchronization boundaries. A separately generated 164-row corpus was
+executed against the complete pinned Microwatt VHDL core with official,
+checksum-verified GHDL 6.0.0. Independent Rust consumers validate its manifest
+and compare every complete-state/memory result with this simulator. Network and
+GHDL access are not needed for normal tests. The exact tool/source pins,
+reproduction command, and evidence boundary are in
+[`tests/README.md`](tests/README.md).

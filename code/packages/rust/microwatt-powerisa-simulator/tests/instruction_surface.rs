@@ -131,11 +131,6 @@ fn arithmetic_logical_count_and_shift_families_execute() {
         (794, "srad"),
         (26, "cntlzw"),
         (58, "cntlzd"),
-        (122, "popcntb"),
-        (154, "prtyw"),
-        (186, "prtyd"),
-        (378, "popcntw"),
-        (506, "popcntd"),
         (538, "cnttzw"),
         (570, "cnttzd"),
         (922, "extsh"),
@@ -148,9 +143,18 @@ fn arithmetic_logical_count_and_shift_families_execute() {
             format!("{expected}.")
         );
     }
+    for (xo, expected) in [
+        (122, "popcntb"),
+        (154, "prtyw"),
+        (186, "prtyd"),
+        (378, "popcntw"),
+        (506, "popcntd"),
+    ] {
+        assert_eq!(run(x_form(31, 3, 5, 4, xo, false), |_| {}), expected);
+    }
     assert_eq!(run(x_form(31, 3, 5, 7, 824, true), |_| {}), "srawi.");
-    assert_eq!(run(x_form(31, 3, 5, 7, 413, true), |_| {}), "sradi.");
-    assert_eq!(run(x_form(31, 3, 5, 7, 445, true), |_| {}), "sradi.");
+    assert_eq!(run(x_form(31, 3, 5, 7, 826, true), |_| {}), "sradi.");
+    assert_eq!(run(x_form(31, 3, 5, 7, 827, true), |_| {}), "sradi.");
 }
 
 #[test]

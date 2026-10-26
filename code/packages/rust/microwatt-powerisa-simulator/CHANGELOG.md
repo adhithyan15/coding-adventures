@@ -10,3 +10,9 @@
   termination semantics.
 - Pin sticky SO to 64-bit OV only, Microwatt word multiply/divide shaping and
   full-width Rc, and valid-but-unsupported `ptesync`.
+- Correct word arithmetic shift sign extension, byte-LSB parity, fixed-Rc and
+  special-register reserved encodings, exact `sradi` selectors, `rlwimi` upper
+  half preservation, and Microwatt word-multiply result/overflow behavior.
+- Add an executed 164-row complete-core GHDL differential corpus with pinned
+  tool/source/harness hashes plus independent manifest and functional
+  consumers.

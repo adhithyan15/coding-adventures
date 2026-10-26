@@ -734,13 +734,8 @@ fn classify_31(raw: u32) -> Classification {
         0 if raw & ((1 << 22) | 1) == 0 => Classification::Supported("cmp"),
         9 => Classification::Supported("mulhdu"),
         11 => Classification::Supported("mulhwu"),
-        19 => {
-            if raw & (1 << 20) == 0 {
-                Classification::Supported("mfcr")
-            } else {
-                Classification::Unsupported("mfocrf")
-            }
-        }
+        19 if raw & 0x001f_f000 == 0 => Classification::Supported("mfcr"),
+        19 => Classification::Illegal,
         21 => Classification::Supported("ldx"),
         23 => Classification::Supported("lwzx"),
         24 => Classification::Supported("slw"),
@@ -756,21 +751,16 @@ fn classify_31(raw: u32) -> Classification {
         75 => Classification::Supported("mulhw"),
         87 => Classification::Supported("lbzx"),
         119 => Classification::Supported("lbzux"),
-        122 => Classification::Supported("popcntb"),
+        122 if raw & 1 == 0 => Classification::Supported("popcntb"),
         124 => Classification::Supported("nor"),
-        144 => {
-            if raw & (1 << 20) == 0 {
-                Classification::Supported("mtcrf")
-            } else {
-                Classification::Unsupported("mtocrf")
-            }
-        }
+        144 if raw & (1 << 20) == 0 => Classification::Supported("mtcrf"),
+        144 => Classification::Illegal,
         149 => Classification::Supported("stdx"),
         151 => Classification::Supported("stwx"),
-        154 => Classification::Supported("prtyw"),
+        154 if raw & 1 == 0 => Classification::Supported("prtyw"),
         181 => Classification::Supported("stdux"),
         183 => Classification::Supported("stwux"),
-        186 => Classification::Supported("prtyd"),
+        186 if raw & 1 == 0 => Classification::Supported("prtyd"),
         215 => Classification::Supported("stbx"),
         247 => Classification::Supported("stbux"),
         279 => Classification::Supported("lhzx"),
@@ -782,15 +772,15 @@ fn classify_31(raw: u32) -> Classification {
         343 => Classification::Supported("lhax"),
         375 => Classification::Supported("lhaux"),
         373 => Classification::Supported("lwaux"),
-        378 => Classification::Supported("popcntw"),
+        378 if raw & 1 == 0 => Classification::Supported("popcntw"),
         407 => Classification::Supported("sthx"),
         412 => Classification::Supported("orc"),
-        413 | 445 => Classification::Supported("sradi"),
+        826 | 827 => Classification::Supported("sradi"),
         439 => Classification::Supported("sthux"),
         444 => Classification::Supported("or"),
         467 => Classification::Supported("mtspr"),
         476 => Classification::Supported("nand"),
-        506 => Classification::Supported("popcntd"),
+        506 if raw & 1 == 0 => Classification::Supported("popcntd"),
         532 => Classification::Supported("ldbrx"),
         534 => Classification::Supported("lwbrx"),
         536 => Classification::Supported("srw"),
@@ -902,14 +892,19 @@ fn execute(state: &mut State, raw: u32) -> Result<Outcome, Error> {
             let me = (raw >> 1) & 31;
             let rotated = rs.rotate_left(sh);
             let mask = mask32(mb, me);
-            let value = if op == 20 {
+            let low = if op == 20 {
                 (state.gpr[ra] as u32 & !mask) | (rotated & mask)
             } else {
                 rotated & mask
             };
-            state.gpr[ra] = u64::from(value);
+            let value = if op == 20 {
+                (state.gpr[ra] & 0xffff_ffff_0000_0000) | u64::from(low)
+            } else {
+                u64::from(low)
+            };
+            state.gpr[ra] = value;
             if raw & 1 != 0 {
-                update_cr0(state, u64::from(value));
+                update_cr0(state, value);
             }
             outcome.mnemonic = record_name(
                 if op == 20 {
@@ -1269,7 +1264,7 @@ fn execute_31(state: &mut State, raw: u32) -> Result<Outcome, Error> {
                             n != 0 && word & ((1_u32 << n) - 1) != 0
                         };
                     state.xer.ca32 = state.xer.ca;
-                    (u64::from(value), "sraw")
+                    (((value as i32) as i64) as u64, "sraw")
                 }
                 _ => {
                     let n = (other & 0x7f) as u32;
@@ -1312,8 +1307,12 @@ fn execute_31(state: &mut State, raw: u32) -> Result<Outcome, Error> {
                     }
                     (value, "popcntb")
                 }
-                154 => (u64::from((source as u32).count_ones() & 1), "prtyw"),
-                186 => (u64::from(source.count_ones() & 1), "prtyd"),
+                154 => {
+                    let lo = byte_lsb_parity(u64::from(source as u32), 4);
+                    let hi = byte_lsb_parity(source >> 32, 4);
+                    ((hi << 32) | lo, "prtyw")
+                }
+                186 => (byte_lsb_parity(source, 8), "prtyd"),
                 378 => {
                     let lo = u64::from((source as u32).count_ones());
                     let hi = u64::from(((source >> 32) as u32).count_ones());
@@ -1353,7 +1352,7 @@ fn execute_31(state: &mut State, raw: u32) -> Result<Outcome, Error> {
             };
             outcome.mnemonic = "mfspr".into();
         }
-        413 | 445 | 824 => {
+        824 | 826 | 827 => {
             let immediate = if xo10 == 824 {
                 (raw >> 11) & 31
             } else {
@@ -1366,7 +1365,7 @@ fn execute_31(state: &mut State, raw: u32) -> Result<Outcome, Error> {
                 state.xer.ca =
                     (word as i32) < 0 && immediate != 0 && word & ((1_u32 << immediate) - 1) != 0;
                 state.xer.ca32 = state.xer.ca;
-                (u64::from(value), "srawi")
+                (((value as i32) as i64) as u64, "srawi")
             } else {
                 let value = ((source as i64) >> immediate) as u64;
                 state.xer.ca = (source as i64) < 0
@@ -1524,17 +1523,14 @@ fn execute_arithmetic_31(
         233 => {
             let product = i128::from(a as i64) * i128::from(b as i64);
             let value = product as u64;
-            (
-                value,
-                "mulld",
-                product != i128::from(value as i64),
-                product != i128::from(value as u32 as i32),
-            )
+            let overflow = product != i128::from(value as i64);
+            (value, "mulld", overflow, overflow)
         }
         235 => {
             let product = i64::from(a as u32 as i32) * i64::from(b as u32 as i32);
-            let value = (product as u32 as i32 as i64) as u64;
-            (value, "mullw", false, product != i64::from(product as i32))
+            let value = product as u64;
+            let overflow = product != i64::from(product as i32);
+            (value, "mullw", overflow, overflow)
         }
         266 => {
             let value = a.wrapping_add(b);
@@ -1715,6 +1711,10 @@ fn set_cr_field(state: &mut State, field: usize, relation: Ordering) {
 
 fn update_cr0(state: &mut State, value: u64) {
     set_cr_field(state, 0, (value as i64).cmp(&0));
+}
+
+fn byte_lsb_parity(value: u64, byte_count: usize) -> u64 {
+    (0..byte_count).fold(0, |parity, index| parity ^ ((value >> (index * 8)) & 1))
 }
 
 fn mask32(mb: u32, me: u32) -> u32 {

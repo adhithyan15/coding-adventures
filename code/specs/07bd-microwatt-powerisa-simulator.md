@@ -220,11 +220,15 @@ is an intentional fail-closed lifecycle strengthening; it is not claimed as a
 Power ISA synchronous-exception model and is not compared as a valid Microwatt
 instruction result.
 
-The pinned Microwatt RTL makes two deterministic 64-bit-mode choices for word
+The pinned Microwatt RTL makes three deterministic 64-bit-mode choices for word
 multiply/divide results, and this model reproduces them exactly:
 
 - `mulhw` and `mulhwu` take product bits 63:32 and duplicate that 32-bit word
   into both halves of the 64-bit destination; and
+- `mullw` places the complete signed 32-by-32 product in the 64-bit
+  destination. OE compares that product with the signed 32-bit range and the
+  multiplier's word-width overflow drives both OV and OV32; SO remains sticky
+  from OV only; and
 - `divw` and `divwu` place quotient bits 31:0 in the low half and clear the
   destination's upper 32 bits.
 
@@ -246,7 +250,11 @@ generic Power ISA word-extension assumption.
 
 Mask construction, the word-versus-doubleword result rule, arithmetic fill,
 CA update, and shift counts at and beyond 32 or 64 follow the ISA pseudocode,
-not the host language's shift operators.
+not the host language's shift operators. In this 64-bit profile, `rlwimi`
+preserves the destination's upper 32 bits and merges only the masked low-word
+lanes. The two `sradi` encodings use Microwatt's exact ten-bit selectors 826
+and 827. Word arithmetic right shifts sign-extend their low-word result to the
+complete 64-bit destination before Rc records CR0.
 
 ### 7.4 Condition register and special registers
 
@@ -437,7 +445,8 @@ the production instruction enum.
 - word multiply/divide rows include `mulhw.` and `mulhwu.` results that prove
   bits 63:32 equal bits 31:0, plus negative-quotient `divw.` and nonzero
   `divwu.` results that prove bits 63:32 are zero and CR0 compares the complete
-  shaped 64-bit value;
+  shaped 64-bit value; `mullwo.` rows cover positive, negative, and nonoverflow
+  signed-word products and prove the full product plus OV/OV32/SO boundary;
 - sync classification and lifecycle rows cover L=0 `sync`, L=1 `lwsync`,
   recognized-but-unsupported L=2 `ptesync`, and reserved L=3 without mutation;
 - independent widened-arithmetic oracles cover add/subtract carry and signed

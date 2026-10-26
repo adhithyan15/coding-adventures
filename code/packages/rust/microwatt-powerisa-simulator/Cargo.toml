@@ -6,3 +6,6 @@ description = "Checked 64-bit little-endian Microwatt/Power ISA fixed-point simu
 license = "MIT"
 
 [dependencies]
+
+[dev-dependencies]
+coding_adventures_sha256 = { path = "../sha256" }
