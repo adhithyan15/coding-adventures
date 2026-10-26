@@ -80,6 +80,15 @@ architecture/core introduction era, not a claim about a particular chip.
 | 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
+| 15 | MSP430 classic (MSP430F2274 profile) | TI SLAU144K family guide and SLAS504G device data sheet | Source-pinned classic 16-bit von-Neumann CPU with the full documented 27-instruction core; MSP430X, peripherals, clocks, power, and timing stay outside the first cell. |
+
+MSP430 follows Xtensa rather than displacing an active item. TI's public
+SLAU144K chapter 3 gives a complete classic encoding, addressing, flag, and
+stack contract, while SLAS504G pins a real non-MSP430X implementation with 16
+registers and a 16-bit address space. That unusually complete primary-source
+boundary makes the CPU independently implementable now. Its educational gate
+and MSP430F2274 SoC compositions remain later cells so neither undocumented
+silicon topology nor peripheral behavior is inferred.
 
 ## Discovered follow-up work
 
