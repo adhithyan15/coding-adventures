@@ -252,6 +252,14 @@ impl CortexM3Simulator {
         self.state.clone()
     }
 
+    /// Fallibly snapshot all architectural state and owned memory.
+    ///
+    /// Execution wrappers that promise typed allocation failures should use
+    /// this method instead of the infallible compatibility accessor.
+    pub fn try_get_state(&self) -> Result<CortexM3State, CortexM3Error> {
+        try_clone_state(&self.state)
+    }
+
     pub fn restore(&mut self, state: CortexM3State) -> Result<(), CortexM3Error> {
         validate_state(&state)?;
         self.state = state;

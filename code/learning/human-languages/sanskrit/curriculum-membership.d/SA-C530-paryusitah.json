@@ -1,0 +1,11 @@
+{
+  "id": "SA-C530-paryusitah",
+  "pathSegment": "SA-PATH-530-BHOJYA530",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-530-BHOJYA530",
+      "order": 4
+    }
+  ]
+}

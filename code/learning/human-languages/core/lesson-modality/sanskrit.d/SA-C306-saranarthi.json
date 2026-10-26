@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C306-saranarthi",
+    "language": "sanskrit",
+    "chapter": 306,
+    "sequence": 18050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c664b6d91245bd88"
+  },
+  "findings": []
+}

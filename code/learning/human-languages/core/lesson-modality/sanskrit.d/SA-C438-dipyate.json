@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C438-dipyate",
+    "language": "sanskrit",
+    "chapter": 438,
+    "sequence": 25290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f98dfb017e4f9597"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C538-niyatih",
+    "language": "sanskrit",
+    "chapter": 538,
+    "sequence": 30850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93794fd4f62c3277"
+  },
+  "findings": []
+}

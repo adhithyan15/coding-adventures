@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:3e4cea73c396c421",
+  "lessonIds": [
+    "SA-C428-grhapatih",
+    "SA-C428-abhyagatah",
+    "SA-C428-nivasayati",
+    "SA-C428-pratyudgacchati",
+    "SA-C428-anuvrajati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch428.txt",
+  "json": "sanskrit/narration/ch428.json",
+  "textHash": "fnv1a64:e91acccf1bf7e36e",
+  "jsonHash": "fnv1a64:baef039ac6c3805f",
+  "findings": []
+}

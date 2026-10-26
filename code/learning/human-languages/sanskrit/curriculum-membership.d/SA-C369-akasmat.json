@@ -1,0 +1,11 @@
+{
+  "id": "SA-C369-akasmat",
+  "pathSegment": "SA-PATH-369-BHAGYA369",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-369-BHAGYA369",
+      "order": 2
+    }
+  ]
+}

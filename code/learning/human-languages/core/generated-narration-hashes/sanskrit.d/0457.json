@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:0d2d41a508841064",
+  "lessonIds": [
+    "SA-C457-smayate",
+    "SA-C457-upahasati",
+    "SA-C457-parihasah",
+    "SA-C457-attahasah",
+    "SA-C457-vinodah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch457.txt",
+  "json": "sanskrit/narration/ch457.json",
+  "textHash": "fnv1a64:4d4cc70084e28d4e",
+  "jsonHash": "fnv1a64:d6c8720f655b1f71",
+  "findings": []
+}

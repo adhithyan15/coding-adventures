@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:39e971612fec65aa",
+  "lessonIds": [
+    "SA-C307-viyogah",
+    "SA-C307-asru",
+    "SA-C307-milati",
+    "SA-C307-anathah",
+    "SA-C307-ksemah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch307.txt",
+  "json": "sanskrit/narration/ch307.json",
+  "textHash": "fnv1a64:127bd23e9d19ca01",
+  "jsonHash": "fnv1a64:be930f8a86cdd9be",
+  "findings": []
+}

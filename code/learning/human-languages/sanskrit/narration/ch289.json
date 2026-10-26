@@ -1,0 +1,728 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 289,
+  "title": "What the Witness Saw",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:6bd12c1b6ba26d1a",
+  "lessons": [
+    {
+      "id": "SA-C289-abhijanati",
+      "sequence": 17150,
+      "title": "अभिजानाति (abhijānāti) — recognizes",
+      "headword": "अभिजानाति",
+      "romanization": "abhijānāti",
+      "gloss": "recognizes",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:551d517d7953a2d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for threatens, then the Sanskrit for a weapon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अभिजानाति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अभिजानाति — abhijānāti — \"recognizes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि दीपः अभविष्यत्, साक्षी चौरम् अभ्यज्ञास्यत्। yadi dīpaḥ abhaviṣyat, sākṣī cauram abhyajñāsyat. If there had been a lamp, the witness would have recognized the thief."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः चौरम् अभिज्ञातवान्, saḥ cauram abhijñātavān."
+            },
+            {
+              "kind": "speech",
+              "text": "Future: अभिज्ञास्यति, abhijñāsyati."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अभिजानाति (abhijānāti) is built from abhi, \"towards\", and the root √jñā, \"to know\"; MW gives abhi-jñā as to recognize or become aware of (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhijānāti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhijānāti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhijānāti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhijānāti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi dīpaḥ abhaviṣyat, sākṣī cauram abhyajñāsyat. — If there had been a lamp, the witness would have recognized the thief.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi dīpaḥ abhaviṣyat, sākṣī cauram abhyajñāsyat.* — If there had been a lamp, the witness would have recognized the thief.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for threatens, then the Sanskrit for a weapon, then say abhijānāti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for threatens, then the Sanskrit for a weapon, then say *abhijānāti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अभिजानाति (abhijānāti) mean? (\"Recognizes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C289-varnayati",
+      "sequence": 17160,
+      "title": "वर्णयति (varṇayati) — describes",
+      "headword": "वर्णयति",
+      "romanization": "varṇayati",
+      "gloss": "describes",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28c1659787b5cb36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a weapon, then the Sanskrit for recognizes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वर्णयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वर्णयति — varṇayati — \"describes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "साक्षी चौरस्य मुखं वर्णयति। sākṣī caurasya mukhaṃ varṇayati. The witness describes the thief's face."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः मुखं वर्णितवान्, saḥ mukhaṃ varṇitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वर्णयति (varṇayati) is built on varṇa, \"colour, outward appearance\"; MW treats varṇayati as a verb made from that noun, to paint and to describe (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varṇayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varṇayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varṇayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varṇayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sākṣī caurasya mukhaṃ varṇayati. — The witness describes the thief's face.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sākṣī caurasya mukhaṃ varṇayati.* — The witness describes the thief's face.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a weapon, then the Sanskrit for recognizes, then say varṇayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a weapon, then the Sanskrit for recognizes, then say *varṇayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वर्णयति (varṇayati) mean? (\"Describes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C289-niriksate",
+      "sequence": 17170,
+      "title": "निरीक्षते (nirīkṣate) — observes closely",
+      "headword": "निरीक्षते",
+      "romanization": "nirīkṣate",
+      "gloss": "observes closely",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:4940956ec25d0f0b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for recognizes, then the Sanskrit for describes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निरीक्षते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निरीक्षते — nirīkṣate — \"observes closely\"."
+            },
+            {
+              "kind": "speech",
+              "text": "साक्षी सर्वं निरीक्षते। sākṣī sarvaṃ nirīkṣate. The witness observes everything closely."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः सर्वं निरीक्षितवान्, saḥ sarvaṃ nirīkṣitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निरीक्षते (nirīkṣate) is built from nir and the root √īkṣ, \"to see\"; MW gives nir-īkṣ as to look at, regard and observe (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirīkṣate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirīkṣate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirīkṣate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirīkṣate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sākṣī sarvaṃ nirīkṣate. — The witness observes everything closely.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sākṣī sarvaṃ nirīkṣate.* — The witness observes everything closely.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for recognizes, then the Sanskrit for describes, then say nirīkṣate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for recognizes, then the Sanskrit for describes, then say *nirīkṣate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निरीक्षते (nirīkṣate) mean? (\"Observes closely\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C289-cihnam",
+      "sequence": 17180,
+      "title": "चिह्नम् (cihnam) — a trace; a sign",
+      "headword": "चिह्नम्",
+      "romanization": "cihnam",
+      "gloss": "a trace; a sign",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79897ded291af1c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for describes, then the Sanskrit for observes closely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चिह्नम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिह्नम् — cihnam — \"a trace; a sign\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भित्तौ चौरस्य चिह्नम् अस्ति। bhittau caurasya cihnam asti. There is a mark of the thief on the wall."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिह्नम् (cihnam) MW gives cihna as a mark, a sign or a characteristic, without a derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cihnam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cihnam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cihnam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cihnam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhittau caurasya cihnam asti. — There is a mark of the thief on the wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhittau caurasya cihnam asti.* — There is a mark of the thief on the wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for describes, then the Sanskrit for observes closely, then say cihnam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for describes, then the Sanskrit for observes closely, then say *cihnam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चिह्नम् (cihnam) mean? (\"A trace; a sign\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C289-pratyaksam",
+      "sequence": 17190,
+      "title": "प्रत्यक्षम् (pratyakṣam) — before one's eyes; in person",
+      "headword": "प्रत्यक्षम्",
+      "romanization": "pratyakṣam",
+      "gloss": "before one's eyes; in person",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:945a86f524862027",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for observes closely, then the Sanskrit for a trace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रत्यक्षम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रत्यक्षम् — pratyakṣam — \"before one's eyes; in person\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अहं प्रत्यक्षं दृष्टवान्। ahaṃ pratyakṣaṃ dṛṣṭavān. I saw it with my own eyes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रत्यक्षम् (pratyakṣam) is built from prati, \"before, facing\", and akṣa, \"the eye\"; MW gives pratyakṣa as present before the eyes, visible (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratyakṣam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratyakṣam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratyakṣam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratyakṣam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahaṃ pratyakṣaṃ dṛṣṭavān. — I saw it with my own eyes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahaṃ pratyakṣaṃ dṛṣṭavān.* — I saw it with my own eyes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for observes closely, then the Sanskrit for a trace, then say pratyakṣam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for observes closely, then the Sanskrit for a trace, then say *pratyakṣam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रत्यक्षम् (pratyakṣam) mean? (\"Before one's eyes; in person\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

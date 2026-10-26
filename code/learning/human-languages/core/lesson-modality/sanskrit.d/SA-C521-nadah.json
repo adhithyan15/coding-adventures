@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C521-nadah",
+    "language": "sanskrit",
+    "chapter": 521,
+    "sequence": 30010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a17077ee0157260e"
+  },
+  "findings": []
+}

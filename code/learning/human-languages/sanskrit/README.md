@@ -107,6 +107,52 @@ seven pre-A1 spine nodes are now realized.
   join inside each of the ten headwords, and the chapter-63 payoff reproduces
   that table with his page numbers. A1 exam coverage 141/164 → **142/164**, and
   the Saṅkhyā column closes outright.
+- **Chapters 275–285 — the B1 core** ([`lessons/`](./lessons/), `SA-C275-*`
+  to `SA-R285-depends-and-would`): the track's first running sentences, each
+  line short, romanized and translated. 275 bridges the A2 future — every
+  person and number on करिष्य-, and each verb's own stem (पठिष्यति,
+  द्रक्ष्यति, दास्यति). Then two chapters for each of the five B1 spine nodes:
+  narrating (the -tavat past that follows the doer, सः गतवान् / सा गतवती; the
+  present with स्म in a यदा … तदा scene; -त्वा and -य; प्रथमम् … अन्ते; an
+  eighty-word reading), giving reasons (मम मतेन, मन्ये, यतः, -कारणात्, the
+  optative of advice भवान् गच्छेत्, अतः, तस्मात्), travel (asking the way with
+  the polite -तु, a ticket, a lost bag, a missed train), experience (feelings
+  agreeing with the speaker, भवितुम् इच्छामि, -अपेक्षया and -तर, आरभ्य …
+  -पर्यन्तम्) and conditions (यदि … तर्हि, अन्यथा, -अधीन, the conditional
+  अभविष्यत्), closing on a six-line writing task. Pāṇini, Lanman's reader
+  and Monier-Williams are the sources cited. Four letter
+  lessons, `SA-S226-letter-gha` to `SA-S229-letter-ii` (घ ढ औ ई), sit right
+  after their anchor words घटते, दृढः, औषधम् and ईदृशः and read their stroke
+  order from the inventory; four filmstrips are added, and ऊ ऐ झ ळ stay
+  unread. Still untaught: the passive, the perfect and aorist, vowel sandhi
+  across words and the avagraha.
+- **Chapters 286–555 — the B1 vocabulary** ([`lessons/`](./lessons/),
+  `SA-C286-*` to `SA-R555-*`): 1,350 headwords, 394 of them verbs (each shown
+  with its -tavat past agreeing with the doer), one word per lesson, with
+  eight reviews in each of the five tranches:
+  - 286–339: narrating (theft and the watch, accidents and fire, disasters
+    and rescue, news and rumour, kings, war and history, festivals, the epics
+    and the Pañcatantra);
+  - 340–393: reasons and conditions (causes and purposes, debate and proof,
+    law and dharma, government, values, study and research, then likelihood,
+    conditions, degrees and goals);
+  - 394–447: travel (pilgrimage and temples, roads, wheels and halts, rivers
+    and boats, towns and gates, lodging, the bazaar and money, the weather,
+    the sky and the fields);
+  - 448–501: experience (feelings and character, the body and health,
+    Ayurveda and care, birth, upbringing, the wedding and the family);
+  - 502–555: crafts and work, the kitchen, free time, the arts and sport, then
+    plans, luck, omens and choices.
+
+  Examples use only the words and grammar taught before them: no passive,
+  perfect or aorist, no case form the track has not shown (no genitive or
+  dative plural, oblique dual or s- and n-stem oblique yet), and every
+  condition from chapter 367 on in यदि … तर्हि or the conditional. Every word
+  cites Monier-Williams; descendants cite CDIAL, and Western cousins appear
+  only where Monier-Williams compares them. The first words of chapters
+  286–293 practise the core's last grammar points again, and घ ढ औ ई each
+  come back twice in chapters 294–316. With the core, Sanskrit teaches 2,601
+  headwords and 563 verbs at or below B1 and attains B1 on the level gate.
 
 ---
 

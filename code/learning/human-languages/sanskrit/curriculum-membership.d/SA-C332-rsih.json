@@ -1,0 +1,11 @@
+{
+  "id": "SA-C332-rsih",
+  "pathSegment": "SA-PATH-332-AKHYANA332",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-332-AKHYANA332",
+      "order": 1
+    }
+  ]
+}

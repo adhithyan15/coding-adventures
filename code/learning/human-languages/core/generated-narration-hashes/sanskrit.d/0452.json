@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:3f518f6182a4e9ab",
+  "lessonIds": [
+    "SA-C452-udvegah",
+    "SA-C452-hatasah",
+    "SA-C452-visidati",
+    "SA-C452-vyagrah",
+    "SA-C452-dinah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch452.txt",
+  "json": "sanskrit/narration/ch452.json",
+  "textHash": "fnv1a64:aaeab80f0c9de566",
+  "jsonHash": "fnv1a64:e23d565b547f39a3",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C512-curnayati",
+    "language": "sanskrit",
+    "chapter": 512,
+    "sequence": 29530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f899a143875113b"
+  },
+  "findings": []
+}

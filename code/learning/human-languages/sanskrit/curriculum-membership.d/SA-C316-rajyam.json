@@ -1,0 +1,11 @@
+{
+  "id": "SA-C316-rajyam",
+  "pathSegment": "SA-PATH-316-SAMRAT316",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-316-SAMRAT316",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 452,
+  "title": "Worry and Despair",
+  "label": "ch:sa-worry-and-despair",
+  "canDo": "I can say that someone is worried or has lost hope.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C452-dinah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can say that someone is worried or has lost hope.",
+    "assesses": [
+      "SA-LEX-C452-UDVEGA452-03",
+      "SA-LEX-C452-UDVEGA452-04",
+      "SA-LEX-C452-UDVEGA452-05"
+    ]
+  }
+}

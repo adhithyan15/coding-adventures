@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C316-sasti",
+    "language": "sanskrit",
+    "chapter": 316,
+    "sequence": 18570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60406133fca34578"
+  },
+  "findings": []
+}

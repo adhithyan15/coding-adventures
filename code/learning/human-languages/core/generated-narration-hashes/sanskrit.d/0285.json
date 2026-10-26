@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:7f8913a44083f3aa",
+  "lessonIds": [
+    "SA-C285-adhinam",
+    "SA-C285-samayadhinam",
+    "SA-C285-yadi-samayah-abhavisyat",
+    "SA-W285-six-lines",
+    "SA-R285-depends-and-would"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "sanskrit/narration/ch285.txt",
+  "json": "sanskrit/narration/ch285.json",
+  "textHash": "fnv1a64:47b063433c67a649",
+  "jsonHash": "fnv1a64:93849aff9ae319f6",
+  "findings": []
+}

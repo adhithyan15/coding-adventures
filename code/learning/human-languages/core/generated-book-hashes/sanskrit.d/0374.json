@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:cf943fdbfad2fe68",
+  "lessonIds": [
+    "SA-C374-avahitah",
+    "SA-C374-pramadah",
+    "SA-C374-pariharati",
+    "SA-C374-anarthah",
+    "SA-C374-viramati"
+  ],
+  "tex": "sanskrit/book/chapters/ch374-taking-care.tex"
+}

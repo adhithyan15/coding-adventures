@@ -1,0 +1,11 @@
+{
+  "id": "SA-C364-vimarsah",
+  "pathSegment": "SA-PATH-364-VISHESHAJNA364",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-364-VISHESHAJNA364",
+      "order": 1
+    }
+  ]
+}

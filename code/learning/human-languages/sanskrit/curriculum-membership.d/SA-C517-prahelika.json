@@ -1,0 +1,11 @@
+{
+  "id": "SA-C517-prahelika",
+  "pathSegment": "SA-PATH-517-CATURANGA517",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-517-CATURANGA517",
+      "order": 1
+    }
+  ]
+}

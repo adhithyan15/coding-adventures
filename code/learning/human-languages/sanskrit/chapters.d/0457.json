@@ -1,0 +1,19 @@
+{
+  "chapter": 457,
+  "title": "Laughter and Jokes",
+  "label": "ch:sa-laughter-and-jokes",
+  "canDo": "I can say what made people laugh.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C457-vinodah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can say what made people laugh.",
+    "assesses": [
+      "SA-LEX-C457-HASA457-03",
+      "SA-LEX-C457-HASA457-04",
+      "SA-LEX-C457-HASA457-05"
+    ]
+  }
+}

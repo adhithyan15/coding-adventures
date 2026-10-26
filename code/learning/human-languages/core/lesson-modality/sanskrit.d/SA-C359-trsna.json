@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C359-trsna",
+    "language": "sanskrit",
+    "chapter": 359,
+    "sequence": 21000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e95905df96a267c"
+  },
+  "findings": []
+}

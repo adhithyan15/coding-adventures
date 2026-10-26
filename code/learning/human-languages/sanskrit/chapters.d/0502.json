@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "In the Workshop",
+  "label": "ch:sa-in-the-workshop",
+  "canDo": "I can say where a craftsman works and which tools he uses.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C502-tankah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can say where a craftsman works and which tools he uses.",
+    "assesses": [
+      "SA-LEX-C502-KARMASALA502-03",
+      "SA-LEX-C502-KARMASALA502-04",
+      "SA-LEX-C502-KARMASALA502-05"
+    ]
+  }
+}

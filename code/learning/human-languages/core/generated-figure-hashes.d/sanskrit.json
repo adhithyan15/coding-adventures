@@ -339,6 +339,34 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "SA-S226-letter-gha",
+      "sourceHash": "fnv1a64:3173d88b3506e680",
+      "svgHash": "fnv1a64:0218556830f6c6e8",
+      "svg": "sanskrit/book/figures/SA-S226-letter-gha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "SA-S227-letter-ddha",
+      "sourceHash": "fnv1a64:649194a705ead3aa",
+      "svgHash": "fnv1a64:aec462e401492c42",
+      "svg": "sanskrit/book/figures/SA-S227-letter-ddha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "SA-S228-letter-au",
+      "sourceHash": "fnv1a64:06f5f9205f646ffe",
+      "svgHash": "fnv1a64:c3f87bd88a25054a",
+      "svg": "sanskrit/book/figures/SA-S228-letter-au-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "SA-S229-letter-ii",
+      "sourceHash": "fnv1a64:82ddbf21ca1cf656",
+      "svgHash": "fnv1a64:1cb36c601067b1f8",
+      "svg": "sanskrit/book/figures/SA-S229-letter-ii-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "SA-W03-mama-delayed-copy",
       "sourceHash": "fnv1a64:6fb678687687ac6d",
       "svgHash": "fnv1a64:b05dd274e41c44ca",

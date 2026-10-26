@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:1f44844d29c48ba5",
+  "lessonIds": [
+    "SA-C434-uttamarnah",
+    "SA-C434-adhamarnah",
+    "SA-C434-kusidam",
+    "SA-C434-niksepah",
+    "SA-C434-niryatayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch434.txt",
+  "json": "sanskrit/narration/ch434.json",
+  "textHash": "fnv1a64:2beda73ee2febc5d",
+  "jsonHash": "fnv1a64:2de4d4ac9e80fd55",
+  "findings": []
+}

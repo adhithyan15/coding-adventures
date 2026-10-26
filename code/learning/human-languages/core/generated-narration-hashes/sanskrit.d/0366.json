@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:9096c34725cad465",
+  "lessonIds": [
+    "SA-C366-niskarsah",
+    "SA-C366-samiksa",
+    "SA-C366-ganana",
+    "SA-C366-vicarayati",
+    "SA-C366-niscinoti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch366.txt",
+  "json": "sanskrit/narration/ch366.json",
+  "textHash": "fnv1a64:735a707635006c34",
+  "jsonHash": "fnv1a64:29eda1b6293de2a7",
+  "findings": []
+}

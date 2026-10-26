@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:7f72619e65bfc84b",
+  "lessonIds": [
+    "SA-C342-adharah",
+    "SA-C342-yuktih",
+    "SA-C342-arthat",
+    "SA-C342-phalatah",
+    "SA-C342-upapadayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch342.txt",
+  "json": "sanskrit/narration/ch342.json",
+  "textHash": "fnv1a64:f585dec62499d761",
+  "jsonHash": "fnv1a64:59fd2c2568881f8a",
+  "findings": []
+}

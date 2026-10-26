@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-540-ASANNA540",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "SA-EXT-540-ASANNA540"
+  ],
+  "after": []
+}

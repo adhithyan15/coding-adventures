@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:506310b71271abe1",
+  "lessonIds": [
+    "SA-C440-himapatah",
+    "SA-C440-kantha",
+    "SA-C440-viliyate",
+    "SA-C440-sankucati",
+    "SA-C440-pravarah",
+    "SA-R440-review-434-440"
+  ],
+  "tex": "sanskrit/book/chapters/ch440-snow-and-cold.tex"
+}

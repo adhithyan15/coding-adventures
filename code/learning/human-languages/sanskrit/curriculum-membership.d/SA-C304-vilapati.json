@@ -1,0 +1,11 @@
+{
+  "id": "SA-C304-vilapati",
+  "pathSegment": "SA-PATH-304-RASHI304",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-304-RASHI304",
+      "order": 3
+    }
+  ]
+}

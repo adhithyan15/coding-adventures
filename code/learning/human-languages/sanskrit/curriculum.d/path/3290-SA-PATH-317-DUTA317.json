@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-317-DUTA317",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "SA-EXT-317-DUTA317"
+  ],
+  "after": []
+}

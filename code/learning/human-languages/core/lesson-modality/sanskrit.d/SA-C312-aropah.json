@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C312-aropah",
+    "language": "sanskrit",
+    "chapter": 312,
+    "sequence": 18340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9f700668ccbf84c"
+  },
+  "findings": []
+}

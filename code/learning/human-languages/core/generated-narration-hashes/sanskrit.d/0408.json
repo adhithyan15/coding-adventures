@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:3056ee99e42c1198",
+  "lessonIds": [
+    "SA-C408-vahah",
+    "SA-C408-bharavahah",
+    "SA-C408-adhoranah",
+    "SA-C408-ankusah",
+    "SA-C408-asvasala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch408.txt",
+  "json": "sanskrit/narration/ch408.json",
+  "textHash": "fnv1a64:a81bff71037f5c70",
+  "jsonHash": "fnv1a64:52c4826a05f98464",
+  "findings": []
+}

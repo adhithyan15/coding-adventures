@@ -1,0 +1,21 @@
+{
+  "chapter": 494,
+  "title": "Bringing Up a Child",
+  "label": "ch:sa-bringing-up-a-child",
+  "canDo": "I can say how a child is brought up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-R494-review-488-494",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can say how a child is brought up.",
+    "assesses": [
+      "SA-LEX-C494-LALANA494-01",
+      "SA-LEX-C494-LALANA494-02",
+      "SA-LEX-C494-LALANA494-03",
+      "SA-LEX-C494-LALANA494-04",
+      "SA-LEX-C494-LALANA494-05"
+    ]
+  }
+}

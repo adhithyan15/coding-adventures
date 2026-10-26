@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C317-samantah",
+    "language": "sanskrit",
+    "chapter": 317,
+    "sequence": 18620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4ccc78518e42caa"
+  },
+  "findings": []
+}

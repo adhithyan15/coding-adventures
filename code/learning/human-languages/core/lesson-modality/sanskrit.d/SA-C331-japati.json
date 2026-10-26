@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C331-japati",
+    "language": "sanskrit",
+    "chapter": 331,
+    "sequence": 19330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a6c18ab216d3c31"
+  },
+  "findings": []
+}

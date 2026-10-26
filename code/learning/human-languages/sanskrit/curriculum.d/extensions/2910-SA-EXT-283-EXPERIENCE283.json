@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-283-EXPERIENCE283",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can compare two things (nagaraṃ grāmāpekṣayā mahat; grāmāt mahattaram), say which is best (sarveṣu … śreṣṭhaḥ), and say how long something lasts (prātaḥ ārabhya rātriparyantam; ekāṃ horām).",
+  "prerequisites": [
+    "SA-EXT-282-EXPERIENCE282"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 362,
+  "title": "Research",
+  "label": "ch:sa-research",
+  "canDo": "I can say what a researcher is working on.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C362-udbhavayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can say what a researcher is working on.",
+    "assesses": [
+      "SA-LEX-C362-ANUSANDHANA362-03",
+      "SA-LEX-C362-ANUSANDHANA362-04",
+      "SA-LEX-C362-ANUSANDHANA362-05"
+    ]
+  }
+}

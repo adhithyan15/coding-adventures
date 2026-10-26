@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:b4e7ad309bb46a1a",
+  "lessonIds": [
+    "SA-C435-kapardakah",
+    "SA-C435-niskah",
+    "SA-C435-dinarah",
+    "SA-C435-vinimayah",
+    "SA-C435-bhandagaram"
+  ],
+  "tex": "sanskrit/book/chapters/ch435-old-coins-and-storehouses.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C336-lobhah",
+  "pathSegment": "SA-PATH-336-NITI336",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-336-NITI336",
+      "order": 1
+    }
+  ]
+}

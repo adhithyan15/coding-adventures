@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:eaf4be06203d67d1",
+  "lessonIds": [
+    "SA-C331-bhaktih",
+    "SA-C331-candanam",
+    "SA-C331-visarjayati",
+    "SA-C331-japati",
+    "SA-C331-pavitrah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch331.txt",
+  "json": "sanskrit/narration/ch331.json",
+  "textHash": "fnv1a64:6bf1f737afbfbd6c",
+  "jsonHash": "fnv1a64:27e586ebc2cfedbe",
+  "findings": []
+}

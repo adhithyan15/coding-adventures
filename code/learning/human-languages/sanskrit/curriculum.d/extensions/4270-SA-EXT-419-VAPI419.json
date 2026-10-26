@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-419-VAPI419",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say where to find water on a journey.",
+  "prerequisites": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-378-LESHA378",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what a small change would do.",
+  "prerequisites": []
+}

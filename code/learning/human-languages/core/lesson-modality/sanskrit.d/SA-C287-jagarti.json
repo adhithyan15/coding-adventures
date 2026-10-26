@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C287-jagarti",
+    "language": "sanskrit",
+    "chapter": 287,
+    "sequence": 17080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:630e12bde0c46ce1"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C382-satkaroti",
+    "language": "sanskrit",
+    "chapter": 382,
+    "sequence": 22190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4f489a9b1ef3219"
+  },
+  "findings": []
+}

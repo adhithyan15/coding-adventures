@@ -1,0 +1,19 @@
+{
+  "chapter": 377,
+  "title": "Very and Extremely",
+  "label": "ch:sa-very-and-extremely",
+  "canDo": "I can say how strong something will be if it happens.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C377-atikramati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can say how strong something will be if it happens.",
+    "assesses": [
+      "SA-LEX-C377-ATIVA377-03",
+      "SA-LEX-C377-ATIVA377-04",
+      "SA-LEX-C377-ATIVA377-05"
+    ]
+  }
+}

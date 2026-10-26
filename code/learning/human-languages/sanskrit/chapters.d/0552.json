@@ -1,0 +1,19 @@
+{
+  "chapter": 552,
+  "title": "Trying It Out",
+  "label": "ch:sa-trying-it-out",
+  "canDo": "I can say what will happen if I keep trying.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C552-upakarakah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 552: I can say what will happen if I keep trying.",
+    "assesses": [
+      "SA-LEX-C552-PRAYASA552-03",
+      "SA-LEX-C552-PRAYASA552-04",
+      "SA-LEX-C552-PRAYASA552-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:edc7ea884662eae4",
+  "lessonIds": [
+    "SA-C281-ekam-yanapatram-dadatu",
+    "SA-C281-agrimah",
+    "SA-C281-mama-syutah-nastah",
+    "SA-C281-ausadham",
+    "SA-S228-letter-au",
+    "SA-R281-at-the-station"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 4,
+  "text": "sanskrit/narration/ch281.txt",
+  "json": "sanskrit/narration/ch281.json",
+  "textHash": "fnv1a64:7040ec3755e0fd15",
+  "jsonHash": "fnv1a64:c5875cbd63fc317d",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:6f5ffff746fd7646",
+  "lessonIds": [
+    "SA-C343-vadah",
+    "SA-C343-tarkah",
+    "SA-C343-vakta",
+    "SA-C343-srota",
+    "SA-C343-pratipadayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch343.txt",
+  "json": "sanskrit/narration/ch343.json",
+  "textHash": "fnv1a64:213715aaa7780dc4",
+  "jsonHash": "fnv1a64:56c4379331d0f7fc",
+  "findings": []
+}

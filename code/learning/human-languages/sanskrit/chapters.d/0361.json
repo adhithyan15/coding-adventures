@@ -1,0 +1,19 @@
+{
+  "chapter": 361,
+  "title": "Faith and Loyalty",
+  "label": "ch:sa-faith-and-loyalty",
+  "canDo": "I can talk about faith, steadfastness and ingratitude.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C361-pratisrnoti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can talk about faith, steadfastness and ingratitude.",
+    "assesses": [
+      "SA-LEX-C361-SHRADDHA361-03",
+      "SA-LEX-C361-SHRADDHA361-04",
+      "SA-LEX-C361-SHRADDHA361-05"
+    ]
+  }
+}

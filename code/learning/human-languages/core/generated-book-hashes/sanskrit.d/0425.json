@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:282f8e646b0b8d38",
+  "lessonIds": [
+    "SA-C425-adbhutah",
+    "SA-C425-smarakam",
+    "SA-C425-preksakah",
+    "SA-C425-gavaksah",
+    "SA-C425-smaraniyah",
+    "SA-R425-review-418-425"
+  ],
+  "tex": "sanskrit/book/chapters/ch425-monuments-and-onlookers.tex"
+}

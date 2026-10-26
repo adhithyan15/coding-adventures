@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C387-durgatih",
+    "language": "sanskrit",
+    "chapter": 387,
+    "sequence": 22430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2585b2d2c582f116"
+  },
+  "findings": []
+}

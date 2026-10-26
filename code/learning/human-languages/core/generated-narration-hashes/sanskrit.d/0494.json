@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:575dea7550e6b62d",
+  "lessonIds": [
+    "SA-C494-lalayati",
+    "SA-C494-samvardhayati",
+    "SA-C494-bhartsayati",
+    "SA-C494-anujanati",
+    "SA-C494-balyam",
+    "SA-R494-review-488-494"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch494.txt",
+  "json": "sanskrit/narration/ch494.json",
+  "textHash": "fnv1a64:6c52dcd29bb43ced",
+  "jsonHash": "fnv1a64:1c471113e1085ac1",
+  "findings": []
+}

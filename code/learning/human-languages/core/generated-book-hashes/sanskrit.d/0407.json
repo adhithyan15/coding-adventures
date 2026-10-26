@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:d771a91785b21708",
+  "lessonIds": [
+    "SA-C407-yanta",
+    "SA-C407-valga",
+    "SA-C407-kasa",
+    "SA-C407-pratodah",
+    "SA-C407-yunakti"
+  ],
+  "tex": "sanskrit/book/chapters/ch407-drivers-and-reins.tex"
+}
