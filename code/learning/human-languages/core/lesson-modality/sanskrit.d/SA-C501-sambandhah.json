@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C501-sambandhah",
+    "language": "sanskrit",
+    "chapter": 501,
+    "sequence": 28720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b94cd1b05ce97bb"
+  },
+  "findings": []
+}

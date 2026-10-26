@@ -1,0 +1,11 @@
+{
+  "id": "SA-C531-kamana",
+  "pathSegment": "SA-PATH-531-VANCHATI531",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-531-VANCHATI531",
+      "order": 4
+    }
+  ]
+}

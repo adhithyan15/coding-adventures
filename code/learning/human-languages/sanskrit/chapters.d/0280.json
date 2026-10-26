@@ -1,0 +1,18 @@
+{
+  "chapter": 280,
+  "title": "Which Way to the Station?",
+  "label": "ch:sa-which-way-to-the-station",
+  "canDo": "I can ask the way (sthānakaṃ kutra asti? kathaṃ gacchāmi? kiyat dūram?) and follow the answer: left, right, straight on (vāmataḥ, dakṣiṇataḥ, ṛju gacchatu).",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-R280-asking-the-way",
+    "kind": "production",
+    "summary": "Complete SA-R280-asking-the-way: ask the way and follow the answer.",
+    "assesses": [
+      "SA-GRAMMAR-C280-DIRECTION-01",
+      "SA-GRAMMAR-C280-DIRECTION-02"
+    ]
+  }
+}

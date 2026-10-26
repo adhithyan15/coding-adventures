@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:940d6cd9f774c8a5",
+  "lessonIds": [
+    "SA-C303-durbhiksam",
+    "SA-C303-mahamari",
+    "SA-C303-ksinah",
+    "SA-C303-vyapnoti",
+    "SA-C303-mlayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch303-famine-and-sickness.tex"
+}

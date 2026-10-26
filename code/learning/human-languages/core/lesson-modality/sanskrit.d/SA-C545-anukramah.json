@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C545-anukramah",
+    "language": "sanskrit",
+    "chapter": 545,
+    "sequence": 31200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe12ff068bb8177e"
+  },
+  "findings": []
+}

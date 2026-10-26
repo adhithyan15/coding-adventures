@@ -1,0 +1,11 @@
+{
+  "id": "SA-C359-trsna",
+  "pathSegment": "SA-PATH-359-TYAGA359",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-359-TYAGA359",
+      "order": 3
+    }
+  ]
+}

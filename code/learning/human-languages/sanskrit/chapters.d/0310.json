@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "What Happened Today",
+  "label": "ch:sa-what-happened-today",
+  "canDo": "I can say what happened and give the details.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C310-visesah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can say what happened and give the details.",
+    "assesses": [
+      "SA-LEX-C310-GHATANA310-03",
+      "SA-LEX-C310-GHATANA310-04",
+      "SA-LEX-C310-GHATANA310-05"
+    ]
+  }
+}

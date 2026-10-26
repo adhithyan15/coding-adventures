@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:c830c44e4e88fc9f",
+  "lessonIds": [
+    "SA-C441-durdinam",
+    "SA-C441-sajalah",
+    "SA-C441-ativrstih",
+    "SA-C441-tuhinam",
+    "SA-C441-avrnoti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch441.txt",
+  "json": "sanskrit/narration/ch441.json",
+  "textHash": "fnv1a64:be7237324bad8203",
+  "jsonHash": "fnv1a64:7391a0bd1a2fb96f",
+  "findings": []
+}

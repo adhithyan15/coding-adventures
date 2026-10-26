@@ -35,7 +35,8 @@
 //! | Ruby | `ruby-iir-compiler` (LANG84 phases 5a/5b; any profiled release, default `3.3.6`) |
 //! | Macsyma | `macsyma-iir-compiler` |
 //! | Perl | `perl-iir-compiler` (LANG84; any checked release, default `5.38.0`) |
-//! | Python | `python-iir-compiler` (LANG84 phases 7a/7b `py-int-print`, 7c `py2-int-print` on 2.2, 2.4, 2.6 and 2.7.18; any profiled release, default `3.13.16`) |
+//! | Python | `python-iir-compiler` (LANG84 phases 7a/7b `py-int-print`, 7c `py2-int-print` on 2.2, 2.4, 2.6 and 2.7.18 and `py-float-print` on 3.5.10 and later; any profiled release, default `3.13.16`) |
+//! | JavaScript | `javascript-iir-compiler` (LANG84 phase 6e `es-number-log`; any claiming edition es2016–es2025, default `es2020`) |
 //!
 //! ## Release selection (LANG84)
 //!
@@ -52,6 +53,8 @@
 //!   --lang ruby@3.3.7      ──► LanguageRequest { Ruby, Some("3.3.7") }  ──► Ruby 3.3.7
 //!   --lang ruby@0.49       ──► ReleaseNotAvailable (a grammar pair, but no IIR profile)
 //!   --lang python@3.0a1    ──► LanguageRequest { Python, Some("3.0a1") } ──► Python 3.0a1
+//!   --lang js@es2016       ──► LanguageRequest { JavaScript, Some("es2016") } ──► ECMAScript 2016
+//!   --lang js@es5          ──► ReleaseNotAvailable (a grammar pair, but no F10 table yet)
 //!   --lang twig@1          ──► UnknownRelease   (Twig has no release inventory)
 //! ```
 //!
@@ -160,7 +163,8 @@ pub enum Language {
     /// that lowers LANG83 runs it with no Perl-specific code.
     Perl,
     /// Python — the `py-int-print` subset (`print` of `+ - * // %` integer
-    /// arithmetic) via `python-iir-compiler`'s release path, compiled against
+    /// arithmetic) and, on 3.5.10 and later, `py-float-print` (IEEE floats,
+    /// true `/`, `repr` output; LANG84 7c slice 3) via `python-iir-compiler`'s release path, compiled against
     /// one profiled release of `code/grammars/python/releases.csv` (LANG84):
     /// `3.13.16` by default, or `3.0a1`, `3.5.10`, `3.6.0`, `3.11.17`,
     /// `3.12.3`, `3.16.0a1` through [`compile_source_to_iir_at`] /
@@ -176,6 +180,20 @@ pub enum Language {
     /// `i64_mod_floor` (a zero divisor traps `Trap.DivZero`), `print` is
     /// `print_i64`. No backend has Python code.
     Python,
+    /// JavaScript — the `es-number-log` subset (`console.log` of IEEE number
+    /// arithmetic over top-level `let`/`const`) via `javascript-iir-compiler`,
+    /// compiled against one claiming edition of
+    /// `code/grammars/ecmascript/releases.csv` (LANG84 phase 6e): `es2020` by
+    /// default, or any of `es2016` … `es2025` through
+    /// [`compile_source_to_iir_at`] / `--lang javascript@<edition>`. The
+    /// compiler walks the CST that the generic `GrammarLexer`/`GrammarParser`
+    /// build from that edition's `es<edition>.tokens`/`.grammar` and emits
+    /// only LANG83 registry ops: `+ - * /` and unary `-` are the PR6c IEEE
+    /// `f64_*` ops (BEAM refuses them at compile time), `console.log` is
+    /// `write_f64_js` and `putchar` (the `-` of `-0` behind an
+    /// `f64_signbit` test), and a ReferenceError is
+    /// `trap "Trap.ReferenceError"`. No backend has JavaScript code.
+    JavaScript,
 }
 
 impl fmt::Display for Language {
@@ -195,6 +213,7 @@ impl fmt::Display for Language {
             Language::Macsyma => write!(f, "macsyma"),
             Language::Perl => write!(f, "perl"),
             Language::Python => write!(f, "python"),
+            Language::JavaScript => write!(f, "javascript"),
         }
     }
 }
@@ -220,13 +239,14 @@ impl Language {
             "macsyma" | "mac" => Ok(Self::Macsyma),
             "perl" | "pl" => Ok(Self::Perl),
             "python" | "py" => Ok(Self::Python),
+            "javascript" | "js" => Ok(Self::JavaScript),
             other => Err(format!(
                 "unknown language \"{}\"; expected one of: twig, nib, ruby (or rb), \
                  brainfuck (or bf), dartmouth-basic (or basic / bas), oct, macrooct, \
                  mccarthy-lisp (or mccarthy / mcl / lisp), algol60 \
                  (or algol / algol-60 / a60), flow-matic (or fm / b0), \
                  cobol60 (or cobol / cobol-60 / cob), macsyma (or mac), \
-                 perl (or pl), python (or py)", echo_release(other))),
+                 perl (or pl), python (or py), javascript (or js)", echo_release(other))),
         }
     }
 }
@@ -236,7 +256,10 @@ impl Language {
     /// `releases.csv` inventory (LANG84 C4). Only those languages accept a
     /// `@<release>` suffix or a `Some(release)`.
     pub fn has_release_inventory(self) -> bool {
-        matches!(self, Language::Perl | Language::Ruby | Language::Python)
+        matches!(
+            self,
+            Language::Perl | Language::Ruby | Language::Python | Language::JavaScript
+        )
     }
 }
 
@@ -368,6 +391,7 @@ pub fn detect_language_from_path(path: &Path) -> Option<Language> {
         "mac" => Some(Language::Macsyma),
         "pl" => Some(Language::Perl),
         "py" => Some(Language::Python),
+        "js" => Some(Language::JavaScript),
         _ => None,
     }
 }
@@ -846,6 +870,24 @@ pub fn compile_source_to_iir_at(
                     language,
                     message: format!("{other}"),
                 },
+            })
+        }
+        // LANG84 phase 6e: exactly one claiming edition (es2016 … es2025),
+        // chosen by the caller or `DEFAULT_RELEASE` (es2020); the errors map
+        // exactly as Ruby's and Python's do. The module is LANG83 registry
+        // ops only, so no backend needs a JavaScript case.
+        Language::JavaScript => {
+            use javascript_iir_compiler::FrontendError as JavaScript;
+            javascript_iir_compiler::compile_source_at(source, release, module_name).map_err(|e| {
+                match e {
+                    JavaScript::UnknownRelease { requested, suggestions } => {
+                        LangAotError::UnknownRelease { language, release: requested, nearest: suggestions }
+                    }
+                    JavaScript::ReleaseNotAvailable { release, stage } => {
+                        LangAotError::ReleaseNotAvailable { language, release, stage }
+                    }
+                    other => LangAotError::FrontendError { language, message: format!("{other}") },
+                }
             })
         }
     }
@@ -3513,11 +3555,20 @@ mod tests {
             assert!(ops.contains(&op), "{op} missing from {ops:?}");
         }
         assert_eq!(module.functions[0].return_type, "i64");
-        let error = compile_source_to_iir(Language::Python, "print(1.5)\n", "m").unwrap_err();
+        // LANG84 7c slice 3: floats are in the default release's subset, and
+        // a float `//` is a typed refusal naming the release.
+        let module = compile_source_to_iir(Language::Python, "print(7 / 2 + 0.5)\n", "m").unwrap();
+        let ops: Vec<_> = module.functions[0].instructions.iter().map(|i| i.op.as_str()).collect();
+        for op in ["int_to_real", "f64_div", "f64_add"] {
+            assert!(ops.contains(&op), "{op} missing from {ops:?}");
+        }
+        let error = compile_source_to_iir(Language::Python, "print(7.5 // 2)\n", "m").unwrap_err();
         assert!(
             matches!(&error, LangAotError::FrontendError { language: Language::Python, message } if message.contains("3.13.16")),
             "{error:?}"
         );
+        // 3.0a1 (profile `py30`) has no floats.
+        assert!(compile_source_to_iir_at(Language::Python, Some("3.0a1"), "print(7 / 2)\n", "m").is_err());
     }
 
     /// LANG84 phase 7b: Python is an inventory language. `python@<release>`
@@ -3578,6 +3629,57 @@ mod tests {
         }
         // And Python 3 refuses the statement.
         assert!(compile_source_to_iir_at(Language::Python, None, "print 6 * 7\n", "p").is_err());
+    }
+
+    /// LANG84 phase 6e: `--lang javascript`/`js` and `.js` reach
+    /// `javascript-iir-compiler` on its default edition (es2020); any claiming
+    /// edition is selectable, and the typed release errors surface as
+    /// `UnknownRelease` / `ReleaseNotAvailable`, never a fallback.
+    #[test]
+    fn javascript_language_parses_detects_and_selects_editions() {
+        for alias in ["javascript", "js"] {
+            assert_eq!(Language::parse(alias).unwrap(), Language::JavaScript);
+        }
+        assert_eq!(Language::JavaScript.to_string(), "javascript");
+        assert_eq!(detect_language_from_path(Path::new("prog.js")), Some(Language::JavaScript));
+        assert!(Language::parse("bogus").unwrap_err().contains("javascript (or js)"));
+        assert!(Language::JavaScript.has_release_inventory());
+
+        let src = "let x = 1 / 0; console.log(x, -x * 0);\n";
+        let default = compile_source_to_iir(Language::JavaScript, src, "j").unwrap();
+        assert_eq!(default.release.as_deref(), Some("es2020"));
+        assert_eq!(default.language, "javascript");
+        for edition in ["es2016", "es2021", "es2025"] {
+            let request = LanguageRequest::parse(&format!("js@{edition}")).unwrap();
+            let module = compile_request_to_iir(request, src, "j").unwrap();
+            assert_eq!(module.release.as_deref(), Some(edition));
+            // Different editions, the same program: the same IIR.
+            assert_eq!(format!("{:?}", module.functions), format!("{:?}", default.functions));
+        }
+        // Not an inventory ID: no guessing.
+        match compile_source_to_iir_at(Language::JavaScript, Some("es20"), src, "j") {
+            Err(LangAotError::UnknownRelease { language: Language::JavaScript, release, nearest }) => {
+                assert_eq!(release, "es20");
+                assert!(!nearest.is_empty());
+            }
+            other => panic!("{other:?}"),
+        }
+        // An inventoried edition that cannot compile the subset yet.
+        for edition in ["es5", "es2015"] {
+            match compile_source_to_iir_at(Language::JavaScript, Some(edition), src, "j") {
+                Err(e @ LangAotError::ReleaseNotAvailable { language: Language::JavaScript, .. }) => {
+                    assert!(e.to_string().starts_with(&format!("javascript: release {edition} cannot compile yet")), "{e}")
+                }
+                other => panic!("{edition}: {other:?}"),
+            }
+        }
+        // Edition-specific syntax: numeric separators are ES2021.
+        assert!(compile_source_to_iir_at(Language::JavaScript, Some("es2021"), "console.log(1_0);", "j").is_ok());
+        let error = compile_source_to_iir_at(Language::JavaScript, Some("es2020"), "console.log(1_0);", "j").unwrap_err();
+        assert!(
+            matches!(&error, LangAotError::FrontendError { language: Language::JavaScript, message } if message.contains("es2020")),
+            "{error}"
+        );
     }
 
     /// LANG84 phase 5a: `--lang ruby`/`rb` and `.rb` reach `ruby-iir-compiler`

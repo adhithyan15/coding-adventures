@@ -1,0 +1,11 @@
+{
+  "id": "SA-C550-viniyunkte",
+  "pathSegment": "SA-PATH-550-AMSA550",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-550-AMSA550",
+      "order": 3
+    }
+  ]
+}

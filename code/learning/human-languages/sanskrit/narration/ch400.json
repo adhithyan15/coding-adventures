@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 400,
+  "title": "Round the Shrine",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0ba8a4a63268aba2",
+  "lessons": [
+    {
+      "id": "SA-C400-parikramati",
+      "sequence": 23300,
+      "title": "परिक्रामति (parikrāmati) — walks around; goes round",
+      "headword": "परिक्रामति",
+      "romanization": "parikrāmati",
+      "gloss": "walks around; goes round",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea53d2cef3d2b4f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for an arched gateway, then the Sanskrit for a pennant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: परिक्रामति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिक्रामति — parikrāmati — \"walks around; goes round\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यात्रिकाः मन्दिरं परिक्रामन्ति। yātrikāḥ mandiraṃ parikrāmanti. The pilgrims walk around the temple."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः मन्दिरं परिक्रान्तवान्, saḥ mandiraṃ parikrāntavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिक्रामति (parikrāmati) is built from pari, \"around\", and the root √kram, \"to step, to stride\"; MW gives pari-kram as to walk or step round, with the participle parikrānta (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parikrāmati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parikrāmati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parikrāmati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parikrāmati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātrikāḥ mandiraṃ parikrāmanti. — The pilgrims walk around the temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātrikāḥ mandiraṃ parikrāmanti.* — The pilgrims walk around the temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for an arched gateway, then the Sanskrit for a pennant, then say parikrāmati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for an arched gateway, then the Sanskrit for a pennant, then say *parikrāmati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does परिक्रामति (parikrāmati) mean? (\"Walks around; goes round\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C400-japamala",
+      "sequence": 23310,
+      "title": "जपमाला (japamālā) — a string of prayer beads",
+      "headword": "जपमाला",
+      "romanization": "japamālā",
+      "gloss": "a string of prayer beads",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb41587d982a4a88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a pennant, then the Sanskrit for walks around."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जपमाला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जपमाला — japamālā — \"a string of prayer beads\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वृद्धः हस्ते जपमालां धारयति। vṛddhaḥ haste japamālāṃ dhārayati. The old man holds prayer beads in his hand."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जपमाला (japamālā) is built from japa, \"the quiet repeating of prayers\", from the root √jap, \"to mutter\", and mālā, \"a garland\"; MW gives the compound as a rosary for counting prayers (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "japamālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *japamālā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "japamālā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *japamālā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vṛddhaḥ haste japamālāṃ dhārayati. — The old man holds prayer beads in his hand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vṛddhaḥ haste japamālāṃ dhārayati.* — The old man holds prayer beads in his hand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a pennant, then the Sanskrit for walks around, then say japamālā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a pennant, then the Sanskrit for walks around, then say *japamālā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जपमाला (japamālā) mean? (\"A string of prayer beads\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C400-rudraksah",
+      "sequence": 23320,
+      "title": "रुद्राक्षः (rudrākṣaḥ) — a rudraksha bead",
+      "headword": "रुद्राक्षः",
+      "romanization": "rudrākṣaḥ",
+      "gloss": "a rudraksha bead",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83827c52207be2ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for walks around, then the Sanskrit for prayer beads."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रुद्राक्षः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रुद्राक्षः — rudrākṣaḥ — \"a rudraksha bead\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जपमालायां रुद्राक्षाः सन्ति। japamālāyāṃ rudrākṣāḥ santi. There are rudraksha beads on the string of prayer beads."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रुद्राक्षः (rudrākṣaḥ) is built from Rudra, a name of Śiva, and akṣa, \"an eye\": MW gives it as \"Rudra-eyed\", a tree whose berries are strung into rosaries (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rudrākṣaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rudrākṣaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rudrākṣaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rudrākṣaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "japamālāyāṃ rudrākṣāḥ santi. — There are rudraksha beads on the string of prayer beads.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *japamālāyāṃ rudrākṣāḥ santi.* — There are rudraksha beads on the string of prayer beads.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for walks around, then the Sanskrit for prayer beads, then say rudrākṣaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for walks around, then the Sanskrit for prayer beads, then say *rudrākṣaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रुद्राक्षः (rudrākṣaḥ) mean? (\"A rudraksha bead\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C400-rathayatra",
+      "sequence": 23330,
+      "title": "रथयात्रा (rathayātrā) — a chariot procession",
+      "headword": "रथयात्रा",
+      "romanization": "rathayātrā",
+      "gloss": "a chariot procession",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17d46d4ca7ccde30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for prayer beads, then the Sanskrit for a rudraksha bead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रथयात्रा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रथयात्रा — rathayātrā — \"a chariot procession\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रथयात्रायां जनाः रथं कर्षन्ति। rathayātrāyāṃ janāḥ rathaṃ karṣanti. In the chariot procession people pull the chariot."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रथयात्रा (rathayātrā) is built from ratha, \"a chariot\", and yātrā, \"a journey, a procession\"; MW gives the compound as the festive procession of an image on a car (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rathayātrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rathayātrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rathayātrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rathayātrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rathayātrāyāṃ janāḥ rathaṃ karṣanti. — In the chariot procession people pull the chariot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rathayātrāyāṃ janāḥ rathaṃ karṣanti.* — In the chariot procession people pull the chariot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for prayer beads, then the Sanskrit for a rudraksha bead, then say rathayātrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for prayer beads, then the Sanskrit for a rudraksha bead, then say *rathayātrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रथयात्रा (rathayātrā) mean? (\"A chariot procession\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C400-aharati",
+      "sequence": 23340,
+      "title": "आहरति (āharati) — fetches; brings",
+      "headword": "आहरति",
+      "romanization": "āharati",
+      "gloss": "fetches; brings",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7cf08d381cb52628",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a rudraksha bead, then the Sanskrit for a chariot procession."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आहरति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आहरति — āharati — \"fetches; brings\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बालिका उद्यानात् पुष्पाणि आहरति। bālikā udyānāt puṣpāṇi āharati. The girl fetches flowers from the garden."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): सा पुष्पाणि आहृतवती, sā puṣpāṇi āhṛtavatī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आहरति (āharati) is built from ā, \"towards\", and the root √hṛ, \"to carry\", which also gives harati, \"takes away\"; MW gives ā-hṛ as to fetch or bring, with the participle āhṛta (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āharati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āharati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āharati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āharati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālikā udyānāt puṣpāṇi āharati. — The girl fetches flowers from the garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālikā udyānāt puṣpāṇi āharati.* — The girl fetches flowers from the garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a rudraksha bead, then the Sanskrit for a chariot procession, then say āharati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a rudraksha bead, then the Sanskrit for a chariot procession, then say *āharati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आहरति (āharati) mean? (\"Fetches; brings\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

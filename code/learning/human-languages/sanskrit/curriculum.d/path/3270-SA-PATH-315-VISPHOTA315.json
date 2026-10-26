@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-315-VISPHOTA315",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "SA-EXT-315-VISPHOTA315"
+  ],
+  "after": []
+}

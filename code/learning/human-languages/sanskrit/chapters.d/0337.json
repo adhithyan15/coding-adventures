@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Exile in the Forest",
+  "label": "ch:sa-exile-in-the-forest",
+  "canDo": "I can tell how a prince kept his word in exile.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C337-mrgaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can tell how a prince kept his word in exile.",
+    "assesses": [
+      "SA-LEX-C337-VANAVASA337-03",
+      "SA-LEX-C337-VANAVASA337-04",
+      "SA-LEX-C337-VANAVASA337-05"
+    ]
+  }
+}

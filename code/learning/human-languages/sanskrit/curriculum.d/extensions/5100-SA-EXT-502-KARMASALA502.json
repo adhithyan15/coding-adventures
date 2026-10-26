@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-502-KARMASALA502",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say where a craftsman works and which tools he uses.",
+  "prerequisites": []
+}

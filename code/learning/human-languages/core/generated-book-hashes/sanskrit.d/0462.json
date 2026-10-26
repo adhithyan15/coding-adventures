@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:76f2f72968465aff",
+  "lessonIds": [
+    "SA-C462-sathah",
+    "SA-C462-kutilah",
+    "SA-C462-apalapati",
+    "SA-C462-visvasaniyah",
+    "SA-C462-visvasaghatah"
+  ],
+  "tex": "sanskrit/book/chapters/ch462-honest-and-false.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C432-sancayah",
+    "language": "sanskrit",
+    "chapter": 432,
+    "sequence": 24980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db8dc7ce62d27daa"
+  },
+  "findings": []
+}

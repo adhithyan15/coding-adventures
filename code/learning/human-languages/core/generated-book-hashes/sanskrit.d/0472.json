@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:1cf68652cab23819",
+  "lessonIds": [
+    "SA-C472-talu",
+    "SA-C472-lala",
+    "SA-C472-carvayati",
+    "SA-C472-nisthivati",
+    "SA-C472-rasah"
+  ],
+  "tex": "sanskrit/book/chapters/ch472-the-mouth.tex"
+}

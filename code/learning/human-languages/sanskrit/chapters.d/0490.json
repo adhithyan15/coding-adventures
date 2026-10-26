@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "Age and Appearance",
+  "label": "ch:sa-age-and-appearance",
+  "canDo": "I can describe someone's age and appearance.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C490-rupam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can describe someone's age and appearance.",
+    "assesses": [
+      "SA-LEX-C490-RUPA490-03",
+      "SA-LEX-C490-RUPA490-04",
+      "SA-LEX-C490-RUPA490-05"
+    ]
+  }
+}

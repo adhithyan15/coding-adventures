@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C525-uttolayati",
+    "language": "sanskrit",
+    "chapter": 525,
+    "sequence": 30200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0f76b646dd27a1a"
+  },
+  "findings": []
+}

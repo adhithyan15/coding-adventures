@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:79f17b6a500fd4df",
+  "lessonIds": [
+    "SA-C402-dharmasala",
+    "SA-C402-parnasala",
+    "SA-C402-nisidati",
+    "SA-C402-samvisati",
+    "SA-C402-padyam"
+  ],
+  "tex": "sanskrit/book/chapters/ch402-rest-houses.tex"
+}

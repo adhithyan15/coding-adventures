@@ -1207,6 +1207,7 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
     let mut diagram = StructuralDiagram {
         kind: StructuralKind::Architecture,
         architecture_config: Some(architecture_config),
+        render_config: Default::default(),
         title: None,
         accessibility_title: None,
         accessibility_description: None,
@@ -3587,6 +3588,7 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
     Ok(StructuralDiagram {
         kind: StructuralKind::Requirement,
         architecture_config: None,
+        render_config: Default::default(),
         title,
         accessibility_title,
         accessibility_description,
@@ -4517,6 +4519,7 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
     Ok(StructuralDiagram {
         kind: StructuralKind::Class,
         architecture_config: None,
+        render_config: Default::default(),
         title,
         accessibility_title: None,
         accessibility_description: None,
@@ -13507,6 +13510,7 @@ fn expect_gitgraph_token(
 /// Parse Mermaid ER syntax into the shared structural IR.
 pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     let front_matter_title = mermaid_front_matter_value(source, "title");
+    let render_config = parse_er_render_config(source);
     let preprocessed = preprocess_mermaid_source(source)?;
     parse_mermaid_er_ast(&preprocessed.source)?;
 
@@ -13762,6 +13766,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     Ok(StructuralDiagram {
         kind: StructuralKind::Er,
         architecture_config: None,
+        render_config,
         title,
         accessibility_title,
         accessibility_description,
@@ -13771,6 +13776,45 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
         groups: vec![],
         relationships,
     })
+}
+
+fn parse_er_render_config(source: &str) -> diagram_ir::StructuralRenderConfig {
+    let defaults = diagram_ir::StructuralRenderConfig::default();
+    diagram_ir::StructuralRenderConfig {
+        use_max_width: parse_mermaid_boolean_config(
+            source,
+            "er",
+            "useMaxWidth",
+            defaults.use_max_width,
+        ),
+        html_labels: parse_mermaid_boolean_config(
+            source,
+            "flowchart",
+            "htmlLabels",
+            defaults.html_labels,
+        ),
+    }
+}
+
+fn parse_mermaid_boolean_config(source: &str, section: &str, key: &str, fallback: bool) -> bool {
+    let front_matter = mermaid_front_matter_section(source, &["config", section]);
+    let config = mermaid_directive_object(source, section)
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    let value = quadrant_directive_value(config, key).or_else(|| {
+        config.lines().find_map(|line| {
+            let (name, value) = line.trim().split_once(':')?;
+            (name.trim() == key)
+                .then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        })
+    });
+    value
+        .and_then(|value| match value.to_ascii_lowercase().as_str() {
+            "true" => Some(true),
+            "false" => Some(false),
+            _ => None,
+        })
+        .unwrap_or(fallback)
 }
 
 fn parse_er_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
@@ -14102,6 +14146,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     Ok(StructuralDiagram {
         kind: StructuralKind::C4,
         architecture_config: None,
+        render_config: Default::default(),
         title,
         accessibility_title: None,
         accessibility_description: None,

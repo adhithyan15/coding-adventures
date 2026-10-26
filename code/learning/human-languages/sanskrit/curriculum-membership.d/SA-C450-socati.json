@@ -1,0 +1,11 @@
+{
+  "id": "SA-C450-socati",
+  "pathSegment": "SA-PATH-450-VISADA450",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-450-VISADA450",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C371-avadhih",
+    "language": "sanskrit",
+    "chapter": 371,
+    "sequence": 21610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c852aaeb8afd33c4"
+  },
+  "findings": []
+}

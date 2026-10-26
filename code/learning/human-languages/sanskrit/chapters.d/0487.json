@@ -1,0 +1,21 @@
+{
+  "chapter": 487,
+  "title": "Getting Ready",
+  "label": "ch:sa-getting-ready",
+  "canDo": "I can talk about grooming and dressing up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-R487-review-480-487",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can talk about grooming and dressing up.",
+    "assesses": [
+      "SA-LEX-C487-PRASADHANA487-01",
+      "SA-LEX-C487-PRASADHANA487-02",
+      "SA-LEX-C487-PRASADHANA487-03",
+      "SA-LEX-C487-PRASADHANA487-04",
+      "SA-LEX-C487-PRASADHANA487-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:9bdd13c3086e88b1",
+  "lessonIds": [
+    "SA-C305-uddharati",
+    "SA-C305-pranah",
+    "SA-C305-sahasam",
+    "SA-C305-avatarayati",
+    "SA-C305-trayate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch305.txt",
+  "json": "sanskrit/narration/ch305.json",
+  "textHash": "fnv1a64:af0ea11f66ee03c7",
+  "jsonHash": "fnv1a64:cb0b09ab93612689",
+  "findings": []
+}

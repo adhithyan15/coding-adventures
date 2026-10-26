@@ -1,6 +1,7 @@
 //! Exact DFF-backed PowerPC 601 lifecycle scaffold.
 
 use crate::alu;
+use crate::branch;
 use crate::register_file::RegisterFile32;
 use crate::state::{clock_bit, DffMemory};
 use powerpc601_simulator::{
@@ -590,19 +591,9 @@ fn execute_x31(state: &mut PowerPcState, raw: u32, cia: u32) -> Result<&'static 
 }
 
 fn eval_branch(state: &mut PowerPcState, bo: u32, bi: u32) -> bool {
-    let ctr_ok = if bo & 0x10 == 0 {
-        state.ctr = alu::sub(state.ctr, 1).result;
-        (state.ctr != 0) ^ (bo & 8 != 0)
-    } else {
-        true
-    };
-    let condition_ok = if bo & 4 != 0 {
-        true
-    } else {
-        let cr_bit = state.cr & (1 << (31 - bi)) != 0;
-        cr_bit == (bo & 2 != 0)
-    };
-    ctr_ok && condition_ok
+    let decision = branch::evaluate(state.ctr, state.cr, bo as u8, bi as u8);
+    state.ctr = decision.next_ctr;
+    decision.taken
 }
 
 fn set_ca(state: &mut PowerPcState, value: bool) {

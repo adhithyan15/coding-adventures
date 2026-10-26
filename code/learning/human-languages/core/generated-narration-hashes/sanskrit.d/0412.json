@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:6d5c6c0148992aa7",
+  "lessonIds": [
+    "SA-C412-viramah",
+    "SA-C412-nivartate",
+    "SA-C412-upagacchati",
+    "SA-C412-atigacchati",
+    "SA-C412-krosah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch412.txt",
+  "json": "sanskrit/narration/ch412.json",
+  "textHash": "fnv1a64:da95def5a6ce7e80",
+  "jsonHash": "fnv1a64:3afcf8a5f42b67e2",
+  "findings": []
+}

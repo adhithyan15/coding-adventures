@@ -1,0 +1,11 @@
+{
+  "id": "SA-C503-parisramah",
+  "pathSegment": "SA-PATH-503-SAHAKARI503",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-503-SAHAKARI503",
+      "order": 2
+    }
+  ]
+}

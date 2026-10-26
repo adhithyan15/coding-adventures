@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:624f6b52869736ff",
+  "lessonIds": [
+    "SA-C306-sibiram",
+    "SA-C306-asrayah",
+    "SA-C306-danam",
+    "SA-C306-saranarthi",
+    "SA-C306-santvayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch306-the-relief-camp.tex"
+}

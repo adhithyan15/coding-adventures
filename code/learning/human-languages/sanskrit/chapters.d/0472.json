@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "The Mouth",
+  "label": "ch:sa-the-mouth",
+  "canDo": "I can talk about chewing and the mouth.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C472-rasah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can talk about chewing and the mouth.",
+    "assesses": [
+      "SA-LEX-C472-TALU472-03",
+      "SA-LEX-C472-TALU472-04",
+      "SA-LEX-C472-TALU472-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "Halts and Turning Back",
+  "label": "ch:sa-halts-and-turning-back",
+  "canDo": "I can say where we halted, turned back or went past.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C412-krosah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can say where we halted, turned back or went past.",
+    "assesses": [
+      "SA-LEX-C412-VIRAMA412-03",
+      "SA-LEX-C412-VIRAMA412-04",
+      "SA-LEX-C412-VIRAMA412-05"
+    ]
+  }
+}

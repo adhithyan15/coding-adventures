@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:0364b864fa6f2ec2",
+  "lessonIds": [
+    "SA-C343-vadah",
+    "SA-C343-tarkah",
+    "SA-C343-vakta",
+    "SA-C343-srota",
+    "SA-C343-pratipadayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch343-a-debate.tex"
+}

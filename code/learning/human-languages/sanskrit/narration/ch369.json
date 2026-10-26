@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 369,
+  "title": "Luck and Fate",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c18520dd420ba0c5",
+  "lessons": [
+    {
+      "id": "SA-C369-bhagyam",
+      "sequence": 21480,
+      "title": "भाग्यम् (bhāgyam) — luck; fortune",
+      "headword": "भाग्यम्",
+      "romanization": "bhāgyam",
+      "gloss": "luck; fortune",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fbb96c78775c4ee4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for an inference, then the Sanskrit for so they say."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भाग्यम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भाग्यम् — bhāgyam — \"luck; fortune\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि भाग्यम् अस्ति, तर्हि सर्वं सुखं भविष्यति। yadi bhāgyam asti, tarhi sarvaṃ sukhaṃ bhaviṣyati. If we have luck, all will be well."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भाग्यम् (bhāgyam) comes from the root √bhaj, \"to share\" (MW takes bhāgya as \"to be shared\"), and MW gives the neuter bhāgya \"fate, destiny, fortune, good fortune\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāgyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāgyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāgyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāgyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bhāgyam asti, tarhi sarvaṃ sukhaṃ bhaviṣyati. — If we have luck, all will be well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bhāgyam asti, tarhi sarvaṃ sukhaṃ bhaviṣyati.* — If we have luck, all will be well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for an inference, then the Sanskrit for so they say, then say bhāgyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for an inference, then the Sanskrit for so they say, then say *bhāgyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भाग्यम् (bhāgyam) mean? (\"Luck; fortune\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C369-daivam",
+      "sequence": 21490,
+      "title": "दैवम् (daivam) — fate",
+      "headword": "दैवम्",
+      "romanization": "daivam",
+      "gloss": "fate",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99cd9d9b910511e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for so they say, then the Sanskrit for luck."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दैवम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दैवम् — daivam — \"fate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि दैवम् इच्छति, तर्हि सर्वं भविष्यति। yadi daivam icchati, tarhi sarvaṃ bhaviṣyati. If fate wills it, everything will happen."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दैवम् (daivam) is built on deva, \"a god\"; MW gives daiva \"divine power or will, destiny, fate, chance\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daivam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daivam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daivam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daivam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi daivam icchati, tarhi sarvaṃ bhaviṣyati. — If fate wills it, everything will happen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi daivam icchati, tarhi sarvaṃ bhaviṣyati.* — If fate wills it, everything will happen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for so they say, then the Sanskrit for luck, then say daivam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for so they say, then the Sanskrit for luck, then say *daivam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दैवम् (daivam) mean? (\"Fate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C369-akasmat",
+      "sequence": 21500,
+      "title": "अकस्मात् (akasmāt) — by accident; without warning",
+      "headword": "अकस्मात्",
+      "romanization": "akasmāt",
+      "gloss": "by accident; without warning",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64af84f045755b68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for luck, then the Sanskrit for fate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अकस्मात्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अकस्मात् — akasmāt — \"by accident; without warning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि अकस्मात् वर्षा भवति, तर्हि अहं गृहे स्थास्यामि। yadi akasmāt varṣā bhavati, tarhi ahaṃ gṛhe sthāsyāmi. If it rains without warning, I will stay at home."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अकस्मात् (akasmāt) is built from a-, \"not\", and kasmāt, \"from what? why?\"; MW gives a-kasmāt \"without a why or a wherefore, accidentally, suddenly\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akasmāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akasmāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akasmāt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akasmāt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi akasmāt varṣā bhavati, tarhi ahaṃ gṛhe sthāsyāmi. — If it rains without warning, I will stay at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi akasmāt varṣā bhavati, tarhi ahaṃ gṛhe sthāsyāmi.* — If it rains without warning, I will stay at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for luck, then the Sanskrit for fate, then say akasmāt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for luck, then the Sanskrit for fate, then say *akasmāt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अकस्मात् (akasmāt) mean? (\"By accident; without warning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C369-upalabhate",
+      "sequence": 21510,
+      "title": "उपलभते (upalabhate) — comes by; obtains",
+      "headword": "उपलभते",
+      "romanization": "upalabhate",
+      "gloss": "comes by; obtains",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3223fb31b4121f87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for fate, then the Sanskrit for by accident."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उपलभते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपलभते — upalabhate — \"comes by; obtains\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि भाग्यम् अस्ति, तर्हि सः धनम् उपलभते। yadi bhāgyam asti, tarhi saḥ dhanam upalabhate. If he is lucky, he comes by money."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः धनम् उपलब्धवान्, saḥ dhanam upalabdhavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपलभते (upalabhate) is built on upa, \"towards\", and the root √labh, \"to take, to get\"; MW gives upa-√labh \"to acquire, to receive, to obtain, to find\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upalabhate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upalabhate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upalabhate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upalabhate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bhāgyam asti, tarhi saḥ dhanam upalabhate. — If he is lucky, he comes by money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bhāgyam asti, tarhi saḥ dhanam upalabhate.* — If he is lucky, he comes by money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for fate, then the Sanskrit for by accident, then say upalabhate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for fate, then the Sanskrit for by accident, then say *upalabhate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उपलभते (upalabhate) mean? (\"Comes by; obtains\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C369-sambhavana",
+      "sequence": 21520,
+      "title": "सम्भावना (sambhāvanā) — a likelihood",
+      "headword": "सम्भावना",
+      "romanization": "sambhāvanā",
+      "gloss": "a likelihood",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:034785bec6fd110c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for by accident, then the Sanskrit for comes by."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सम्भावना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सम्भावना — sambhāvanā — \"a likelihood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि आकाशः कृष्णः, तर्हि वर्षायाः सम्भावना अस्ति। yadi ākāśaḥ kṛṣṇaḥ, tarhi varṣāyāḥ sambhāvanā asti. If the sky is dark, rain is likely."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सम्भावना (sambhāvanā) is built on sam and the root √bhū, \"to be\", in its causative form; MW gives sam-bhāvanā \"imagination, supposition, assumption\", and \"a likelihood\" is its modern sense (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhāvanā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhāvanā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhāvanā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhāvanā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi ākāśaḥ kṛṣṇaḥ, tarhi varṣāyāḥ sambhāvanā asti. — If the sky is dark, rain is likely.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi ākāśaḥ kṛṣṇaḥ, tarhi varṣāyāḥ sambhāvanā asti.* — If the sky is dark, rain is likely.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for by accident, then the Sanskrit for comes by, then say sambhāvanā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for by accident, then the Sanskrit for comes by, then say *sambhāvanā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सम्भावना (sambhāvanā) mean? (\"A likelihood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

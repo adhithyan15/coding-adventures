@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "The Long Road",
+  "label": "ch:sa-the-long-road",
+  "canDo": "I can describe a long, hard road and who walks it.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C403-vicarati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can describe a long, hard road and who walks it.",
+    "assesses": [
+      "SA-LEX-C403-PANTHA403-03",
+      "SA-LEX-C403-PANTHA403-04",
+      "SA-LEX-C403-PANTHA403-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C298-bhagnah",
+    "language": "sanskrit",
+    "chapter": 298,
+    "sequence": 17630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a68dfe7f8f7caae8"
+  },
+  "findings": []
+}

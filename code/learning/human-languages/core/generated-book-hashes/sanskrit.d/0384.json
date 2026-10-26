@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:f34b4f306aaa4a10",
+  "lessonIds": [
+    "SA-C384-udyamah",
+    "SA-C384-dhrtih",
+    "SA-C384-yathasakti",
+    "SA-C384-anutisthati",
+    "SA-C384-protsahayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch384-effort.tex"
+}

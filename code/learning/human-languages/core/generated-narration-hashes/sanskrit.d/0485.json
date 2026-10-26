@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:0206b24e2c944bbd",
+  "lessonIds": [
+    "SA-C485-susrusa",
+    "SA-C485-upacarati",
+    "SA-C485-apyayayati",
+    "SA-C485-upasamah",
+    "SA-C485-rasayanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch485.txt",
+  "json": "sanskrit/narration/ch485.json",
+  "textHash": "fnv1a64:03c7845fa9d8929b",
+  "jsonHash": "fnv1a64:f4760305a4bbb7e7",
+  "findings": []
+}

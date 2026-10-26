@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C434-uttamarnah",
+    "language": "sanskrit",
+    "chapter": 434,
+    "sequence": 25050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ad0fd5417e8511b"
+  },
+  "findings": []
+}

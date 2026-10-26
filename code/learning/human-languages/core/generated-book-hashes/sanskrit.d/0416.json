@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:48552deb38a9c02d",
+  "lessonIds": [
+    "SA-C416-navikah",
+    "SA-C416-aritram",
+    "SA-C416-karnadharah",
+    "SA-C416-vahayati",
+    "SA-C416-uttarati"
+  ],
+  "tex": "sanskrit/book/chapters/ch416-boatmen.tex"
+}

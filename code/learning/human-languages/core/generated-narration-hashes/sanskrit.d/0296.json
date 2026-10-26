@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:c6ce120a2c5ea679",
+  "lessonIds": [
+    "SA-C296-davagnih",
+    "SA-C296-prajvalati",
+    "SA-C296-sphulingah",
+    "SA-C296-gadhah",
+    "SA-C296-prasarati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch296.txt",
+  "json": "sanskrit/narration/ch296.json",
+  "textHash": "fnv1a64:9c397237ea4b1a94",
+  "jsonHash": "fnv1a64:e8c5f420d05f7823",
+  "findings": []
+}

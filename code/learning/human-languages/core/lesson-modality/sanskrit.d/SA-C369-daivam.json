@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C369-daivam",
+    "language": "sanskrit",
+    "chapter": 369,
+    "sequence": 21490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99cd9d9b910511e8"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:958083b099baf521",
+  "lessonIds": [
+    "SA-C482-cikitsati",
+    "SA-C482-aturah",
+    "SA-C482-nidanam",
+    "SA-C482-upacarah",
+    "SA-C482-salyam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch482.txt",
+  "json": "sanskrit/narration/ch482.json",
+  "textHash": "fnv1a64:7f4b961ea9a6fa87",
+  "jsonHash": "fnv1a64:1c7c88e332b323d1",
+  "findings": []
+}

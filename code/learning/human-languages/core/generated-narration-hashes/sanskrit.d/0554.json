@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 554,
+  "sourceHash": "fnv1a64:5288f3c271423b1d",
+  "lessonIds": [
+    "SA-C554-sambhavati",
+    "SA-C554-dirghadarsi",
+    "SA-C554-abhipraiti",
+    "SA-C554-ayatih",
+    "SA-C554-arambhah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch554.txt",
+  "json": "sanskrit/narration/ch554.json",
+  "textHash": "fnv1a64:0b8773ef652c8d8d",
+  "jsonHash": "fnv1a64:3caaab2b2f0bcaf6",
+  "findings": []
+}

@@ -709,54 +709,46 @@ pub fn whitespace_only_minify(
     // at i+2 stays at i+3 logically — equivalent to a
     // 3-token rotation within `[i+1, i+2, i+3]`.
     //
-    // Safety: this pattern can ONLY appear in IIFE
-    // contexts where the inner `()` is a call on the
-    // immediately-prior function body. Any non-IIFE
-    // `} ( ) )` sequence in valid JS would imply
-    // something like `class Foo {} () ()` which is a
-    // syntax error. So the rewrite is sound.
+    // #18114: the window alone is NOT enough. The outer `)` must close a
+    // GROUPING paren that wraps exactly this one function expression. In
+    // `f(function(){}())` the outer `)` closes `f`'s argument list, and
+    // rotating printed `f(function(){})()`: it called `f` with the
+    // function, then called whatever `f` returned. The table is what this
+    // pass does; every row prints a program equivalent to its source.
+    // Upstream reprints from an AST and drops grouping parens outside
+    // statement position (`var x=function(){}()`), so only the first row
+    // matches it byte for byte; the others keep their source form.
     //
-    // Note we don't gate on what's BEFORE the `}` — it
-    // could be a function body, a class body, or anything.
-    // For class bodies, `class C{} ()` would be weird; but
-    // upstream's normalisation applies to function bodies
-    // specifically. To be safe, we additionally require
-    // the `}` to be preceded by a token that could end a
-    // function body (which is essentially any expression
-    // closer — too broad). Simpler check: look back for
-    // the matching `{` and confirm it's preceded by `)`
-    // (function arg-list close) or `=>` (arrow head). For
-    // now, the simpler pattern match alone — if false
-    // positives surface, refine with the backwards scan.
+    //   source                         rotate?   why
+    //   -----------------------------  -------   --------------------------
+    //   (function(){}());              yes       statement-start grouping
+    //   var x=(function(){}());        yes       grouping after `=`
+    //   f((function(){}()));           yes       inner `(` is grouping
+    //   f(function(){}());             no        `(` is f's argument list
+    //   if(function(){}())g();         no        `(` is the `if` head
+    //   new(function(){}());           no        `new(f)()` ≠ `new(f())`
+    //   a?.(function(){}());           no        optional call
+    //   x=(a||function(){}());         no        parens hold more than it
+    //   f("}"());                      no        `"}"` is a string, not `}`
+    //
+    // `wraps_only_this_function` checks all of it, using bracket partners
+    // computed once, so the pass stays linear. Every window is decided on
+    // the original stream, then rotated; windows never overlap.
     {
-        let mut i = 0;
-        while i + 3 < kept.len() {
-            if kept[i].value == "}"
-                && kept[i + 1].value == "("
-                && kept[i + 2].value == ")"
-                && kept[i + 3].value == ")"
-            {
-                // Swap the call-close at i+2 with the
-                // outer-close at i+3. After swap, the
-                // sequence is `} ( ) )` → `} ) ( )` where
-                // the first `)` is the outer close.
-                // Wait — we want `} ) ( )` but we have
-                // `} ( ) )`. To go from input to output,
-                // we move the call-pair `( )` (at i+1,
-                // i+2) AFTER the outer `)` (at i+3).
-                //
-                // Implementation: rotate the slice
-                // [i+1..=i+3] one position right (which
-                // is equivalent to rotating one left
-                // since it's a 3-element window):
-                //   [A=(,  B=),  C=)] → [C, A, B]
-                //   so (, ), ) → ), (, )
-                kept[i + 1..=i + 3].rotate_right(1);
-                // Advance past the now-rewritten window.
-                i += 4;
-            } else {
-                i += 1;
-            }
+        let partners = bracket_partners(&kept);
+        let windows: Vec<usize> = (0..kept.len().saturating_sub(3))
+            .filter(|&i| {
+                is_structural_punct(kept[i], "}")
+                    && is_structural_punct(kept[i + 1], "(")
+                    && is_structural_punct(kept[i + 2], ")")
+                    && is_structural_punct(kept[i + 3], ")")
+                    && wraps_only_this_function(&kept, &partners, i, i + 3)
+            })
+            .collect();
+        for i in windows {
+            // `[(, ), )]` → `[), (, )]`: the outer close moves in front of
+            // the call's `()`.
+            kept[i + 1..=i + 3].rotate_right(1);
         }
     }
     // gap-053 + gap-084: paren elision around var-init RHS, to a
@@ -6291,6 +6283,109 @@ fn is_plain_identifier(tok: &lexer::token::Token) -> bool {
     matches!(tok.type_, lexer::token::TokenType::Name)
 }
 
+/// For every structural bracket in `kept`, the index of its partner, or
+/// `usize::MAX` when it has none (unbalanced input, or a mismatched pair
+/// such as `(…}`). One stack pass, so O(n).
+fn bracket_partners(kept: &[&lexer::token::Token]) -> Vec<usize> {
+    let mut partners = vec![usize::MAX; kept.len()];
+    let mut stack: Vec<(usize, &str)> = Vec::new();
+    for (k, t) in kept.iter().enumerate() {
+        for (open, close) in [("(", ")"), ("[", "]"), ("{", "}")] {
+            if is_structural_punct(t, open) {
+                stack.push((k, close));
+            } else if is_structural_punct(t, close) {
+                if let Some((o, want)) = stack.pop() {
+                    if want == close {
+                        partners[o] = k;
+                        partners[k] = o;
+                    }
+                }
+            }
+        }
+    }
+    partners
+}
+
+/// #18114: in the window `} ( ) )` at `body_close`…`outer_close`, is the
+/// outer `)` the close of a grouping paren holding exactly
+/// `function…{…}()`? See the table above the gap-051 pass.
+///
+/// Three checks:
+///
+/// 1. The `(` partnering `outer_close` is a *grouping* paren. Its
+///    predecessor must not make it a call or a head: it is absent, or an
+///    operator/punctuator other than `)`, `]`, `}`, `?.` and `@` (a
+///    decorator's `@(expr)` may not be followed by a call), or one of the
+///    reserved words `return typeof void delete throw case in instanceof
+///    else do`, which can't be called (and not after `.`/`?.`, where they
+///    are member names). `new`, `yield`, `await` and every identifier
+///    are refused.
+/// 2. Right inside it sits `function` (or `async function`).
+/// 3. That function's header, `[*] [name] (params) {`, opens the block
+///    that `body_close` closes. So nothing else shares the parens.
+fn wraps_only_this_function(
+    kept: &[&lexer::token::Token],
+    partners: &[usize],
+    body_close: usize,
+    outer_close: usize,
+) -> bool {
+    let open = partners[outer_close];
+    if open == usize::MAX || open >= body_close {
+        return false;
+    }
+    let keyword = |k: usize, word: &str| {
+        kept.get(k).is_some_and(|t| !is_string_literal(t) && t.value == word)
+    };
+    let member_name = |k: usize| {
+        k.checked_sub(1)
+            .is_some_and(|p| matches!(kept[p].value.as_str(), "." | "?."))
+    };
+    // 1. A grouping paren.
+    if let Some(p) = open.checked_sub(1) {
+        let pred = kept[p];
+        let grouping = if is_punct(pred) {
+            !matches!(pred.value.as_str(), ")" | "]" | "}" | "?." | "@")
+        } else {
+            !is_string_literal(pred)
+                && matches!(
+                    pred.value.as_str(),
+                    "return" | "typeof" | "void" | "delete" | "throw" | "case" | "in"
+                        | "instanceof" | "else" | "do"
+                )
+                && !member_name(p)
+        };
+        if !grouping {
+            return false;
+        }
+    }
+    // 2. `function` or `async function` right inside.
+    let mut k = open + 1;
+    if keyword(k, "async") {
+        k += 1;
+    }
+    if !keyword(k, "function") {
+        return false;
+    }
+    k += 1;
+    // 3. `[*] [name] (params) {` opening the block `body_close` closes.
+    if kept.get(k).is_some_and(|t| is_structural_punct(t, "*")) {
+        k += 1;
+    }
+    if kept.get(k).is_some_and(|t| is_word_like(t)) {
+        k += 1;
+    }
+    if !kept.get(k).is_some_and(|t| is_structural_punct(t, "(")) {
+        return false;
+    }
+    let params_close = partners[k];
+    if params_close == usize::MAX {
+        return false;
+    }
+    let body_open = params_close + 1;
+    kept.get(body_open).is_some_and(|t| is_structural_punct(t, "{"))
+        && partners[body_open] == body_close
+}
+
 /// #18124: does the statement starting at `kept[at]` declare a lexical
 /// binding (`let`, `const`, `using`)?
 ///
@@ -10679,6 +10774,64 @@ mod tests {
         // don't rewrite. Upstream may or may not rewrite
         // with-args IIFEs; leaving that as a future
         // refinement.
+    }
+
+    // ---- #18114: only a grouping paren around the function rotates ----
+
+    #[test]
+    fn issue18114_argument_iife_is_left_alone() {
+        // The outer `)` is `f`'s argument list, not a grouping paren.
+        assert_eq!(minify("f(function(){return 1}());"), "f(function(){return 1}());");
+        assert_eq!(
+            minify("console.log(function(){return 1}());"),
+            "console.log(function(){return 1}());"
+        );
+        assert_eq!(minify("f(a,function(){return 1}());"), "f(a,function(){return 1}());");
+        assert_eq!(minify("g(x)(function(){return 1}());"), "g(x)(function(){return 1}());");
+    }
+
+    #[test]
+    fn issue18114_heads_new_and_optional_calls_are_left_alone() {
+        assert_eq!(minify("if(function(){return 1}())g();"), "if(function(){return 1}())g();");
+        assert_eq!(minify("while(function(){return 0}());"), "while(function(){return 0}());");
+        assert_eq!(minify("a?.(function(){return 1}());"), "a?.(function(){return 1}());");
+        assert_eq!(
+            minify("new(function(){return 1}());"),
+            "new (function(){return 1}());"
+        );
+    }
+
+    #[test]
+    fn issue18114_parens_holding_more_than_the_function_are_left_alone() {
+        assert_eq!(minify("x=(a,function(){return 1}());"), "x=(a,function(){return 1}());");
+        assert_eq!(minify("f(\"}\"());"), "f(\"}\"());");
+    }
+
+    #[test]
+    fn issue18114_grouping_parens_still_rotate() {
+        assert_eq!(minify("(function(){}()),f();"), "(function(){})(),f();");
+        assert_eq!(minify("f((function(){return 1}()));"), "f((function(){return 1})());");
+        assert_eq!(minify("x=(async function(){}());"), "x=async function(){}();");
+        assert_eq!(minify("x=(function*(){}());"), "x=function*(){}();");
+        assert_eq!(minify("x=(function f(){return 1}());"), "x=function f(){return 1}();");
+    }
+
+    #[test]
+    fn issue18114_a_decorator_paren_is_left_alone() {
+        // `@(f())` is a valid decorator; `@(f)()` is not.
+        assert_eq!(
+            minify("@(function(){return function(){}}()) class A{}"),
+            "@(function(){return function(){}}())class A{};"
+        );
+    }
+
+    #[test]
+    fn issue18114_a_member_named_return_is_a_call() {
+        // `x.return(…)` is a method call; `return` is just its name.
+        assert_eq!(
+            minify("x.return(function(){return 1}());"),
+            "x.return(function(){return 1}());"
+        );
     }
 
     // ---- gap-049: flattened for-body `;` suppression ----

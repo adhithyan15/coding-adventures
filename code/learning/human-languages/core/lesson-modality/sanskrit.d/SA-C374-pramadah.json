@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C374-pramadah",
+    "language": "sanskrit",
+    "chapter": 374,
+    "sequence": 21750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08b6e7d5af5cca1b"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 424,
+  "title": "Sights Worth Seeing",
+  "label": "ch:sa-sights-worth-seeing",
+  "canDo": "I can say which places are worth seeing and why.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C424-viharati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can say which places are worth seeing and why.",
+    "assesses": [
+      "SA-LEX-C424-PARYATANA424-03",
+      "SA-LEX-C424-PARYATANA424-04",
+      "SA-LEX-C424-PARYATANA424-05"
+    ]
+  }
+}

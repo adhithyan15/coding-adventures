@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:a0ce032695859006",
+  "lessonIds": [
+    "SA-C373-anumatih",
+    "SA-C373-nisedhati",
+    "SA-C373-pratibandhah",
+    "SA-C373-apavadah",
+    "SA-C373-anivaryah"
+  ],
+  "tex": "sanskrit/book/chapters/ch373-permission-first.tex"
+}

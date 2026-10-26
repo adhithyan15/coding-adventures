@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C458-slaghate",
+    "language": "sanskrit",
+    "chapter": 458,
+    "sequence": 26520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44fb6a632349a2b8"
+  },
+  "findings": []
+}

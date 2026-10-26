@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:4221ec45e549345f",
+  "lessonIds": [
+    "SA-C334-raksasah",
+    "SA-C334-asurah",
+    "SA-C334-vadhah",
+    "SA-C334-hanti",
+    "SA-C334-nigirati"
+  ],
+  "tex": "sanskrit/book/chapters/ch334-gods-and-demons.tex"
+}

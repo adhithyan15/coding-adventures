@@ -1,0 +1,11 @@
+{
+  "id": "SA-C325-gada",
+  "pathSegment": "SA-PATH-325-GADA325",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-325-GADA325",
+      "order": 0
+    }
+  ]
+}

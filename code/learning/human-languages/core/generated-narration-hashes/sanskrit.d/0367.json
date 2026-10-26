@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:f2a4e331c8330c00",
+  "lessonIds": [
+    "SA-C367-sambhavah",
+    "SA-C367-sambhavayati",
+    "SA-C367-dhruvam",
+    "SA-C367-ksipram",
+    "SA-C367-apeksate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch367.txt",
+  "json": "sanskrit/narration/ch367.json",
+  "textHash": "fnv1a64:d6a265962669bd0f",
+  "jsonHash": "fnv1a64:cdb4730e0790d9b7",
+  "findings": []
+}

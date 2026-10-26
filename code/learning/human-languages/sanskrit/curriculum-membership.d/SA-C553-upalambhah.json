@@ -1,0 +1,11 @@
+{
+  "id": "SA-C553-upalambhah",
+  "pathSegment": "SA-PATH-553-SKHALANA553",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-553-SKHALANA553",
+      "order": 4
+    }
+  ]
+}

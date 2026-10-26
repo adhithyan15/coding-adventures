@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "Clearing the Clutter",
+  "label": "ch:sa-clearing-the-clutter",
+  "canDo": "I can talk about rubbish, sweeping out and putting things in order.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C510-sammarjanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can talk about rubbish, sweeping out and putting things in order.",
+    "assesses": [
+      "SA-LEX-C510-AVAKARA510-03",
+      "SA-LEX-C510-AVAKARA510-04",
+      "SA-LEX-C510-AVAKARA510-05"
+    ]
+  }
+}

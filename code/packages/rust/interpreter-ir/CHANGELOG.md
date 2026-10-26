@@ -1,5 +1,14 @@
 # Changelog — interpreter-ir
 
+## Unreleased (LANG84 phase 6e — `Trap.ReferenceError`)
+
+- **`exception_kind::TRAP_REFERENCE_ERROR`** (`"Trap.ReferenceError"`) joins
+  `ALL_TRAP_KINDS` (now seven) with the stable id 7: reading a name that is
+  not bound yet (JavaScript's temporal dead zone) or at all. It is the kind
+  `javascript-iir-compiler` emits in place of its two VM-only ReferenceError
+  builtins. Ids 1–6 are unchanged; the pinned-id test gains the new row and
+  `trap_kind_name(8)` is now the first unused id.
+
 ## [0.15.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
 
 - **Registry:** six new type-first Ops, `introduced_by: "LANG83 PR6c"`

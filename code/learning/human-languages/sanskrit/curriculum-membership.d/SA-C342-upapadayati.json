@@ -1,0 +1,11 @@
+{
+  "id": "SA-C342-upapadayati",
+  "pathSegment": "SA-PATH-342-ADHARA342",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-342-ADHARA342",
+      "order": 4
+    }
+  ]
+}

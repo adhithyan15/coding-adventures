@@ -1,0 +1,11 @@
+{
+  "id": "SA-C417-budbudah",
+  "pathSegment": "SA-PATH-417-PULINA417",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-417-PULINA417",
+      "order": 2
+    }
+  ]
+}

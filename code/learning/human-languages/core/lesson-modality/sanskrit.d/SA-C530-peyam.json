@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C530-peyam",
+    "language": "sanskrit",
+    "chapter": 530,
+    "sequence": 30440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4226515a2d632813"
+  },
+  "findings": []
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 522,
+  "title": "A Song to Dance To",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:94853b98ce809774",
+  "lessons": [
+    {
+      "id": "SA-C522-padanyasah",
+      "sequence": 30020,
+      "title": "पदन्यासः (padanyāsaḥ) — a dance step",
+      "headword": "पदन्यासः",
+      "romanization": "padanyāsaḥ",
+      "gloss": "a dance step",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28ea979902af0304",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a tambourine, then the Sanskrit for a resonant sound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पदन्यासः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पदन्यासः — padanyāsaḥ — \"a dance step\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नर्तकस्य पदन्यासः सुन्दरः अस्ति। nartakasya padanyāsaḥ sundaraḥ asti. The dancer's footwork is beautiful."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पदन्यासः (padanyāsaḥ) is built from pada, \"a foot, a step\", and nyāsa, \"a putting down\"; MW gives padanyāsa as putting down the feet, a step (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "padanyāsaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *padanyāsaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "padanyāsaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *padanyāsaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nartakasya padanyāsaḥ sundaraḥ asti. — The dancer's footwork is beautiful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nartakasya padanyāsaḥ sundaraḥ asti.* — The dancer's footwork is beautiful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a tambourine, then the Sanskrit for a resonant sound, then say padanyāsaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a tambourine, then the Sanskrit for a resonant sound, then say *padanyāsaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पदन्यासः (padanyāsaḥ) mean? (\"A dance step\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C522-avartate",
+      "sequence": 30030,
+      "title": "आवर्तते (āvartate) — spins round; turns back",
+      "headword": "आवर्तते",
+      "romanization": "āvartate",
+      "gloss": "spins round; turns back",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ca47152fdf87121",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a resonant sound, then the Sanskrit for a dance step."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आवर्तते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आवर्तते — āvartate — \"spins round; turns back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नर्तकः शीघ्रम् आवर्तते। nartakaḥ śīghram āvartate. The dancer turns round quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः शीघ्रम् आवृत्तवान्, saḥ śīghram āvṛttavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आवर्तते (āvartate) is built on ā and the root √vṛt, \"to turn\", which also gives vartate; MW gives āvṛt as to turn or draw round, to turn back (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvartate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvartate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvartate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvartate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nartakaḥ śīghram āvartate. — The dancer turns round quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nartakaḥ śīghram āvartate.* — The dancer turns round quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a resonant sound, then the Sanskrit for a dance step, then say āvartate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a resonant sound, then the Sanskrit for a dance step, then say *āvartate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आवर्तते (āvartate) mean? (\"Spins round; turns back\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C522-kinkini",
+      "sequence": 30040,
+      "title": "किंकिणी (kiṅkiṇī) — a small bell",
+      "headword": "किंकिणी",
+      "romanization": "kiṅkiṇī",
+      "gloss": "a small bell",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5a81d766cbf2373",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a dance step, then the Sanskrit for spins round."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: किंकिणी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किंकिणी — kiṅkiṇī — \"a small bell\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नर्तकस्य पादे किंकिण्यः सन्ति। nartakasya pāde kiṅkiṇyaḥ santi. The dancer has small bells on his foot."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किंकिणी (kiṅkiṇī) is the word MW records for a small bell; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiṅkiṇī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiṅkiṇī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiṅkiṇī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiṅkiṇī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nartakasya pāde kiṅkiṇyaḥ santi. — The dancer has small bells on his foot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nartakasya pāde kiṅkiṇyaḥ santi.* — The dancer has small bells on his foot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a dance step, then the Sanskrit for spins round, then say kiṅkiṇī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a dance step, then the Sanskrit for spins round, then say *kiṅkiṇī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does किंकिणी (kiṅkiṇī) mean? (\"A small bell\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C522-anukaroti",
+      "sequence": 30050,
+      "title": "अनुकरोति (anukaroti) — imitates",
+      "headword": "अनुकरोति",
+      "romanization": "anukaroti",
+      "gloss": "imitates",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0055a545c3b53455",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for spins round, then the Sanskrit for a small bell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अनुकरोति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुकरोति — anukaroti — \"imitates\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शिष्यः गुरोः पदन्यासम् अनुकरोति। śiṣyaḥ guroḥ padanyāsam anukaroti. The pupil imitates the teacher's steps."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः गुरुम् अनुकृतवान्, saḥ gurum anukṛtavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुकरोति (anukaroti) is built on anu, \"after\", and the root √kṛ, \"to do\", which also gives karoti: to do after another; MW gives anukṛ as to imitate, to copy (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anukaroti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anukaroti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anukaroti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anukaroti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śiṣyaḥ guroḥ padanyāsam anukaroti. — The pupil imitates the teacher's steps.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śiṣyaḥ guroḥ padanyāsam anukaroti.* — The pupil imitates the teacher's steps.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for spins round, then the Sanskrit for a small bell, then say anukaroti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for spins round, then the Sanskrit for a small bell, then say *anukaroti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अनुकरोति (anukaroti) mean? (\"Imitates\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C522-karatalika",
+      "sequence": 30060,
+      "title": "करतालिका (karatālikā) — clapping; applause",
+      "headword": "करतालिका",
+      "romanization": "karatālikā",
+      "gloss": "clapping; applause",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f34882ce5979511f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a small bell, then the Sanskrit for imitates."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: करतालिका",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "करतालिका — karatālikā — \"clapping; applause\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नृत्यं दृष्ट्वा पिता करतालिकां करोति। nṛtyaṃ dṛṣṭvā pitā karatālikāṃ karoti. After the dance, father claps."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "करतालिका (karatālikā) is built from kara, \"the hand\", and tālikā, \"clapping\", a word of the same family as tāla, \"beating time\"; MW gives karatālikā as clapping the hands and beating time by clapping (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karatālikā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karatālikā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karatālikā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karatālikā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nṛtyaṃ dṛṣṭvā pitā karatālikāṃ karoti. — After the dance, father claps.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nṛtyaṃ dṛṣṭvā pitā karatālikāṃ karoti.* — After the dance, father claps.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a small bell, then the Sanskrit for imitates, then say karatālikā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a small bell, then the Sanskrit for imitates, then say *karatālikā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does करतालिका (karatālikā) mean? (\"Clapping; applause\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

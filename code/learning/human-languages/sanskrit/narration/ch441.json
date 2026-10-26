@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 441,
+  "title": "Bad Weather",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c830c44e4e88fc9f",
+  "lessons": [
+    {
+      "id": "SA-C441-durdinam",
+      "sequence": 25410,
+      "title": "दुर्दिनम् (durdinam) — a day of bad weather",
+      "headword": "दुर्दिनम्",
+      "romanization": "durdinam",
+      "gloss": "a day of bad weather",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a728905b96014de4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for huddles up, then the Sanskrit for a cloak."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दुर्दिनम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुर्दिनम् — durdinam — \"a day of bad weather\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दुर्दिने यात्रा कठिना भवति। durdine yātrā kaṭhinā bhavati. On a day of bad weather a journey is hard."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुर्दिनम् (durdinam) is built from dur, \"bad, ill\", and dina, \"a day\"; MW gives the compound as a rainy or cloudy day, bad weather (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durdinam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durdinam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durdinam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durdinam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durdine yātrā kaṭhinā bhavati. — On a day of bad weather a journey is hard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durdine yātrā kaṭhinā bhavati.* — On a day of bad weather a journey is hard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for huddles up, then the Sanskrit for a cloak, then say durdinam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for huddles up, then the Sanskrit for a cloak, then say *durdinam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दुर्दिनम् (durdinam) mean? (\"A day of bad weather\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C441-sajalah",
+      "sequence": 25420,
+      "title": "सजलः (sajalaḥ) — rain-laden; watery",
+      "headword": "सजलः",
+      "romanization": "sajalaḥ",
+      "gloss": "rain-laden; watery",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2bbd74c6ae1ba91e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a cloak, then the Sanskrit for a day of bad weather."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सजलः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सजलः — sajalaḥ — \"rain-laden; watery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सजलम् अभ्रं पर्वतं प्रति गच्छति। sajalam abhraṃ parvataṃ prati gacchati. A rain-laden cloud moves towards the mountain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सजलः (sajalaḥ) is built from sa, \"with\", and jala, \"water\"; MW gives sajala as containing water, watery, wet (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sajalaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sajalaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sajalaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sajalaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sajalam abhraṃ parvataṃ prati gacchati. — A rain-laden cloud moves towards the mountain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sajalam abhraṃ parvataṃ prati gacchati.* — A rain-laden cloud moves towards the mountain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a cloak, then the Sanskrit for a day of bad weather, then say sajalaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a cloak, then the Sanskrit for a day of bad weather, then say *sajalaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सजलः (sajalaḥ) mean? (\"Rain-laden; watery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C441-ativrstih",
+      "sequence": 25430,
+      "title": "अतिवृष्टिः (ativṛṣṭiḥ) — too much rain",
+      "headword": "अतिवृष्टिः",
+      "romanization": "ativṛṣṭiḥ",
+      "gloss": "too much rain",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c18691b546d6cc12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a day of bad weather, then the Sanskrit for rain-laden."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अतिवृष्टिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अतिवृष्टिः — ativṛṣṭiḥ — \"too much rain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अतिवृष्ट्या क्षेत्राणि नश्यन्ति। ativṛṣṭyā kṣetrāṇi naśyanti. Too much rain ruins the fields."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अतिवृष्टिः (ativṛṣṭiḥ) is built from ati, \"beyond, too much\", and vṛṣṭi, \"rain\", on the root √vṛṣ; MW gives the compound as excessive rain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ativṛṣṭiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ativṛṣṭiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ativṛṣṭiḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ativṛṣṭiḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ativṛṣṭyā kṣetrāṇi naśyanti. — Too much rain ruins the fields.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ativṛṣṭyā kṣetrāṇi naśyanti.* — Too much rain ruins the fields.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a day of bad weather, then the Sanskrit for rain-laden, then say ativṛṣṭiḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a day of bad weather, then the Sanskrit for rain-laden, then say *ativṛṣṭiḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अतिवृष्टिः (ativṛṣṭiḥ) mean? (\"Too much rain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C441-tuhinam",
+      "sequence": 25440,
+      "title": "तुहिनम् (tuhinam) — frost; hoarfrost",
+      "headword": "तुहिनम्",
+      "romanization": "tuhinam",
+      "gloss": "frost; hoarfrost",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72865b312cb20e3f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for rain-laden, then the Sanskrit for too much rain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तुहिनम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तुहिनम् — tuhinam — \"frost; hoarfrost\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शिशिरे प्रातः तृणेषु तुहिनम् अस्ति। śiśire prātaḥ tṛṇeṣu tuhinam asti. In late winter there is frost on the grass in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तुहिनम् (tuhinam) is the word MW gives for frost, cold, mist, dew and snow; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuhinam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuhinam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuhinam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuhinam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śiśire prātaḥ tṛṇeṣu tuhinam asti. — In late winter there is frost on the grass in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śiśire prātaḥ tṛṇeṣu tuhinam asti.* — In late winter there is frost on the grass in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for rain-laden, then the Sanskrit for too much rain, then say tuhinam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for rain-laden, then the Sanskrit for too much rain, then say *tuhinam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तुहिनम् (tuhinam) mean? (\"Frost; hoarfrost\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C441-avrnoti",
+      "sequence": 25450,
+      "title": "आवृणोति (āvṛṇoti) — veils; hides from view",
+      "headword": "आवृणोति",
+      "romanization": "āvṛṇoti",
+      "gloss": "veils; hides from view",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d201072ced062bfc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for too much rain, then the Sanskrit for hoarfrost."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आवृणोति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आवृणोति — āvṛṇoti — \"veils; hides from view\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अभ्रं सूर्यम् आवृणोति। abhraṃ sūryam āvṛṇoti. A cloud veils the sun."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): अभ्रं सूर्यम् आवृतवत्, abhraṃ sūryam āvṛtavat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आवृणोति (āvṛṇoti) is built from ā and the root √vṛ, \"to cover\"; MW gives ā-vṛ as to cover, hide, conceal, with the participle āvṛta, \"covered\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvṛṇoti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvṛṇoti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvṛṇoti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvṛṇoti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhraṃ sūryam āvṛṇoti. — A cloud veils the sun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhraṃ sūryam āvṛṇoti.* — A cloud veils the sun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for too much rain, then the Sanskrit for hoarfrost, then say āvṛṇoti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for too much rain, then the Sanskrit for hoarfrost, then say *āvṛṇoti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आवृणोति (āvṛṇoti) mean? (\"Veils; hides from view\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

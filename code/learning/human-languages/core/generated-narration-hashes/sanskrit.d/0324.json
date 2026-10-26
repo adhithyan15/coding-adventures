@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:b8e3121f4157716b",
+  "lessonIds": [
+    "SA-C324-pura",
+    "SA-C324-itivrttam",
+    "SA-C324-puranam",
+    "SA-C324-anusmarati",
+    "SA-C324-kirtayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch324.txt",
+  "json": "sanskrit/narration/ch324.json",
+  "textHash": "fnv1a64:763f1ca6867e34d4",
+  "jsonHash": "fnv1a64:cf3d7cca9360352e",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:d38837cb5ea38f6d",
+  "lessonIds": [
+    "SA-C357-samitih",
+    "SA-C357-parisad",
+    "SA-C357-pramukhah",
+    "SA-C357-sacivah",
+    "SA-C357-nirdisati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch357.txt",
+  "json": "sanskrit/narration/ch357.json",
+  "textHash": "fnv1a64:ce036052cc1b6e92",
+  "jsonHash": "fnv1a64:c503dbc481be07f6",
+  "findings": []
+}

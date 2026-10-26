@@ -1,0 +1,11 @@
+{
+  "id": "SA-R275-what-everyone-will-do",
+  "pathSegment": "SA-PATH-275-FUTURE275",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-275-FUTURE275",
+      "order": 2
+    }
+  ]
+}

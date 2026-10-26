@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:f18a37e1ae0d2058",
+  "lessonIds": [
+    "SA-C405-javah",
+    "SA-C405-satvaram",
+    "SA-C405-pradhavati",
+    "SA-C405-antimah",
+    "SA-C405-ayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch405.txt",
+  "json": "sanskrit/narration/ch405.json",
+  "textHash": "fnv1a64:41d37f1f8e250ad7",
+  "jsonHash": "fnv1a64:d7cc1291d2d285d2",
+  "findings": []
+}

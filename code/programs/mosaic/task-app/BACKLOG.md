@@ -69,11 +69,18 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next: #18264 — publish and audit the v0.5.12 Qt rail checkpoint.**
+**Next: #18305 — preserve Qt timeline labels' 150-pixel width floor.**
+Reuse the conservative static non-shrink bridge for text, preserve diagnostics,
+and validate both product themes. This is a bounded native fidelity slice under
+#12022; feature composition and signing remain outside scope.
+
+**Published and audited: #18264 — v0.5.12 Qt rail checkpoint.**
+Run 40269564825 passed all payloads and publication. The immutable source is
+`d75d061afe34c7f3764636dbf879181eb4dceb33`; 13 assets, 12 checksum entries,
+and 11 manifest payloads were audited. Artifact coverage is unchanged.
 The rail repair #18250 merged in #18251 with all payload validations passing
-in run 40230057835. Prepare its compatible patch, then publish only after
-preparation merges and audit immutable provenance, assets, and checksums.
-Preparation is not publication; artifact and unsigned-platform limits stay unchanged.
+in run 40230057835. Its compatible patch is now published with audited immutable
+provenance, assets, and checksums; unsigned-platform limits stay unchanged.
 
 **Completed fidelity slice: #18250 — Qt fixed non-shrinking rail geometry.**
 The v0.5.11 checkpoint (#18238) is published and audited: run 40225950352,
