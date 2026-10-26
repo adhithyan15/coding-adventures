@@ -147,6 +147,51 @@ public static class MosaicRuntimeHost
 
     public static bool IsAvailable => State is not null;
 
+    // A value-equal list is still a different dependency-property reference after
+    // deserialization. Reuse the live value to avoid needless binding invalidation,
+    // but still call the setter: custom controls may observe every assignment.
+    // Only Mosaic's scalar list shapes participate, never arbitrary object Equals.
+    private static object? ReuseEquivalentList(object component, PropertyInfo property, object? value)
+    {
+        if (!property.CanRead || property.GetIndexParameters().Length != 0
+            || !IsScalarList(property.PropertyType)) return value;
+        try
+        {
+            var current = property.GetValue(component);
+            return EqualListValue(current, value, property.PropertyType) ? current : value;
+        }
+        catch { return value; } // An optional optimization cannot make a getter required.
+    }
+
+    private static bool IsScalarList(Type type)
+    {
+        if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(IReadOnlyList<>))
+            return false;
+        var item = type.GetGenericArguments()[0];
+        return item == typeof(string) || item == typeof(double) || item == typeof(bool)
+            || IsScalarList(item);
+    }
+
+    private static bool EqualListValue(object? current, object? incoming, Type type)
+    {
+        if (current is null || incoming is null) return current is null && incoming is null;
+        if (!IsScalarList(type))
+            return current.GetType() == type && incoming.GetType() == type && current.Equals(incoming);
+        // Converted IReadOnlyList values are List<T>. Use their finite count to
+        // bound reads even if a custom existing list has a broken enumerator.
+        if (incoming is not System.Collections.IList values
+            || current is not System.Collections.IEnumerable existing) return false;
+        var item = type.GetGenericArguments()[0];
+        var cursor = existing.GetEnumerator();
+        try
+        {
+            for (var i = 0; i < values.Count; i++)
+                if (!cursor.MoveNext() || !EqualListValue(cursor.Current, values[i], item)) return false;
+            return !cursor.MoveNext();
+        }
+        finally { (cursor as IDisposable)?.Dispose(); }
+    }
+
     public static void LoadRequired()
     {
         State ??= Load();
@@ -1334,7 +1379,7 @@ public static class MosaicRuntimeHost
                             continue;
                         }
                         using (BeginProfile("apply-props-set"))
-                            property.SetValue(component, converted.value);
+                            property.SetValue(component, ReuseEquivalentList(component, property, converted.value));
                     }
                 }
                 finally
