@@ -1,0 +1,19 @@
+{
+  "chapter": 144,
+  "title": "Easy and Important",
+  "label": "ch:zh-easy-and-important",
+  "canDo": "I can say a thing is important, easy, simple or special, and what I think of it.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C144-juede",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 144: I can say a thing is important, easy, simple or special, and what I think of it.",
+    "assesses": [
+      "ZH-LEX-C144-MATTER144-03",
+      "ZH-LEX-C144-MATTER144-04",
+      "ZH-LEX-C144-MATTER144-05"
+    ]
+  }
+}

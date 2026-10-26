@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C135-lanqiu",
+  "pathSegment": "ZH-PATH-135-SPORT135",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-135-SPORT135",
+      "order": 1
+    }
+  ]
+}

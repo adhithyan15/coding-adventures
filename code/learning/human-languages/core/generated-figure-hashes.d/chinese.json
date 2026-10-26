@@ -290,6 +290,34 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "ZH-W126-yi-use",
+      "sourceHash": "fnv1a64:20a073c69f46a0fd",
+      "svgHash": "fnv1a64:307b8def00222ed5",
+      "svg": "chinese/book/figures/ZH-W126-yi-use-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W127-xie-few",
+      "sourceHash": "fnv1a64:6225623ad6213e7e",
+      "svgHash": "fnv1a64:99b1a969dba63935",
+      "svg": "chinese/book/figures/ZH-W127-xie-few-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W128-yin-sound",
+      "sourceHash": "fnv1a64:428f16be09481090",
+      "svgHash": "fnv1a64:4774626bee912036",
+      "svg": "chinese/book/figures/ZH-W128-yin-sound-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W129-chao-noisy",
+      "sourceHash": "fnv1a64:add0a9f36773f155",
+      "svgHash": "fnv1a64:d71d03da8186d16b",
+      "svg": "chinese/book/figures/ZH-W129-chao-noisy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "ZH-W13-da",
       "sourceHash": "fnv1a64:bd6088ecaf541fa7",
       "svgHash": "fnv1a64:d16193fb7553a41c",
@@ -311,10 +339,66 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "ZH-W130-bing-ill",
+      "sourceHash": "fnv1a64:f2b56003579cdea3",
+      "svgHash": "fnv1a64:8dd7380cd78142f7",
+      "svg": "chinese/book/figures/ZH-W130-bing-ill-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W131-chun-spring",
+      "sourceHash": "fnv1a64:dfb90dc699743f17",
+      "svgHash": "fnv1a64:23d0a398baec3e3b",
+      "svg": "chinese/book/figures/ZH-W131-chun-spring-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W132-qian-thousand",
+      "sourceHash": "fnv1a64:9cefdac73c0c50e1",
+      "svgHash": "fnv1a64:04b1cbc1e1e5a540",
+      "svg": "chinese/book/figures/ZH-W132-qian-thousand-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W133-sao-sweep",
+      "sourceHash": "fnv1a64:a56cb6cc331beec4",
+      "svgHash": "fnv1a64:5ed3cdbdead68305",
+      "svg": "chinese/book/figures/ZH-W133-sao-sweep-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W134-zhong-heavy",
+      "sourceHash": "fnv1a64:33e1a5a2dcbe19b6",
+      "svgHash": "fnv1a64:2b120724035a7c9c",
+      "svg": "chinese/book/figures/ZH-W134-zhong-heavy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W137-jie-joint",
+      "sourceHash": "fnv1a64:fa25414f0fcfd2d8",
+      "svgHash": "fnv1a64:fadf60ef5178100a",
+      "svg": "chinese/book/figures/ZH-W137-jie-joint-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W138-mei-every",
+      "sourceHash": "fnv1a64:f9db18d384112429",
+      "svgHash": "fnv1a64:16ccc2d02bb4f785",
+      "svg": "chinese/book/figures/ZH-W138-mei-every-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "ZH-W14-xiao",
       "sourceHash": "fnv1a64:511686a7b7669ef9",
       "svgHash": "fnv1a64:560aa8955237dc17",
       "svg": "chinese/book/figures/ZH-W14-xiao-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W140-ban-half",
+      "sourceHash": "fnv1a64:3e37ef780be4912a",
+      "svgHash": "fnv1a64:27f4c696e59eff53",
+      "svg": "chinese/book/figures/ZH-W140-ban-half-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
