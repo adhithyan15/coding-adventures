@@ -1,0 +1,19 @@
+{
+  "chapter": 345,
+  "title": "Evidence",
+  "label": "ch:sa-evidence",
+  "canDo": "I can say what convinced me and what the evidence shows.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C345-niscayah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can say what convinced me and what the evidence shows.",
+    "assesses": [
+      "SA-LEX-C345-PRATYAYA345-03",
+      "SA-LEX-C345-PRATYAYA345-04",
+      "SA-LEX-C345-PRATYAYA345-05"
+    ]
+  }
+}

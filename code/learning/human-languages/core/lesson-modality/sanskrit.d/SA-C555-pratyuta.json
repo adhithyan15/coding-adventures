@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C555-pratyuta",
+    "language": "sanskrit",
+    "chapter": 555,
+    "sequence": 31730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb84407a2931f20b"
+  },
+  "findings": []
+}

@@ -1,0 +1,22 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER flowchart htmlLabels render configuration vertical slice",
+  "fixtures": [
+    {
+      "name": "upstream-html-labels-default",
+      "source": "erDiagram\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER ||--|{ ADDRESS : \"invoiced at\"",
+      "html_labels": true
+    },
+    {
+      "name": "upstream-html-labels-false-init",
+      "source": "%%{init: {\"flowchart\": {\"htmlLabels\": false}}}%%\nerDiagram\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER ||--|{ ADDRESS : \"invoiced at\"",
+      "html_labels": false
+    },
+    {
+      "name": "upstream-html-labels-false-frontmatter",
+      "source": "---\nconfig:\n  flowchart:\n    htmlLabels: false\n---\nerDiagram\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER ||--|{ ADDRESS : \"invoiced at\"",
+      "html_labels": false
+    }
+  ]
+}

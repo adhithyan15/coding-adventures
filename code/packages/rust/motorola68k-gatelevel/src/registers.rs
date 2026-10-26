@@ -47,13 +47,18 @@ use logic_gates::gates::{and_gate, or_gate};
 /// and assembled into/extracted from `sr` on demand.
 #[derive(Clone)]
 pub struct RegisterFile68K {
-    /// Data registers D0–D7 (32-bit each).
+    /// Source-compatible observers of the D0–D7 DFF banks.
+    ///
+    /// Architectural reads use [`Self::read_dn`]. External writes are repaired
+    /// at the next mutating execution boundary.
     pub d: [u32; 8],
-    /// Address registers A0–A7 (32-bit each; A7 = supervisor stack pointer).
+    /// Source-compatible observers of the A0–A7 DFF banks.
+    ///
+    /// Architectural reads use [`Self::read_an`].
     pub a: [u32; 8],
-    /// Program counter (24-bit effective, stored as 32-bit).
+    /// Source-compatible observer of the PC DFF bank.
     pub pc: u32,
-    /// Status register (16-bit: system byte + CCR).
+    /// Source-compatible observer of the SR DFF bank.
     pub sr: u16,
     register_state: [StateRegister; 16],
     pc_state: StateRegister,
@@ -97,32 +102,71 @@ impl RegisterFile68K {
             pc_state: StateRegister::new(32),
             sr_state: StateRegister::new(16),
         };
-        rf.a[7] = 0x0000_F000; // supervisor stack pointer
-        rf.clock_wires_into_state();
+        rf.write_an(7, 0x0000_F000, 4); // supervisor stack pointer
+        rf.write_pc(0x0000_1000);
+        rf.write_sr(0x2700);
+        rf.synchronize_compatibility_observers();
         rf
     }
 
-    /// Clock all public register input wires into their persistent DFF banks.
-    pub(crate) fn clock_wires_into_state(&mut self) {
-        for (state, value) in self
-            .register_state
-            .iter_mut()
-            .zip(self.d.into_iter().chain(self.a))
-        {
-            state.write(value);
-        }
-        self.pc_state.write(self.pc);
-        self.sr_state.write(u32::from(self.sr));
+    /// Repair every public compatibility observer from stable Q.
+    pub(crate) fn synchronize_compatibility_observers(&mut self) {
+        self.d = self.data_snapshot();
+        self.a = self.address_snapshot();
+        self.pc = self.read_pc();
+        self.sr = self.read_sr();
     }
 
-    #[cfg(test)]
-    pub(crate) fn latched_values(&self) -> ([u32; 8], [u32; 8], u32, u16) {
-        (
-            std::array::from_fn(|index| self.register_state[index].read()),
-            std::array::from_fn(|index| self.register_state[index + 8].read()),
-            self.pc_state.read(),
-            self.sr_state.read() as u16,
-        )
+    pub(crate) fn restore_architecture(&mut self, d: [u32; 8], a: [u32; 8], pc: u32, sr: u16) {
+        for (index, value) in d.into_iter().enumerate() {
+            self.clock_data(index, value);
+        }
+        for (index, value) in a.into_iter().enumerate() {
+            self.clock_address(index, value);
+        }
+        self.pc_state.write(pc);
+        self.sr_state.write(u32::from(sr));
+        self.synchronize_compatibility_observers();
+    }
+
+    pub(crate) fn data_snapshot(&self) -> [u32; 8] {
+        std::array::from_fn(|index| self.register_state[index].read())
+    }
+
+    pub(crate) fn address_snapshot(&self) -> [u32; 8] {
+        std::array::from_fn(|index| self.register_state[index + 8].read())
+    }
+
+    pub(crate) fn data_register_dff_count(&self) -> usize {
+        self.register_state[..8]
+            .iter()
+            .map(StateRegister::dff_count)
+            .sum()
+    }
+
+    pub(crate) fn address_register_dff_count(&self) -> usize {
+        self.register_state[8..]
+            .iter()
+            .map(StateRegister::dff_count)
+            .sum()
+    }
+
+    pub(crate) fn program_counter_dff_count(&self) -> usize {
+        self.pc_state.dff_count()
+    }
+
+    pub(crate) fn status_register_dff_count(&self) -> usize {
+        self.sr_state.dff_count()
+    }
+
+    fn clock_data(&mut self, n: usize, value: u32) {
+        self.register_state[n].write(value);
+        self.d[n] = self.register_state[n].read();
+    }
+
+    fn clock_address(&mut self, n: usize, value: u32) {
+        self.register_state[n + 8].write(value);
+        self.a[n] = self.register_state[n + 8].read();
     }
 
     // ── Data register access ──────────────────────────────────────────────────
@@ -136,7 +180,7 @@ impl RegisterFile68K {
             2 => WORD_MASK,
             _ => LONG_MASK,
         };
-        self.d[n] & mask
+        self.register_state[n].read() & mask
     }
 
     /// Write `sz` bytes into data register `n`, preserving upper bits.
@@ -152,14 +196,15 @@ impl RegisterFile68K {
             2 => (WORD_MASK, LONG_MASK ^ WORD_MASK),
             _ => (LONG_MASK, 0),
         };
-        self.d[n] = (self.d[n] & keep) | (val & mask);
+        let value = (self.read_dn(n, 4) & keep) | (val & mask);
+        self.clock_data(n, value);
     }
 
     // ── Address register access ───────────────────────────────────────────────
 
     /// Read address register `n` (always full 32-bit).
     pub fn read_an(&self, n: usize) -> u32 {
-        self.a[n]
+        self.register_state[n + 8].read()
     }
 
     /// Write to address register `n`.
@@ -173,9 +218,9 @@ impl RegisterFile68K {
             let sign_bit = (v16 >> 15) & 1;
             // Gate-level sign extension: OR every upper bit with sign_bit
             let upper = if sign_bit == 1 { 0xFFFF_0000u32 } else { 0 };
-            self.a[n] = (upper | v16) & LONG_MASK;
+            self.clock_address(n, (upper | v16) & LONG_MASK);
         } else {
-            self.a[n] = val & LONG_MASK;
+            self.clock_address(n, val & LONG_MASK);
         }
     }
 
@@ -183,27 +228,27 @@ impl RegisterFile68K {
 
     /// Get the X (extend) flag as 0 or 1.
     pub fn flag_x(&self) -> u8 {
-        ((self.sr & X_BIT) != 0) as u8
+        ((self.read_sr() & X_BIT) != 0) as u8
     }
 
     /// Get the N (negative) flag as 0 or 1.
     pub fn flag_n(&self) -> u8 {
-        ((self.sr & N_BIT) != 0) as u8
+        ((self.read_sr() & N_BIT) != 0) as u8
     }
 
     /// Get the Z (zero) flag as 0 or 1.
     pub fn flag_z(&self) -> u8 {
-        ((self.sr & Z_BIT) != 0) as u8
+        ((self.read_sr() & Z_BIT) != 0) as u8
     }
 
     /// Get the V (overflow) flag as 0 or 1.
     pub fn flag_v(&self) -> u8 {
-        ((self.sr & V_BIT) != 0) as u8
+        ((self.read_sr() & V_BIT) != 0) as u8
     }
 
     /// Get the C (carry) flag as 0 or 1.
     pub fn flag_c(&self) -> u8 {
-        ((self.sr & C_BIT) != 0) as u8
+        ((self.read_sr() & C_BIT) != 0) as u8
     }
 
     /// Set the CCR bits (X, N, Z, V, C) in SR using OR/AND gate operations.
@@ -213,14 +258,14 @@ impl RegisterFile68K {
     /// Each flag is written by: clear the bit (AND with NOT mask), then OR in
     /// the new value.  This models the D-flip-flop update in real hardware.
     pub fn set_ccr(&mut self, x: u8, n: u8, z: u8, v: u8, c: u8) {
-        let keep = self.sr & 0xFFE0u16; // bits 15–5 (system byte + reserved)
+        let keep = self.read_sr() & 0xFFE0u16; // bits 15–5 (system byte + reserved)
         let ccr = ((x as u16) << 4)
             | ((n as u16) << 3)
             | ((z as u16) << 2)
             | ((v as u16) << 1)
             | (c as u16);
         // OR the preserved system byte with the new CCR
-        self.sr = {
+        let value = {
             // Gate-level: OR each system byte bit with 0 (keeps it); OR each
             // CCR bit with computed value.
             let s = keep;
@@ -228,6 +273,7 @@ impl RegisterFile68K {
             // Combine: s | c_bits (safe since they occupy disjoint bit ranges)
             s | c_bits
         };
+        self.write_sr(value);
     }
 
     /// Set N, Z, V, C (common arithmetic result); X = C.
@@ -318,22 +364,34 @@ impl RegisterFile68K {
 
     /// Assemble the full 16-bit SR from component parts (used by MOVE #imm, SR).
     pub fn write_sr(&mut self, val: u16) {
-        self.sr = val;
+        self.sr_state.write(u32::from(val));
+        self.sr = self.read_sr();
     }
 
     /// Read the full SR.
     pub fn read_sr(&self) -> u16 {
-        self.sr
+        self.sr_state.read() as u16
     }
 
     /// Read the CCR (lower 5 bits of SR).
     pub fn read_ccr(&self) -> u8 {
-        (self.sr & 0x1F) as u8
+        (self.read_sr() & 0x1F) as u8
     }
 
     /// Write the CCR (lower 5 bits of SR); upper byte preserved.
     pub fn write_ccr(&mut self, val: u8) {
-        self.sr = (self.sr & 0xFFE0) | ((val as u16) & 0x1F);
+        self.write_sr((self.read_sr() & 0xFFE0) | ((val as u16) & 0x1F));
+    }
+
+    /// Read the authoritative stable-Q outputs of the PC DFF bank.
+    pub fn read_pc(&self) -> u32 {
+        self.pc_state.read()
+    }
+
+    /// Clock the program counter and refresh its observer.
+    pub fn write_pc(&mut self, val: u32) {
+        self.pc_state.write(val & ADDR_MASK);
+        self.pc = self.read_pc();
     }
 }
 
@@ -353,7 +411,7 @@ mod tests {
     #[test]
     fn write_dn_byte_preserves_upper() {
         let mut rf = RegisterFile68K::new();
-        rf.d[0] = 0xABCD_EF00;
+        rf.write_dn(0, 0xABCD_EF00, 4);
         rf.write_dn(0, 0x42, 1);
         assert_eq!(rf.d[0], 0xABCD_EF42);
     }
@@ -361,9 +419,34 @@ mod tests {
     #[test]
     fn write_dn_word_preserves_upper() {
         let mut rf = RegisterFile68K::new();
-        rf.d[0] = 0xABCD_0000;
+        rf.write_dn(0, 0xABCD_0000, 4);
         rf.write_dn(0, 0x1234, 2);
         assert_eq!(rf.d[0], 0xABCD_1234);
+    }
+
+    #[test]
+    fn dff_q_overrides_all_public_register_observers() {
+        let mut rf = RegisterFile68K::new();
+        rf.restore_architecture([0x11; 8], [0x22; 8], 0x1234, 0x2705);
+        rf.d = [0xAA; 8];
+        rf.a = [0xBB; 8];
+        rf.pc = 0xCCCC;
+        rf.sr = 0xDDDD;
+
+        assert_eq!(rf.data_snapshot(), [0x11; 8]);
+        assert_eq!(rf.address_snapshot(), [0x22; 8]);
+        assert_eq!(rf.read_pc(), 0x1234);
+        assert_eq!(rf.read_sr(), 0x2705);
+
+        rf.write_dn(0, 0x33, 4);
+        rf.write_an(0, 0x44, 4);
+        rf.write_pc(0x5678);
+        rf.write_sr(0x2000);
+        rf.synchronize_compatibility_observers();
+        assert_eq!(rf.d, [0x33, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11]);
+        assert_eq!(rf.a, [0x44, 0x22, 0x22, 0x22, 0x22, 0x22, 0x22, 0x22]);
+        assert_eq!(rf.pc, 0x5678);
+        assert_eq!(rf.sr, 0x2000);
     }
 
     #[test]

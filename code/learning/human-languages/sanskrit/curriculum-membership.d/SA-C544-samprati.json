@@ -1,0 +1,11 @@
+{
+  "id": "SA-C544-samprati",
+  "pathSegment": "SA-PATH-544-PARASPARA544",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-544-PARASPARA544",
+      "order": 4
+    }
+  ]
+}

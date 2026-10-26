@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C496-parinayati",
+    "language": "sanskrit",
+    "chapter": 496,
+    "sequence": 28480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9c256ff821e32c3"
+  },
+  "findings": []
+}

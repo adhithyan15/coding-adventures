@@ -1,5 +1,11 @@
 # task-app
 
+The v0.5.12 release is published and audited (#18264), from
+`d75d061afe34c7f3764636dbf879181eb4dceb33` via run 40269564825:
+13 assets, 12 verified checksum entries, and 11 manifest payloads. Coverage
+and unsigned limitations are unchanged. The next Qt fidelity fix (#18305)
+preserves timeline labels' existing 150-pixel non-shrinking floor.
+
 A to-do app with **automatic scheduling**, built entirely on the shared `task-core`
 engine. Add tasks (with optional due dates), complete or delete them — and the engine
 auto-schedules them into a working-day timeline via the Critical Path Method.
@@ -254,7 +260,7 @@ Published and audited in run 40225950352 from
 11 manifest payloads, with unchanged artifact coverage and unsigned limits.
 The Qt rail repair (#18250) merged in #18251 and preserves its 236-pixel floor;
 all release payload validations passed in run 40230057835. The compatible
-`task-app-v0.5.12` checkpoint (#18264) is prepared, not yet published. It does
+`task-app-v0.5.12` checkpoint (#18264) is published and audited. It does
 not claim general flexbox lowering or expand downloadable artifact coverage.
 
 The published `task-app-v0.5.9` patch preserves Qt calendar/timeline text widths

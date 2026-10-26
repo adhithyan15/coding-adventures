@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 526,
+  "title": "Training Hard",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:55d2370a46ed3abd",
+  "lessons": [
+    {
+      "id": "SA-C526-vyayamabhumih",
+      "sequence": 30230,
+      "title": "व्यायामभूमिः (vyāyāmabhūmiḥ) — a gymnasium; an exercise ground",
+      "headword": "व्यायामभूमिः",
+      "romanization": "vyāyāmabhūmiḥ",
+      "gloss": "a gymnasium; an exercise ground",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40ffd30aa138e65c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for hoists, then the Sanskrit for a challenge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: व्यायामभूमिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "व्यायामभूमिः — vyāyāmabhūmiḥ — \"a gymnasium; an exercise ground\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अरुणः प्रतिदिनं व्यायामभूमिं गच्छति। aruṇaḥ pratidinaṃ vyāyāmabhūmiṃ gacchati. Arun goes to the exercise ground every day."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "व्यायामभूमिः (vyāyāmabhūmiḥ) is built from vyāyāma, \"exercise\", and bhūmi, \"ground\"; MW gives vyāyāmabhūmi as an exercising ground, a gymnasium (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyāyāmabhūmiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyāyāmabhūmiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyāyāmabhūmiḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyāyāmabhūmiḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aruṇaḥ pratidinaṃ vyāyāmabhūmiṃ gacchati. — Arun goes to the exercise ground every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aruṇaḥ pratidinaṃ vyāyāmabhūmiṃ gacchati.* — Arun goes to the exercise ground every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for hoists, then the Sanskrit for a challenge, then say vyāyāmabhūmiḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for hoists, then the Sanskrit for a challenge, then say *vyāyāmabhūmiḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does व्यायामभूमिः (vyāyāmabhūmiḥ) mean? (\"A gymnasium; an exercise ground\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C526-dhavakah",
+      "sequence": 30240,
+      "title": "धावकः (dhāvakaḥ) — a runner",
+      "headword": "धावकः",
+      "romanization": "dhāvakaḥ",
+      "gloss": "a runner",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17fad8354065e40f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a challenge, then the Sanskrit for a gymnasium."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धावकः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धावकः — dhāvakaḥ — \"a runner\"."
+            },
+            {
+              "kind": "speech",
+              "text": "धावकः क्षेत्रं परितः धावति। dhāvakaḥ kṣetraṃ paritaḥ dhāvati. The runner runs round the field."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धावकः (dhāvakaḥ) comes from the root √dhāv, \"to run\", which also gives dhāvati, with the agent ending -aka; MW gives dhāvaka as running, a forerunner (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāvakaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāvakaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāvakaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāvakaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāvakaḥ kṣetraṃ paritaḥ dhāvati. — The runner runs round the field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāvakaḥ kṣetraṃ paritaḥ dhāvati.* — The runner runs round the field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a challenge, then the Sanskrit for a gymnasium, then say dhāvakaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a challenge, then the Sanskrit for a gymnasium, then say *dhāvakaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धावकः (dhāvakaḥ) mean? (\"A runner\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C526-ksiprah",
+      "sequence": 30250,
+      "title": "क्षिप्रः (kṣipraḥ) — quick",
+      "headword": "क्षिप्रः",
+      "romanization": "kṣipraḥ",
+      "gloss": "quick",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98a1be8ddbc4a258",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a gymnasium, then the Sanskrit for a runner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: क्षिप्रः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्षिप्रः — kṣipraḥ — \"quick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सः क्षिप्रः धावकः अस्ति। saḥ kṣipraḥ dhāvakaḥ asti. He is a quick runner."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्षिप्रः (kṣipraḥ) comes from the root √kṣip, \"to throw\", as MW lists it: springing back like a bow, and so quick, speedy, swift (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣipraḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣipraḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣipraḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣipraḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saḥ kṣipraḥ dhāvakaḥ asti. — He is a quick runner.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saḥ kṣipraḥ dhāvakaḥ asti.* — He is a quick runner.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a gymnasium, then the Sanskrit for a runner, then say kṣipraḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a gymnasium, then the Sanskrit for a runner, then say *kṣipraḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does क्षिप्रः (kṣipraḥ) mean? (\"Quick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C526-langhayati",
+      "sequence": 30260,
+      "title": "लंघयति (laṅghayati) — leaps over",
+      "headword": "लंघयति",
+      "romanization": "laṅghayati",
+      "gloss": "leaps over",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a888f8076464b3e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a runner, then the Sanskrit for quick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लंघयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लंघयति — laṅghayati — \"leaps over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "धावकः रज्जुं लंघयति। dhāvakaḥ rajjuṃ laṅghayati. The runner leaps over the rope."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः रज्जुं लंघितवान्, saḥ rajjuṃ laṅghitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लंघयति (laṅghayati) comes from the root √laṅgh, \"to leap over, to go beyond\"; its causative laṅghayati has the same sense, and the past participle is laṅghita (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laṅghayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laṅghayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laṅghayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laṅghayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāvakaḥ rajjuṃ laṅghayati. — The runner leaps over the rope.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāvakaḥ rajjuṃ laṅghayati.* — The runner leaps over the rope.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a runner, then the Sanskrit for quick, then say laṅghayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a runner, then the Sanskrit for quick, then say *laṅghayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लंघयति (laṅghayati) mean? (\"Leaps over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C526-dalam",
+      "sequence": 30270,
+      "title": "दलम् (dalam) — a team; a party",
+      "headword": "दलम्",
+      "romanization": "dalam",
+      "gloss": "a team; a party",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:434c429f50371e09",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for quick, then the Sanskrit for leaps over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दलम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दलम् — dalam — \"a team; a party\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अस्माकं दले दश क्रीडकाः सन्ति। asmākaṃ dale daśa krīḍakāḥ santi. Our team has ten players."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दलम् (dalam) comes from the root √dal, \"to split\": MW gives dala as a piece split off, a part; CDIAL also lists a dala \"a party, a band\", perhaps the same word, perhaps from Dravidian (CDIAL 6215); \"a team\" is the modern sense (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dalam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dalam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dalam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dalam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asmākaṃ dale daśa krīḍakāḥ santi. — Our team has ten players.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asmākaṃ dale daśa krīḍakāḥ santi.* — Our team has ten players.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for quick, then the Sanskrit for leaps over, then say dalam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for quick, then the Sanskrit for leaps over, then say *dalam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दलम् (dalam) mean? (\"A team; a party\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

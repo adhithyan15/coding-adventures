@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:6444947ac4ea1271",
+  "lessonIds": [
+    "SA-C386-siddhih",
+    "SA-C386-sidhyati",
+    "SA-C386-arjayati",
+    "SA-C386-abhyudayah",
+    "SA-C386-samrddhih",
+    "SA-R386-review-380-386"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch386.txt",
+  "json": "sanskrit/narration/ch386.json",
+  "textHash": "fnv1a64:40f193c08c30e0e4",
+  "jsonHash": "fnv1a64:9f7152ea23bc9606",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C467-sistah",
+    "language": "sanskrit",
+    "chapter": 467,
+    "sequence": 26970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3adfa904b5477003"
+  },
+  "findings": []
+}

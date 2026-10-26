@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "When the Ground Shook",
+  "label": "ch:sa-when-the-ground-shook",
+  "canDo": "I can tell what happened in an earthquake.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C300-gartah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can tell what happened in an earthquake.",
+    "assesses": [
+      "SA-LEX-C300-BHUKAMPA300-03",
+      "SA-LEX-C300-BHUKAMPA300-04",
+      "SA-LEX-C300-BHUKAMPA300-05"
+    ]
+  }
+}

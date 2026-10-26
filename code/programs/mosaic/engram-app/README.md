@@ -120,7 +120,13 @@ editing, and save/delete/cancel controls.
   single-threaded and a deferred answer has no other thread to reach.
 - The web, Electron, and native host adapters persist raw Engram state snapshots
   across launches. Set `ENGRAM_SNAPSHOT_PATH` to override the storage file; by
-  default host shells use `~/.engram/mosaic-snapshot.v1.json`.
+  default host shells use `~/.engram/mosaic-snapshot.v1.json`. If a snapshot
+  fails to load, the host copies it aside before saving the demo deck in its
+  place. The copy goes to the first free name of `<snapshot>.corrupt`,
+  `.corrupt.1` … `.corrupt.9` (on the web, `localStorage` keys starting with
+  `engram.snapshot.v1.corrupt`), and never replaces an earlier one. If the
+  copy fails or all ten are taken, the host saves nothing for the rest of the
+  session, so a snapshot is never overwritten.
 - Smoke tests now assert the generated Qt, SwiftUI, and XAML project shells
   expose the same Engram host contract slots, collection events, card-browser
   events, rating events, and Anki-style review action events as the shared Rust

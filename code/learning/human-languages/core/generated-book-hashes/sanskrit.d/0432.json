@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:b717cb0537507423",
+  "lessonIds": [
+    "SA-C432-vyayah",
+    "SA-C432-apavyayah",
+    "SA-C432-vyayati",
+    "SA-C432-sancinoti",
+    "SA-C432-sancayah"
+  ],
+  "tex": "sanskrit/book/chapters/ch432-spending-and-saving.tex"
+}

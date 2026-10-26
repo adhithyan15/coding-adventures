@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C292-rahasyam",
+    "language": "sanskrit",
+    "chapter": 292,
+    "sequence": 17330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:523f120c164f9cd5"
+  },
+  "findings": []
+}

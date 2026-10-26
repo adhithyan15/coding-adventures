@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:06eee99be8a2ffb0",
+  "lessonIds": [
+    "SA-C546-santustah",
+    "SA-C546-nispannah",
+    "SA-C546-udbhavati",
+    "SA-C546-praptih",
+    "SA-C546-vipakah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch546.txt",
+  "json": "sanskrit/narration/ch546.json",
+  "textHash": "fnv1a64:d9dbb7c7d40c618b",
+  "jsonHash": "fnv1a64:87d92acf498c0c24",
+  "findings": []
+}

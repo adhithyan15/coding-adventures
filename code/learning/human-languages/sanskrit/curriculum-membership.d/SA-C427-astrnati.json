@@ -1,0 +1,11 @@
+{
+  "id": "SA-C427-astrnati",
+  "pathSegment": "SA-PATH-427-VASATI427",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-427-VASATI427",
+      "order": 3
+    }
+  ]
+}

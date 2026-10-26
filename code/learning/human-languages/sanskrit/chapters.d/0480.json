@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "Bites and Wounds",
+  "label": "ch:sa-bites-and-wounds",
+  "canDo": "I can say how someone was hurt.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C480-sravati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can say how someone was hurt.",
+    "assesses": [
+      "SA-LEX-C480-DAMSA480-03",
+      "SA-LEX-C480-DAMSA480-04",
+      "SA-LEX-C480-DAMSA480-05"
+    ]
+  }
+}

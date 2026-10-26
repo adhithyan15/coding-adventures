@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:f16ba45b84b09e81",
+  "lessonIds": [
+    "SA-C332-akhyanam",
+    "SA-C332-rsih",
+    "SA-C332-munih",
+    "SA-C332-tapah",
+    "SA-C332-sapati",
+    "SA-R332-review-326-332"
+  ],
+  "tex": "sanskrit/book/chapters/ch332-a-tale-of-long-ago.tex"
+}

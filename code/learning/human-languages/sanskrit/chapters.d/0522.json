@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "A Song to Dance To",
+  "label": "ch:sa-a-song-to-dance-to",
+  "canDo": "I can talk about steps, turns and bells in a dance.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C522-karatalika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can talk about steps, turns and bells in a dance.",
+    "assesses": [
+      "SA-LEX-C522-PADANYASA522-03",
+      "SA-LEX-C522-PADANYASA522-04",
+      "SA-LEX-C522-PADANYASA522-05"
+    ]
+  }
+}

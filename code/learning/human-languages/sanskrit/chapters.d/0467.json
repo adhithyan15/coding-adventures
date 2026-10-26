@@ -1,0 +1,19 @@
+{
+  "chapter": 467,
+  "title": "Good and Bad Manners",
+  "label": "ch:sa-good-and-bad-manners",
+  "canDo": "I can say whether someone is polite or rude.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C467-priyamvadah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 467: I can say whether someone is polite or rude.",
+    "assesses": [
+      "SA-LEX-C467-SISTA467-03",
+      "SA-LEX-C467-SISTA467-04",
+      "SA-LEX-C467-SISTA467-05"
+    ]
+  }
+}

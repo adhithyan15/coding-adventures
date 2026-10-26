@@ -400,7 +400,7 @@ fn validate_control_transition(
             Some(gates::select_u32(
                 sequential_pc,
                 before.gprs[r2] & 0x00ff_ffff,
-                u8::from(r2 != 0),
+                gates::register_field_nonzero(r2 as u8),
             ))
         }
         0x06 => {
@@ -413,7 +413,7 @@ fn validate_control_transition(
             Some(gates::select_u32(
                 sequential_pc,
                 before.gprs[r2] & 0x00ff_ffff,
-                u8::from(decremented != 0 && r2 != 0),
+                gates::count_branch_selected(decremented, r2 as u8),
             ))
         }
         0x07 => {
@@ -440,7 +440,7 @@ fn validate_control_transition(
                     if next.gprs[r1] != decremented {
                         return gate_disagrees("gate BCT decrement path and transition disagree");
                     }
-                    u8::from(decremented != 0)
+                    gates::nonzero_32(decremented)
                 }
                 0x47 => gates::branch_selected(r1 as u8, before.condition_code),
                 _ => unreachable!(),
@@ -452,12 +452,12 @@ fn validate_control_transition(
             let r3 = usize::from(trace.raw[1] & 15);
             let compare = if r3.is_multiple_of(2) { r3 + 1 } else { r3 };
             let incremented = gates::add_32(before.gprs[r1], before.gprs[r3], 0).0;
-            let high = gates::signed_compare_condition_code(incremented, before.gprs[compare]) == 2;
-            let selected = (opcode == 0x86 && high) || (opcode == 0x87 && !high);
+            let comparison =
+                gates::signed_compare_condition_code(incremented, before.gprs[compare]);
             Some(gates::select_u32(
                 sequential_pc,
                 gate_ea_base(&trace.raw, 2, before),
-                u8::from(selected),
+                gates::index_branch_selected(opcode, comparison),
             ))
         }
         _ => None,

@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "At the River Steps",
+  "label": "ch:sa-at-the-river-steps",
+  "canDo": "I can say where pilgrims bathe and what they do there.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C398-proksati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can say where pilgrims bathe and what they do there.",
+    "assesses": [
+      "SA-LEX-C398-GHATTA398-03",
+      "SA-LEX-C398-GHATTA398-04",
+      "SA-LEX-C398-GHATTA398-05"
+    ]
+  }
+}

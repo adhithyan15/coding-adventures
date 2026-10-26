@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:96dbf680c70af296",
+  "lessonIds": [
+    "SA-C367-sambhavah",
+    "SA-C367-sambhavayati",
+    "SA-C367-dhruvam",
+    "SA-C367-ksipram",
+    "SA-C367-apeksate"
+  ],
+  "tex": "sanskrit/book/chapters/ch367-is-it-possible.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C345-sadhayati",
+    "language": "sanskrit",
+    "chapter": 345,
+    "sequence": 20280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52890e61d2528c34"
+  },
+  "findings": []
+}

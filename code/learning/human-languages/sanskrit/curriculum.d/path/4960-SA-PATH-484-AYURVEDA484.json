@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-484-AYURVEDA484",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "SA-EXT-484-AYURVEDA484"
+  ],
+  "after": []
+}

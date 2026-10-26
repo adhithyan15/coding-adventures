@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C473-parsnih",
+    "language": "sanskrit",
+    "chapter": 473,
+    "sequence": 27300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86a44f5db0e6696a"
+  },
+  "findings": []
+}

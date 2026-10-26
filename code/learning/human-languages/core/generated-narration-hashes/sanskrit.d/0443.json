@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:d11b79ace26af351",
+  "lessonIds": [
+    "SA-C443-suryastah",
+    "SA-C443-astam-gacchati",
+    "SA-C443-godhulih",
+    "SA-C443-tamisra",
+    "SA-C443-naktam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch443.txt",
+  "json": "sanskrit/narration/ch443.json",
+  "textHash": "fnv1a64:3a6024e334043063",
+  "jsonHash": "fnv1a64:9ffb3b3873c8c6ff",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "Blind, Deaf and Lame",
+  "label": "ch:sa-blind-deaf-and-lame",
+  "canDo": "I can talk about someone who cannot see, hear or walk well.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C481-kubjah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can talk about someone who cannot see, hear or walk well.",
+    "assesses": [
+      "SA-LEX-C481-ANDHA481-03",
+      "SA-LEX-C481-ANDHA481-04",
+      "SA-LEX-C481-ANDHA481-05"
+    ]
+  }
+}

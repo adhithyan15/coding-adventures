@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 412,
+  "title": "Halts and Turning Back",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6d5c6c0148992aa7",
+  "lessons": [
+    {
+      "id": "SA-C412-viramah",
+      "sequence": 23920,
+      "title": "विरामः (virāmaḥ) — a halt; a stop",
+      "headword": "विरामः",
+      "romanization": "virāmaḥ",
+      "gloss": "a halt; a stop",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac29222b08042d1b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a blockage, then the Sanskrit for keeps away from."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विरामः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विरामः — virāmaḥ — \"a halt; a stop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लोकयानस्य विरामः ग्रामे अस्ति। lokayānasya virāmaḥ grāme asti. The bus has a halt at the village."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विरामः (virāmaḥ) is built from vi, \"away\", and the root √ram, \"to rest, to delight\", which also gives ramate, \"enjoys\"; MW gives virāma as cessation, end, a stop or pause; a bus halt is that sense in modern use (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virāmaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virāmaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virāmaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virāmaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lokayānasya virāmaḥ grāme asti. — The bus has a halt at the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lokayānasya virāmaḥ grāme asti.* — The bus has a halt at the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a blockage, then the Sanskrit for keeps away from, then say virāmaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a blockage, then the Sanskrit for keeps away from, then say *virāmaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विरामः (virāmaḥ) mean? (\"A halt; a stop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C412-nivartate",
+      "sequence": 23930,
+      "title": "निवर्तते (nivartate) — turns round; turns back",
+      "headword": "निवर्तते",
+      "romanization": "nivartate",
+      "gloss": "turns round; turns back",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2983cab1bc2e5aa2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for keeps away from, then the Sanskrit for a halt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निवर्तते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निवर्तते — nivartate — \"turns round; turns back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वर्षायां पथिकः मार्गात् निवर्तते। varṣāyāṃ pathikaḥ mārgāt nivartate. In the rain the wayfarer turns back from the road."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः मार्गात् निवृत्तवान्, saḥ mārgāt nivṛttavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निवर्तते (nivartate) is built from ni, \"back\", and the root √vṛt, \"to turn\", which also gives vartate, \"is present\"; MW gives ni-vṛt as to turn back, with the participle nivṛtta, \"turned back, returned\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivartate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivartate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivartate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivartate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varṣāyāṃ pathikaḥ mārgāt nivartate. — In the rain the wayfarer turns back from the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varṣāyāṃ pathikaḥ mārgāt nivartate.* — In the rain the wayfarer turns back from the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for keeps away from, then the Sanskrit for a halt, then say nivartate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for keeps away from, then the Sanskrit for a halt, then say *nivartate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निवर्तते (nivartate) mean? (\"Turns round; turns back\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C412-upagacchati",
+      "sequence": 23940,
+      "title": "उपगच्छति (upagacchati) — approaches; comes near",
+      "headword": "उपगच्छति",
+      "romanization": "upagacchati",
+      "gloss": "approaches; comes near",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d92d54836a651925",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a halt, then the Sanskrit for turns round."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उपगच्छति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपगच्छति — upagacchati — \"approaches; comes near\"."
+            },
+            {
+              "kind": "speech",
+              "text": "धूमयानं स्थानकम् उपगच्छति। dhūmayānaṃ sthānakam upagacchati. The train is coming up to the station."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): धूमयानं स्थानकम् उपगतवत्, dhūmayānaṃ sthānakam upagatavat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपगच्छति (upagacchati) is built from upa, \"towards, near\", and the root √gam, \"to go\", which also gives gacchati, \"goes\"; MW gives upa-gam as to go near, approach, arrive at (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upagacchati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upagacchati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upagacchati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upagacchati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhūmayānaṃ sthānakam upagacchati. — The train is coming up to the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhūmayānaṃ sthānakam upagacchati.* — The train is coming up to the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a halt, then the Sanskrit for turns round, then say upagacchati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a halt, then the Sanskrit for turns round, then say *upagacchati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उपगच्छति (upagacchati) mean? (\"Approaches; comes near\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C412-atigacchati",
+      "sequence": 23950,
+      "title": "अतिगच्छति (atigacchati) — passes by; overtakes",
+      "headword": "अतिगच्छति",
+      "romanization": "atigacchati",
+      "gloss": "passes by; overtakes",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46024e70441a2dc5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for turns round, then the Sanskrit for approaches."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अतिगच्छति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अतिगच्छति — atigacchati — \"passes by; overtakes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कारयानं लोकयानम् अतिगच्छति। kārayānaṃ lokayānam atigacchati. The car passes the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): कारयानं लोकयानम् अतिगतवत्, kārayānaṃ lokayānam atigatavat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अतिगच्छति (atigacchati) is built from ati, \"beyond, past\", and the root √gam, \"to go\"; MW gives ati-gam as to pass by or over, with the participle atigata, \"having passed\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atigacchati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atigacchati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atigacchati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atigacchati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kārayānaṃ lokayānam atigacchati. — The car passes the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kārayānaṃ lokayānam atigacchati.* — The car passes the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for turns round, then the Sanskrit for approaches, then say atigacchati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for turns round, then the Sanskrit for approaches, then say *atigacchati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अतिगच्छति (atigacchati) mean? (\"Passes by; overtakes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C412-krosah",
+      "sequence": 23960,
+      "title": "क्रोशः (krośaḥ) — a kos (a measure of distance)",
+      "headword": "क्रोशः",
+      "romanization": "krośaḥ",
+      "gloss": "a kos (a measure of distance)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b6431e6da3d2abb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for approaches, then the Sanskrit for passes by."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: क्रोशः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्रोशः — krośaḥ — \"a kos (a measure of distance)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ग्रामः इतः क्रोशं दूरम् अस्ति। grāmaḥ itaḥ krośaṃ dūram asti. The village is a kos away from here."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्रोशः (krośaḥ) comes from the root √kruś, \"to cry out\": MW gives krośa as a cry and as a measure of distance, the range of the voice in calling, the kos; it lives on as Hindi kos, a distance of some two miles (MW; CDIAL 3611)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krośaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krośaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krośaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krośaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grāmaḥ itaḥ krośaṃ dūram asti. — The village is a kos away from here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grāmaḥ itaḥ krośaṃ dūram asti.* — The village is a kos away from here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for approaches, then the Sanskrit for passes by, then say krośaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for approaches, then the Sanskrit for passes by, then say *krośaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does क्रोशः (krośaḥ) mean? (\"A kos (a measure of distance)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:874336fcc2716f33",
+  "lessonIds": [
+    "SA-C375-vipattih",
+    "SA-C375-apad",
+    "SA-C375-vinasah",
+    "SA-C375-anavrstih",
+    "SA-C375-pratikaroti"
+  ],
+  "tex": "sanskrit/book/chapters/ch375-in-hard-times.tex"
+}

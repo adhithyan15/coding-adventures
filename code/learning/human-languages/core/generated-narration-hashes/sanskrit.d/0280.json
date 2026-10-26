@@ -1,0 +1,16 @@
+{
+  "language": "sanskrit",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:7d7c6d8a2eb92452",
+  "lessonIds": [
+    "SA-C280-sthanakam-kutra",
+    "SA-R280-asking-the-way"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "sanskrit/narration/ch280.txt",
+  "json": "sanskrit/narration/ch280.json",
+  "textHash": "fnv1a64:d4f8db1fa2db2668",
+  "jsonHash": "fnv1a64:97090674488978da",
+  "findings": []
+}

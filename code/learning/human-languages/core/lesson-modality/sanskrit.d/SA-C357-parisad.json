@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C357-parisad",
+    "language": "sanskrit",
+    "chapter": 357,
+    "sequence": 20880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96f65a877076a647"
+  },
+  "findings": []
+}

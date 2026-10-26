@@ -1,0 +1,11 @@
+{
+  "id": "SA-R282-feelings-and-hopes",
+  "pathSegment": "SA-PATH-282-EXPERIENCE282",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-282-EXPERIENCE282",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:0d469cdb23127973",
+  "lessonIds": [
+    "SA-C518-tulika",
+    "SA-C518-rangah",
+    "SA-C518-rekha",
+    "SA-C518-alikhati",
+    "SA-C518-pratikrtih"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch518.txt",
+  "json": "sanskrit/narration/ch518.json",
+  "textHash": "fnv1a64:a131b11ee2afb3fe",
+  "jsonHash": "fnv1a64:36c31d688cedce50",
+  "findings": []
+}

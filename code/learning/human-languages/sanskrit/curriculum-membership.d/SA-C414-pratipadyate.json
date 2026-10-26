@@ -1,0 +1,11 @@
+{
+  "id": "SA-C414-pratipadyate",
+  "pathSegment": "SA-PATH-414-DIGBHRAMA414",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-414-DIGBHRAMA414",
+      "order": 2
+    }
+  ]
+}

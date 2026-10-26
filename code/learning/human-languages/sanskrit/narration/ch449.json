@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 449,
+  "title": "Amazed and Pleased",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:805f22b0e4ad9d55",
+  "lessons": [
+    {
+      "id": "SA-C449-avegah",
+      "sequence": 26050,
+      "title": "आवेगः (āvegaḥ) — agitation; a flurry of feeling",
+      "headword": "आवेगः",
+      "romanization": "āvegaḥ",
+      "gloss": "agitation; a flurry of feeling",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59b3fec10df8ee2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for merriment, then the Sanskrit for distress."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आवेगः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आवेगः — āvegaḥ — \"agitation; a flurry of feeling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वार्तया मातुः आवेगः भवति। vārtayā mātuḥ āvegaḥ bhavati. The news throws mother into a flurry."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आवेगः (āvegaḥ) is built from ā and the root √vij, \"to tremble, to start\": a quick stirring of the mind; MW gives \"hurry or haste produced by excitement\" and \"flurry, agitation\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvegaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvegaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvegaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvegaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vārtayā mātuḥ āvegaḥ bhavati. — The news throws mother into a flurry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vārtayā mātuḥ āvegaḥ bhavati.* — The news throws mother into a flurry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for merriment, then the Sanskrit for distress, then say āvegaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for merriment, then the Sanskrit for distress, then say *āvegaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आवेगः (āvegaḥ) mean? (\"Agitation; a flurry of feeling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C449-vismayate",
+      "sequence": 26060,
+      "title": "विस्मयते (vismayate) — is amazed",
+      "headword": "विस्मयते",
+      "romanization": "vismayate",
+      "gloss": "is amazed",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efb9c6a5184ab104",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for distress, then the Sanskrit for a flurry of feeling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विस्मयते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विस्मयते — vismayate — \"is amazed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात्रौ मीरा ताराः पश्यति, विस्मयते च। rātrau mīrā tārāḥ paśyati, vismayate ca. At night Mira sees the stars and is amazed."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): सा विस्मितवती, sā vismitavatī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विस्मयते (vismayate) is built from vi, \"apart\", and the root √smi, \"to smile\", the verb behind विस्मयः; MW gives \"to wonder, be surprised or astonished at\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vismayate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vismayate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vismayate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vismayate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātrau mīrā tārāḥ paśyati, vismayate ca. — At night Mira sees the stars and is amazed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātrau mīrā tārāḥ paśyati, vismayate ca.* — At night Mira sees the stars and is amazed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for distress, then the Sanskrit for a flurry of feeling, then say vismayate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for distress, then the Sanskrit for a flurry of feeling, then say *vismayate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विस्मयते (vismayate) mean? (\"Is amazed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C449-ascaryam",
+      "sequence": 26070,
+      "title": "आश्चर्यम् (āścaryam) — a marvel",
+      "headword": "आश्चर्यम्",
+      "romanization": "āścaryam",
+      "gloss": "a marvel",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:764d8ac6f243098c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a flurry of feeling, then the Sanskrit for is amazed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आश्चर्यम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आश्चर्यम् — āścaryam — \"a marvel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अहो आश्चर्यम्! aho āścaryam! Oh, what a marvel!"
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आश्चर्यम् (āścaryam) MW reports that it is said to come from ā and the root √car, \"to move\", with an s inserted (Pāṇini 6.1.147); its first sense is \"appearing rarely\", and the history is not settled (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āścaryam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āścaryam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āścaryam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āścaryam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aho āścaryam! — Oh, what a marvel!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aho āścaryam!* — Oh, what a marvel!]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a flurry of feeling, then the Sanskrit for is amazed, then say āścaryam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a flurry of feeling, then the Sanskrit for is amazed, then say *āścaryam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आश्चर्यम् (āścaryam) mean? (\"A marvel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C449-tosayati",
+      "sequence": 26080,
+      "title": "तोषयति (toṣayati) — pleases; gratifies",
+      "headword": "तोषयति",
+      "romanization": "toṣayati",
+      "gloss": "pleases; gratifies",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7be906c24bbee6b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for is amazed, then the Sanskrit for a marvel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तोषयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तोषयति — toṣayati — \"pleases; gratifies\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पौत्रः मधुरेण गीतेन पितामहं तोषयति। pautraḥ madhureṇa gītena pitāmahaṃ toṣayati. The grandson pleases his grandfather with a sweet song."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः पितामहं तोषितवान्, saḥ pitāmahaṃ toṣitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तोषयति (toṣayati) is built on the causative of the root √tuṣ, \"to be satisfied, to be pleased\", the root of तुष्यति and सन्तोषः: to make someone pleased; MW gives the causative the senses \"to satisfy, please, appease\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toṣayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toṣayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toṣayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toṣayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pautraḥ madhureṇa gītena pitāmahaṃ toṣayati. — The grandson pleases his grandfather with a sweet song.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pautraḥ madhureṇa gītena pitāmahaṃ toṣayati.* — The grandson pleases his grandfather with a sweet song.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for is amazed, then the Sanskrit for a marvel, then say toṣayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for is amazed, then the Sanskrit for a marvel, then say *toṣayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तोषयति (toṣayati) mean? (\"Pleases; gratifies\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C449-romancah",
+      "sequence": 26090,
+      "title": "रोमाञ्चः (romāñcaḥ) — a thrill; the hair standing on end",
+      "headword": "रोमाञ्चः",
+      "romanization": "romāñcaḥ",
+      "gloss": "a thrill; the hair standing on end",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dac94a5c76318688",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a marvel, then the Sanskrit for pleases."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रोमाञ्चः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रोमाञ्चः — romāñcaḥ — \"a thrill; the hair standing on end\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सिंहस्य गर्जनेन मम रोमाञ्चः भवति। siṃhasya garjanena mama romāñcaḥ bhavati. The lion's roar gives me a thrill."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रोमाञ्चः (romāñcaḥ) is built from roman, \"the hair of the body\", and añca, from the root √añc, \"to bend, to rise\"; MW gives \"thrill of the hair\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "romāñcaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *romāñcaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "romāñcaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *romāñcaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siṃhasya garjanena mama romāñcaḥ bhavati. — The lion's roar gives me a thrill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siṃhasya garjanena mama romāñcaḥ bhavati.* — The lion's roar gives me a thrill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a marvel, then the Sanskrit for pleases, then say romāñcaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a marvel, then the Sanskrit for pleases, then say *romāñcaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रोमाञ्चः (romāñcaḥ) mean? (\"A thrill; the hair standing on end\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

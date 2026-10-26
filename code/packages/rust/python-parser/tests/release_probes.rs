@@ -2,8 +2,9 @@
 //! budgets (C5) and error spans (C6).
 //!
 //! Stage P means: positive and negative parse probes for the release's
-//! declared `grammar_subset` (py-int-print for Python 3, py2-int-print for
-//! Python 2 since phase 7c slice 1) pass through the COMPILED tables, and
+//! declared `grammar_subset` (py-int-print for 3.0a1, py-float-print for the
+//! other Python 3 pairs since phase 7c slice 3, py2-int-print for Python 2
+//! since phase 7c slice 1) pass through the COMPILED tables, and
 //! hostile probes come back as errors. Each probe below runs against every
 //! release that claims it in `code/grammars/python/releases.csv`.
 
@@ -76,7 +77,17 @@ fn supported_releases_are_exactly_the_paired_inventory_rows() {
 #[test]
 fn every_paired_row_claims_stage_p_for_its_subset() {
     for row in paired_rows() {
-        let subset = if PY2_RELEASES.contains(&row["release"].as_str()) { "py2-int-print" } else { "py-int-print" };
+        // The pair's grammar is the widest subset it parses: Python 2's
+        // integer print statement, 3.0a1's integer-only grammar, or (3.5.10
+        // and later) the float grammar, whose `atom` admits FLOAT.
+        let release = row["release"].as_str();
+        let subset = if PY2_RELEASES.contains(&release) {
+            "py2-int-print"
+        } else if release == "3.0a1" {
+            "py-int-print"
+        } else {
+            "py-float-print"
+        };
         assert_eq!(
             (
                 row["grammar_status"].as_str(),
@@ -134,11 +145,14 @@ fn deduplicated_classes_follow_the_evidence() {
     assert_eq!(class("3.12.3"), class("3.13.16"));
     assert_eq!(class("3.13.16"), class("3.16.0a1"));
     // 3.11.17 has no `!` token; 3.0a1 has no `_` separator, no `@=`/`:=`
-    // and no async/await keywords. The subset grammar is the same for all.
+    // and no async/await keywords. Since LANG84 7c slice 3 the six
+    // py-float-print releases share one subset grammar (`atom` admits
+    // FLOAT) and 3.0a1 keeps the integer-only one.
     assert_ne!(class("3.11.17").0, class("3.12.3").0);
     assert_ne!(class("3.0a1").0, class("3.11.17").0);
-    let grammar = class("3.0a1").1;
-    assert!(py3_releases().iter().all(|r| class(r).1 == grammar));
+    let grammar = class("3.5.10").1;
+    assert!(py3_releases().iter().filter(|r| **r != "3.0a1").all(|r| class(r).1 == grammar));
+    assert_ne!(class("3.0a1").1, grammar);
     // Python 2: one subset grammar (with `print_stmt`) for all four pairs,
     // three token tables: 2.4 adds `@`; 2.6 adds `as`, `with` and PEP 3127
     // `0o`/`0b`; 2.7.18 lexes like 2.6.
@@ -146,6 +160,7 @@ fn deduplicated_classes_follow_the_evidence() {
         assert_eq!(class("2.2").1, class(release).1, "{release}");
     }
     assert_ne!(class("2.2").1, grammar);
+    assert_ne!(class("2.2").1, class("3.0a1").1);
     assert_ne!(class("2.2").0, class("2.4").0);
     assert_ne!(class("2.4").0, class("2.6").0);
     assert_eq!(class("2.6").0, class("2.7.18").0);
@@ -269,7 +284,7 @@ const POSITIVE_ALL: &[&str] = &[
     "print(3 * 4)",
     "print(-7 // 2)",
     "print(-7 % 2)",
-    "print(7 / 2)", // parses; the compiler refuses `/` (a float result)
+    "print(7 / 2)", // parses; 3.0a1's compiler refuses `/` (a float result)
     "print()",
     "print(1,)",
     "print(1, 2)", // parses; the compiler refuses two arguments
@@ -295,6 +310,41 @@ const POSITIVE_ALL: &[&str] = &[
 /// PEP 515 (3.6): `_` separators. Valid from 3.6, a lexer error before.
 const UNDERSCORES: &[&str] = &["print(1_000)", "print(0_0)", "print(1_2_3 * 4)"];
 
+/// LANG84 7c slice 3: `py-float-print` literals. They parse on the six
+/// releases that claim the float subset (3.5.10 and later) and are a lexer
+/// or parse error on 3.0a1, whose pair never lexed a float.
+const FLOATS: &[&str] = &[
+    "print(1.5)",
+    "print(1e3)",
+    "print(.5)",
+    "print(1.)",
+    "print(1. + 2)",
+    "print(1.e5)",
+    "print(1.5e-3 * 2E+2)",
+    "print(00.5)",
+    "print(0123e1)",
+    "print(-0.0)",
+    "print(7.5 // 2)", // parses; the compiler refuses float `//`
+];
+
+/// PEP 515 `_` inside a float: from 3.6, a lexer error before it.
+const FLOAT_UNDERSCORES: &[&str] = &["print(1_000.5)", "print(1e1_0)", "print(.0_1)"];
+
+/// Float spellings no claiming release accepts (lexer or parse errors).
+const FLOAT_NEGATIVE: &[&str] = &[
+    "print(1j)",
+    "print(1.5j)",
+    "print(1_.5)",
+    "print(1._5)",
+    "print(1e)",
+    "print(1e+)",
+    "print(1e_1)",
+    "print(1.5.5)",
+    "print(1..5)",
+    "print(1.5if)",
+    "print(1.real)",
+];
+
 const NEGATIVE_ALL: &[&str] = &[
     "print(",
     "print(1",
@@ -303,8 +353,6 @@ const NEGATIVE_ALL: &[&str] = &[
     ";print(1)",
     "print(1 +)",
     "print(0x10)",
-    "print(1.5)",
-    "print(1e3)",
     "print('a')",
     "print(012)",
     "print(1__0)",
@@ -345,7 +393,29 @@ fn py_int_print_probes_for_every_release() {
             }
             checked += 1;
         }
-        for source in NEGATIVE_ALL {
+        // Floats: the six py-float-print releases parse them; 3.0a1 does not.
+        let floats = release != "3.0a1";
+        for source in FLOATS {
+            match parse(release, source) {
+                Ok(_) => assert!(floats, "{release} must not parse {source:?}"),
+                Err(PythonFrontendError::Lex { .. } | PythonFrontendError::Parse { .. }) => {
+                    assert!(!floats, "{release}: {source:?}")
+                }
+                Err(other) => panic!("{release}: {source:?}: {other:?}"),
+            }
+            checked += 1;
+        }
+        for source in FLOAT_UNDERSCORES {
+            match parse(release, source) {
+                Ok(_) => assert!(floats && !early, "{release} must not lex {source:?}"),
+                Err(PythonFrontendError::Lex { .. } | PythonFrontendError::Parse { .. }) => {
+                    assert!(!floats || early, "{release}: {source:?}")
+                }
+                Err(other) => panic!("{release}: {source:?}: {other:?}"),
+            }
+            checked += 1;
+        }
+        for source in NEGATIVE_ALL.iter().chain(FLOAT_NEGATIVE) {
             let error = parse(release, source)
                 .err()
                 .unwrap_or_else(|| panic!("{release}: {source:?} accepted"));
@@ -358,7 +428,13 @@ fn py_int_print_probes_for_every_release() {
     }
     assert_eq!(
         checked,
-        releases.len() * (POSITIVE_ALL.len() + UNDERSCORES.len() + NEGATIVE_ALL.len())
+        releases.len()
+            * (POSITIVE_ALL.len()
+                + UNDERSCORES.len()
+                + FLOATS.len()
+                + FLOAT_UNDERSCORES.len()
+                + NEGATIVE_ALL.len()
+                + FLOAT_NEGATIVE.len())
     );
 }
 

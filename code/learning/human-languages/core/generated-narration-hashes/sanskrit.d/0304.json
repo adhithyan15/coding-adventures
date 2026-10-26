@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:61351a48417b4328",
+  "lessonIds": [
+    "SA-C304-rasih",
+    "SA-C304-artah",
+    "SA-C304-krosati",
+    "SA-C304-vilapati",
+    "SA-C304-nihsarayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch304.txt",
+  "json": "sanskrit/narration/ch304.json",
+  "textHash": "fnv1a64:a8305054ac586df8",
+  "jsonHash": "fnv1a64:1595ebeb3e9164a6",
+  "findings": []
+}

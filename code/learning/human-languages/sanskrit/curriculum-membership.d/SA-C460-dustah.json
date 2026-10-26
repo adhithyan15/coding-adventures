@@ -1,0 +1,11 @@
+{
+  "id": "SA-C460-dustah",
+  "pathSegment": "SA-PATH-460-SVABHAVA460",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-460-SVABHAVA460",
+      "order": 4
+    }
+  ]
+}

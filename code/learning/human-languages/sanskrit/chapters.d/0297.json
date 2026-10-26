@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "Putting the Fire Out",
+  "label": "ch:sa-putting-the-fire-out",
+  "canDo": "I can say how a fire was put out.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C297-samyati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can say how a fire was put out.",
+    "assesses": [
+      "SA-LEX-C297-NIRVAPANA297-03",
+      "SA-LEX-C297-NIRVAPANA297-04",
+      "SA-LEX-C297-NIRVAPANA297-05"
+    ]
+  }
+}

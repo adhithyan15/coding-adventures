@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C301-cakravatah",
+    "language": "sanskrit",
+    "chapter": 301,
+    "sequence": 17770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4502e7af61ddfbb"
+  },
+  "findings": []
+}

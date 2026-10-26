@@ -1,0 +1,11 @@
+{
+  "id": "SA-C396-darsanam",
+  "pathSegment": "SA-PATH-396-DARSHANA396",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-396-DARSHANA396",
+      "order": 1
+    }
+  ]
+}

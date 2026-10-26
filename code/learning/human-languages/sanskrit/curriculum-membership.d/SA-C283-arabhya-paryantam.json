@@ -1,0 +1,11 @@
+{
+  "id": "SA-C283-arabhya-paryantam",
+  "pathSegment": "SA-PATH-283-EXPERIENCE283",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-283-EXPERIENCE283",
+      "order": 1
+    }
+  ]
+}

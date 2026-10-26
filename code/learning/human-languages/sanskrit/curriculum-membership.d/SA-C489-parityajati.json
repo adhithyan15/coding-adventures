@@ -1,0 +1,11 @@
+{
+  "id": "SA-C489-parityajati",
+  "pathSegment": "SA-PATH-489-VYASANA489",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-489-VYASANA489",
+      "order": 3
+    }
+  ]
+}

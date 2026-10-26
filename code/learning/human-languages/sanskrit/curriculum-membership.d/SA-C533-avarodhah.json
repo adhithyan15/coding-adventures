@@ -1,0 +1,11 @@
+{
+  "id": "SA-C533-avarodhah",
+  "pathSegment": "SA-PATH-533-ANTARAYA533",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-533-ANTARAYA533",
+      "order": 1
+    }
+  ]
+}

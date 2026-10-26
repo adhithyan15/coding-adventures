@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C429-ghatika",
+    "language": "sanskrit",
+    "chapter": 429,
+    "sequence": 24800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e75e6985ca12ebe7"
+  },
+  "findings": []
+}

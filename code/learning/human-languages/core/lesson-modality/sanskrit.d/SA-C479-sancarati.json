@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C479-sancarati",
+    "language": "sanskrit",
+    "chapter": 479,
+    "sequence": 27610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38deb0f5551ed4b9"
+  },
+  "findings": []
+}

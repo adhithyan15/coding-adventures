@@ -1,0 +1,11 @@
+{
+  "id": "SA-C452-dinah",
+  "pathSegment": "SA-PATH-452-UDVEGA452",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-452-UDVEGA452",
+      "order": 4
+    }
+  ]
+}

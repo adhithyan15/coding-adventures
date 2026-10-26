@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:f785d6c3ef11f538",
+  "lessonIds": [
+    "SA-C380-matra",
+    "SA-C380-parimanam",
+    "SA-C380-madhyamah",
+    "SA-C380-yathestam",
+    "SA-C380-vistarayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch380-how-much.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "The Rescue",
+  "label": "ch:sa-the-rescue",
+  "canDo": "I can tell how people were rescued.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C305-trayate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can tell how people were rescued.",
+    "assesses": [
+      "SA-LEX-C305-UDDHARANA305-03",
+      "SA-LEX-C305-UDDHARANA305-04",
+      "SA-LEX-C305-UDDHARANA305-05"
+    ]
+  }
+}

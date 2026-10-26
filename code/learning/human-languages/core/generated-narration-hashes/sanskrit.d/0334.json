@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:c00c42f81fe8937b",
+  "lessonIds": [
+    "SA-C334-raksasah",
+    "SA-C334-asurah",
+    "SA-C334-vadhah",
+    "SA-C334-hanti",
+    "SA-C334-nigirati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch334.txt",
+  "json": "sanskrit/narration/ch334.json",
+  "textHash": "fnv1a64:f3e1b0de8ec6cdb2",
+  "jsonHash": "fnv1a64:d1994c6e4ab697f1",
+  "findings": []
+}

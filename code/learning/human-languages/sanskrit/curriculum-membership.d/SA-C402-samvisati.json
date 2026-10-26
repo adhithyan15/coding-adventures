@@ -1,0 +1,11 @@
+{
+  "id": "SA-C402-samvisati",
+  "pathSegment": "SA-PATH-402-DHARMASHALA402",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-402-DHARMASHALA402",
+      "order": 3
+    }
+  ]
+}

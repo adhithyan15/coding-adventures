@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-502-KARMASALA502",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "SA-EXT-502-KARMASALA502"
+  ],
+  "after": []
+}

@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 512,
+  "output": "sanskrit/book/chapters/ch512-chop-and-grind.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

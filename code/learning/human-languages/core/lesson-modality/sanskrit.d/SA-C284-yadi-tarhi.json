@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C284-yadi-tarhi",
+    "language": "sanskrit",
+    "chapter": 284,
+    "sequence": 16600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42dbc0942dcd7b2e"
+  },
+  "findings": []
+}
