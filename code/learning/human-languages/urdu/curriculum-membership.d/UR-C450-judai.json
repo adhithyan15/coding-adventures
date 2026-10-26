@@ -1,0 +1,11 @@
+{
+  "id": "UR-C450-judai",
+  "pathSegment": "UR-PATH-450-MISS450",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-450-MISS450",
+      "order": 2
+    }
+  ]
+}

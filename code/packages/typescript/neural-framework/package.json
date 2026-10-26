@@ -1,0 +1,24 @@
+{
+  "name": "@coding-adventures/neural-framework",
+  "version": "0.1.0",
+  "description": "Portable, inspectable dense neural network training",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "node node_modules/typescript/bin/tsc --noEmit",
+    "test": "node node_modules/vitest/vitest.mjs run",
+    "test:coverage": "node node_modules/vitest/vitest.mjs run --coverage",
+    "example": "node node_modules/tsx/dist/cli.mjs examples/xor.ts"
+  },
+  "dependencies": {"matrix": "file:../matrix"},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.12",
+    "@vitest/coverage-v8": "^4.1.12",
+    "@types/node": "^22.20.1",
+    "tsx": "^4.20.0"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT"
+}

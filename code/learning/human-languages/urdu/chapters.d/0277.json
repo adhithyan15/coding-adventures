@@ -1,0 +1,19 @@
+{
+  "chapter": 277,
+  "title": "The Thief Got Away",
+  "label": "ch:ur-the-thief-got-away",
+  "canDo": "I can say how a thief got away and what would have stopped him.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C277-mujrim",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 277: I can say how a thief got away and what would have stopped him.",
+    "assesses": [
+      "UR-LEX-C277-FARAR277-03",
+      "UR-LEX-C277-FARAR277-04",
+      "UR-LEX-C277-FARAR277-05"
+    ]
+  }
+}

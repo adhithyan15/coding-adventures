@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:50cc8a7fd8a4de31",
+  "lessonIds": [
+    "UR-C327-khazana",
+    "UR-C327-garna",
+    "UR-C327-nag",
+    "UR-C327-dasna",
+    "UR-C327-hira"
+  ],
+  "tex": "urdu/book/chapters/ch327-buried-treasure.tex"
+}

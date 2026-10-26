@@ -1,0 +1,1 @@
+| 264 | [`UR-C264-voh-gaya`](./lessons/UR-C264-voh-gaya.md) → [`UR-C264-voh-yahan-tha`](./lessons/UR-C264-voh-yahan-tha.md) → [`UR-R264-where-i-went`](./lessons/UR-R264-where-i-went.md) | `UR-R264-where-i-went` | say where someone went and where someone was (voh gayā, voh gaī, maiṅ ghar par thā), and what I used to do (jātā thā) |

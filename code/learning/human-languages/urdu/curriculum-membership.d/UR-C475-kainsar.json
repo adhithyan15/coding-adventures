@@ -1,0 +1,11 @@
+{
+  "id": "UR-C475-kainsar",
+  "pathSegment": "UR-PATH-475-LONG475",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-475-LONG475",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:ef85cf3ee178a97a",
+  "lessonIds": [
+    "GU-C544-pher",
+    "GU-C544-taphavat",
+    "GU-C544-alag",
+    "GU-C544-nakal",
+    "GU-C544-barabar"
+  ],
+  "tex": "gujarati/book/chapters/ch544-same-or-different.tex"
+}

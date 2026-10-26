@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C466-nidar",
+    "language": "gujarati",
+    "chapter": 466,
+    "sequence": 25980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef173e1234016e28"
+  },
+  "findings": []
+}

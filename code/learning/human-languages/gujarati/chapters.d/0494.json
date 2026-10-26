@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Growing Up, Growing Old",
+  "label": "ch:gu-growing-up-growing-old",
+  "canDo": "I can talk about childhood and old age.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C494-vrddhasram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can talk about childhood and old age.",
+    "assesses": [
+      "GU-LEX-C494-BALPAN494-03",
+      "GU-LEX-C494-BALPAN494-04",
+      "GU-LEX-C494-BALPAN494-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C275-agar-vaqt-hota",
+  "pathSegment": "UR-PATH-275-DEPENDS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-275-DEPENDS",
+      "order": 2
+    }
+  ]
+}

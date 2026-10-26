@@ -116,16 +116,7 @@ fn task_app_sources_compile() {
 #[test]
 fn builds_on_every_backend() {
     use mosaic_package_artifact_builder::{build_package, Backend, BuildOptions};
-    for backend in [
-        Backend::React,
-        Backend::WebComponent,
-        Backend::Html,
-        Backend::SwiftUI,
-        Backend::Compose,
-        Backend::Flutter,
-        Backend::Qt,
-        Backend::Xaml,
-    ] {
+    for backend in Backend::ALL {
         let out = tempfile::TempDir::new().unwrap();
         build_package(&BuildOptions {
             package_root: PathBuf::from(env!("CARGO_MANIFEST_DIR")),
@@ -153,6 +144,7 @@ fn qt_board_columns_keep_their_width_floor_in_both_themes() {
             theme: Some(theme.to_string()),
         }).unwrap();
         let qml = fs::read_to_string(out.path().join("qt/TaskApp.qml")).unwrap();
+        assert!(qml.contains("Layout.minimumWidth: 236"), "{theme}: rail must not shrink");
         let board = qml.split_once("model: boardColumns").expect("board repeater").1;
         let (delegate, column) = board.split_once("Rectangle {").expect("board column");
         assert!(delegate.contains("Layout.minimumWidth: 260"), "{theme}: {delegate}");

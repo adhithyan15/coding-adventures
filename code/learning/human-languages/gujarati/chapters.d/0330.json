@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "Nine Nights of Dance",
+  "label": "ch:gu-nine-nights-of-dance",
+  "canDo": "I can tell how people danced and sang at night.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C330-bhakt",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can tell how people danced and sang at night.",
+    "assesses": [
+      "GU-LEX-C330-GARBO330-03",
+      "GU-LEX-C330-GARBO330-04",
+      "GU-LEX-C330-GARBO330-05"
+    ]
+  }
+}

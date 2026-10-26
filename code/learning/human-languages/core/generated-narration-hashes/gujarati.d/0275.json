@@ -1,0 +1,17 @@
+{
+  "language": "gujarati",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:a6bff30f75a8305f",
+  "lessonIds": [
+    "GU-C275-vanchto-hato",
+    "GU-C275-banvu",
+    "GU-R275-the-scene"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "gujarati/narration/ch275.txt",
+  "json": "gujarati/narration/ch275.json",
+  "textHash": "fnv1a64:8a80a0ddbb3a2b0d",
+  "jsonHash": "fnv1a64:726b20acab09ffb5",
+  "findings": []
+}

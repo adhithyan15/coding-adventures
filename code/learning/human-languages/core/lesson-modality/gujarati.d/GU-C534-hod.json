@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C534-hod",
+    "language": "gujarati",
+    "chapter": 534,
+    "sequence": 29710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0185425b30c0ee48"
+  },
+  "findings": []
+}

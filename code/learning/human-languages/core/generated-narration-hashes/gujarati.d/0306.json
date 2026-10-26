@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:6f92f258a2d611e7",
+  "lessonIds": [
+    "GU-C306-svayansevak",
+    "GU-C306-rahat",
+    "GU-C306-chavni",
+    "GU-C306-anaj",
+    "GU-C306-umatvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch306.txt",
+  "json": "gujarati/narration/ch306.json",
+  "textHash": "fnv1a64:2bd8cdf49d9bfc29",
+  "jsonHash": "fnv1a64:eaee47a01efff124",
+  "findings": []
+}

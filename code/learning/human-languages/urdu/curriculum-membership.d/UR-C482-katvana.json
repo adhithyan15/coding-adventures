@@ -1,0 +1,11 @@
+{
+  "id": "UR-C482-katvana",
+  "pathSegment": "UR-PATH-482-GROOM482",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-482-GROOM482",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C371-labh",
+  "pathSegment": "GU-PATH-371-FAYDO371",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-371-FAYDO371",
+      "order": 1
+    }
+  ]
+}

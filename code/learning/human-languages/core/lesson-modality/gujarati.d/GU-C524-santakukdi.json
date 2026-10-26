@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C524-santakukdi",
+    "language": "gujarati",
+    "chapter": 524,
+    "sequence": 29200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb0cc7f5bfed62a1"
+  },
+  "findings": []
+}

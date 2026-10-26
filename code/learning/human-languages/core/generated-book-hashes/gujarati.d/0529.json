@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:e00c96800e94d497",
+  "lessonIds": [
+    "GU-C529-tabakko",
+    "GU-C529-kram",
+    "GU-C529-andaj",
+    "GU-C529-adhuru",
+    "GU-C529-antim"
+  ],
+  "tex": "gujarati/book/chapters/ch529-one-stage-at-a-time.tex"
+}

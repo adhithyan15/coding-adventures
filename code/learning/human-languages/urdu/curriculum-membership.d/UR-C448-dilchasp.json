@@ -1,0 +1,11 @@
+{
+  "id": "UR-C448-dilchasp",
+  "pathSegment": "UR-PATH-448-CURIOUS448",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-448-CURIOUS448",
+      "order": 1
+    }
+  ]
+}

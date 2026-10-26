@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C348-tanqid",
+    "language": "urdu",
+    "chapter": 348,
+    "sequence": 20880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:673b824b3c933a28"
+  },
+  "findings": []
+}

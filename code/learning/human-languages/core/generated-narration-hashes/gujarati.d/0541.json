@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:40486fdefb0ef463",
+  "lessonIds": [
+    "GU-C541-sapath",
+    "GU-C541-vaydo",
+    "GU-C541-bharoso",
+    "GU-C541-chatakbari",
+    "GU-C541-prastav"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch541.txt",
+  "json": "gujarati/narration/ch541.json",
+  "textHash": "fnv1a64:2458e5c7ad2027f2",
+  "jsonHash": "fnv1a64:4c5dfc62254e83e7",
+  "findings": []
+}

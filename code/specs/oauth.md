@@ -1252,6 +1252,427 @@ role or critical-extension policy, decide freshness or revocation, fetch or
 cache data, read a clock, or grant path, trust, TLS, HTTP, OAuth transport, or
 network authority. Concrete HTTPS remains unavailable.
 
+A bounded `x509-ocsp-response` prerequisite decodes exactly one RFC 6960
+`OCSPResponse` SEQUENCE under a shared caller-owned DER depth, element,
+length, and OID-arc budget. It recognizes only the assigned
+`OCSPResponseStatus` values 0, 1, 2, 3, 5, and 6; rejects negative,
+non-canonical, unassigned, and oversized ENUMERATED values; requires a
+successful response to carry one terminal `[0] EXPLICIT ResponseBytes`; and
+requires every error response to omit that field. `ResponseBytes` retains one
+generic response-type OBJECT IDENTIFIER and the borrowed contents of one OCTET
+STRING without interpreting either. Success retains the exact complete outer
+response encoding without reserialization. An explicit structural dispatch
+accepts only the exact `id-pkix-ocsp-basic` OID `1.3.6.1.5.5.7.48.1.1`, frames
+the OCTET STRING contents as exactly one canonical DER document, and composes
+the repository-owned `BasicOCSPResponse` decoder through the same caller-owned
+decoder so no depth, element, length, OID-arc, extension-count,
+response-count, or certificate-count authority is reset. An unrecognized OID
+is rejected before its payload is parsed. Dispatch failures are payload-free;
+their offsets are local to the embedded response body because `ResponseBytes`
+exposes that body as an independently framed OCTET STRING. This structural
+layer does not select or enable an algorithm, verify a signature, authorize a
+responder, bind status to a certificate or constructed path, interpret
+extensions, decide freshness or revocation, fetch or cache data, read a clock,
+or grant path, trust, TLS, HTTP, OAuth transport, or network authority.
+Concrete HTTPS remains unavailable.
+
+A bounded `x509-ocsp-rsa-pkcs1-v1-5-sha256-signature` prerequisite verifies
+one structurally decoded `BasicOCSPResponse` with one separately
+policy-validated RSA public key. It accepts only the exact
+`sha256WithRSAEncryption` algorithm identifier with canonical present NULL
+parameters, requires a byte-aligned signature BIT STRING, hashes the preserved
+canonical `ResponseData` DER with the repository-owned SHA-256 implementation,
+applies the bounded repository-owned RSA public operation, and validates the
+complete PKCS #1 v1.5 SHA-256 encoded message. Success returns non-copyable
+evidence retaining the exact response and validated public key so neither can
+be substituted after verification. The verifier does not select that key,
+route algorithms, authorize or match a responder, bind a response or `CertID`
+to a certificate or constructed path, apply certificate role or extension
+policy, decide freshness or revocation, fetch or cache data, read a clock, or
+grant path, trust, TLS, HTTP, OAuth transport, or network authority. Concrete
+HTTPS remains unavailable.
+
+A bounded `x509-ocsp-responder-id-binding` prerequisite now matches one exact
+structurally decoded `BasicOCSPResponse` to one exact decoded candidate
+responder certificate. For `byName`, it invokes caller-owned Name policy
+exactly once with the response's responder Name followed by the candidate
+certificate's subject. For `byKey`, it requires the fixed 20-byte RFC 6960
+KeyHash form, computes repository-owned SHA-1 over the candidate certificate's
+`subjectPublicKey` BIT STRING contents excluding the tag, length, and
+unused-bits count octet, and compares the complete digest with the
+repository-owned constant-time equality primitive. Success returns
+non-copyable evidence retaining the exact response, certificate, and matched
+identifier kind so neither input can be substituted after matching. This
+binding does not verify the response signature, prove that the certificate's
+key signed it, authorize the responder, apply certificate role, EKU,
+critical-extension, algorithm, path, or trust policy, bind a `CertID` or status
+to a certificate or constructed path, decide freshness or revocation, fetch or
+cache data, read a clock, or grant TLS, HTTP, OAuth transport, or network
+authority. Concrete HTTPS remains unavailable.
+
+A bounded `x509-ocsp-responder-certificate-policy` prerequisite now consumes
+certificate-wide role evidence and data-driven algorithm evidence for one
+exact decoded candidate responder certificate. It rejects evidence from
+distinct decoded objects, requires the retained certificate to have the
+end-entity role, requires any present Key Usage to assert `digitalSignature`
+or `contentCommitment`, checks its validity at one explicit caller-owned time,
+and requires the fixed RFC 6960 `id-kp-OCSPSigning` Extended Key Usage purpose.
+Success returns non-copyable evidence retaining both consumed policy results
+and the derived validity and purpose results, so a caller cannot substitute a
+different certificate after authorization. This target-certificate policy
+does not bind a `ResponderID`, verify or bind a response signature, prove an
+issuer relationship or delegated authorization, construct or validate a path,
+establish trust, check the responder certificate's revocation, fetch or cache
+revocation data, read a clock, perform TLS or HTTP, authorize OAuth transport,
+or grant network authority. Concrete HTTPS remains unavailable.
+
+A bounded `x509-ocsp-authenticated-responder` composition now consumes one
+exact `ResponderID`-to-certificate binding and complete responder-certificate
+policy. It rejects evidence retained from distinct decoded certificate objects
+before cryptographic work, derives and validates the RSA public key from that
+same policy-retained certificate under caller-owned strength and resource
+limits, and uses the repository-owned RSA PKCS #1 v1.5 SHA-256 verifier on the
+exact response retained by the identifier binding. Its non-copyable result
+retains the identifier, certificate-policy, and response-signature evidence so
+the matched response, policy-approved candidate, or verified key cannot be
+silently substituted. This authenticates only one policy-approved delegated
+responder candidate to one response. It does not prove that the target
+certificate's issuer signed or authorized the responder certificate, construct
+or validate a responder path, establish trust, check responder-certificate
+revocation, bind a `CertID` or revocation decision, fetch or cache data, read a
+clock, perform TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS remains unavailable.
+
+A bounded `x509-ocsp-issuer-bound-responder` composition now consumes that
+exact authenticated-responder evidence and one exact repository-owned RSA
+SHA-256 issuer link for the responder certificate. It rejects evidence whose
+responder certificates are distinct decoded objects, including byte-equal
+re-decodes, before returning non-copyable evidence retaining both proofs.
+Together, those proofs establish that one exact candidate issuer with an
+issuing-CA role signed the policy-approved OCSP-signing responder certificate,
+whose key signed the exact response. This does not establish that the candidate
+issuer issued any particular target certificate, bind a `CertID` or revocation
+decision, construct or validate a responder path, establish trust, check the
+responder certificate's revocation, fetch or cache data, read a clock, perform
+TLS or HTTP, authorize OAuth transport, or grant network authority. Concrete
+HTTPS remains unavailable.
+
+A bounded `x509-ocsp-cert-id-binding` prerequisite now binds one exact
+structurally decoded `SingleResponse` to one exact target certificate and one
+exact candidate issuer certificate. It first requires the target certificate's
+canonical serial number to equal the `CertID` serial, then invokes one
+caller-owned, data-driven hash policy with the exact `CertID` algorithm and the
+checked target certificate's canonical issuer Name DER followed by the
+candidate issuer certificate's `subjectPublicKey` BIT STRING contents. The
+caller selects and implements the hash algorithm; the binding requires one
+public non-zero fixed digest length for both fields and compares each complete
+digest with the repository-owned constant-time primitive. Success returns
+non-copyable evidence retaining the exact response, target, and issuer so none
+can be substituted after binding.
+This composition does not authorize the selected hash, prove that the issuer
+signed the target, verify or authorize the OCSP responder, bind the response to
+a constructed path, interpret extensions or status, decide freshness or
+revocation, fetch or cache data, read a clock, or grant TLS, HTTP, OAuth
+transport, or network authority. Concrete HTTPS remains unavailable.
+
+A bounded `x509-ocsp-revocation-policy` follow-up now consumes that exact
+non-copyable `CertID` binding and one explicit validated caller-owned time. It
+derives status, `thisUpdate`, and `nextUpdate` only from the exact retained
+`SingleResponse`, rejects every currently unsupported `singleExtensions`
+collection, and applies the shared repository-owned fail-closed revocation
+policy. Only `good` inside the ordered half-open freshness interval
+`thisUpdate <= observation_time < nextUpdate` succeeds. The distinct
+non-copyable result retains the complete target, issuer, and response binding
+plus the exact observation time, preventing detached status or freshness
+values from being attached to another certificate. This composition does not
+authenticate the OCSP signature,
+authorize or bind a responder, interpret outer response extensions, prove the
+candidate issuer signed the target, bind the result to a constructed path,
+fetch or cache revocation data, read a clock, implement nonce policy, establish
+trust, perform TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS remains unavailable.
+
+A bounded `x509-ocsp-authenticated-target-revocation` composition now consumes
+that exact good-and-fresh target/issuer result, one issuer-bound authenticated
+RSA SHA-256 responder, and one repository-owned RSA SHA-256 issuer link for the
+target certificate. It requires the revocation result's exact `SingleResponse`
+object to occur inside the signed `BasicOCSPResponse`, requires the target link
+to retain the exact target certificate, and requires both certificate links and
+the `CertID` binding to retain the same exact issuer certificate object.
+It requires the signed response to contain exactly one `SingleResponse`, so an
+unexamined entry encoded under another hash algorithm cannot conflict with the
+selected target status, and revalidates the responder certificate at the exact
+revocation observation time. Byte-equal re-decodes fail closed. Until outer
+extension and nonce policy is implemented, any `responseExtensions` collection
+is rejected. Non-copyable success evidence retains all three complete proofs
+and the exact-time responder-validity result, establishing only that the same
+candidate issuer signed the target and authorized the then-valid delegated
+responder whose key signed the exact unambiguous response containing the good-
+and-fresh target status. This fixed RSA SHA-256 composition does not construct
+or validate a
+certificate path, establish issuer trust, apply responder-path or responder-
+revocation policy, interpret any OCSP extension, fetch or cache data, read a
+clock, perform TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS remains unavailable.
+
+A bounded `x509-ocsp-reviewed-server-revocation-binding` composition now joins
+that complete authenticated target-revocation evidence to the strongest
+existing constructed reviewed-intermediate server-path evidence. It requires
+both non-copyable inputs to retain the same exact decoded target and
+intermediate issuer objects; byte-equal independent decodes fail closed.
+After those identity checks, it revalidates both exact path certificates at
+the OCSP proof's retained observation time and retains the two fresh validity
+tokens, so earlier server-path validity evidence cannot be mixed with a later
+revocation observation after either certificate expires.
+Success retains the full OCSP target, issuer, delegated responder, signed
+single-status response, freshness and observation-time evidence alongside the
+full target-server policy, constructed two-link RSA SHA-256 path, path-length
+state, exact Mozilla-reviewed root selection, selected-anchor DNS policy, and
+supported intermediate DNS-constraint policy. Stable failures distinguish
+target from issuer mismatch and target from issuer exact-time validity failure
+without retaining response, certificate, key, signature, status, hostname, or
+time payloads. This composition performs no new cryptography or external
+effect. It does not generalize certificate-path
+validation, establish a reviewed responder path, check responder-certificate
+or intermediate revocation, interpret unsupported OCSP extensions, fetch or
+cache data, read a clock, implement TLS or HTTP, authorize OAuth transport, or
+grant network authority. Concrete HTTPS remains unavailable.
+
+A bounded follow-up in
+`x509-ocsp-reviewed-server-revocation-binding` now consumes that complete
+reviewed server-revocation proof and reifies its delegated
+responder-to-reviewed-root path as a distinct non-copyable type for later
+policy composition. Earlier safe constructors already prove the exact
+responder-policy, responder-link, shared-issuer, and reviewed-path identities;
+this infallible projection performs no additional validation.
+Success retains the signed response, good-and-fresh target status, responder
+policy and signature, target and responder issuer links, constructed two-link
+server path, path-length state, selected Mozilla-reviewed root, and the
+exact-observation responder/intermediate validity evidence in one non-copyable
+result. This establishes only the fixed RSA SHA-256 responder-to-reviewed-root
+path evidence already present in those exact inputs. It does not apply anchor
+or intermediate name constraints to the responder, check responder-certificate
+or intermediate revocation, generalize path construction or validation,
+interpret unsupported OCSP extensions, fetch or cache data, read a clock,
+perform TLS or HTTP, authorize OAuth transport, or grant network authority.
+Concrete HTTPS remains unavailable.
+
+Another bounded policy slice in the same package consumes that exact reified
+responder path and applies the selected Mozilla-reviewed terminal's supported
+out-of-band DNS constraints to the exact authenticated responder certificate.
+Both the responder and constraint bytes are derived through the retained proof;
+callers cannot substitute a certificate, SAN collection, or snapshot entry.
+Entries without constraints succeed without reading Subject Alternative Name.
+Constrained entries decode the supported permitted-DNS subset and the exact
+responder SAN under separate caller-owned ASN.1 limits, require every responder
+`dNSName` to comply, and retain only a count token. Stable failures expose no
+certificate, name, constraint, response, key, signature, or status payload.
+This is selected-anchor DNS policy for that fixed responder path only. It does
+not apply intermediate, excluded, or non-DNS constraints, check responder or
+intermediate revocation, generalize path construction or validation, perform
+TLS or HTTP, authorize OAuth transport, or grant network authority. Concrete
+HTTPS remains unavailable.
+
+A subsequent bounded policy slice consumes that complete responder-anchor
+proof and applies the exact retained intermediate's supported critical DNS
+constraints to the exact authenticated responder certificate. Both
+certificates are derived through the retained proof, so callers cannot
+substitute a responder, SAN collection, intermediate, or path. An absent
+NameConstraints extension succeeds without reading responder SAN. A present
+extension must be critical and decode under caller-owned limits as the
+supported permitted-and-excluded-DNS subset; every responder `dNSName` must
+comply, and success retains only count evidence. Stable failures expose no
+certificate, name, constraint, response, key, signature, or status payload.
+This remains fixed-path DNS policy only: it does not implement excluded anchor
+constraints, non-DNS constraints, responder or intermediate revocation,
+generalized path construction or validation, TLS, HTTP, OAuth transport, or
+network authority. Concrete HTTPS remains unavailable.
+
+A following bounded revocation-policy slice consumes that complete responder
+DNS proof and applies RFC 6960's trust-for-certificate-lifetime branch to the
+exact authenticated responder. The responder certificate is derived only
+through the retained proof; callers cannot substitute a certificate or
+extension value. The structurally unique `id-pkix-ocsp-nocheck` extension must
+be present and its value must be exact DER `NULL`. A critical instance can
+reach this semantic gate only when the prerequisite certificate-wide policy
+explicitly recognized its OID; RFC 6960 recommends, but does not require, a
+non-critical extension. Success retains the complete reviewed responder proof,
+including issuer authorization and responder validity at the exact OCSP
+observation time. Stable failures expose no certificate, extension, response,
+key, signature, status, hostname, or time payload. This implements only the
+no-check branch: responders without the extension still require separately
+authenticated revocation evidence, and intermediate revocation, generalized
+path validation, TLS, HTTP, OAuth transport, and network authority remain
+unavailable. Concrete HTTPS remains unavailable.
+
+A bounded `x509-authority-information-access` prerequisite now decodes one
+RFC 5280 Authority Information Access certificate extension under the caller's
+existing DER depth, element, length, and OID-arc limits. The extension must be
+non-critical and contain a non-empty, fixed-capacity ordered sequence of
+`AccessDescription` values. Each retained value contains its arbitrary
+canonical access-method OID and one non-empty URI `GeneralName`; unsupported
+location forms fail closed rather than becoming opaque fetch targets. The
+package exposes the standard `id-ad-ocsp` and `id-ad-caIssuers` identifiers as
+data and lets callers select any exact method without embedding provider
+behavior. Success borrows only the validated method and URI values, while
+stable failures retain no OID arcs, URI text, extension bytes, certificate, or
+provider payload. This is structural discovery data only: it does not validate
+RFC 3986 syntax, authorize URI schemes or hosts, select a responder, fetch or
+cache data, bind a locator to authenticated revocation evidence, read a clock,
+check revocation, perform TLS or HTTP, authorize OAuth transport, or grant
+network authority. Concrete HTTPS remains unavailable.
+
+An effect-free `x509-ocsp-aia-locator-policy` slice now consumes that decoded
+collection and validates every exact `id-ad-ocsp` locator before uniquely
+selecting one. The caller supplies the allowed lowercase URI schemes, each
+scheme's implicit port and exact explicit-port set, plus URI, DNS-host, and
+path/query length ceilings. The accepted profile is deliberately narrower than
+general RFC 3986: it requires an absolute hierarchical URI with a DNS-style
+host; rejects userinfo, IP literals, fragments, invalid DNS labels, malformed
+or disallowed ports, legacy numeric IPv4 resolver spellings, unsafe path/query
+characters, and incomplete percent
+escapes; and fails closed on multiple OCSP descriptions. Other AIA methods do
+not become OCSP candidates. Policy is checked before discovery data, success
+borrows the exact AIA description, and stable failures expose no URI, host,
+certificate, provider, or response payload. This proves syntax, caller policy,
+and unique selection only: it does not authorize DNS or a destination, verify
+hostname identity, resolve an address, build an HTTP request, follow redirects,
+fetch or cache OCSP data, authenticate a response, read a clock, decide
+revocation, validate a path, establish trust, perform TLS or HTTP, authorize
+OAuth transport, open a socket, or access a credential. Concrete HTTPS remains
+unavailable.
+
+An allocation-free `tls13-record` prerequisite now owns only the outer RFC
+8446 record framing needed by a future repository-owned TLS client. It decodes
+and encodes strict five-byte TLS record headers plus borrowed fragments,
+retains but does not interpret the deprecated plaintext legacy record version,
+and provides separate plaintext and ciphertext entry points. Plaintext callers
+supply an explicit non-empty content-type allowlist and a fragment ceiling no
+larger than `2^14`; ciphertext requires the TLS 1.3 legacy version `0x0303`, is
+fixed to outer `application_data`, rejects an empty fragment, and is bounded by
+`2^14 + 256`. Control-plane plaintext records cannot be empty, while
+zero-length application data remains a distinct standards-permitted case for
+later sequencing policy. Exact decoders reject trailing bytes and prefix
+decoders return the unconsumed stream tail. Encoders emit `0x0303` and validate
+the complete record and output capacity before mutating caller-owned storage.
+Stable failures retain no record contents.
+
+This slice does not parse handshake messages or `TLSInnerPlaintext`, implement
+record sequencing, negotiate versions or cipher suites, derive keys, encrypt,
+decrypt, authenticate, read entropy or a clock, validate certificates, select
+trust roots, check revocation, perform I/O, open a socket, authorize HTTP or
+OAuth transport, or replace `tls-platform`. Concrete HTTPS remains
+unavailable.
+
+An allocation-free `tls13-inner-plaintext` prerequisite now specifies the
+authenticated cleartext syntax inside a protected TLS 1.3 record. Its decoder
+first bounds the complete caller-supplied cleartext, scans backward only within
+that slice for the final nonzero content-type octet, and returns borrowed
+content plus the zero-padding length. Its encoder validates the entire
+`content || type || zero padding` length and caller-owned output capacity before
+writing. A caller-selected ceiling from 1 through `2^14 + 1` carries negotiated
+record-size policy, and a non-empty, duplicate-free allowlist keeps protected
+content authorization data-driven. Only `handshake`, `alert`, and
+`application_data` may be allowed: protected ChangeCipherSpec is forbidden.
+Empty application data remains representable while empty handshake and alert
+content fail closed. Stable failures retain no cleartext bytes, content type
+value, or lengths.
+
+This slice may receive only cleartext already authenticated by a future AEAD
+boundary. It does not encrypt, decrypt, authenticate, select padding, manage
+nonces or record sequence numbers, process handshake or alert messages,
+negotiate versions or cipher suites, derive keys, read entropy or a clock,
+validate certificates, select trust roots, check revocation, perform I/O, open
+a socket, authorize HTTP or OAuth transport, or replace `tls-platform`.
+Concrete HTTPS remains unavailable.
+
+An allocation-free `tls13-record-nonce` prerequisite now specifies record
+sequence consumption and nonce derivation for one TLS 1.3 traffic key in one
+direction. A caller-selected policy fixes the exact static-IV length from 8
+through 255 bytes and a per-key record ceiling from 1 through `u64::MAX`.
+Fresh state starts at sequence zero and has no reset operation. Each successful
+reservation left-pads the current 64-bit network-order sequence to the selected
+IV length, XORs it with the caller-borrowed static IV into caller-owned output,
+and consumes that sequence before returning. Static-IV and output lengths are
+validated before either output or sequence state changes; exhaustion also
+leaves both untouched. The largest policy ceiling conservatively stops after
+sequence `u64::MAX - 1`, before an increment could wrap. Callers must own
+separate read and write state, create fresh state after each key change, and
+select the lower cipher-suite-specific cryptographic usage limit.
+
+The package's 255-byte IV ceiling is an explicit work bound, not permission for
+an AEAD to use an unsupported nonce length. It stores no static IV, key, nonce,
+plaintext, or ciphertext bytes, and stable failures retain no caller lengths or
+bytes. It does not select or invoke an AEAD, encrypt, decrypt, authenticate,
+derive traffic keys or IVs, negotiate a cipher suite, perform key updates,
+process handshake or alert messages, validate certificates, select trust
+roots, check revocation, perform I/O, open a socket, authorize HTTP or OAuth
+transport, or replace `tls-platform`. Concrete HTTPS remains unavailable.
+
+An allocation-free `tls13-cipher-suite-policy` prerequisite now binds the
+three repository-targeted RFC 8446 TLS 1.3 cipher-suite wire identifiers to
+their exact AEAD algorithm, HKDF hash, key length, IV length, authentication-tag
+length, and conservative maximum records per traffic key. The standard
+metadata is immutable. A caller supplies a non-empty, duplicate-free allowlist
+and an explicit nonzero record ceiling for every allowed suite; each ceiling
+must be no greater than the suite maximum. Selection accepts only an exact
+known wire identifier already authorized by that policy and returns one
+validated value carrying all parameters together, so later key derivation,
+nonce state, and AEAD routing cannot independently reinterpret the negotiated
+suite. AES-GCM policies conservatively stop at `2^24` records, below RFC 8446
+section 5.5's `2^24.5` full-size-record bound. ChaCha20-Poly1305 policies are
+bounded by the record sequence because RFC 8446 states that it wraps before the
+algorithm's safety limit; the nonce prerequisite's conservative sequence
+semantics still stop before increment wrap.
+
+The registry is policy data only. It neither proves that a repository-owned
+AEAD or hash implementation is suitable for production nor selects a suite on
+behalf of a handshake. It stores no keys, IVs, nonces, plaintext, ciphertext,
+or provider data; invokes no cryptography; and performs no negotiation, key
+derivation, record protection, key update, certificate processing, trust,
+revocation, I/O, HTTP, OAuth transport, or network effect. Unsupported RFC 8446
+CCM suites fail closed until separately reviewed repository-owned primitives
+and limits are added. Concrete HTTPS remains unavailable.
+
+An allocation-free `tls13-hkdf-label` prerequisite now owns only the exact
+RFC 8446 section 7.1 `HkdfLabel` information framing consumed by a future
+repository-owned HKDF boundary. A validated value binds one public 16-bit
+requested output length, a caller label from 1 through 249 bytes, and a context
+from 0 through 255 bytes. Encoding always prepends the six-byte `"tls13 "`
+namespace, emits the resulting 7-through-255-byte label and one-byte context
+lengths, and writes into caller-owned storage only after the complete encoded
+length and capacity have been checked. The maximum encoded value is 514 bytes.
+Stable failures expose only categories, never caller bytes or lengths.
+
+This framing slice receives no secret, performs no HKDF or hashing, selects no
+cipher-suite hash, derives or stores no key or IV, and does not audit the
+generic repository HKDF implementation for production TLS secret handling.
+Later traffic-key composition must combine a selected cipher suite, reviewed
+HKDF execution, the labels `"key"` and `"iv"`, and empty context without
+letting detached caller parameters reinterpret the selected suite. Handshake
+key scheduling, transcript hashing, record protection, certificate validation,
+trust, revocation, I/O, HTTP, OAuth transport, and concrete HTTPS remain
+unavailable.
+
+A fixed-memory `sha384` prerequisite now supplies the missing repository-owned
+FIPS 180-4 digest selected by `TLS_AES_256_GCM_SHA384`. Its one-shot and
+streaming entry points share the SHA-384 initial state, 1024-bit block
+compression, 128-bit length encoding, and 384-bit truncation rules. Streaming
+updates reject a message whose encoded bit length would exceed the standard's
+128-bit field before mutating retained state. Digest snapshots are
+non-destructive, allocate no heap memory, and scrub their temporary state and
+padding; the live hasher also scrubs its retained chaining state and partial
+block on drop. Stable failures contain no input bytes or lengths.
+
+This digest primitive does not implement HMAC, HKDF, `HKDF-Expand-Label`, a
+TLS key schedule, transcript sequencing, cipher-suite negotiation, AEAD, record
+protection, handshake processing, certificate validation, trust, revocation,
+I/O, HTTP, OAuth transport, or any network effect. In particular, its presence
+does not make the existing generic repository HKDF suitable for production TLS
+secret handling. Reviewed fixed-output HMAC-SHA-256/HMAC-SHA-384 and HKDF
+execution remain prerequisites before the label framing can derive traffic
+keys or IVs. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,

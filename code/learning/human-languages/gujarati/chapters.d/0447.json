@@ -1,0 +1,19 @@
+{
+  "chapter": 447,
+  "title": "A Morning Full of Joy",
+  "label": "ch:gu-a-morning-full-of-joy",
+  "canDo": "I can say how good news makes me feel.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C447-racvu-delight",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can say how good news makes me feel.",
+    "assesses": [
+      "GU-LEX-C447-HARAKH447-03",
+      "GU-LEX-C447-HARAKH447-04",
+      "GU-LEX-C447-HARAKH447-05"
+    ]
+  }
+}

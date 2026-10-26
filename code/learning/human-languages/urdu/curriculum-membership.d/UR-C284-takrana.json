@@ -1,0 +1,11 @@
+{
+  "id": "UR-C284-takrana",
+  "pathSegment": "UR-PATH-284-TAKKAR284",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-284-TAKKAR284",
+      "order": 1
+    }
+  ]
+}

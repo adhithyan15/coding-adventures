@@ -1809,6 +1809,62 @@ fn emit_method(
                 );
                 store_var(il, &regs, dest)?;
             }
+            // ── LANG83 PR6c: IEEE-754 binary64, never a trap ─────────────────
+            //
+            // ECMA-335 §III.3 `add`/`sub`/`mul`/`div`/`neg` on `float64`
+            // follow IEEE-754 and never throw (`1.0/0.0` is `+inf`, `0.0/0.0`
+            // is `NaN`; `div` throws only for INTEGER zero). `neg` flips the
+            // sign, so `-0.0` survives. The sign bit is read from the raw bits:
+            //
+            //   f64_add d <- a, b   ldloc a; ldloc b; add; stloc d
+            //   f64_sub / f64_mul / f64_div   … sub / mul / div …
+            //   f64_neg d <- a      ldloc a; neg; stloc d
+            //   f64_signbit d <- a  ldloc a;
+            //                       call int64 BitConverter::DoubleToInt64Bits(float64);
+            //                       ldc.i4.s 63; shr.un; stloc d   (0 or 1)
+            //
+            // Sources must live in `float64` homes and the dest in a
+            // `float64` (arithmetic) or `int64` (`f64_signbit`) home: anything
+            // else is a compile error here, never IL the verifier rejects.
+            "f64_add" | "f64_sub" | "f64_mul" | "f64_div" | "f64_neg" | "f64_signbit" => {
+                let op = instr.op.as_str();
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: format!("{op} must have a dest"),
+                })?;
+                let unary = matches!(op, "f64_neg" | "f64_signbit");
+                let mut srcs = vec![var_src(f, instr, 0, op)?];
+                if !unary {
+                    srcs.push(var_src(f, instr, 1, op)?);
+                }
+                let want_dest = if op == "f64_signbit" { "int64" } else { "float64" };
+                let bad = srcs.iter().find(|s| regs.home(s).map(|h| h.ty != "float64").unwrap_or(true));
+                if bad.is_some() || regs.home(dest)?.ty != want_dest {
+                    return Err(IIRClrError::InvalidOperand {
+                        function: f.name.clone(),
+                        detail: format!("{op} needs float64 sources and a {want_dest} dest"),
+                    });
+                }
+                for src in &srcs {
+                    load_var(il, &regs, src)?;
+                }
+                match op {
+                    "f64_add" => { let _ = writeln!(il, "    add"); }
+                    "f64_sub" => { let _ = writeln!(il, "    sub"); }
+                    "f64_mul" => { let _ = writeln!(il, "    mul"); }
+                    "f64_div" => { let _ = writeln!(il, "    div"); }
+                    "f64_neg" => { let _ = writeln!(il, "    neg"); }
+                    _ => {
+                        let _ = writeln!(
+                            il,
+                            "    call int64 [System.Runtime]System.BitConverter::DoubleToInt64Bits(float64)"
+                        );
+                        let _ = writeln!(il, "    ldc.i4.s 63");
+                        let _ = writeln!(il, "    shr.un");
+                    }
+                }
+                store_var(il, &regs, dest)?;
+            }
             // ── BA-pow: two-argument pow(base, exp) via System.Math::Pow ─────
             //
             // `System.Math::Pow(float64,float64)float64` — the CLR JIT lowers

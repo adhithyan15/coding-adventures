@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C506-tatno",
+    "language": "gujarati",
+    "chapter": 506,
+    "sequence": 28260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff975d2d1c92aa89"
+  },
+  "findings": []
+}

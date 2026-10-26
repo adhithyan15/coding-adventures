@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 537,
+  "sourceHash": "fnv1a64:c08eec9802324668",
+  "lessonIds": [
+    "UR-C537-mutabadil",
+    "UR-C537-yaksan",
+    "UR-C537-evaz",
+    "UR-C537-kasauti",
+    "UR-C537-muntakhab-karna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch537.txt",
+  "json": "urdu/narration/ch537.json",
+  "textHash": "fnv1a64:bce7f3f5d5727be0",
+  "jsonHash": "fnv1a64:805257cc8eb8c8db",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C418-taki",
+  "pathSegment": "GU-PATH-418-SOCIETY418",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-418-SOCIETY418",
+      "order": 3
+    }
+  ]
+}

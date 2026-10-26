@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C454-salvalvu",
+    "language": "gujarati",
+    "chapter": 454,
+    "sequence": 25390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75a96b4c5452aa77"
+  },
+  "findings": []
+}

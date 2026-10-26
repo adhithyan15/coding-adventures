@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:8e7d1fc3278bbad1",
+  "lessonIds": [
+    "GU-C477-odkar",
+    "GU-C477-aphro",
+    "GU-C477-ubko",
+    "GU-C477-okvu",
+    "GU-C477-jiravvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch477.txt",
+  "json": "gujarati/narration/ch477.json",
+  "textHash": "fnv1a64:0846e067cee9c684",
+  "jsonHash": "fnv1a64:fc2e6991ceb97d03",
+  "findings": []
+}

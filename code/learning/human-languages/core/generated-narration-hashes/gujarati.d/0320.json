@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:e1c16a685b123616",
+  "lessonIds": [
+    "GU-C320-yuddh",
+    "GU-C320-sena",
+    "GU-C320-sainik",
+    "GU-C320-dusman",
+    "GU-C320-akraman"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch320.txt",
+  "json": "gujarati/narration/ch320.json",
+  "textHash": "fnv1a64:b51c54ccf47ebb7a",
+  "jsonHash": "fnv1a64:54a429b2b5eadee8",
+  "findings": []
+}

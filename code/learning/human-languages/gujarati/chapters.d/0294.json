@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "A Fall in the Rain",
+  "label": "ch:gu-a-fall-in-the-rain",
+  "canDo": "I can say how someone slipped and fell and when they came round.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C294-bhan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can say how someone slipped and fell and when they came round.",
+    "assesses": [
+      "GU-LEX-C294-LAPAS294-03",
+      "GU-LEX-C294-LAPAS294-04",
+      "GU-LEX-C294-LAPAS294-05"
+    ]
+  }
+}

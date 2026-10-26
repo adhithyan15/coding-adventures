@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C416-bhagol",
+    "language": "gujarati",
+    "chapter": 416,
+    "sequence": 23200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a918d8a2a255704"
+  },
+  "findings": []
+}

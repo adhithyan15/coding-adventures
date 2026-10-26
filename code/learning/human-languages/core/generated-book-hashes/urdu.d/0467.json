@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:75d1bb9f5d15a890",
+  "lessonIds": [
+    "UR-C467-talu",
+    "UR-C467-masurha",
+    "UR-C467-chatna",
+    "UR-C467-chusna",
+    "UR-C467-thukna"
+  ],
+  "tex": "urdu/book/chapters/ch467-taste-and-the-mouth.tex"
+}

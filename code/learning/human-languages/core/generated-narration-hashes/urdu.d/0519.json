@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:c7953f60ecb1829a",
+  "lessonIds": [
+    "UR-C519-dhol",
+    "UR-C519-saz",
+    "UR-C519-qavvali",
+    "UR-C519-mahfil",
+    "UR-C519-nachana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch519.txt",
+  "json": "urdu/narration/ch519.json",
+  "textHash": "fnv1a64:daede9e83128b775",
+  "jsonHash": "fnv1a64:d50032f52ef391ef",
+  "findings": []
+}

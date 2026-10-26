@@ -1,0 +1,11 @@
+{
+  "id": "GU-C535-sanket",
+  "pathSegment": "GU-PATH-535-SHUKAN535",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-535-SHUKAN535",
+      "order": 2
+    }
+  ]
+}

@@ -4,7 +4,7 @@
 
 **Scope:** functional and gate-level Rust simulators for every CPU target in the
 07-series, followed by a complete cross-language port wave
-**Last reprioritized:** 2026-09-19
+**Last reprioritized:** 2026-10-24
 
 ## Definition of the matrix
 
@@ -90,13 +90,45 @@ according to the current prioritization run.
 | RCPU-045 / RCPU-046 | 2010 | RISC-V RV64I + M | Complete: `riscv-rv64i-simulator` | Complete: `riscv-rv64i-gatelevel` |
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Complete: `aarch64-simulator` | Complete: `aarch64-gatelevel` |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Complete: `apple-m1-simulator` | Complete: `apple-m1-gatelevel` |
-| RCPU-051 / RCPU-052 | 1965 / 1970 | DEC PDP-8 ISA / PDP-8/E implementation | Complete locally: `pdp8-simulator` | Next: `pdp8-gatelevel` |
+| RCPU-051 / RCPU-052 | 1965 / 1970 | DEC PDP-8 ISA / PDP-8/E implementation | Complete: `pdp8-simulator` | Complete in this change: `pdp8-gatelevel` |
 
-Current selection: **RCPU-051 / RCPU-052**, the first source-backed historical
-expansion pair after the original 07a–07z matrix. The functional PDP-8/E base
-processor is complete locally; its gate-level partner follows against that
-behavioral oracle. PORT-001 remains a separate unpublished branch and must not
-be assumed present on `main`.
+Current selection: **RCPU-052**, the gate-level PDP-8/E partner for the merged
+functional simulator. After RCPU-052 merges, the next selection is **RCPU-053
+EDSAC functional**, the oldest ready, source-backed gap in the expansion queue.
+PORT-001 remains a separate unpublished branch and must not be assumed present
+on `main`.
+
+## Source-backed expansion queue
+
+This queue records CPU families discovered beyond the original 07a–07z matrix.
+It is reprioritized after each merge. `Ready` means enough public architectural
+documentation exists to specify a bounded functional model and an educational
+gate-level partner; it does not claim transistor-accurate knowledge of a
+particular die. A functional cell must merge before its paired gate cell.
+
+| IDs (functional / gate) | Year | Target | Readiness | Priority disposition |
+|---|---:|---|---|---|
+| RCPU-053 / RCPU-054 | 1949 | EDSAC | Ready | Next after PDP-8; earliest documented gap |
+| RCPU-055 / RCPU-056 | 1951 | IAS machine | Ready | Follows EDSAC chronologically |
+| RCPU-057 / RCPU-058 | 1964 | IBM System/360 | Ready | Public Principles of Operation; bound the first cell to the base integer architecture |
+| RCPU-059 / RCPU-060 | 1974 | Motorola 6800 | Ready | Public programming manuals; precedes the existing 68000 pair |
+| RCPU-061 / RCPU-062 | 1976 | Intel 8085 | Ready | Public Intel manuals; preserve its interrupt and serial-I/O distinctions from 8080 |
+| RCPU-063 / RCPU-064 | 1977 | DEC VAX-11/780 | Ready | Public architecture manuals; slice the broad ISA explicitly before implementation |
+| RCPU-065 / RCPU-066 | 1978 | Motorola 6809 | Ready | Public programming manuals; separate from the 6800 cell |
+| RCPU-067 / RCPU-068 | 1986 | HP PA-RISC 1.0 | Research | Confirm a complete public primary-source boundary before selection |
+| RCPU-069 / RCPU-070 | 2000 | OpenRISC 1000 | Ready | Open ISA and implementation sources |
+| RCPU-071 / RCPU-072 | 2001 | Intel Itanium | Research | Specify a bounded architectural subset before selection |
+| RCPU-073 / RCPU-074 | 2005 | OpenSPARC T1 | Ready | Open RTL permits a source-backed educational gate model |
+| RCPU-075 / RCPU-076 | 2009 | ARM Cortex-M0 | Ready | Public ARMv6-M architecture; distinct microcontroller lifecycle |
+| RCPU-077 / RCPU-078 | 2019 | Microwatt / PowerISA | Ready | Open core and public ISA sources |
+| RCPU-079 / RCPU-080 | 2020 | LoongArch base integer ISA | Research | Confirm stable public specification and bounded initial profile |
+
+Apple M5/M6 are intentionally not queued as distinct microarchitectures: the
+public AArch64 ISA can be simulated by the existing AArch64 family, but there
+is not yet a defensible public gate-level description of those proprietary
+dies. SoC fabrics, peripherals, timing, and later SPICE/transistor descent are
+tracked as a subsequent systems layer rather than being mislabeled as CPU ISA
+cells.
 
 RCPU-047 is complete locally. The new `aarch64-simulator` owns exact 64 KiB
 big-endian state, 32x64-bit GPR storage with XZR enforced, separate 64-bit SP

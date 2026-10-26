@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:e7974f2ee9002aa7",
+  "lessonIds": [
+    "UR-C532-qismat",
+    "UR-C532-taqdir",
+    "UR-C532-latri",
+    "UR-C532-qura",
+    "UR-C532-tas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch532.txt",
+  "json": "urdu/narration/ch532.json",
+  "textHash": "fnv1a64:4a26ccfc6c304428",
+  "jsonHash": "fnv1a64:91a96395dc8496be",
+  "findings": []
+}

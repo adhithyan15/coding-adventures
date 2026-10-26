@@ -1,0 +1,11 @@
+{
+  "id": "GU-C354-manjuri",
+  "pathSegment": "GU-PATH-354-ADHIKARI354",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-354-ADHIKARI354",
+      "order": 2
+    }
+  ]
+}

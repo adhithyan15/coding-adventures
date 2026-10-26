@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C375-khub",
+    "language": "urdu",
+    "chapter": 375,
+    "sequence": 22270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:543dc4a2b032bcfc"
+  },
+  "findings": []
+}

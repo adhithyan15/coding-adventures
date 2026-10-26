@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:11df55050e6ab3c1",
+  "lessonIds": [
+    "UR-C284-raftar",
+    "UR-C284-takrana",
+    "UR-C284-pahiya",
+    "UR-C284-ulatna",
+    "UR-C284-savari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch284.txt",
+  "json": "urdu/narration/ch284.json",
+  "textHash": "fnv1a64:d8884e495b270c5b",
+  "jsonHash": "fnv1a64:b424af47370b828c",
+  "findings": []
+}

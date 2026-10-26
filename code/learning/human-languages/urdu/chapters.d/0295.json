@@ -1,0 +1,19 @@
+{
+  "chapter": 295,
+  "title": "Trapped",
+  "label": "ch:ur-trapped",
+  "canDo": "I can say who was trapped and how they called for help.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C295-be-hal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can say who was trapped and how they called for help.",
+    "assesses": [
+      "UR-LEX-C295-PHANSA295-03",
+      "UR-LEX-C295-PHANSA295-04",
+      "UR-LEX-C295-PHANSA295-05"
+    ]
+  }
+}

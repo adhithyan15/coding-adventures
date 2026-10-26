@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:338255503d70703d",
+  "lessonIds": [
+    "GU-C277-mat",
+    "GU-C277-mane-lage-che",
+    "GU-C277-karan",
+    "GU-C277-karan-ke",
+    "GU-R277-opinion-and-reason"
+  ],
+  "tex": "gujarati/book/chapters/ch277-opinions-and-reasons.tex"
+}

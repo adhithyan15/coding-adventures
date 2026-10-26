@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C529-tabakko",
+    "language": "gujarati",
+    "chapter": 529,
+    "sequence": 29430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5dd003c474d2be53"
+  },
+  "findings": []
+}

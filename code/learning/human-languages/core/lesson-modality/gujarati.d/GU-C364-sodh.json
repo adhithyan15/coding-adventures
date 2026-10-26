@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C364-sodh",
+    "language": "gujarati",
+    "chapter": 364,
+    "sequence": 20280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05d2382c9d3a85a6"
+  },
+  "findings": []
+}

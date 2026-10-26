@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C512-pad",
+    "language": "gujarati",
+    "chapter": 512,
+    "sequence": 28560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c1f29a82e440f54"
+  },
+  "findings": []
+}

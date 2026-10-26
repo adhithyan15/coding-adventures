@@ -1,0 +1,11 @@
+{
+  "id": "PA-C203-baare-review",
+  "pathSegment": "PA-PATH-203-A2-BAARE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-203-A2-BAARE",
+      "order": 2
+    }
+  ]
+}

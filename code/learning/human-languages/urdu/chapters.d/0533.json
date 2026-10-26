@@ -1,0 +1,21 @@
+{
+  "chapter": 533,
+  "title": "A Game of Chance",
+  "label": "ch:ur-a-game-of-chance",
+  "canDo": "I can talk about games of chance and what could go wrong.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-R533-review-526-533",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can talk about games of chance and what could go wrong.",
+    "assesses": [
+      "UR-LEX-C533-JUA533-01",
+      "UR-LEX-C533-JUA533-02",
+      "UR-LEX-C533-JUA533-03",
+      "UR-LEX-C533-JUA533-04",
+      "UR-LEX-C533-JUA533-05"
+    ]
+  }
+}

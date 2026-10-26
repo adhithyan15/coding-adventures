@@ -1,0 +1,11 @@
+{
+  "id": "UR-C493-dafnana",
+  "pathSegment": "UR-PATH-493-MOURNING493",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-493-MOURNING493",
+      "order": 2
+    }
+  ]
+}

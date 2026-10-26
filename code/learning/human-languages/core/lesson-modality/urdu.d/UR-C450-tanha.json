@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C450-tanha",
+    "language": "urdu",
+    "chapter": 450,
+    "sequence": 26510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd34be4b5a19c34f"
+  },
+  "findings": []
+}

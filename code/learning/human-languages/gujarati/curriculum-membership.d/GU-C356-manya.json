@@ -1,0 +1,11 @@
+{
+  "id": "GU-C356-manya",
+  "pathSegment": "GU-PATH-356-BANDHARAN356",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-356-BANDHARAN356",
+      "order": 3
+    }
+  ]
+}

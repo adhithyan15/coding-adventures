@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:2ea814904d00c822",
+  "lessonIds": [
+    "UR-C423-sauda",
+    "UR-C423-bhao",
+    "UR-C423-dam",
+    "UR-C423-riayat",
+    "UR-C423-sel"
+  ],
+  "tex": "urdu/book/chapters/ch423-rates-and-deals.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C499-ganth",
+  "pathSegment": "UR-PATH-499-CHARKHA499",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-499-CHARKHA499",
+      "order": 4
+    }
+  ]
+}

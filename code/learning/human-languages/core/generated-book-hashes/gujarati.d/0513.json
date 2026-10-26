@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:e26fff7c7927757d",
+  "lessonIds": [
+    "GU-C513-udyog",
+    "GU-C513-kampni",
+    "GU-C513-masin",
+    "GU-C513-pittal",
+    "GU-C513-bhangar"
+  ],
+  "tex": "gujarati/book/chapters/ch513-on-the-factory-floor.tex"
+}

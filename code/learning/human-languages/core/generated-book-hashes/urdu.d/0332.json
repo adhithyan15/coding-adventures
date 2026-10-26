@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:7a9d4485dee67154",
+  "lessonIds": [
+    "UR-C332-nuqsan",
+    "UR-C332-zariya",
+    "UR-C332-radd-e-amal",
+    "UR-C332-bigarna",
+    "UR-C332-phailna"
+  ],
+  "tex": "urdu/book/chapters/ch332-what-follows-from-it.tex"
+}

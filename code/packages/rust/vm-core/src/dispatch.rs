@@ -2124,6 +2124,76 @@ fn handle_f64_pow(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Valu
     Ok(Some(result))
 }
 
+// ---------------------------------------------------------------------------
+// LANG83 PR6c — non-trapping IEEE-754 f64 arithmetic and the sign bit
+// ---------------------------------------------------------------------------
+//
+// Rust's `f64` operators ARE IEEE-754 binary64 with round-to-nearest-even, so
+// each op is one Rust operator: `1.0 / 0.0` is `inf`, `0.0 / 0.0` is NaN,
+// `-1.0 * 0.0` is `-0.0`, and nothing panics or traps. Operands must be
+// `Value::Float` (the same strict check as `f64_sqrt`): an integer reaching an
+// `f64` op is malformed IR, not something to coerce silently.
+
+/// Read `srcs[i]` of an `f64` op as a float, or fail with a typed error.
+fn f64_operand(ctx: &DispatchCtx, instr: &IIRInstr, i: usize) -> Result<f64, VMError> {
+    let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+    resolve_src(frame, &instr.srcs, i)?
+        .as_f64()
+        .ok_or_else(|| VMError::Custom(format!("{}: srcs[{i}] is not a real", instr.op)))
+}
+
+/// `f64_add` / `f64_sub` / `f64_mul` / `f64_div` — `a <op> b` per IEEE-754.
+/// Both operands are read before `dest` is written, so `x = f64_add x, x` is
+/// safe.
+fn handle_f64_ieee_binop(
+    ctx: &mut DispatchCtx,
+    instr: &IIRInstr,
+    op: fn(f64, f64) -> f64,
+) -> Result<Option<Value>, VMError> {
+    let a = f64_operand(ctx, instr, 0)?;
+    let b = f64_operand(ctx, instr, 1)?;
+    let result = Value::Float(op(a, b));
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
+fn handle_f64_add(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_ieee_binop(ctx, instr, |a, b| a + b)
+}
+fn handle_f64_sub(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_ieee_binop(ctx, instr, |a, b| a - b)
+}
+fn handle_f64_mul(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_ieee_binop(ctx, instr, |a, b| a * b)
+}
+fn handle_f64_div(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_ieee_binop(ctx, instr, |a, b| a / b)
+}
+
+/// `f64_neg` — flips the sign bit only (Rust's unary `-` on `f64`), so
+/// `f64_neg 0.0` is `-0.0`, which `0.0 - x` would not give.
+fn handle_f64_neg(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let x = f64_operand(ctx, instr, 0)?;
+    let result = Value::Float(-x);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
+/// `f64_signbit` — the sign bit as `Value::Int` 0/1: `1` for `-0.0`, `-inf`
+/// and every negative value, `0` for `0.0`, `+inf` and every positive value.
+fn handle_f64_signbit(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let x = f64_operand(ctx, instr, 0)?;
+    let result = Value::Int(i64::from(x.is_sign_negative()));
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
 fn handle_f64_sin(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     handle_f64_transcendental(ctx, instr, "f64_sin", f64::sin)
 }
@@ -2243,6 +2313,13 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "f64_atan"          => Some(handle_f64_atan),
         "f64_tan"           => Some(handle_f64_tan),
         "f64_pow"           => Some(handle_f64_pow),
+        // LANG83 PR6c.
+        "f64_add"           => Some(handle_f64_add),
+        "f64_sub"           => Some(handle_f64_sub),
+        "f64_mul"           => Some(handle_f64_mul),
+        "f64_div"           => Some(handle_f64_div),
+        "f64_neg"           => Some(handle_f64_neg),
+        "f64_signbit"       => Some(handle_f64_signbit),
         // `call` is handled specially (needs jit_handlers) — see dispatch loop.
         _              => None,
     }

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C326-lanat",
+  "pathSegment": "UR-PATH-326-LANAT326",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-326-LANAT326",
+      "order": 0
+    }
+  ]
+}

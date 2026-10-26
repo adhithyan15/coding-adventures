@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C444-taish",
+    "language": "urdu",
+    "chapter": 444,
+    "sequence": 26240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e3523ddb94fdfc7"
+  },
+  "findings": []
+}

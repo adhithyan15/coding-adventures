@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:8d26ac58f0774f3d",
+  "lessonIds": [
+    "UR-C288-chiragh",
+    "UR-C288-shola",
+    "UR-C288-dahakna",
+    "UR-C288-raushni",
+    "UR-C288-tapish"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch288.txt",
+  "json": "urdu/narration/ch288.json",
+  "textHash": "fnv1a64:3a2730f3756476ea",
+  "jsonHash": "fnv1a64:119f1161bb32091f",
+  "findings": []
+}

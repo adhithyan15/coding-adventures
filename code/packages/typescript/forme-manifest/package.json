@@ -13,6 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "@coding-adventures/forme-capability": "file:../forme-capability",
+    "@coding-adventures/forme-types": "file:../forme-types",
     "@coding-adventures/blake2b": "file:../blake2b",
     "@coding-adventures/ed25519": "file:../ed25519"
   },

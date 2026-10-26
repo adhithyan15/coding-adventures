@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 530,
+  "title": "Deadlines",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3a37a2c0dabcb6e7",
+  "lessons": [
+    {
+      "id": "GU-C530-avdhi",
+      "sequence": 29480,
+      "title": "અવધિ (avdhi) — a time limit",
+      "headword": "અવધિ",
+      "romanization": "avdhi",
+      "gloss": "a time limit",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ff3d7faa535b4ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for half-finished, then the Gujarati for final."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: અવધિ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અવધિ — avdhi — \"a time limit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો તમે આ અવધિમાં અરજી નહીં કરો તો તમે આ તક ગુમાવશો. jo tame ā avdhimā̃ arjī nahī̃ karo to tame ā tak gumāvśo. If you don't apply within this time limit, you will lose this chance."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અવધિ (avdhi) is a tatsama, taken from Sanskrit avadhi, \"a term, a limit\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avdhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avdhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avdhi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avdhi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo tame ā avdhimā̃ arjī nahī̃ karo to tame ā tak gumāvśo. — If you don't apply within this time limit, you will lose this chance.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo tame ā avdhimā̃ arjī nahī̃ karo to tame ā tak gumāvśo.* — If you don't apply within this time limit, you will lose this chance.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for half-finished, then the Gujarati for final, then say avdhi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for half-finished, then the Gujarati for final, then say *avdhi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does અવધિ (avdhi) mean? (\"A time limit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C530-takid",
+      "sequence": 29490,
+      "title": "તાકીદ (tākīd) — urgency",
+      "headword": "તાકીદ",
+      "romanization": "tākīd",
+      "gloss": "urgency",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34c231601b46d79a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for final, then the Gujarati for a time limit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: તાકીદ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તાકીદ — tākīd — \"urgency\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો કામમાં તાકીદ હશે તો હું રવિવારે પણ આવીશ. jo kāmmā̃ tākīd haśe to hũ ravivāre paṇ āvīś. If the work is urgent, I'll come in on Sunday too."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તાકીદ (tākīd) is usually traced to Arabic taʾkīd, \"emphasis, insistence\", through Persian; in Gujarati it is the pressing need to get something done."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tākīd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tākīd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tākīd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tākīd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo kāmmā̃ tākīd haśe to hũ ravivāre paṇ āvīś. — If the work is urgent, I'll come in on Sunday too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo kāmmā̃ tākīd haśe to hũ ravivāre paṇ āvīś.* — If the work is urgent, I'll come in on Sunday too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for final, then the Gujarati for a time limit, then say tākīd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for final, then the Gujarati for a time limit, then say *tākīd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does તાકીદ (tākīd) mean? (\"Urgency\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C530-mahetal",
+      "sequence": 29500,
+      "title": "મહેતલ (mahetal) — extra time",
+      "headword": "મહેતલ",
+      "romanization": "mahetal",
+      "gloss": "extra time",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72faccff161fb6e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a time limit, then the Gujarati for urgency."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: મહેતલ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મહેતલ — mahetal — \"extra time\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો સાહેબ મને એક અઠવાડિયાની મહેતલ આપશે તો હું કામ પતાવી દઈશ. jo sāheb mane ek aṭhvāḍiyānī mahetal āpśe to hũ kām patāvī daīś. If the boss gives me a week's extra time, I'll get the work finished."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મહેતલ (mahetal) is usually traced to Arabic muhla, \"a respite, a delay granted\", through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahetal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahetal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahetal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahetal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo sāheb mane ek aṭhvāḍiyānī mahetal āpśe to hũ kām patāvī daīś. — If the boss gives me a week's extra time, I'll get the work finished.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo sāheb mane ek aṭhvāḍiyānī mahetal āpśe to hũ kām patāvī daīś.* — If the boss gives me a week's extra time, I'll get the work finished.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a time limit, then the Gujarati for urgency, then say mahetal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a time limit, then the Gujarati for urgency, then say *mahetal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does મહેતલ (mahetal) mean? (\"Extra time\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C530-thelvu",
+      "sequence": 29510,
+      "title": "ઠેલવું (ṭhelvũ) — to push back (a date)",
+      "headword": "ઠેલવું",
+      "romanization": "ṭhelvũ",
+      "gloss": "to push back (a date)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b15e391f100fae7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for urgency, then the Gujarati for extra time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઠેલવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઠેલવું — ṭhelvũ — \"to push back (a date)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો વરસાદ પડશે તો અમે પ્રવાસ આવતા અઠવાડિયા પર ઠેલીશું. jo varsād paḍśe to ame pravās āvtā aṭhvāḍiyā par ṭhelīśũ. If it rains, we will push the trip back to next week."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે પ્રવાસ ઠેલ્યો, teṇe pravās ṭhelyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઠેલવું (ṭhelvũ) comes from ṭhēḍḍ, a form CDIAL reconstructs, and CDIAL lists the Gujarati verb as \"to push\" (CDIAL 5512); a plan or a date is pushed back."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhelvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhelvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhelvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhelvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo varsād paḍśe to ame pravās āvtā aṭhvāḍiyā par ṭhelīśũ. — If it rains, we will push the trip back to next week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo varsād paḍśe to ame pravās āvtā aṭhvāḍiyā par ṭhelīśũ.* — If it rains, we will push the trip back to next week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for urgency, then the Gujarati for extra time, then say ṭhelvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for urgency, then the Gujarati for extra time, then say *ṭhelvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઠેલવું (ṭhelvũ) mean? (\"To push back (a date)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C530-akhre",
+      "sequence": 29520,
+      "title": "આખરે (ākhre) — at long last",
+      "headword": "આખરે",
+      "romanization": "ākhre",
+      "gloss": "at long last",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4efcfba5524af49f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for extra time, then the Gujarati for to push back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: આખરે",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આખરે — ākhre — \"at long last\"."
+            },
+            {
+              "kind": "speech",
+              "text": "જો આપણે મહેનત કરીશું તો આખરે આપણે જીતીશું. jo āpaṇe mahenat karīśũ to ākhre āpaṇe jītīśũ. If we work hard, in the end we will win."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આખરે (ākhre) is usually traced to Arabic ākhir, \"last\", through Persian, with the Gujarati ending -e of ગઈકાલે: at the last."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākhre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākhre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākhre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākhre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo āpaṇe mahenat karīśũ to ākhre āpaṇe jītīśũ. — If we work hard, in the end we will win.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo āpaṇe mahenat karīśũ to ākhre āpaṇe jītīśũ.* — If we work hard, in the end we will win.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for extra time, then the Gujarati for to push back, then say ākhre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for extra time, then the Gujarati for to push back, then say *ākhre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does આખરે (ākhre) mean? (\"At long last\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

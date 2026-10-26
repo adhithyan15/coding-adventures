@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:1cccd01aebf2754f",
+  "lessonIds": [
+    "GU-C337-panu",
+    "GU-C337-prakaran",
+    "GU-C337-patra",
+    "GU-C337-nayak",
+    "GU-C337-vacak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch337.txt",
+  "json": "gujarati/narration/ch337.json",
+  "textHash": "fnv1a64:9baa003d1c0bfd5f",
+  "jsonHash": "fnv1a64:bcd2a65f11236dff",
+  "findings": []
+}

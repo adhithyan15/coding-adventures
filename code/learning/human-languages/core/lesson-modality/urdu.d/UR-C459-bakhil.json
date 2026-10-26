@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C459-bakhil",
+    "language": "urdu",
+    "chapter": 459,
+    "sequence": 27000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:778ad55b3dc649b5"
+  },
+  "findings": []
+}

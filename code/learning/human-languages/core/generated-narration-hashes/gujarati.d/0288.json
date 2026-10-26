@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:e9952e313a351eef",
+  "lessonIds": [
+    "GU-C288-dharpakad",
+    "GU-C288-kabulvu",
+    "GU-C288-nakarvu",
+    "GU-C288-gunegar",
+    "GU-C288-jel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch288.txt",
+  "json": "gujarati/narration/ch288.json",
+  "textHash": "fnv1a64:9e0402c21953b7e2",
+  "jsonHash": "fnv1a64:cb2c94630c47ad1a",
+  "findings": []
+}

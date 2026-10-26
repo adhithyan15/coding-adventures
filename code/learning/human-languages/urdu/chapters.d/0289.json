@@ -1,0 +1,19 @@
+{
+  "chapter": 289,
+  "title": "Putting the Fire Out",
+  "label": "ch:ur-putting-the-fire-out",
+  "canDo": "I can say how a fire was put out.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C289-harbarana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 289: I can say how a fire was put out.",
+    "assesses": [
+      "UR-LEX-C289-BUJHI289-03",
+      "UR-LEX-C289-BUJHI289-04",
+      "UR-LEX-C289-BUJHI289-05"
+    ]
+  }
+}

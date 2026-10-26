@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:d756cf51f9584606",
+  "lessonIds": [
+    "GU-C411-rajai",
+    "GU-C411-osiku",
+    "GU-C411-macchardani",
+    "GU-C411-sankelvu",
+    "GU-C411-suvdavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch411-quilts-and-pillows.tex"
+}

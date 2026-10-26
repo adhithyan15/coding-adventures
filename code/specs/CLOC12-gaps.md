@@ -235,6 +235,43 @@ historical context with status `RESOLVED` and a link to the fix PR.
   - 10 inline tests pin every rule + edge case (function-expression doesn't get trailing `;`, if/while/for body slots preserved, dedup works, multi-stmt drops only last `;`, top-level `var` unchanged).
   - The pre-existing `tests/diff/whitespace-only/expected.stdout` was updated — its hand-written golden predicted `function add(a,b){return a+b;}` (closurec's old shape), but upstream Closure actually emits `function add(a,b){return a+b};`. Re-captured from upstream JAR to match the now-correct output.
 
+### #17883 — Rule A keeps a `with(...)` or label body `;` (exception to gap-030 rule A)
+
+- **The bug.** Rule A drops a `;` before `}` unless `body_position_next` says
+  it is a body slot. Only `if`/`while`/`for` armed that flag, so
+  `function f(){with(a);}` printed as `function f(){with(a)}` and `{l2:;}`
+  as `{l2:}`. Neither parses.
+- **Upstream rule (v20260915, probed on the jar).** `with` prints exactly
+  like `while`: `with(o);` keeps its `;`, `with(o){}` becomes `with(o);`,
+  and `with(o){a()}` becomes `with(o)a();`. A label keeps its `;` (`l:;`),
+  and a `case`/`default` clause drops it (`case 1:}`).
+- **Resolution (WHITESPACE_ONLY).** `is_with_body` keeps a `;` that
+  directly follows the `)` of a `with(...)` head (not after `.`/`?.`).
+  `with` is deliberately *not* armed like `while`. That flag can't tell a
+  `with` statement from a method named `with`, and the security review
+  showed `class C{with(){}}` would then print as the invalid
+  `class C{with();}`. A method's `)` is never followed by `;`. The cost is
+  that `with(o){}` keeps its braces, where upstream prints `with(o);`.
+  `is_label_body` keeps a `;` that follows a label's `:`. A label is a word followed by `:`
+  where the token before the word is a statement boundary (start, `;`,
+  `{`, `}`, `)`, `:`, `else`, `do`). That excludes `case x:` and
+  `case a.b:`.
+- **Related fix.** `opens_control_flow_head` arms `if`/`while`/`for`/`with`
+  only when a `(` follows (or `await (` for `for`), the keyword is not
+  after `.`/`?.`, and it is not a string token. Before, a keyword used as a
+  property name (`{if:1}`) left the flag armed for the next `(`, which
+  could be a function's parameter list:
+  `x={if:1};function g(){}` printed as the invalid `x={if:1};function g();`.
+- **Still open, filed from the review.** #18123: a *method* named
+  `if`/`while`/`for`/`with` still gets body-slot rules (`class C{if(){}}`
+  → `class C{if();}`). #18124: gap-032/gap-076 flatten a lone `let`/`const`
+  into a body slot. #18125: a newline after `y.if` loses its boundary.
+- **Tests.** Eight unit tests, and
+  `closurec/tests/regression_ws_empty_body_semi.rs`. It pins 25 shapes to
+  the jar's bytes, and checks with `node` that those shapes, plus 11
+  shapes left different on purpose (empty `with` blocks and methods named
+  `with`), all parse.
+
 ### CCR-084 (#15919) — a block-final `throw` keeps its `;` (exception to gap-030 rule A)
 
 - **Upstream rule.** At the audited commit `10ca677a`, `CodeGenerator` ends
@@ -266,6 +303,56 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **WHITESPACE_ONLY token path: open.** It is queued behind #17840 (newline
   ASI), since both rewrite the same statement boundaries.
 
+### #17907 — a non-directive is never printed as `"use strict"`
+
+- **The bug.** ECMA-262 §11.2.1 makes a body strict only when its directive
+  prologue holds the exact token `"use strict"` or `'use strict'`. The AST
+  keeps no record of which statements were directives: the bridge decodes
+  escapes and drops grouping parentheses, and passes fold `` `use strict` ``
+  to a string and split `"use strict",1` into two statements. The printer
+  then wrote each of `"use\x20strict";`, `` `use strict`; ``,
+  `("use strict");` and `"use strict",1;` back as `"use strict";`, which made
+  sloppy code strict.
+- **Upstream rule (v20260915, probed on the jar).** Upstream never prints an
+  input `"use strict"`. It drops the leading run of statements in a program
+  or function body whose string value is `use strict`, whatever the escapes
+  or parentheses. It keeps one that follows any other statement
+  (`"a";"use strict"` and `0;"use strict"` print unchanged). It adds one
+  top-level directive back only for `--emit_use_strict`, single-quoted.
+- **AST emitter (SIMPLE/ADVANCED): resolved.** `without_use_strict` drops
+  every statement with value `use strict` from a body's directive prologue
+  (its leading run of lone string statements), and `emit_program` and the
+  new `emit_function_body` print what is left. Function declarations, function
+  expressions, methods, accessors, constructors and block-bodied arrows all
+  print their bodies through it. A plain block and a class `static {}` block
+  are not prologues and keep their strings.
+- **Deliberate divergences, both where upstream miscompiles.**
+  - Upstream strips at parse time, before folding, so at SIMPLE it prints
+    `` `use strict`;x=1 `` as `"use strict";x=1;` and `"use strict",1;x=1`
+    as `"use strict";1;x=1;`. Both outputs are strict. closurec strips
+    after folding and prints `x=1;` and `1;x=1;`.
+  - Upstream strips only the leading run, so after `"a";` it keeps a
+    `"use strict"`. SIMPLE's flattening then turns `"a";{"use strict"}`,
+    `"a";if(1){"use strict"}` and `"a";1&&"use strict"` into a live
+    `"a";"use strict";…`. closurec drops a `"use strict"` anywhere in the
+    prologue, so even a genuine `"a";"use strict";f()` prints as `"a";f();`.
+    That is consistent with stripping the genuine leading ones.
+- **WHITESPACE_ONLY token path: the escape case is resolved.**
+  `emit_quoted_string` prints a `use strict` string whose source spelling had
+  an escape as `"use\x20strict"`, so it stays inert. gap-088 (empty
+  statement removal) keeps the one `;` in front of a `use strict` string:
+  in `;"use strict";…` that empty statement is what ends the prologue, and
+  dropping it made the string a live directive. The template,
+  parenthesised and sequence forms already printed as written. Stripping the
+  leading run in WHITESPACE_ONLY, which needs function-body boundaries in the
+  token stream, is left to CCR-085 (#15920).
+- **Tests.** Eleven emitter unit tests, and
+  `closurec/tests/regression_use_strict_prologue.rs`. The closurec test pins
+  WHITESPACE_ONLY and SIMPLE bytes for seven shapes, SIMPLE bytes for seven
+  more (in function bodies, and after `"a";`), asserts that no level opens
+  its output with `"use strict"`, and, when `node` is on `PATH`, checks
+  that every output prints what its source prints.
+
 ### gap-031 — empty `{}` body collapses to `;`
 
 - **Status:** **RESOLVED** in CLOC12.41 (PR pending). `minify_for_loop` flipped IGNORED → PASS.
@@ -291,15 +378,78 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Why it failed:** Upstream emits a `;` after the last `}` of a try/catch statement, mirroring its function-decl normalisation. closurec correctly dropped inner `;`s per gap-030 rule A but never emitted the trailing `;`.
 - **Resolution:** Extended the CLI token state machine. `brace_stack` was refactored from `Vec<bool>` to `Vec<BlockKind>` with three variants: `Function`, `TryChain`, `Other`. A new flag `next_block_is_try_chain` is armed by the `try`/`catch`/`finally` keywords; the next `{` consumes it and pushes `BlockKind::TryChain` onto the stack. When a `}` pops a `TryChain` kind, the emitter peeks the next non-trivia token: if it's `catch` or `finally`, the chain continues and no `;` is emitted; otherwise the chain has ended and a synthetic `;` is appended. 6 inline tests pin the behavior including nested try/catch, try/catch/finally chains, function-decl inside try-block (no interference between Function and TryChain), and ES2019 optional catch binding (`try{a;}catch{b;}`).
 
+### #18137 — WHITESPACE_ONLY drops the hashbang
+
+- **The bug.** `HASHBANG` is a token, not trivia, so the re-stitcher kept
+  it while dropping the newline after it. `#!/usr/bin/env node⏎f()` printed
+  as `#!/usr/bin/env nodef();`, and the program became part of the comment.
+- **Upstream (v20260915).** Drops the hashbang at every level:
+  `#!/usr/bin/env node⏎console.log(1)` → `console.log(1);`.
+- **Resolution.** `is_trivia` lists `HASHBANG`, so WHITESPACE_ONLY drops it
+  like a line comment. `check_hashbangs` first refuses the two lexer shapes
+  where dropping the token would delete code or accept an invalid program:
+  - a HASHBANG containing U+2028/U+2029. The `.tokens` rule
+    `^#![^\n\r]*` runs past those line terminators, so the token holds
+    real code. That is the open part of #17887.
+  - a HASHBANG that is not at offset 0. The `^` anchor matches at every
+    token start, but `#!` anywhere else is a SyntaxError (upstream reports
+    a parse error).
+  SIMPLE/ADVANCED still delete the code after a U+2028 hashbang until the
+  lexer is fixed (#17887).
+- **Tests.** Two unit tests, and `closurec/tests/regression_ws_hashbang.rs`
+  (node-backed, plus four refused inputs).
+
 ### gap-034 — class declaration trailing `;` after `}`
 
 - **Status:** **RESOLVED** in CLOC12.43 (PR pending). `minify_class` flipped IGNORED → PASS. **The byte-identity harness now reports 25/25 PASS across the expanded seed set.**
 - **Resolution:** Added `BlockKind::Class` variant. `class` keyword at statement boundary arms `saw_class_kw_at_boundary`; next `{` consumes it. On matching `}`, emit synthetic `;`. **Critical bug caught by pre-push security review**: the initial cut armed the flag whenever `class` appeared at a statement boundary, contaminating the next unrelated `{` when `class` was used as an object-literal property name (`var o={class:1};do{y}while(x);` would emit `do{y};while(x);` — a SyntaxError). Same defect family as gap-033's `try`-as-property bug. Fix: also require the next non-trivia token to look like a class-decl continuation (`{`, `extends`, or an identifier — NOT `:`/`,`/`;`/`}`/`)`/`]`/`.`/`=`/`(`).
 
+### #18124 — body flattens keep a lone lexical declaration braced
+
+- **The bug.** gap-032, gap-074/076/079, gap-080 and the `do`-body flatten
+  checked only for `function`/`class`/control-flow keywords, so
+  `if(a){let x=1;}` printed as `if(a)let x=1;`, which does not parse. A body
+  slot takes a Statement, and a lexical declaration is not one.
+- **Upstream (v20260915).** Keeps the block (`isBlockDeclOrDo` is true for
+  `LET`/`CONST`): `if(a){let x=1};`, `while(o){const x=1};`.
+- **Resolution.** `starts_lexical_declaration` checks the body's first
+  token: `const`, `let` + identifier/`[`/`{`, `using` + identifier, or
+  `await using`. Each pass refuses to flatten such a body.
+  `if(a){using(b);}` still flattens, because there `using` is a call.
+- **Not matched.** Upstream rejects `let` used as an identifier
+  (`if(a){let=1;}` is a parse error there); closurec's token path keeps
+  compiling it. That belongs to the refusal work (CCR-075).
+- **Tests.** Two unit tests, and
+  `closurec/tests/regression_ws_lexical_body.rs` (15 shapes pinned to the
+  jar, node parse check).
+
 ### gap-035 — `var{...}` / `let{...}` / `const{...}` destructuring requires space before `{`
 
 - **Status:** **RESOLVED** in CLOC12.43 (PR pending). `minify_destructuring` flipped IGNORED → PASS.
 - **Resolution:** Extended `needs_separator` with a 3-keyword whitelist: when prev is `var`/`let`/`const` AND next is `{`/`[`, force a separator. Keeps the change scoped; doesn't affect general PUNCTUATION-after-KEYWORD shapes.
+
+### #18123 — a keyword method name is not a statement head
+
+- **The bug.** The gap-076/079 header-body flatten and the emit loop's
+  control-flow-head arming fired on a *method* named `if`/`while`/`for`/
+  `with`. So `class C{if(){}}` printed as `class C{if();}` and
+  `x={while(a){c=a;}}` as `x={while(a)c=a}`, and neither parses. Upstream
+  prints both unchanged.
+- **Resolution.** `member_list_positions` makes one stack pass over `kept`
+  and marks each token whose innermost open bracket is a class body or
+  object literal; a keyword there is a member name. Class bodies are the
+  first `{` at the same depth after `class`. Object literals are a `{` after
+  an unambiguous expression-position token. After `:`, a `{` is an object
+  literal only when that `:` is a property colon or sits inside a paren or
+  bracket. Labels and `case x:{` stay blocks. Misclassifying a block as a
+  member list would disarm a real `if`, so every rule errs towards
+  "block".
+- **Tests.** Three unit tests, and
+  `closurec/tests/regression_ws_keyword_methods.rs` (26 shapes pinned to the
+  jar, node parse check). A `function` keyword at the class head's depth
+  cancels the wait for the class body, since a function expression in
+  `extends` opens its own `{` first; and only a real class head
+  (`class {`, `class extends`, `class Name {|extends`) arms it.
 
 ### gap-036 — switch statement trailing `;` after `}`
 

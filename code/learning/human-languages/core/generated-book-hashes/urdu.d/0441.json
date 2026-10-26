@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:1b701a52da8acc17",
+  "lessonIds": [
+    "UR-C441-masarrat",
+    "UR-C441-lutf",
+    "UR-C441-shadman",
+    "UR-C441-sarshar",
+    "UR-C441-umang"
+  ],
+  "tex": "urdu/book/chapters/ch441-joy-and-delight.tex"
+}

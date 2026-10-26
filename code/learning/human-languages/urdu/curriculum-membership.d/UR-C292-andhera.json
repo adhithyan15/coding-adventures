@@ -1,0 +1,11 @@
+{
+  "id": "UR-C292-andhera",
+  "pathSegment": "UR-PATH-292-TUFAN292",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-292-TUFAN292",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C330-tarjuma",
+  "pathSegment": "UR-PATH-330-SAFHA330",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-330-SAFHA330",
+      "order": 4
+    }
+  ]
+}

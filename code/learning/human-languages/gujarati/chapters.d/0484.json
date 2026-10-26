@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "Finding a Cure",
+  "label": "ch:gu-finding-a-cure",
+  "canDo": "I can say how a doctor treats an illness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C484-injeksan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can say how a doctor treats an illness.",
+    "assesses": [
+      "GU-LEX-C484-ILAJ484-03",
+      "GU-LEX-C484-ILAJ484-04",
+      "GU-LEX-C484-ILAJ484-05"
+    ]
+  }
+}

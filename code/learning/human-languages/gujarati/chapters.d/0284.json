@@ -1,0 +1,21 @@
+{
+  "chapter": 284,
+  "title": "It depends, and what would have been",
+  "label": "ch:gu-it-depends-and-what-would-have-been",
+  "canDo": "I can say what something depends on (… par ādhār rākhe che), say what would happen or would have happened (jo … hot, to … āvat), and write six connected lines about a trip.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-R284-depends-and-would",
+    "kind": "production",
+    "summary": "Complete GU-R284-depends-and-would: say what something depends on, and what would have been.",
+    "assesses": [
+      "GU-LEX-C284-ADHAR-01",
+      "GU-GRAMMAR-C284-PAR-ADHAR-01",
+      "GU-GRAMMAR-C284-DEPENDS-ANSWER-01",
+      "GU-GRAMMAR-C284-T-COUNTERFACTUAL-01",
+      "GU-GRAMMAR-C284-T-FORMS-01"
+    ]
+  }
+}

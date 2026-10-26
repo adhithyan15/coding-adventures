@@ -1,0 +1,11 @@
+{
+  "id": "GU-C400-hendal",
+  "pathSegment": "GU-PATH-400-SCOOTER400",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-400-SCOOTER400",
+      "order": 3
+    }
+  ]
+}

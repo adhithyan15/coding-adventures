@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:49bd6cf6121929e7",
+  "lessonIds": [
+    "GU-C286-guno",
+    "GU-C286-sipai",
+    "GU-C286-sanka",
+    "GU-C286-khub",
+    "GU-C286-chupavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch286-calling-the-police.tex"
+}

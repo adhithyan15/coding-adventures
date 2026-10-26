@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C505-atari",
+    "language": "urdu",
+    "chapter": 505,
+    "sequence": 29580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f065a03e1dff246c"
+  },
+  "findings": []
+}

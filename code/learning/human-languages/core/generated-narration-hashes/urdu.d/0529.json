@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:dbbc0a540d846124",
+  "lessonIds": [
+    "UR-C529-jhamela",
+    "UR-C529-makhmasa",
+    "UR-C529-kashmakash",
+    "UR-C529-pechida",
+    "UR-C529-uljhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch529.txt",
+  "json": "urdu/narration/ch529.json",
+  "textHash": "fnv1a64:4ba6e360444da134",
+  "jsonHash": "fnv1a64:540144592497ec1f",
+  "findings": []
+}

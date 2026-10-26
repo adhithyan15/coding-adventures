@@ -1,0 +1,19 @@
+{
+  "chapter": 509,
+  "title": "Bellows, Hammer and Rust",
+  "label": "ch:gu-bellows-hammer-and-rust",
+  "canDo": "I can say how iron is heated, beaten and how it rusts.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C509-katavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can say how iron is heated, beaten and how it rusts.",
+    "assesses": [
+      "GU-LEX-C509-DHAMAN509-03",
+      "GU-LEX-C509-DHAMAN509-04",
+      "GU-LEX-C509-DHAMAN509-05"
+    ]
+  }
+}

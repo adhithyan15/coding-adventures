@@ -1,0 +1,11 @@
+{
+  "id": "GU-C494-ucharvu",
+  "pathSegment": "GU-PATH-494-BALPAN494",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-494-BALPAN494",
+      "order": 1
+    }
+  ]
+}

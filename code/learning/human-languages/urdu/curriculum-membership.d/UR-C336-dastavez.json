@@ -1,0 +1,11 @@
+{
+  "id": "UR-C336-dastavez",
+  "pathSegment": "UR-PATH-336-SABIT336",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-336-SABIT336",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C357-shaffaf",
+    "language": "urdu",
+    "chapter": 357,
+    "sequence": 21370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72f2e4a3e5d9b62e"
+  },
+  "findings": []
+}

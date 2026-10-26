@@ -1,0 +1,11 @@
+{
+  "id": "GU-C337-vacak",
+  "pathSegment": "GU-PATH-337-PANU337",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-337-PANU337",
+      "order": 4
+    }
+  ]
+}

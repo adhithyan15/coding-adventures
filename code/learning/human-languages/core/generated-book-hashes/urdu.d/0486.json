@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:920fe0eb1653d52e",
+  "lessonIds": [
+    "UR-C486-umr",
+    "UR-C486-baligh",
+    "UR-C486-iklauta",
+    "UR-C486-guzarna-pass",
+    "UR-C486-shabab",
+    "UR-R486-review-480-486"
+  ],
+  "tex": "urdu/book/chapters/ch486-growing-up.tex"
+}

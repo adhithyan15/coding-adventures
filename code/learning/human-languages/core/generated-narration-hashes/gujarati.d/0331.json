@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:0e0ae3845a8830df",
+  "lessonIds": [
+    "GU-C331-upvas",
+    "GU-C331-vrat",
+    "GU-C331-prarthana",
+    "GU-C331-asirvad",
+    "GU-C331-cadhavvu",
+    "GU-R331-review-325-331"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch331.txt",
+  "json": "gujarati/narration/ch331.json",
+  "textHash": "fnv1a64:90d364d9f6ce8dd3",
+  "jsonHash": "fnv1a64:7ea18d51fa47739b",
+  "findings": []
+}

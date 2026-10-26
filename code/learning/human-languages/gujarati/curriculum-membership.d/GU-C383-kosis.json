@@ -1,0 +1,11 @@
+{
+  "id": "GU-C383-kosis",
+  "pathSegment": "GU-PATH-383-PRAYATNA383",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-383-PRAYATNA383",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:d729c72a59fb1e4d",
+  "lessonIds": [
+    "GU-C304-tanavu",
+    "GU-C304-dubadvu",
+    "GU-C304-nuksan",
+    "GU-C304-aphat",
+    "GU-C304-sankat"
+  ],
+  "tex": "gujarati/book/chapters/ch304-the-flood.tex"
+}

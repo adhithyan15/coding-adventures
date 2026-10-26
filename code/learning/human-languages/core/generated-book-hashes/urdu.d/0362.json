@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:e7817f2b27d9aaa6",
+  "lessonIds": [
+    "UR-C362-takhmina",
+    "UR-C362-yaqin",
+    "UR-C362-aksar",
+    "UR-C362-qiyas",
+    "UR-C362-bujhna-guess",
+    "UR-R362-review-355-362"
+  ],
+  "tex": "urdu/book/chapters/ch362-perhaps-probably.tex"
+}

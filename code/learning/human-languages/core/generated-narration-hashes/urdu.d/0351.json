@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:ad2ca988b9f26684",
+  "lessonIds": [
+    "UR-C351-mutalia",
+    "UR-C351-mutabiq",
+    "UR-C351-namuna",
+    "UR-C351-muvazana-karna",
+    "UR-C351-parakhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch351.txt",
+  "json": "urdu/narration/ch351.json",
+  "textHash": "fnv1a64:d47fdd053beba0f4",
+  "jsonHash": "fnv1a64:3b3308b211a2692a",
+  "findings": []
+}

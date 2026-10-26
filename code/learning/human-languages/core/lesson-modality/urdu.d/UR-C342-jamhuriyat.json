@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C342-jamhuriyat",
+    "language": "urdu",
+    "chapter": 342,
+    "sequence": 20580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aea433663066b97c"
+  },
+  "findings": []
+}

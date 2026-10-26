@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C473-kasakna",
+    "language": "urdu",
+    "chapter": 473,
+    "sequence": 27690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c5b9489a2f8ef3c"
+  },
+  "findings": []
+}

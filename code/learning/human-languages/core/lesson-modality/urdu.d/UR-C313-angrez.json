@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C313-angrez",
+    "language": "urdu",
+    "chapter": 313,
+    "sequence": 18890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57ed7149c67c6a3c"
+  },
+  "findings": []
+}

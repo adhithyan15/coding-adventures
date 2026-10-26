@@ -1,0 +1,11 @@
+{
+  "id": "GU-C368-sanyog",
+  "pathSegment": "GU-PATH-368-NASIB368",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-368-NASIB368",
+      "order": 2
+    }
+  ]
+}

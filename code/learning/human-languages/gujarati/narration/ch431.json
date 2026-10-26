@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 431,
+  "title": "Stock and Shortages",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0e4190bf0ddefb82",
+  "lessons": [
+    {
+      "id": "GU-C431-godam",
+      "sequence": 23940,
+      "title": "ગોદામ (godām) — a warehouse; a godown",
+      "headword": "ગોદામ",
+      "romanization": "godām",
+      "gloss": "a warehouse; a godown",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca143b77b2800575",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a regular buyer, then the Gujarati for to weigh out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ગોદામ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગોદામ — godām — \"a warehouse; a godown\"."
+            },
+            {
+              "kind": "speech",
+              "text": "વેપારીના ગોદામમાં ઘઉં ભરેલા છે. vepārīnā godāmmā̃ ghaũ bharelā che. The merchant's warehouse is full of wheat."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગોદામ (godām) is usually traced to Malay gudang, \"a storehouse\", which came round the coasts through Portuguese; English godown is the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "godām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *godām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "godām, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *godām*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vepārīnā godāmmā̃ ghaũ bharelā che. — The merchant's warehouse is full of wheat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vepārīnā godāmmā̃ ghaũ bharelā che.* — The merchant's warehouse is full of wheat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a regular buyer, then the Gujarati for to weigh out, then say godām again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a regular buyer, then the Gujarati for to weigh out, then say *godām* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ગોદામ (godām) mean? (\"A warehouse; a godown\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C431-puravtho",
+      "sequence": 23950,
+      "title": "પુરવઠો (puravṭho) — a supply (of goods, water or power)",
+      "headword": "પુરવઠો",
+      "romanization": "puravṭho",
+      "gloss": "a supply (of goods, water or power)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e29eb4aa4779a87a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to weigh out, then the Gujarati for a warehouse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પુરવઠો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પુરવઠો — puravṭho — \"a supply (of goods, water or power)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ગામમાં પાણીનો પુરવઠો ઓછો છે. gāmmā̃ pāṇīno puravṭho ocho che. The water supply in the village is low."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પુરવઠો (puravṭho) seems to belong with the verb CDIAL lists for Gujarati, pūrvũ, \"to fill\", and Marathi puraviṇẽ, \"to supply to the full\", under Sanskrit pūrayati, \"fills\" (CDIAL 8335); CDIAL gives no form for પુરવઠો itself, so the link is hedged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puravṭho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puravṭho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puravṭho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puravṭho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāmmā̃ pāṇīno puravṭho ocho che. — The water supply in the village is low.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāmmā̃ pāṇīno puravṭho ocho che.* — The water supply in the village is low.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to weigh out, then the Gujarati for a warehouse, then say puravṭho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to weigh out, then the Gujarati for a warehouse, then say *puravṭho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પુરવઠો (puravṭho) mean? (\"A supply (of goods, water or power)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C431-unap",
+      "sequence": 23960,
+      "title": "ઊણપ (ūṇap) — a shortfall; a lack",
+      "headword": "ઊણપ",
+      "romanization": "ūṇap",
+      "gloss": "a shortfall; a lack",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:474d7d250da13d69",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a warehouse, then the Gujarati for a supply."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઊણપ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઊણપ — ūṇap — \"a shortfall; a lack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ઉનાળામાં ગામમાં પાણીની ઊણપ રહે છે. unāḷāmā̃ gāmmā̃ pāṇīnī ūṇap rahe che. In summer the village runs short of water."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઊણપ (ūṇap) is built on ઊણું, \"wanting, short\", which CDIAL lists under Sanskrit ūna, \"deficient\" (CDIAL 2405): what is missing from the full amount."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūṇap",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūṇap*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūṇap, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūṇap*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unāḷāmā̃ gāmmā̃ pāṇīnī ūṇap rahe che. — In summer the village runs short of water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unāḷāmā̃ gāmmā̃ pāṇīnī ūṇap rahe che.* — In summer the village runs short of water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a warehouse, then the Gujarati for a supply, then say ūṇap again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a warehouse, then the Gujarati for a supply, then say *ūṇap* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઊણપ (ūṇap) mean? (\"A shortfall; a lack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C431-jaththabandh",
+      "sequence": 23970,
+      "title": "જથ્થાબંધ (jaththābandh) — wholesale; in bulk",
+      "headword": "જથ્થાબંધ",
+      "romanization": "jaththābandh",
+      "gloss": "wholesale; in bulk",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:624e499c09d635a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a supply, then the Gujarati for a shortfall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: જથ્થાબંધ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જથ્થાબંધ — jaththābandh — \"wholesale; in bulk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "વેપારી જથ્થાબંધ ભાવે માલ વેચે છે. vepārī jaththābandh bhāve māl vece che. The trader sells goods at wholesale prices."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જથ્થાબંધ (jaththābandh) is built from જથ્થો, \"a quantity, a bulk\", and -બંધ, \"bound, tied\", usually traced to Persian band: goods sold tied up in bulk."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaththābandh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaththābandh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaththābandh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaththābandh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vepārī jaththābandh bhāve māl vece che. — The trader sells goods at wholesale prices.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vepārī jaththābandh bhāve māl vece che.* — The trader sells goods at wholesale prices.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a supply, then the Gujarati for a shortfall, then say jaththābandh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a supply, then the Gujarati for a shortfall, then say *jaththābandh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does જથ્થાબંધ (jaththābandh) mean? (\"Wholesale; in bulk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C431-sangharvu",
+      "sequence": 23980,
+      "title": "સંઘરવું (sangharvũ) — to store up; to hoard",
+      "headword": "સંઘરવું",
+      "romanization": "sangharvũ",
+      "gloss": "to store up; to hoard",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ad6ce00dc979f15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for a shortfall, then the Gujarati for wholesale."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સંઘરવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંઘરવું — sangharvũ — \"to store up; to hoard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "વેપારીએ ગોદામમાં ખાંડ સંઘરી. vepārīe godāmmā̃ khā̃ḍ sanghrī. The trader stored up sugar in his warehouse."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with તેણે (he or she …): તેણે ઘઉં સંઘર્યા, teṇe ghaũ sangharyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંઘરવું (sangharvũ) is built on Sanskrit saṁgraha, \"holding together, gathering in\" (Monier-Williams): to keep gathering things and not let them go."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sangharvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sangharvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sangharvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sangharvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vepārīe godāmmā̃ khā̃ḍ sanghrī. — The trader stored up sugar in his warehouse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vepārīe godāmmā̃ khā̃ḍ sanghrī.* — The trader stored up sugar in his warehouse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for a shortfall, then the Gujarati for wholesale, then say sangharvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for a shortfall, then the Gujarati for wholesale, then say *sangharvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સંઘરવું (sangharvũ) mean? (\"To store up; to hoard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

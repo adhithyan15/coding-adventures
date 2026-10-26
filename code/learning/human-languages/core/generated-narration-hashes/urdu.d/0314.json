@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:36bd4fd918558540",
+  "lessonIds": [
+    "UR-C314-khandar",
+    "UR-C314-khodna",
+    "UR-C314-mujassama",
+    "UR-C314-katba",
+    "UR-C314-asar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch314.txt",
+  "json": "urdu/narration/ch314.json",
+  "textHash": "fnv1a64:ab85a58d2559a523",
+  "jsonHash": "fnv1a64:199e0fe3b7f2c00e",
+  "findings": []
+}

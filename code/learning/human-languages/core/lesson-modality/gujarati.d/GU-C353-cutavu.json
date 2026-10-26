@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C353-cutavu",
+    "language": "gujarati",
+    "chapter": 353,
+    "sequence": 19750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:887c5914f18c32c7"
+  },
+  "findings": []
+}

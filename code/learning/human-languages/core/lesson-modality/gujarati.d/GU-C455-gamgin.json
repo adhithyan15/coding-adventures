@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C455-gamgin",
+    "language": "gujarati",
+    "chapter": 455,
+    "sequence": 25410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28a7b8f3fd455317"
+  },
+  "findings": []
+}

@@ -2104,6 +2104,7 @@ fn host_control_supports_state_property(xaml_tag: &str, property: &str) -> bool 
             | "BorderThickness"
             | "BorderBrush"
             | "CornerRadius"
+            | "RequestedTheme"
             | "Opacity"
             | "HorizontalAlignment"
             | "VerticalAlignment"
@@ -3012,6 +3013,15 @@ fn has_unsupported_length_unit(value: &str) -> bool {
 /// above [`STYLE_MARKUP_EXTENSIONS`].
 fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
     let trimmed = raw.trim();
+    // Explicit subtree themes select native template resources as well as
+    // authored brushes. CSS preference lists have no equivalent enum value.
+    if key == "RequestedTheme" {
+        return match trimmed.to_ascii_lowercase().as_str() {
+            "light" => Some("Light".to_string()),
+            "dark" => Some("Dark".to_string()),
+            _ => None,
+        };
+    }
 
     // A leading `{` (after any whitespace) is markup-extension syntax.
     // Never px-strip or PascalCase it: either it is an allow-listed
@@ -3524,6 +3534,7 @@ fn css_property_to_xaml_setter(name: &str) -> Option<String> {
         "background" => Some("Background".to_string()),
         "background-color" => Some("Background".to_string()),
         "color" => Some("Foreground".to_string()),
+        "color-scheme" => Some("RequestedTheme".to_string()),
         "font-family" => Some("FontFamily".to_string()),
         "font-size" => Some("FontSize".to_string()),
         "font-weight" => Some("FontWeight".to_string()),
@@ -3667,6 +3678,7 @@ fn is_container_style_attr(setter: &str) -> bool {
             | "MinHeight"
             | "HorizontalAlignment"
             | "VerticalAlignment"
+            | "RequestedTheme"
             | "Opacity"
     )
 }
@@ -3684,6 +3696,7 @@ fn is_stack_panel_style_attr(setter: &str) -> bool {
             | "MinHeight"
             | "HorizontalAlignment"
             | "VerticalAlignment"
+            | "RequestedTheme"
             | "Opacity"
     )
 }
@@ -5866,6 +5879,24 @@ fn emit_code_behind(
     .unwrap();
     writeln!(out, "{{").unwrap();
 
+    // Native lifecycle counts complement VM projection counts without walking
+    // the visual tree or retaining UI elements. Standalone controls need no host.
+    out.push_str(r#"    private static readonly bool mosaicProfileRealization = !string.IsNullOrWhiteSpace(
+        System.Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH"));
+    private long mosaicItemsPrepared, mosaicItemsCleared;
+    public (long Prepared, long Cleared) MosaicRealizationCounts => (mosaicItemsPrepared, mosaicItemsCleared);
+    private void MosaicItemPrepared(Microsoft.UI.Xaml.Controls.ItemsRepeater sender,
+        Microsoft.UI.Xaml.Controls.ItemsRepeaterElementPreparedEventArgs args)
+    {
+        if (mosaicProfileRealization) mosaicItemsPrepared++;
+    }
+    private void MosaicItemClearing(Microsoft.UI.Xaml.Controls.ItemsRepeater sender,
+        Microsoft.UI.Xaml.Controls.ItemsRepeaterElementClearingEventArgs args)
+    {
+        if (mosaicProfileRealization) mosaicItemsCleared++;
+    }
+
+"#);
     // Constructor: `InitializeComponent()`. The XAML compiler generates
     // the actual `InitializeComponent` method at build time from the
     // matching `.xaml` file.
@@ -8204,7 +8235,7 @@ fn emit_for(
     let mut out = String::new();
     writeln!(
         out,
-        "{pad}<ItemsRepeater ItemsSource=\"{{x:Bind {items_source}, Mode=OneWay}}\"{style}>"
+        "{pad}<ItemsRepeater ItemsSource=\"{{x:Bind {items_source}, Mode=OneWay}}\" ElementPrepared=\"MosaicItemPrepared\" ElementClearing=\"MosaicItemClearing\"{style}>"
     )
     .unwrap();
     if let Some(columns) = uniform_columns {
@@ -15290,6 +15321,37 @@ mod tests {
     }
 
     #[test]
+    fn explicit_color_scheme_validates_and_reaches_native_subtrees() {
+        assert_eq!(css_property_to_xaml_setter("color-scheme").as_deref(), Some("RequestedTheme"));
+        for (raw, expected) in [(" light ", "Light"), ("DARK", "Dark")] {
+            assert_eq!(translate_xaml_value("RequestedTheme", raw).as_deref(), Some(expected));
+        }
+        for raw in ["normal", "light dark", "only dark", "inherit", "", "{ThemeResource Theme}"] {
+            assert_eq!(translate_xaml_value("RequestedTheme", raw), None);
+        }
+        for tag in ["Box", "Stack"] {
+            let c = component("ThemeTest", vec![], vec![]);
+            let l = layout_with_root("ThemeTest", LayoutNode {
+                tag: tag.to_string(), part_name: Some("surface".to_string()), props: vec![],
+                children: vec![LayoutNode {
+                    tag: "HostInput".to_string(), part_name: Some("editor".to_string()),
+                    props: vec![], children: vec![],
+                }],
+            });
+            let s = StyleDef {
+                component_name: "ThemeTest".to_string(),
+                parts: [("surface", "dark"), ("editor", "light")].into_iter().map(|(name, value)| PartStyle {
+                    name: name.to_string(),
+                    base: vec![StyleProp { name: "color-scheme".to_string(), value: value.to_string() }],
+                    transitions: vec![], states: vec![],
+                }).collect(),
+            };
+            let result = compile(&c, &l, &s);
+            assert!(result.xaml.contains("RequestedTheme=\"Dark\""), "{}", result.xaml);
+            assert!(result.xaml.lines().any(|line| line.contains("<TextBox") && line.contains("RequestedTheme=\"Light\"")), "{}", result.xaml);
+        }
+    }
+    #[test]
     fn font_size_rejects_invalid_values_and_nonnumeric_slots() {
         let slots = vec![slot("label", SlotType::Text, false)];
         for value in [LayoutPropValue::Number(f64::NAN), LayoutPropValue::Number(f64::INFINITY),
@@ -20432,6 +20494,10 @@ mod tests {
                 r.xaml
             );
             assert!(r.xaml.matches("<ItemsRepeater ItemsSource=").count() >= 2);
+            let repeaters = r.xaml.matches("<ItemsRepeater ItemsSource=").count();
+            assert_eq!(r.xaml.matches("ElementPrepared=\"MosaicItemPrepared\"").count(), repeaters);
+            assert_eq!(r.xaml.matches("ElementClearing=\"MosaicItemClearing\"").count(), repeaters);
+            assert!(r.code_behind.contains("MosaicRealizationCounts"));
         }
     }
 

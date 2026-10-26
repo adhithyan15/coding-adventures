@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 301,
+  "output": "urdu/book/chapters/ch301-reporters.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

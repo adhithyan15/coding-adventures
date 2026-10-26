@@ -1,0 +1,11 @@
+{
+  "id": "GU-R279-asking-the-way",
+  "pathSegment": "GU-PATH-279-TRAVEL-WAY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-279-TRAVEL-WAY",
+      "order": 2
+    }
+  ]
+}

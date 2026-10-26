@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:a52b428727c4227c",
+  "lessonIds": [
+    "GU-C303-vavajhodu",
+    "GU-C303-tratakvu",
+    "GU-C303-chapru",
+    "GU-C303-jhupdu",
+    "GU-C303-ujadvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch303.txt",
+  "json": "gujarati/narration/ch303.json",
+  "textHash": "fnv1a64:7e151aa23e9f2ed5",
+  "jsonHash": "fnv1a64:06e2cb7e283ff7d2",
+  "findings": []
+}

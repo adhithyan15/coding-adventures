@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:e343a7db2120cf70",
+  "lessonIds": [
+    "GU-C406-vijha",
+    "GU-C406-sima",
+    "GU-C406-jakat",
+    "GU-C406-phi",
+    "GU-C406-thalavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch406.txt",
+  "json": "gujarati/narration/ch406.json",
+  "textHash": "fnv1a64:16e99da22a46a6e3",
+  "jsonHash": "fnv1a64:407295d734550e28",
+  "findings": []
+}

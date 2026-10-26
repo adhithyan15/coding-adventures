@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:f1ec24ff9bc8cc12",
+  "lessonIds": [
+    "UR-C343-mahkama",
+    "UR-C343-darkhast",
+    "UR-C343-uhda",
+    "UR-C343-hidayat",
+    "UR-C343-sujhana"
+  ],
+  "tex": "urdu/book/chapters/ch343-offices-and-officials.tex"
+}

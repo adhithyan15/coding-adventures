@@ -1,0 +1,11 @@
+{
+  "id": "GU-C286-khub",
+  "pathSegment": "GU-PATH-286-GUNO286",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-286-GUNO286",
+      "order": 3
+    }
+  ]
+}

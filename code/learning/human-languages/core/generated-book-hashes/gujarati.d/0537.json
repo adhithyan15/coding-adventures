@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 537,
+  "sourceHash": "fnv1a64:c676e7e39a499c1c",
+  "lessonIds": [
+    "GU-C537-pasandgi",
+    "GU-C537-badle",
+    "GU-C537-manapsand",
+    "GU-C537-vinvu",
+    "GU-C537-rucvu"
+  ],
+  "tex": "gujarati/book/chapters/ch537-choosing.tex"
+}

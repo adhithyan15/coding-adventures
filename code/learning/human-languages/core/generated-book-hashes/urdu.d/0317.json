@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:6185932e6e04853f",
+  "lessonIds": [
+    "UR-C317-id",
+    "UR-C317-hilal",
+    "UR-C317-mehndi",
+    "UR-C317-jagmagana",
+    "UR-C317-raunaq"
+  ],
+  "tex": "urdu/book/chapters/ch317-the-night-before-eid.tex"
+}

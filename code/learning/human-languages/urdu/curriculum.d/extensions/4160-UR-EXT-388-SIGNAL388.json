@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-388-SIGNAL388",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what the signal shows and why the crossing is shut.",
+  "prerequisites": []
+}

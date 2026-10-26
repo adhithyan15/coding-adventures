@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C546-asani",
+    "language": "urdu",
+    "chapter": 546,
+    "sequence": 31680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d677e119dbbf650"
+  },
+  "findings": []
+}

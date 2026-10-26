@@ -1,0 +1,11 @@
+{
+  "id": "GU-C336-atmaktha",
+  "pathSegment": "GU-PATH-336-LEKHAK336",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-336-LEKHAK336",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 373,
+  "title": "If Things Go Wrong",
+  "label": "ch:ur-if-things-go-wrong",
+  "canDo": "I can warn what will go wrong if something is done or left undone.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C373-adhura",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can warn what will go wrong if something is done or left undone.",
+    "assesses": [
+      "UR-LEX-C373-BIKHARNA373-03",
+      "UR-LEX-C373-BIKHARNA373-04",
+      "UR-LEX-C373-BIKHARNA373-05"
+    ]
+  }
+}

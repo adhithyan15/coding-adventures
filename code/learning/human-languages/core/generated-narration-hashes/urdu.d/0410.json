@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:98e14dae3be44f02",
+  "lessonIds": [
+    "UR-C410-imarat",
+    "UR-C410-maqam",
+    "UR-C410-bord",
+    "UR-C410-khamba",
+    "UR-C410-dikhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch410.txt",
+  "json": "urdu/narration/ch410.json",
+  "textHash": "fnv1a64:3464f0dfbab6864c",
+  "jsonHash": "fnv1a64:dacc2851605441f4",
+  "findings": []
+}

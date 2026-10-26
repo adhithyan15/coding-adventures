@@ -8,9 +8,10 @@
 //!
 //! ```text
 //! source
-//!   │  coding_adventures_javascript_parser::parse_javascript_cst_division_only
-//!   │    GrammarLexer over es2020.tokens (REGEX off) → GrammarParser over
-//!   │    es2020.grammar, with the ASI retry loop and the flat-spine bound
+//!   │  coding_adventures_javascript_parser::parse_javascript_cst_bounded
+//!   │    GrammarLexer over es2020.tokens (its F10 mode table tells a regex
+//!   │    from a division) → GrammarParser over es2020.grammar, with the ASI
+//!   │    retry loop, the flat-spine bound and no exponent tokens
 //!   ▼
 //! GrammarASTNode  (the CST: one node per grammar rule that matched)
 //!   │  compile_ast — this crate
@@ -102,10 +103,15 @@
 //! | `js_<name>`     | runner builtins       | `_`             |
 //! | `js.<name>`     | user `let` / `const`  | `.`             |
 //!
-//! # Editions
+//! # Editions (LANG84 phase 6d)
 //!
-//! [`compile_source`] parses ECMAScript 2020, as it always has (LANG84 phase
-//! 6d makes the edition selectable). [`compile_ast`] keys only on rule names
+//! [`compile_source_at`] parses with exactly one ECMAScript edition's
+//! `.tokens`/`.grammar` pair, chosen by an inventory ID from
+//! `code/grammars/ecmascript/releases.csv` (`"es2016"` … `"es2025"`), and
+//! records it in `IIRModule::release`. `None` selects [`DEFAULT_RELEASE`],
+//! `es2020`, the edition [`compile_source`] has always used; an ID that is
+//! not a row, or a row that does not claim the subset, is a typed error and
+//! never falls back to another edition (see [`releases`]). [`compile_ast`] keys only on rule names
 //! and token types that the `es*.grammar` files share, so a CST from another
 //! edition plugs in unchanged: es5's `arguments` rule lists its expressions
 //! directly instead of through `argument_list`, which the argument reader
@@ -113,9 +119,17 @@
 //! `lexical_declaration`; and a rule this file does not know classifies as
 //! "unsupported", never as something it is not.
 
-use coding_adventures_javascript_parser::parse_javascript_cst_division_only;
+pub mod frontend_error;
+pub mod profiles;
+pub mod releases;
+
+pub use frontend_error::FrontendError;
+pub use releases::{resolve_release, supported_releases, DEFAULT_RELEASE, SUBSET};
+
+use coding_adventures_javascript_parser::parse_javascript_cst_bounded;
 #[cfg(test)]
 use coding_adventures_javascript_parser::parse_javascript_typed;
+#[cfg(test)]
 use coding_adventures_javascript_tokens::EsVersion;
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use lexer::token::Token;
@@ -128,10 +142,6 @@ use vm_core::{value::Value, VMCore};
 pub const MAX_SOURCE_BYTES: usize = 64 * 1024;
 const MAX_AST_NODES: usize = 16_384;
 const MAX_EXPRESSION_DEPTH: usize = 64;
-
-/// The ECMAScript edition whose `.tokens`/`.grammar` pair [`compile_source`]
-/// parses with. Unchanged from the typed-AST pipeline.
-const SOURCE_EDITION: EsVersion = EsVersion::Es2020;
 
 /// Runner builtin raised by reading a name that no declaration binds.
 const NOT_DEFINED_BUILTIN: &str = "js_reference_error_not_defined";
@@ -229,24 +239,60 @@ const RUNNER_GLOBAL_NAMES: &[&str] = &[
     "Reflect",
 ];
 
-/// Parse source and compile the currently supported JavaScript subset.
+/// Parse source with [`DEFAULT_RELEASE`] and compile the supported subset.
+///
+/// The pre-6d entry point, kept with its `String` errors: each message is
+/// exactly the text it returned before releases were selectable
+/// ([`FrontendError::message`]). New callers should use
+/// [`compile_source_at`], which says which edition and which C6 category.
 pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, String> {
+    compile_source_at(source, None, module_name).map_err(|error| error.message())
+}
+
+/// Lex, parse and compile `source` against exactly one ECMAScript edition.
+///
+/// `release` is `None` for [`DEFAULT_RELEASE`] or an exact inventory ID such
+/// as `Some("es2017")`. The returned module names that edition in
+/// `IIRModule::release` (LANG84 "Selection API"), so a backend or a cache
+/// can tell two editions' modules apart even when their code is identical.
+///
+/// ```text
+///   resolve_release ─► size budget ─► parse_javascript_cst_bounded(edition)
+///                   ─► compile_ast ─► module.release = Some(edition)
+/// ```
+pub fn compile_source_at(
+    source: &str,
+    release: Option<&str>,
+    module_name: &str,
+) -> Result<IIRModule, FrontendError> {
+    let (release, edition) = resolve_release(release)?;
     if source.len() > MAX_SOURCE_BYTES {
-        return Err(format!(
-            "JavaScript source exceeds the {MAX_SOURCE_BYTES}-byte native pilot limit"
-        ));
+        return Err(FrontendError::Budget {
+            release: release.to_string(),
+            which: "source bytes",
+            message: format!(
+                "JavaScript source exceeds the {MAX_SOURCE_BYTES}-byte native pilot limit"
+            ),
+        });
     }
-    // Regex literals are outside the native subset. Select the division goal
-    // before tokenization so two arithmetic slashes cannot become one regex.
-    let cst = parse_javascript_cst_division_only(source, SOURCE_EDITION)?;
-    compile_ast(&cst, module_name)
+    // Regex literals are outside the native subset, but telling one from a
+    // division is the grammar's job, not ours: every claiming edition's
+    // .tokens carries the F10 mode table (LANG84 phase 6a), so `8 / 2 / 2`
+    // lexes as two divisions and a real `/re/` becomes one REGEX leaf that
+    // `check_cst` rejects.
+    let cst = parse_javascript_cst_bounded(source, edition)
+        .map_err(|message| FrontendError::from_parse(release, message))?;
+    let mut module =
+        compile_ast(&cst, module_name).map_err(|message| FrontendError::from_compile(release, message))?;
+    module.release = Some(release.to_string());
+    Ok(module)
 }
 
 /// Compile a JavaScript parse tree (a `program` CST) directly to InterpreterIR.
 ///
 /// `ast` is the `GrammarASTNode` that the generic `GrammarParser` builds from
 /// an `es*.grammar` file — for instance from
-/// `coding_adventures_javascript_parser::parse_javascript_cst_division_only`
+/// `coding_adventures_javascript_parser::parse_javascript_cst_bounded`
 /// or `parse_javascript_typed`. Compilation runs three passes:
 ///
 /// 0. **Validation** ([`check_cst`]). Read every top-level item off the tree
@@ -1327,6 +1373,18 @@ fn primary_token<'a>(token: &'a Token, primary: &GrammarASTNode) -> Result<Shape
         return Ok(Shape::Other);
     }
     match kind {
+        // A spelling no JavaScript edition accepts is a SyntaxError (C6
+        // category Parse), as node reports it, not a bridge failure. The
+        // es2021+ patterns never produce one; es2016–es2020 still lex a
+        // legacy octal with a fraction (`017.5`) as one NUMBER.
+        "NUMBER" if !separators_well_placed(&token.value)
+            || is_legacy_octal_with_fraction(&token.value) =>
+        {
+            Err(format!(
+                "SyntaxError: Invalid numeric literal '{}'",
+                token.value.escape_debug()
+            ))
+        }
         "NUMBER" => decode_number(&token.value)
             .map(Shape::Number)
             .map_err(|()| {
@@ -1362,6 +1420,13 @@ fn primary_token<'a>(token: &'a Token, primary: &GrammarASTNode) -> Result<Shape
 /// A radix literal wider than 64 bits is an error, not an approximation;
 /// that is the typed stage's rule and is kept so errors stay the same.
 fn decode_number(spelling: &str) -> Result<f64, ()> {
+    // Defence in depth behind the edition's token patterns: only strip the
+    // `_`s ES2021's NumericLiteralSeparator allows. A spelling the lexer
+    // should never have produced (`0_17`, `1__0`, `1_.5`) is refused rather
+    // than silently given a value (review M1).
+    if !separators_well_placed(spelling) || is_legacy_octal_with_fraction(spelling) {
+        return Err(());
+    }
     let cleaned: String = spelling.chars().filter(|&c| c != '_').collect();
     for (prefixes, radix) in [(["0x", "0X"], 16), (["0b", "0B"], 2), (["0o", "0O"], 8)] {
         if let Some(digits) = prefixes.iter().find_map(|p| cleaned.strip_prefix(p)) {
@@ -1383,6 +1448,65 @@ fn decode_number(spelling: &str) -> Result<f64, ()> {
     cleaned.parse::<f64>().map_err(|_| ())
 }
 
+/// Whether every `_` in a number spelling is a legal ES2021
+/// NumericLiteralSeparator:
+///
+/// | spelling  | ok? | why                                              |
+/// |-----------|-----|--------------------------------------------------|
+/// | `1_000`   | yes | one `_` between two decimal digits               |
+/// | `0x_F`    | no  | `_` right after the radix prefix                 |
+/// | `0xF_F`   | yes | between two hex digits                           |
+/// | `1__0`    | no  | two in a row                                     |
+/// | `0_1`     | no  | `0` alone is DecimalIntegerLiteral; no separator |
+/// | `01_7`    | no  | legacy octal/NonOctalDecimal take no separators  |
+/// | `1_.5`    | no  | next to `.`                                      |
+/// | `1e_5`    | no  | next to the exponent marker                      |
+fn separators_well_placed(spelling: &str) -> bool {
+    if !spelling.contains('_') {
+        return true;
+    }
+    let lower = spelling.to_ascii_lowercase();
+    let (body, is_digit): (&str, fn(u8) -> bool) =
+        if let Some(rest) = lower.strip_prefix("0x") {
+            (rest, |b| b.is_ascii_hexdigit())
+        } else if let Some(rest) = lower.strip_prefix("0o") {
+            (rest, |b| (b'0'..=b'7').contains(&b))
+        } else if let Some(rest) = lower.strip_prefix("0b") {
+            (rest, |b| b == b'0' || b == b'1')
+        } else {
+            // A decimal literal: a leading `0` followed by anything but `.`
+            // or an exponent is `0` itself, legacy octal or NonOctalDecimal,
+            // none of which admit separators.
+            let bytes = lower.as_bytes();
+            if bytes[0] == b'0' && bytes.len() > 1 && bytes[1] != b'.' && bytes[1] != b'e' {
+                return false;
+            }
+            (lower.as_str(), |b| b.is_ascii_digit())
+        };
+    let bytes = body.as_bytes();
+    bytes.iter().enumerate().all(|(i, &b)| {
+        b != b'_' || (i > 0 && i + 1 < bytes.len() && is_digit(bytes[i - 1]) && is_digit(bytes[i + 1]))
+    })
+}
+
+/// Whether `spelling` is a legacy octal integer (`0` then only octal digits,
+/// like `017`) carrying a fraction or exponent. JavaScript has no such
+/// literal: node rejects `017.5` and `017e1` as SyntaxErrors. A
+/// NonOctalDecimal (`08.5`, `08e1`) is a different literal and stays valid.
+/// The es2016–es2020 token patterns still lex these spellings as one
+/// NUMBER, so the decoder refuses them for every edition.
+fn is_legacy_octal_with_fraction(spelling: &str) -> bool {
+    let bytes = spelling.as_bytes();
+    if bytes.len() < 2 || bytes[0] != b'0' || !bytes[1].is_ascii_digit() {
+        return false;
+    }
+    let integer_end = bytes
+        .iter()
+        .position(|&b| !b.is_ascii_digit())
+        .unwrap_or(bytes.len());
+    integer_end < bytes.len() && bytes[1..integer_end].iter().all(|&b| b < b'8')
+}
+
 /// VM failure with console output completed by earlier JavaScript statements.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct JavaScriptRunError {
@@ -1400,11 +1524,31 @@ impl std::error::Error for JavaScriptRunError {}
 
 /// Execute source on this repository's Rust VM and collect console output.
 pub fn run_source(source: &str) -> Result<String, JavaScriptRunError> {
-    let mut module =
+    let module =
         compile_source(source, "javascript-script").map_err(|message| JavaScriptRunError {
             output: String::new(),
             message,
         })?;
+    run_module(module)
+}
+
+/// Compile `source` for one edition and run it on `vm-core`.
+///
+/// A compile failure is reported as its typed [`FrontendError`] text
+/// (`JavaScript es2017: …`), with no output, since nothing ran.
+pub fn run_source_at(source: &str, release: Option<&str>) -> Result<String, JavaScriptRunError> {
+    let module =
+        compile_source_at(source, release, "javascript-script").map_err(|error| {
+            JavaScriptRunError {
+                output: String::new(),
+                message: error.to_string(),
+            }
+        })?;
+    run_module(module)
+}
+
+/// Run a compiled module on `vm-core` and collect its console output.
+pub fn run_module(mut module: IIRModule) -> Result<String, JavaScriptRunError> {
     let output = Arc::new(Mutex::new(String::new()));
     let captured = Arc::clone(&output);
     let mut vm = VMCore::new();
@@ -1771,7 +1915,7 @@ mod tests {
     }
 
     #[test]
-    fn native_division_goal_rejects_regex_and_malformed_operands() {
+    fn native_subset_rejects_regex_and_malformed_operands() {
         for source in [
             "console.log(/1/);",
             "console.log(/1/ / 2);",

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C545-asan",
+    "language": "gujarati",
+    "chapter": 545,
+    "sequence": 30250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ca4ff8e3631f5a7"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:b2e75a4666cef707",
+  "lessonIds": [
+    "UR-C279-pahchanna",
+    "UR-C279-huliya",
+    "UR-C279-shubah",
+    "UR-C279-manzar",
+    "UR-C279-nazar-ana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch279.txt",
+  "json": "urdu/narration/ch279.json",
+  "textHash": "fnv1a64:2357970bc980d181",
+  "jsonHash": "fnv1a64:fc183c6af8592532",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C361-vinavvu",
+    "language": "gujarati",
+    "chapter": 361,
+    "sequence": 20160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6531308d5347e41"
+  },
+  "findings": []
+}

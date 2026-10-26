@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:567871b655f2be2f",
+  "lessonIds": [
+    "UR-C307-pitna",
+    "UR-C307-jharap",
+    "UR-C307-ghunsa",
+    "UR-C307-thappar",
+    "UR-C307-ainthna",
+    "UR-R307-review-300-307"
+  ],
+  "tex": "urdu/book/chapters/ch307-a-fight-in-the-market.tex"
+}

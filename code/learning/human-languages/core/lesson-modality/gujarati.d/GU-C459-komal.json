@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C459-komal",
+    "language": "gujarati",
+    "chapter": 459,
+    "sequence": 25610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8aa5df6c22ffeaee"
+  },
+  "findings": []
+}

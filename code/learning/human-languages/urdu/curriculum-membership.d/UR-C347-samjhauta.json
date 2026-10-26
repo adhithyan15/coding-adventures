@@ -1,0 +1,11 @@
+{
+  "id": "UR-C347-samjhauta",
+  "pathSegment": "UR-PATH-347-MUAMALA347",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-347-MUAMALA347",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 485,
+  "title": "Childhood",
+  "label": "ch:ur-childhood",
+  "canDo": "I can talk about childhood.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C485-pahnana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can talk about childhood.",
+    "assesses": [
+      "UR-LEX-C485-CHILDHOOD485-03",
+      "UR-LEX-C485-CHILDHOOD485-04",
+      "UR-LEX-C485-CHILDHOOD485-05"
+    ]
+  }
+}

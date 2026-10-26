@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:1b7790882a949568",
+  "lessonIds": [
+    "UR-C486-umr",
+    "UR-C486-baligh",
+    "UR-C486-iklauta",
+    "UR-C486-guzarna-pass",
+    "UR-C486-shabab",
+    "UR-R486-review-480-486"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "urdu/narration/ch486.txt",
+  "json": "urdu/narration/ch486.json",
+  "textHash": "fnv1a64:68fff58065a9e7cc",
+  "jsonHash": "fnv1a64:7623e5a91a881879",
+  "findings": []
+}

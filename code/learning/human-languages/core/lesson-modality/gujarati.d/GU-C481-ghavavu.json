@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C481-ghavavu",
+    "language": "gujarati",
+    "chapter": 481,
+    "sequence": 26760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:68df22b3cdd5e2bf"
+  },
+  "findings": []
+}

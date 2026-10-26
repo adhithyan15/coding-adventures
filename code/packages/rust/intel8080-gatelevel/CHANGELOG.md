@@ -43,3 +43,6 @@
   plus topology, failure-boundary, and multi-instruction workload contracts.
 - Updated the actual test count to 51 unit, 4 integration, and 5 doctests.
 - Raised core line coverage to 95.53% (855/895).
+- Fold internal DFF-memory selectors to the 16-bit address bus so the second
+  byte of word and stack cycles at `0xFFFF` wraps to `0x0000` instead of
+  indexing beyond the 64 KiB topology.

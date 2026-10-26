@@ -1,0 +1,19 @@
+{
+  "chapter": 421,
+  "title": "Noise and Stray Cattle",
+  "label": "ch:gu-noise-and-stray-cattle",
+  "canDo": "I can complain about noise and animals in the street.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C421-bhagadvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can complain about noise and animals in the street.",
+    "assesses": [
+      "GU-LEX-C421-NOISE421-03",
+      "GU-LEX-C421-NOISE421-04",
+      "GU-LEX-C421-NOISE421-05"
+    ]
+  }
+}

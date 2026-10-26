@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C544-tartib",
+    "language": "urdu",
+    "chapter": 544,
+    "sequence": 31600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10c2e207430bf500"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C498-sancha",
+  "pathSegment": "UR-PATH-498-AVA498",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-498-AVA498",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:a6212fa081a118e3",
+  "lessonIds": [
+    "GU-C413-taraph",
+    "GU-C413-marg",
+    "GU-C413-par",
+    "GU-C413-dorvu",
+    "GU-C413-cidhvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch413.txt",
+  "json": "gujarati/narration/ch413.json",
+  "textHash": "fnv1a64:59731fa4da8c783b",
+  "jsonHash": "fnv1a64:3b6366203a25491b",
+  "findings": []
+}

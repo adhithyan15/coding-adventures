@@ -1,0 +1,11 @@
+{
+  "id": "UR-C478-kuredna",
+  "pathSegment": "UR-PATH-478-CUT478",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-478-CUT478",
+      "order": 4
+    }
+  ]
+}

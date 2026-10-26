@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C452-ukalvu-seethe",
+    "language": "gujarati",
+    "chapter": 452,
+    "sequence": 25280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d523e964df67fb6a"
+  },
+  "findings": []
+}

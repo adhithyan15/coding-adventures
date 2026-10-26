@@ -1,6 +1,9 @@
 # ECMAScript 2016 (ES7) — Parser Grammar
 # @version 1
 # @ecmascript_edition 2016
+# source_ref: https://github.com/tc39/ecma262/tree/es2016
+# source_sha: b154ce84698377ab53fe88c889633263607f4423
+# PARTIAL: the IIR path claims es-number-log only (LANG84 phase 6d; see releases.csv); this syntactic pair predates LANG84 and is not yet audited clause by clause against the tagged spec text.
 #
 # ECMA-262, 7th Edition — June 2016
 #
@@ -208,7 +211,7 @@ variable_declaration = ( NAME | binding_pattern ) [ EQUALS assignment_expression
 
 empty_statement = SEMICOLON ;
 
-expression_statement = expression SEMICOLON ;
+expression_statement = !( LBRACE | "function" | "class" | "let" LBRACKET ) expression SEMICOLON ; # lookahead: see the note at the end of this file
 
 if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ] ;
 
@@ -459,3 +462,18 @@ template_literal = TEMPLATE_NO_SUB
                  | TEMPLATE_HEAD { template_span } TEMPLATE_TAIL ;
 
 template_span = expression TEMPLATE_MIDDLE ;
+
+# ============================================================================
+# ExpressionStatement lookahead (F12 phase 0)
+# ============================================================================
+#
+# ECMA-262: ExpressionStatement : [lookahead ∉ { `{`, `function`, `class`, `let [` }]
+# Expression ;
+#
+# A `{` at the start of a statement is a Block, and `function` (and, from
+# ES2015, `class` and `let [`) start declarations, never expressions. Without
+# the lookahead, a block whose last statement has no `;` yet (ASI only runs
+# after the whole parse fails) re-parsed as an object literal: `{ a }` became
+# `({a})`, and `{ a }⏎/foo/g.exec(s)` compiled to a different program. The
+# rule is kept on one line, with this note at the end of the file, so the
+# rules after it keep their line numbers in the compiled grammars.

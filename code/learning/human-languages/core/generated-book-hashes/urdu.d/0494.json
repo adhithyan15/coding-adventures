@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:4eca8e148613788b",
+  "lessonIds": [
+    "UR-C494-intarvyu",
+    "UR-C494-rozgar",
+    "UR-C494-asami",
+    "UR-C494-bartaraf",
+    "UR-C494-bharti-karna"
+  ],
+  "tex": "urdu/book/chapters/ch494-looking-for-work.tex"
+}

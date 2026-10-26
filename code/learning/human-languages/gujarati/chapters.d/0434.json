@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "Showers and Drizzle",
+  "label": "ch:gu-showers-and-drizzle",
+  "canDo": "I can talk about rain coming and getting wet.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C434-bhijavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can talk about rain coming and getting wet.",
+    "assesses": [
+      "GU-LEX-C434-SHOWER434-03",
+      "GU-LEX-C434-SHOWER434-04",
+      "GU-LEX-C434-SHOWER434-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:72b9e50a4f2aea01",
+  "lessonIds": [
+    "GU-C384-saphal",
+    "GU-C384-unnati",
+    "GU-C384-vikas",
+    "GU-C384-phavvu",
+    "GU-C384-pahocadvu"
+  ],
+  "tex": "gujarati/book/chapters/ch384-success.tex"
+}

@@ -1,0 +1,1 @@
+| 1513-1520 | 281 | Feelings and hopes | `GU-C281-dukh` -> `GU-W50-visarga` -> `GU-C281-mane-bik` -> `GU-C281-iccha` -> `GU-W51-short-i` -> `GU-C281-sapnu` -> `GU-C281-banvu-che` -> `GU-R281-feelings-and-hopes` |

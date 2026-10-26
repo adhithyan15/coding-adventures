@@ -1,0 +1,11 @@
+{
+  "id": "GU-C491-banevi",
+  "pathSegment": "GU-PATH-491-JAMAI491",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-491-JAMAI491",
+      "order": 2
+    }
+  ]
+}

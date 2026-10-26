@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "Probably",
+  "label": "ch:gu-probably",
+  "canDo": "I can say how likely something is.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GU-C367-akvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can say how likely something is.",
+    "assesses": [
+      "GU-LEX-C367-SAMBHAV367-03",
+      "GU-LEX-C367-SAMBHAV367-04",
+      "GU-LEX-C367-SAMBHAV367-05"
+    ]
+  }
+}

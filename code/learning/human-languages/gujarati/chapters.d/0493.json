@@ -1,0 +1,21 @@
+{
+  "chapter": 493,
+  "title": "Many Generations",
+  "label": "ch:gu-many-generations",
+  "canDo": "I can talk about my family's generations.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-R493-review-487-493",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can talk about my family's generations.",
+    "assesses": [
+      "GU-LEX-C493-PEDHI493-01",
+      "GU-LEX-C493-PEDHI493-02",
+      "GU-LEX-C493-PEDHI493-03",
+      "GU-LEX-C493-PEDHI493-04",
+      "GU-LEX-C493-PEDHI493-05"
+    ]
+  }
+}

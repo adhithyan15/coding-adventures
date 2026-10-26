@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:f24e1c66a43f8443",
+  "lessonIds": [
+    "GU-C435-kadako",
+    "GU-C435-cakravat",
+    "GU-C435-susvato",
+    "GU-C435-agahi",
+    "GU-C435-jhabakvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch435.txt",
+  "json": "gujarati/narration/ch435.json",
+  "textHash": "fnv1a64:5a94d5feabe2ea73",
+  "jsonHash": "fnv1a64:73a54992b832c1b7",
+  "findings": []
+}

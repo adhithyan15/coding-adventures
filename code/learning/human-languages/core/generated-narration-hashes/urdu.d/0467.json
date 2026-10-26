@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:89393cde0642bd3b",
+  "lessonIds": [
+    "UR-C467-talu",
+    "UR-C467-masurha",
+    "UR-C467-chatna",
+    "UR-C467-chusna",
+    "UR-C467-thukna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch467.txt",
+  "json": "urdu/narration/ch467.json",
+  "textHash": "fnv1a64:02f2a0f83cc5fff9",
+  "jsonHash": "fnv1a64:4b1dc869364bd097",
+  "findings": []
+}

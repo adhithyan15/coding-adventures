@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:229cc2ba654332af",
+  "lessonIds": [
+    "UR-C534-bisat",
+    "UR-C534-mohra",
+    "UR-C534-piyada",
+    "UR-C534-mat",
+    "UR-C534-ludo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch534.txt",
+  "json": "urdu/narration/ch534.json",
+  "textHash": "fnv1a64:5bf045f7974d67e0",
+  "jsonHash": "fnv1a64:790af163d1b39a8c",
+  "findings": []
+}

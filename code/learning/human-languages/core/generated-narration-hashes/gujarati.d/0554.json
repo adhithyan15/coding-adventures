@@ -1,0 +1,21 @@
+{
+  "language": "gujarati",
+  "chapter": 554,
+  "sourceHash": "fnv1a64:d4ff8232656d0ac2",
+  "lessonIds": [
+    "GU-C554-ras",
+    "GU-C554-dadiya",
+    "GU-C554-ghughro",
+    "GU-C554-jhumvu",
+    "GU-C554-nacavvu",
+    "GU-R554-review-548-554",
+    "GU-R554-review-final-554"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "gujarati/narration/ch554.txt",
+  "json": "gujarati/narration/ch554.json",
+  "textHash": "fnv1a64:2211c628c8833f62",
+  "jsonHash": "fnv1a64:3540b0572caae0fe",
+  "findings": []
+}

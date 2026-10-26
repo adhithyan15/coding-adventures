@@ -25,8 +25,16 @@
 //!
 //! | Release(s)                                   | Profile | Evidence |
 //! |----------------------------------------------|---------|----------|
-//! | 3.0a1, 3.11.17, 3.12.3, 3.13.16, 3.16.0a1     | `py3`   | below    |
+//! | 2.2, 2.4, 2.6, 2.7.18                        | `py2`   | below    |
+//! | 3.0a1, 3.5.10, 3.6.0, 3.11.17, 3.12.3,       | `py3`   | below    |
+//! | 3.13.16, 3.16.0a1                            |         |          |
 //! | every other row                              | none    | no grammar pair yet |
+//!
+//! A profile also names the subset its releases claim (`subset`):
+//! `py3` releases compile `py-int-print`, `py2` releases `py2-int-print`.
+//! The two are different subsets, not one subset under two profiles,
+//! because the same text means different things in them (`print(1, 2)` is
+//! a call in Python 3 and a tuple in Python 2).
 //!
 //! ## The `py3` profile
 //!
@@ -52,10 +60,69 @@
 //! - **`/` is true division** (PEP 238 is the Python 3 default): 3.0a1's
 //!   `nb_true_divide` is `long_true_divide`, which returns a float. So `/`
 //!   is outside an integer subset: [`Slash::True`].
+//! - **Integer literals are decimal** in `py-int-print`, with PEP 515 `_`
+//!   separators where the release lexes them (3.6.0 and later; 3.0a1 and
+//!   3.5.10 lex `1_000` as an error). A leading zero on a non-zero literal
+//!   is a SyntaxError in every Python 3. [`IntLiterals::Decimal`].
 //!
 //! The host interpreters (3.11.17, 3.12.3, 3.13.16) reproduce every
 //! accepted corpus case; 3.0a1 and 3.16.0a1 rest on the source evidence
 //! above (LANG84 "Pinned historical source").
+//!
+//! ## The `py2` profile (LANG84 phase 7c slice 1)
+//!
+//! What `py2-int-print` relies on, at every `py2` tag (2.2, 2.4, 2.6 and
+//! 2.7.18; blob IDs in
+//! `pair-evidence.csv`, columns `intobject_c_blob`, `ceval_c_blob`,
+//! `pythonrun_c_blob`). There is no host `python2`, so this source is the
+//! oracle for every case:
+//!
+//! - **`/` is classic division, and on two ints it floors.**
+//!   `Objects/intobject.c` registers `int_classic_div` as `nb_divide` and
+//!   `int_div` as `nb_floor_divide`; both call `i_divmod`, which computes
+//!   the C quotient and then, when the remainder's sign differs from the
+//!   divisor's, adds the divisor to the remainder and decrements the
+//!   quotient. So `-7 / 2 == -7 // 2 == -4` and `-7 % 2 == 1`. (Only
+//!   `from __future__ import division` or `-Qnew` makes `/` true division;
+//!   neither is in the subset.) [`Slash::Classic`].
+//! - **A zero divisor raises `ZeroDivisionError`** ("integer division or
+//!   modulo by zero", `i_divmod`).
+//! - **`int` is bounded, but promotes.** A result outside the C `long` is
+//!   handed to `PyLong_Type` (`int_add` … call its `nb_add`; `i_divmod`
+//!   returns `DIVMOD_OVERFLOW` for `LONG_MIN / -1`), so CPython prints a
+//!   bigger number. The subset traps `Trap.Overflow` instead, the same
+//!   stated divergence as `py3`.
+//! - **`print` is a statement.** `print x` compiles to the expression, then
+//!   `PRINT_ITEM` (writes `str(x)`) and `PRINT_NEWLINE` (writes `\n` and
+//!   clears the stream's softspace); a bare `print` is `PRINT_NEWLINE` only
+//!   (`Python/ceval.c`). A trap in `x` therefore writes nothing for that
+//!   statement.
+//! - **Why `print a, b` and `print a,` are refused.** `PRINT_ITEM` sets
+//!   softspace, and before an uncaught exception's traceback CPython 2 calls
+//!   `Py_FlushLine`, which writes `\n` if softspace is set
+//!   (`Python/pythonrun.c`). `print 1, 1/0` therefore writes `1\n`, a
+//!   newline the program never asked for, which only a trap handler could
+//!   reproduce. The compiler refuses both forms (`Unsupported`).
+//! - **Integer literals have four spellings and a long suffix** (phase 7c
+//!   slice 2). `tok_get` in `Parser/tokenizer.c` lexes a decimal, an octal
+//!   `0[0-7]*` (so `010` is 8), a hex `0x…` and, from 2.6 (PEP 3127),
+//!   `0o…` and `0b…`; any of them may end in `l`/`L`. `parsenumber`
+//!   (`Python/compile.c` at 2.2 and 2.4, `Python/ast.c` at 2.6 and 2.7.18)
+//!   hands an `L` literal to `PyLong_FromString(s, 0, 0)` and the rest to
+//!   `PyOS_strtoul`/`PyOS_strtol` with base 0, which pick the base from the
+//!   prefix. `print` writes `str()` of a long, which has no `L`
+//!   (`Objects/longobject.c` `long_str`; only `long_repr` adds it), and a
+//!   long that fits `i64` does the same arithmetic as an int
+//!   (`long_classic_div` floors through `l_divmod`). So in `i64` the suffix
+//!   changes nothing the subset can observe. [`IntLiterals::Python2`].
+//!
+//!   Which prefixes a release has is decided by its lexer, not here: the
+//!   2.2 and 2.4 pairs never produce a `0o17` token. The decoder accepts
+//!   every Python 2 spelling because no spelling has two values in two
+//!   Python 2 releases inside `i64`. The one spelling that does differ (at
+//!   2.2 a hex or octal literal between `LONG_MAX` and `ULONG_MAX` is a
+//!   negative int, `(long) PyOS_strtoul`; 2.4 made it a positive long, PEP
+//!   237) is above `i64::MAX`, which the decoder refuses.
 
 /// What `/` means on two integers.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -64,10 +131,22 @@ pub enum Slash {
     /// every integer subset, so the compiler refuses it as `Unsupported`.
     True,
     /// Classic division: floor division on ints (Python 2 without `from
-    /// __future__ import division`). It would lower to `i64_div_floor`. No
-    /// profile uses it yet; a Python 2 release needs its own pair (its
-    /// `print` is a statement) before it can.
+    /// __future__ import division`). It lowers exactly like `//`, to
+    /// `i64_div_floor` (with the same `-1` divisor fold). The `py2` profile.
     Classic,
+}
+
+/// How an `INT` token's text becomes a value.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum IntLiterals {
+    /// Decimal only, with optional single `_` separators between digits
+    /// (PEP 515; the lexer decides whether the release has them). A
+    /// non-zero literal with a leading zero is refused. The `py3` profile.
+    Decimal,
+    /// Python 2: decimal, octal `0[0-7]*`, `0x`/`0o`/`0b` prefixes, and an
+    /// optional `l`/`L` long suffix that changes no value. No `_`. The
+    /// `py2` profile.
+    Python2,
 }
 
 /// The semantic switches one release (or many) compiles under.
@@ -77,23 +156,46 @@ pub struct ReleaseProfile {
     pub name: &'static str,
     /// What `/` means on integers.
     pub slash: Slash,
+    /// How integer literals are spelled.
+    pub int_literals: IntLiterals,
+    /// The subset this profile's releases claim, as `subsets.csv` names it.
+    pub subset: &'static str,
 }
 
 /// Python 3: unbounded `int`, floor `//` and `%`, true `/`, `print()`.
 pub const PY3: ReleaseProfile = ReleaseProfile {
     name: "py3",
     slash: Slash::True,
+    int_literals: IntLiterals::Decimal,
+    subset: "py-int-print",
+};
+
+/// Python 2: classic `/` on ints, floor `//` and `%`, octal, hex and long
+/// literals, the `print`
+/// statement (the statement is a grammar shape, not a switch: only the
+/// `py2` pairs have a `print_stmt` rule).
+pub const PY2: ReleaseProfile = ReleaseProfile {
+    name: "py2",
+    slash: Slash::Classic,
+    int_literals: IntLiterals::Python2,
+    subset: "py2-int-print",
 };
 
 /// Every profile this crate defines, for tooling and tests.
-pub const PROFILES: &[ReleaseProfile] = &[PY3];
+pub const PROFILES: &[ReleaseProfile] = &[PY2, PY3];
+
+/// CST rules a profile's grammars add to [`crate::DISPATCHED_RULES`]
+/// (LANG84 C8): `cst_contract` checks each one exists in every release of
+/// that profile, and only there.
+pub const PROFILE_RULES: &[(&str, &[&str])] = &[("py2", &["print_stmt"])];
 
 /// The profile an inventory release compiles under, or `None` when the
 /// release claims no IIR subset. Exact IDs only; nothing here orders or
 /// compares versions.
 pub fn profile_for(release: &str) -> Option<&'static ReleaseProfile> {
     match release {
-        "3.0a1" | "3.11.17" | "3.12.3" | "3.13.16" | "3.16.0a1" => Some(&PY3),
+        "2.2" | "2.4" | "2.6" | "2.7.18" => Some(&PY2),
+        "3.0a1" | "3.5.10" | "3.6.0" | "3.11.17" | "3.12.3" | "3.13.16" | "3.16.0a1" => Some(&PY3),
         _ => None,
     }
 }
@@ -103,14 +205,31 @@ mod tests {
     use super::*;
 
     #[test]
-    fn phase_7a_releases_share_py3_and_nothing_else_has_a_profile() {
-        for release in ["3.0a1", "3.11.17", "3.12.3", "3.13.16", "3.16.0a1"] {
+    fn paired_releases_have_their_profile_and_nothing_else_has_one() {
+        for release in ["3.0a1", "3.5.10", "3.6.0", "3.11.17", "3.12.3", "3.13.16", "3.16.0a1"] {
             assert_eq!(profile_for(release), Some(&PY3), "{release}");
         }
-        for release in ["3.0", "3.12", "3.13.15", "2.7.18", "", "py3"] {
+        for release in ["2.2", "2.4", "2.6", "2.7.18"] {
+            assert_eq!(profile_for(release), Some(&PY2), "{release}");
+        }
+        // The legacy minor lines (2.7, 3.0, 3.12) and unpaired rows have none.
+        for release in ["3.0", "3.12", "3.13.15", "3.5.9", "3.6.1", "2.7", "2.7.17", "2.6.9", "2.4.6", "2.2a3", "", "py3", "py2"] {
             assert_eq!(profile_for(release), None, "{release:?}");
         }
         assert_eq!(PY3.slash, Slash::True);
+        assert_eq!(PY2.slash, Slash::Classic);
+        assert_eq!(PY3.int_literals, IntLiterals::Decimal);
+        assert_eq!(PY2.int_literals, IntLiterals::Python2);
         assert!(PROFILES.iter().all(|p| !p.name.is_empty()));
+    }
+
+    #[test]
+    fn each_profile_names_its_own_subset() {
+        assert_eq!(PY3.subset, "py-int-print");
+        assert_eq!(PY2.subset, "py2-int-print");
+        for (profile, rules) in PROFILE_RULES {
+            assert!(PROFILES.iter().any(|p| p.name == *profile), "{profile}");
+            assert!(!rules.is_empty());
+        }
     }
 }

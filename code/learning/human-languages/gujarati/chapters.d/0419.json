@@ -1,0 +1,19 @@
+{
+  "chapter": 419,
+  "title": "Streets and Lanes",
+  "label": "ch:gu-streets-and-lanes",
+  "canDo": "I can talk about my street and the people who live there.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GU-C419-rajhalvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can talk about my street and the people who live there.",
+    "assesses": [
+      "GU-LEX-C419-STREET419-03",
+      "GU-LEX-C419-STREET419-04",
+      "GU-LEX-C419-STREET419-05"
+    ]
+  }
+}

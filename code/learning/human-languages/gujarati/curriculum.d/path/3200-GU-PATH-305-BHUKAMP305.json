@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-305-BHUKAMP305",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GU-EXT-305-BHUKAMP305"
+  ],
+  "after": []
+}

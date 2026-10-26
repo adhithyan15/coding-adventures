@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R500-review-final-500",
+    "language": "gujarati",
+    "chapter": 500,
+    "sequence": 27770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ecc836da9f6a7bc"
+  },
+  "findings": []
+}

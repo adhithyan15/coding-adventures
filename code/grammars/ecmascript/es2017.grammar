@@ -1,6 +1,9 @@
 # ECMAScript 2017 (ES8) — Parser Grammar
 # @version 1
 # @ecmascript_edition 2017
+# source_ref: https://github.com/tc39/ecma262/tree/es2017
+# source_sha: 7301daf5ab1f0959b203c2e63ecccb21fe13d5e5
+# PARTIAL: the IIR path claims es-number-log only (LANG84 phase 6d; see releases.csv); this syntactic pair predates LANG84 and is not yet audited clause by clause against the tagged spec text.
 #
 # ECMA-262, 8th Edition — June 2017
 #
@@ -265,7 +268,7 @@ variable_declaration = ( NAME | binding_pattern ) [ EQUALS assignment_expression
 
 empty_statement = SEMICOLON ;
 
-expression_statement = expression SEMICOLON ;
+expression_statement = !( LBRACE | "function" | "class" | "let" LBRACKET | "async" "function" ) expression SEMICOLON ; # lookahead: see the note at the end of this file
 
 if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ] ;
 
@@ -470,3 +473,23 @@ template_literal = TEMPLATE_NO_SUB
                  | TEMPLATE_HEAD { template_span } TEMPLATE_TAIL ;
 
 template_span = expression TEMPLATE_MIDDLE ;
+
+# ============================================================================
+# ExpressionStatement lookahead (F12 phase 0)
+# ============================================================================
+#
+# ECMA-262: ExpressionStatement : [lookahead ∉ { `{`, `function`, `class`, `let [`,
+# `async [no LineTerminator here] function` }]
+# Expression ;
+#
+# A `{` at the start of a statement is a Block, and `function` (and, from
+# ES2015, `class` and `let [`) start declarations, never expressions. Without
+# the lookahead, a block whose last statement has no `;` yet (ASI only runs
+# after the whole parse fails) re-parsed as an object literal: `{ a }` became
+# `({a})`, and `{ a }⏎/foo/g.exec(s)` compiled to a different program. The
+# rule is kept on one line, with this note at the end of the file, so the
+# rules after it keep their line numbers in the compiled grammars.
+#
+# The `async function` arm also refuses the rare `async⏎function f(){}` (an
+# `async;` statement, then a declaration): not every grammar port has a
+# no-newline predicate yet, so that input fails closed.

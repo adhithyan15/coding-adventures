@@ -1,0 +1,8 @@
+[package]
+name = "opensparc-t1-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked single-strand UltraSPARC T1 scalar integer functional simulator"
+license = "MIT"
+
+[dependencies]

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C541-prastav",
+    "language": "gujarati",
+    "chapter": 541,
+    "sequence": 30090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f9caf20fa99427b"
+  },
+  "findings": []
+}

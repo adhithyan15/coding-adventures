@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:15654054663fa70a",
+  "lessonIds": [
+    "UR-C357-badunvani",
+    "UR-C357-idara",
+    "UR-C357-pabandi",
+    "UR-C357-sifarish",
+    "UR-C357-shaffaf"
+  ],
+  "tex": "urdu/book/chapters/ch357-corruption.tex"
+}

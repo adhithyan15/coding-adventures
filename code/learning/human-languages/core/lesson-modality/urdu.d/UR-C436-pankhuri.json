@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C436-pankhuri",
+    "language": "urdu",
+    "chapter": 436,
+    "sequence": 25590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86d88c3dcb5f2abc"
+  },
+  "findings": []
+}

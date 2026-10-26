@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:28ef5fbecf525712",
+  "lessonIds": [
+    "UR-C392-istaind",
+    "UR-C392-istap",
+    "UR-C392-rah",
+    "UR-C392-tahalna",
+    "UR-C392-hanpna"
+  ],
+  "tex": "urdu/book/chapters/ch392-stands-and-stops.tex"
+}

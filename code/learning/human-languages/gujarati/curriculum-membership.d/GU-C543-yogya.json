@@ -1,0 +1,11 @@
+{
+  "id": "GU-C543-yogya",
+  "pathSegment": "GU-PATH-543-APVAD543",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-543-APVAD543",
+      "order": 1
+    }
+  ]
+}

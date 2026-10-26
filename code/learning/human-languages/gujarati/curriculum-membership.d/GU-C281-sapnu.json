@@ -1,0 +1,11 @@
+{
+  "id": "GU-C281-sapnu",
+  "pathSegment": "GU-PATH-281-FEEL-HOPE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GU-EXT-281-FEEL-HOPE",
+      "order": 5
+    }
+  ]
+}

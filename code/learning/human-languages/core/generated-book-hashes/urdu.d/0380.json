@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:ccf960f1672b67aa",
+  "lessonIds": [
+    "UR-C380-tariqa",
+    "UR-C380-mashq",
+    "UR-C380-himmat",
+    "UR-C380-sujhna",
+    "UR-C380-jutna"
+  ],
+  "tex": "urdu/book/chapters/ch380-getting-ready.tex"
+}

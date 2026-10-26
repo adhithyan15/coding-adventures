@@ -1,0 +1,19 @@
+{
+  "chapter": 435,
+  "title": "Bays and Nets",
+  "label": "ch:ur-bays-and-nets",
+  "canDo": "I can describe a bay, its boats and what the fishermen bring in.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C435-dubki",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can describe a bay, its boats and what the fishermen bring in.",
+    "assesses": [
+      "UR-LEX-C435-KHALIJ435-03",
+      "UR-LEX-C435-KHALIJ435-04",
+      "UR-LEX-C435-KHALIJ435-05"
+    ]
+  }
+}

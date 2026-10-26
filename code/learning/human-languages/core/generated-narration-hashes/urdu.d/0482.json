@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:528930a4165fd968",
+  "lessonIds": [
+    "UR-C482-nahlana",
+    "UR-C482-mundna",
+    "UR-C482-shev",
+    "UR-C482-katvana",
+    "UR-C482-tarashna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch482.txt",
+  "json": "urdu/narration/ch482.json",
+  "textHash": "fnv1a64:33ace1a470e9ec4e",
+  "jsonHash": "fnv1a64:3e64dbc6dd13e039",
+  "findings": []
+}

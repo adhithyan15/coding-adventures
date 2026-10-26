@@ -1,0 +1,11 @@
+{
+  "id": "UR-C367-nafiz-hona",
+  "pathSegment": "UR-PATH-367-QAIDA367",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-367-QAIDA367",
+      "order": 4
+    }
+  ]
+}

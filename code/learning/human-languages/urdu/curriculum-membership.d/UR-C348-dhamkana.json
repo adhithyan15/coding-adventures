@@ -1,0 +1,11 @@
+{
+  "id": "UR-C348-dhamkana",
+  "pathSegment": "UR-PATH-348-ETIRAZ348",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-348-ETIRAZ348",
+      "order": 3
+    }
+  ]
+}

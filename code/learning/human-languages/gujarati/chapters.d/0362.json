@@ -1,0 +1,21 @@
+{
+  "chapter": 362,
+  "title": "Research",
+  "label": "ch:gu-research",
+  "canDo": "I can say what a researcher is working on.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GU-R362-review-355-362",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can say what a researcher is working on.",
+    "assesses": [
+      "GU-LEX-C362-SANSHODHAN362-01",
+      "GU-LEX-C362-SANSHODHAN362-02",
+      "GU-LEX-C362-SANSHODHAN362-03",
+      "GU-LEX-C362-SANSHODHAN362-04",
+      "GU-LEX-C362-SANSHODHAN362-05"
+    ]
+  }
+}

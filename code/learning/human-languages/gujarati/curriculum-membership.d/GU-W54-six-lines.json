@@ -1,0 +1,11 @@
+{
+  "id": "GU-W54-six-lines",
+  "pathSegment": "GU-PATH-284-CONDITION-WOULD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-284-CONDITION-WOULD",
+      "order": 3
+    }
+  ]
+}

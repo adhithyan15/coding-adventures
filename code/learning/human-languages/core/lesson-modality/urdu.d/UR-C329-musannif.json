@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C329-musannif",
+    "language": "urdu",
+    "chapter": 329,
+    "sequence": 19720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19899b72771a6ec3"
+  },
+  "findings": []
+}

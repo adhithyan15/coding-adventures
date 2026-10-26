@@ -1,0 +1,19 @@
+{
+  "chapter": 463,
+  "title": "Chatty and Quiet",
+  "label": "ch:gu-chatty-and-quiet",
+  "canDo": "I can say whether someone talks a lot or a little.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C463-hasmukhu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can say whether someone talks a lot or a little.",
+    "assesses": [
+      "GU-LEX-C463-VACAL463-03",
+      "GU-LEX-C463-VACAL463-04",
+      "GU-LEX-C463-VACAL463-05"
+    ]
+  }
+}

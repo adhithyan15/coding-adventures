@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:957715288ea2399a",
+  "lessonIds": [
+    "GU-C355-vero",
+    "GU-C355-phalo",
+    "GU-C355-arthik",
+    "GU-C355-grant",
+    "GU-C355-ughravvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch355.txt",
+  "json": "gujarati/narration/ch355.json",
+  "textHash": "fnv1a64:366078d0e4b45969",
+  "jsonHash": "fnv1a64:6e91312d2c73ed67",
+  "findings": []
+}

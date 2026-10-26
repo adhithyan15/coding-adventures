@@ -1,0 +1,19 @@
+{
+  "chapter": 351,
+  "title": "A Study",
+  "label": "ch:ur-a-study",
+  "canDo": "I can report what a study found.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C351-parakhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 351: I can report what a study found.",
+    "assesses": [
+      "UR-LEX-C351-MUTALAA351-03",
+      "UR-LEX-C351-MUTALAA351-04",
+      "UR-LEX-C351-MUTALAA351-05"
+    ]
+  }
+}

@@ -424,6 +424,10 @@ pub const F64_FLOOR: u8 = 0x9C;
 /// trunc=0x9D, nearest=0x9E, **sqrt=0x9F**.
 pub const F64_SQRT: u8 = 0x9F;
 
+/// `i64.reinterpret_f64` (0xBD) — the bit pattern of a double as an i64, no
+/// conversion (LANG83 PR6c `f64_signbit`).
+pub const I64_REINTERPRET_F64: u8 = 0xBD;
+
 /// `i64.trunc_f64_s` (0xB0) — truncate a double toward zero to a signed i64,
 /// **trapping** on NaN/±∞/out-of-range.
 pub const I64_TRUNC_F64_S: u8 = 0xB0;

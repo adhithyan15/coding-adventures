@@ -1,0 +1,11 @@
+{
+  "id": "UR-C520-langot",
+  "pathSegment": "UR-PATH-520-AKHARA520",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-520-AKHARA520",
+      "order": 4
+    }
+  ]
+}

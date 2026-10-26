@@ -1,0 +1,19 @@
+{
+  "chapter": 319,
+  "title": "Kites in Spring",
+  "label": "ch:ur-kites-in-spring",
+  "canDo": "I can tell how a spring kite festival was spent.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C319-katna-cut-loose",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can tell how a spring kite festival was spent.",
+    "assesses": [
+      "UR-LEX-C319-BASANT319-03",
+      "UR-LEX-C319-BASANT319-04",
+      "UR-LEX-C319-BASANT319-05"
+    ]
+  }
+}

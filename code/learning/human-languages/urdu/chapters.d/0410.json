@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Landmarks",
+  "label": "ch:ur-landmarks",
+  "canDo": "I can give directions by landmarks: a building, a sign, a pole.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C410-dikhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can give directions by landmarks: a building, a sign, a pole.",
+    "assesses": [
+      "UR-LEX-C410-IMARAT410-03",
+      "UR-LEX-C410-IMARAT410-04",
+      "UR-LEX-C410-IMARAT410-05"
+    ]
+  }
+}

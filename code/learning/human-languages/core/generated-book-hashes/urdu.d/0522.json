@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:aba9ea0efb0ca22d",
+  "lessonIds": [
+    "UR-C522-phurti",
+    "UR-C522-lachakna",
+    "UR-C522-lurhkana",
+    "UR-C522-daurana",
+    "UR-C522-trafi"
+  ],
+  "tex": "urdu/book/chapters/ch522-quick-on-your-feet.tex"
+}

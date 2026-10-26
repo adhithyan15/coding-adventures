@@ -1,0 +1,21 @@
+{
+  "chapter": 486,
+  "title": "Growing Up",
+  "label": "ch:ur-growing-up",
+  "canDo": "I can talk about growing up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-R486-review-480-486",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can talk about growing up.",
+    "assesses": [
+      "UR-LEX-C486-GROWUP486-01",
+      "UR-LEX-C486-GROWUP486-02",
+      "UR-LEX-C486-GROWUP486-03",
+      "UR-LEX-C486-GROWUP486-04",
+      "UR-LEX-C486-GROWUP486-05"
+    ]
+  }
+}

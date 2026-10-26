@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:56ed860cdfbcf5b5",
+  "lessonIds": [
+    "UR-C510-chhilna-peel",
+    "UR-C510-kutna",
+    "UR-C510-okhli",
+    "UR-C510-pisvana",
+    "UR-C510-nichorna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch510.txt",
+  "json": "urdu/narration/ch510.json",
+  "textHash": "fnv1a64:650034b1fe3399d1",
+  "jsonHash": "fnv1a64:0627d8a9bbeea446",
+  "findings": []
+}

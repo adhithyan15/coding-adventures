@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-500-SILAI500",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "UR-EXT-500-SILAI500"
+  ],
+  "after": []
+}

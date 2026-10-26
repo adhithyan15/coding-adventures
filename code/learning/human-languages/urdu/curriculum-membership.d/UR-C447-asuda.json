@@ -1,0 +1,11 @@
+{
+  "id": "UR-C447-asuda",
+  "pathSegment": "UR-PATH-447-CALM447",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-447-CALM447",
+      "order": 1
+    }
+  ]
+}

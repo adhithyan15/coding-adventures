@@ -1,0 +1,11 @@
+{
+  "id": "UR-C394-draivar",
+  "pathSegment": "UR-PATH-394-GARHA394",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-394-GARHA394",
+      "order": 1
+    }
+  ]
+}

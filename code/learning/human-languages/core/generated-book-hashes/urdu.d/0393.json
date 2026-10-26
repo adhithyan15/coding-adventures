@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:68dd4e16ecb84bb7",
+  "lessonIds": [
+    "UR-C393-jam",
+    "UR-C393-harn",
+    "UR-C393-kandaktar",
+    "UR-C393-sarakna",
+    "UR-C393-rukvana",
+    "UR-R393-review-386-393"
+  ],
+  "tex": "urdu/book/chapters/ch393-traffic-jams.tex"
+}

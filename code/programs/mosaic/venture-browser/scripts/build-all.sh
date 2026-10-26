@@ -62,10 +62,18 @@ else
 fi
 mkdir -p "$output_path"
 output_root="$(cd "$output_path" && pwd)"
-backends=(react electron swiftui qt webcomponent html xaml flutter compose)
 cargo_args=(run -q -p mosaic-compile)
 if ((release)); then
   cargo_args+=(--release)
+fi
+# The backend matrix is the compiler's own list, never a copy of it: a backend
+# added to Mosaic is built here the next time this runs.
+# (bash 3.2 on macOS has no `mapfile`; backend names contain no spaces.)
+# shellcheck disable=SC2207
+backends=($(cd "$rust_workspace" && cargo "${cargo_args[@]}" -- backends))
+if ((${#backends[@]} == 0)); then
+  echo "mosaic-compile backends listed nothing" >&2
+  exit 1
 fi
 cargo_args+=(-- pkg "$package_root")
 

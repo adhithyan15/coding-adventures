@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:3e5a18c7b43cbe32",
+  "lessonIds": [
+    "GU-C475-andh",
+    "GU-C475-baheru",
+    "GU-C475-mugu",
+    "GU-C475-najar",
+    "GU-C475-adakvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch475.txt",
+  "json": "gujarati/narration/ch475.json",
+  "textHash": "fnv1a64:3ad5d84f000f0d5c",
+  "jsonHash": "fnv1a64:6185c89af4087dd1",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C464-thavku",
+  "pathSegment": "GU-PATH-464-SANU464",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-464-SANU464",
+      "order": 3
+    }
+  ]
+}

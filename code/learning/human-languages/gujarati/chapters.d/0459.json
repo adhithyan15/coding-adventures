@@ -1,0 +1,19 @@
+{
+  "chapter": 459,
+  "title": "Gentle and Harsh",
+  "label": "ch:gu-gentle-and-harsh",
+  "canDo": "I can describe how gently or harshly someone speaks.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C459-pigalvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can describe how gently or harshly someone speaks.",
+    "assesses": [
+      "GU-LEX-C459-KOMAL459-03",
+      "GU-LEX-C459-KOMAL459-04",
+      "GU-LEX-C459-KOMAL459-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C522-palaalvu",
+  "pathSegment": "GU-PATH-522-KHAYNI522",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-522-KHAYNI522",
+      "order": 3
+    }
+  ]
+}

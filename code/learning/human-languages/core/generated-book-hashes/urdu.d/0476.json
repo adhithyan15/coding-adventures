@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:5f77c51f0320e9ee",
+  "lessonIds": [
+    "UR-C476-muaina-karna",
+    "UR-C476-test",
+    "UR-C476-tashkhis",
+    "UR-C476-hakim",
+    "UR-C476-bulvana"
+  ],
+  "tex": "urdu/book/chapters/ch476-at-the-doctor-s.tex"
+}

@@ -1,0 +1,8 @@
+[package]
+name = "cortex-m3-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked Armv7-M Cortex-M3 functional simulator"
+license = "MIT"
+
+[dependencies]
