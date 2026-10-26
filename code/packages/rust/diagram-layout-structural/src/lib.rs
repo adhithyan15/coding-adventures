@@ -1775,6 +1775,26 @@ mod tests {
     }
 
     #[test]
+    fn key_prefix_attribute_types_reserve_rows() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.nodes[0].id = "ENTITY".into();
+        diagram.nodes[0].label = "ENTITY".into();
+        diagram.nodes[0].compartments[0].entries = vec![
+            "primary: PKType".into(),
+            "foreign: fk_type".into(),
+            "alias: string? [UK]".into(),
+        ];
+        diagram.relationships.clear();
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.nodes[0].compartments[0].rows.len(), 3);
+        assert!(layout.nodes[0].height > 70.0);
+    }
+
+    #[test]
     fn unicode_symbol_er_text_reserves_layout_space() {
         let mut diagram = two_class_diagram();
         diagram.title = None;

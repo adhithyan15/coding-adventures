@@ -245,6 +245,14 @@ const ER_ATTRIBUTE_NAME_VALIDATION_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-attribute-name-validation-11.16.1-visual-corpus.json"
 ));
+const ER_ATTRIBUTE_TYPE_VALIDATION_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-attribute-type-validation-11.16.1-corpus.json"
+));
+const ER_ATTRIBUTE_TYPE_VALIDATION_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-attribute-type-validation-11.16.1-visual-corpus.json"
+));
 const ER_UNICODE_SYMBOLS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-unicode-symbols-11.16.1-corpus.json"
@@ -2998,6 +3006,42 @@ fn pinned_er_attribute_name_boundaries_match_upstream() {
             .expect("invalid ER attribute-name source");
         assert!(
             parse_er_diagram(source).is_err(),
+            "{} must be rejected",
+            fixture["name"]
+        );
+    }
+}
+
+#[test]
+fn pinned_er_attribute_type_boundaries_match_upstream() {
+    let syntax: Value = serde_json::from_str(ER_ATTRIBUTE_TYPE_VALIDATION_CORPUS)
+        .expect("ER attribute-type validation corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_ATTRIBUTE_TYPE_VALIDATION_VISUAL_CORPUS)
+        .expect("ER attribute-type validation visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["valid"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["valid"][0]["source"]
+            .as_str()
+            .expect("valid ER attribute-type source"),
+    )
+    .expect("key-prefix attribute types must parse");
+
+    assert_eq!(
+        diagram.nodes[0].compartments[0].entries,
+        ["primary: PKType", "foreign: fk_type", "alias: string? [UK]"]
+    );
+    for fixture in syntax["invalid"]
+        .as_array()
+        .expect("invalid ER attribute-type fixtures")
+    {
+        assert!(
+            parse_er_diagram(
+                fixture["source"]
+                    .as_str()
+                    .expect("invalid ER attribute-type source")
+            )
+            .is_err(),
             "{} must be rejected",
             fixture["name"]
         );
