@@ -420,13 +420,18 @@ impl CortexM23Simulator {
         let before = try_clone_state(&self.state)?;
         let (first, _second, width) = fetch_instruction(&before)?;
         check_access(&before, before.pc, width, AccessKind::Instruction)?;
+
+        // Execute only against the private scratch core first. This performs
+        // the inherited decode and semantic checks without changing M23
+        // architectural state. Data attribution is then checked before the
+        // successful candidate is allowed to commit.
+        self.core.restore(to_core_state(&before)?)?;
+        let core_trace = self.core.step()?;
         if let Some((address, bytes, access)) = inherited_data_access(&before, first) {
             checked_instruction_data_range(address, bytes)?;
             check_access(&before, address, bytes, access)?;
         }
 
-        self.core.restore(to_core_state(&before)?)?;
-        let core_trace = self.core.step()?;
         let mut next = try_clone_state(&before)?;
         update_from_core(&mut next, core_trace.state_after);
         let state_after = try_clone_state(&next)?;
@@ -1374,6 +1379,36 @@ mod tests {
                 }
             ))
         ));
+    }
+
+    #[test]
+    fn inherited_invalid_multiple_encoding_precedes_security_attribution() {
+        // STMIA r1!, {r0, r1} is invalid because the writeback base is in the
+        // list but is not the lowest-numbered register. Its apparent data
+        // address is Secure, so this guards the decode-vs-SAU fault priority.
+        let raw = 0xc103;
+        let mut simulator = non_secure_program(&[raw]);
+        let mut state = snapshot(&simulator);
+        state.registers[1] = 0x100;
+        simulator.restore(state).unwrap();
+        let before = snapshot(&simulator);
+        let error = simulator.step().unwrap_err();
+        assert_eq!(
+            error,
+            CortexM23Error::Core(cortex_m0_simulator::CortexM0Error::UnknownInstruction16 {
+                raw,
+                pc: 0
+            })
+        );
+        assert_eq!(snapshot(&simulator), before);
+
+        let mut core = cortex_m0_simulator::CortexM0Simulator::new();
+        core.load(&bytes(&[raw]), 0).unwrap();
+        core.write_register(1, 0x100).unwrap();
+        assert_eq!(
+            core.step(),
+            Err(cortex_m0_simulator::CortexM0Error::UnknownInstruction16 { raw, pc: 0 })
+        );
     }
 
     #[test]
