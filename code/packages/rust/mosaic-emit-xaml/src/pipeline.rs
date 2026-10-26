@@ -6328,6 +6328,20 @@ public sealed class __COMPONENT__MosaicTable : Grid
         return (int)count;
     }
 
+    // A keyboard step addresses exactly one logical row. Unlike wheel input,
+    // fractional metadata must not be rounded: it cannot identify a row whose
+    // selection is safe to dispatch after the window changes.
+    internal static int KeyboardViewportShift(int nextRow, int rows, double offset, double total, int capacity)
+    {
+        if (rows <= 0 || capacity <= 0 || rows > capacity ||
+            !double.IsFinite(offset) || !double.IsFinite(total) ||
+            offset < 0 || total <= 0 || offset != Math.Truncate(offset) || total != Math.Truncate(total) ||
+            total > int.MaxValue || offset > Math.Max(0, total - capacity) || rows > total - offset) return 0;
+        if (nextRow == -1 && offset > 0) return -1;
+        if (nextRow == rows && rows == capacity && offset + rows < total) return 1;
+        return 0;
+    }
+
     internal static int ViewportShift(int delta, double offset, double total, int capacity, ref double remainder)
     {
         if (!double.IsFinite(offset) || !double.IsFinite(total) || offset < 0 || total < 0 || capacity <= 0) { remainder = 0; return 0; }
@@ -28858,6 +28872,22 @@ MATH
         Check(ViewportCapacity(double.PositiveInfinity, 32, 100) == 0);
         Check(ViewportCapacity(640, double.NaN, 100) == 0);
         Check(ViewportCapacity(640, 0, 100) == 0);
+        Check(KeyboardViewportShift(-1, 20, 15, 100, 20) == -1);
+        Check(KeyboardViewportShift(20, 20, 15, 100, 20) == 1);
+        Check(KeyboardViewportShift(-1, 20, 0, 100, 20) == 0);
+        Check(KeyboardViewportShift(20, 20, 80, 100, 20) == 0);
+        Check(KeyboardViewportShift(19, 20, 15, 100, 20) == 0);
+        Check(KeyboardViewportShift(21, 20, 15, 100, 20) == 0);
+        Check(KeyboardViewportShift(5, 5, 0, 5, 20) == 0);
+        Check(KeyboardViewportShift(5, 5, 15, 100, 20) == 0);
+        Check(KeyboardViewportShift(-1, 20, 15.5, 100, 20) == 0);
+        Check(KeyboardViewportShift(-1, 20, 15, 100.5, 20) == 0);
+        Check(KeyboardViewportShift(-1, 20, double.NaN, 100, 20) == 0);
+        Check(KeyboardViewportShift(-1, 20, 15, double.PositiveInfinity, 20) == 0);
+        Check(KeyboardViewportShift(-1, 20, 81, 100, 20) == 0);
+        Check(KeyboardViewportShift(-1, 20, 15, 100, 0) == 0);
+        Check(KeyboardViewportShift(-1, 21, 15, 100, 20) == 0);
+        Check(KeyboardViewportShift(-1, 20, 15, (double)int.MaxValue + 1, 20) == 0);
         double rest = 0;
         Check(ViewportShift(-10, 0, 100, 20, ref rest) == 0 && rest == .25);
         Check(ViewportShift(-30, 0, 100, 20, ref rest) == 1 && rest == 0);

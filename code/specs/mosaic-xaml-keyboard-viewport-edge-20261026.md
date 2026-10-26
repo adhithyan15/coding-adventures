@@ -54,7 +54,12 @@ Source assertions and stub execution alone do not establish native acceptance.
 
 ## Status
 
-Specification only. Implementation and all validation above are pending.
+The emitted keyboard boundary arithmetic is implemented and exercised by the
+compiled C# projection probe (2026-10-26): upper/lower steps, global boundaries,
+short windows, fractional/nonfinite/out-of-range metadata and invalid capacity
+pass. The helper is not connected to keyboard input yet. The cancellable
+continuation, native regeneration and interaction acceptance remain pending;
+this intermediate commit does not fix the observed native navigation defect.
 Existing #16865 warm populated measurements remain valid but do not cover this
 boundary. The separate PickerHost tooling limitation in #14548 does not block
 implementation or independent keyboard probes; do not claim Save/Open acceptance.
