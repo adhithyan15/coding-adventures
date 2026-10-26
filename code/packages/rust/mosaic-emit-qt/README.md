@@ -1,5 +1,8 @@
 # mosaic-emit-qt
 
+Static scalar text widths paired with exact `flex-shrink: 0` also retain a
+minimum width. The conservative container exclusions and flex diagnostics apply.
+
 Static fixed-width Row/Column/Box containers paired with exact `flex-shrink: 0`
 retain a minimum width, including painted wrappers. State geometry overrides
 and conflicting min/max/flex constraints remain outside this narrow bridge;

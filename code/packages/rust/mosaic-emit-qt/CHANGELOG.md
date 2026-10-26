@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-25 (Fixed text width floors)
+
+- Preserve static scalar text widths paired with exact flex-shrink: 0 (#18305).
+  Conflicting constraints and state geometry remain excluded; diagnostics remain.
+
 ## 2026-10-25 (Fixed container width floors)
 
 - Preserve static non-shrinking Row/Column/Box widths on ordinary container
