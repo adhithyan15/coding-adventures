@@ -42,6 +42,19 @@ The real-stdin test is replaced by seven in-memory ones that run natively
 
 `host/read_line` previously had no tests at all.
 
+### Changed — four cap-exhaustion tests skip under Miri only
+
+With the abort gone, the Miri run reached tests it had never reached before and
+could not finish: `execution_budget_enforces_cap` alone ticks a `u64` counter
+2^25 times and took ~75 min under Miri, past the 120-min CI timeout. It and
+`ic_table_rejects_too_many_functions` (2^16 inserts),
+`profile_table_rejects_too_many_functions` (2^16) and
+`profile_table_rejects_too_many_instruction_slots` (2^20) are pure safe Rust
+over counters and `HashMap`s — no `unsafe`, no dynval-runtime seam — so Miri
+has nothing to check in them. They now carry
+`#[cfg_attr(miri, ignore = "<reason>")]` and still run under native
+`cargo test`.
+
 ## Unreleased — LANG84 phase 4b — `IIRModule::release`
 
 - Every `IIRModule { .. }` struct literal (code, tests and doc examples)

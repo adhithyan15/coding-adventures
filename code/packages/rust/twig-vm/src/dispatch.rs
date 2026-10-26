@@ -3825,7 +3825,14 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(miri, ignore = "2^25 safe-Rust counter ticks; hours under Miri, no unsafe or heap-seam code reached")]
     fn execution_budget_enforces_cap() {
+        // Not run under Miri: this loop ticks a plain `u64` counter
+        // MAX_INSTRUCTIONS_PER_RUN (2^25) times.  It is ordinary safe Rust
+        // with no pointers, no `unsafe` and no dynval-runtime calls, so
+        // Miri has nothing to check here — but it interprets every tick,
+        // which took ~75 min alone and pushed miri-twig-vm.sh past the
+        // 120-min CI timeout.  Native `cargo test` still runs it.
         let mut b = ExecutionBudget::new();
         // Burn through the budget — increment to one past the limit.
         for _ in 0..MAX_INSTRUCTIONS_PER_RUN {
@@ -4534,7 +4541,12 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(miri, ignore = "2^16 format!+HashMap inserts; very slow under Miri, safe Rust only")]
     fn ic_table_rejects_too_many_functions() {
+        // Not run under Miri: 2^16 `format!` + `HashMap` inserts of
+        // safe Rust (no `unsafe`, no dynval-runtime seam) — interpreting
+        // them costs tens of minutes and checks nothing new.  Native
+        // `cargo test` still runs it.
         // PR 7 security review (MEDIUM #2): adding the
         // MAX_IC_FUNCTIONS+1th distinct function name fails.
         // We don't actually allocate 65k entries (slow); just
@@ -4811,7 +4823,10 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(miri, ignore = "2^16 format!+HashMap inserts; very slow under Miri, safe Rust only")]
     fn profile_table_rejects_too_many_functions() {
+        // Not run under Miri: same shape and reason as
+        // `ic_table_rejects_too_many_functions` (2^16 safe-Rust inserts).
         let mut p = ProfileTable::new();
         for i in 0..MAX_PROFILED_FUNCTIONS {
             p.note_call(&format!("f{i}")).unwrap();
@@ -4827,7 +4842,10 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(miri, ignore = "2^20 safe-Rust HashMap inserts; hours under Miri, no unsafe reached")]
     fn profile_table_rejects_too_many_instruction_slots() {
+        // Not run under Miri: 2^20 safe-Rust `HashMap` inserts — hours of
+        // interpretation, no `unsafe` or dynval-runtime seam involved.
         // PR 8 security review (Medium #3): cap on the per-instr
         // slot map.  This prevents long-lived ProfileTables
         // reused across many runs from growing without bound.
