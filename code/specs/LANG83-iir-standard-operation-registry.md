@@ -1209,6 +1209,56 @@ computed `x` lowers on BEAM too.
 Ruby `Float#to_s` (fixed when `-4 <= e < 16`, else `1.0e+16`) becomes a
 third helper in the Ruby compiler when Ruby gains floats. No backend changes.
 
+**What PR7c-js landed, and where it diverged from the plan above.**
+`javascript-iir-compiler` 0.7.0 emits no `write_f64_js`. A module that
+prints a number carries `__js_write_number(x: f64) -> i64` and the three
+shared helpers, as `__js_digit_count(D)`, `__js_write_digits(D, n, from, to)`
+and `__js_write_uint(u)`, written in the crate's `number_to_string` module.
+Each `console.log` argument is one `call __js_write_number`; a module that
+prints no number (only `console.log()`, or a trap before the first print)
+carries none of them. All 38 `lang_matrix` JavaScript rows print what they
+printed before on every column that ran (native x86-64, LLVM, WASM, JVM, VM
+and JIT locally, 228 cells, matching host node v22), and a crate test
+compares 1,200 values, each positive and negative, with vm-core's PR6a
+formatter byte for byte.
+
+- *The `-0` test is one compare.* `f64_class x == 0 and f64_signbit x == 1`
+  is emitted as `cmp_gt (f64_signbit x) (f64_class x)`. The sign bit is 0 or
+  1 and the class is 0 to 3, so `s > c` holds exactly when `s = 1` and
+  `c = 0`. A literal, or a binding initialized straight from one, still
+  skips the test, as in 6e.
+- *`q − (q div 10) × 10`, not `q mod 10`.* The values agree for `q ≥ 0`.
+  The generic JIT has no `mod` bytecode, so with `mod` it would refuse the
+  digit writer. As written, it compiles.
+- *The run of zeros after `0.`* is `write_digits(D, n, n, n − e − 1)`.
+  Positions past `D`'s end are `'0'`, so no separate loop is needed.
+- *`write_uint`* is BASIC's recursive `__basic_print_uint`, unchanged.
+  `digit_count` stops at `p = 10^17`, since `D < 10^17`.
+- *Typing.* The helpers are marked `FullyTyped`, like BASIC's. Every
+  instruction has an `i64`, `f64` or `void` hint, and each helper returns
+  `i64` from one `ret`.
+- *Which rows BEAM runs did not change.* The subset has no computed value
+  without arithmetic: a value is a literal, a binding of one, or an `f64_*`
+  result. So the same 11 literal-only rows list BEAM, and the other 27 are
+  refused at compile time. The refusal now names only the five arithmetic
+  ops, never `f64_class`, `f64_signbit`, `f64_digits` or `f64_exp10`. The new
+  `javascript_prints_lower_on_beam_once_the_arithmetic_is_gone` replaces each
+  row's arithmetic with constants and lowers every module to BEAM, the sign
+  tests and the helpers included.
+- *JIT.* `main`, `__js_write_number` and `__js_write_uint` contain a `call`,
+  which the generic JIT has no bytecode for, so they run on the interpreter
+  tier. `__js_digit_count` and `__js_write_digits` compile, and
+  `execute_with_jit` compiles them eagerly. The 6e test that every row's
+  `main` compiles is replaced by
+  `javascript_rows_run_with_their_call_free_number_helpers_compiled_by_the_jit`,
+  which pins that split and checks that the compiled tier writes the
+  significant digits.
+- `write_f64_js` stays registered and lowered everywhere, and the `lang_matrix`
+  VM and JIT harnesses keep their sinks. They are removed in PR7e.
+  `run_module` registers only `putchar`.
+- `release_classes.csv` is regenerated. The classes partition the editions
+  as before: es2016–es2020 and es2021–es2025.
+
 **Conformance.** PR6a's 90-value table (its Python and JavaScript
 columns) stays the oracle. The PR7b
 `op_conformance` cases print `f64_class`, `f64_digits` and `f64_exp10` of
@@ -1266,7 +1316,8 @@ anything still emits it.
    computed values. All 38 `lang_matrix` JavaScript rows stay
    byte-identical. BEAM still refuses only `f64_*` arithmetic, but a
    `console.log` of a computed value no longer needs `f64_add` for its sign. `release_classes.csv` is regenerated, since the IIR
-   changes.
+   changes. *Landed;* see "What PR7c-js landed" under "The layouts, as
+   compiler-emitted helpers".
 4. **PR7c-py — python-iir-compiler does the same** on the release path.
    Its `lang_matrix` rows stay byte-identical.
 5. **PR7d — `Trap.ReferenceError` → `Trap.Unbound`, and retire

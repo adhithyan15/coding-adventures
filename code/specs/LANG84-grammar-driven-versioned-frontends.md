@@ -1610,6 +1610,17 @@ Divergences from this spec in 5b/7b slice 2:
    is refused by BEAM at compile time; CI executes both columns. Following
    the Ruby and Python precedent, `backend_status` claims `es-number-log`
    for es2016–es2025 (`check --matrix`: 38 cells direct, 92 by IIR class).
+
+   **Since LANG83 PR7c-js (2026-10-26)** the IIR names no language, so
+   `write_f64_js` and the `x + 0` sign test above are history. The compiler
+   writes `String(x)` into the module as `__js_write_number`, built from
+   `f64_class`/`f64_signbit`/`f64_digits`/`f64_exp10`, and every
+   `console.log` argument calls it. The `-0` test is
+   `f64_signbit x > f64_class x`. `main` now calls a function, so it runs on
+   the JIT's interpreter tier; the JIT test above became
+   `javascript_rows_run_with_their_call_free_number_helpers_compiled_by_the_jit`.
+   The rows' output and columns are unchanged (LANG83 "What PR7c-js
+   landed").
 6. **Later.** E7 goals replace the F10 approximation for full JavaScript.
 
 ### Twig and McCarthy Lisp: rewrite to walk `GrammarASTNode`
