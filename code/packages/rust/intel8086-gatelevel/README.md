@@ -21,6 +21,13 @@ The memory implementation keeps a cached view of the DFF Q bus so full-state
 inspection and differential hashing remain byte-linear; every write still
 clocks both phases of the underlying eight flip-flops.
 
+The halt latch follows the same rule: its DFF Q output is authoritative for
+execution, snapshots, restore, results, and rollback. The historical public
+`halted` boolean remains a synchronized compatibility observer, while
+`halted()` reads Q directly. `physical_storage_inventory()` derives every bank
+count from the concrete memory, register/FLAGS, halt, and port containers so
+the topology can be checked independently of `FLIP_FLOP_COUNT`.
+
 ## Gate data paths
 
 - 8/16/20-bit ripple-carry adders use `full_adder` stages.

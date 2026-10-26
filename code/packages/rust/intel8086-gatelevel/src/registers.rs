@@ -156,6 +156,17 @@ impl RegisterFile8086 {
         }
     }
 
+    /// Count the DFF cells in the concrete register and FLAGS arrays.
+    pub(crate) fn dff_counts(&self) -> (usize, usize) {
+        let registers = self
+            .register_state
+            .iter()
+            .map(StateRegister::dff_count)
+            .sum();
+        let flags = self.flag_state.iter().map(StateRegister::dff_count).sum();
+        (registers, flags)
+    }
+
     /// Read all latched register and flag values for topology tests.
     #[cfg(test)]
     pub(crate) fn latched_values(&self) -> ([u16; 13], [u8; 9]) {

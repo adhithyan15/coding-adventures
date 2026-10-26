@@ -1,5 +1,17 @@
 # Changelog — coding-adventures-intel8086-gatelevel
 
+## [Unreleased]
+
+### Fixed
+
+- Made the physical HALT DFF Q output authoritative for execution control,
+  snapshots, restore, every halt-producing instruction/fault, checked results,
+  and rollback. The public `halted` boolean remains a synchronized observation
+  mirror for source compatibility, but caller mutation cannot clock state.
+- Added a public physical-storage inventory derived from the concrete memory,
+  register/FLAGS, HALT, and port-latch containers, plus mirror-divergence,
+  restore, halt-source, result, and fault-preservation tests.
+
 ## [0.2.0] — 2026-08-28
 
 ### Added

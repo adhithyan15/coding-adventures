@@ -75,7 +75,7 @@ architecture/core introduction era, not a claim about a particular chip.
 
 | Priority | Target | Finding / next action |
 |---:|---|---|
-| P0 in progress | Intel 8086 gate HALT storage | The existing one-bit `StateRegister` is clocked only from a public host boolean, so the mirror is currently authoritative while the claimed HALT DFF Q is write-only. Make Q the execution/snapshot/restore/result/fault authority, preserve the public boolean only as a synchronized compatibility observer, route HLT and every protocol/error halt source through one clock helper, and publish an inventory derived from the concrete memory, register/FLAGS, HALT, and port storage. |
+| P0 complete locally | Intel 8086 gate HALT storage | HALT DFF Q is now the execution/snapshot/restore/result/fault authority; the public boolean remains a synchronized compatibility observer. HLT and all eleven protocol/error halt paths share one clock helper. The independent physical inventory reports 8,388,608 memory, 208 register, 9 FLAGS, 1 HALT, and 4,096 port DFFs (8,392,922 total). Release tests cover 61 unit cases, all 461 differential vectors, 8 lifecycle cases, and 14 doctests; line coverage is 95.49% (2,732/2,861). |
 | P1 audit | Remaining completed gate packages with public halt fields | Audit each package before changing it. A public observation field is acceptable only when execution, snapshots, restore, and faults are driven by DFF Q; otherwise add one bounded repair cell and a non-tautological storage inventory. |
 
 - Expand Cortex-M3 beyond the bounded completed core with long multiply,

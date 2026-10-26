@@ -4,7 +4,79 @@ const MEMORY_SIZE: usize = 1 << 20;
 
 #[test]
 fn exact_topology_is_public_and_stable() {
-    assert_eq!(FLIP_FLOP_COUNT, 8_392_922);
+    let cpu = Cpu8086::new();
+    let inventory = cpu.physical_storage_inventory();
+    assert_eq!(inventory.memory_dffs, 8_388_608);
+    assert_eq!(inventory.register_dffs, 208);
+    assert_eq!(inventory.flag_dffs, 9);
+    assert_eq!(inventory.halt_dffs, 1);
+    assert_eq!(inventory.input_port_dffs, 2_048);
+    assert_eq!(inventory.output_port_dffs, 2_048);
+    assert_eq!(inventory.total(), FLIP_FLOP_COUNT);
+    assert_eq!(inventory.total(), 8_392_922);
+}
+
+#[test]
+fn halt_q_overrides_both_compatibility_mirror_divergences() {
+    let mut running = Cpu8086::new();
+    running.load_checked(&[0x90, 0xf4], 0).unwrap();
+    running.halted = true;
+    assert!(!running.halted());
+    assert!(!running.get_state().halted);
+    let trace = running.step_checked().unwrap();
+    assert_eq!(trace.raw, [0x90]);
+    assert_eq!(trace.state_after.ip, 1);
+    assert!(!running.halted);
+
+    let result = running.run_loaded_checked(2).unwrap();
+    assert!(result.halted);
+    assert_eq!(result.steps, 1);
+    assert!(result.final_state.halted);
+    assert!(running.halted());
+
+    running.halted = false;
+    let before = running.get_state();
+    assert!(before.halted);
+    assert_eq!(running.step_checked(), Err(Intel8086Error::Halted));
+    assert_eq!(running.get_state(), before);
+    assert!(running.halted);
+}
+
+#[test]
+fn restore_clocks_halt_q_and_faults_preserve_it() {
+    let mut cpu = Cpu8086::new();
+    let mut halted = cpu.get_state();
+    halted.halted = true;
+    cpu.restore(&halted).unwrap();
+    assert!(cpu.halted());
+    assert!(cpu.halted);
+
+    cpu.load_checked(&[0xf4], 0).unwrap();
+    cpu.step_checked().unwrap();
+    assert!(cpu.halted());
+    assert!(cpu.get_state().halted);
+
+    cpu.load_checked(&[0x0f], 0).unwrap();
+    cpu.halted = true;
+    let before = cpu.get_state();
+    assert!(matches!(
+        cpu.step_checked(),
+        Err(Intel8086Error::UnknownOpcode { .. })
+    ));
+    assert_eq!(cpu.get_state(), before);
+    assert!(!cpu.halted());
+    assert!(!cpu.halted);
+
+    cpu.load_checked(&[0x90, 0x0f], 0).unwrap();
+    cpu.halted = true;
+    let before_run = cpu.get_state();
+    assert!(matches!(
+        cpu.run_loaded_checked(2),
+        Err(Intel8086Error::UnknownOpcode { .. })
+    ));
+    assert_eq!(cpu.get_state(), before_run);
+    assert!(!cpu.halted());
+    assert!(!cpu.halted);
 }
 
 #[test]

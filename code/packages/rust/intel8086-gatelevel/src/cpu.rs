@@ -23,7 +23,7 @@
 //!
 //! # Halt
 //!
-//! `HLT` (0xF4) sets `halted = true`. The checked API returns
+//! `HLT` (0xF4) clocks the HALT DFF. The checked API returns
 //! `Intel8086Error::Halted`; the preserved legacy `step()` asserts instead.
 
 #![allow(clippy::too_many_lines)]
@@ -50,6 +50,34 @@ const PHYS_MASK: u32 = 0xFFFFF;
 /// bits, nine FLAGS bits, one halt bit, and 4,096 port-latch bits.
 pub const FLIP_FLOP_COUNT: usize = DffMemory::DFF_COUNT + 13 * 16 + 9 + 1 + 2 * PORT_SIZE * 8;
 
+/// Counts read from the machine's concrete persistent storage containers.
+///
+/// This inventory is independent from [`FLIP_FLOP_COUNT`], allowing callers
+/// to verify the published topology against the storage actually owned by the
+/// machine.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct PhysicalStorageInventory {
+    pub memory_dffs: usize,
+    pub register_dffs: usize,
+    pub flag_dffs: usize,
+    pub halt_dffs: usize,
+    pub input_port_dffs: usize,
+    pub output_port_dffs: usize,
+}
+
+impl PhysicalStorageInventory {
+    /// Sum all independently inventoried storage banks.
+    #[must_use]
+    pub const fn total(self) -> usize {
+        self.memory_dffs
+            + self.register_dffs
+            + self.flag_dffs
+            + self.halt_dffs
+            + self.input_port_dffs
+            + self.output_port_dffs
+    }
+}
+
 // ─── Public CPU state snapshot ────────────────────────────────────────────────
 
 /// Backward-compatible name for the complete shared architectural state.
@@ -66,11 +94,16 @@ pub type CpuState = Intel8086State;
 /// // MOV AX, 42; HLT
 /// cpu.execute(&[0xB8, 42, 0, 0xF4], 1000);
 /// assert_eq!(cpu.rf.ax, 42);
-/// assert!(cpu.halted);
+/// assert!(cpu.halted());
 /// ```
 pub struct Cpu8086 {
     pub rf: RegisterFile8086,
     mem: DffMemory,
+    /// Source-compatible observation mirror of the authoritative HALT DFF Q.
+    ///
+    /// Execution operations synchronize this value for existing callers.
+    /// Writing it directly cannot clock architectural state; use
+    /// [`Self::halted`] to observe the authoritative value.
     pub halted: bool,
     pub input_ports: [u8; PORT_SIZE],
     pub output_ports: [u8; PORT_SIZE],
@@ -131,7 +164,7 @@ impl Cpu8086 {
             es: rf.es,
             ip: rf.ip,
             flags: rf.pack_flags(),
-            halted: self.halted,
+            halted: self.halted(),
             input_ports: self.input_ports,
             output_ports: self.output_ports,
             memory: self.mem.snapshot(),
@@ -159,12 +192,12 @@ impl Cpu8086 {
         self.rf.es = state.es;
         self.rf.ip = state.ip;
         self.rf.unpack_flags(state.flags);
-        self.halted = state.halted;
         self.input_ports = state.input_ports;
         self.output_ports = state.output_ports;
         self.mem = DffMemory::new();
         self.mem.copy_from_slice(0, &state.memory);
         self.clock_wires_into_state();
+        self.clock_halted(state.halted);
         Ok(())
     }
 
@@ -184,8 +217,8 @@ impl Cpu8086 {
         }
         self.mem.copy_from_slice(origin, program);
         self.rf.ip = 0;
-        self.halted = false;
         self.clock_wires_into_state();
+        self.clock_halted(false);
         Ok(())
     }
 
@@ -210,7 +243,8 @@ impl Cpu8086 {
 
     /// Execute one validated instruction and return a complete shared trace.
     pub fn step_checked(&mut self) -> Result<StepTrace, Intel8086Error> {
-        if self.halted {
+        self.synchronize_halted_mirror();
+        if self.halted() {
             return Err(Intel8086Error::Halted);
         }
         let state_before = self.get_state();
@@ -235,7 +269,8 @@ impl Cpu8086 {
     ) -> Result<ExecutionResult, Intel8086Error> {
         let entry = self.get_state();
         let mut traces = Vec::new();
-        while traces.len() < max_steps && !self.halted {
+        self.synchronize_halted_mirror();
+        while traces.len() < max_steps && !self.halted() {
             match self.step_checked() {
                 Ok(trace) => traces.push(trace),
                 Err(error) => {
@@ -245,7 +280,7 @@ impl Cpu8086 {
             }
         }
         Ok(ExecutionResult {
-            halted: self.halted,
+            halted: self.halted(),
             steps: traces.len(),
             ip: self.rf.ip,
             traces,
@@ -275,7 +310,7 @@ impl Cpu8086 {
         self.reset();
         self.load(program, 0);
         let mut steps = 0;
-        while !self.halted && steps < max_steps {
+        while !self.halted() && steps < max_steps {
             self.step();
             steps += 1;
         }
@@ -284,7 +319,8 @@ impl Cpu8086 {
 
     /// Execute one fetch-decode-execute cycle. Panics if halted.
     pub fn step(&mut self) {
-        assert!(!self.halted, "CPU is halted; call reset() to restart");
+        self.synchronize_halted_mirror();
+        assert!(!self.halted(), "CPU is halted; call reset() to restart");
         self.clock_wires_into_state();
         self.fetch_decode_execute();
         self.clock_wires_into_state();
@@ -292,11 +328,49 @@ impl Cpu8086 {
 
     fn clock_wires_into_state(&mut self) {
         self.rf.clock_wires_into_state();
-        self.halt_state.write(u16::from(self.halted));
         for port in 0..PORT_SIZE {
             self.input_port_state[port].write(u16::from(self.input_ports[port]));
             self.output_port_state[port].write(u16::from(self.output_ports[port]));
         }
+    }
+
+    /// Read the authoritative HALT DFF Q output.
+    #[must_use]
+    pub fn halted(&self) -> bool {
+        self.halt_state.read() != 0
+    }
+
+    /// Inventory the concrete persistent storage owned by this machine.
+    #[must_use]
+    pub fn physical_storage_inventory(&self) -> PhysicalStorageInventory {
+        let (register_dffs, flag_dffs) = self.rf.dff_counts();
+        PhysicalStorageInventory {
+            memory_dffs: self.mem.dff_count(),
+            register_dffs,
+            flag_dffs,
+            halt_dffs: self.halt_state.dff_count(),
+            input_port_dffs: self
+                .input_port_state
+                .iter()
+                .map(StateRegister::dff_count)
+                .sum(),
+            output_port_dffs: self
+                .output_port_state
+                .iter()
+                .map(StateRegister::dff_count)
+                .sum(),
+        }
+    }
+
+    /// Clock physical HALT state, then refresh the compatibility observer.
+    fn clock_halted(&mut self, value: bool) {
+        self.halt_state.write(u16::from(value));
+        self.synchronize_halted_mirror();
+    }
+
+    /// Repair the legacy public observer from the physical Q output.
+    fn synchronize_halted_mirror(&mut self) {
+        self.halted = self.halted();
     }
 
     /// Read one physical memory byte from the DFF-backed memory array.
@@ -886,7 +960,7 @@ impl Cpu8086 {
                     _ => break 'prefix b,
                 }
             }
-            self.halted = true; // too many prefix bytes — undefined behaviour
+            self.clock_halted(true); // too many prefix bytes — undefined behaviour
             return;
         };
 
@@ -1435,7 +1509,7 @@ impl Cpu8086 {
                     self.push16(val);
                 } // PUSH m16
                 _ => {
-                    self.halted = true;
+                    self.clock_halted(true);
                 }
             }
             return;
@@ -1515,7 +1589,7 @@ impl Cpu8086 {
                         let dividend = ((self.rf.dx as u32) << 16) | (self.rf.ax as u32);
                         match div16(dividend, a) {
                             None => {
-                                self.halted = true;
+                                self.clock_halted(true);
                             }
                             Some((ax, dx)) => {
                                 self.rf.ax = ax;
@@ -1525,7 +1599,7 @@ impl Cpu8086 {
                     } else {
                         match div8(self.rf.ax, a as u8) {
                             None => {
-                                self.halted = true;
+                                self.clock_halted(true);
                             }
                             Some((q, r)) => {
                                 self.rf.ax = ((r as u16) << 8) | (q as u16);
@@ -1539,7 +1613,7 @@ impl Cpu8086 {
                         let d32 = ((self.rf.dx as u32) << 16) | (self.rf.ax as u32);
                         match idiv16(d32, a) {
                             None => {
-                                self.halted = true;
+                                self.clock_halted(true);
                             }
                             Some((ax, dx)) => {
                                 self.rf.ax = ax;
@@ -1549,7 +1623,7 @@ impl Cpu8086 {
                     } else {
                         match idiv8(self.rf.ax, a as u8) {
                             None => {
-                                self.halted = true;
+                                self.clock_halted(true);
                             }
                             Some((q, r)) => {
                                 self.rf.ax = ((r as u16) << 8) | ((q as u16) & 0xFF);
@@ -1558,7 +1632,7 @@ impl Cpu8086 {
                     }
                 }
                 _ => {
-                    self.halted = true;
+                    self.clock_halted(true);
                 }
             }
             return;
@@ -1845,18 +1919,18 @@ impl Cpu8086 {
 
         if op == 0xCC {
             // INT 3 — repository protocol halt boundary
-            self.halted = true;
+            self.clock_halted(true);
             return;
         }
         if op == 0xCD {
             // INT n
             self.fetch8();
-            self.halted = true;
+            self.clock_halted(true);
             return;
         }
         if op == 0xCE {
             // INTO — repository protocol halt boundary
-            self.halted = true;
+            self.clock_halted(true);
             return;
         }
         if op == 0xCF {
@@ -1890,7 +1964,7 @@ impl Cpu8086 {
         // ── Miscellaneous ──────────────────────────────────────────────────────
 
         if op == 0xF4 {
-            self.halted = true;
+            self.clock_halted(true);
             return;
         } // HLT
         if op == 0xF8 {
@@ -1984,7 +2058,7 @@ impl Cpu8086 {
         } // WAIT — no-op
 
         // Unknown opcode — halt
-        self.halted = true;
+        self.clock_halted(true);
     }
 }
 
@@ -2004,13 +2078,21 @@ mod tests {
     fn exact_persistent_topology_and_latched_outputs() {
         assert_eq!(FLIP_FLOP_COUNT, 8_392_922);
         let mut cpu = Cpu8086::new();
+        let inventory = cpu.physical_storage_inventory();
+        assert_eq!(inventory.memory_dffs, cpu.mem.dff_count());
+        assert_eq!(inventory.register_dffs, 13 * 16);
+        assert_eq!(inventory.flag_dffs, 9);
+        assert_eq!(inventory.halt_dffs, 1);
+        assert_eq!(inventory.input_port_dffs, PORT_SIZE * 8);
+        assert_eq!(inventory.output_port_dffs, PORT_SIZE * 8);
+        assert_eq!(inventory.total(), FLIP_FLOP_COUNT);
         cpu.rf.ax = 0x1234;
         cpu.rf.es = 0xabcd;
         cpu.rf.flag_cf = 1;
         cpu.input_ports[7] = 0x5a;
         cpu.output_ports[9] = 0xa5;
-        cpu.halted = true;
         cpu.clock_wires_into_state();
+        cpu.clock_halted(true);
         let (registers, flags) = cpu.rf.latched_values();
         assert_eq!(registers[0], 0x1234);
         assert_eq!(registers[11], 0xabcd);
@@ -2020,6 +2102,36 @@ mod tests {
         assert_eq!(cpu.halt_state.read(), 1);
         cpu.write_memory(0xfffff, 0x3c);
         assert_eq!(cpu.read_memory(0xfffff), 0x3c);
+    }
+
+    #[test]
+    fn every_internal_halt_source_clocks_the_authoritative_dff() {
+        let programs: &[&[u8]] = &[
+            &[0xf4],       // HLT
+            &[0xcc],       // INT3
+            &[0xcd, 0x20], // INT n
+            &[0xce],       // INTO protocol boundary
+            &[0x0f],       // unknown opcode
+            &[0xff, 0xf8], // invalid FF extension
+            &[0xf6, 0xc8], // invalid F6 extension
+            &[0xf6, 0xf0], // DIV byte fault
+            &[0xf7, 0xf0], // DIV word fault
+            &[0xf6, 0xf8], // IDIV byte fault
+            &[0xf7, 0xf8], // IDIV word fault
+        ];
+        for program in programs {
+            let mut cpu = Cpu8086::new();
+            cpu.load(program, 0);
+            cpu.step();
+            assert!(cpu.halted(), "{program:02x?}");
+            assert!(cpu.halted, "{program:02x?} compatibility mirror");
+        }
+
+        let mut prefixes = Cpu8086::new();
+        prefixes.load(&[0xf3; 16], 0);
+        prefixes.step();
+        assert!(prefixes.halted());
+        assert!(prefixes.halted);
     }
 
     fn run(program: &[u8]) -> Cpu8086 {
