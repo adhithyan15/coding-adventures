@@ -1,0 +1,10 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "source_corpus": "er-use-max-width-11.16.1-corpus.json",
+  "fixtures": [
+    "upstream-use-max-width-default",
+    "upstream-use-max-width-true",
+    "upstream-use-max-width-false"
+  ]
+}
