@@ -9,7 +9,11 @@ pub struct StatusOpcodeWires {
     pub andi: u8,
     pub andis: u8,
     pub compare_immediate: u8,
+    pub compare_immediate_signed: u8,
+    pub compare_immediate_unsigned: u8,
     pub compare_register: u8,
+    pub compare_register_signed: u8,
+    pub compare_register_unsigned: u8,
     pub recordable_x: u8,
     pub mtcrf: u8,
     pub addc: u8,
@@ -50,6 +54,10 @@ pub fn decode(raw: u32) -> DecodedInstruction {
     let primary31 = opcode(31);
     let xo10_line = |expected| and_gate(primary31, equal_line(u32::from(xo10), 10, expected));
     let xo9_line = |expected| and_gate(primary31, equal_line(u32::from(xo10 & 0x1ff), 9, expected));
+    let compare_immediate_unsigned = opcode(10);
+    let compare_immediate_signed = opcode(11);
+    let compare_register_signed = xo10_line(0);
+    let compare_register_unsigned = xo10_line(32);
     let recordable_x = [24, 26, 28, 124, 316, 444, 476, 536, 792, 824]
         .into_iter()
         .fold(0, |line, xo| or_gate(line, xo10_line(xo)));
@@ -71,8 +79,12 @@ pub fn decode(raw: u32) -> DecodedInstruction {
             subfic: opcode(8),
             andi: opcode(28),
             andis: opcode(29),
-            compare_immediate: or_gate(opcode(10), opcode(11)),
-            compare_register: or_gate(xo10_line(0), xo10_line(32)),
+            compare_immediate: or_gate(compare_immediate_unsigned, compare_immediate_signed),
+            compare_immediate_signed,
+            compare_immediate_unsigned,
+            compare_register: or_gate(compare_register_signed, compare_register_unsigned),
+            compare_register_signed,
+            compare_register_unsigned,
             recordable_x,
             mtcrf: xo10_line(144),
             addc: xo9_line(10),

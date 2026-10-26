@@ -275,16 +275,9 @@ fn execute_raw(state: &mut PowerPcState, raw: u32, cia: u32) -> Result<&'static 
             state.cia = next;
             Ok("SUBFIC")
         }
-        10 | 11 => {
-            let relation = if opcode == 11 {
-                status::compare_signed(state.gpr[ra], simm)
-            } else {
-                status::compare_unsigned(state.gpr[ra], u32::from(immediate))
-            };
-            set_cr_field(state, decoded.cr_field_wires, relation);
-            state.cia = next;
-            Ok(if opcode == 11 { "CMPI" } else { "CMPLI" })
-        }
+        10 | 11 => Ok(execute_compare_immediate(
+            state, &decoded, opcode, immediate, simm, next,
+        )),
         14 | 15 => {
             let base = if ra == 0 { 0 } else { state.gpr[ra] };
             let operand = if opcode == 15 {
@@ -471,19 +464,7 @@ fn execute_x31(state: &mut PowerPcState, raw: u32, cia: u32) -> Result<&'static 
     let mut result = None;
     let mut destination = rs;
     let mnemonic = match xo10 {
-        0 | 32 => {
-            let relation = if xo10 == 0 {
-                status::compare_signed(state.gpr[ra], state.gpr[rb])
-            } else {
-                status::compare_unsigned(state.gpr[ra], state.gpr[rb])
-            };
-            set_cr_field(state, decoded.cr_field_wires, relation);
-            if xo10 == 0 {
-                "CMP"
-            } else {
-                "CMPL"
-            }
-        }
+        0 | 32 => execute_compare_register(state, &decoded, xo10, ra, rb),
         19 => {
             result = Some(state.cr);
             "MFCR"
@@ -528,10 +509,7 @@ fn execute_x31(state: &mut PowerPcState, raw: u32, cia: u32) -> Result<&'static 
             );
             "LOGIC"
         }
-        144 => {
-            state.cr = status::mtcrf(state.cr, state.gpr[rs], decoded.mtcrf_mask_wires);
-            "MTCRF"
-        }
+        144 => execute_mtcrf(state, &decoded, rs),
         339 => {
             result = Some(match decode_spr(raw) {
                 1 => state.xer,
@@ -598,12 +576,91 @@ fn eval_branch(state: &mut PowerPcState, bo: u32, bi: u32) -> bool {
     decision.taken
 }
 
+fn execute_compare_immediate(
+    state: &mut PowerPcState,
+    decoded: &decoder::DecodedInstruction,
+    opcode: u32,
+    immediate: u16,
+    simm: u32,
+    next: u32,
+) -> &'static str {
+    let relation = status::select_relation(
+        status::compare_signed(state.gpr[decoded.ra], simm),
+        status::compare_unsigned(state.gpr[decoded.ra], u32::from(immediate)),
+        decoded.status.compare_immediate_signed,
+        decoded.status.compare_immediate_unsigned,
+    );
+    set_cr_field(
+        state,
+        decoded.cr_field_wires,
+        relation,
+        decoded.status.compare_immediate,
+    );
+    state.cia = next;
+    match opcode {
+        10 => "CMPLI",
+        11 => "CMPI",
+        _ => unreachable!(),
+    }
+}
+
+fn execute_compare_register(
+    state: &mut PowerPcState,
+    decoded: &decoder::DecodedInstruction,
+    xo10: u32,
+    ra: usize,
+    rb: usize,
+) -> &'static str {
+    let relation = status::select_relation(
+        status::compare_signed(state.gpr[ra], state.gpr[rb]),
+        status::compare_unsigned(state.gpr[ra], state.gpr[rb]),
+        decoded.status.compare_register_signed,
+        decoded.status.compare_register_unsigned,
+    );
+    set_cr_field(
+        state,
+        decoded.cr_field_wires,
+        relation,
+        decoded.status.compare_register,
+    );
+    match xo10 {
+        0 => "CMP",
+        32 => "CMPL",
+        _ => unreachable!(),
+    }
+}
+
+fn execute_mtcrf(
+    state: &mut PowerPcState,
+    decoded: &decoder::DecodedInstruction,
+    source_register: usize,
+) -> &'static str {
+    state.cr = status::mtcrf(
+        state.cr,
+        state.gpr[source_register],
+        decoded.mtcrf_mask_wires,
+        decoded.status.mtcrf,
+    );
+    "MTCRF"
+}
+
 fn set_ca(state: &mut PowerPcState, value: u8, write_enable: u8) {
     state.xer = status::write_ca(state.xer, value, write_enable);
 }
 
-fn set_cr_field(state: &mut PowerPcState, field: [u8; 3], relation: status::RelationWires) {
-    state.cr = status::write_cr_field(state.cr, field, relation, status::so(state.xer));
+fn set_cr_field(
+    state: &mut PowerPcState,
+    field: [u8; 3],
+    relation: status::RelationWires,
+    write_enable: u8,
+) {
+    state.cr = status::write_cr_field(
+        state.cr,
+        field,
+        relation,
+        status::so(state.xer),
+        write_enable,
+    );
 }
 
 fn update_cr0(state: &mut PowerPcState, value: u32, write_enable: u8) {

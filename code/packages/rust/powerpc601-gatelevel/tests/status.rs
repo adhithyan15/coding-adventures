@@ -87,6 +87,17 @@ fn architectural_relation_witnesses_cross_signed_and_unsigned_boundaries() {
                 std::cmp::Ordering::Equal => [0, 0, 1],
             };
             assert_eq!([unsigned.lt, unsigned.gt, unsigned.eq], expected_unsigned);
+
+            assert_eq!(status::select_relation(signed, unsigned, 1, 0), signed);
+            assert_eq!(status::select_relation(signed, unsigned, 0, 1), unsigned);
+            assert_eq!(
+                status::select_relation(signed, unsigned, 0, 0),
+                RelationWires {
+                    lt: 0,
+                    gt: 0,
+                    eq: 0,
+                }
+            );
         }
     }
 }
@@ -115,13 +126,14 @@ fn cr_field_decoder_and_cr0_write_mux_preserve_every_unselected_bit() {
         let selector = std::array::from_fn(|bit| ((field >> bit) & 1) as u8);
         for relation in relations {
             for so in 0..=1 {
-                let actual = status::write_cr_field(old, selector, relation, so);
+                let actual = status::write_cr_field(old, selector, relation, so, 1);
                 let shift = 28 - field * 4;
                 let expected = (old & !(0xf << shift)) | (relation_nibble(relation, so) << shift);
                 assert_eq!(
                     actual, expected,
                     "field={field} relation={relation:?} SO={so}"
                 );
+                assert_eq!(status::write_cr_field(old, selector, relation, so, 0), old);
             }
         }
     }
@@ -136,6 +148,7 @@ fn cr_field_decoder_and_cr0_write_mux_preserve_every_unselected_bit() {
                     [0, 0, 0],
                     status::compare_signed(value, 0),
                     status::so(xer),
+                    1,
                 );
                 assert_eq!(actual, if enable == 0 { old } else { candidate });
             }
@@ -165,7 +178,7 @@ fn mtcrf_uses_field_mask_wires_for_exact_isolation() {
     let source = 0xfedc_ba98;
     for mask in [0x00_u8, 0x01, 0x80, 0x55, 0xaa, 0xff] {
         let wires = std::array::from_fn(|bit| (mask >> bit) & 1);
-        let actual = status::mtcrf(old, source, wires);
+        let actual = status::mtcrf(old, source, wires, 1);
         let mut expected = old;
         for field in 0..8 {
             let field_mask = 0xf_u32 << (28 - field * 4);
@@ -174,6 +187,7 @@ fn mtcrf_uses_field_mask_wires_for_exact_isolation() {
             }
         }
         assert_eq!(actual, expected, "mask={mask:02x}");
+        assert_eq!(status::mtcrf(old, source, wires, 0), old);
     }
 }
 
@@ -224,14 +238,49 @@ fn decoder_exposes_gate_lines_for_every_status_producer() {
     let andis = decoder::decode(d_form(29, 1, 2, 0));
     assert_eq!((andis.status.andi, andis.status.andis), (0, 1));
 
-    for xo in [0, 32] {
-        assert_eq!(
-            decoder::decode(x_form(31, 0, 1, 2, xo, false))
-                .status
-                .compare_register,
-            1
-        );
-    }
+    let cmpli = decoder::decode(d_form(10, 0, 1, 0));
+    assert_eq!(
+        (
+            cmpli.status.compare_immediate,
+            cmpli.status.compare_immediate_signed,
+            cmpli.status.compare_immediate_unsigned,
+        ),
+        (1, 0, 1)
+    );
+    let cmpi = decoder::decode(d_form(11, 0, 1, 0));
+    assert_eq!(
+        (
+            cmpi.status.compare_immediate,
+            cmpi.status.compare_immediate_signed,
+            cmpi.status.compare_immediate_unsigned,
+        ),
+        (1, 1, 0)
+    );
+
+    let cmp = decoder::decode(x_form(31, 0, 1, 2, 0, false));
+    assert_eq!(
+        (
+            cmp.status.compare_register,
+            cmp.status.compare_register_signed,
+            cmp.status.compare_register_unsigned,
+        ),
+        (1, 1, 0)
+    );
+    let cmpl = decoder::decode(x_form(31, 0, 1, 2, 32, false));
+    assert_eq!(
+        (
+            cmpl.status.compare_register,
+            cmpl.status.compare_register_signed,
+            cmpl.status.compare_register_unsigned,
+        ),
+        (1, 0, 1)
+    );
+    assert_eq!(
+        decoder::decode(x_form(31, 1, 0, 0, 144, false))
+            .status
+            .mtcrf,
+        1
+    );
     for xo in [24, 26, 28, 124, 316, 444, 476, 536, 792, 824] {
         assert_eq!(
             decoder::decode(x_form(31, 1, 4, 2, xo, true))

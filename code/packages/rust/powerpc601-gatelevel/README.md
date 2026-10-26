@@ -24,7 +24,10 @@ CTR zero/nonzero boundaries.
 CR and XER updates are likewise gate-authoritative. Subtractor Z/N/V/C wires
 produce one-hot signed and unsigned relation bundles. A three-to-eight decoder
 and per-bit muxes isolate compare fields, a write-enable mux controls CR0, and
-32 muxes implement `mtcrf`. XER[CA] is the only bit replaced by ordinary
+32 muxes implement `mtcrf`. Split signed/unsigned compare lines gate-select the
+relation bundle, and decoded compare/`mtcrf` lines gate-qualify the final CR
+commit; host opcode and XO tests do not authorize status writes. XER[CA] is the
+only bit replaced by ordinary
 carry-producing instructions; SO, OV, and all opaque XER bits remain stable.
 `adde` consumes CA from stable DFF Q and CR nibbles copy stable XER[SO].
 
@@ -52,4 +55,5 @@ source-corrected from clamp-to-31 CA behavior; the remaining 238 hashes are
 unchanged. Primary-source edge tests independently cover relation, CR/CR0,
 CA, `mtcrf`, modifier, producer-to-branch, snapshot/trace/rollback, and hostile
 AST anti-bypass behavior. The normative completion contract is Spec 07u2.
-The completed status cell has 95.15% package-source line coverage (962/1,011).
+The completed status cell has 95.38% package-source line coverage
+(1,052/1,103), including 100% of `status.rs` (125/125).

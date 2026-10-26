@@ -55,6 +55,29 @@ pub fn compare_unsigned(left: u32, right: u32) -> RelationWires {
     unsigned_relation(difference.zero, difference.carry)
 }
 
+/// Gate-select the signed or unsigned comparison bundle.
+pub fn select_relation(
+    signed: RelationWires,
+    unsigned: RelationWires,
+    signed_enable: u8,
+    unsigned_enable: u8,
+) -> RelationWires {
+    RelationWires {
+        lt: or_gate(
+            and_gate(signed.lt, signed_enable),
+            and_gate(unsigned.lt, unsigned_enable),
+        ),
+        gt: or_gate(
+            and_gate(signed.gt, signed_enable),
+            and_gate(unsigned.gt, unsigned_enable),
+        ),
+        eq: or_gate(
+            and_gate(signed.eq, signed_enable),
+            and_gate(unsigned.eq, unsigned_enable),
+        ),
+    }
+}
+
 fn decode_lines<const INPUTS: usize, const OUTPUTS: usize>(inputs: &[u8; INPUTS]) -> [u8; OUTPUTS] {
     std::array::from_fn(|line| {
         inputs.iter().enumerate().fold(1, |selected, (bit, input)| {
@@ -74,20 +97,22 @@ pub fn write_cr_field(
     field_selector: [u8; 3],
     relation: RelationWires,
     so: u8,
+    write_enable: u8,
 ) -> u32 {
     let selected = decode_lines::<3, 8>(&field_selector);
     let old = u32_to_bits(old_cr);
     let nibble = relation_bits(relation, so);
     let updated: [u8; 32] = std::array::from_fn(|bit| {
         let architectural_field = 7 - bit / 4;
-        mux2(old[bit], nibble[bit % 4], selected[architectural_field])
+        let field_write = and_gate(selected[architectural_field], write_enable);
+        mux2(old[bit], nibble[bit % 4], field_write)
     });
     bits_to_u32(&updated)
 }
 
 /// Mux an optional signed relation-against-zero result into CR0.
 pub fn write_cr0(old_cr: u32, value: u32, so: u8, write_enable: u8) -> u32 {
-    let candidate = write_cr_field(old_cr, [0, 0, 0], compare_signed(value, 0), so);
+    let candidate = write_cr_field(old_cr, [0, 0, 0], compare_signed(value, 0), so, 1);
     let old = u32_to_bits(old_cr);
     let candidate = u32_to_bits(candidate);
     bits_to_u32(&std::array::from_fn::<_, 32, _>(|bit| {
@@ -113,12 +138,13 @@ pub fn ca(xer: u32) -> u8 {
 }
 
 /// Eight field-mask wires and 32 muxes implement `mtcrf` field isolation.
-pub fn mtcrf(old_cr: u32, source: u32, field_mask: [u8; 8]) -> u32 {
+pub fn mtcrf(old_cr: u32, source: u32, field_mask: [u8; 8], write_enable: u8) -> u32 {
     let old = u32_to_bits(old_cr);
     let source = u32_to_bits(source);
     bits_to_u32(&std::array::from_fn::<_, 32, _>(|bit| {
         let architectural_field = 7 - bit / 4;
-        mux2(old[bit], source[bit], field_mask[7 - architectural_field])
+        let field_write = and_gate(field_mask[7 - architectural_field], write_enable);
+        mux2(old[bit], source[bit], field_write)
     }))
 }
 

@@ -28,6 +28,12 @@
 - Add exhaustive truth-table, field-isolation, carry/borrow, modifier,
   producer-to-branch, lifecycle, differential, and `syn`-parsed hostile AST
   coverage for the complete decoder-to-status-to-commit chain.
-- Pass all 23 gate-package test functions, all 239 differential vectors,
-  strict formatting/Clippy/rustdoc, and 95.15% package-source line coverage
-  (962/1,011).
+- Gate-select signed versus unsigned compare relations from split decoder lines
+  and gate-qualify compare and `mtcrf` CR commits with their decoded opcode
+  lines, removing host opcode/XO authority from the status dataflow.
+- Exact-lock every decoder, relation, mux, and commit helper, including
+  compile-valid hostile helper-replacement, dead-decoder, and caller-overwrite
+  fixtures.
+- Pass all 24 gate-package test functions, all 239 differential vectors,
+  strict formatting/Clippy/rustdoc, and 95.38% package-source line coverage
+  (1,052/1,103), with `status.rs` at 100% (125/125).

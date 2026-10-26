@@ -104,7 +104,10 @@ representation. A three-to-eight gate decoder selects exactly one CR field and
 per-bit muxes preserve all unselected fields. CR0 uses the same relation network
 against zero. A write-enable mux selects the old or candidate CR0 for `Rc=0/1`;
 `andi.` and `andis.` drive that enable high, while compare always selects its
-explicit field.
+explicit field. Immediate and register compare each use separate signed and
+unsigned decoder lines to gate-select the relation bundle, while their combined
+one-hot line gate-qualifies the CR-field commit. Host opcode or XO tests may
+choose trace text, but cannot select relation data or authorize a CR write.
 
 XER architectural SO/OV/CA bits 0/1/2 correspond to Rust `u32` bits 31/30/29.
 The CA network accepts `old_ca`, `new_ca`, and `write_enable` wires and uses a
@@ -114,9 +117,10 @@ mux to replace bit 29 only. It must preserve SO, OV, and every opaque XER bit.
 the CA write-enable. `mtspr XER` remains the explicit full-word architectural
 writer; all other status updates are field-preserving mux networks.
 
-`mtcrf` uses eight field-mask wires and 32 per-bit muxes to select the source or
-old CR bit. Native loops may replicate fixed hardware structure, but their
-conditionals must not decide architectural field selection.
+`mtcrf` uses its decoded opcode line, eight field-mask wires, and 32 per-bit
+muxes to select the source or old CR bit. Native loops may replicate fixed
+hardware structure, but their conditionals must not decide architectural field
+selection or write authorization.
 
 ### Profile modifier classification
 
@@ -211,10 +215,11 @@ The completed conditional-branch repair passes three gate/topology suites,
 three lifecycle suites, the aggregate 239-vector differential, strict checks,
 and 94.58% package line coverage (838/886).
 
-The completed CR/XER authority cell passes 23 gate-package and 13
+The completed CR/XER authority cell passes 24 gate-package and 13
 functional-package test functions, the corrected 239-vector differential,
 strict formatting/Clippy/rustdoc, affected builds, lessons validation, and
-95.15% gate-package line coverage (962/1,011). The functional package remains at
+95.38% gate-package line coverage (1,052/1,103). The status network is at 100%
+line coverage (125/125), and the functional package remains at
 90.25% line coverage (639/708).
 
 ## Independent specification review
