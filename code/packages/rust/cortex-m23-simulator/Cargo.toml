@@ -7,4 +7,3 @@ license = "MIT"
 
 [dependencies]
 cortex-m0-simulator = { path = "../cortex-m0-simulator" }
-
