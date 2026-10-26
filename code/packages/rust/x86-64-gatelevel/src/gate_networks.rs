@@ -202,7 +202,10 @@ fn negate128(value: u128) -> u128 {
 fn qualify_unsigned(bits: &[u8; 128]) -> QualifiedWideResult {
     let low = bits_to_u64(&bits[..64]);
     let high = bits_to_u64(&bits[64..]);
-    let any_high = bits[64..].iter().copied().fold(0, or_gate);
+    let any_high = bits[64..]
+        .iter()
+        .copied()
+        .fold(0, ::logic_gates::gates::or_gate);
     QualifiedWideResult {
         low,
         high,
@@ -217,8 +220,8 @@ fn qualify_signed(bits: &[u8; 128]) -> QualifiedWideResult {
     let differs_from_sign = bits[64..]
         .iter()
         .copied()
-        .map(|bit| xor_gate(bit, sign))
-        .fold(0, or_gate);
+        .map(|bit| ::logic_gates::gates::xor_gate(bit, sign))
+        .fold(0, ::logic_gates::gates::or_gate);
     QualifiedWideResult {
         low,
         high,

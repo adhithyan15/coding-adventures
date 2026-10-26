@@ -8,10 +8,7 @@ use crate::bits::{and_64, invert_64, or_64, xor_64};
 use crate::gate_flags::{
     adc_with_flags, add_with_flags, logic_flags, sbb_with_flags, sub_with_flags,
 };
-use crate::gate_networks::{
-    address, condition_holds, divide_signed, divide_unsigned, multiply_signed, multiply_unsigned,
-    shift, ShiftKind,
-};
+use crate::gate_networks::{address, condition_holds, shift, ShiftKind};
 use x86_simulator::decode::{AluOp, Instr, Operand, ShiftOp, SseOp, XmmRm};
 use x86_simulator::memory::Memory;
 use x86_simulator::state::{CpuState, Flags, Reg};
@@ -232,7 +229,10 @@ pub fn exec_one(
             execute_shift(st, mem, *op, dst, next_ip, st.get(Reg::Rcx) as u8)
         }
         Instr::Imul { dst, src } => {
-            let product = multiply_signed(st.get(*dst), read_op(st, mem, src, next_ip, 8)?);
+            let product = crate::gate_networks::multiply_signed(
+                st.get(*dst),
+                read_op(st, mem, src, next_ip, 8)?,
+            );
             st.set(*dst, product.low);
             let truncated = product.overflow != 0;
             st.flags.cf = truncated;
@@ -240,7 +240,10 @@ pub fn exec_one(
             Ok(Flow::Next)
         }
         Instr::ImulImm { dst, src, imm } => {
-            let product = multiply_signed(read_op(st, mem, src, next_ip, 8)?, *imm as u64);
+            let product = crate::gate_networks::multiply_signed(
+                read_op(st, mem, src, next_ip, 8)?,
+                *imm as u64,
+            );
             st.set(*dst, product.low);
             let truncated = product.overflow != 0;
             st.flags.cf = truncated;
@@ -249,7 +252,7 @@ pub fn exec_one(
         }
         Instr::Mul { src } => {
             let source = read_op(st, mem, src, next_ip, 8)?;
-            let product = multiply_unsigned(st.get(Reg::Rax), source);
+            let product = crate::gate_networks::multiply_unsigned(st.get(Reg::Rax), source);
             st.set(Reg::Rax, product.low);
             st.set(Reg::Rdx, product.high);
             st.flags.cf = product.overflow != 0;
@@ -300,15 +303,15 @@ pub fn exec_one(
             // The dividend is the 128-bit `rdx:rax` pair.
             let dividend = ((hi as u128) << 64) | (lo as u128);
             let (quot, rem) = if *signed {
-                let division =
-                    divide_signed(dividend, d).ok_or(Trap::DivideError(instr_off as u64))?;
+                let division = crate::gate_networks::divide_signed(dividend, d)
+                    .ok_or(Trap::DivideError(instr_off as u64))?;
                 if division.quotient.overflow != 0 {
                     return Err(Trap::DivideError(instr_off as u64));
                 }
                 (division.quotient.low, division.remainder)
             } else {
-                let division =
-                    divide_unsigned(dividend, d).ok_or(Trap::DivideError(instr_off as u64))?;
+                let division = crate::gate_networks::divide_unsigned(dividend, d)
+                    .ok_or(Trap::DivideError(instr_off as u64))?;
                 if division.quotient.overflow != 0 {
                     return Err(Trap::DivideError(instr_off as u64));
                 }

@@ -9,6 +9,11 @@
 - Add exact boundary differentials, per-wire qualifier witnesses, atomic fault
   coverage, and a structural guard against host-wide comparisons returning to
   instruction execution.
+- Lock the normalized qualifier, entry-point, and consumer bodies and exercise
+  adversarial helper-shadow, iterator, high-word, and dead-anchor fixtures so
+  alternate spellings cannot bypass that structural guard.
+- Document the reproducible all-target coverage command and its 88.40%
+  (1,357/1,535) package result.
 
 ## [0.1.0] — 2026-08-31
 

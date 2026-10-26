@@ -33,4 +33,16 @@ RUSTDOCFLAGS="-D warnings" cargo doc -p coding-adventures-x86-64-gatelevel --no-
 The aggregate differential replays all 262 reproducible Python full-state
 vectors from the functional package. Focused multiply/divide differentials
 also pin every signed/unsigned 64-bit fit boundary and atomic overflow fault.
-The normative completion contract is Spec 07w2.
+Exact normalized-source contracts lock the reviewed qualifier functions,
+multiply/divide entry points, and instruction consumers; adversarial fixtures
+prove that helper indirection, shadowed reductions, dead anchors, iterator
+shortcuts, and direct high-word predicates invalidate the contract. The
+normative completion contract is Spec 07w2. Standard all-target coverage is
+measured with:
+
+```bash
+cargo llvm-cov --manifest-path code/packages/rust/Cargo.toml \
+  -p coding-adventures-x86-64-gatelevel --all-targets --summary-only
+```
+
+The completed package reports 88.40% line coverage (1,357/1,535).
