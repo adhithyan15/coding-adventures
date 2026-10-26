@@ -18202,3 +18202,44 @@ PR #18324's checks had already passed. Preserve both tranches by merging exact
 current main into the Python branch without rewriting its published history,
 then rerun exact-head independent review and hosted checks before re-enabling
 guarded auto-merge.
+
+## October 26, 2026: Haskell ITF Windows-front local preparation
+
+Python gradient-descent PR #18324 merged reviewed head
+`d34af356d621175dd8cc307d953ecb7a99d1b79a` as
+`1bb58a0d7ed8d818d622e69890234d96b6e26b3a` at
+`2026-10-26T15:37:25Z`. The three live hosted parity slots are now exactly
+#18293 at `c7b1e98687d3c762a98a9beed61ad71f586ca484`, #18355 at
+`f27058ffa18abe1fb7a7167237eb0b761414162f`, and #18367 at
+`365f455bbaa57c41b1ff825f85fbca883d0cfb92`. No fourth PR may be published.
+
+The dependency-ready local backlog was reprioritized after excluding every
+Bezier successor still blocked on #18293 and every downstream GFM owner still
+blocked on the unpublished fenced-block preparation at exact local head
+`47bcc00857695c53f9caeb9a0568b2d4cfb8356b`:
+
+1. `haskell-itf-stack-windows-build-front-coverage` ranks first because its
+   two bounded build-front repairs immediately ready the five-symbology
+   Haskell Windows tranche and contribute to the final barcode facade.
+2. `swift-hash-map-lane-parity` ranks second behind its merged DT17 hashing
+   prerequisite and carries six unfinished descendants, but requires a new
+   implementation package rather than repairing an existing tested front.
+3. `binary-tree-dart-swift-lane-parity` ranks third with seven unfinished
+   descendants and no dependency, but spans two complete language packages.
+
+Select only the first owner as local `in_progress` on branch
+`codex/haskell-itf-stack-windows-build-front-coverage` from exact origin/main
+`aa568304c93e44d733535cdb3209793041ff9503`. Replace only the unconditional
+Windows skips in Haskell `barcode-layout-1d` and `itf` with the established
+fail-closed Cabal discovery and `cabal test all --builddir=dist` command. Keep
+the existing Unix fronts, Cabal package graphs, `tests: True` settings,
+production APIs, and encoder behavior unchanged.
+
+The same audit found that Haskell, Lua, Perl, Python, Rust, and Swift ITF
+packages still lack the explicit empty required-capability metadata promised
+by the merged neutral-conformance owner. Record
+`itf-required-capability-metadata-reconciliation` as a separate pending child
+of `itf-existing-lanes-v1-conformance`. Its scope is metadata only: add
+schema-valid empty manifests plus package/archive inclusion for those six
+lanes, with no behavior, public API, or build-front changes. It is deliberately
+not selected or absorbed into this Windows-front preparation.

@@ -19,13 +19,14 @@
   "active_pr": 18293,
   "active_prs": [
     18293,
-    18324
+    18355,
+    18367
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-26T11:52:29Z",
-    "pr_number": 18312,
-    "head_revision": "b804a122612f4ae64d967efbff454af771bf6130",
-    "action": "Verified every exact-head check terminal acceptable and the reviewed head conflict-free, completed guarded squash merge as 0be03745d775ffa9ee8c66ffda1700baa76ba58f, verified the receipt on origin/main, and removed the clean completed Swift hash-functions worktree and local branch.",
+    "observed_at": "2026-10-26T15:37:25Z",
+    "pr_number": 18324,
+    "head_revision": "d34af356d621175dd8cc307d953ecb7a99d1b79a",
+    "action": "Verified PR #18324 merged from exact reviewed head d34af356d621175dd8cc307d953ecb7a99d1b79a as 1bb58a0d7ed8d818d622e69890234d96b6e26b3a at 2026-10-26T15:37:25Z, confirmed the receipt on origin/main, and removed its clean completed worktree and local branch.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -10250,10 +10251,14 @@
     {
       "id": "paint-vm-ascii-swift-lane-parity",
       "title": "Complete paint-vm-ascii parity in Swift",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-swift-paint-vm-ascii-capabilities-20261026",
+      "pr_number": 18367,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18367",
+      "pr_opened_at": "2026-10-26T15:52:35Z",
+      "publication_head": "365f455bbaa57c41b1ff825f85fbca883d0cfb92",
+      "publication_notes": "PR #18367 is live at exact reviewed lifecycle head 365f455bbaa57c41b1ff825f85fbca883d0cfb92. Its separate owner retains exact-head review and hosted-check responsibility; this local Haskell preparation does not alter it.",
       "notes": "The afa7975 inventory recorded new Dart, Java, and Kotlin paint-vm-ascii implementations, leaving Swift as the sole missing established slot. Merged external PR #12149 added the Swift implementation and closed the package-directory gap, but it omitted the required explicit empty capability metadata. Keep this owner pending until that truthful library profile is added and validated; do not duplicate the already merged renderer implementation or introduce terminal I/O into the library."
     },
     {
@@ -14780,6 +14785,17 @@
       "merge_notes": "All final-head checks reached terminal acceptable conclusions. GitHub reported the reviewed head clean and mergeable, guarded squash auto-merge was enabled only then, and GitHub merged PR #16153 automatically without a plain manual merge command."
     },
     {
+      "id": "itf-required-capability-metadata-reconciliation",
+      "title": "Reconcile required-capability metadata for existing ITF lanes",
+      "status": "pending",
+      "depends_on": [
+        "itf-existing-lanes-v1-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Metadata-only follow-up for the Haskell, Lua, Perl, Python, Rust, and Swift ITF packages whose merged conformance implementations still lack explicit required_capabilities.json files. Add schema-valid empty manifests and the package/archive inclusion needed to publish them; validate package contents and planner discovery. Do not change encoder behavior, public APIs, test semantics, build-front execution, or host authority, and do not absorb this pending owner into the selected Haskell Windows-front tranche."
+    },
+    {
       "id": "code39-existing-lanes-v1-conformance",
       "title": "Reconcile existing Code 39 lanes with the neutral v1 contract",
       "status": "pending",
@@ -16319,12 +16335,17 @@
     {
       "id": "haskell-itf-stack-windows-build-front-coverage",
       "title": "Add Windows build fronts for the Haskell ITF stack",
-      "status": "pending",
+      "status": "in_progress",
       "depends_on": [
         "itf-existing-lanes-v1-conformance"
       ],
-      "branch": null,
+      "branch": "codex/haskell-itf-stack-windows-build-front-coverage",
       "pr_number": null,
+      "selected_at": "2026-10-26T16:52:26Z",
+      "selection_revision": "aa568304c93e44d733535cdb3209793041ff9503",
+      "base_revision": "aa568304c93e44d733535cdb3209793041ff9503",
+      "selection_notes": "Selected as the highest-leverage independent non-Rust local preparation after excluding every Bezier successor still blocked on live PR #18293 and every downstream GFM owner still blocked on the unpublished fenced-block preparation. This two-front repair immediately readies the Haskell one-dimensional symbology Windows-front owner and contributes to facade readiness; Swift hash-map ranks second behind merged Swift hash-functions with six unfinished descendants, while the broader binary-tree Dart/Swift pair ranks third. Hosted parity slots remain full with exact live heads {18293: c7b1e98687d3c762a98a9beed61ad71f586ca484, 18355: f27058ffa18abe1fb7a7167237eb0b761414162f, 18367: 365f455bbaa57c41b1ff825f85fbca883d0cfb92}, so this branch is local-only and must not be published yet.",
+      "reconciliation_notes": "Created one dedicated sparse worktree from exact origin/main aa568304c93e44d733535cdb3209793041ff9503. The selected scope is limited to replacing the two unconditional Windows skips with fail-closed Cabal test routing while preserving each existing tests: True project and dependency closure. The newly discovered six-lane ITF capability-metadata gap is recorded as a separate pending owner and is not selected.",
       "notes": "Add real BUILD_windows fronts for barcode-layout-1d and itf, preserve their exact Cabal closure and tests: True project metadata, and cover Windows-front precedence without absorbing the complete barcode-1d facade."
     },
     {
@@ -16421,10 +16442,14 @@
     {
       "id": "kotlin-micro-qr-build-front-and-gradle-metadata-coverage",
       "title": "Restore Kotlin micro-qr Gradle metadata and build-front coverage",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-kotlin-micro-qr-build-front-20261026",
+      "pr_number": 18355,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18355",
+      "pr_opened_at": "2026-10-26T13:52:05Z",
+      "publication_head": "f27058ffa18abe1fb7a7167237eb0b761414162f",
+      "publication_notes": "PR #18355 is live at exact independently reviewed reconciliation head f27058ffa18abe1fb7a7167237eb0b761414162f. Its separate owner retains exact-head review and hosted-check responsibility; this local Haskell preparation does not alter it.",
       "notes": "Discovered by the post-PR #16133 structural package-root audit. `code/packages/kotlin/micro-qr` has production and test sources plus package documentation but no Gradle package metadata and no BUILD front, so established-lane discovery cannot schedule or validate it. Add lane-consistent Gradle metadata, fail-closed cross-platform BUILD fronts, execution of the existing test suite, capability metadata, and documentation without widening the portable Micro QR contract."
     },
     {
@@ -16521,14 +16546,18 @@
     {
       "id": "python-gradient-descent-build-front-coverage",
       "title": "Add tested BUILD fronts for Python gradient-descent",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-python-gradient-descent-front-20261025",
       "pr_number": 18324,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18324",
       "pr_opened_at": "2026-10-26T09:06:48Z",
-      "publication_head": "773fb4cafe0033da22128682b3b14ae19a6cb4d2",
-      "publication_notes": "Draft PR #18324 opened from exact independently reviewed implementation head 773fb4cafe0033da22128682b3b14ae19a6cb4d2, and lifecycle head 9176757d3a1cebc015779131e1f41085bd833680 passed every hosted check. Swift hash-functions PR #18312 then advanced main and made the Python branch conflicting. Current main is merged into this published branch without rewriting history; the exact merge head requires independent review and fresh hosted checks before guarded auto-merge.",
+      "publication_head": "d34af356d621175dd8cc307d953ecb7a99d1b79a",
+      "publication_notes": "Every exact-head check reached a terminal acceptable conclusion at independently reviewed head d34af356d621175dd8cc307d953ecb7a99d1b79a, and guarded squash merge completed without bypassing review or checks.",
+      "merged_head_revision": "d34af356d621175dd8cc307d953ecb7a99d1b79a",
+      "merged_at": "2026-10-26T15:37:25Z",
+      "merge_revision": "1bb58a0d7ed8d818d622e69890234d96b6e26b3a",
+      "merge_notes": "GitHub reports PR #18324 merged from exact reviewed head d34af356d621175dd8cc307d953ecb7a99d1b79a as 1bb58a0d7ed8d818d622e69890234d96b6e26b3a at 2026-10-26T15:37:25Z. The receipt is present in current origin/main and its clean completed worktree and local branch were removed after verification.",
       "selection_revision": "27dc687739ac74e8f5bbab70916a03d62a609743",
       "selection_notes": "Selected after the local Swift hash-functions tranche reached an exact-head independent PASS while the hosted parity queue remained full. Among dependency-ready portable owners, this bounded Python front ranks ahead of the Swift paint-vm-ascii capability-only repair because it removes one exact orphan exemption and unblocks two recorded descendants without changing SGD behavior. Scope is limited to truthful Unix and Windows BUILD fronts, production-only coverage, Ruff, existing ML02 behavior tests, publishable metadata, package documentation, and removal of the exact gradient-descent exemption. No training loop, randomness, convergence guarantee, model API, native runtime, or new host authority is introduced.",
       "reconciled_main_revision": "0be03745d775ffa9ee8c66ffda1700baa76ba58f",
@@ -20731,9 +20760,9 @@
       "pr_number": 18293,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18293",
       "pr_opened_at": "2026-10-26T04:49:54Z",
-      "publication_head": "a62b31f3543f6a09bbf5b9daf1363c10b5862bf4",
+      "publication_head": "c7b1e98687d3c762a98a9beed61ad71f586ca484",
       "notes": "Read-only twelve-lane audit found both .NET lanes use midpoint flatness and unbounded recursion; their tolerance guard rejects negatives but permits zero. Consume nine neutral cases dynamically, reject nonfinite controls/tolerance, enforce finite-segment bound and shared budgets, then run Bezier2D and dependent Arc2D suites. Raise both Bezier BUILD coverage floors from 80% to G2D02's >=95% line requirement within this owner.",
-      "publication_notes": "PR #18293 is open, non-draft, mergeable, and failure-free at its exact independently reviewed head. Required jobs remain queued or running, so guarded auto-merge is not yet enabled."
+      "publication_notes": "PR #18293 is live at exact head c7b1e98687d3c762a98a9beed61ad71f586ca484. Its separate owner retains exact-head review and hosted-check responsibility; prepared Bezier successors remain blocked on this selector dependency."
     },
     {
       "id": "geometry-bezier2d-flattening-python-ruby-perl",
@@ -26017,6 +26046,8 @@
       "delivery_class": "portable-lane-reconciliation",
       "selection_blocked": false,
       "registered_at": "2026-10-24T19:17:58Z",
+      "preparation_head_revision": "47bcc00857695c53f9caeb9a0568b2d4cfb8356b",
+      "preparation_notes": "A complete local preparation exists at exact clean head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b but remains unpublished. Keep this owner pending in shared lifecycle state; every downstream GFM owner remains blocked until this fenced-block prerequisite is published and merged.",
       "package_paths": [
         "code/packages/fsharp/commonmark-parser"
       ],
