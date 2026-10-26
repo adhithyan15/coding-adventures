@@ -1,5 +1,57 @@
 # Changelog — vm-core
 
+## [0.33.0] — 2026-10-26 (VM-wide register-slot budget; private name map)
+
+- **Fix (pre-existing): a recursive `store_reg` could pin ~768 MiB.**
+  `store_reg idx, v` resized the frame's register file to `idx + 1` for any
+  `idx ≤ 65_535`, whatever the function statically used, so the
+  three-instruction recursion `store_reg 65535, 1; call r = f; ret r` grew
+  every one of 512 frames to 65,536 × 24-byte `Value`s (measured peak RSS
+  ≈ 792 MB) before `FrameOverflow`. The per-frame limit bounds one frame,
+  not a call stack.
+- **New `VMCore::max_register_slots`** (default
+  `VMCore::DEFAULT_MAX_REGISTER_SLOTS` = 2²⁰ = 1,048,576): a budget of
+  register slots shared by every live frame, counted as `Vec` *capacity*.
+  The register files of one `execute` now occupy at most
+  `max_register_slots × size_of::<Value>()` bytes — 24 MiB by default. The
+  reproducer stops after 16 frames (peak RSS ≈ 28 MB in the test binary).
+- **New `VMError::RegisterBudgetExceeded { function, slots, budget }`**,
+  displayed as `function "f" would bring the call stack to 1114112 register
+  slots, more than the vm-core budget of 1048576`.
+- **How it is enforced (O(1), nothing on pop).** Each frame records, when
+  pushed, the slots the frames beneath it hold (`slots_below`); only the top
+  frame ever grows, so the sum stays exact. All growth goes through one
+  private `VMFrame::grow_to`, which checks `slots_below + len ≤ budget` and
+  clamps `Vec`'s capacity doubling to the frame's share. Growth points: new
+  names (`assign` / `register_index`, which now allocates the slot
+  immediately — the `call` handler's return slot is therefore allocated
+  before the callee is pushed), the new **`VMFrame::store_index(idx, v)`**
+  (used by `store_reg` and `ret`), and the callee frame's pre-allocation
+  (`for_call`, crate-private; `for_function` is now the standalone,
+  budget-free form). `DispatchCtx` gains `max_register_slots`.
+- **Unchanged:** the `load_reg`/`store_reg` index range (`0..=65_535`). No
+  frontend in the repository emits numeric-index `load_reg`/`store_reg`
+  for vm-core (`twig-to-beam`'s `load_reg` is a BEAM register copy; the
+  BEAM/CIL/JVM backends lower both to moves), so the budget bounds memory
+  without redefining the index range.
+- **`VMFrame::name_to_reg` is now private** (breaking for code that wrote
+  to it; no crate in the repository did), with a read-only
+  `VMFrame::name_to_reg()` accessor. Inserting a name directly skipped the
+  `next_reg` counter, so the next new register aliased its slot.
+- New `VMFrame::stack_slots()`: the slots held by a frame and every frame
+  beneath it (the running sum the budget checks).
+- Tests: the recursive `store_reg 65535` reproducer ends with
+  `RegisterBudgetExceeded` after exactly 16 full frames, with the live
+  frames' independently summed capacities equal to the budget; a lowered
+  budget is enforced exactly; `store_reg 1023` recursion still ends in
+  `FrameOverflow` at 512; 500-deep ordinary recursion and a
+  `store_reg`/`load_reg` round trip are unaffected; a budget too small for
+  the entry point's parameters is refused before any instruction; frame
+  tests for `store_index` within/past the budget and past the frame limit,
+  a refused name leaving the frame unchanged, capacity never overshooting
+  the frame's share, `for_call`'s budget checks, and the `name_to_reg()`
+  view.
+
 ## [0.32.0] — 2026-10-26 (frame register limit is a typed, load-time error)
 
 - **Fix: a frame's 65,537th register is no longer silently dropped.**

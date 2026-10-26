@@ -81,6 +81,49 @@
 //! more than the limit — so neither `register_count = usize::MAX` (which
 //! would abort on allocation) nor a tiny recursive function claiming 65,536
 //! registers can make each frame allocate far more than it needs.
+//!
+//! # The register-slot budget (all live frames together)
+//!
+//! The per-frame limit bounds one frame; it does not bound a program.  A
+//! three-instruction recursive function
+//!
+//! ```text
+//!   store_reg 65535, 1     ← grow this frame's file to 65,536 slots
+//!   call r = f             ← recurse
+//!   ret r
+//! ```
+//!
+//! used to grow *every* frame to 65,536 × 24-byte `Value`s (1.5 MiB) and
+//! pin ~768 MiB across 512 frames before `FrameOverflow` ended it.  So the
+//! frames on one call stack also share a **budget** of register slots
+//! (`VMCore::max_register_slots`, default 2²⁰), checked whenever a register
+//! file grows.  The accounting is a running sum carried down the stack:
+//!
+//! ```text
+//!   frame        slots_below              its own slots (capacity)
+//!   ─────        ───────────              ────────────────────────
+//!   root         0                        c₀
+//!   callee 1     c₀                       c₁
+//!   callee 2     c₀ + c₁                  c₂        ← top: the only frame
+//!                                                      the VM grows
+//!   a frame may grow while   slots_below + new capacity ≤ budget
+//! ```
+//!
+//! It works because the VM only ever grows the **top** frame (a caller
+//! cannot run while its callee does, and `call` reserves the caller's return
+//! slot *before* pushing the callee), so the frames beneath the top are
+//! frozen and their sum, recorded once at push time, stays exact.  Popping a
+//! frame needs no bookkeeping at all: its share leaves with it.
+//!
+//! The sum is of `Vec` **capacities**, not lengths: capacity is what is
+//! actually allocated, and growth here doubles (amortised O(1) appends) but
+//! never past what the budget allows.  So the register files of one
+//! `execute` occupy at most `budget × size_of::<Value>()` bytes — 24 MiB at
+//! the default.  Exceeding it is [`VMError::RegisterBudgetExceeded`].
+//!
+//! Host code that reaches into `pub registers` directly (an opcode
+//! extension, say) is trusted and outside the accounting; it should grow a
+//! file only through [`VMFrame::store_index`] or [`VMFrame::assign`].
 
 use std::collections::{HashMap, HashSet};
 use interpreter_ir::IIRFunction;
@@ -104,7 +147,12 @@ pub struct VMFrame {
     ///
     /// Parameters occupy the first `params.len()` slots (assigned in order);
     /// subsequent assignments extend the map dynamically.
-    pub name_to_reg: HashMap<String, usize>,
+    ///
+    /// Private, with a read-only view in [`Self::name_to_reg`]: inserting a
+    /// name directly would skip `next_reg`, so the next new register would be
+    /// handed the same slot and the two names would silently alias.  New
+    /// names go through [`Self::register_index`] / [`Self::assign`].
+    name_to_reg: HashMap<String, usize>,
 
     /// Register index in the **caller** frame where the return value should
     /// be written when this frame's `ret` instruction fires.
@@ -119,6 +167,18 @@ pub struct VMFrame {
     /// hand out a slot that still holds an argument.  It is also the number
     /// of registers in use, which is what the frame limit bounds.
     next_reg: usize,
+
+    /// Register slots (`Vec` capacities) held by every frame **beneath**
+    /// this one on the call stack, recorded when this frame was pushed.
+    ///
+    /// The frames beneath cannot grow while this one is live (see the module
+    /// docs), so the number stays exact without any bookkeeping on pop.
+    slots_below: usize,
+
+    /// The VM-wide register-slot budget this frame was pushed under
+    /// (`VMCore::max_register_slots`); `usize::MAX` for a standalone frame
+    /// built with [`Self::new`] / [`Self::for_function`].
+    slot_budget: usize,
 }
 
 impl VMFrame {
@@ -128,6 +188,10 @@ impl VMFrame {
     /// `register_count` is clamped to [`Self::MAX_FRAME_REGISTERS`], so an
     /// absurd value cannot abort the process on allocation.  The file still
     /// grows on demand in [`Self::assign`].
+    ///
+    /// A frame built here is *standalone*: it is not part of a VM call
+    /// stack, so only the per-frame limit applies to it, not the VM-wide
+    /// register-slot budget (see the module docs).
     pub fn new(fn_name: impl Into<String>, register_count: usize, return_dest: Option<usize>) -> Self {
         VMFrame {
             fn_name: fn_name.into(),
@@ -136,18 +200,41 @@ impl VMFrame {
             name_to_reg: HashMap::new(),
             return_dest,
             next_reg: 0,
+            slots_below: 0,
+            slot_budget: usize::MAX,
         }
     }
 
-    /// Build the frame for a call to `function`: parameter `i` owns register
-    /// slot `i` (the caller then writes argument `i` into `registers[i]`).
+    /// Build a standalone frame for a call to `function` — the same as the
+    /// VM's own `for_call` with nothing beneath it and no VM-wide budget:
+    /// parameter `i` owns slot `i`, and the untrusted `register_count` hint
+    /// pre-allocates at least `params` and at most
+    /// `min(params + instructions, MAX_FRAME_REGISTERS)` slots.
+    ///
+    /// # Errors
+    ///
+    /// [`VMError::RegisterLimitExceeded`] if the function has more parameters
+    /// than a frame has registers.
+    pub fn for_function(function: &IIRFunction, return_dest: Option<usize>) -> Result<Self, VMError> {
+        Self::for_call(function, return_dest, 0, usize::MAX)
+    }
+
+    /// Build the frame for a call to `function` on a VM call stack: parameter
+    /// `i` owns register slot `i` (the caller then writes argument `i` into
+    /// `registers[i]`).
+    ///
+    /// `slots_below` is what the frames beneath already hold (the caller's
+    /// [`Self::stack_slots`], or 0 for the root frame) and `slot_budget` the
+    /// VM-wide register-slot budget; together they cap this frame at
+    /// `slot_budget - slots_below` slots (and never more than
+    /// [`Self::MAX_FRAME_REGISTERS`]).
     ///
     /// The register file is pre-allocated to the frontend's `register_count`
     /// hint, bounded on both sides:
     ///
     /// ```text
     ///   at most   params + instructions   (all the function could ever name)
-    ///   at most   MAX_FRAME_REGISTERS
+    ///   at most   MAX_FRAME_REGISTERS, and what the budget leaves
     ///   at least  params                  (argument slots are written by index)
     /// ```
     ///
@@ -159,12 +246,19 @@ impl VMFrame {
     ///
     /// # Errors
     ///
-    /// [`VMError::RegisterLimitExceeded`] if the function has more parameters
-    /// than a frame has registers.  [`VMCore::execute`](crate::core::VMCore::execute)
-    /// refuses such a module before it runs; this is the backstop that keeps
-    /// every argument write in bounds (a function added to the module while
-    /// it runs never passed that check).
-    pub fn for_function(function: &IIRFunction, return_dest: Option<usize>) -> Result<Self, VMError> {
+    /// - [`VMError::RegisterLimitExceeded`] if the function has more
+    ///   parameters than a frame has registers.  [`VMCore::execute`](crate::core::VMCore::execute)
+    ///   refuses such a module before it runs; this is the backstop that keeps
+    ///   every argument write in bounds (a function added to the module while
+    ///   it runs never passed that check).
+    /// - [`VMError::RegisterBudgetExceeded`] if the budget has no room left
+    ///   for even the parameters.
+    pub(crate) fn for_call(
+        function: &IIRFunction,
+        return_dest: Option<usize>,
+        slots_below: usize,
+        slot_budget: usize,
+    ) -> Result<Self, VMError> {
         let n_params = function.params.len();
         if n_params > Self::MAX_FRAME_REGISTERS {
             return Err(VMError::RegisterLimitExceeded {
@@ -173,13 +267,23 @@ impl VMFrame {
                 limit: Self::MAX_FRAME_REGISTERS,
             });
         }
+        let slot_limit = Self::slot_limit_for(slots_below, slot_budget);
+        if n_params > slot_limit {
+            return Err(VMError::RegisterBudgetExceeded {
+                function: function.name.clone(),
+                slots: slots_below.saturating_add(n_params),
+                budget: slot_budget,
+            });
+        }
         let could_ever_use = n_params.saturating_add(function.instructions.len());
         let prealloc = function
             .register_count
             .min(could_ever_use)
-            .min(Self::MAX_FRAME_REGISTERS)
+            .min(slot_limit)
             .max(n_params);
         let mut frame = VMFrame::new(function.name.clone(), prealloc, return_dest);
+        frame.slots_below = slots_below;
+        frame.slot_budget = slot_budget;
         for (idx, (param_name, _)) in function.params.iter().enumerate() {
             frame.name_to_reg.insert(param_name.clone(), idx);
         }
@@ -197,18 +301,96 @@ impl VMFrame {
         self.registers.get(idx)
     }
 
+    /// Read-only view of the variable name → register index map.
+    ///
+    /// There is deliberately no mutable access: a name inserted behind the
+    /// frame's back would not advance its next-free-slot counter, and the
+    /// next new register would alias it.  Use [`Self::assign`] or
+    /// [`Self::register_index`] to create a name.
+    pub fn name_to_reg(&self) -> &HashMap<String, usize> {
+        &self.name_to_reg
+    }
+
+    /// Register slots held by this frame **and every frame beneath it** —
+    /// the running sum the VM-wide budget is checked against.
+    ///
+    /// For the top frame of a VM call stack this is the whole stack's
+    /// register-file footprint, in `Value` slots (`Vec` capacity, i.e. what
+    /// is allocated, not just what is in use).  A callee pushed on top of
+    /// this frame starts its own count from here.
+    pub fn stack_slots(&self) -> usize {
+        self.slots_below.saturating_add(self.registers.capacity())
+    }
+
     /// Maximum number of distinct named registers per frame (2¹⁶).
     ///
-    /// A resource bound: it caps one frame's register file, and so the
-    /// memory a deep call stack can pin (`max_frames` frames × this many
-    /// registers each).  It matches the index range `load_reg`/`store_reg`
-    /// accept (`0..=65_535`) and twig-vm's `MAX_REGISTERS_PER_FRAME`.
+    /// A resource bound: it caps one frame's register file.  It matches the
+    /// index range `load_reg`/`store_reg` accept (`0..=65_535`) and twig-vm's
+    /// `MAX_REGISTERS_PER_FRAME`.  The memory a whole call stack can pin is
+    /// bounded separately, by the VM-wide register-slot budget (see the
+    /// module docs).
     ///
     /// A function over the limit is refused before it runs (see
     /// [`Self::check_register_limit`]); a new register past the limit at run
     /// time is the same [`VMError::RegisterLimitExceeded`].  Neither path
     /// drops the write and carries on.
     pub const MAX_FRAME_REGISTERS: usize = 1 << 16;
+
+    /// The most slots a frame may hold given what lies beneath it:
+    ///
+    /// ```text
+    ///   min( MAX_FRAME_REGISTERS ,  slot_budget − slots_below )
+    /// ```
+    ///
+    /// (saturating: a full budget leaves 0, not a wrapped huge number).
+    fn slot_limit_for(slots_below: usize, slot_budget: usize) -> usize {
+        Self::MAX_FRAME_REGISTERS.min(slot_budget.saturating_sub(slots_below))
+    }
+
+    /// Grow the register file so that it holds at least `len` slots.
+    ///
+    /// The one place a frame's register file grows, so the one place the
+    /// limits are enforced:
+    ///
+    /// ```text
+    ///   len ≤ registers.len()              → nothing to do
+    ///   len > MAX_FRAME_REGISTERS          → RegisterLimitExceeded
+    ///   len > budget − slots_below         → RegisterBudgetExceeded
+    ///   otherwise                          → grow, capacity clamped to the limit
+    /// ```
+    ///
+    /// Capacity grows by doubling, as `Vec` itself would (so a run of
+    /// one-at-a-time `assign`s stays amortised O(1)), but is clamped to the
+    /// slot limit — a plain `resize` could double past it, and capacity is
+    /// what the budget counts.  On error the frame is unchanged.
+    fn grow_to(&mut self, len: usize) -> Result<(), VMError> {
+        if len <= self.registers.len() {
+            return Ok(());
+        }
+        if len > Self::MAX_FRAME_REGISTERS {
+            return Err(VMError::RegisterLimitExceeded {
+                function: self.fn_name.clone(),
+                registers: len,
+                limit: Self::MAX_FRAME_REGISTERS,
+            });
+        }
+        let slot_limit = Self::slot_limit_for(self.slots_below, self.slot_budget);
+        if len > slot_limit {
+            return Err(VMError::RegisterBudgetExceeded {
+                function: self.fn_name.clone(),
+                slots: self.slots_below.saturating_add(len),
+                budget: self.slot_budget,
+            });
+        }
+        let capacity = self.registers.capacity();
+        if len > capacity {
+            // `len ≤ slot_limit` was checked above, so the clamp is well formed.
+            let target = capacity.saturating_mul(2).clamp(len, slot_limit);
+            self.registers.reserve_exact(target - self.registers.len());
+        }
+        self.registers.resize(len, Value::Null);
+        Ok(())
+    }
 
     /// Refuse a function that needs more registers than a frame can hold.
     ///
@@ -268,12 +450,17 @@ impl VMFrame {
     ///
     /// Shared by [`Self::assign`] and the `call` handler (which reserves the
     /// caller's return slot before the callee runs), so both obey the limit.
+    /// A new name's slot is allocated **now**, not when it is first written:
+    /// the `call` handler relies on that, because the caller must not grow
+    /// after its callee has been pushed on top of it (the budget accounting
+    /// assumes only the top frame grows).
     ///
     /// # Errors
     ///
     /// [`VMError::RegisterLimitExceeded`] if `name` is new and the frame
-    /// already holds [`Self::MAX_FRAME_REGISTERS`] registers.  The frame is
-    /// left unchanged.
+    /// already holds [`Self::MAX_FRAME_REGISTERS`] registers, or
+    /// [`VMError::RegisterBudgetExceeded`] if the VM-wide budget has no room
+    /// for its slot.  Either way the frame is left unchanged.
     pub fn register_index(&mut self, name: &str) -> Result<usize, VMError> {
         if let Some(&idx) = self.name_to_reg.get(name) {
             return Ok(idx);
@@ -289,6 +476,9 @@ impl VMFrame {
                 limit: Self::MAX_FRAME_REGISTERS,
             });
         }
+        // Grow first, then record the name: a refused growth leaves no
+        // half-registered name behind.
+        self.grow_to(next_idx + 1)?;
         self.name_to_reg.insert(name.to_string(), next_idx);
         self.next_reg = next_idx + 1;
         Ok(next_idx)
@@ -301,13 +491,29 @@ impl VMFrame {
     /// [`VMError::RegisterLimitExceeded`] if `name` would be the frame's
     /// 65,537th register.  This used to return silently, dropping the value,
     /// so the program failed later with a misleading `undefined variable`.
+    /// [`VMError::RegisterBudgetExceeded`] if the call stack's register files
+    /// have used up the VM-wide budget.
     pub fn assign(&mut self, name: &str, value: Value) -> Result<(), VMError> {
+        // `register_index` has already grown the file to cover a new slot.
         let idx = self.register_index(name)?;
-        // Grow the register file if the frontend under-reported
-        // `register_count` (or it was clamped in `new`).
-        if idx >= self.registers.len() {
-            self.registers.resize(idx + 1, Value::Null);
-        }
+        self.registers[idx] = value;
+        Ok(())
+    }
+
+    /// Write `value` into register slot `idx` by **index** (the `store_reg`
+    /// view of the register file), growing the file if needed.
+    ///
+    /// The by-index and by-name views share one file and one set of limits:
+    /// slot `idx` may be a named register's slot, and growing the file to
+    /// reach it is charged to the budget exactly like a new name.
+    ///
+    /// # Errors
+    ///
+    /// [`VMError::RegisterLimitExceeded`] if `idx` is past the last slot a
+    /// frame can have; [`VMError::RegisterBudgetExceeded`] if reaching it
+    /// would overrun the VM-wide budget.  The frame is unchanged on error.
+    pub fn store_index(&mut self, idx: usize, value: Value) -> Result<(), VMError> {
+        self.grow_to(idx.saturating_add(1))?;
         self.registers[idx] = value;
         Ok(())
     }
@@ -563,5 +769,118 @@ mod tests {
             .collect();
         f.instructions.splice(0..0, body);
         assert!(VMFrame::check_register_limit(&f).is_ok());
+    }
+
+    // ------------------------------------------------------------------
+    // The register-slot budget
+    // ------------------------------------------------------------------
+
+    /// A parameterless frame pushed under `budget` with `below` slots
+    /// already held by the frames beneath it.
+    fn budgeted(below: usize, budget: usize) -> VMFrame {
+        VMFrame::for_call(&fn_with_params(&[], 0), None, below, budget).unwrap()
+    }
+
+    /// `store_index` grows the file to reach a slot, within the frame's share
+    /// of the budget; one slot more is the typed error and leaves the frame
+    /// exactly as it was.
+    #[test]
+    fn store_index_grows_within_the_budget_and_refuses_past_it() {
+        let mut frame = budgeted(60, 100); // 40 slots left for this frame
+        frame.store_index(39, Value::Int(7)).unwrap();
+        assert_eq!(frame.registers[39], Value::Int(7));
+        assert_eq!(frame.stack_slots(), 100);
+
+        let before = frame.registers.clone();
+        match frame.store_index(40, Value::Int(8)).unwrap_err() {
+            VMError::RegisterBudgetExceeded { function, slots, budget } => {
+                assert_eq!(function, "f");
+                assert_eq!(slots, 101);
+                assert_eq!(budget, 100);
+            }
+            other => panic!("expected RegisterBudgetExceeded, got {other:?}"),
+        }
+        assert_eq!(frame.registers, before);
+        assert_eq!(frame.stack_slots(), 100);
+    }
+
+    /// Named registers are charged the same way, and a refused name is not
+    /// half-registered: it does not resolve and does not consume a slot
+    /// number.
+    #[test]
+    fn a_refused_name_leaves_the_frame_unchanged() {
+        let mut frame = budgeted(0, 3);
+        for name in ["a", "b", "c"] {
+            frame.assign(name, Value::Int(1)).unwrap();
+        }
+        assert!(matches!(
+            frame.assign("d", Value::Int(1)),
+            Err(VMError::RegisterBudgetExceeded { slots: 4, budget: 3, .. })
+        ));
+        assert!(frame.resolve("d").is_none());
+        assert_eq!(frame.name_to_reg().len(), 3);
+        assert_eq!(frame.register_index("c").unwrap(), 2, "known names still resolve");
+    }
+
+    /// Capacity, not length, is what the budget counts, so growth must not
+    /// let `Vec`'s doubling overshoot: one-at-a-time assignment up to the
+    /// limit ends with capacity exactly at the limit, never above it.
+    #[test]
+    fn amortised_growth_never_allocates_past_the_frame_share() {
+        let mut frame = budgeted(0, 1_000);
+        for i in 0..1_000 {
+            frame.assign(&format!("r{i}"), Value::Int(i)).unwrap();
+            assert!(frame.registers.capacity() <= 1_000, "capacity overshot at {i}");
+        }
+        assert_eq!(frame.stack_slots(), 1_000);
+        // Doubling still happens below the limit (amortised O(1) appends).
+        let mut small = budgeted(0, 1_000);
+        small.assign("x", Value::Null).unwrap();
+        small.assign("y", Value::Null).unwrap();
+        small.assign("z", Value::Null).unwrap();
+        assert_eq!(small.registers.capacity(), 4);
+    }
+
+    /// `for_call` refuses a frame whose parameters alone do not fit in what
+    /// the budget leaves, and caps an over-reported hint at that share.
+    #[test]
+    fn for_call_respects_the_remaining_budget() {
+        let f = fn_with_params(&["a", "b", "c"], 64);
+        assert!(matches!(
+            VMFrame::for_call(&f, None, 98, 100),
+            Err(VMError::RegisterBudgetExceeded { slots: 101, budget: 100, .. })
+        ));
+        let frame = VMFrame::for_call(&f, None, 96, 100).unwrap();
+        assert_eq!(frame.registers.len(), 4, "hint 64 capped by params + instructions");
+        assert_eq!(frame.stack_slots(), 100);
+    }
+
+    /// The per-frame limit still applies when the budget is larger, so an
+    /// index past the last slot a frame can have is `RegisterLimitExceeded`.
+    #[test]
+    fn store_index_past_the_frame_limit_is_the_frame_limit_error() {
+        let mut frame = VMFrame::new("f", 0, None);
+        assert!(matches!(
+            frame.store_index(VMFrame::MAX_FRAME_REGISTERS, Value::Null),
+            Err(VMError::RegisterLimitExceeded { registers: 65_537, limit: 65_536, .. })
+        ));
+        assert!(frame.registers.is_empty());
+    }
+
+    /// A standalone frame has no budget beyond the per-frame limit.
+    #[test]
+    fn a_standalone_frame_is_bounded_only_by_the_frame_limit() {
+        let mut frame = VMFrame::new("f", 0, None);
+        frame.store_index(VMFrame::MAX_FRAME_REGISTERS - 1, Value::Int(1)).unwrap();
+        assert_eq!(frame.stack_slots(), VMFrame::MAX_FRAME_REGISTERS);
+    }
+
+    /// The read-only name map view shows the parameters by position.
+    #[test]
+    fn name_to_reg_view_lists_parameters() {
+        let frame = VMFrame::for_function(&fn_with_params(&["a", "b"], 0), None).unwrap();
+        assert_eq!(frame.name_to_reg().get("a"), Some(&0));
+        assert_eq!(frame.name_to_reg().get("b"), Some(&1));
+        assert_eq!(frame.name_to_reg().len(), 2);
     }
 }

@@ -13,6 +13,8 @@
 //!   ├── Trap { kind }            — a LANG83 trap (`trap`, `i64_div_floor`, …)
 //!   ├── RegisterLimitExceeded { function, registers, limit }
 //!   │                            — a function needs more registers than a frame holds
+//!   ├── RegisterBudgetExceeded { function, slots, budget }
+//!   │                            — the call stack's register files outgrew the VM budget
 //!   └── Custom(String)           — for type_assert and other domain errors
 //! ```
 
@@ -70,6 +72,29 @@ pub enum VMError {
         /// The per-frame limit, `VMFrame::MAX_FRAME_REGISTERS`.
         limit: usize,
     },
+    /// The register files of every live frame together would outgrow the
+    /// VM-wide register-slot budget (`VMCore::max_register_slots`).
+    ///
+    /// Raised at run time, when a frame's register file is about to grow —
+    /// a new named register, a `store_reg` to a slot past the end, or a
+    /// `call` pushing a callee frame.  The per-frame limit
+    /// ([`Self::RegisterLimitExceeded`]) caps one frame; this caps the whole
+    /// call stack, so the memory one `execute` can pin in register files is
+    /// at most `budget × size_of::<Value>()` bytes.
+    ///
+    /// Before it existed, a three-instruction recursive function
+    /// (`store_reg 65535, 1; call r = f; ret r`) grew every one of its 512
+    /// frames to 65,536 slots — about 768 MiB of register files — before
+    /// `FrameOverflow` stopped it.
+    RegisterBudgetExceeded {
+        /// The function whose frame was growing (or being pushed).
+        function: String,
+        /// The total register slots of all live frames the growth would
+        /// have reached.
+        slots: usize,
+        /// The VM-wide budget, `VMCore::max_register_slots`.
+        budget: usize,
+    },
     /// A custom error raised by language-specific opcode handlers.
     Custom(String),
 }
@@ -105,6 +130,13 @@ impl fmt::Display for VMError {
                     f,
                     "function {function:?} needs {registers} registers, \
                      more than the {limit} a vm-core frame can hold"
+                )
+            }
+            VMError::RegisterBudgetExceeded { function, slots, budget } => {
+                write!(
+                    f,
+                    "function {function:?} would bring the call stack to {slots} register slots, \
+                     more than the vm-core budget of {budget}"
                 )
             }
             VMError::Custom(msg) => write!(f, "{msg}"),
@@ -147,6 +179,20 @@ mod tests {
         assert_eq!(
             e.to_string(),
             "function \"main\" needs 65537 registers, more than the 65536 a vm-core frame can hold"
+        );
+    }
+
+    #[test]
+    fn display_register_budget_names_function_slots_and_budget() {
+        let e = VMError::RegisterBudgetExceeded {
+            function: "f".into(),
+            slots: 1_114_112,
+            budget: 1_048_576,
+        };
+        assert_eq!(
+            e.to_string(),
+            "function \"f\" would bring the call stack to 1114112 register slots, \
+             more than the vm-core budget of 1048576"
         );
     }
 

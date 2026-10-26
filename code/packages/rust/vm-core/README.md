@@ -89,8 +89,9 @@ that the ALGOL 60 `real` frontend now emits; integer programs are untouched.
 ### `VMFrame` — per-call state
 
 One frame per active function call.  Holds a flat `registers: Vec<Value>` and a
-`name_to_reg: HashMap<String, usize>` that maps variable names to register
-indices.  `assign()` grows the register file on demand, and
+private name map (variable name → register index, read through
+`frame.name_to_reg()`; new names go through `assign`/`register_index`, so a
+host cannot insert one that aliases the next slot).  `assign()` grows the register file on demand, and
 `for_function(&IIRFunction, return_dest)` pre-allocates the `register_count` hint
 bounded by `params + instructions` and the frame limit, and never below the
 parameter count, so the dispatcher can place call arguments at indices
@@ -111,6 +112,19 @@ run-time backstop (for a register a custom opcode invents on the fly). Earlier
 versions dropped the 65,537th register silently and failed later with a
 misleading `undefined variable`. `register_count` is only a pre-allocation hint
 and is clamped (see above), so an absurd value cannot abort the process.
+
+**Register-slot budget.** The frame limit bounds one frame; all live frames of
+one call stack also share `VMCore::max_register_slots` (default 2²⁰ slots), so
+the register files of an `execute` never hold more than
+`max_register_slots × size_of::<Value>()` bytes — **24 MiB** by default. Every
+growth — a new name, `store_reg` past the end of the file
+(`frame.store_index(idx, v)?`), a callee frame's pre-allocation — is checked
+against it and fails with `VMError::RegisterBudgetExceeded { function, slots,
+budget }`. Each frame records what the frames beneath it hold when it is
+pushed; only the top frame grows, so the sum stays exact with no bookkeeping on
+return. Without it, the three-instruction recursion
+`store_reg 65535, 1; call r = f; ret r` grew all 512 frames to 65,536 slots
+(~768 MiB) before `FrameOverflow`; now it stops after 16 frames, at 24 MiB.
 
 ### `VMCore` — the execution API
 
@@ -216,8 +230,10 @@ vm.register_opcode("tetrad.move", handler);
 ```
 
 Custom opcodes shadow the standard table. A handler that writes a register
-uses `frame.assign(name, value)?` — `assign` returns `Result` and fails with
-`RegisterLimitExceeded` rather than dropping a register past the frame limit.
+uses `frame.assign(name, value)?` (by name) or `frame.store_index(idx, value)?`
+(by index) — both return `Result` and fail with `RegisterLimitExceeded` or
+`RegisterBudgetExceeded` rather than dropping a register or outgrowing the
+VM's register budget. Growing `frame.registers` directly bypasses the budget.
 
 ---
 
@@ -228,6 +244,7 @@ uses `frame.assign(name, value)?` — `assign` returns `Result` and fails with
 | `u8_wrap` | `false` | Mask all arithmetic `& 0xFF` (Tetrad mode) |
 | `profiler_enabled` | `true` | Collect type-feedback observations |
 | `max_frames` | 512 | Call-stack depth limit (raises `FrameOverflow`) |
+| `max_register_slots` | 2²⁰ (1,048,576) | Register slots all live frames may hold together — 24 MiB of `Value`s (raises `RegisterBudgetExceeded`) |
 
 ---
 

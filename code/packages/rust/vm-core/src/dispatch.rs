@@ -75,6 +75,11 @@ pub struct DispatchCtx<'a> {
     pub builtins: &'a crate::builtins::BuiltinRegistry,
     pub u8_wrap: bool,
     pub max_frames: usize,
+    /// VM-wide register-slot budget, summed over every live frame
+    /// (`VMCore::max_register_slots`).  `handle_call` hands each callee
+    /// frame what the frames beneath it already hold, so the frame can
+    /// enforce the budget itself whenever it grows.
+    pub max_register_slots: usize,
     /// Maximum number of distinct memory-address entries before `store_mem` /
     /// `io_out` return `VMError::Custom`.  Guards against unbounded HashMap
     /// growth from looping IIR programs.
@@ -776,10 +781,10 @@ fn handle_ret(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
     };
     ctx.frames.pop();
     if let (Some(dest_idx), Some(caller)) = (return_dest, ctx.frames.last_mut()) {
-        if dest_idx >= caller.registers.len() {
-            caller.registers.resize(dest_idx + 1, Value::Null);
-        }
-        caller.registers[dest_idx] = value.clone();
+        // `call` allocated this slot before pushing the callee (see
+        // `register_index`), so this never grows the caller — `store_index`
+        // is the bounds-safe write, and the one place growth is checked.
+        caller.store_index(dest_idx, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -847,11 +852,11 @@ fn handle_store_reg(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
         let value = resolve_src(frame, &instr.srcs, 1)?;
         (raw as usize, value)
     };
-    let frame = ctx.frames.last_mut().unwrap();
-    if idx >= frame.registers.len() {
-        frame.registers.resize(idx + 1, Value::Null);
-    }
-    frame.registers[idx] = value;
+    // `store_index` grows the file to reach `idx` only within the frame's
+    // share of the VM-wide register-slot budget: an index the frame never
+    // names still costs memory, and a recursive `store_reg 65535` would
+    // otherwise pin 65,536 slots in every frame of the stack.
+    ctx.frames.last_mut().unwrap().store_index(idx, value)?;
     Ok(None)
 }
 
@@ -1858,19 +1863,30 @@ fn handle_call(
 
     // Step 4: Determine the return-value register slot in the CALLER frame.
     // We need to look up / allocate it in the caller frame before pushing
-    // the callee frame.  `register_index` applies the frame register limit,
-    // the same as `assign` — this slot is a register like any other.
+    // the callee frame.  `register_index` applies the frame register limit
+    // and the register-slot budget, the same as `assign` — this slot is a
+    // register like any other — and grows the caller's file to cover it
+    // *now*: once the callee is pushed the caller must not grow (the budget
+    // accounting below assumes only the top frame does).
     let ret_dest: Option<usize> = match dest_name.as_ref() {
         Some(dest_name) => Some(ctx.frames.last_mut().unwrap().register_index(dest_name)?),
         None => None,
     };
 
-    // Step 5: Build and push the callee frame.  `for_function` gives every
+    // Step 5: Build and push the callee frame.  `for_call` gives every
     // parameter its own slot (or refuses a function with more parameters than
     // a frame holds), so the positional argument writes stay in bounds.
+    //
+    // The callee's share of the register-slot budget is what the caller's
+    // stack has left:
+    //
+    //   slots_below(callee) = caller.stack_slots()   (caller and everything beneath)
+    //   callee may hold     ≤ max_register_slots − slots_below(callee)
+    let slots_below = ctx.frames.last().map_or(0, VMFrame::stack_slots);
     let callee = &ctx.module_fns[callee_idx];
     let n_params = callee.params.len();
-    let mut callee_frame = VMFrame::for_function(callee, ret_dest)?;
+    let mut callee_frame =
+        VMFrame::for_call(callee, ret_dest, slots_below, ctx.max_register_slots)?;
     for (i, val) in args.into_iter().enumerate().take(n_params) {
         callee_frame.registers[i] = val;
     }

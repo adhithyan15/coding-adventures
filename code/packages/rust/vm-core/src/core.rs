@@ -32,6 +32,7 @@
 //! | `u8_wrap` | `false` | Mask arithmetic results with `& 0xFF` (Tetrad mode) |
 //! | `profiler_enabled` | `true` | Enable inline type profiling |
 //! | `max_frames` | 512 | Maximum call-stack depth |
+//! | `max_register_slots` | 2²⁰ | Register slots all live frames may hold together (24 MiB of `Value`s) |
 //!
 //! # JIT integration
 //!
@@ -103,6 +104,23 @@ pub struct VMCore {
     /// Prevents stack overflow from runaway recursion — raises
     /// `VMError::FrameOverflow` instead.  Default: 512.
     pub max_frames: usize,
+
+    /// VM-wide budget of register slots, summed over every live frame.
+    ///
+    /// `max_frames` bounds how *deep* the call stack gets and
+    /// [`VMFrame::MAX_FRAME_REGISTERS`] how big *one* frame gets, but their
+    /// product (512 × 65,536 slots ≈ 768 MiB) is no useful bound: a
+    /// three-instruction recursive function that does `store_reg 65535, …`
+    /// reaches it.  This budget caps the sum directly, so the register files
+    /// of one `execute` occupy at most `max_register_slots ×
+    /// size_of::<Value>()` bytes.  Growing past it raises
+    /// [`VMError::RegisterBudgetExceeded`].
+    ///
+    /// Counted in `Vec` capacity (what is allocated), checked whenever a
+    /// register file grows; see the [`crate::frame`] module docs for why a
+    /// running sum down the stack is exact.  Default: 2²⁰ = 1,048,576 slots
+    /// (24 MiB) — room for the full 512-frame stack at 2,048 slots a frame.
+    pub max_register_slots: usize,
 
     /// Maximum number of distinct addresses in the flat memory map.
     ///
@@ -256,6 +274,15 @@ pub struct VMCore {
 }
 
 impl VMCore {
+    /// Default [`Self::max_register_slots`]: 2²⁰ = 1,048,576 register slots,
+    /// 24 MiB of 24-byte `Value`s across the whole call stack.
+    ///
+    /// Sized so the deepest default stack (`max_frames` = 512) still gets
+    /// 2,048 slots a frame — far more than recursive functions in practice
+    /// use — while one frame alone can still reach the full
+    /// [`VMFrame::MAX_FRAME_REGISTERS`] (65,536).
+    pub const DEFAULT_MAX_REGISTER_SLOTS: usize = 1 << 20;
+
     /// Create a `VMCore` with sensible defaults.
     pub fn new() -> Self {
         // Attest generational-barrier coverage (gc-core AOT00-T8): `should_collect_minor`
@@ -286,6 +313,7 @@ impl VMCore {
             u8_wrap: false,
             profiler_enabled: true,
             max_frames: 512,
+            max_register_slots: VMCore::DEFAULT_MAX_REGISTER_SLOTS,
             max_memory_entries: 1_000_000,
             max_gc_heap_bytes: 64 * 1024 * 1024,
             max_instructions: None, // unlimited — trusted code path
@@ -406,7 +434,7 @@ impl VMCore {
         // at least one slot per parameter, so the argument writes are in
         // bounds.
         let entry = &module.functions[fn_idx];
-        let mut root_frame = VMFrame::for_function(entry, None)?;
+        let mut root_frame = VMFrame::for_call(entry, None, 0, self.max_register_slots)?;
         for (i, arg) in args.iter().enumerate().take(entry.params.len()) {
             root_frame.registers[i] = arg.clone();
         }
@@ -441,6 +469,7 @@ impl VMCore {
             gc_object_count: &mut self.gc_object_count,
             u8_wrap: self.u8_wrap,
             max_frames: self.max_frames,
+            max_register_slots: self.max_register_slots,
             max_memory_entries: self.max_memory_entries,
             max_gc_heap_bytes: self.max_gc_heap_bytes,
             // Use saturating_add so that a near-u64::MAX metrics_instrs + a
@@ -488,7 +517,7 @@ impl VMCore {
         check_register_limits(module)?;
 
         let entry = &module.functions[fn_idx];
-        let mut root_frame = VMFrame::for_function(entry, None)?;
+        let mut root_frame = VMFrame::for_call(entry, None, 0, self.max_register_slots)?;
         for (i, arg) in args.iter().enumerate().take(entry.params.len()) {
             root_frame.registers[i] = arg.clone();
         }
@@ -520,6 +549,7 @@ impl VMCore {
             gc_object_count: &mut self.gc_object_count,
             u8_wrap: self.u8_wrap,
             max_frames: self.max_frames,
+            max_register_slots: self.max_register_slots,
             max_memory_entries: self.max_memory_entries,
             max_gc_heap_bytes: self.max_gc_heap_bytes,
             max_instructions: self.max_instructions.map(|limit| instrs_before.saturating_add(limit)),
@@ -661,6 +691,7 @@ impl std::fmt::Debug for VMCore {
             .field("u8_wrap", &self.u8_wrap)
             .field("profiler_enabled", &self.profiler_enabled)
             .field("max_frames", &self.max_frames)
+            .field("max_register_slots", &self.max_register_slots)
             .field("frames_depth", &self.frames.len())
             .field("metrics_instrs", &self.metrics_instrs)
             .finish()
@@ -861,6 +892,154 @@ mod tests {
         let mut module = module_of(vec![f]);
         let result = VMCore::new().execute(&mut module, "main", &[]).unwrap();
         assert_eq!(result, Some(Value::Int(1)));
+    }
+
+    // ------------------------------------------------------------------
+    // VM-wide register-slot budget (VMCore::max_register_slots)
+    // ------------------------------------------------------------------
+
+    /// `f() { store_reg <idx>, 1; r = call f(); ret r }` — recursion whose
+    /// every frame writes register slot `idx` by index, so every frame's
+    /// register file grows to `idx + 1` slots although the function names
+    /// just one register.
+    fn recursive_store_reg(idx: i64) -> IIRModule {
+        let f = IIRFunction::new(
+            "f", vec![], "any",
+            vec![
+                IIRInstr::new("store_reg", None, vec![Operand::Int(idx), Operand::Int(1)], "any"),
+                IIRInstr::new("call", Some("r".into()), vec![Operand::Var("f".into())], "any"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+            ],
+        );
+        module_of(vec![f])
+    }
+
+    /// Sum of the register-file capacities of every live frame — what the
+    /// budget bounds — computed independently of the frames' running sums.
+    fn live_register_slots(vm: &VMCore) -> usize {
+        vm.frames.iter().map(|f| f.registers.capacity()).sum()
+    }
+
+    /// The security-review reproducer.  Each frame grows to 65,536 slots
+    /// (1.5 MiB); with the default budget of 2²⁰ slots exactly 16 such frames
+    /// fit, and the 17th frame's `store_reg` is refused with the typed error —
+    /// long before the 512-frame `FrameOverflow` that used to end it after
+    /// pinning ~768 MiB.  The accounting is asserted directly: the live
+    /// frames hold exactly the budget, never more.
+    #[test]
+    fn recursive_store_reg_hits_the_register_budget_not_hundreds_of_mib() {
+        let mut module = recursive_store_reg(65_535);
+        let mut vm = VMCore::new();
+        let budget = vm.max_register_slots;
+        assert_eq!(budget, 1 << 20);
+
+        let err = vm.execute(&mut module, "f", &[]).unwrap_err();
+        let per_frame = VMFrame::MAX_FRAME_REGISTERS;
+        let full_frames = budget / per_frame; // 16
+        match &err {
+            VMError::RegisterBudgetExceeded { function, slots, budget: b } => {
+                assert_eq!(function, "f");
+                assert_eq!(*b, budget);
+                // The refused growth: 16 full frames beneath, plus 65,536 more.
+                assert_eq!(*slots, full_frames * per_frame + per_frame);
+            }
+            other => panic!("expected RegisterBudgetExceeded, got {other:?}"),
+        }
+        // 16 full frames plus the 17th, which was refused its growth (the
+        // budget left it no slots at all, so it holds none).
+        assert_eq!(vm.frames.len(), full_frames + 1);
+        assert_eq!(vm.frames.last().unwrap().registers.capacity(), 0);
+        // The bound: everything the live frames hold, by an independent sum.
+        assert_eq!(live_register_slots(&vm), budget);
+        assert_eq!(vm.frames.last().unwrap().stack_slots(), budget);
+    }
+
+    /// The bound scales with the setting: a host that lowers the budget gets
+    /// the error correspondingly sooner, and never holds more than it.
+    #[test]
+    fn a_lower_register_budget_is_enforced_exactly() {
+        let mut module = recursive_store_reg(999); // 1,000 slots a frame
+        let mut vm = VMCore::new();
+        vm.max_register_slots = 4_500;
+        let err = vm.execute(&mut module, "f", &[]).unwrap_err();
+        assert!(
+            matches!(&err, VMError::RegisterBudgetExceeded { slots: 5_000, budget: 4_500, .. }),
+            "got {err:?}"
+        );
+        // Four full frames fit (4,000 slots); the fifth may hold at most the
+        // 500 left, so its `store_reg 999` is refused.
+        assert_eq!(vm.frames.len(), 5);
+        assert!(live_register_slots(&vm) <= 4_500);
+    }
+
+    /// Moderate by-index use is untouched: 1,024 slots a frame × 512 frames
+    /// is half the default budget, so the recursion still ends exactly as it
+    /// always did, at `max_frames` with `FrameOverflow`.
+    #[test]
+    fn store_reg_within_the_budget_still_reaches_frame_overflow() {
+        let mut module = recursive_store_reg(1_023);
+        let mut vm = VMCore::new();
+        let err = vm.execute(&mut module, "f", &[]).unwrap_err();
+        assert!(matches!(err, VMError::FrameOverflow { depth: 512, .. }), "got {err:?}");
+        assert!(live_register_slots(&vm) <= vm.max_register_slots);
+    }
+
+    /// Ordinary recursion — named registers, a few per frame — runs to a
+    /// depth of 500 under the default budget, and a store/load by index
+    /// round-trips.
+    #[test]
+    fn ordinary_recursion_and_load_reg_are_unaffected_by_the_budget() {
+        // count(n) { if n == 0 ret 0; m = n - 1; r = count(m); s = r + 1; ret s }
+        let count = IIRFunction::new(
+            "count", vec![("n".into(), "i64".into())], "i64",
+            vec![
+                IIRInstr::new("cmp_eq", Some("z".into()), vec![Operand::Var("n".into()), Operand::Int(0)], "bool"),
+                IIRInstr::new("jmp_if_false", None, vec![Operand::Var("z".into()), Operand::Var("rec".into())], "void"),
+                IIRInstr::new("ret", None, vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("label", None, vec![Operand::Var("rec".into())], "void"),
+                IIRInstr::new("sub", Some("m".into()), vec![Operand::Var("n".into()), Operand::Int(1)], "i64"),
+                IIRInstr::new("call", Some("r".into()), vec![Operand::Var("count".into()), Operand::Var("m".into())], "i64"),
+                IIRInstr::new("add", Some("s".into()), vec![Operand::Var("r".into()), Operand::Int(1)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("s".into())], "i64"),
+            ],
+        );
+        let mut module = module_of(vec![count]);
+        let result = VMCore::new().execute(&mut module, "count", &[Value::Int(500)]).unwrap();
+        assert_eq!(result, Some(Value::Int(500)));
+
+        // store_reg 7, 42 then load_reg 7 → 42 (slot 7 is past every name).
+        let main = IIRFunction::new(
+            "main", vec![], "any",
+            vec![
+                IIRInstr::new("store_reg", None, vec![Operand::Int(7), Operand::Int(42)], "any"),
+                IIRInstr::new("load_reg", Some("x".into()), vec![Operand::Int(7)], "any"),
+                IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "any"),
+            ],
+        );
+        let mut module = module_of(vec![main]);
+        let result = VMCore::new().execute(&mut module, "main", &[]).unwrap();
+        assert_eq!(result, Some(Value::Int(42)));
+    }
+
+    /// A budget too small for even the entry point's parameters refuses the
+    /// root frame with the same typed error, before anything runs.
+    #[test]
+    fn a_budget_too_small_for_the_entry_parameters_is_refused_up_front() {
+        let f = IIRFunction::new(
+            "main",
+            vec![("a".into(), "any".into()), ("b".into(), "any".into())],
+            "any",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "any")],
+        );
+        let mut module = module_of(vec![f]);
+        let mut vm = VMCore::new();
+        vm.max_register_slots = 1;
+        let err = vm.execute(&mut module, "main", &[Value::Int(1), Value::Int(2)]).unwrap_err();
+        assert!(
+            matches!(&err, VMError::RegisterBudgetExceeded { slots: 2, budget: 1, .. }),
+            "got {err:?}"
+        );
+        assert_eq!(vm.metrics_instrs(), 0);
     }
 
     fn make_const_fn(value: i64) -> IIRModule {
