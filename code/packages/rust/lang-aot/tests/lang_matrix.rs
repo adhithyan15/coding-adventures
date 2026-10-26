@@ -6727,6 +6727,17 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // ALGOL 60 - a divisor above the complete sign-rooted magnitude proves a
+    // zero div quotient or an identity mod remainder before later composition.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := 3.5; real procedure rightvalue; rightvalue := -2.25; real result; result := entier(((((2 * sign(leftvalue()) + 2) div 5) / 7 + (((2 * sign(leftvalue()) + 2) mod 5) * sign(rightvalue()) / 2)) ^ 2)); output(result) end",
+        expect: Expect::Stdout("4"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -16674,6 +16685,31 @@ fn algol_stable_sign_reduction_divisibility_runs_on_every_available_standard_bac
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but stable sign-reduction divisibility did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_range_dominated_sign_reductions_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "sign(leftvalue()) + 2) div 5) / 7 + (((2 * sign(leftvalue()) + 2) mod 5)",
+                )
+        })
+        .expect("the ALGOL range-dominated sign-reduction program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but range-dominated sign reductions did not complete"
             );
             continue;
         };
