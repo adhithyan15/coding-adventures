@@ -417,8 +417,12 @@ fn validate_points(points: &[Point]) -> Result<(), FlatteningError> {
     }
 }
 
-/// Scale before squaring so tiny curved geometry cannot underflow into a false
-/// zero-distance chord. Non-finite derived arithmetic fails closed.
+/// Project onto a unit-length chord before measuring the perpendicular
+/// residual. Scaling the point vector by the chord's largest component would
+/// erase valid mixed-scale offsets (for example, 1e-16 above a 1e308-wide
+/// chord). Compensated products retain cancellation-sensitive dot and cross
+/// products, and every nonzero returned magnitude is rounded outward by one
+/// ULP. Non-finite derived arithmetic fails closed.
 fn point_to_segment_distance(
     point: Point,
     start: Point,
@@ -432,25 +436,89 @@ fn point_to_segment_distance(
         return Err(FlatteningError::NonFiniteGeometry);
     }
 
-    let scale = dx.abs().max(dy.abs()).max(px.abs()).max(py.abs());
-    if scale == 0.0 {
-        return Ok(0.0);
+    let length = dx.hypot(dy);
+    let point_length = px.hypot(py);
+    if !length.is_finite() || !point_length.is_finite() {
+        return Err(FlatteningError::NonFiniteGeometry);
     }
-    let nx = dx / scale;
-    let ny = dy / scale;
-    let npx = px / scale;
-    let npy = py / scale;
-    let denominator = nx * nx + ny * ny;
-    let projection = if denominator > 0.0 {
-        ((npx * nx + npy * ny) / denominator).clamp(0.0, 1.0)
-    } else {
-        0.0
-    };
-    let distance = scale * (npx - projection * nx).hypot(npy - projection * ny);
-    if distance.is_finite() {
-        Ok(distance)
+    if length == 0.0 {
+        return Ok(outward_magnitude(point_length));
+    }
+
+    let chord_scale = dx.abs().max(dy.abs());
+    let sx = dx / chord_scale;
+    let sy = dy / chord_scale;
+    let normalized_length = sx.hypot(sy);
+    let ux = sx / normalized_length;
+    let uy = sy / normalized_length;
+    let projection = compensated_product_difference(px, ux, -py, uy)?;
+
+    // Near an endpoint, rounding ambiguity is resolved toward that endpoint.
+    // Endpoint distance is an upper bound on finite-segment distance, so this
+    // can subdivide more but can never accept an unsafe chord.
+    let margin = 8.0 * f64::EPSILON * point_length.max(length) + f64::from_bits(1);
+    if !margin.is_finite() {
+        return Err(FlatteningError::NonFiniteGeometry);
+    }
+    if projection <= margin {
+        return Ok(outward_magnitude(point_length));
+    }
+    if projection >= length - margin {
+        let ex = point.x - end.x;
+        let ey = point.y - end.y;
+        if !ex.is_finite() || !ey.is_finite() {
+            return Err(FlatteningError::NonFiniteGeometry);
+        }
+        let end_distance = ex.hypot(ey);
+        if !end_distance.is_finite() {
+            return Err(FlatteningError::NonFiniteGeometry);
+        }
+        return Ok(outward_magnitude(end_distance));
+    }
+
+    // Compute the determinant with only the chord scaled. Scaling the point
+    // vector as well would discard a small perpendicular component next to a
+    // very large chord. Dividing by the scaled chord length leaves the result
+    // in the point vector's original units.
+    let cross = compensated_product_difference(px, sy, py, sx)?;
+    let distance = cross.abs() / normalized_length;
+    if !distance.is_finite() {
+        return Err(FlatteningError::NonFiniteGeometry);
+    }
+    Ok(outward_magnitude(distance))
+}
+
+/// Return a*b-c*d with product and subtraction roundoff folded into the result.
+fn compensated_product_difference(a: f64, b: f64, c: f64, d: f64) -> Result<f64, FlatteningError> {
+    let ab = a * b;
+    let cd = c * d;
+    if !ab.is_finite() || !cd.is_finite() {
+        return Err(FlatteningError::NonFiniteGeometry);
+    }
+    let ab_tail = a.mul_add(b, -ab);
+    let cd_tail = c.mul_add(d, -cd);
+    let difference = ab - cd;
+    if !difference.is_finite() {
+        return Err(FlatteningError::NonFiniteGeometry);
+    }
+    let b_virtual = ab - difference;
+    let a_virtual = difference + b_virtual;
+    let b_roundoff = b_virtual - cd;
+    let a_roundoff = ab - a_virtual;
+    let correction = (a_roundoff + b_roundoff) + ab_tail - cd_tail;
+    let result = difference + correction;
+    if result.is_finite() {
+        Ok(result)
     } else {
         Err(FlatteningError::NonFiniteGeometry)
+    }
+}
+
+fn outward_magnitude(value: f64) -> f64 {
+    if value == 0.0 {
+        0.0
+    } else {
+        f64::from_bits(value.to_bits() + 1)
     }
 }
 
@@ -949,6 +1017,22 @@ mod tests {
     }
 
     #[test]
+    fn flattening_preserves_mixed_scale_perpendicular_distance() {
+        let curve = QuadraticBezier::new(
+            Point::new(0.0, 0.0),
+            Point::new(5e307, 1e-16),
+            Point::new(1e308, 0.0),
+        );
+        let distance = point_to_segment_distance(curve.p1, curve.p0, curve.p2)
+            .expect("finite mixed-scale geometry should have a finite bound");
+        assert!(distance >= 1e-16, "mixed-scale offset was lost: {distance}");
+        assert_eq!(
+            curve.to_polyline(f64::from_bits(1)),
+            Err(FlatteningError::BudgetExceeded)
+        );
+    }
+
+    #[test]
     fn flattening_error_messages_and_scaled_distance_boundaries() {
         assert_eq!(
             FlatteningError::InvalidTolerance.to_string(),
@@ -967,6 +1051,14 @@ mod tests {
         assert_eq!(point_to_segment_distance(origin, origin, origin), Ok(0.0));
         assert_eq!(
             point_to_segment_distance(Point::new(f64::MAX, f64::MAX), origin, origin),
+            Err(FlatteningError::NonFiniteGeometry)
+        );
+        assert_eq!(
+            compensated_product_difference(f64::MAX, 2.0, 0.0, 0.0),
+            Err(FlatteningError::NonFiniteGeometry)
+        );
+        assert_eq!(
+            compensated_product_difference(f64::MAX, 1.0, -f64::MAX, 1.0),
             Err(FlatteningError::NonFiniteGeometry)
         );
     }

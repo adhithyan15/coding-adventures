@@ -127,8 +127,14 @@ func TestFlatteningRejectsNonFiniteInputsAtomically(t *testing.T) {
 
 func TestFlatteningFailsClosedOnDerivedOverflowAndSubnormalGeometry(t *testing.T) {
 	max := math.MaxFloat64
+	quadOverflow := QuadraticBezier{point2d.NewPoint(-max, 0), point2d.NewPoint(0, 1), point2d.NewPoint(max, 0)}
+	points, err := PolylineQuad(quadOverflow, 0.1)
+	if !errors.Is(err, ErrNonFiniteGeometry) || points != nil {
+		t.Fatalf("expected atomic quadratic derived-overflow error, got points=%v err=%v", points, err)
+	}
+
 	overflow := CubicBezier{point2d.NewPoint(-max, 0), point2d.NewPoint(0, 1), point2d.NewPoint(0, -1), point2d.NewPoint(max, 0)}
-	points, err := PolylineCubic(overflow, 0.1)
+	points, err = PolylineCubic(overflow, 0.1)
 	if !errors.Is(err, ErrNonFiniteGeometry) || points != nil {
 		t.Fatalf("expected atomic derived-overflow error, got points=%v err=%v", points, err)
 	}
@@ -138,5 +144,41 @@ func TestFlatteningFailsClosedOnDerivedOverflowAndSubnormalGeometry(t *testing.T
 	points, err = PolylineQuad(subnormal, math.SmallestNonzeroFloat64)
 	if !errors.Is(err, ErrFlatteningBudgetExceeded) || points != nil {
 		t.Fatalf("expected subnormal curve to exhaust its budget, got points=%v err=%v", points, err)
+	}
+}
+
+func TestFlatteningPreservesMixedScalePerpendicularDistance(t *testing.T) {
+	curve := QuadraticBezier{
+		point2d.NewPoint(0, 0),
+		point2d.NewPoint(5e307, 1e-16),
+		point2d.NewPoint(1e308, 0),
+	}
+	distance, ok := pointToSegmentDistance(curve.P1, curve.P0, curve.P2)
+	if !ok || distance < 1e-16 {
+		t.Fatalf("mixed-scale control distance was lost: distance=%v ok=%v", distance, ok)
+	}
+	points, err := PolylineQuad(curve, math.SmallestNonzeroFloat64)
+	if !errors.Is(err, ErrFlatteningBudgetExceeded) || points != nil {
+		t.Fatalf("expected atomic budget error instead of an unsafe chord, got points=%v err=%v", points, err)
+	}
+	cubic := CubicBezier{
+		point2d.NewPoint(0, 0),
+		point2d.NewPoint(3e307, 1e-16),
+		point2d.NewPoint(7e307, -1e-16),
+		point2d.NewPoint(1e308, 0),
+	}
+	points, err = PolylineCubic(cubic, math.SmallestNonzeroFloat64)
+	if !errors.Is(err, ErrFlatteningBudgetExceeded) || points != nil {
+		t.Fatalf("expected atomic cubic budget error instead of an unsafe chord, got points=%v err=%v", points, err)
+	}
+}
+
+func TestCompensatedProductDifferenceRejectsNonFiniteArithmetic(t *testing.T) {
+	max := math.MaxFloat64
+	if _, ok := compensatedProductDifference(max, 2, 0, 0); ok {
+		t.Fatal("overflowing product must fail closed")
+	}
+	if _, ok := compensatedProductDifference(max, 1, -max, 1); ok {
+		t.Fatal("overflowing product difference must fail closed")
 	}
 }

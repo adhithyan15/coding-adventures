@@ -230,9 +230,13 @@ func finitePoints(points ...point2d.Point) bool {
 	return true
 }
 
-// pointToSegmentDistance scales before squaring so tiny curved geometry does
-// not underflow into a false zero-distance chord. A false result means finite
-// inputs produced non-finite derived arithmetic and flattening must fail closed.
+// pointToSegmentDistance projects onto a unit-length chord before measuring the
+// perpendicular residual. Scaling the point vector by the chord's largest
+// component would erase valid mixed-scale offsets (for example, 1e-16 above a
+// 1e308-wide chord). Compensated products retain cancellation-sensitive dot and
+// cross products, and every returned magnitude is rounded outward by one ULP.
+// A false result means finite inputs produced non-finite derived arithmetic and
+// flattening must fail closed.
 func pointToSegmentDistance(point, start, end point2d.Point) (float64, bool) {
 	dx, dy := end.X-start.X, end.Y-start.Y
 	px, py := point.X-start.X, point.Y-start.Y
@@ -240,22 +244,92 @@ func pointToSegmentDistance(point, start, end point2d.Point) (float64, bool) {
 		math.IsInf(dx, 0) || math.IsInf(dy, 0) || math.IsInf(px, 0) || math.IsInf(py, 0) {
 		return 0, false
 	}
-	scale := math.Max(math.Max(math.Abs(dx), math.Abs(dy)), math.Max(math.Abs(px), math.Abs(py)))
-	if scale == 0 {
-		return 0, true
+	length := math.Hypot(dx, dy)
+	pointLength := math.Hypot(px, py)
+	if math.IsInf(length, 0) || math.IsInf(pointLength, 0) {
+		return 0, false
 	}
-	nx, ny := dx/scale, dy/scale
-	npx, npy := px/scale, py/scale
-	denominator := nx*nx + ny*ny
-	projection := 0.0
-	if denominator > 0 {
-		projection = math.Max(0, math.Min(1, (npx*nx+npy*ny)/denominator))
+	if length == 0 {
+		return outwardMagnitude(pointLength), true
 	}
-	distance := scale * math.Hypot(npx-projection*nx, npy-projection*ny)
+
+	chordScale := math.Max(math.Abs(dx), math.Abs(dy))
+	sx, sy := dx/chordScale, dy/chordScale
+	normalizedLength := math.Hypot(sx, sy)
+	ux, uy := sx/normalizedLength, sy/normalizedLength
+	projection, ok := compensatedProductDifference(px, ux, -py, uy)
+	if !ok {
+		return 0, false
+	}
+	// Near an endpoint, rounding ambiguity is resolved toward that endpoint.
+	// Endpoint distance is an upper bound on finite-segment distance, so this
+	// can subdivide more but can never accept an unsafe chord.
+	margin := 8*(math.Nextafter(1, 2)-1)*math.Max(pointLength, length) + math.SmallestNonzeroFloat64
+	if math.IsInf(margin, 0) {
+		return 0, false
+	}
+	if projection <= margin {
+		return outwardMagnitude(pointLength), true
+	}
+	if projection >= length-margin {
+		ex, ey := point.X-end.X, point.Y-end.Y
+		if math.IsNaN(ex) || math.IsNaN(ey) || math.IsInf(ex, 0) || math.IsInf(ey, 0) {
+			return 0, false
+		}
+		endDistance := math.Hypot(ex, ey)
+		if math.IsInf(endDistance, 0) {
+			return 0, false
+		}
+		return outwardMagnitude(endDistance), true
+	}
+
+	// Compute the determinant with only the chord scaled. Scaling the point
+	// vector as well would discard a small perpendicular component next to a
+	// very large chord. Dividing by the scaled chord length leaves the result
+	// in the point vector's original units.
+	cross, ok := compensatedProductDifference(px, sy, py, sx)
+	if !ok {
+		return 0, false
+	}
+	distance := math.Abs(cross) / normalizedLength
 	if math.IsNaN(distance) || math.IsInf(distance, 0) {
 		return 0, false
 	}
-	return distance, true
+	return outwardMagnitude(distance), true
+}
+
+// compensatedProductDifference returns a*b-c*d with the product and
+// subtraction roundoff folded back into the result. math.FMA exposes each
+// product's exact residual without widening the public numeric type.
+func compensatedProductDifference(a, b, c, d float64) (float64, bool) {
+	ab := a * b
+	cd := c * d
+	if math.IsNaN(ab) || math.IsNaN(cd) || math.IsInf(ab, 0) || math.IsInf(cd, 0) {
+		return 0, false
+	}
+	abTail := math.FMA(a, b, -ab)
+	cdTail := math.FMA(c, d, -cd)
+	difference := ab - cd
+	if math.IsNaN(difference) || math.IsInf(difference, 0) {
+		return 0, false
+	}
+	bVirtual := ab - difference
+	aVirtual := difference + bVirtual
+	bRoundoff := bVirtual - cd
+	aRoundoff := ab - aVirtual
+	correction := (aRoundoff + bRoundoff) + abTail - cdTail
+	result := difference + correction
+	if math.IsNaN(result) || math.IsInf(result, 0) {
+		return 0, false
+	}
+	return result, true
+}
+
+func outwardMagnitude(value float64) float64 {
+	if value == 0 {
+		return 0
+	}
+	return math.Nextafter(value, math.Inf(1))
 }
 
 // BboxCubic returns the tight bounding box of the cubic Bezier.
