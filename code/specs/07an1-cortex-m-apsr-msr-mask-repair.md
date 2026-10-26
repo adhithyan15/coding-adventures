@@ -10,7 +10,7 @@ User Guide*. This repair precedes the Cortex-M7 gate implementation.
 
 The second halfword of the admitted MSR (register) encoding contains a two-bit
 mask in bits 11:10 and SYSm in bits 7:0. For APSR-family SYSm values 0 through
-3, the supported masks are:
+3 on a core with the DSP extension, the supported masks are:
 
 | Encoding | Mask | Required write |
 |---|---:|---|
@@ -18,27 +18,31 @@ mask in bits 11:10 and SYSm in bits 7:0. For APSR-family SYSm values 0 through
 | `APSR_nzcvq` | `10` | N, Z, C, V, and Q only |
 | `APSR_nzcvqg` | `11` | both groups |
 
-Mask `00` is reserved. Non-APSR special-register writes retain their existing
-bounded contract and require the established `10` encoding. A reserved mask or
-reserved-field neighbor returns the existing typed unknown-instruction error
-without mutation.
+Mask `00` is reserved. On a core without the DSP extension, setting mask bit
+zero (the G group) is architecturally UNPREDICTABLE and is rejected by this
+checked boundary. Non-APSR special-register writes retain their existing
+bounded contract and require the established `10` encoding. A reserved mask,
+unavailable-extension mask, or reserved-field neighbor returns the existing
+typed unknown-instruction error without mutation.
 
 ## 2. Cortex-M3 behavior
 
-Cortex-M3 has no implemented GE state. Its functional and gate decoders must
-still classify the masks correctly:
+Cortex-M3 does not have the DSP extension. Its functional and gate decoders
+must therefore classify the masks as follows:
 
-- a G-only APSR write is an architecturally ignored successful no-op for the
-  unimplemented extension and preserves N/Z/C/V/Q;
-- an NZCVQ-only or combined write updates N/Z/C/V/Q from source bits
-  31:27 exactly as before; and
+- an NZCVQ-only write updates N/Z/C/V/Q from source bits 31:27 exactly as
+  before;
+- G-only and combined NZCVQ+G writes return the typed unknown-instruction
+  error because mask bit zero names an unavailable extension; and
 - no mask changes any unrelated special register, mode, memory, or lifecycle
   state.
 
 Both production decoders must derive the mask from the actual second halfword.
 The existing two-argument `msr(rn, sysm)` encoder remains source-compatible and
-emits `APSR_nzcvq`/mask `10`; a new checked or typed mask encoder exposes all
-three APSR forms to tests and downstream packages.
+emits `APSR_nzcvq`/mask `10`; a new `ApsrMask` enum exposes exactly the three
+nonzero architectural forms without silently truncating arbitrary integers.
+Encoding a G form is useful to tests and downstream DSP cores but does not make
+that instruction executable on Cortex-M3.
 
 The Cortex-M3 gate result must remain exact functional lockstep. Its mask
 classification and write-enable selection flow through repository gate
@@ -60,11 +64,13 @@ skips the complete MRS/MSR effect. Reserved mask and operand encodings are
 rejected before IT evaluation where the architecture requires encoding
 validation.
 
-The functional wrapper may delegate to the corrected Cortex-M3 transition and
-then apply GE transport only if failure rollback restores the complete prior
-core plus GE state. The later gate package must instead expose or add a
-fallible, noncommitting, preallocated inherited transition so M3 candidate
-state and GE DFFs clock in one composite commit.
+The functional wrapper delegates mask `10` and MRS to the corrected Cortex-M3
+transition, but must recognize masks `01` and `11` before that non-DSP decoder
+rejects them. Those DSP-mask forms execute through one fallible complete-state
+candidate and one commit so failure rollback restores the prior core plus GE
+state. The later gate package must expose or add a fallible, noncommitting,
+preallocated inherited transition so M3 candidate state and GE DFFs clock in
+one composite commit.
 
 ## 4. Regression and completion gate
 
@@ -72,14 +78,14 @@ This repair is complete only when it provides:
 
 1. exact encoding/classification witnesses for masks 00, 01, 10, and 11 over
    every admitted APSR-family SYSm alias and reserved neighbors;
-2. Cortex-M3 functional and gate witnesses proving G-only preservation,
-   NZCVQ-only updates, combined-form NZCVQ updates, typed reserved-mask
-   rollback, and exact differential traces/state;
+2. Cortex-M3 functional and gate witnesses proving NZCVQ-only updates, typed
+   atomic rejection of mask 00, G-only, and combined forms, and exact
+   differential traces/state;
 3. Cortex-M7 witnesses proving G-only, NZCVQ-only, and combined group isolation,
    every MRS composite alias, false-IT preservation, restore, and allocation-
    failure rollback;
-4. source-compatible default encoders plus explicit-mask encoders whose output
-   is asserted byte-for-byte;
+4. source-compatible default encoders plus typed explicit-mask encoders whose
+   output is asserted byte-for-byte and cannot alias out-of-range integers;
 5. updated functional/gate/M7 documentation, changelogs, and the expansion
    backlog prerequisite; and
 6. release tests, package-scoped Rustfmt, strict Clippy, rustdoc, affected BUILD

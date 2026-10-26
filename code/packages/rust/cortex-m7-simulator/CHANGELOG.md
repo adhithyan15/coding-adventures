@@ -5,7 +5,9 @@
 - Honor the architectural APSR MSR mask groups: G-only writes GE, NZCVQ-only
   preserves GE, combined writes both, and reserved masks roll back complete
   Cortex-M7 state.
-- Reach 96.66% line coverage (492 of 509 lines).
+- Add a typed APSR mask encoder and a fallible composite transition for the
+  G-bearing masks that the inherited non-DSP Cortex-M3 correctly rejects.
+- Reach 96.25% line coverage (565 of 587 lines).
 
 ## 0.1.0 — 2026-10-25
 

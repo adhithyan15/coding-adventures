@@ -336,11 +336,21 @@ fn every_thirty_two_bit_subfamily_matches_the_functional_oracle() {
         cases.push(("msr", encoding::msr(0, sysm)));
     }
     for sysm in 0_u8..=3 {
-        for mask in 0_u8..=3 {
-            cases.push(("apsr-msr-mask", encoding::msr_masked(0, sysm, mask)));
-        }
+        cases.push(("apsr-msr-mask-zero", [0xf380, 0x8000 | u16::from(sysm)]));
+        cases.push((
+            "apsr-msr-mask-ge",
+            encoding::msr_masked(0, sysm, encoding::ApsrMask::Ge),
+        ));
+        cases.push((
+            "apsr-msr-mask-nzcvq",
+            encoding::msr_masked(0, sysm, encoding::ApsrMask::Nzcvq),
+        ));
+        cases.push((
+            "apsr-msr-mask-nzcvqge",
+            encoding::msr_masked(0, sysm, encoding::ApsrMask::NzcvqGe),
+        ));
     }
-    for mask in [1_u8, 3] {
+    for mask in [encoding::ApsrMask::Ge, encoding::ApsrMask::NzcvqGe] {
         cases.push(("reserved-non-apsr-mask", encoding::msr_masked(0, 20, mask)));
     }
     cases.push(("unknown", [0xf000, 0]));

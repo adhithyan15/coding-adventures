@@ -54,5 +54,5 @@ allocation-failure rollback, bounded rollback, and the documented SoC
 boundary. Release tests, strict Clippy, rustdoc warnings, BUILD integration,
 and line coverage above 80% are required before publication.
 
-The current completion baseline is **96.66% line coverage (492/509 lines)**
+The current completion baseline is **96.25% line coverage (565/587 lines)**
 under the LLVM coverage engine.

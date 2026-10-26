@@ -839,12 +839,7 @@ fn valid_msr_second(second: u16) -> bool {
         return false;
     }
     let mask = ((second >> 10) & 3) as u8;
-    let sysm = second as u8;
-    if matches!(sysm, 0..=3) {
-        mask != 0
-    } else {
-        mask == 2
-    }
+    mask == 2
 }
 
 fn execute_decoded(
@@ -1927,6 +1922,18 @@ fn execute_special_register(
 
 /// Little-endian instruction encoding helpers for tests and downstream users.
 pub mod encoding {
+    /// Architecturally named APSR fields selected by an MSR mask.
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    #[repr(u8)]
+    pub enum ApsrMask {
+        /// `GE[3:0]` only; requires the DSP extension.
+        Ge = 1,
+        /// N, Z, C, V, and Q.
+        Nzcvq = 2,
+        /// N, Z, C, V, Q, and `GE[3:0]`; requires the DSP extension.
+        NzcvqGe = 3,
+    }
+
     #[must_use]
     pub const fn halfword(value: u16) -> [u8; 2] {
         value.to_le_bytes()
@@ -2024,15 +2031,15 @@ pub mod encoding {
 
     #[must_use]
     pub const fn msr(rn: u16, sysm: u8) -> [u16; 2] {
-        msr_masked(rn, sysm, 2)
+        msr_masked(rn, sysm, ApsrMask::Nzcvq)
     }
 
-    /// Encode MSR with an explicit two-bit architectural mask.
+    /// Encode MSR with an explicit typed architectural APSR mask.
     #[must_use]
-    pub const fn msr_masked(rn: u16, sysm: u8, mask: u8) -> [u16; 2] {
+    pub const fn msr_masked(rn: u16, sysm: u8, mask: ApsrMask) -> [u16; 2] {
         [
             0xf380 | (rn & 0xf),
-            0x8000 | (((mask as u16) & 3) << 10) | sysm as u16,
+            0x8000 | ((mask as u16) << 10) | sysm as u16,
         ]
     }
 

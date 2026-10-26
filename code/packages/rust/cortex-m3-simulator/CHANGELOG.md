@@ -2,10 +2,10 @@
 
 ## Unreleased
 
-- Distinguish `APSR_g`, `APSR_nzcvq`, and `APSR_nzcvqg` MSR masks, preserve
-  NZCVQ on G-only writes, reject reserved masks atomically, and expose an
+- Accept `APSR_nzcvq` while atomically rejecting `APSR_g` and `APSR_nzcvqg`
+  on the non-DSP Cortex-M3 boundary, reject reserved masks, and expose a typed
   explicit-mask encoder while retaining the existing NZCVQ default.
-- Reach 92.17% line coverage (1,459 of 1,583 lines).
+- Reach 92.22% line coverage (1,457 of 1,580 lines).
 
 ## 0.1.0 — 2026-10-24
 

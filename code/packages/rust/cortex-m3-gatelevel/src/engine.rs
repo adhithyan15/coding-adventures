@@ -710,16 +710,8 @@ pub(crate) fn classify_at(
             and_gate(line16(first, 4, 12, 0xf38), line16(second, 12, 4, 8)),
             line16(second, 8, 2, 0),
         );
-        let apsr_sysm = line16(second, 2, 6, 0);
-        let mask_one = line16(second, 10, 2, 1);
         let mask_two = line16(second, 10, 2, 2);
-        let mask_three = line16(second, 10, 2, 3);
-        let apsr_mask = or_gate(mask_one, or_gate(mask_two, mask_three));
-        let valid_mask = or_gate(
-            and_gate(apsr_sysm, apsr_mask),
-            and_gate(not_gate(apsr_sysm), mask_two),
-        );
-        let msr = and_gate(msr_shape, valid_mask);
+        let msr = and_gate(msr_shape, mask_two);
         if or_gate(mrs, msr) == 1 {
             return Ok(InstructionClass::SpecialRegister);
         }
@@ -2011,6 +2003,18 @@ fn execute_special_register(
 
 /// Little-endian instruction encoding helpers for tests and downstream users.
 pub mod encoding {
+    /// Architecturally named APSR fields selected by an MSR mask.
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    #[repr(u8)]
+    pub enum ApsrMask {
+        /// `GE[3:0]` only; requires the DSP extension.
+        Ge = 1,
+        /// N, Z, C, V, and Q.
+        Nzcvq = 2,
+        /// N, Z, C, V, Q, and `GE[3:0]`; requires the DSP extension.
+        NzcvqGe = 3,
+    }
+
     #[must_use]
     pub const fn halfword(value: u16) -> [u8; 2] {
         value.to_le_bytes()
@@ -2108,15 +2112,15 @@ pub mod encoding {
 
     #[must_use]
     pub const fn msr(rn: u16, sysm: u8) -> [u16; 2] {
-        msr_masked(rn, sysm, 2)
+        msr_masked(rn, sysm, ApsrMask::Nzcvq)
     }
 
-    /// Encode MSR with an explicit two-bit architectural mask.
+    /// Encode MSR with an explicit typed architectural APSR mask.
     #[must_use]
-    pub const fn msr_masked(rn: u16, sysm: u8, mask: u8) -> [u16; 2] {
+    pub const fn msr_masked(rn: u16, sysm: u8, mask: ApsrMask) -> [u16; 2] {
         [
             0xf380 | (rn & 0xf),
-            0x8000 | (((mask as u16) & 3) << 10) | sysm as u16,
+            0x8000 | ((mask as u16) << 10) | sysm as u16,
         ]
     }
 

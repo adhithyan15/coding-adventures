@@ -26,6 +26,23 @@ fn every_bounded_decode_family_is_explicit() {
     ] {
         assert_eq!(classify(encoded[0], Some(encoded[1])), Ok(expected));
     }
+    for sysm in 0..=3 {
+        for mask in [ApsrMask::Ge, ApsrMask::Nzcvq, ApsrMask::NzcvqGe] {
+            let encoded = msr_masked(0, sysm, mask);
+            assert!(matches!(
+                classify(encoded[0], Some(encoded[1])),
+                Ok(InstructionClass::Inherited(_))
+            ));
+        }
+    }
+    for second in [0x8000, 0x8200, 0x8414] {
+        assert!(matches!(
+            classify(0xf380, Some(second)),
+            Err(CortexM7Error::Core(
+                CortexM3Error::UnknownInstruction32 { .. }
+            ))
+        ));
+    }
     assert!(matches!(
         classify(0xfa80, None),
         Err(CortexM7Error::Core(CortexM3Error::FetchOutsideProgram {
@@ -47,6 +64,9 @@ fn encoders_match_armv7e_m_little_endian_words() {
     assert_eq!(qsub(3, 4, 5), [0xfa85, 0xf3a4]);
     assert_eq!(sadd8(6, 7, 0), [0xfa87, 0xf600]);
     assert_eq!(uadd8(1, 2, 3), [0xfa82, 0xf143]);
+    assert_eq!(msr_masked(0, 0, ApsrMask::Ge), [0xf380, 0x8400]);
+    assert_eq!(msr_masked(0, 0, ApsrMask::Nzcvq), msr(0, 0));
+    assert_eq!(msr_masked(0, 0, ApsrMask::NzcvqGe), [0xf380, 0x8c00]);
 }
 
 #[test]
@@ -187,9 +207,9 @@ fn inherited_instructions_preserve_cortex_m7_only_state() {
 fn apsr_masks_isolate_nzcvq_and_ge_for_every_alias() {
     for sysm in 0..=3 {
         for (mask, expected_apsr, expected_ge) in [
-            (1, 0x5000_0000, 0b1011),
-            (2, 0xa800_0000, 0b0101),
-            (3, 0xa800_0000, 0b1011),
+            (ApsrMask::Ge, 0x5000_0000, 0b1011),
+            (ApsrMask::Nzcvq, 0xa800_0000, 0b0101),
+            (ApsrMask::NzcvqGe, 0xa800_0000, 0b1011),
         ] {
             let write = msr_masked(0, sysm, mask);
             let read = mrs(1, sysm);
@@ -215,7 +235,7 @@ fn apsr_masks_isolate_nzcvq_and_ge_for_every_alias() {
 
 #[test]
 fn reserved_apsr_mask_is_typed_and_atomic() {
-    let write = msr_masked(0, 0, 0);
+    let write = [0xf380, 0x8000];
     for false_it in [false, true] {
         let mut simulator = loaded(&write);
         let mut state = simulator.get_state();
@@ -252,7 +272,7 @@ fn false_it_conditions_skip_ge_special_register_transport() {
     assert_eq!(reader.read_register(1).unwrap(), 0xdead_beef);
     assert_eq!(reader.get_state().ge, 0b1011);
 
-    let write = msr_masked(0, 0, 1);
+    let write = msr_masked(0, 0, ApsrMask::Ge);
     let mut writer = loaded(&write);
     let mut state = writer.get_state();
     state.core.itstate = 0x08;
