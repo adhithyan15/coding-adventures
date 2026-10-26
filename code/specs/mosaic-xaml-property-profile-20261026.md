@@ -43,4 +43,32 @@ distributions, broader viewport workloads, concrete repairs and durability.
 
 ## Status
 
-Specification only. Implementation, executable tests and native receipt pending.
+Implemented in ce6a05d8df0 after specification commit 569f2d5888a.
+Full `cargo test --manifest-path code/packages/rust/mosaic-app-bindings/Cargo.toml`
+passed: 44 library tests and six integration tests, including executable C#
+conversion/setter failures, distinct Count/AwaitedEffects/Status labels, unchanged
+aggregate shape, disabled/filtering and 4096-budget tests. Security review passed.
+
+## Native receipt (2026-10-26)
+
+Generated the host using public `xaml_runtime_binding_for_application` from this
+source. Built retained #18348 generated VisiCalc components as Debug x64, zero
+errors and two existing CS0067 warnings. This is a host diagnostic candidate,
+not a rebuilt full current-main runtime or release artifact.
+
+- Managed DLL SHA256: 69AE11817148996858FA74AA377ECBB7E36F3983142333C4E5674B6446D8BF1B.
+- Retained Rust DLL SHA256: A18198012F2985EC5CEA6E10A2151388D2E9093F567A59F46A72E45C28BC2124.
+- Raw log: adjacent `mosaic-xaml-property-profile-20261026.jsonl` (353 records),
+  SHA256 02BEA3590FA7958F983EB235BF5ABC2603612C03D7936E2FE7C73BE5E149E17F.
+- Isolated state/profile paths; detailed profiling enabled, interactions-only off.
+- Through native computer input at 1908x1019, focused the formula field, replaced
+  A1 with `=20+22`, pressed Enter, observed A1=42 and dependent totals 65/66/196.
+  Scrolled downward 600 at (600,600), observed rows 16-34 and onViewportShift.
+  Closed normally to flush the buffer. No Save/Open picker acceptance claimed.
+
+The raw records now identify EditContent setters at 13.3411/12.8208 ms,
+RowHeaders at 11.0331 ms, and EditorLabel at 5.0498 ms. These include startup
+and a tiny smoke workload; they are attribution evidence, not steady-state
+percentiles or evidence that earlier anonymous tails involved those properties.
+The log contains metadata labels only, not the entered formula or cell values.
+Larger matched workloads and a concrete latency repair remain open in #16865.
