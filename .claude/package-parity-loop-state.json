@@ -16520,10 +16520,10 @@
       "pr_number": null,
       "selection_revision": "27dc687739ac74e8f5bbab70916a03d62a609743",
       "selection_notes": "Selected after the local Swift hash-functions tranche reached an exact-head independent PASS while the hosted parity queue remained full. Among dependency-ready portable owners, this bounded Python front ranks ahead of the Swift paint-vm-ascii capability-only repair because it removes one exact orphan exemption and unblocks two recorded descendants without changing SGD behavior. Scope is limited to truthful Unix and Windows BUILD fronts, production-only coverage, Ruff, existing ML02 behavior tests, publishable metadata, package documentation, and removal of the exact gradient-descent exemption. No training loop, randomness, convergence guarantee, model API, native runtime, or new host authority is introduced.",
-      "reconciled_main_revision": "06d8c098e5c3aa93b196716db30dc4d28247ea0a",
+      "reconciled_main_revision": "263e05f201003afd0395e82e6b810fe25a1260b4",
       "queue_notes": "Rebased onto current origin/main after guarded auto-merge of Haskell Starlark provider PR #18183 freed one hosted slot. Fresh prioritization keeps this reviewed Python front ahead of the prepared Swift PaintVmAscii and Kotlin micro-qr metadata repairs because it retires an exact orphan exemption and unblocks two recorded descendants. The Bezier successors remain publication-blocked on PR #18293.",
       "validation_notes": "Fresh post-rebase native validation uses Python 3.12.13 and passes Ruff lint, Ruff format checking, all 11 focused optimizer tests, and the production-only 95% coverage gate at 100% lines. Two consecutive clean source and wheel builds succeed while an intentionally hostile in-package validation environment points through an absolute Python symlink; the resulting source archive excludes every .venv variant, cache, coverage file, bytecode directory, and dist recursion. The empty required-capabilities declaration validates against the repository schema, and the exact gradient-descent exemption is absent. The root changelog filename digest matches its full heading. A real Go diff plan evaluates 12 Starlark BUILD files, discovers five Python packages, and selects only python/gradient-descent. All 1,576 lesson shards validate. The 1,547-owner state is JSON-valid, unique, dependency-complete, acyclic, and free of merged-to-unfinished edges; only this local owner is in progress and exactly the three published owners are pr-open.",
-      "prepublication_revalidation_notes": "After rebasing onto 06d8c098e5c3aa93b196716db30dc4d28247ea0a, Python 3.12.13 again passes Ruff, formatting, all 11 tests, and 100% production-line coverage. Two clean builds with an absolute-symlink .venv-review-absolute again exclude all validation environments, caches, coverage, bytecode, and dist recursion from the sdist. The capability schema, exact exemption removal, and root changelog digest pass. The real Go planner again selects only python/gradient-descent from five discovered Python packages. All 1,583 lesson shards validate. The 1,547-owner graph remains unique, dependency-complete, acyclic, and free of merged-to-unfinished edges with exactly this owner in_progress and the two remaining hosted owners pr-open.",
+      "prepublication_revalidation_notes": "After rebasing onto 263e05f201003afd0395e82e6b810fe25a1260b4, Python 3.12.13 again passes Ruff, formatting, all 11 tests, and 100% production-line coverage. Two clean builds with an absolute-symlink .venv-review-absolute again exclude all validation environments, caches, coverage, bytecode, and dist recursion from the sdist. The capability schema, exact exemption removal, and root changelog digest pass. The real Go planner again selects only python/gradient-descent from five discovered Python packages. All 1,583 lesson shards validate. The 1,547-owner graph remains unique, dependency-complete, acyclic, and free of merged-to-unfinished edges with exactly this owner in_progress and the two remaining hosted owners pr-open.",
       "notes": "Add an independent cross-platform front, run the existing optimizer suite and coverage/lint checks, and reconcile package documentation and metadata without changing the SGD API.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/python-gradient-descent-build-front-coverage"
@@ -20712,7 +20712,7 @@
     {
       "id": "geometry-bezier2d-flattening-csharp-fsharp",
       "title": "Consume safe Bezier flattening contract in C# and F#",
-      "status": "merged",
+      "status": "pr-open",
       "depends_on": [
         "geometry-bezier2d-flattening-termination-contract"
       ],
@@ -22977,7 +22977,7 @@
     {
       "id": "starlark-compiler-haskell-opcode-provider-parity",
       "title": "Implement the pure Starlark opcode provider in haskell",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],

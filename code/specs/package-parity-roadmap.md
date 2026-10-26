@@ -18101,5 +18101,5 @@ removes one exact orphan exemption and unlocks two recorded descendants. The
 reviewed Swift PaintVmAscii capability profile and Kotlin micro-qr build front
 remain compact local preparations. Bezier successor tranches remain blocked on
 PR #18293. The Python branch is rebased onto exact current main
-`06d8c098e5c3aa93b196716db30dc4d28247ea0a` and must pass fresh native,
+`263e05f201003afd0395e82e6b810fe25a1260b4` and must pass fresh native,
 metadata, state, planner, and exact-head independent review before publication.
