@@ -123,8 +123,9 @@ Completion requires:
    affected-package BUILD checks, security review, and at least 80% package
    line coverage before publication.
 
-The accepted implementation passes eleven Rust differential suites and three
-gate-integrity suites, including every first-byte classification, every
+The accepted implementation passes eleven Rust differential suites, one
+exhaustive decoder unit suite, and four gate-integrity suites, including every
+first-byte and 2/4/6-byte transport classification, every
 supported hexadecimal-floating order, exhaustive branch predicate truth
 tables, both architectural branch paths, overlap semantics, lifecycle, typed
 atomic faults, and token-normalized exact-body structural checks over the full
@@ -143,10 +144,15 @@ so a literal declaration discarded inside macro input cannot authorize a
 macro-generated live `executor` or `gates` module, and delimiter-shaped
 character literals cannot counterfeit top-level scope.
 
-The next bounded completion cell replaces the remaining host opcode switches
-with the decode-and-dispatch authority contract above. Its publication evidence
-must retain every accepted differential vector and fault ordering while adding
-the exhaustive 256-byte/width matrix and compile-checked structural attacks;
-passing the behavioral oracle alone is insufficient.
+The decode-and-dispatch authority cell is complete locally. One transition-
+boundary decode now controls gate-derived transport width, legality, family,
+typed operation evaluation, validator routing, oracle comparison, and commit.
+Reserved holes retain their gate-derived width so truncated-instruction
+precedence is unchanged. A poison-address witness proves that inactive
+storage candidates are not evaluated, while compiled hostile shapes and
+source mutations reject raw equality/range/match dispatch, dead or duplicate
+decoders, secondary decoding, oracle dispatch, inactive storage access, gate
+binding shadows, and post-selection overwrites. Passing the behavioral oracle
+alone remains insufficient.
 Rustfmt, strict Clippy, rustdoc, lesson validation, and the
-package BUILD are green. Package line coverage is 93.01% (1,662/1,787).
+package BUILD are green. Package line coverage is 93.82% (1,912/2,038).

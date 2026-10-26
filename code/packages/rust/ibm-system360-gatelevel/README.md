@@ -11,9 +11,16 @@ fixed-width shifters, shift/add multiplication, restoring division, and
 fixed-width hexadecimal-floating networks. Condition-mask selection,
 zero/nonzero count and target tests, and signed index-branch polarity are
 settled by gate reductions, muxes, and one-hot opcode lines rather than host
-comparisons. The functional package is used as a fail-closed trace and fault
-oracle; no gate transition is clocked unless its complete settled state agrees
-with that oracle.
+comparisons. A single 256-line decoder now settles before the functional
+oracle runs. Gate OR reductions derive transport width and a fixed candidate
+table maps exactly one asserted legal line to a typed operation; that same
+authority is shared by execution, independent validation, oracle comparison,
+and commit. Reserved lines still retain their architectural transport width,
+so truncation keeps precedence over the eventual unknown-opcode fault.
+Unselected candidates are never evaluated and therefore cannot read storage,
+fault, or mutate state. The functional package is used only as a fail-closed
+trace, fault, and complete-state oracle; no gate transition is clocked unless
+its complete settled state agrees with that oracle.
 
 This is an educational ISA-visible System/360 base processor rather than a
 cycle-accurate reconstruction of a particular model's SLT cards, channels,
