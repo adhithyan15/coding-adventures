@@ -87,7 +87,7 @@ merged, while Cortex-M33 is already in review.
 | 9 | PA-RISC 1.1 | published architecture manuals | Local functional complete: checked bounded integer core, big-endian transport, both IA queues, PSW nibble carry/borrow state, delayed control, nullification, calls/returns, complete traces, typed atomic lifecycle, three allocation-seam unit tests, 19 integration tests, one doctest, and 92.80% line coverage (580/625). Gate work remains evidence/scope pending. |
 | 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
 | 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
-| 12 | ARM7TDMI | published ARMv4T manuals | Functional merged: bounded ARMv4T ARM/Thumb integer core; all 31 physical GPRs and five SPSRs; pipeline-visible PC, bank/state exchange, checked memory and full-span control targets; exact transactional traces/lifecycle; 39 release tests; and 88.30% line coverage (1,389/1,573). Spec 07ax2 now defines the implementation-ready educational gate partner; SoC composition remains queued. |
+| 12 | ARM7TDMI | published ARMv4T manuals | Functional merged. Educational gate partner complete locally: exact 525,522-DFF stable-Q inventory; independent ARM/Thumb engine; gate-derived decode/condition/arithmetic/control; complete physical state, traces, typed atomic lifecycle and commit rollback; full-state differential and compiler-checked hostile structural evidence; 51 release tests; and 90.62% line coverage (2,059/2,272). Independent exact-head review is next; SoC composition remains queued. |
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
 | 15 | RCA CDP1802 | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: all documented encodings except unassigned 0x68, complete COSMAC state, and explicit I/O/DMA/interrupt transaction seams; independent implementation review is next. |
@@ -106,12 +106,9 @@ relations, strict Clippy/rustdoc, lessons validation, affected BUILD, and
 
 ## Discovered follow-up work
 
-- Implement and independently review Spec 07ax2's ARM7TDMI educational gate
-  partner. Its exact 525,522-DFF stable-Q inventory, independent ARM/Thumb
-  decoder, gate-derived condition/arithmetic/control paths, full-state/trace
-  differential, transactional lifecycle, and hostile anti-bypass suite are the
-  next bounded ARM7TDMI cell. Real exception delivery and SoC buses remain
-  separate follow-ups.
+- Independently review the completed local Spec 07ax2 ARM7TDMI educational
+  gate partner. Real exception delivery and SoC buses remain separate bounded
+  follow-ups.
 
 ### Gate-integrity audit queue
 

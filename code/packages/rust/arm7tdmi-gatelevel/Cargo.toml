@@ -1,0 +1,18 @@
+[package]
+name = "arm7tdmi-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "Educational DFF-backed ARMv4T ARM7TDMI gate simulator"
+license = "MIT"
+
+[lib]
+name = "arm7tdmi_gatelevel"
+path = "src/lib.rs"
+
+[dependencies]
+arithmetic = { path = "../arithmetic" }
+logic-gates = { path = "../logic-gates" }
+
+[dev-dependencies]
+arm7tdmi-simulator = { path = "../arm7tdmi-simulator" }
+syn = { version = "2", features = ["full", "visit"] }
