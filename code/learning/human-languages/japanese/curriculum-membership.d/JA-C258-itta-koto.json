@@ -1,0 +1,11 @@
+{
+  "id": "JA-C258-itta-koto",
+  "pathSegment": "JA-PATH-258-EXPERIENCE258",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-258-EXPERIENCE258",
+      "order": 3
+    }
+  ]
+}

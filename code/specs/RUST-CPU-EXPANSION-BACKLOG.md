@@ -66,17 +66,25 @@ already public.
 This queue is re-costed after every merge or discovery. Dates indicate the
 architecture/core introduction era, not a claim about a particular chip.
 
+Cortex-M4 is complete locally and awaiting publication. Its checked Armv7E-M
+boundary explicitly classifies all 20 inherited Cortex-M3 instruction
+families, differentially witnesses inherited integer, privilege, IT, memory,
+exclusive, branch, power, and lifecycle state, and covers the bounded DSP and
+optional FPv4-SP extension. All 30 release tests, strict Clippy/rustdoc, and
+92.81% line coverage (994/1071) are green. Cortex-M7 and Cortex-M23 are
+merged, while Cortex-M33 is already in review.
+
 | Order | Target | Public basis | Planned boundary |
 |---:|---|---|---|
-| 1 | Arm Cortex-M4 | Armv7E-M manuals | Cortex-M3 integer base plus documented DSP/FPU boundary. |
-| 2 | Arm Cortex-M7 | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
-| 3 | Arm Cortex-M23 | Armv8-M manuals | Bounded baseline/security-state cell complete locally; exclusive encodings and exceptions remain follow-up work. |
-| 4 | Arm Cortex-M33 | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
+| 1 | Arm Cortex-M4 (in publication) | Armv7E-M manuals | Cortex-M3 integer base plus documented DSP/FPU boundary. |
+| 2 | Arm Cortex-M7 (merged) | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
+| 3 | Arm Cortex-M23 (merged) | Armv8-M manuals | Bounded baseline/security-state cell complete; exclusive encodings and exceptions remain follow-up work. |
+| 4 | Arm Cortex-M33 (in review) | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
 | 5 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
 | 6 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
 | 7 | IBM System/370 | published Principles of Operation | Local functional cell complete: owned checked state and lifecycle, the complete modeled System/360 surface through a private adapter, and source-backed MVCL/CLCL/CLM/STCM/ICM semantics, including one-byte zero-mask validation for CLM/ICM and the architecturally exception-free zero-mask STCM. Fourteen tests, strict checks, and 98.78% line coverage (568/575) are green; gate partner follows only after merge. |
 | 8 | Motorola 68020 | published programmer reference | Functional first cell complete locally: bounded checked full-format `MOVE.L` and problem-state extensions, including reserved IS/IIS rejection, immutable fetched trace bytes, and unaligned data transfers. |
-| 9 | PA-RISC 1.1 | published architecture manuals | Checked integer core and delayed-control boundary. |
+| 9 | PA-RISC 1.1 | published architecture manuals | Local functional complete: checked bounded integer core, big-endian transport, both IA queues, PSW nibble carry/borrow state, delayed control, nullification, calls/returns, complete traces, typed atomic lifecycle, three allocation-seam unit tests, 19 integration tests, one doctest, and 92.80% line coverage (580/625). Gate work remains evidence/scope pending. |
 | 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
 | 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
 | 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
@@ -89,6 +97,7 @@ architecture/core introduction era, not a claim about a particular chip.
 
 | Priority | Target | Finding / next action |
 |---:|---|---|
+| P1 complete locally | AArch64 gate 32-bit carry authority | The 32-bit ADD/SUB flag path now takes carry and overflow directly from exact-width ripple networks; host sum comparisons are gone. Width-edge tests, all seven topology/datapath tests, six lifecycle suites, all 836 Python differential vectors, strict checks, and 97.79% line coverage pass. Follow-up audits still need to cost host decode and fetch assembly separately. |
 | P1 complete locally | PowerPC 601 conditional-branch authority | The host-language BO/CTR/CR predicate is replaced by explicit gate ALU, 32:1 CR mux, polarity, bypass-mux, and final-AND networks. Exhaustive tests cover every BO value and CR selector, both selected-bit polarities, and CTR zero/nonzero boundaries against an independent truth table. Three gate/topology suites, three lifecycle suites, all 239 differential vectors, strict checks, and 94.58% line coverage pass. The counted GPR/LR/CTR/XER/CR/CIA, memory, and HALT storage banks remain private stable-Q authority with no public host-state mirrors. |
 | P1 queued | PowerPC 601 CR/XER update authority | Replace host `Ordering`/Boolean control in CR-field, CR0, CA, and SO propagation with explicit relation wires, masks, muxes, and gates while preserving the public lifecycle. |
 | P1 queued | PowerPC 601 shift/count/divide authority | Replace host slice moves, iterator leading-zero counting, and conditional restoring-divide selection with fixed gate/mux networks, then audit multiply accumulation and record-form updates as one bounded datapath family at a time. |
@@ -128,6 +137,11 @@ bytes across self-modifying writes, odd-address data and indirect-pointer
 transfers, boundary rollback, and inherited differentials. Strict checks, the
 package BUILD, lessons validation, and 89.28% line coverage (641/718) are green.
 Publication remains blocked only on independent review and merge.
+- Extend PA-RISC 1.1 problem-state coverage in bounded cells: extract/deposit
+  and variable shifts, unit operations, indexed/short/modifying memory forms,
+  decimal correction, multiply/divide, MOVB/MOVIB, and remaining arithmetic
+  completers. Privileged spaces/control registers, traps, MMU/TLB, caches,
+  coprocessors/FPU, and implementation timing remain separate system cells.
 - Build reusable SoC primitives after the initial missing-core wave: clock and
   reset domains, address-decoded buses, arbitration/backpressure, interrupt
   routing, DMA movement, timers, memory-mapped peripherals, and deterministic
