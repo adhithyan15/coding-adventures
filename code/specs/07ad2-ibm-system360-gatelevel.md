@@ -93,8 +93,10 @@ Completion requires:
    affected-package BUILD checks, security review, and at least 80% package
    line coverage before publication.
 
-The accepted implementation passes eleven Rust differential suites, including
-every first-byte classification, every supported hexadecimal-floating order,
-both branch paths, overlap semantics, lifecycle, and typed atomic faults.
-Rustfmt, strict Clippy, rustdoc, lesson validation, and the package BUILD are
-green. Package line coverage is 92.86% (1,626/1,751).
+The accepted implementation passes eleven Rust differential suites and two
+gate-integrity suites, including every first-byte classification, every
+supported hexadecimal-floating order, exhaustive branch predicate truth
+tables, both architectural branch paths, overlap semantics, lifecycle, typed
+atomic faults, and structural anti-shortcut checks. Rustfmt, strict Clippy,
+rustdoc, lesson validation, and the package BUILD are green. Package line
+coverage is 93.01% (1,662/1,787).

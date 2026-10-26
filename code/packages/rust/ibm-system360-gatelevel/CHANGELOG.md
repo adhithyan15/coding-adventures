@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.1] - 2026-10-26
+
+### Fixed
+
+- Route every modeled branch predicate through gate reductions, muxes,
+  comparator condition-code wires, and one-hot opcode lines.
+- Add exhaustive mask, condition-code, register-field, count-wire, and
+  index-branch truth tables plus structural anti-shortcut coverage.
+
 ## [0.1.0] - 2026-10-24
 
 ### Added
