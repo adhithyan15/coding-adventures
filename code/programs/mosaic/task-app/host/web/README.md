@@ -40,8 +40,11 @@ is a one-line change here. See `code/specs/task-app-super-app.md` (§2.6, Phase 
   and restored on reload (falls back to in-memory storage where IndexedDB is absent).
 - **Persistence stays honest**: the rendered shell names the active backend and browser
   record, warns persistently when fallback memory or a background write is not durable,
-  and preserves the most recently rejected record as `workspace/web-corrupt` before
-  starting fresh. The warning is non-modal and never steals capture focus.
+  and keeps a rejected record under the first free recovery key (`workspace/web-corrupt`,
+  then `.1` … `.9`, never replacing an earlier one) before starting fresh. If it
+  cannot keep it, or cannot read the saved record at all, it saves nothing that
+  session, so the saved record is never written over. The warning is non-modal and
+  never steals capture focus.
 
 ## Develop
 
