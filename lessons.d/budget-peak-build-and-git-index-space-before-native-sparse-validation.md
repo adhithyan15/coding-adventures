@@ -1,5 +1,5 @@
 ---
-category: Build systems
+category: CI & GitHub Actions
 ---
 
 # Budget peak build and Git index space before native sparse validation
@@ -17,3 +17,5 @@ just source files. After successful generation/tests, cargo clean in the isolate
 checkout can free regenerable targets before native compilation. Preserve native
 binaries, evidence logs and unrelated work; verify repository status after a
 failed index write and reapply the intended sparse patterns.
+The first version also used an unregistered lesson category and failed CI. Choose
+from lessons.d/_meta.md and run lessons.py validate before publishing.
