@@ -68,7 +68,7 @@ architecture/core introduction era, not a claim about a particular chip.
 |---:|---|---|---|
 | 1 | Arm Cortex-M4 | Armv7E-M manuals | Cortex-M3 integer base plus documented DSP/FPU boundary. |
 | 2 | Arm Cortex-M7 | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
-| 3 | Arm Cortex-M23 | Armv8-M manuals | Bounded baseline/security-state cell complete locally; exclusive encodings and exceptions remain follow-up work. |
+| 3 | Arm Cortex-M23 (merged) | Armv8-M manuals | Bounded baseline/security-state cell complete; exclusive encodings and exceptions remain follow-up work. |
 | 4 | Arm Cortex-M33 | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
 | 5 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
 | 6 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
@@ -76,7 +76,7 @@ architecture/core introduction era, not a claim about a particular chip.
 | 8 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
 | 9 | PA-RISC 1.1 | published architecture manuals | Checked integer core and delayed-control boundary. |
 | 10 | SuperH-2 | published programming manuals | Checked compact RISC core boundary. |
-| 11 | SPARC V9 | published architecture manual | Complete locally: bounded problem-state integer core implements 72-register complete state, four windows, icc/xcc/Y, the admitted V9 and compatibility integer/memory/control families, exact delay/annul/chaining traces, and typed transactional lifecycle. 48 tests, strict checks/docs, BUILD integration, and 91.22% line coverage (1,216/1,333) are green. Independent exact-head review and publication remain. |
+| 11 | SPARC V9 | published architecture manual | Complete and independently reviewed locally: bounded problem-state integer core implements 72-register complete state, four windows, icc/xcc/Y, the admitted V9 and compatibility integer/memory/control families, exact delay/annul/chaining traces, and typed transactional lifecycle. 48 tests, strict checks/docs, BUILD integration, and 91.22% line coverage (1,216/1,333) are green. Publication is next. |
 | 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
