@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-256-TRAVEL256",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask the way (eki wa doko desu ka; kūkō made dō yatte ikimasu ka), follow directions (massugu itte, migi ni magatte kudasai), buy tickets with the counter mai, and ask when the next train leaves.",
+  "prerequisites": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:66d3fd99e883f59c",
+  "lessonIds": [
+    "JA-C254-to-omoimasu",
+    "JA-C254-kara-node",
+    "JA-C254-iidasu",
+    "JA-W254-da-kanji",
+    "JA-C254-iken",
+    "JA-R254-what-i-think-and-why"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "japanese/narration/ch254.txt",
+  "json": "japanese/narration/ch254.json",
+  "textHash": "fnv1a64:7076dd057a65b34d",
+  "jsonHash": "fnv1a64:e6bc9bef5b483ba2",
+  "findings": []
+}

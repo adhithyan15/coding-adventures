@@ -1,0 +1,11 @@
+{
+  "id": "JA-C254-iken",
+  "pathSegment": "JA-PATH-254-REASONS254",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-254-REASONS254",
+      "order": 4
+    }
+  ]
+}
