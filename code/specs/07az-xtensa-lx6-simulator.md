@@ -7,7 +7,9 @@ repository. The package is an instruction-level oracle for a single
 **ESP32-class Xtensa LX6 integer core**, not a cycle-accurate ESP32 and not a
 claim to reproduce a proprietary Tensilica implementation.
 
-**Status:** independently reviewed specification; implementation authorized.
+**Status:** bounded functional implementation complete locally; independent
+exact-head implementation review passed at
+`cd152ed0463a6158b4d3cf1b6e0b8b31fb06b09e`; publication remains pending.
 The exact reviewed spec-only head was
 `83c2113b12e03601c7bafcbd5c50e2a423828202`.
 
