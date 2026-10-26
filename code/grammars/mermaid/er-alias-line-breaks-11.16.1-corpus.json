@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER entity-alias line-break vertical slice",
+  "fixtures": [
+    {
+      "name": "entity-alias-line-break-variants",
+      "source": "erDiagram\nFIRST[\"Primary<br>Entity\"] {\n  string id PK\n}\nSECOND[\"Second<br/>Entity\"] {\n  string id PK\n}\nTHIRD[\"Third<br />Entity\"] {\n  string id PK\n}\nFIRST ||--o{ SECOND : contains\nSECOND ||--o{ THIRD : contains"
+    }
+  ]
+}

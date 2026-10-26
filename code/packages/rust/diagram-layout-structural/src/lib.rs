@@ -280,11 +280,7 @@ fn node_height(node: &StructuralNode, architecture_config: Option<&ArchitectureC
         return 18.0 * architecture_config.map_or(1.0, |config| config.icon_size / 80.0);
     }
     let font_size = structural_style(node, architecture_config).font_size;
-    let header_height = if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
-        architecture_config.map_or(72.0, |config| config.icon_size * 0.9).max(font_size * 2.4)
-    } else {
-        HEADER_H.max(font_size * 2.4)
-    };
+    let header_height = node_header_height(node, architecture_config, font_size);
     let row_height = ROW_H.max(font_size * 1.4);
     let mut h = header_height;
     for comp in &node.compartments {
@@ -296,6 +292,25 @@ fn node_height(node: &StructuralNode, architecture_config: Option<&ArchitectureC
         h += COMP_PAD + line_count as f64 * row_height + COMP_PAD;
     }
     h
+}
+
+fn node_header_height(
+    node: &StructuralNode,
+    architecture_config: Option<&ArchitectureConfig>,
+    font_size: f64,
+) -> f64 {
+    let base_height = if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
+        architecture_config.map_or(72.0, |config| config.icon_size * 0.9).max(font_size * 2.4)
+    } else {
+        HEADER_H.max(font_size * 2.4)
+    };
+    let label_lines = node.label.split('\n').count();
+    if label_lines > 1 {
+        let stereotype_lines = usize::from(node.stereotype.is_some());
+        base_height.max((label_lines + stereotype_lines) as f64 * font_size * 1.4 + 16.0)
+    } else {
+        base_height
+    }
 }
 
 fn architecture_icon_name(node: &StructuralNode) -> Option<&str> {
@@ -367,12 +382,7 @@ fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
         // Build layouted compartments.
         let style = structural_style(node, architecture_config);
         let row_height = ROW_H.max(style.font_size * 1.4);
-        let mut y_off = if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
-            architecture_config.map_or(72.0, |config| config.icon_size * 0.9)
-                .max(style.font_size * 2.4)
-        } else {
-            HEADER_H.max(style.font_size * 2.4)
-        };
+        let mut y_off = node_header_height(node, architecture_config, style.font_size);
         let mut comps: Vec<LayoutedCompartment> = Vec::new();
         for comp in &node.compartments {
             let line_count = comp
@@ -1830,6 +1840,24 @@ mod tests {
         assert_eq!(layout.nodes[0].compartments[0].rows.len(), 3);
         assert!(layout.nodes[0].height > 130.0);
         assert!(layout.nodes[0].width < 300.0);
+    }
+
+    #[test]
+    fn multiline_entity_aliases_reserve_header_geometry() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        diagram.nodes.truncate(1);
+        diagram.nodes[0].id = "ENTITY".into();
+        diagram.nodes[0].label = "Primary\nEntity".into();
+        diagram.nodes[0].compartments[0].entries = vec!["id: string [PK]".into()];
+        diagram.relationships.clear();
+
+        let layout = layout_structural_diagram(&diagram);
+        let node = &layout.nodes[0];
+
+        assert!(node.compartments[0].y_offset > 50.0);
+        assert!(node.height > 90.0);
+        assert_eq!(node.header, "Primary\nEntity");
     }
 
     #[test]

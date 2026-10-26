@@ -2013,6 +2013,27 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_entity_alias_line_break_variants() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nFIRST[\"Primary<br>Entity\"]\nSECOND[\"Second<br/>Entity\"]\nTHIRD[\"Third<br />Entity\"]\n",
+        );
+        let aliases: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.value.contains("<br"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(
+            aliases,
+            [
+                "Primary<br>Entity",
+                "Second<br/>Entity",
+                "Third<br />Entity"
+            ]
+        );
+    }
+
+    #[test]
     fn tokenizes_er_unicode_symbol_identifiers() {
         let tokens = tokenize_mermaid_er(
             "erDiagram\n_**testẽζ➕Ø😀㌕ぼ**_\nperson[😀]\nperson ||--o| a : __hẽ😀__\n",
