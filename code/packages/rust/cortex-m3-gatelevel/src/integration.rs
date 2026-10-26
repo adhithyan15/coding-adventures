@@ -95,6 +95,14 @@ impl StorageInventory {
 /// Derive physical storage from the live production containers.
 #[must_use]
 pub fn storage_inventory(core: &CortexM3GateLevel) -> StorageInventory {
+    let status_bits = [&core.primask, &core.faultmask, &core.handler_mode];
+    let power_event_bits = [
+        &core.halted,
+        &core.sleeping,
+        &core.waiting_for_event,
+        &core.event_registered,
+    ];
+    let exclusive_valid_bits = [&core.exclusive_valid];
     StorageInventory {
         memory: core.memory.bit_len(),
         general_registers: core.registers.iter().map(|bank| bank.len()).sum(),
@@ -102,13 +110,11 @@ pub fn storage_inventory(core: &CortexM3GateLevel) -> StorageInventory {
         status: core.apsr.len()
             + core.ipsr.len()
             + core.itstate.len()
-            + 1
             + core.basepri.len()
-            + 1
             + core.control.len()
-            + 1,
-        power_event: 4,
-        exclusive_monitor: core.exclusive_address.len() + 1,
+            + status_bits.len(),
+        power_event: power_event_bits.len(),
+        exclusive_monitor: core.exclusive_address.len() + exclusive_valid_bits.len(),
         installed_image: core.loaded_origin.len() + core.loaded_len.len(),
     }
 }
