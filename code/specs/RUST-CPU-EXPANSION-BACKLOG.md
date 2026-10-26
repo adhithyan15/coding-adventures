@@ -44,7 +44,7 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | Motorola 6809 | merged | merged | Complete; gate PR #18269 landed. |
 | P0 | OpenRISC 1000 | merged | merged | Complete; gate PR #18276 landed. |
 | P0 | OpenSPARC T1 | merged | merged | Complete; gate PR #18295 landed. |
-| P0 | Arm Cortex-M0 | merged | PR #18296 | Conflict reconciliation in progress; squash auto-merge remains armed. |
+| P0 | Arm Cortex-M0 | merged | merged | Complete; gate PR #18296 landed. |
 | P0 | Arm Cortex-M3 | merged | merged | Complete; gate PR #18297 landed. |
 
 ## P0 gate-integrity repair queue
@@ -57,8 +57,11 @@ already public.
 
 | Priority | Target | Status | Required boundary |
 |---:|---|---|---|
-| P0 complete locally | x86-64 multiply/divide qualification | ready | The fixed-round multiplier/divider returns gate-qualified wide results; exact signed/unsigned fit boundaries, atomic divide faults, discarded high wires, parsed-syntax anti-bypass fixtures including inactive decoys, duplicate definitions, and exact production module routing, strict checks, all affected builds, and 88.40% line coverage are green. |
-| P0 | Motorola 68000 gate | local complete | All 560 register/PC/SR DFF Q outputs and the HALT DFF Q output are authoritative; public fields are synchronized observers. Concrete inventory, deliberate observer-divergence lifecycle regressions, 71 unit tests, all 82 differential vectors, 6 lifecycle tests, 7 doctests, strict checks, lessons, and 83.39% combined line coverage are green. |
+| P0 merged | x86-64 multiply/divide qualification | PR #18323 merged | The fixed-round multiplier/divider returns gate-qualified wide results; exact signed/unsigned fit boundaries, atomic divide faults, discarded high wires, parsed-syntax anti-bypass fixtures including inactive decoys, duplicate definitions, and exact production module routing, strict checks, all affected builds, and 88.40% line coverage are green. |
+| P0 merged | Motorola 68000 gate | PR #18316 merged | All 560 register/PC/SR DFF Q outputs and the HALT DFF Q output are authoritative; public fields are synchronized observers. Concrete inventory, deliberate observer-divergence lifecycle regressions, 71 unit tests, all 82 differential vectors, 6 lifecycle tests, 7 doctests, strict checks, lessons, and 83.39% combined line coverage are green. |
+| P0 in PR #18379 | ARM1 gate HALT storage | Publication in progress | The HALT DFF Q output is the sole architectural halt authority across observation, lifecycle, interrupts, execution, and rollback; compiler-checked hostile full-crate fixtures close the final review gap. Do not duplicate this cell. |
+| P0 in PR #18381 | MOS 6502 gate HALT storage | Publication in progress | The one-bit `StateRegister` Q output is the sole HALT authority across observation, lifecycle, execution, IRQ/NMI, and rollback. Do not duplicate this cell. |
+| P0 selected | Z80 gate HALT storage | Specified here; implementation next | Make the one-bit `halt_state` Q output authoritative across observation, run/step/results, reset/load/restore, HALT, IRQ/NMI, and rollback. Derive the exact 528,597-DFF inventory and pin two-way divergence plus compiler-checked hostile full-crate rewrites. |
 | P1 audit | Remaining completed gate packages | queued | Search architecturally visible arithmetic, flags, fault qualification, decode, state selection, and storage authority for host-language shortcuts; record and repair one bounded cell at a time. Address/control bookkeeping permitted by the educational boundary is not itself a defect. |
 
 ## Independent functional queue

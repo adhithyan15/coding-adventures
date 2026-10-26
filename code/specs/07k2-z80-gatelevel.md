@@ -49,6 +49,33 @@ paths. Persistent state uses this exact topology:
 
 The public `FLIP_FLOP_COUNT` constant equals this total.
 
+### HALT storage authority
+
+The one-bit `halt_state` `StateRegister` Q output is the sole architectural
+HALT authority. Every observation, snapshot, reset, load, restore,
+instruction-step guard, bounded-run guard and result, HALT instruction,
+maskable interrupt, NMI, and transactional rollback must read or clock that Q
+bit. The private host Boolean may remain only as a transient, synchronized
+instruction wire and compatibility observer. Deliberately corrupting that
+observer in either direction must not change execution, returned state, or
+interrupt behavior, and the next simulator-owned HALT transition must repair
+it from Q.
+
+No lifecycle or execution path may assign the packed HALT Q bit directly after
+construction. All architectural HALT changes pass through one reviewed helper
+that clocks the one-bit `StateRegister`; ordinary instruction commit may only
+synchronize the observer from Q. The physical-storage inventory must derive
+its counts independently from the owned memory, register-file, control-state,
+HALT, and port-latch containers and must total exactly 528,597 D flip-flops.
+
+Structural conformance tests exact-lock the complete transition chain from the
+public lifecycle through snapshot, execution, interrupts, commit, and the
+sequential primitive. They must reject compile-valid full-crate hostile
+rewrites that make the observer decisive, write HALT Q directly, hide either
+bypass behind a helper, retain a dead clock anchor, or overwrite the clocked
+result after commit. Merely parsing a hostile fixture is not compilation
+evidence.
+
 ## Lifecycle contract
 
 The gate and functional simulators share `Z80State`, `StepTrace`,
@@ -72,8 +99,13 @@ Completion requires:
 2. identical typed, atomic rejection of unassigned prefixed bytes;
 3. exact topology, lifecycle, wrapping, port, interrupt, block, indexed, and
    multi-instruction tests;
-4. at least 80% core line coverage; and
-5. clean formatting, Clippy with warnings denied, and rustdoc with warnings
+4. two-way observer/Q divergence, already-halted bounded execution,
+   reset/load/restore, HALT, IRQ/NMI, checked-step, and transactional rollback
+   tests that prove Q authority;
+5. exact transition-chain locks plus compiler-checked hostile observer,
+   direct-Q, helper-indirection, dead-anchor, and post-commit bypass fixtures;
+6. at least 80% core line coverage; and
+7. clean formatting, Clippy with warnings denied, and rustdoc with warnings
    denied.
 
 The completion audit records 58 unit, 4 integration, and 8 documentation tests
