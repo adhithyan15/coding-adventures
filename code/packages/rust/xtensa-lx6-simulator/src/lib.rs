@@ -1690,7 +1690,7 @@ fn execute_decoded(
             let new_wb = (before.window_base + before.call_inc) & 15;
             next.window_base = new_wb;
             next.window_start |= 1u16 << new_wb;
-            write_ar(next, (before.call_inc << 2) | (s & 3), stack);
+            write_ar(next, s, stack);
         }
         Op::Retw | Op::RetwN => {
             execute_retw(before, next, raw, width)?;

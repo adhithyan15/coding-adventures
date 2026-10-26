@@ -26,4 +26,4 @@ major family and exercises mixed-width transport, arithmetic, shifts, memory,
 branches, calls, windows, loops, special registers, narrow encodings, exact
 trace bytes, typed fault precedence, and whole-state rollback. All 29 release
 tests, strict Clippy, and rustdoc warnings pass. The completion baseline is
-89.96% line coverage (1,380/1,534).
+90.09% line coverage (1,382/1,534).

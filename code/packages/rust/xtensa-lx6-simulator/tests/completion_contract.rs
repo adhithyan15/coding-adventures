@@ -575,45 +575,73 @@ fn lazy_window_priority_false_conditions_and_raw_reserved_order() {
 
 #[test]
 fn movsp_exhausts_caller_availability_and_self_move_is_legal() {
-    let movsp = rrr(0, 0, 1, 2, 2);
-    for mask in 0..8u16 {
+    for (source, destination) in [(2, 2), (2, 3)] {
+        let movsp = rrr(0, 0, 1, source, destination);
+        for mask in 0..8u16 {
+            let mut simulator = with_state(loaded(movsp), |state| {
+                state.window_base = 4;
+                state.window_start = 1 << 4;
+                state.ar[18] = 0x55;
+                state.ar[19] = 0xaa;
+                if mask & 1 != 0 {
+                    state.window_start |= 1 << 1;
+                }
+                if mask & 2 != 0 {
+                    state.window_start |= 1 << 2;
+                }
+                if mask & 4 != 0 {
+                    state.window_start |= 1 << 3;
+                }
+            });
+            let before = simulator.snapshot().unwrap();
+            if mask == 0 {
+                assert_eq!(simulator.step(), Err(XtensaLx6Error::AllocaCause));
+                assert_eq!(simulator.snapshot().unwrap(), before);
+            } else {
+                simulator.step().unwrap();
+                assert_eq!(simulator.logical_register(destination).unwrap(), 0x55);
+            }
+        }
+    }
+
+    for (source, active_increment) in [(4, 1), (8, 2), (12, 3)] {
+        let movsp = rrr(0, 0, 1, source, 1);
         let mut simulator = with_state(loaded(movsp), |state| {
             state.window_base = 4;
-            state.window_start = 1 << 4;
-            state.ar[18] = 0x55;
-            if mask & 1 != 0 {
-                state.window_start |= 1 << 1;
-            }
-            if mask & 2 != 0 {
-                state.window_start |= 1 << 2;
-            }
-            if mask & 4 != 0 {
-                state.window_start |= 1 << 3;
-            }
+            state.window_start = (1 << 4) | (1 << (4 + active_increment));
         });
         let before = simulator.snapshot().unwrap();
-        if mask == 0 {
-            assert_eq!(simulator.step(), Err(XtensaLx6Error::AllocaCause));
-            assert_eq!(simulator.snapshot().unwrap(), before);
-        } else {
-            simulator.step().unwrap();
-            assert_eq!(simulator.logical_register(2).unwrap(), 0x55);
-        }
+        assert_eq!(
+            simulator.step(),
+            Err(XtensaLx6Error::WindowOverflow {
+                increment: active_increment,
+            })
+        );
+        assert_eq!(simulator.snapshot().unwrap(), before);
     }
 }
 
 #[test]
 fn entry_reads_caller_then_writes_callee_and_retw_is_atomic() {
     let entry = 6 | (3 << 4) | (2 << 8) | (1 << 12);
-    let mut simulator = with_state(loaded(entry), |state| {
-        state.call_inc = 1;
-        state.ar[2] = 0x1000;
-    });
-    simulator.step().unwrap();
-    let state = simulator.snapshot().unwrap();
-    assert_eq!(state.window_base, 1);
-    assert_eq!(state.ar[10], 0x0ff8);
-    assert_ne!(state.window_start & 2, 0);
+    for call_inc in 0..=3u8 {
+        let mut simulator = with_state(loaded(entry), |state| {
+            state.call_inc = call_inc;
+            state.ar[2] = 0x1000;
+        });
+        let before = simulator.snapshot().unwrap();
+        simulator.step().unwrap();
+        let state = simulator.snapshot().unwrap();
+        let destination = usize::from(call_inc) * 4 + 2;
+        assert_eq!(state.window_base, call_inc);
+        assert_eq!(state.ar[destination], 0x0ff8);
+        assert_ne!(state.window_start & (1 << call_inc), 0);
+        for physical in 0..64 {
+            if physical != destination {
+                assert_eq!(state.ar[physical], before.ar[physical]);
+            }
+        }
+    }
 
     let bad_entry = 6 | (3 << 4) | (4 << 8);
     let mut simulator = with_state(loaded(bad_entry), |state| {

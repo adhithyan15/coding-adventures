@@ -79,7 +79,7 @@ architecture/core introduction era, not a claim about a particular chip.
 | 11 | SPARC V9 | published architecture manual | 64-bit SPARC functional extension. |
 | 12 | ARM7TDMI | published ARMv4T manuals | ARM/Thumb state and pipeline-visible architecture boundary. |
 | 13 | AVR classic | published instruction-set manual | Harvard core boundary suitable for later MCU SoCs. |
-| 14 | Xtensa LX6 | public Tensilica ISA manual plus ESP32 manuals | Functional cell complete locally as `Esp32Lx6IntegerV1`, pending independent implementation review: little-endian, 64 physical windowed ARs, mixed 16/24-bit core+density, lazy window checks, loops, complete traces/lifecycle, 29 release tests, and 89.96% line coverage (1,380/1,534). Proprietary/configuration-unknown extensions remain excluded. |
+| 14 | Xtensa LX6 | public Tensilica ISA manual plus ESP32 manuals | Functional cell complete locally as `Esp32Lx6IntegerV1`, pending independent implementation review: little-endian, 64 physical windowed ARs, mixed 16/24-bit core+density, lazy window checks, loops, complete traces/lifecycle, 29 release tests, and 90.09% line coverage (1,382/1,534). Proprietary/configuration-unknown extensions remain excluded. |
 
 ## Discovered follow-up work
 
