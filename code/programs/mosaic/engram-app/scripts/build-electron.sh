@@ -193,8 +193,8 @@ if [[ "$RUN_PACKAGE" -eq 1 ]]; then
   # checksums.json, which ships INSIDE the lockfile-pinned electron package --
   # so the binary is pinned by the lock transitively:
   #
-  #   package-lock.json --sha512--> electron-42.5.0.tgz --contains--> checksums.json
-  #                                                     --sha256--> electron-v42.5.0-<os>-<arch>.zip
+  #   package-lock.json --sha512--> electron-43.8.0.tgz --contains--> checksums.json
+  #                                                     --sha256--> electron-v43.8.0-<os>-<arch>.zip
   #
   # `electronDist` above then points electron-builder at that verified copy.
   #

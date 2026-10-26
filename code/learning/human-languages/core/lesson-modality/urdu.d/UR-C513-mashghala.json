@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C513-mashghala",
+    "language": "urdu",
+    "chapter": 513,
+    "sequence": 29980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b12867e15214b40"
+  },
+  "findings": []
+}

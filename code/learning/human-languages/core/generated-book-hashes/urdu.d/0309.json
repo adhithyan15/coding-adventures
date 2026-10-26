@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:0af416621bad649f",
+  "lessonIds": [
+    "UR-C309-hamla",
+    "UR-C309-qila",
+    "UR-C309-gherna",
+    "UR-C309-top",
+    "UR-C309-bhirna"
+  ],
+  "tex": "urdu/book/chapters/ch309-the-attack.tex"
+}

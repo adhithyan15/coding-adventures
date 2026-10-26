@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:087e0d1e4624b39b",
+  "lessonIds": [
+    "UR-C300-rediyo",
+    "UR-C300-nashr-karna",
+    "UR-C300-surkhi",
+    "UR-C300-ittila",
+    "UR-C300-sansani"
+  ],
+  "tex": "urdu/book/chapters/ch300-the-morning-news.tex"
+}

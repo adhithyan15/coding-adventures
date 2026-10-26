@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C457-mukhlis",
+    "language": "urdu",
+    "chapter": 457,
+    "sequence": 26870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8c3cd5460d257a0"
+  },
+  "findings": []
+}

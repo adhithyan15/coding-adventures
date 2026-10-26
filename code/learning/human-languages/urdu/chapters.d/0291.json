@@ -1,0 +1,21 @@
+{
+  "chapter": 291,
+  "title": "When the Ground Shook",
+  "label": "ch:ur-when-the-ground-shook",
+  "canDo": "I can tell what happened in an earthquake.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-R291-review-284-291",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: I can tell what happened in an earthquake.",
+    "assesses": [
+      "UR-LEX-C291-ZALZALA291-01",
+      "UR-LEX-C291-ZALZALA291-02",
+      "UR-LEX-C291-ZALZALA291-03",
+      "UR-LEX-C291-ZALZALA291-04",
+      "UR-LEX-C291-ZALZALA291-05"
+    ]
+  }
+}

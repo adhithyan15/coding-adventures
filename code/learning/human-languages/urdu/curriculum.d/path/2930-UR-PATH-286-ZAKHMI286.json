@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-286-ZAKHMI286",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "UR-EXT-286-ZAKHMI286"
+  ],
+  "after": []
+}

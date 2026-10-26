@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:d1e2533d0fe10866",
+  "lessonIds": [
+    "UR-C312-riaya",
+    "UR-C312-hukm",
+    "UR-C312-ghulam",
+    "UR-C312-baghavat",
+    "UR-C312-lalkarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch312.txt",
+  "json": "urdu/narration/ch312.json",
+  "textHash": "fnv1a64:cb9b8d3cb4f9e8a5",
+  "jsonHash": "fnv1a64:44e050591371e590",
+  "findings": []
+}

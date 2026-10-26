@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:2a540769a7a05b21",
+  "lessonIds": [
+    "UR-C330-safha",
+    "UR-C330-unvan",
+    "UR-C330-qari",
+    "UR-C330-bikna",
+    "UR-C330-tarjuma",
+    "UR-R330-review-324-330",
+    "UR-R330-review-final-330"
+  ],
+  "tex": "urdu/book/chapters/ch330-turning-the-pages.tex"
+}

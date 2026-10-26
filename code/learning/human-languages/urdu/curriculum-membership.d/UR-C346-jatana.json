@@ -1,0 +1,11 @@
+{
+  "id": "UR-C346-jatana",
+  "pathSegment": "UR-PATH-346-KHIDMAT346",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-346-KHIDMAT346",
+      "order": 4
+    }
+  ]
+}

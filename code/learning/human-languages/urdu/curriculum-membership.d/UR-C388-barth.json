@@ -1,0 +1,11 @@
+{
+  "id": "UR-C388-barth",
+  "pathSegment": "UR-PATH-388-SIGNAL388",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-388-SIGNAL388",
+      "order": 3
+    }
+  ]
+}

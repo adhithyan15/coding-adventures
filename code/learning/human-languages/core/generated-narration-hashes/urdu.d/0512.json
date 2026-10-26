@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:7c17526f1b524e71",
+  "lessonIds": [
+    "UR-C512-bagh",
+    "UR-C512-kyari",
+    "UR-C512-khad",
+    "UR-C512-sinchna",
+    "UR-C512-ukharna-uproot"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch512.txt",
+  "json": "urdu/narration/ch512.json",
+  "textHash": "fnv1a64:cabd813dfd76a5a4",
+  "jsonHash": "fnv1a64:43e4baf8b36daf2a",
+  "findings": []
+}

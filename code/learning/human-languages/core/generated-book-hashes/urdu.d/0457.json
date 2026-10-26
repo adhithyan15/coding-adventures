@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:5f3c515a8b582e4e",
+  "lessonIds": [
+    "UR-C457-mukhlis",
+    "UR-C457-makkar",
+    "UR-C457-etibar-karna",
+    "UR-C457-diyanat",
+    "UR-C457-vada"
+  ],
+  "tex": "urdu/book/chapters/ch457-honest-and-false.tex"
+}

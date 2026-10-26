@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:b638d29ec1f2d00f",
+  "lessonIds": [
+    "UR-C481-ifaqa",
+    "UR-C481-bahal",
+    "UR-C481-malish-karna",
+    "UR-C481-dabana",
+    "UR-C481-senkna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch481.txt",
+  "json": "urdu/narration/ch481.json",
+  "textHash": "fnv1a64:495ad482453a87f4",
+  "jsonHash": "fnv1a64:2c2dc75e34160574",
+  "findings": []
+}

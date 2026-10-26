@@ -1,0 +1,11 @@
+{
+  "id": "UR-C282-jasus",
+  "pathSegment": "UR-PATH-282-TAFTISH282",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-282-TAFTISH282",
+      "order": 2
+    }
+  ]
+}

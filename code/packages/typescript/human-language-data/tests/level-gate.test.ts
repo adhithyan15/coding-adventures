@@ -414,6 +414,14 @@ describe("the gate that would have caught the A2 claim", () => {
     // five B1 nodes, plus letter lessons for ઝ, ઃ, ઇ, ૌ and ઋ) and chapters
     // 285-554 (1,350 headwords, 351 verbs), which moved it from the A2 row of
     // HELD to B1.
+    // Urdu followed as the eighteenth, with chapters 264-275 (the B1 core: the
+    // perfective and تھا, the agent نے with the verb agreeing with its object,
+    // the full future, رہا تھا and -کر, reasons with لگتا ہے / کی وجہ سے /
+    // چاہیے / -نا پڑنا / اس لیے, travel with the polite -یے, feelings and
+    // سے بڑا / سب سے, and اگر … تو / … پر منحصر ہے / the -تا counterfactual,
+    // realizing all five B1 nodes, plus letter lessons for ؤ ع غ ذ ث ڈ ص) and
+    // chapters 276-547 (1,360 headwords, 370 verbs), which moved it from the A2
+    // row of HELD to B1.
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

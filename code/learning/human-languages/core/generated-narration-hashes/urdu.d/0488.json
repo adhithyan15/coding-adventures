@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:f65952bdbdb51848",
+  "lessonIds": [
+    "UR-C488-valima",
+    "UR-C488-susral",
+    "UR-C488-bahu",
+    "UR-C488-damad",
+    "UR-C488-byahna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch488.txt",
+  "json": "urdu/narration/ch488.json",
+  "textHash": "fnv1a64:ac0ae4edfbe748da",
+  "jsonHash": "fnv1a64:196d522d2f9e12e7",
+  "findings": []
+}

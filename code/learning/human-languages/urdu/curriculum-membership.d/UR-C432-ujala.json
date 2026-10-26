@@ -1,0 +1,11 @@
+{
+  "id": "UR-C432-ujala",
+  "pathSegment": "UR-PATH-432-TULU432",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-432-TULU432",
+      "order": 4
+    }
+  ]
+}

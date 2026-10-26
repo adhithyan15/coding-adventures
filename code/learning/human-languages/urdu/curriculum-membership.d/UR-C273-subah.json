@@ -1,0 +1,11 @@
+{
+  "id": "UR-C273-subah",
+  "pathSegment": "UR-PATH-273-COMPARE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-273-COMPARE",
+      "order": 2
+    }
+  ]
+}

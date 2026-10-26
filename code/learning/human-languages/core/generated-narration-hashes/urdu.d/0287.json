@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:3643b478fdb10e64",
+  "lessonIds": [
+    "UR-C287-angara",
+    "UR-C287-sulagna",
+    "UR-C287-sharara",
+    "UR-C287-bharakna",
+    "UR-C287-jalna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch287.txt",
+  "json": "urdu/narration/ch287.json",
+  "textHash": "fnv1a64:f483e9c7d16988ad",
+  "jsonHash": "fnv1a64:4cd1fbb6df5539fb",
+  "findings": []
+}

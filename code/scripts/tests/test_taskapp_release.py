@@ -40,6 +40,7 @@ from taskapp_release import (
     artifact_names,
     build_manifest,
     changelog_change_headings,
+    main,
     materialize_upgrade_fixture,
     render_notes,
     validate_changelog,
@@ -49,6 +50,32 @@ from taskapp_release import (
 )
 
 COMMIT = "0123456789abcdef0123456789abcdef01234567"
+
+
+def test_notes_cli_preserves_selected_release_markdown(tmp_path: Path) -> None:
+    changelog = tmp_path / "CHANGELOG.md"
+    details = "### Fixed\n\n- Preserve the board floor.\n  Continuation with `code`."
+    changelog.write_text(
+        "## [Unreleased]\n\n### Future\n\n- Future only.\n\n"
+        "## [0.5.11] - 2026-10-25\n\n" + details
+        + "\n\n## [0.5.10] - 2026-10-24\n\n### Older\n\n- Older only.\n",
+        encoding="utf-8",
+    )
+    history = tmp_path / "history.json"
+    history.write_text("[]", encoding="utf-8")
+    output = tmp_path / "notes.md"
+    assert main([
+        "write-notes", "--version", "0.5.11", "--tag", "task-app-v0.5.11",
+        "--commit", COMMIT, "--repository", "adhithyan15/coding-adventures",
+        "--history", str(history), "--changelog", str(changelog),
+        "--output", str(output),
+    ]) == 0
+    notes = output.read_text(encoding="utf-8")
+    assert details in notes
+    assert "- ### Fixed" not in notes
+    assert "Future only" not in notes
+    assert "Older only" not in notes
+
 UPGRADE_FIXTURE = (
     REPOSITORY_ROOT
     / "code"

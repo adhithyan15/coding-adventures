@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "Swords and Shields",
+  "label": "ch:ur-swords-and-shields",
+  "canDo": "I can describe how battles were fought long ago.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C310-lashkar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can describe how battles were fought long ago.",
+    "assesses": [
+      "UR-LEX-C310-DHAL310-03",
+      "UR-LEX-C310-DHAL310-04",
+      "UR-LEX-C310-DHAL310-05"
+    ]
+  }
+}

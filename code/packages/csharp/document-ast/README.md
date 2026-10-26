@@ -29,3 +29,8 @@ Console.WriteLine(doc.Type); // document
 ```bash
 bash BUILD
 ```
+
+The Unix and Windows fronts build an instrumented project graph, execute the
+six native tests, report coverage for only `CodingAdventures.DocumentAst`,
+and fail if production line coverage falls below 95%. The Windows setup
+conditionals are grouped so a warm second run cannot skip the test command.

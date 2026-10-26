@@ -2,6 +2,22 @@
 
 TypeScript gfm-parser package.
 
+## Portable extension conformance
+
+The package test suite dynamically reads all sixteen cases from the shared
+[`gfm-extension-v1`](../../../specs/fixtures/gfm-extension-v1/README.md)
+corpus. Every source is parsed through the public `parse()` API, and the
+resulting complete Document AST and public `toHtml()` output are compared with
+the language-neutral oracle. The suite also proves that independent source,
+AST, and HTML corruption cannot pass unnoticed. Its native reader caps the
+corpus at 131,072 bytes and rejects a byte-order mark or malformed UTF-8. The
+repository's always-run contract job separately applies the strict
+duplicate-key, depth, shape, resource, roster, and literal-digest validator.
+
+The fixture remains test-only: it is not bundled into the published parser and
+fenced payloads remain inert strings. An exact corpus change schedules this
+package and its ordinary dependent closure in the repository build plan.
+
 ## TE04 fenced-block compatibility
 
 GFM fences now produce `fenced_block` with the entire normalized `info`, its first-token `name`, and literal payload. Info is decoded once, interior whitespace is retained, and absent or empty normalized info produces null hints; empty payloads remain valid. Indented code remains `code_block`.

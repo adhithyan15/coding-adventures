@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:a90b17992a3c9ad8",
+  "lessonIds": [
+    "UR-C334-bahas-karna",
+    "UR-C334-dalil",
+    "UR-C334-tokna",
+    "UR-C334-takrar",
+    "UR-C334-mantiq"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch334.txt",
+  "json": "urdu/narration/ch334.json",
+  "textHash": "fnv1a64:117702a380afe351",
+  "jsonHash": "fnv1a64:67b2e8a6fe6d6c56",
+  "findings": []
+}

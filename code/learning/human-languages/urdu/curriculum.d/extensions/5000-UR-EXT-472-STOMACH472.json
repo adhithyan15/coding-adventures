@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-472-STOMACH472",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone has an upset stomach.",
+  "prerequisites": []
+}

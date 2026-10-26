@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:42d8b39495739463",
+  "lessonIds": [
+    "UR-C316-qaidi",
+    "UR-C316-pahra",
+    "UR-C316-surang",
+    "UR-C316-khisakna",
+    "UR-C316-rengna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch316.txt",
+  "json": "urdu/narration/ch316.json",
+  "textHash": "fnv1a64:1afb47db6efa16c8",
+  "jsonHash": "fnv1a64:9c14437787d522df",
+  "findings": []
+}

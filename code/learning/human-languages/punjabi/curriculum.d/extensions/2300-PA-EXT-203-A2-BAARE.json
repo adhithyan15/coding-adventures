@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-203-A2-BAARE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can recognise and use the postposition for about in one bounded familiar-noun frame.",
+  "prerequisites": [
+    "PA-EXT-202-A2-YATRI"
+  ]
+}

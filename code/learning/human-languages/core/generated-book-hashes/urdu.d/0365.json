@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:140413eb2d3086b8",
+  "lessonIds": [
+    "UR-C365-halat",
+    "UR-C365-surat-e-hal",
+    "UR-C365-musibat",
+    "UR-C365-tabdili",
+    "UR-C365-phansana"
+  ],
+  "tex": "urdu/book/chapters/ch365-as-things-stand.tex"
+}

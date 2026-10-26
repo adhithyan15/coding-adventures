@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-370-JALDBAZI370",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can warn someone what will happen if they rush.",
+  "prerequisites": []
+}

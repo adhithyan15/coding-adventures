@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C429-jara",
+    "language": "urdu",
+    "chapter": 429,
+    "sequence": 25220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:287b2059cd6e64b4"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C439-charna",
+  "pathSegment": "UR-PATH-439-GIDAR439",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-439-GIDAR439",
+      "order": 3
+    }
+  ]
+}

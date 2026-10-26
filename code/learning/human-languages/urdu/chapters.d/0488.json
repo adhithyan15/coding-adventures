@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "After the Wedding",
+  "label": "ch:ur-after-the-wedding",
+  "canDo": "I can talk about the family a marriage brings.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C488-byahna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can talk about the family a marriage brings.",
+    "assesses": [
+      "UR-LEX-C488-INLAWS488-03",
+      "UR-LEX-C488-INLAWS488-04",
+      "UR-LEX-C488-INLAWS488-05"
+    ]
+  }
+}

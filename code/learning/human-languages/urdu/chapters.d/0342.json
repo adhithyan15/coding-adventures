@@ -1,0 +1,19 @@
+{
+  "chapter": 342,
+  "title": "Citizens and Votes",
+  "label": "ch:ur-citizens-and-votes",
+  "canDo": "I can talk about voting and the rights of citizens.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C342-thopna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 342: I can talk about voting and the rights of citizens.",
+    "assesses": [
+      "UR-LEX-C342-VOT342-03",
+      "UR-LEX-C342-VOT342-04",
+      "UR-LEX-C342-VOT342-05"
+    ]
+  }
+}

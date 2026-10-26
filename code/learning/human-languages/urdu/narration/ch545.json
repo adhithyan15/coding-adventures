@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 545,
+  "title": "For Now or for Good",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1fab2f18f0e74940",
+  "lessons": [
+    {
+      "id": "UR-C545-arzi",
+      "sequence": 31610,
+      "title": "عارضی (ārzī) — temporary",
+      "headword": "عارضی",
+      "romanization": "ārzī",
+      "gloss": "temporary",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:60f9eea2c68d28c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a series, then the Urdu for order (a set sequence)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عارضی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عارضی — ārzī — \"temporary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر یہ نوکری عارضی ہے تو میں نہیں لوں گا۔ agar yih naukrī ārzī hai to maiṅ nahīṅ lūṅ gā. If this job is temporary, I won't take it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عارضی (ārzī) is usually traced, through Persian, to Arabic ʿāriḍī, \"passing, accidental\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārzī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārzī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārzī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārzī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar yih naukrī ārzī hai to maiṅ nahīṅ lūṅ gā. — If this job is temporary, I won't take it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar yih naukrī ārzī hai to maiṅ nahīṅ lūṅ gā.* — If this job is temporary, I won't take it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a series, then the Urdu for order (a set sequence), then say ārzī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a series, then the Urdu for order (a set sequence), then say *ārzī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عارضی (ārzī) mean? (\"Temporary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C545-mustaqil",
+      "sequence": 31620,
+      "title": "مستقل (mustaqil) — permanent; steady",
+      "headword": "مستقل",
+      "romanization": "mustaqil",
+      "gloss": "permanent; steady",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b2310a1d4ab932f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for order (a set sequence), then the Urdu for temporary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مستقل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مستقل — mustaqil — \"permanent; steady\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر نوکری مستقل ہوئی تو ہم نیا گھر لیں گے۔ agar naukrī mustaqil huī to ham nayā ghar leṅ ge. If the job becomes permanent, we'll get a new house."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مستقل (mustaqil) is usually traced, through Persian, to Arabic mustaqill, \"standing on its own, independent\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mustaqil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mustaqil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mustaqil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mustaqil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar naukrī mustaqil huī to ham nayā ghar leṅ ge. — If the job becomes permanent, we'll get a new house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar naukrī mustaqil huī to ham nayā ghar leṅ ge.* — If the job becomes permanent, we'll get a new house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for order (a set sequence), then the Urdu for temporary, then say mustaqil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for order (a set sequence), then the Urdu for temporary, then say *mustaqil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مستقل (mustaqil) mean? (\"Permanent; steady\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C545-hatmi",
+      "sequence": 31630,
+      "title": "حتمی (hatmī) — final; definite",
+      "headword": "حتمی",
+      "romanization": "hatmī",
+      "gloss": "final; definite",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fcb3029011dfbc8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for temporary, then the Urdu for permanent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حتمی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حتمی — hatmī — \"final; definite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر یہ تاریخ حتمی ہے تو میں ٹکٹ خریدوں گا۔ agar yih tārīkh hatmī hai to maiṅ ṭikaṭ kharīdūṅ gā. If this date is final, I'll buy the ticket."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حتمی (hatmī) is usually traced, through Persian, to Arabic ḥatmī, \"decisive\", built on ḥatm, \"deciding finally\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hatmī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hatmī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hatmī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hatmī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar yih tārīkh hatmī hai to maiṅ ṭikaṭ kharīdūṅ gā. — If this date is final, I'll buy the ticket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar yih tārīkh hatmī hai to maiṅ ṭikaṭ kharīdūṅ gā.* — If this date is final, I'll buy the ticket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for temporary, then the Urdu for permanent, then say hatmī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for temporary, then the Urdu for permanent, then say *hatmī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حتمی (hatmī) mean? (\"Final; definite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C545-marhala",
+      "sequence": 31640,
+      "title": "مرحلہ (marhalā) — a stage (of a process)",
+      "headword": "مرحلہ",
+      "romanization": "marhalā",
+      "gloss": "a stage (of a process)",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b42aa26cc7936d6b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for permanent, then the Urdu for final."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مرحلہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مرحلہ — marhalā — \"a stage (of a process)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر ہم نے پہلا مرحلہ جیتا تو آگے جائیں گے۔ agar ham ne pehlā marhalā jītā to āge jāeṅ ge. If we win the first stage, we'll go through."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مرحلہ (marhalā) is usually traced, through Persian, to Arabic marḥala, \"a day's journey, a stage\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marhalā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marhalā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marhalā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marhalā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar ham ne pehlā marhalā jītā to āge jāeṅ ge. — If we win the first stage, we'll go through.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar ham ne pehlā marhalā jītā to āge jāeṅ ge.* — If we win the first stage, we'll go through.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for permanent, then the Urdu for final, then say marhalā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for permanent, then the Urdu for final, then say *marhalā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مرحلہ (marhalā) mean? (\"A stage (of a process)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C545-paedar",
+      "sequence": 31650,
+      "title": "پائیدار (pāedār) — durable; hard-wearing",
+      "headword": "پائیدار",
+      "romanization": "pāedār",
+      "gloss": "durable; hard-wearing",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc46d8c129abc6b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for final, then the Urdu for a stage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پائیدار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پائیدار — pāedār — \"durable; hard-wearing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر جوتا پائیدار ہوتا تو ابھی تک چلتا۔ agar jūtā pāedār hotā to abhī tak chaltā. If the shoe were well made, it would still be going."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پائیدار (pāedār) is usually traced to Persian pāydār, \"lasting, firm\", built from pāy, \"a foot\", and -dār, \"holding\": keeping its footing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāedār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāedār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāedār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāedār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar jūtā pāedār hotā to abhī tak chaltā. — If the shoe were well made, it would still be going.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar jūtā pāedār hotā to abhī tak chaltā.* — If the shoe were well made, it would still be going.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for final, then the Urdu for a stage, then say pāedār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for final, then the Urdu for a stage, then say *pāedār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پائیدار (pāedār) mean? (\"Durable; hard-wearing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

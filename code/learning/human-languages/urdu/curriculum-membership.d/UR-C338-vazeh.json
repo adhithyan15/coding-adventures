@@ -1,0 +1,11 @@
+{
+  "id": "UR-C338-vazeh",
+  "pathSegment": "UR-PATH-338-MISAL338",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-338-MISAL338",
+      "order": 2
+    }
+  ]
+}

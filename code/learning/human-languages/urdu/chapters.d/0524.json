@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "Making a Plan",
+  "label": "ch:ur-making-a-plan",
+  "canDo": "I can talk about plans and what happens if they change.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C524-banvana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can talk about plans and what happens if they change.",
+    "assesses": [
+      "UR-LEX-C524-FEHRIST524-03",
+      "UR-LEX-C524-FEHRIST524-04",
+      "UR-LEX-C524-FEHRIST524-05"
+    ]
+  }
+}

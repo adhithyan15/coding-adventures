@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:22326fcd9f03d97e",
+  "lessonIds": [
+    "UR-C501-loha",
+    "UR-C501-pital",
+    "UR-C501-zevar",
+    "UR-C501-pighlana",
+    "UR-C501-marhna",
+    "UR-R501-review-494-501"
+  ],
+  "tex": "urdu/book/chapters/ch501-metal-and-jewellery.tex"
+}

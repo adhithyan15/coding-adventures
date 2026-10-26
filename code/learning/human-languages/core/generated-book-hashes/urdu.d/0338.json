@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:d4c2985dd28eaa43",
+  "lessonIds": [
+    "UR-C338-misal",
+    "UR-C338-yani",
+    "UR-C338-vazeh",
+    "UR-C338-ginana",
+    "UR-C338-havala",
+    "UR-R338-review-331-338"
+  ],
+  "tex": "urdu/book/chapters/ch338-for-example.tex"
+}

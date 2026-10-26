@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C489-jeth",
+    "language": "urdu",
+    "chapter": 489,
+    "sequence": 28520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a351198bc10b783"
+  },
+  "findings": []
+}

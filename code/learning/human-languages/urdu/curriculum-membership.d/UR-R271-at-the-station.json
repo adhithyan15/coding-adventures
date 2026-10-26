@@ -1,0 +1,11 @@
+{
+  "id": "UR-R271-at-the-station",
+  "pathSegment": "UR-PATH-271-STATION",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "UR-EXT-271-STATION",
+      "order": 5
+    }
+  ]
+}

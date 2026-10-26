@@ -1,0 +1,21 @@
+{
+  "chapter": 432,
+  "title": "Sunrise and Sunset",
+  "label": "ch:ur-sunrise-and-sunset",
+  "canDo": "I can say when the sun rises and sets and describe the sky at dawn and dusk.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-R432-review-426-432",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can say when the sun rises and sets and describe the sky at dawn and dusk.",
+    "assesses": [
+      "UR-LEX-C432-TULU432-01",
+      "UR-LEX-C432-TULU432-02",
+      "UR-LEX-C432-TULU432-03",
+      "UR-LEX-C432-TULU432-04",
+      "UR-LEX-C432-TULU432-05"
+    ]
+  }
+}

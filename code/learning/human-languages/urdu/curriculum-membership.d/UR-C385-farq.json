@@ -1,0 +1,11 @@
+{
+  "id": "UR-C385-farq",
+  "pathSegment": "UR-PATH-385-DAKHILA385",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-385-DAKHILA385",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 477,
+  "title": "Taking Medicine",
+  "label": "ch:ur-taking-medicine",
+  "canDo": "I can say how to take a medicine.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C477-phankna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can say how to take a medicine.",
+    "assesses": [
+      "UR-LEX-C477-MEDICINE477-03",
+      "UR-LEX-C477-MEDICINE477-04",
+      "UR-LEX-C477-MEDICINE477-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:f91e4b4515d5ab94",
+  "lessonIds": [
+    "UR-C441-masarrat",
+    "UR-C441-lutf",
+    "UR-C441-shadman",
+    "UR-C441-sarshar",
+    "UR-C441-umang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch441.txt",
+  "json": "urdu/narration/ch441.json",
+  "textHash": "fnv1a64:166a44166bf3a0bc",
+  "jsonHash": "fnv1a64:0a84ebff2d2bf51c",
+  "findings": []
+}

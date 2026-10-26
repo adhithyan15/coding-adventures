@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:a02e0295d7854d92",
+  "lessonIds": [
+    "UR-C414-gard",
+    "UR-C414-avara",
+    "UR-C414-bhaunkna",
+    "UR-C414-ghurrana",
+    "UR-C414-bhagana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch414.txt",
+  "json": "urdu/narration/ch414.json",
+  "textHash": "fnv1a64:af8192efe4f35936",
+  "jsonHash": "fnv1a64:4ae2b67435b3545e",
+  "findings": []
+}

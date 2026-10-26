@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "Washrooms",
+  "label": "ch:ur-washrooms",
+  "canDo": "I can say what the washroom has and what is wrong with it.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C404-sahulat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can say what the washroom has and what is wrong with it.",
+    "assesses": [
+      "UR-LEX-C404-GHUSL404-03",
+      "UR-LEX-C404-GHUSL404-04",
+      "UR-LEX-C404-GHUSL404-05"
+    ]
+  }
+}

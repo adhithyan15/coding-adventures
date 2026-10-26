@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C344-zulm",
+    "language": "urdu",
+    "chapter": 344,
+    "sequence": 20690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77ff5484322f0d09"
+  },
+  "findings": []
+}

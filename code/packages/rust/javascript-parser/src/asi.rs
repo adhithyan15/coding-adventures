@@ -132,6 +132,28 @@ pub fn asi_insertion_points(
     version: EsVersion,
 ) -> Result<Vec<usize>, GrammarParseError> {
     let (_, original) = parse_with_asi_tracked(tokens, version)?;
+    Ok(insertion_points(original))
+}
+
+/// Where the restricted-production rule alone inserts semicolons, without
+/// parsing.
+///
+/// This is the parse-independent part of [`asi_insertion_points`]: the `;`
+/// that ECMAScript forces after `return`, `break`, `continue`, `throw` and
+/// `yield` when a line break follows them, and before a newline-led `++`/`--`
+/// (see `force_restricted_semicolons`). Unlike the other ASI rules, these change
+/// what an otherwise-valid program means: `return⏎42` returns `undefined`.
+/// So a consumer that must handle a program the grammar can't parse (closurec's
+/// WHITESPACE_ONLY) still applies them rather than gluing `return 42` together.
+/// Same index convention as [`asi_insertion_points`].
+pub fn restricted_insertion_points(tokens: Vec<Token>) -> Vec<usize> {
+    let (_, original) = force_restricted_semicolons(tokens);
+    insertion_points(original)
+}
+
+/// Turn a parallel "is this final token original?" record into the input
+/// indices *before which* each synthetic `;` goes.
+fn insertion_points(original: Vec<bool>) -> Vec<usize> {
     // `original[k]` says whether the k-th final token came from the input.
     // A synthetic one goes before the next original, whose input index is the
     // number of originals seen so far.
@@ -144,7 +166,7 @@ pub fn asi_insertion_points(
             points.push(seen);
         }
     }
-    Ok(points)
+    points
 }
 
 /// [`parse_with_asi`] plus a record of which final tokens are original
@@ -920,6 +942,19 @@ mod tests {
         let (points, values) = insertion_points("function f(){return\na}");
         let a = values.iter().position(|v| v == "a").unwrap();
         assert!(points.contains(&a), "{points:?} over {values:?}");
+    }
+
+    #[test]
+    fn restricted_points_need_no_parse() {
+        // The trailing `if (1) function g(){}` makes the program unparseable,
+        // but the `;` after `return` is still reported, and only that one.
+        let tokens = tokenize("function f(){return\na} if (1) function g(){}");
+        assert!(asi_insertion_points(tokens.clone(), EsVersion::Es2025).is_err());
+        let values: Vec<String> = tokens.iter().map(|t| t.value.clone()).collect();
+        let a = values.iter().position(|v| v == "a").unwrap();
+        assert_eq!(restricted_insertion_points(tokens), vec![a]);
+        // No restricted keyword, no insertion.
+        assert!(restricted_insertion_points(tokenize("a()\nb()")).is_empty());
     }
 
     #[test]

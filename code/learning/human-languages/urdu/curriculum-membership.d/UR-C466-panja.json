@@ -1,0 +1,11 @@
+{
+  "id": "UR-C466-panja",
+  "pathSegment": "UR-PATH-466-LIMB466",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-466-LIMB466",
+      "order": 4
+    }
+  ]
+}

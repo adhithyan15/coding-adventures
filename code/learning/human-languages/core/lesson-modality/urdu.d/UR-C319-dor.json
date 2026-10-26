@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C319-dor",
+    "language": "urdu",
+    "chapter": 319,
+    "sequence": 19210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c7faa214a8e151c"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C516-naqqashi",
+  "pathSegment": "UR-PATH-516-KHATTATI516",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-516-KHATTATI516",
+      "order": 1
+    }
+  ]
+}

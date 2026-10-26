@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-307-JHAGRA307",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell who hit whom in a fight.",
+  "prerequisites": []
+}

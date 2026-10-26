@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:8d21c09bac9bb2d1",
+  "lessonIds": [
+    "UR-C336-sabit-karna",
+    "UR-C336-pukhta",
+    "UR-C336-ilzam",
+    "UR-C336-dastavez",
+    "UR-C336-khara"
+  ],
+  "tex": "urdu/book/chapters/ch336-proof.tex"
+}

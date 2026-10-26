@@ -1,0 +1,19 @@
+{
+  "chapter": 377,
+  "title": "Better and Worse",
+  "label": "ch:ur-better-and-worse",
+  "canDo": "I can say whether things will get better or worse.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C377-sudharna-improve",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can say whether things will get better or worse.",
+    "assesses": [
+      "UR-LEX-C377-BADTAR377-03",
+      "UR-LEX-C377-BADTAR377-04",
+      "UR-LEX-C377-BADTAR377-05"
+    ]
+  }
+}

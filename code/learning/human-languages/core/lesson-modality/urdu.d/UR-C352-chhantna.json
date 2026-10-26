@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C352-chhantna",
+    "language": "urdu",
+    "chapter": 352,
+    "sequence": 21110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3969c1156c91f596"
+  },
+  "findings": []
+}

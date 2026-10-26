@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C446-tashvish",
+    "language": "urdu",
+    "chapter": 446,
+    "sequence": 26310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:def806b9be53d2a1"
+  },
+  "findings": []
+}

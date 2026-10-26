@@ -1,0 +1,11 @@
+{
+  "id": "UR-C309-bhirna",
+  "pathSegment": "UR-PATH-309-HAMLA309",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-309-HAMLA309",
+      "order": 4
+    }
+  ]
+}

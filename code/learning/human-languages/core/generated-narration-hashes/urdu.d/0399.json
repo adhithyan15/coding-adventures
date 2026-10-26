@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:e8be91eb7055406d",
+  "lessonIds": [
+    "UR-C399-hifazat",
+    "UR-C399-talashi",
+    "UR-C399-kastam",
+    "UR-C399-mamnu",
+    "UR-C399-charhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch399.txt",
+  "json": "urdu/narration/ch399.json",
+  "textHash": "fnv1a64:3f520ffbc4c04feb",
+  "jsonHash": "fnv1a64:d53611e2c2c84807",
+  "findings": []
+}

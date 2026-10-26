@@ -1,0 +1,19 @@
+{
+  "chapter": 452,
+  "title": "Pride and Showing Off",
+  "label": "ch:ur-pride-and-showing-off",
+  "canDo": "I can say that someone is proud or showing off.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C452-takabbur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can say that someone is proud or showing off.",
+    "assesses": [
+      "UR-LEX-C452-PRIDE452-03",
+      "UR-LEX-C452-PRIDE452-04",
+      "UR-LEX-C452-PRIDE452-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 321,
+  "title": "At the Fair",
+  "label": "ch:ur-at-the-fair",
+  "canDo": "I can describe the crowds and the sights at a fair.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "UR-C321-tamasha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can describe the crowds and the sights at a fair.",
+    "assesses": [
+      "UR-LEX-C321-MELA321-03",
+      "UR-LEX-C321-MELA321-04",
+      "UR-LEX-C321-MELA321-05"
+    ]
+  }
+}

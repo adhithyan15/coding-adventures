@@ -1,0 +1,11 @@
+{
+  "id": "UR-C388-phatak",
+  "pathSegment": "UR-PATH-388-SIGNAL388",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-388-SIGNAL388",
+      "order": 2
+    }
+  ]
+}

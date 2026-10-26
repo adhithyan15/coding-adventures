@@ -1,0 +1,11 @@
+{
+  "id": "UR-C319-katna-cut-loose",
+  "pathSegment": "UR-PATH-319-BASANT319",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-319-BASANT319",
+      "order": 4
+    }
+  ]
+}

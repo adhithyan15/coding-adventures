@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 417,
+  "title": "Accounts and Cash",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:1e420dbd15bfcb2c",
+  "lessons": [
+    {
+      "id": "UR-C417-akaunt",
+      "sequence": 24580,
+      "title": "اکاؤنٹ (akāunṭ) — a bank account",
+      "headword": "اکاؤنٹ",
+      "romanization": "akāunṭ",
+      "gloss": "a bank account",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79bda0d253a50572",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a stink, then the Urdu for to spread (something) around."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اکاؤنٹ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اکاؤنٹ — akāunṭ — \"a bank account\"."
+            },
+            {
+              "kind": "speech",
+              "text": "میرا اکاؤنٹ اس بینک میں ہے۔ merā akāunṭ is baink meṅ hai. My account is with this bank."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اکاؤنٹ (akāunṭ) is borrowed from English account."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akāunṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akāunṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akāunṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akāunṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā akāunṭ is baink meṅ hai. — My account is with this bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā akāunṭ is baink meṅ hai.* — My account is with this bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a stink, then the Urdu for to spread (something) around, then say akāunṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a stink, then the Urdu for to spread (something) around, then say *akāunṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اکاؤنٹ (akāunṭ) mean? (\"A bank account\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C417-raqam",
+      "sequence": 24590,
+      "title": "رقم (raqam) — a sum of money; an amount",
+      "headword": "رقم",
+      "romanization": "raqam",
+      "gloss": "a sum of money; an amount",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:405fe02cf618bd4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for to spread (something) around, then the Urdu for a bank account."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رقم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رقم — raqam — \"a sum of money; an amount\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اکاؤنٹ میں رقم کم ہے۔ akāunṭ meṅ raqam kam hai. There isn't much money in the account."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رقم (raqam) is usually traced, through Persian, to Arabic raqam, \"a figure, a written mark\"; in Urdu it is a sum of money."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raqam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raqam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raqam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raqam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akāunṭ meṅ raqam kam hai. — There isn't much money in the account.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akāunṭ meṅ raqam kam hai.* — There isn't much money in the account.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for to spread (something) around, then the Urdu for a bank account, then say raqam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for to spread (something) around, then the Urdu for a bank account, then say *raqam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رقم (raqam) mean? (\"A sum of money; an amount\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C417-naqd",
+      "sequence": 24600,
+      "title": "نقد (naqd) — cash",
+      "headword": "نقد",
+      "romanization": "naqd",
+      "gloss": "cash",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2fcb9030f5a16e13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a bank account, then the Urdu for a sum of money."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نقد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نقد — naqd — \"cash\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دکاندار نقد پیسے مانگتا ہے۔ dukāndār naqd paise māṅgtā hai. The shopkeeper wants cash."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نقد (naqd) is usually traced, through Persian, to Arabic naqd, \"ready money\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naqd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naqd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naqd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naqd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukāndār naqd paise māṅgtā hai. — The shopkeeper wants cash.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukāndār naqd paise māṅgtā hai.* — The shopkeeper wants cash.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a bank account, then the Urdu for a sum of money, then say naqd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a bank account, then the Urdu for a sum of money, then say *naqd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نقد (naqd) mean? (\"Cash\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C417-chek",
+      "sequence": 24610,
+      "title": "چیک (chek) — a cheque",
+      "headword": "چیک",
+      "romanization": "chek",
+      "gloss": "a cheque",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7eab1f5421439a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a sum of money, then the Urdu for cash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: چیک",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چیک — chek — \"a cheque\"."
+            },
+            {
+              "kind": "speech",
+              "text": "میں نے کرایے کے لیے چیک دیا۔ maiṅ ne kirāye ke liye chek diyā. I paid the rent by cheque."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چیک (chek) is borrowed from English cheque."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chek",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chek*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chek, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chek*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṅ ne kirāye ke liye chek diyā. — I paid the rent by cheque.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṅ ne kirāye ke liye chek diyā.* — I paid the rent by cheque.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a sum of money, then the Urdu for cash, then say chek again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a sum of money, then the Urdu for cash, then say *chek* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does چیک (chek) mean? (\"A cheque\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C417-nikalvana",
+      "sequence": 24620,
+      "title": "نکلوانا (nikalvānā) — to withdraw (money); to have (something) taken out",
+      "headword": "نکلوانا",
+      "romanization": "nikalvānā",
+      "gloss": "to withdraw (money); to have (something) taken out",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e838dc895c670b04",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for cash, then the Urdu for a cheque."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نکلوانا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نکلوانا — nikalvānā — \"to withdraw (money); to have (something) taken out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سارا نے بینک سے پیسے نکلوائے۔ sārā ne baink se paise nikalvāe. Sara took some money out of the bank."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with نے (he or she …): اس نے رقم نکلوائی, us ne raqam nikalvāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نکلوانا (nikalvānā) is built on نکلنا, \"to come out\", with the ending -vā- for getting someone else to do it: you have the bank take your money out. نکلنا comes from niṣkalati, a form CDIAL reconstructs (CDIAL 7478)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikalvānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikalvānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikalvānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikalvānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārā ne baink se paise nikalvāe. — Sara took some money out of the bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārā ne baink se paise nikalvāe.* — Sara took some money out of the bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for cash, then the Urdu for a cheque, then say nikalvānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for cash, then the Urdu for a cheque, then say *nikalvānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نکلوانا (nikalvānā) mean? (\"To withdraw (money); to have (something) taken out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R417-review-410-417",
+      "sequence": 24630,
+      "title": "Looking back: from Landmarks to Accounts and Cash",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Landmarks to Accounts and Cash",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2afef931bbef74fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Urdu for a building and a spot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a building, a spot, a signboard, a pole, to show",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a building, a spot, a signboard, a pole, to show]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a slope, to roll (down), a veranda, a basement, beside",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a slope, to roll (down), a veranda, a basement, beside]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a small town, a population, an inhabitant, the countryside, next door",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a small town, a population, an inhabitant, the countryside, next door]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a large house, a hut, a compound, a thatched roof, to found (a town)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a large house, a hut, a compound, a thatched roof, to found (a town)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a guard, stray, to bark, to growl, to chase off",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a guard, stray, to bark, to growl, to chase off]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a roadside eatery, a handcart, a betel leaf, a flavour, to serve (food)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a roadside eatery, a handcart, a betel leaf, a flavour, to serve (food)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rubbish, a drain, a sewer, a stink, to spread (something) around",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: rubbish, a drain, a sewer, a stink, to spread (something) around]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bank account, a sum of money, cash, a cheque, to withdraw (money)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bank account, a sum of money, cash, a cheque, to withdraw (money)]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A building? (عمارت, imārat.) A spot? (مقام, maqām.) A signboard? (بورڈ, borḍ.) A pole? (کھمبا, khambā.) To show? (دکھانا, dikhānā.) A slope? (ڈھلان, ḍhalān.) To roll (down)? (لڑھکنا, luṛhaknā.) A veranda? (برآمدہ, barāmadā.) A basement? (تہہ خانہ, tah khānā.) Beside? (بغل, baghal.) A small town? (قصبہ, qasbā.) A population? (آبادی, ābādī.) An inhabitant? (باشندہ, bāshindā.) The countryside? (دیہات, dehāt.) Next door? (پڑوس, paṛos.) A large house? (کوٹھی, koṭhī.) A hut? (جھونپڑی, jhoṅpṛī.) A compound? (احاطہ, ahātā.) A thatched roof? (چھپر, chhappar.) To found (a town)? (بسانا, basānā.) A guard? (گارڈ, gārḍ.) Stray? (آوارہ, āvārā.) To bark? (بھونکنا, bhauṅknā.) To growl? (غرانا, ghurrānā.) To chase off? (بھگانا, bhagānā.) A roadside eatery? (ڈھابا, ḍhābā.) A handcart? (ٹھیلا, ṭhelā.) A betel leaf? (پان, pān.) A flavour? (ذائقہ, zāiqā.) To serve (food)? (پروسنا, parosnā.) Rubbish? (کوڑا, kūṛā.) A drain? (نالی, nālī.) A sewer? (گٹر, gaṭar.) A stink? (بدبو, badbū.) To spread (something) around? (پھیلانا, phailānā.) A bank account? (اکاؤنٹ, akāunṭ.) A sum of money? (رقم, raqam.) Cash? (نقد, naqd.) A cheque? (چیک, chek.) To withdraw (money)? (نکلوانا, nikalvānā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

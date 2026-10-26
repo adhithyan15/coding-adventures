@@ -1,0 +1,19 @@
+{
+  "chapter": 491,
+  "title": "Falling Out and Making Up",
+  "label": "ch:ur-falling-out-and-making-up",
+  "canDo": "I can say how family members fell out and made up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C491-maf-karna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can say how family members fell out and made up.",
+    "assesses": [
+      "UR-LEX-C491-MENDING491-03",
+      "UR-LEX-C491-MENDING491-04",
+      "UR-LEX-C491-MENDING491-05"
+    ]
+  }
+}

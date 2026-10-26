@@ -2387,6 +2387,13 @@ fn lower_styled_box(node: &LayoutNode, part: &str, ctx: &EmitCtx) -> StyledBox {
         rect_lines.push(format!("implicitWidth: {w}"));
         rect_lines.push(format!("Layout.preferredWidth: {w}"));
     }
+    // A preferred width alone may shrink under RowLayout pressure. Preserve
+    // fixed non-shrink intent; table threading and state geometry take priority.
+    if threaded_width.is_none() && matches!(node.tag.as_str(), "Row" | "Column" | "Box") {
+        if let Some(width) = static_delegate_min_width(base, &state_layers) {
+            rect_lines.push(format!("Layout.minimumWidth: {width}"));
+        }
+    }
     if let Some(max_width) = style_prop(base, "max-width").and_then(qml_px_or_none) {
         rect_lines.push(format!("Layout.maximumWidth: {max_width}"));
     }
@@ -2537,6 +2544,9 @@ fn qml_layout_container_lines_with_states(
     state_layers: &[StateLayer<'_>],
 ) -> Vec<String> {
     let mut lines = qml_layout_size_lines_with_states(props, state_layers);
+    if let Some(width) = static_delegate_min_width(props, state_layers) {
+        lines.push(format!("Layout.minimumWidth: {width}"));
+    }
     if let Some(gap) = style_prop(props, "gap").and_then(qml_px_or_none) {
         lines.push(format!("spacing: {gap}"));
     }
@@ -3705,6 +3715,9 @@ fn emit_styled_layout_container_qml(
     }
     for line in qml_layout_size_lines_with_states(props, &state_layers) {
         writeln!(out, "{inner_pad}{line}").unwrap();
+    }
+    if let Some(width) = static_delegate_min_width(props, &state_layers) {
+        writeln!(out, "{inner_pad}Layout.minimumWidth: {width}").unwrap();
     }
     let (w_src, h_src) = match &content_id {
         Some(id) => (format!("{id}.x + {id}.width"), format!("{id}.y + {id}.height")),
@@ -8862,7 +8875,7 @@ fn emit_table_section_rows(
 /// Validate a static floor before recording it as supported geometry.
 fn static_delegate_min_width(props: &[StyleProp], layers: &[StateLayer<'_>]) -> Option<String> {
     // Do not record flex-shrink as generally supported: this only prevents
-    // the extra For wrapper from shrinking a fixed-width container.
+    // a fixed-width container (or its extra For wrapper) from shrinking.
     let shrink = props.iter().find(|p| p.name == "flex-shrink")?.value.trim().trim_matches('"');
     let conflicts = |p: &StyleProp| matches!(p.name.as_str(),
         "min-width" | "max-width" | "flex" | "flex-basis");
@@ -18252,6 +18265,24 @@ mod tests {
             if property != "flex-shrink" {
                 assert_eq!(static_delegate_min_width(&[sp("width", "260"), sp("flex-shrink", "0"), sp(property, "100")], &[]), None);
             }
+        }
+    }
+
+    #[test]
+    fn ordinary_container_preserves_static_non_shrinking_width() {
+        for tag in ["Column", "Row", "Box"] {
+            let layout = LayoutDef { component_name: "Rail".into(), root: LayoutNode {
+                tag: tag.into(), part_name: Some("rail".into()), props: vec![], children: vec![],
+            }};
+            let style = StyleDef { component_name: "Rail".into(), parts: vec![PartStyle {
+                name: "rail".into(), base: vec![sp("width", "236"), sp("flex-shrink", "0"), sp("background", "#ffffff")],
+                transitions: vec![], states: vec![],
+            }] };
+            let model = styled_cell_component("Rail");
+            let out = from_pipeline(&model, &layout, &style).unwrap().output;
+            assert!(out.contains("Layout.minimumWidth: 236"), "{tag}: {out}");
+            let dropped = dropped_style_properties(&model, &layout, &style);
+            assert!(dropped.iter().any(|drop| drop.name == "flex-shrink"));
         }
     }
 

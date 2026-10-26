@@ -1,0 +1,11 @@
+{
+  "id": "UR-C513-album",
+  "pathSegment": "UR-PATH-513-FURSAT513",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-513-FURSAT513",
+      "order": 4
+    }
+  ]
+}

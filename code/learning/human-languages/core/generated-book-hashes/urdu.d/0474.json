@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:f164d88489bb16a5",
+  "lessonIds": [
+    "UR-C474-jarasim",
+    "UR-C474-mutaddi",
+    "UR-C474-infekshan",
+    "UR-C474-khasra",
+    "UR-C474-chechak"
+  ],
+  "tex": "urdu/book/chapters/ch474-illnesses-that-spread.tex"
+}

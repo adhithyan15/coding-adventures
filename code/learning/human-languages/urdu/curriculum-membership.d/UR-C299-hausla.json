@@ -1,0 +1,11 @@
+{
+  "id": "UR-C299-hausla",
+  "pathSegment": "UR-PATH-299-IMDAD299",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-299-IMDAD299",
+      "order": 3
+    }
+  ]
+}

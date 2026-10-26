@@ -1,0 +1,11 @@
+{
+  "id": "UR-C454-tabiat",
+  "pathSegment": "UR-PATH-454-CHARACTER454",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-454-CHARACTER454",
+      "order": 1
+    }
+  ]
+}

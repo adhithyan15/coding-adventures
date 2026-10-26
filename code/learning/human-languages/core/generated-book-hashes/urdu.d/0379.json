@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:d6ff65d58e5d0279",
+  "lessonIds": [
+    "UR-C379-mehnat",
+    "UR-C379-josh",
+    "UR-C379-lagan",
+    "UR-C379-musalsal",
+    "UR-C379-dohrana"
+  ],
+  "tex": "urdu/book/chapters/ch379-effort.tex"
+}

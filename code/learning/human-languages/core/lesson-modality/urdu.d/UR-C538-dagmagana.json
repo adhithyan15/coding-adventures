@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C538-dagmagana",
+    "language": "urdu",
+    "chapter": 538,
+    "sequence": 31280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e60a75cc06ba37d"
+  },
+  "findings": []
+}

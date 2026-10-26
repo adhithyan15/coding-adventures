@@ -1,0 +1,11 @@
+{
+  "id": "UR-C496-surakh",
+  "pathSegment": "UR-PATH-496-VARKSHAP496",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-496-VARKSHAP496",
+      "order": 2
+    }
+  ]
+}

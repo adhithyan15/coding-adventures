@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:0fb5752ed0de4ad9",
+  "lessonIds": [
+    "UR-C399-hifazat",
+    "UR-C399-talashi",
+    "UR-C399-kastam",
+    "UR-C399-mamnu",
+    "UR-C399-charhana"
+  ],
+  "tex": "urdu/book/chapters/ch399-security-checks.tex"
+}

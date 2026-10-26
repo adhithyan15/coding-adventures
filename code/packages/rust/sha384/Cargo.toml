@@ -1,0 +1,8 @@
+[package]
+name = "coding_adventures_sha384"
+version = "0.1.0"
+edition = "2021"
+description = "Fixed-memory SHA-384 (FIPS 180-4) implemented from scratch"
+
+[dependencies]
+coding_adventures_zeroize = { path = "../zeroize" }

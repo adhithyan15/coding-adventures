@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:f767707d86eb666f",
+  "lessonIds": [
+    "UR-C313-angrez",
+    "UR-C313-tahrik",
+    "UR-C313-jaddojahd",
+    "UR-C313-qurbani",
+    "UR-C313-saunpna"
+  ],
+  "tex": "urdu/book/chapters/ch313-a-movement-for-freedom.tex"
+}

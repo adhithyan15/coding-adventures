@@ -1,0 +1,11 @@
+{
+  "id": "UR-C535-manhus",
+  "pathSegment": "UR-PATH-535-SHAGUN535",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-535-SHAGUN535",
+      "order": 1
+    }
+  ]
+}

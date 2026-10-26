@@ -1,0 +1,11 @@
+{
+  "id": "UR-C412-bashinda",
+  "pathSegment": "UR-PATH-412-QASBA412",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-412-QASBA412",
+      "order": 2
+    }
+  ]
+}

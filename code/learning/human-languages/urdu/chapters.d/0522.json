@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "Quick on Your Feet",
+  "label": "ch:ur-quick-on-your-feet",
+  "canDo": "I can describe quick movement in a game.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C522-trafi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can describe quick movement in a game.",
+    "assesses": [
+      "UR-LEX-C522-PHURTI522-03",
+      "UR-LEX-C522-PHURTI522-04",
+      "UR-LEX-C522-PHURTI522-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 527,
+  "title": "Busy or Free",
+  "label": "ch:ur-busy-or-free",
+  "canDo": "I can say what I would do if I were free.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "UR-C527-ubna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can say what I would do if I were free.",
+    "assesses": [
+      "UR-LEX-C527-MASRUF527-03",
+      "UR-LEX-C527-MASRUF527-04",
+      "UR-LEX-C527-MASRUF527-05"
+    ]
+  }
+}

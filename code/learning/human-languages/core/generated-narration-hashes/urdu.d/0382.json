@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:f52941f0ab49ac8f",
+  "lessonIds": [
+    "UR-C382-inam",
+    "UR-C382-ezaz",
+    "UR-C382-tamgha",
+    "UR-C382-mustahiq",
+    "UR-C382-sanvarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch382.txt",
+  "json": "urdu/narration/ch382.json",
+  "textHash": "fnv1a64:a7297b12eff52e1c",
+  "jsonHash": "fnv1a64:4e60eeb6efe8fef1",
+  "findings": []
+}

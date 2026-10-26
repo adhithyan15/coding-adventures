@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C320-patakha",
+    "language": "urdu",
+    "chapter": 320,
+    "sequence": 19260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d02765320d722ed2"
+  },
+  "findings": []
+}

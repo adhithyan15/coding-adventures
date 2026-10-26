@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "In the Garden",
+  "label": "ch:ur-in-the-garden",
+  "canDo": "I can talk about looking after a garden.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C512-ukharna-uproot",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can talk about looking after a garden.",
+    "assesses": [
+      "UR-LEX-C512-KYARI512-03",
+      "UR-LEX-C512-KYARI512-04",
+      "UR-LEX-C512-KYARI512-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "Mercy and Loyalty",
+  "label": "ch:ur-mercy-and-loyalty",
+  "canDo": "I can talk about mercy, loyalty and wrongdoing.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C360-thamna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can talk about mercy, loyalty and wrongdoing.",
+    "assesses": [
+      "UR-LEX-C360-RAHM360-03",
+      "UR-LEX-C360-RAHM360-04",
+      "UR-LEX-C360-RAHM360-05"
+    ]
+  }
+}

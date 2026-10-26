@@ -1,0 +1,11 @@
+{
+  "id": "UR-C340-mulzim",
+  "pathSegment": "UR-PATH-340-FAISLA340",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-340-FAISLA340",
+      "order": 2
+    }
+  ]
+}

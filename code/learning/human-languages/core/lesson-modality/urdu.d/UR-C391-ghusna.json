@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C391-ghusna",
+    "language": "urdu",
+    "chapter": 391,
+    "sequence": 23290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9773f81fab24077c"
+  },
+  "findings": []
+}

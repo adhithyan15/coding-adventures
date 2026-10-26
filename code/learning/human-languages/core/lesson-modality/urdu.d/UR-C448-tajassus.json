@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C448-tajassus",
+    "language": "urdu",
+    "chapter": 448,
+    "sequence": 26430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b249bae672042c38"
+  },
+  "findings": []
+}

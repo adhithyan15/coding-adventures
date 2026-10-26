@@ -1,0 +1,11 @@
+[package]
+name = "motorola6809-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "DFF-backed educational Motorola MC6809 gate-level simulator"
+license = "MIT"
+
+[dependencies]
+arithmetic = { path = "../arithmetic" }
+logic-gates = { path = "../logic-gates" }
+motorola6809-simulator = { path = "../motorola6809-simulator" }

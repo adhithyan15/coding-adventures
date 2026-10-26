@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C321-tamasha",
+    "language": "urdu",
+    "chapter": 321,
+    "sequence": 19340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c097fb2c2d265aa4"
+  },
+  "findings": []
+}

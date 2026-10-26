@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:26c436044da68630",
+  "lessonIds": [
+    "UR-C397-fasla",
+    "UR-C397-kilomitar",
+    "UR-C397-darra",
+    "UR-C397-morna",
+    "UR-C397-ghumana"
+  ],
+  "tex": "urdu/book/chapters/ch397-distances-and-passes.tex"
+}

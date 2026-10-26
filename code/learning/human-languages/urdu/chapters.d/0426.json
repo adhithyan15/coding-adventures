@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "Pure and Genuine",
+  "label": "ch:ur-pure-and-genuine",
+  "canDo": "I can ask whether goods are pure and genuine.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "UR-C426-chamkana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can ask whether goods are pure and genuine.",
+    "assesses": [
+      "UR-LEX-C426-KHALIS426-03",
+      "UR-LEX-C426-KHALIS426-04",
+      "UR-LEX-C426-KHALIS426-05"
+    ]
+  }
+}

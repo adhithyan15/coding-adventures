@@ -1,0 +1,31 @@
+# Changelog
+
+## Unreleased
+
+- NN46 extends required interchange to native Ruby: twenty directed pairs,
+  five actual native lanes, zero bindings, full baselines/returns through 3002.
+
+- Extend the shared corpus to 55 cases (3 accept, 52 reject); pin and execute
+  NN43's six null weight/bias cases in single, mixed and later-layer positions.
+
+- Extend required native checkpoint exchange to Go: all twelve directed pairs,
+  full model receipts at steps 3000/3001/3002, four native lanes and no bindings.
+
+- Execute NN40's shared 49-case checkpoint acceptance/rejection corpus through
+  the public native loader, including valid controls and save/reload checks.
+
+- Extend native checkpoint exchange to Rust alongside Python, checking all
+  six directed pairs and full model/loss/prediction state at steps 3001/3002.
+
+- Reuse native numerical validation and checkpoint exchange inside the required
+  repository CI gate, rejecting selected jobs without successful evidence.
+
+## 0.1.0 — 2026-10-25
+
+- Add native configurable dense networks above the existing matrix package.
+- Add deterministic initialization, linear/sigmoid/tanh/ReLU activations,
+  full-network gradients, and exact-count SGD training.
+- Add copied closed checkpoints shared with Python and atomic update validation.
+- Add paper-oracle, finite-difference, seeded XOR, malformed-input, ownership,
+  and checkpoint resume tests with enforced coverage thresholds.
+- Add an executable JSON example and cross-language checkpoint exchange gate.

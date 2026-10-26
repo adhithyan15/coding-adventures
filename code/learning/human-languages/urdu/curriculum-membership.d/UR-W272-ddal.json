@@ -1,0 +1,11 @@
+{
+  "id": "UR-W272-ddal",
+  "pathSegment": "UR-PATH-272-FEELING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-272-FEELING",
+      "order": 1
+    }
+  ]
+}

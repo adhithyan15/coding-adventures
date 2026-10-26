@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C526-vaqfa",
+    "language": "urdu",
+    "chapter": 526,
+    "sequence": 30670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3d4b93cf0c98579"
+  },
+  "findings": []
+}
