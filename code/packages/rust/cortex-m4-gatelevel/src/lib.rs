@@ -1277,4 +1277,40 @@ mod allocation_tests {
         );
         assert_eq!(machine.get_state(), before);
     }
+
+    #[test]
+    fn run_allocation_failure_after_one_committed_step_restores_entry_state() {
+        let mut machine = CortexM4GateLevel::new();
+        machine.load(&image(&[0x2001, 0xbe00]), 0x100).unwrap();
+        machine.set_fpu_enabled(true);
+        machine.write_s_register(31, 0x7fc0_1234).unwrap();
+        let before = machine.get_state();
+
+        // Each inherited step clones its complete candidate twice. The third
+        // clone is therefore reached only after MOVS has committed and the
+        // second instruction has begun settling.
+        FAIL_STATE_CLONE_ON_CALL.with(|fail| fail.set(3));
+        assert_eq!(
+            machine.run(2),
+            Err(CortexM4Error::Core(CortexM3Error::AllocationFailed))
+        );
+        assert_eq!(machine.get_state(), before);
+    }
+
+    #[test]
+    fn execute_allocation_failure_after_one_committed_step_restores_call_entry_state() {
+        let mut machine = CortexM4GateLevel::new();
+        machine.load(&image(&[0xbe00]), 0x180).unwrap();
+        machine.set_fpu_enabled(true);
+        machine.write_s_register(31, 0x7fc0_5678).unwrap();
+        machine.write_register(4, 0xfeed_beef).unwrap();
+        let before = machine.get_state();
+
+        FAIL_STATE_CLONE_ON_CALL.with(|fail| fail.set(3));
+        assert_eq!(
+            machine.execute(&image(&[0x2001, 0xbe00]), 0x100, 2),
+            Err(CortexM4Error::Core(CortexM3Error::AllocationFailed))
+        );
+        assert_eq!(machine.get_state(), before);
+    }
 }

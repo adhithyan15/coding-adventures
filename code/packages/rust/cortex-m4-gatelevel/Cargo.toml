@@ -18,3 +18,4 @@ cortex-m3-gatelevel = { path = "../cortex-m3-gatelevel" }
 cortex-m4-simulator = { path = "../cortex-m4-simulator" }
 quote = "1.0.47"
 syn = { version = "2.0.119", features = ["full", "visit"] }
+tempfile = "3.23.0"

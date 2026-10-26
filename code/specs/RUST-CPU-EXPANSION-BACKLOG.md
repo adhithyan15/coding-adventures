@@ -71,12 +71,13 @@ boundary explicitly classifies all 20 inherited Cortex-M3 instruction
 families, differentially witnesses inherited integer, privilege, IT, memory,
 exclusive, branch, power, and lifecycle state, and covers the bounded DSP and
 optional FPv4-SP extension. All 30 release tests, strict Clippy/rustdoc, and
-92.81% line coverage (994/1071) are green. Its educational gate companion is
-now has a locally complete independent 526,013-DFF companion with every
-bounded DSP/FP family differential, exact production source locks, typed
-atomic lifecycle checks, and 90.86% line coverage (1,590/1,750); independent
-implementation review remains required. Cortex-M7 and Cortex-M23 are merged,
-while Cortex-M33 is already in review.
+92.81% line coverage (994/1071) are green. Its educational gate companion now
+has a locally complete independent 526,013-DFF companion with every bounded
+DSP/FP family differential, exact inherited full-trace/full-state matrices,
+post-progress `run`/`execute` allocation rollback, seven compiler-checked
+complete hostile crates, exact production source locks, and 91.66% line
+coverage (1,627/1,775); independent implementation review remains required.
+Cortex-M7 and Cortex-M23 are merged, while Cortex-M33 is already in review.
 
 | Order | Target | Public basis | Planned boundary |
 |---:|---|---|---|

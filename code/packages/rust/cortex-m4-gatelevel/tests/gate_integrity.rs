@@ -1,9 +1,12 @@
+use std::fs;
+use std::path::{Path, PathBuf};
+use std::process::Command;
 use syn::{ImplItem, Item, ItemStruct};
 
 const LIB: &str = include_str!("../src/lib.rs");
 const GATES: &str = include_str!("../src/gates.rs");
 const FLOATING: &str = include_str!("../src/floating.rs");
-const LIB_LOCK: u64 = 0xb3e2_6f39_89a4_98f7;
+const LIB_LOCK: u64 = 0x029d_190e_4ced_6d01;
 const GATES_LOCK: u64 = 0x2247_5d85_4726_a83f;
 const FLOATING_LOCK: u64 = 0x399c_d0ef_65f1_face;
 
@@ -18,6 +21,63 @@ fn fnv1a64(source: &str) -> u64 {
 
 fn parse(source: &str) -> syn::File {
     syn::parse_file(source).expect("the complete hostile fixture must remain valid Rust syntax")
+}
+
+fn copy_sources(destination: &Path) {
+    fs::create_dir_all(destination).unwrap();
+    let source = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("src");
+    for entry in fs::read_dir(source).unwrap() {
+        let entry = entry.unwrap();
+        fs::copy(entry.path(), destination.join(entry.file_name())).unwrap();
+    }
+}
+
+fn fixture_manifest(include_oracle: bool) -> String {
+    let rust = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .to_owned();
+    let oracle = if include_oracle {
+        format!(
+            "functional-oracle = {{ package = \"cortex-m4-simulator\", path = {:?} }}\n",
+            rust.join("cortex-m4-simulator")
+        )
+    } else {
+        String::new()
+    };
+    format!(
+        "[package]\nname = \"hostile-cortex-m4-fixture\"\nversion = \"0.0.0\"\nedition = \"2021\"\n\n[dependencies]\narithmetic = {{ path = {:?} }}\nlogic-gates = {{ path = {:?} }}\ncortex-m3-gatelevel = {{ path = {:?} }}\n{oracle}",
+        rust.join("arithmetic"),
+        rust.join("logic-gates"),
+        rust.join("cortex-m3-gatelevel"),
+    )
+}
+
+fn compile_complete_fixture(
+    root: &Path,
+    target: &Path,
+    lib: &str,
+    gates: &str,
+    floating: &str,
+    include_oracle: bool,
+) {
+    let source = root.join("src");
+    copy_sources(&source);
+    fs::write(source.join("lib.rs"), lib).unwrap();
+    fs::write(source.join("gates.rs"), gates).unwrap();
+    fs::write(source.join("floating.rs"), floating).unwrap();
+    fs::write(root.join("Cargo.toml"), fixture_manifest(include_oracle)).unwrap();
+    let output = Command::new("cargo")
+        .args(["check", "--lib", "--offline"])
+        .current_dir(root)
+        .env("CARGO_TARGET_DIR", target)
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "hostile full-crate fixture must compile before rejection:\n{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
 }
 
 fn count_function(source: &str, name: &str) -> usize {
@@ -127,24 +187,36 @@ fn approved_production_sources_are_exact_and_independent() {
 
 #[test]
 fn compile_valid_hostile_full_crate_mutations_are_rejected() {
+    let duplicate_executor = LIB.replace(
+        "fn classify_extension(",
+        "fn alternate_inherited_executor() -> CortexM3GateLevel { CortexM3GateLevel::new() }\nfn classify_extension(",
+    );
+    let mirror = LIB
+        .replace(
+            "fpscr: [u8; 32],",
+            "fpscr: [u8; 32],\n    post_commit_fpscr: u32,",
+        )
+        .replace(
+            "fpscr: [0; 32],",
+            "fpscr: [0; 32],\n            post_commit_fpscr: 0,",
+        );
     let hostile = [
         (
             LIB.replace(
                 "use cortex_m3_gatelevel::{",
-                "use cortex_m4_simulator as functional_oracle;\nuse cortex_m3_gatelevel::{",
+                "use functional_oracle::CortexM4Simulator as HostOracle;\nconst _HOST_ORACLE_ALIAS: Option<HostOracle> = None;\nuse cortex_m3_gatelevel::{",
             ),
             GATES.to_owned(),
             FLOATING.to_owned(),
             "oracle routing",
+            true,
         ),
         (
-            LIB.replace(
-                "core: CortexM3GateLevel,",
-                "core: CortexM3GateLevel,\n    duplicate_core: CortexM3GateLevel,",
-            ),
+            duplicate_executor,
             GATES.to_owned(),
             FLOATING.to_owned(),
             "duplicate inherited executor",
+            false,
         ),
         (
             LIB.replace(
@@ -154,15 +226,17 @@ fn compile_valid_hostile_full_crate_mutations_are_rejected() {
             GATES.to_owned(),
             FLOATING.to_owned(),
             "raw host decode",
+            false,
         ),
         (
             LIB.replace(
                 "fn execute_saturating(",
-                "fn host_dsp_result(left: u32, right: u32) -> u32 { left.wrapping_add(right) }\nfn execute_saturating(",
+                "fn host_dsp_result_flag_predicate_write_enable(left: u32, right: u32) -> (u32, u8, bool, u8) { let result = left.wrapping_add(right); (result, u8::from(result < left), result == 0, u8::from(left != right)) }\nfn execute_saturating(",
             ),
             GATES.to_owned(),
             FLOATING.to_owned(),
             "host DSP authority",
+            false,
         ),
         (
             LIB.to_owned(),
@@ -172,15 +246,14 @@ fn compile_valid_hostile_full_crate_mutations_are_rejected() {
                 "fn host_float(value: u32) -> f32 { f32::from_bits(value) }\npub fn binary(",
             ),
             "host floating authority",
+            false,
         ),
         (
-            LIB.replace(
-                "fpscr: [u8; 32],",
-                "fpscr: [u8; 32],\n    post_commit_fpscr: u32,",
-            ),
+            mirror,
             GATES.to_owned(),
             FLOATING.to_owned(),
             "hidden post-commit mirror",
+            false,
         ),
         (
             LIB.replace(
@@ -190,13 +263,19 @@ fn compile_valid_hostile_full_crate_mutations_are_rejected() {
             GATES.to_owned(),
             FLOATING.to_owned(),
             "dead shadow helper",
+            false,
         ),
     ];
 
-    for (lib, gates, floating, label) in hostile {
+    let temporary = tempfile::tempdir().unwrap();
+    let target = temporary.path().join("target");
+    for (index, (lib, gates, floating, label, include_oracle)) in hostile.into_iter().enumerate() {
         parse(&lib);
         parse(&gates);
         parse(&floating);
+        let root = temporary.path().join(format!("fixture-{index}"));
+        fs::create_dir_all(&root).unwrap();
+        compile_complete_fixture(&root, &target, &lib, &gates, &floating, include_oracle);
         assert!(
             validate_production(&lib, &gates, &floating).is_err(),
             "hostile {label} mutation was accepted"

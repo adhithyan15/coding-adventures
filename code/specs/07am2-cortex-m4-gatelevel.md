@@ -109,11 +109,14 @@ The cell is complete only when it:
 
 The bounded package is implemented locally with the accepted Cortex-M3 gate
 machine as its sole inherited executor and an exact 526,013-DFF inventory.
-Twelve behavioral tests cover all inherited primary classifications, complete
-inherited/extension state preservation, every bounded DSP/FPU family, reserved
-neighbours, binary32 edge cases, and typed atomic lifecycle rollback. Two unit
-allocation seams prove candidate and final-snapshot failures roll back. Two
-full-source parsed-syntax tests exact-lock production and reject compile-valid
-hostile executor, oracle, raw-decode, host-DSP, host-float, mirror, and shadow
-mutations. The measured baseline is 90.86% line coverage (1,590/1,750); final
-strict checks and independent implementation review remain publication gates.
+Fifteen behavioral tests execute every inherited primary family and compare
+exact full traces/state for representative integer, privilege, IT, memory,
+exclusive, branch, power, and fault paths as well as every bounded DSP/FPU
+family, reserved neighbours, and binary32 edge cases. Four allocation-seam
+unit tests prove candidate and final-snapshot rollback plus `run` and `execute`
+rollback after one instruction has committed. Two structural tests exact-lock
+production and reject seven hostile executor, oracle, raw-decode, host-DSP,
+host-float, mirror, and shadow mutations only after each complete temporary
+crate passes `cargo check --lib`. The 21-test release suite measures 91.66%
+line coverage (1,627/1,775); final strict checks and independent implementation
+review remain publication gates.

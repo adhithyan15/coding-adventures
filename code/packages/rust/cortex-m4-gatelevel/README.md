@@ -33,10 +33,12 @@ assert_eq!(cpu.read_s_register(0)?, 3.75_f32.to_bits());
 # Ok::<(), cortex_m4_gatelevel::CortexM4Error>(())
 ```
 
-The release suite differentially checks exact traces and complete state for
-the inherited executor and every bounded DSP/FPU family, checks all inherited
-primary classifications and reserved extension neighbours, and proves typed
-atomic lifecycle rollback. Full-production source locks plus compile-valid
-hostile parsed-syntax fixtures reject oracle routing, duplicate executors, raw
-host decode, host DSP/float authority, hidden mirrors, and shadow helpers.
-The completion baseline is 90.86% combined Rust line coverage (1,590/1,750).
+The 21-test release suite differentially checks exact full traces and complete
+state for every inherited primary family; representative integer, privilege,
+IT, memory, exclusive, branch, power, and fault paths; and every bounded
+DSP/FPU family. It also proves typed atomic `run` and `execute` rollback after
+one instruction has committed. Exact production source locks plus seven
+hostile complete temporary crates reject oracle routing, duplicate executors,
+raw host decode, host DSP/float authority, hidden mirrors, and shadow helpers;
+every mutation must compile before rejection. The completion baseline is
+91.66% combined Rust line coverage (1,627/1,775).

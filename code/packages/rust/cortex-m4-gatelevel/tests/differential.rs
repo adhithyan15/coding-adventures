@@ -1,3 +1,4 @@
+use cortex_m3_gatelevel::encoding as m3_encoding;
 use cortex_m3_gatelevel::CortexM3State as GateM3State;
 use cortex_m4_gatelevel::{
     classify, encoding, CortexM3InstructionClass, CortexM4GateLevel, CortexM4State,
@@ -73,6 +74,90 @@ fn compare_step(gate: &mut CortexM4GateLevel, oracle: &mut CortexM4Simulator) {
     assert_eq!(state_to_oracle(&gate.get_state()), oracle.get_state());
 }
 
+fn seeded_core(state: &mut GateM3State) {
+    state.registers = [0; 13];
+    state.registers[0] = 0x8000_0001;
+    state.registers[1] = 0x201;
+    state.registers[2] = 4;
+    state.registers[3] = 0xffff_ff80;
+    state.registers[4] = 0x200;
+    state.msp = 0x400;
+    state.psp = 0x500;
+    state.lr = 0x105;
+    state.apsr = 0x3000_0000;
+    state.memory[0x200..0x208].copy_from_slice(&[0x80, 0xff, 0x34, 0x12, 7, 0, 0, 0]);
+}
+
+fn configure_inherited_pair(
+    words: &[u16],
+    configure: impl Fn(&mut GateM3State),
+) -> (CortexM4GateLevel, CortexM4Simulator) {
+    let (mut gate, mut oracle) = paired(words, true);
+    let mut gate_state = gate.get_state();
+    seeded_core(&mut gate_state.core);
+    configure(&mut gate_state.core);
+    gate_state.ge = 0b1010;
+    gate_state.s_registers[31] = 0x7fc0_1234;
+    gate_state.fpscr = 0x2000_0011;
+    let oracle_state = state_to_oracle(&gate_state);
+    gate.restore(gate_state).unwrap();
+    oracle.restore(oracle_state).unwrap();
+    (gate, oracle)
+}
+
+fn compare_inherited_transition(label: &str, words: &[u16], configure: impl Fn(&mut GateM3State)) {
+    let (mut gate, mut oracle) = configure_inherited_pair(words, configure);
+    match (gate.step(), oracle.step()) {
+        (Ok(actual), Ok(expected)) => {
+            assert_eq!(actual.pc_before, expected.pc_before, "{label}: pc before");
+            assert_eq!(actual.pc_after, expected.pc_after, "{label}: pc after");
+            assert_eq!(actual.raw, expected.raw, "{label}: raw");
+            assert_eq!(actual.width, expected.width, "{label}: width");
+            assert_eq!(actual.mnemonic, expected.mnemonic, "{label}: mnemonic");
+            assert_eq!(
+                state_to_oracle(&actual.state_before),
+                expected.state_before,
+                "{label}: complete state before"
+            );
+            assert_eq!(
+                state_to_oracle(&actual.state_after),
+                expected.state_after,
+                "{label}: complete state after"
+            );
+        }
+        (Err(actual), Err(expected)) => {
+            assert_eq!(
+                format!("{actual:?}"),
+                format!("{expected:?}"),
+                "{label}: typed error"
+            );
+        }
+        (actual, expected) => panic!("{label}: gate={actual:?}, oracle={expected:?}"),
+    }
+    assert_eq!(
+        state_to_oracle(&gate.get_state()),
+        oracle.get_state(),
+        "{label}: committed complete state"
+    );
+}
+
+fn compare_inherited_sequence(
+    label: &str,
+    words: &[u16],
+    steps: usize,
+    configure: impl Fn(&mut GateM3State),
+) {
+    let (mut gate, mut oracle) = configure_inherited_pair(words, configure);
+    for step in 0..steps {
+        compare_step(&mut gate, &mut oracle);
+        assert_eq!(
+            state_to_oracle(&gate.get_state()),
+            oracle.get_state(),
+            "{label}: complete state after step {step}"
+        );
+    }
+}
+
 #[test]
 fn topology_and_complete_reset_state_are_exact() {
     let mut gate = CortexM4GateLevel::new();
@@ -96,6 +181,82 @@ fn inherited_executor_matches_m3_backed_oracle() {
     compare_step(&mut gate, &mut oracle);
     compare_step(&mut gate, &mut oracle);
     assert!(gate.step().is_err());
+}
+
+#[test]
+fn inherited_primary_families_execute_with_exact_full_trace_and_state() {
+    let cases: Vec<(&str, Vec<u16>)> = vec![
+        ("shift-add-subtract", vec![0x0008]),
+        ("immediate", vec![0x2001]),
+        ("data-processing", vec![0x4008]),
+        ("special-data", vec![0x4408]),
+        ("literal-load", vec![0x4800]),
+        ("register-memory", vec![0x5020]),
+        ("immediate-memory", vec![0x6020]),
+        ("stack-memory", vec![0x9400]),
+        ("address-generation", vec![0xa000]),
+        ("miscellaneous", vec![0xb240]),
+        ("multiple-memory", vec![0xc011]),
+        ("conditional-branch", vec![0xd000]),
+        ("unconditional-branch", vec![0xe000]),
+        ("branch-link", m3_encoding::bl(0).to_vec()),
+        ("barrier", vec![0xf3bf, 0x8f5f]),
+        ("special-register", m3_encoding::mrs(0, 16).to_vec()),
+        ("thumb2-data", m3_encoding::movw(0, 0x1234).to_vec()),
+        ("thumb2-memory", vec![0xf8c4, 0x0004]),
+        ("exclusive", m3_encoding::ldrex(0, 4, 0).to_vec()),
+        ("table-branch", m3_encoding::tbb(4, 2).to_vec()),
+    ];
+    for (label, words) in cases {
+        compare_inherited_transition(label, &words, |_| {});
+    }
+}
+
+#[test]
+fn inherited_privilege_it_memory_exclusive_and_branch_sequences_are_exact() {
+    let mut privilege = Vec::new();
+    privilege.extend(m3_encoding::msr(0, 16));
+    privilege.extend(m3_encoding::mrs(1, 16));
+    compare_inherited_sequence("privilege", &privilege, 2, |_| {});
+
+    let it = [m3_encoding::it(0, 8), m3_encoding::movs(0, 9)];
+    for apsr in [0, 0x4000_0000] {
+        compare_inherited_sequence("it-execute-skip", &it, 2, |state| state.apsr = apsr);
+    }
+
+    let memory = [m3_encoding::str_imm(0, 4, 0), m3_encoding::ldr_imm(2, 4, 0)];
+    compare_inherited_sequence("memory-store-load", &memory, 2, |_| {});
+
+    let mut exclusive = Vec::new();
+    exclusive.extend(m3_encoding::ldrex(0, 4, 0));
+    exclusive.extend(m3_encoding::strex(1, 0, 4, 0));
+    compare_inherited_sequence("exclusive-success", &exclusive, 2, |_| {});
+
+    for apsr in [0, 0x4000_0000] {
+        compare_inherited_transition("conditional-branch-outcome", &[0xd000], |state| {
+            state.apsr = apsr;
+        });
+    }
+}
+
+#[test]
+fn inherited_power_signals_and_faults_match_with_extension_state_intact() {
+    for instruction in [0xbf20, 0xbf30] {
+        let (mut gate, mut oracle) = configure_inherited_pair(&[instruction], |_| {});
+        compare_step(&mut gate, &mut oracle);
+        if instruction == 0xbf20 {
+            gate.signal_event();
+            oracle.signal_event();
+        } else {
+            gate.signal_interrupt();
+            oracle.signal_interrupt();
+        }
+        assert_eq!(state_to_oracle(&gate.get_state()), oracle.get_state());
+    }
+
+    compare_inherited_transition("unknown-32", &[0xf000, 0], |_| {});
+    compare_inherited_transition("misaligned-data", &[m3_encoding::ldr_imm(0, 1, 0)], |_| {});
+    compare_inherited_transition("branch-outside-program", &[0x4708], |_| {});
 }
 
 #[test]
