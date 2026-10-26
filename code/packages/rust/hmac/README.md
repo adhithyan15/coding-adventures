@@ -2,11 +2,6 @@
 
 HMAC (Hash-based Message Authentication Code) — RFC 2104 / FIPS 198-1 — implemented from scratch in Rust.
 
-Tag verification delegates to the repository-owned `ct-compare` primitive.
-Equal-length tags are compared without a data-dependent early exit; tag length
-is public and mismatched lengths are rejected directly. The crate has no
-external executable production dependency.
-
 ## What Is HMAC?
 
 HMAC takes a secret key and a message and produces a fixed-size authentication tag proving both
