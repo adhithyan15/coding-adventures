@@ -647,11 +647,12 @@ fn memory_pc_cc_destinations_and_register_sources_follow_commit_order() {
 
 #[test]
 fn data_alignment_precedes_range_and_faults_roll_back_effects() {
-    for (class, address) in [
-        (InstructionClass::Lw, 0xffff),
-        (InstructionClass::Lh, 0xffff),
-        (InstructionClass::Sw, 0x1_0000),
-        (InstructionClass::Sb, 0x1_0000),
+    for (class, address, request_value) in [
+        (InstructionClass::Lw, 0xffff, 0),
+        (InstructionClass::Lh, 0xffff, 0),
+        (InstructionClass::Sw, 0x1_0000, 0xdead_beef),
+        (InstructionClass::Sh, 0xffff, 0x0000_beef),
+        (InstructionClass::Sb, 0x1_0000, 0x0000_00ef),
     ] {
         let mut cpu = cpu_with(&[encoding::register(class, 1, Condition::Always, 2, 0)]);
         set_register(&mut cpu, Bank::Supervisor, 1, 0xdead_beef);
@@ -662,6 +663,7 @@ fn data_alignment_precedes_range_and_faults_roll_back_effects() {
         assert_eq!(cpu.state().supervisor_gpr[1], 0xdead_beef);
         assert_eq!(cpu.state().memory, before_memory);
         assert!(!trace.transactions.last().unwrap().success);
+        assert_eq!(trace.transactions.last().unwrap().value, request_value);
     }
 }
 

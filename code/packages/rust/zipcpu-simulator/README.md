@@ -79,7 +79,7 @@ cargo llvm-cov -p zipcpu-simulator --release --all-targets --summary-only
 
 The release suite contains 31 completion-contract tests, two corpus consumers
 covering 3,970 checked-in rows, and one doctest. Measured release line coverage
-is 92.67% (1,265/1,365).
+is 92.70% (1,270/1,370).
 
 Compressed instructions, FPU, LOCK/SIM options, caches, MMU, local
 peripherals, interrupt-controller policy, debug/external-halt wrappers,

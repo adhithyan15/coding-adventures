@@ -15,4 +15,4 @@
   RTL corpora, source-lock their hashes, and compare complete projected state
   and ordered instruction-fetch transactions for all 3,970 rows.
 - Add 31 completion-contract tests, two corpus-consumer tests and one doctest.
-  Strict checks pass with 92.67% release line coverage (1,265/1,365).
+  Strict checks pass with 92.70% release line coverage (1,270/1,370).

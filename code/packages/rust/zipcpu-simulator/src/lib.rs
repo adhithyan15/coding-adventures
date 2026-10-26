@@ -1427,17 +1427,19 @@ fn execute_memory(
         InstructionClass::Sb => (1, MemoryDirection::Write),
         _ => unreachable!("memory class"),
     };
+    let request_value = match decoded.class {
+        InstructionClass::Sw => a,
+        InstructionClass::Sh => u32::from(a as u16),
+        InstructionClass::Sb => u32::from(a as u8),
+        _ => 0,
+    };
     if validate_data_span(address, width).is_err() {
         transition.transactions.push(MemoryTransaction {
             purpose: MemoryPurpose::Data,
             direction,
             address,
             width,
-            value: if direction == MemoryDirection::Write {
-                a
-            } else {
-                0
-            },
+            value: request_value,
             byte_enable: byte_enable(address, width),
             success: false,
         });
