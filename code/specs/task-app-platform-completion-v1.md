@@ -370,7 +370,15 @@ Preparation is not publication. Artifact coverage and unsigned native limits
 remain unchanged; HTML, Web Components and Paint remain CI-only, and #13977
 remains the signing tracker.
 
-### Selected fidelity slice — Qt fixed rail floor (#18250)
+### Release preparation — #18264: TaskApp v0.5.12
+
+Ship the Qt rail floor repair merged in #18251 as a compatible patch dated
+2026-10-25. Validate detailed generated notes and all existing payload lanes.
+Publish only after preparation merges; audit immutable tag/source provenance,
+manifest, assets, and checksums. Preparation is not publication. Artifact
+coverage, unsupported style diagnostics, and unsigned limitations are unchanged.
+
+### Completed fidelity slice — Qt fixed rail floor (#18250)
 
 Delivery blocker #18254: preserve the native XAML typography build/runtime
 gate while pinning its bootstrap to an available compatible .NET 9 SDK.
