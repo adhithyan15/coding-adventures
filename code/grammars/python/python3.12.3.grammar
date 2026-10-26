@@ -1,6 +1,6 @@
-# Python 3.12.3 (2024-04-09) grammar: py-int-print subset over the slice's tokens.
+# Python 3.12.3 (2024-04-09) grammar: py-int-print and py-float-print subsets over the slice's tokens.
 # @version 1
-# PARTIAL: parses only the py-int-print subset below; everything else is a parse error.
+# PARTIAL: parses only the py-int-print/py-float-print subsets below; everything else is a parse error.
 # source_ref: https://github.com/python/cpython/tree/v3.12.3
 # source_sha: f6650f9ad73359051f3e558c2431a109bc016664
 # evidence: Grammar/python.gram blob 546e54ca1de342273f1dc63c49e0468b90f80df1; Grammar/Tokens blob 618ae811d824b0911a16b85f83f52d95d5a1f439;
@@ -30,8 +30,9 @@
 # statement other than an expression statement, `**`, `~`, comparisons and
 # boolean operators, subscripts and attributes, tuples and `()`, keyword and
 # starred arguments, and every compound statement.
-# Admitted here and refused by the compiler (`Unsupported`): `/` (true
-# division gives a float), a callee other than `print`, more than one
+# Since LANG84 phase 7c slice 3 an atom may be a FLOAT (py-float-print).
+# Admitted here and refused by the compiler (`Unsupported`): `//` and `%` on
+# a float, a callee other than `print`, more than one
 # argument, a call used as a value, a bare expression statement.
 # ---------------------------------------------------------------------------
 
@@ -48,6 +49,6 @@ primary     = atom { suffix } ;
 suffix      = LPAREN [ arguments ] RPAREN ;
 arguments   = argument { COMMA argument } [ COMMA ] ;
 argument    = expression ;
-atom        = INT | NAME | paren_expr ;
+atom        = INT | FLOAT | NAME | paren_expr ;
 paren_expr  = LPAREN paren_body RPAREN ;
 paren_body  = expression ;

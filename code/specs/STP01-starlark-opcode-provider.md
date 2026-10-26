@@ -165,3 +165,70 @@ and nearby spec/schema/documentation paths do not acquire this reader. Union
 normal package changes and reverse dependencies; missing required consumers
 fail before writing a plan. Nil/empty changes and force behavior stay intact.
 This adoption runs no Starlark source, imports modules or grants host authority.
+
+## 7. Haskell native adoption
+
+The Haskell package is named `starlark-compiler` and exposes one
+`StarlarkCompiler` module. Its public surface is the closed `Op` algebraic data
+type with all 61 constructors, the closed `OpCategory` type, `allOps`,
+`opFromByte`, `opByte`, `opName`, `opCategory`, the four operator maps, and the
+four direct lookup helpers. `allOps` is in ascending byte order. Unknown bytes
+and operator spellings return `Nothing`; no API trims, case-folds, rewrites or
+narrows an unchecked integer. Export both types with their constructors so
+typed callers can pattern-match without unsafe casts.
+
+Haskell's persistent `Data.Map.Strict.Map` values satisfy the ownership rule:
+inserting, deleting or replacing a key produces a new map and cannot mutate a
+retained value or any later result. Native tests must demonstrate that property
+for all four groups rather than assuming immutability from the type alone.
+
+The committed Haskell test reader dynamically consumes the exact shared
+`cases.json` path. It stops after 131,073 bytes, rejects an oversized transport
+before JSON decoding, enforces the depth-eight/container and scalar-string
+boundary, rejects duplicate decoded object keys and ambiguous numeric forms,
+closes every object shape, and checks the exact row counts, domains and ordered
+rosters before calling production APIs. It visits all 61 opcode records, all
+256 decode records including 195 holes, all 34 operator records and all eight
+unknown probes. Fixture data supplies expected values; production declarations
+must never generate or normalize the expected corpus. Coordinated table
+corruption and independent shape, type, range, ordering and transport witnesses
+must fail in a controlled way.
+
+The package has no production dependency beyond `base` and `containers`; JSON
+support is test-only. Its capability declaration is an explicit empty set
+because the provider is pure and inert. Reading the fixed test fixture does not
+grant production filesystem authority. BUILD fronts, `cabal check`, a real
+native test run and a non-empty production-only HPC report must pass. The
+library target is at least 95 percent expression coverage and remains above the
+repository's 80 percent floor for alternatives. A change to the exact shared
+`cases.json` path selects both the Go and Haskell native readers under the
+all-language filter and only the matching reader under a single-language
+filter, across Linux, macOS and Windows plans. Lookalike paths select neither;
+missing required readers fail before plan output is replaced. A package
+directory or skipped Windows front is not native qualification.
+
+Keep the native test dependency plan compatible with the coverage-enabled
+GHC 9.4.8 / Cabal 3.10.3.0 CI front. A solver failure before compilation is
+not a provider failure or a successful test run. Enable coverage in the named
+`package starlark-compiler` project stanza for both the library and its tests;
+the BUILD front runs `cabal test all` without the conflicting global coverage
+flag. Preserve the public API and dependency ranges. Reproduce the original
+global-flag failure and validate the repaired coverage plan with that toolchain;
+a newer local Cabal alone is insufficient.
+Independent rejection witnesses must isolate byte range/type, row ordering
+and the depth-eight boundary rather than relying on a different malformed
+property of the same candidate.
+
+On macOS, run this package's Cabal process with
+`DEVELOPER_DIR=/Library/Developer/CommandLineTools`. GHC's Darwin bindist links
+against that SDK; its linker must understand the same SDK's stub architectures.
+Keep the override scoped to that process, without changing global xcode-select
+state, other packages, compiler versions, coverage or the test set. Other
+platforms retain their inherited developer-tool environment. A linker failure
+before tests is not native qualification; shell routing tests do not substitute
+for a real macOS build.
+
+The package only describes bytes and lookup tables. `LoadModule`, `ImportFrom`,
+`Print` and `Halt` stay inert constructors: this adoption performs no parsing,
+compilation, execution, module resolution, output, process launch, network
+access or host activation.

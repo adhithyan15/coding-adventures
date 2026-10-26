@@ -1,0 +1,5 @@
+oracle: host CPython 3.11.17, 3.12.3, 3.13.16 (python3.11, python3.12, python3.13)
+command: {python3.11,python3.12,python3.13} -I reject_misplaced_underscore.py
+host-python: SyntaxError: invalid decimal literal
+result: py-float-print refuses it with a Lex error naming the release
+why: `_` must sit between two digits

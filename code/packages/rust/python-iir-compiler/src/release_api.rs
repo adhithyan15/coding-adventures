@@ -1,4 +1,4 @@
-//! # The LANG84 release path: `py-int-print` (or `py2-int-print`) for one exact CPython release
+//! # The LANG84 release path: `py-int-print`/`py-float-print` (or `py2-int-print`) for one exact CPython release
 //!
 //! ```text
 //!   source ──► resolve_release ──► GrammarLexer(python<release>.tokens)
@@ -26,15 +26,15 @@ use crate::frontend_error::FrontendError;
 use crate::int_lower::{shown_rule, Lowering, MAX_IIR_INSTRUCTIONS};
 use crate::profiles::{profile_for, ReleaseProfile};
 
-/// The subset the default release (`DEFAULT_RELEASE`) lowers, as
-/// `code/grammars/python/subsets.csv` names it. Each release's own subset is
-/// its profile's (`profiles::profile_for(release).subset`); [`SUBSETS`]
-/// lists them all.
+/// The integer subset every Python 3 release lowers, the default release
+/// (`DEFAULT_RELEASE`) included, as `code/grammars/python/subsets.csv` names
+/// it. Each release's own subsets are its profile's
+/// (`profiles::profile_for(release).subsets`); [`SUBSETS`] lists them all.
 pub const SUBSET: &str = "py-int-print";
 
-/// Every subset the release path lowers, one per profile (LANG84 phase 7c
-/// slice 1 added `py2-int-print`).
-pub const SUBSETS: &[&str] = &["py-int-print", "py2-int-print"];
+/// Every subset the release path lowers (LANG84 phase 7c slice 1 added
+/// `py2-int-print`, slice 3 `py-float-print`).
+pub const SUBSETS: &[&str] = &["py-int-print", "py2-int-print", "py-float-print"];
 
 // Budgets for a caller-supplied tree (LANG84 C5). A tree that came from
 // source is already bounded by the parser's token and depth budgets; one
@@ -225,8 +225,9 @@ pub fn run_source_at(source: &str, release: Option<&str>) -> Result<RunOutput, R
     run_module(module)
 }
 
-/// Run a compiled module on `vm-core`, capturing `print_i64` and `putchar`
-/// into one ordered, bounded buffer (LANG83 "ordered output stream").
+/// Run a compiled module on `vm-core`, capturing `print_i64`, `putchar`
+/// and `write_f64_py` into one ordered, bounded buffer (LANG83 "ordered
+/// output stream").
 pub fn run_module(mut module: IIRModule) -> Result<RunOutput, RunError> {
     let output = Arc::new(Mutex::new(Vec::<u8>::new()));
     let mut vm = VMCore::new();
@@ -239,6 +240,14 @@ pub fn run_module(mut module: IIRModule) -> Result<RunOutput, RunError> {
             return Err(VMError::Custom("print_i64 expects one integer".into()));
         };
         append(&sink, format!("{number}\n").as_bytes())
+    });
+    let sink = Arc::clone(&output);
+    vm.builtins_mut().register("write_f64_py", move |args| {
+        let [Value::Float(number)] = args else {
+            return Err(VMError::Custom("write_f64_py expects one float".into()));
+        };
+        // `repr(x)`, no newline: the VM's own LANG83 PR6a formatter.
+        append(&sink, vm_core::float_format::python_repr(*number).as_bytes())
     });
     let sink = Arc::clone(&output);
     vm.builtins_mut().register("putchar", move |args| {
