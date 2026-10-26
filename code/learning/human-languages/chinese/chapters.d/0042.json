@@ -1,0 +1,21 @@
+{
+  "chapter": 42,
+  "title": "In the Shop",
+  "label": "ch:zh-in-the-shop",
+  "canDo": "I can say what a shop sells and whether it is cheap or dear.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ZH-R42-review-37-42",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 42: I can say what a shop sells and whether it is cheap or dear.",
+    "assesses": [
+      "ZH-LEX-C42-SHOP42-01",
+      "ZH-LEX-C42-SHOP42-02",
+      "ZH-LEX-C42-SHOP42-03",
+      "ZH-LEX-C42-SHOP42-04",
+      "ZH-LEX-C42-SHOP42-05"
+    ]
+  }
+}

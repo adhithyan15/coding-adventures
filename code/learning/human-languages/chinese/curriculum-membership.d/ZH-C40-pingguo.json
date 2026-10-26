@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C40-pingguo",
+  "pathSegment": "ZH-PATH-40-FRUIT40",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-40-FRUIT40",
+      "order": 2
+    }
+  ]
+}

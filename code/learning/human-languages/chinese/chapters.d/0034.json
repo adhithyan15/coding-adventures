@@ -1,0 +1,19 @@
+{
+  "chapter": 34,
+  "title": "What You Are Called",
+  "label": "ch:zh-what-you-are-called",
+  "canDo": "I can ask somebody's name and family name, politely too.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C34-pengyou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 34: I can ask somebody's name and family name, politely too.",
+    "assesses": [
+      "ZH-LEX-C34-CALLED34-03",
+      "ZH-LEX-C34-CALLED34-04",
+      "ZH-LEX-C34-CALLED34-05"
+    ]
+  }
+}
