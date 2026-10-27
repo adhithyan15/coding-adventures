@@ -151,18 +151,54 @@ program returned 100. Every lookup now checks the lexical scope first:
 - **Call-site string inference in `main`.** A call to a shadowing `let`
   binding tells the compiler nothing about the parameters of the top-level
   function with the same name.
-- **Type facts belong to their binding.** `let`, `let*` and `match` bindings
-  start with no type and no E4 alias. When the scope ends, they restore what
-  the name meant outside it (`FnCtx::shadow` / `FnCtx::unshadow`). So an inner
-  string `x` does not make a later `(string-length x)` on an integer
-  parameter lower to `str_len`. An inner `s` bound to 5 also no longer reads
-  the outer string's alias register.
-- **`var_types` describes registers.** Same-name locals still share one
-  register (#18439). `FnCtx::emit` therefore counts the writes to every
-  register. If a nested binding rewrote register `x` while an outer `x` was
-  in scope, the outer type is not restored; `x` becomes `any`. An aliased
-  name takes its type from its alias register. So an alias whose target
-  register was overwritten is no longer treated as a `str`.
+- **Type facts belong to their binding.** Each binding has its own
+  register (below), and `var_types` is keyed by register, so an inner
+  string `x` cannot make a later `(string-length x)` on an integer parameter
+  lower to `str_len`, and an inner `s` bound to 5 does not read the outer
+  string's alias register.
+
+### Every binding owns its register
+
+An IIR register has a name, and a Twig local *is* a register. If the
+register were simply the source name, two bindings of the same name would
+share it, and the inner one would overwrite the outer (#18439):
+
+```scheme
+(define (f x) (begin (let ((x 5)) x) x))
+(f 1)   ; must be 1 — the parameter
+```
+
+```text
+one register per NAME (old)      one register per BINDING (now)
+mov x ← 5     ; parameter lost    mov __r1_x ← 5   ; parameter untouched
+ret x         ; → 5               ret x            ; → 1
+```
+
+The wrong value was the mild symptom. The compiler stamps static types on
+registers and lowers to typed ops (`str_len`, `add`, …) that the native
+backends trust, so a shared register could hand a typed op a value of the
+wrong kind: `(let* ((x "abc") (y x) (x 5)) (string-length y))` ran `str_len`
+on 5.
+
+So `FnCtx` keeps a **name → stack of registers** map (`scope`). Every
+binder pushes and pops it: function and lambda parameters, closure captures,
+`let`, `let*` and both kinds of `match` binding. Every reader goes through
+`FnCtx::lookup` — value references, call-position checks, closure captures,
+the E4 type queries.
+
+| Binding                                 | Register                                  |
+|-----------------------------------------|-------------------------------------------|
+| first binding of `x` in the function    | `x` (unchanged IR for programs without repeated names) |
+| any later binding of `x`, nested or sibling | `__r1_x`, `__r2_x`, … (per-function counter) |
+| E4 string binding (`(let ((s (string-append a b))) …)`) | no register of its own: `s` reads the producer's register |
+
+Because each binding register is written by exactly one instruction, its
+recorded type stays true for its whole life — even after its scope closes,
+when `(let ((x 1)) x)`'s result may still be waiting to be used. No type
+has to be saved or restored at scope boundaries. A per-function `claimed`
+set keeps all register names collision-free: a user local spelled
+`__r1_x` or `_n1` simply pushes the generated or temporary name to the next
+free one.
 
 `and` and `or` are special forms, not bindings, so a local cannot shadow
 them.

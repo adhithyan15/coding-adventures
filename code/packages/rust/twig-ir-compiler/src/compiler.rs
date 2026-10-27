@@ -78,9 +78,9 @@
 //!
 //! | Site                                  | Lexical check                         |
 //! |---------------------------------------|---------------------------------------|
-//! | `compile_apply` direct / builtin call | `ctx.locals` before `fn_globals` /    |
+//! | `compile_apply` direct / builtin call | `ctx.is_bound` before `fn_globals` /  |
 //! |                                       | `BUILTINS`                            |
-//! | `compile_var_ref` (value position)    | `ctx.locals` first (always was)       |
+//! | `compile_var_ref` (value position)    | `ctx.lookup` first (always was)       |
 //! | lambda free-variable analysis         | a local that shares a global's name   |
 //! |                                       | is captured, not skipped as global    |
 //! | E4 string fast paths                  | a shadowed `string-append` etc. is    |
@@ -319,40 +319,107 @@ fn typed_arith_op_for(name: &str) -> Option<&'static str> {
 // Per-function compilation context
 // ---------------------------------------------------------------------------
 
-/// What a name meant just before a scope rebound it — returned by
-/// [`FnCtx::shadow`] and consumed by [`FnCtx::unshadow`].
-struct OuterBinding {
-    name: String,
-    /// Was the name already a local (parameter or enclosing binding)?
-    was_local: bool,
-    /// The outer binding's E4 alias register, if it had one.
-    alias: Option<String>,
-    /// The outer binding's statically-known type, if any.
-    ty: Option<String>,
-    /// How many times register `name` had been written when the scope
-    /// opened ([`FnCtx::writes`]).  If the count has moved by the time the
-    /// scope closes, the register no longer holds the outer value.
-    writes: u64,
-}
+// ## Registers and bindings (#18439)
+//
+// IIR registers are named, and a Twig local is a register.  The obvious
+// scheme — "a local's register is its source name" — is wrong as soon as two
+// bindings share a name, because the second binding writes over the first:
+//
+// ```text
+// (define (f x) (begin (let ((x 5)) x) x))   ; must return the PARAMETER x
+//
+//   one register per NAME            one register per BINDING
+//   ---------------------            ------------------------
+//   mov x ← 5     ; param x is gone  mov __r1_x ← 5  ; param x untouched
+//   ret x         ; → 5   (wrong)    ret x           ; → 1   (right)
+// ```
+//
+// Worse than a wrong value: the compiler keeps a static type per register
+// (`var_types`) and lowers to typed ops (`str_len`, `add`, …) that the native
+// backends trust.  When two bindings of different kinds share a register, a
+// typed op can be pointed at a value of the other kind — memory-unsafe on a
+// backend that believes the hint.
+//
+// So every binding gets a register of its own, through two tables:
+//
+// | Table     | Maps                                    | Changes when            |
+// |-----------|-----------------------------------------|-------------------------|
+// | `scope`   | source name → stack of registers, the   | a binder opens (push)   |
+// |           | innermost binding on top                | or closes (pop)         |
+// | `claimed` | every register name this function uses  | a register is handed out|
+//
+// A read of a name is "the register on top of its stack" — nothing else.
+// Parameters, `let`, `let*`, lambda parameters, closure captures and `match`
+// bindings all push; `compile_var_ref`, call-position lookups, closure
+// captures and the E4 type checks all read through [`FnCtx::lookup`].
+//
+// ### Naming: keep the source name when it is free
+//
+// The FIRST binding of a name in a function keeps the name itself as its
+// register, so a program without repeated names compiles to the very same IR
+// it always did (parameter lists, debugger variable names and tests that
+// spell `x` stay valid).  Any LATER binding of a name already claimed in the
+// function — nested OR sibling — gets `__r{n}_{name}`, with `n` from a
+// per-function counter.  Siblings need it too: `(let ((x 1)) x)` evaluates to
+// register `x`, and that value may still be waiting to be used when the next
+// `(let ((x "s")) …)` binds:
+//
+// ```text
+// (+ (let ((x 1)) x) (begin (let ((x "s")) x) 2))
+//   mov x ← 1; …; str_const __r1_x "s"; …; add x, _n3   ; x is still 1
+// ```
+//
+// `claimed` makes the names collision-free whatever the user writes: a
+// binding takes `name` only if no register of that spelling exists yet, a
+// rebinding skips any `__r{n}_{name}` already taken, and [`FnCtx::fresh_var`]
+// skips a temporary name a user binding already holds (`(let ((_n1 "s")) …)`).
+// Nothing therefore depends on Twig source being unable to spell `__r1_x`.
+//
+// ### E4 aliases are just stack entries
+//
+// A string-producing binding (`(let ((s (string-append a b))) …)`) does not
+// copy into a register of its own — the code-gen backends have no generic
+// `mov [str]` — so its stack entry is the PRODUCER's register.  A read, a
+// closure capture and a type query of `s` all see that register, because
+// they all go through `lookup`.  (The capture used to read register `s`,
+// which nothing had written.)
+//
+// ### Why `var_types` needs no save / restore
+//
+// `var_types` is keyed by register.  Every binding register is written by
+// exactly one instruction (its `mov` / `str_const`, or the call for a
+// parameter), so the type recorded at that write is true for the register's
+// whole life — including after its scope closes, when the register can still
+// be a pending operand.  Only the compiler's join temporaries (`if` / `and` /
+// `or` / `match` results) have several writers, and their sites compute a
+// consensus type themselves.  The previous design shared registers between
+// bindings and so had to snapshot, restore and drop types at every scope
+// boundary (with a per-register write counter); with one writer per register
+// all of that disappears.
 
 /// Mutable state while lowering one [`IIRFunction`].
 ///
-/// `instrs` accumulates the body in emission order; `locals` records
-/// names introduced at this function level (parameters + active `let`
-/// bindings) so [`Compiler::compile_var_ref`] can distinguish locals
-/// from globals; the two counters generate fresh register and label
-/// names that won't collide.
+/// `instrs` accumulates the body in emission order; `scope` maps each
+/// name bound at this function level to its registers (see "Registers and
+/// bindings" above) so [`Compiler::compile_var_ref`] can distinguish locals
+/// from globals; the counters generate fresh register and label names that
+/// won't collide.
 struct FnCtx {
     instrs: Vec<IIRInstr>,
     /// Per-instruction source positions, kept in **lockstep** with
     /// [`Self::instrs`] (`source_map[i]` = position of `instrs[i]`).
     /// See [`interpreter_ir::SourceLoc`] for indexing conventions.
     source_map: Vec<SourceLoc>,
-    locals: HashSet<String>,
-    /// Lexical names backed by an already-materialised register. This keeps
-    /// string-producing E4 bindings out of backend-unsupported `mov [str]` IR.
-    local_aliases: HashMap<String, String>,
+    /// Source name → registers of its live bindings, innermost last.  A name
+    /// with no entry is not lexically bound here (it may be a global).
+    scope: HashMap<String, Vec<String>>,
+    /// Every register name handed out in this function: parameters, binding
+    /// registers and temporaries.  Keeps all three collision-free.
+    claimed: HashSet<String>,
     var_counter: usize,
+    /// Numbers the `__r{n}_{name}` registers of repeated bindings.  Separate
+    /// from `var_counter` so a rebinding does not shift temporary names.
+    rebind_counter: usize,
     label_counter: usize,
     /// Current AST-nesting depth.  Incremented on every entry to
     /// `compile_expr` and checked against [`MAX_COMPILE_DEPTH`] to
@@ -372,12 +439,10 @@ struct FnCtx {
     /// the legacy `"any"` to the precise type, which lets the IIR-to-*
     /// backends (wasm/jvm/clr/beam) actually accept the result.
     /// See [`crate::lib`]'s "Twig path A" notes for the larger story.
+    ///
+    /// Keyed by REGISTER, never by source name: see "Why `var_types` needs
+    /// no save / restore" above.
     var_types: HashMap<String, String>,
-    /// How many instructions have written each register (`dest == reg`),
-    /// bumped by [`FnCtx::emit`].  Same-name locals share one register
-    /// (#18439), so this is how [`FnCtx::unshadow`] tells whether a nested
-    /// binding overwrote the register an outer binding's type fact is about.
-    writes: HashMap<String, u64>,
 }
 
 impl FnCtx {
@@ -385,19 +450,27 @@ impl FnCtx {
         FnCtx {
             instrs: Vec::new(),
             source_map: Vec::new(),
-            locals: HashSet::new(),
-            local_aliases: HashMap::new(),
+            scope: HashMap::new(),
+            claimed: HashSet::new(),
             var_counter: 0,
+            rebind_counter: 0,
             label_counter: 0,
             depth: 0,
             var_types: HashMap::new(),
-            writes: HashMap::new(),
         }
     }
 
+    /// A new compiler temporary, `_{prefix}{n}`.  In the usual case this is
+    /// the next number; it only skips ahead when a user binding already
+    /// holds that spelling (Twig can name a local `_n1`).
     fn fresh_var(&mut self, prefix: &str) -> String {
-        self.var_counter += 1;
-        format!("_{prefix}{}", self.var_counter)
+        loop {
+            self.var_counter += 1;
+            let v = format!("_{prefix}{}", self.var_counter);
+            if self.claimed.insert(v.clone()) {
+                return v;
+            }
+        }
     }
 
     fn fresh_label(&mut self, prefix: &str) -> String {
@@ -411,16 +484,8 @@ impl FnCtx {
     /// construction.  See [`SourceLoc::SYNTHETIC`] for instructions
     /// the compiler synthesises with no real source counterpart.
     fn emit(&mut self, instr: IIRInstr, loc: SourceLoc) {
-        if let Some(dest) = &instr.dest {
-            *self.writes.entry(dest.clone()).or_insert(0) += 1;
-        }
         self.instrs.push(instr);
         self.source_map.push(loc);
-    }
-
-    /// How many instructions so far have written register `reg`.
-    fn write_count(&self, reg: &str) -> u64 {
-        self.writes.get(reg).copied().unwrap_or(0)
     }
 
     /// Record that `var` was statically inferred to have type `ty`.
@@ -460,95 +525,71 @@ impl FnCtx {
         self.var_types.get(var).map(|s| s.as_str()).unwrap_or("any")
     }
 
-    /// Open a lexical binding of `name` (a `let` / `let*` / `match` name)
-    /// and return what the name meant before, for [`Self::unshadow`].
-    ///
-    /// Everything the compiler knows about a name lives in three tables:
-    /// `locals` (is it bound?), `local_aliases` (is it an E4 string held in
-    /// another register?) and `var_types`.  `var_types` is keyed by
-    /// REGISTER and describes what that register currently holds; an
-    /// aliased name's type is its alias register's (see
-    /// `Compiler::is_known_value_type`).  A new binding starts with *no*
-    /// alias and *no* type: the caller records whatever the new value
-    /// supports.  Without this, an inner `x` bound to `(car l)`
-    /// inherited an outer `x`'s `i64` and lowered `(+ x 1)` to a typed `add`,
-    /// and an inner `s` bound to 5 still read the outer string's alias.
-    fn shadow(&mut self, name: &str) -> OuterBinding {
-        let outer = OuterBinding {
-            name: name.to_string(),
-            was_local: self.locals.contains(name),
-            alias: self.local_aliases.remove(name),
-            ty: self.var_types.remove(name),
-            writes: self.write_count(name),
-        };
-        self.locals.insert(name.to_string());
-        outer
+    // ── Bindings (#18439) ────────────────────────────────────────────
+
+    /// The register a read of `name` returns, if `name` is lexically bound.
+    fn lookup(&self, name: &str) -> Option<&str> {
+        self.scope.get(name).and_then(|regs| regs.last()).map(String::as_str)
     }
 
-    /// Close a binding opened by [`Self::shadow`], restoring the outer meaning.
-    ///
-    /// Local-ness and the outer alias come back exactly.  The type is a
-    /// fact about REGISTER `name`, and same-name locals share that register
-    /// (#18439): a binding written with `mov` / `str_const` — this scope's,
-    /// or any nested same-name binding's, or a `match` arm's — overwrites it.
-    /// So the write counter decides, not the shape of the bindings:
-    ///
-    /// | Register `name` rewritten while the scope was open? | `var_types[name]` after       |
-    /// |-----------------------------------------------------|-------------------------------|
-    /// | no  (e.g. the inner binding was an E4 alias)        | the outer type, restored      |
-    /// | yes, and `name` has an outer binding                | none — dynamic `any`          |
-    /// | yes, no outer binding, this binding was the         | what the register now holds,  |
-    /// | register's FIRST write ever (`writes == 0`)         | as its last writer recorded it|
-    /// | yes, no outer binding, register written before      | none — dynamic `any`          |
-    ///
-    /// The second row never restores a stale `str` onto a register that a
-    /// nested binding filled with 5 (the outer *value* is lost too until
-    /// #18439 gives each binding its own register — but `any` keeps that a
-    /// wrong-value bug rather than type confusion in a typed op).
-    ///
-    /// The last two rows exist because a scope can RETURN its named
-    /// register: `(let ((x 1)) x)` evaluates to register `x`, and that value
-    /// is consumed after `x` is out of scope.  Keeping the type is what lets
-    /// that stay a typed `i64` register — but it is only safe on the
-    /// register's first write.  If an earlier sibling scope already wrote
-    /// register `x`, its result may still be live and in use, and this
-    /// binding's type would be stamped onto it:
-    ///
-    /// ```text
-    /// (+ (let ((x "s")) x)            ; operand 1 = register x, "s"
-    ///    (if c (let ((x 1)) x) 3))    ; rewrites x, records i64
-    ///                                 ; → typed `add` on "s" if kept
-    /// ```
-    ///
-    /// The branch may not even run, so no single type describes the
-    /// register afterwards; it drops to `any`.
-    ///
-    /// The restored outer alias needs no such check: a read of an aliased
-    /// name goes through the alias register's own `var_types` entry, and a
-    /// named register is only ever written right after a `shadow` cleared
-    /// its entry, so that entry always describes the register's contents.
-    fn unshadow(&mut self, outer: OuterBinding) {
-        let OuterBinding { name, was_local, alias, ty, writes } = outer;
-        self.local_aliases.remove(&name);
-        let current_ty = self.var_types.remove(&name);
-        let register_rewritten = self.write_count(&name) != writes;
-        let ty = match (register_rewritten, was_local) {
-            (false, _) => ty,
-            (true, true) => None,
-            // `writes` is the count recorded at `shadow` time: 0 means this
-            // binding made the register's first-ever write.
-            (true, false) if writes == 0 => current_ty,
-            (true, false) => None,
-        };
-        if let Some(ty) = ty {
-            self.var_types.insert(name.clone(), ty);
+    /// Is `name` lexically bound here (and so NOT the global or builtin
+    /// that may share its spelling — #18435)?
+    fn is_bound(&self, name: &str) -> bool {
+        self.lookup(name).is_some()
+    }
+
+    /// Claim a register for a new binding of `name`: `name` itself if this
+    /// function has no register of that spelling yet, else `__r{n}_{name}`.
+    /// The binding is not visible until [`Self::push_binding`].
+    fn binding_register(&mut self, name: &str) -> String {
+        if self.claimed.insert(name.to_string()) {
+            return name.to_string();
         }
-        if let Some(alias) = alias {
-            self.local_aliases.insert(name.clone(), alias);
+        loop {
+            self.rebind_counter += 1;
+            let reg = format!("__r{}_{name}", self.rebind_counter);
+            if self.claimed.insert(reg.clone()) {
+                return reg;
+            }
         }
-        if !was_local {
-            self.locals.remove(&name);
+    }
+
+    /// Make `name` read register `reg` until the matching
+    /// [`Self::pop_binding`].  `reg` is either a fresh
+    /// [`Self::binding_register`] or, for an E4 string alias, the register
+    /// that already holds the value.
+    fn push_binding(&mut self, name: &str, reg: String) {
+        self.scope.entry(name.to_string()).or_default().push(reg);
+    }
+
+    /// Close the innermost binding of `name`; the next outer one (if any)
+    /// becomes visible again.  Its register, and the register's type, are
+    /// untouched — they were never written by the inner binding.
+    fn pop_binding(&mut self, name: &str) {
+        if let Some(regs) = self.scope.get_mut(name) {
+            regs.pop();
+            if regs.is_empty() {
+                self.scope.remove(name);
+            }
         }
+    }
+
+    /// Bind a parameter (or closure capture): claim its register, make it
+    /// visible for the rest of the function, and return the register to use
+    /// in the `IIRFunction::params` list.
+    fn bind_param(&mut self, name: &str) -> String {
+        let reg = self.binding_register(name);
+        self.push_binding(name, reg.clone());
+        reg
+    }
+
+    /// Bind `name` to a copy of `src` in a register of its own (typed `mov`)
+    /// and return that register.
+    fn bind_move(&mut self, name: &str, src: &str, loc: SourceLoc) -> String {
+        let reg = self.binding_register(name);
+        self.emit_move(&reg, src, loc);
+        self.push_binding(name, reg.clone());
+        reg
     }
 
     /// Path-A increment 3: emit a typed `mov dst = src` instruction,
@@ -1336,14 +1377,14 @@ impl Compiler {
     /// `substring`, `string-length`, `+`).  If a parameter or `let` binding
     /// is called `string-append`, `(string-append a b)` calls *that* closure
     /// (#18435), and treating it as the builtin would compile a
-    /// `str_concat` the program never asked for.  `locals` is whatever set
-    /// holds the names bound at this point: `FnCtx::locals` during
-    /// lowering, the pre-pass's `shadowed` set before it.
+    /// `str_concat` the program never asked for.  `is_bound` answers "is
+    /// this name bound at this point?": [`FnCtx::is_bound`] during lowering,
+    /// the pre-pass's `shadowed` set before it.
     fn unshadowed_apply<'a>(
         expr: ExprNode<'a>,
-        locals: &HashSet<String>,
+        is_bound: &dyn Fn(&str) -> bool,
     ) -> Option<(&'a str, Exprs<'a>)> {
-        Self::named_apply(expr).filter(|(f, _)| !locals.contains(*f))
+        Self::named_apply(expr).filter(|(f, _)| !is_bound(f))
     }
 
     fn is_syntax_static_e4_string_expr(
@@ -1355,7 +1396,7 @@ impl Compiler {
             ExprKind::StrLit(_) => true,
             ExprKind::VarRef(name) => known_static_string_values.contains(name),
             ExprKind::Apply(_) => {
-                let Some((f, args)) = Self::unshadowed_apply(expr, shadowed) else {
+                let Some((f, args)) = Self::unshadowed_apply(expr, &|n| shadowed.contains(n)) else {
                     return false;
                 };
                 let arg = |i: usize| args.get(i).expect("length checked first");
@@ -1386,7 +1427,7 @@ impl Compiler {
         match expr.kind() {
             ExprKind::IntLit(_) => true,
             ExprKind::Apply(_) => {
-                let Some((f, args)) = Self::unshadowed_apply(expr, shadowed) else {
+                let Some((f, args)) = Self::unshadowed_apply(expr, &|n| shadowed.contains(n)) else {
                     return false;
                 };
                 match f {
@@ -1440,12 +1481,17 @@ impl Compiler {
             .get(name)
             .cloned()
             .unwrap_or_default();
+        // Each parameter's register is its own name, unless the name repeats
+        // in the list (`(define (f x x) …)`): then the later one is renamed
+        // and, as in Scheme, the body sees the last.
+        let mut param_regs: Vec<String> = Vec::new();
         for (idx, p) in lam.params().enumerate() {
-            ctx.locals.insert(p.name.to_string());
+            let reg = ctx.bind_param(p.name);
             if let Some(ty) = self.param_static_iir_hint(p.annotation, &inferred_param_types, idx)
             {
-                ctx.record_type(p.name, ty);
+                ctx.record_type(&reg, ty);
             }
+            param_regs.push(reg);
         }
 
         let mut last: Option<String> = None;
@@ -1465,12 +1511,13 @@ impl Compiler {
 
         let params: Vec<(String, String)> = lam
             .params()
+            .zip(param_regs)
             .enumerate()
-            .map(|(idx, p)| {
+            .map(|(idx, (p, reg))| {
                 let ty = self
                     .param_static_iir_hint(p.annotation, &inferred_param_types, idx)
                     .unwrap_or("any");
-                (p.name.to_string(), ty.to_string())
+                (reg, ty.to_string())
             })
             .collect();
 
@@ -1528,14 +1575,14 @@ impl Compiler {
         for b in BUILTINS {
             globals.insert((*b).to_string());
         }
-        globals.retain(|g| !outer.locals.contains(g));
+        globals.retain(|g| !outer.is_bound(g));
         let captures = free_vars(lam, &globals);
 
         // Every capture must be currently bound in `outer`; otherwise the
         // user wrote a name that doesn't resolve to anything reachable
         // from the lambda site.
         for c in &captures {
-            if !outer.locals.contains(c) {
+            if !outer.is_bound(c) {
                 return Err(TwigCompileError {
                     message: format!(
                         "unbound name {c:?} captured by lambda — \
@@ -1551,12 +1598,17 @@ impl Compiler {
         let fn_name = format!("__lambda_{}", self.lambda_counter);
         self.lambda_counter += 1;
 
+        // Captures come first, then the lambda's own parameters; both are
+        // bindings of the NEW function, so they claim registers in `inner`.
+        // A parameter that repeats a capture's name cannot happen (`free_vars`
+        // excludes parameters), but a repeated parameter can, and is renamed.
         let mut inner = FnCtx::new();
+        let mut params: Vec<(String, String)> = Vec::new();
         for c in &captures {
-            inner.locals.insert(c.clone());
+            params.push((inner.bind_param(c), "any".to_string()));
         }
         for p in lam.params() {
-            inner.locals.insert(p.name.to_string());
+            params.push((inner.bind_param(p.name), "any".to_string()));
         }
 
         let mut last: Option<String> = None;
@@ -1572,10 +1624,6 @@ impl Compiler {
             IIRInstr::new("ret", None, vec![Operand::Var(last)], "any"),
             lam_loc,
         );
-
-        let mut params: Vec<(String, String)> =
-            captures.iter().map(|c| (c.clone(), "any".to_string())).collect();
-        params.extend(lam.params().map(|p| (p.name.to_string(), "any".to_string())));
 
         self.functions.push(IIRFunction {
             name: fn_name.clone(),
@@ -1598,10 +1646,16 @@ impl Compiler {
         // `string_arg` / `call_builtin "make_closure"` convention and
         // makes the callee name statically visible in the IR for analysis
         // passes and the iir-to-* backends.
+        //
+        // Each capture operand is the register the name READS in the outer
+        // function — `lookup`, exactly as `compile_var_ref` would resolve
+        // it — so a shadowed name passes its innermost binding and an E4
+        // string alias passes the register that holds the string.
         let dest = outer.fresh_var("clos");
         let mut srcs: Vec<Operand> = vec![Operand::Str(fn_name.clone())];
         for c in &captures {
-            srcs.push(Operand::Var(c.clone()));
+            let reg = outer.lookup(c).expect("every capture was checked to be bound above");
+            srcs.push(Operand::Var(reg.to_string()));
         }
         outer.emit(
             IIRInstr::new("alloc_closure", Some(dest.clone()), srcs, "closure"),
@@ -1774,13 +1828,11 @@ impl Compiler {
         ctx: &mut FnCtx,
     ) -> Result<String, TwigCompileError> {
         let loc = SourceLoc::new(at.0, at.1);
-        // Locals (params + lets) — return the name directly; the next
-        // instruction that reads it resolves through the register file.
-        if ctx.locals.contains(name) {
-            if let Some(alias) = ctx.local_aliases.get(name) {
-                return Ok(alias.clone());
-            }
-            return Ok(name.to_string());
+        // Locals (params, lets, lambda / match bindings) — return the
+        // innermost binding's register directly; the next instruction that
+        // reads it resolves through the register file (#18439).
+        if let Some(reg) = ctx.lookup(name) {
+            return Ok(reg.to_string());
         }
 
         // Top-level function — wrap in a 0-capture closure handle so
@@ -1946,28 +1998,32 @@ impl Compiler {
             binding_values.push((name.to_string(), v));
         }
 
-        // Bind each name into `locals_` so the binding name exists in the
-        // lexical frame.
+        // Bind each name to a register of its own (#18439) — the name
+        // itself the first time this function binds it, `__r{n}_{name}`
+        // after that — and push it on the name's scope stack.
         // Path-A increment 4: typed `mov` propagates the RHS's
-        // inferred type to the binding name, so subsequent expressions
+        // inferred type to the binding register, so subsequent expressions
         // that reference `name` see the concrete type. E4 string RHSs alias
         // their producer register instead, because the current code-gen
         // backends accept string producers but not generic string copies.
         //
-        // `shadow` clears any alias / type the name had outside, so the
-        // binding carries only what its own value supports (#18435).
-        let mut outer_bindings: Vec<OuterBinding> = Vec::new();
+        // A new register has no recorded type, so the binding carries only
+        // what its own value supports (#18435) — nothing from an outer
+        // binding of the same name.
         for (name, src) in &binding_values {
-            outer_bindings.push(ctx.shadow(name));
             match src {
-                // The alias register carries the `str` type; register `name`
-                // is not written, so nothing is recorded for it.
+                // The alias register already holds (and is typed as) the
+                // string; the name simply reads it.
                 BindingValue::Reg(src) if ctx.type_of(src) == "str" => {
-                    ctx.local_aliases.insert(name.clone(), src.clone());
+                    ctx.push_binding(name, src.clone());
                 }
-                BindingValue::Reg(src) => ctx.emit_move(name, src, loc),
+                BindingValue::Reg(src) => {
+                    ctx.bind_move(name, src, loc);
+                }
                 BindingValue::StrLiteral(value, value_loc) => {
-                    ctx.emit_str_const_to(name, value, *value_loc);
+                    let reg = ctx.binding_register(name);
+                    ctx.emit_str_const_to(&reg, value, *value_loc);
+                    ctx.push_binding(name, reg);
                 }
             }
         }
@@ -1979,12 +2035,12 @@ impl Compiler {
         }
         let last = last.expect("check_cst rejects empty let body");
 
-        // Restore the outer meaning of every name (reverse order, so a name
-        // bound twice in one `let` unwinds correctly).  This pops `locals`,
-        // `local_aliases` AND `var_types` — a type fact belongs to its
-        // binding and must not leak past the scope.
-        for outer in outer_bindings.into_iter().rev() {
-            ctx.unshadow(outer);
+        // Close the scope: pop each name's stack (reverse order, so a name
+        // bound twice in one `let` unwinds correctly).  The registers and
+        // their types stay as they are — `last` may be one of them, and no
+        // other binding ever writes them.
+        for (name, _) in binding_values.iter().rev() {
+            ctx.pop_binding(name);
         }
         Ok(last)
     }
@@ -1992,47 +2048,46 @@ impl Compiler {
     /// LANG52: compile `(let* ((x e1) (y e2) ...) body+)`.
     ///
     /// Unlike `compile_let`, each binding's RHS is compiled AFTER the previous
-    /// binding is added to locals — so each name is in scope for all subsequent
+    /// binding is in scope — so each name is visible to all subsequent
     /// RHSs.  This is Scheme `let*` semantics.
     ///
     /// ```text
-    /// ; (let* ((a 1) (b (+ a 1))) b)
-    /// const  %n0  = 1              ; compile a=1 in outer scope
-    /// _move  a    ← %n0           ; bind 'a' into locals (now in scope)
-    /// call_builtin +, a, 1 → %n1  ; compile b=(+ a 1) — 'a' is visible
-    /// _move  b    ← %n1           ; bind 'b' into locals
-    /// ret    b
+    /// ; (let* ((a 1) (b (+ a 1)) (a (* b 10))) a)
+    /// const  _n1  = 1               ; compile a=1 in outer scope
+    /// mov    a    ← _n1             ; bind 'a' (now in scope)
+    /// add    _r3  = a, _n2          ; compile b=(+ a 1) — 'a' is visible
+    /// mov    b    ← _r3             ; bind 'b'
+    /// mul    _r5  = b, _n4          ; the second 'a' is a NEW binding…
+    /// mov    __r1_a ← _r5           ; …in a register of its own (#18439)
+    /// ret    __r1_a
     /// ```
     fn compile_let_star(&mut self, expr: LetView<'_>, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
         let loc = SourceLoc::new(expr.pos().0, expr.pos().1);
-        let mut outer_bindings: Vec<OuterBinding> = Vec::new();
+        let mut bound: Vec<&str> = Vec::new();
 
         for (name, rhs) in expr.bindings() {
             // Compile the RHS in the current scope (which already includes
             // all prior let* bindings).
             if let ExprKind::StrLit(value) = rhs.kind() {
-                outer_bindings.push(ctx.shadow(name));
-                ctx.emit_str_const_to(name, value, SourceLoc::new(rhs.pos().0, rhs.pos().1));
+                let reg = ctx.binding_register(name);
+                ctx.emit_str_const_to(&reg, value, SourceLoc::new(rhs.pos().0, rhs.pos().1));
+                ctx.push_binding(name, reg);
+                bound.push(name);
                 continue;
             }
 
             let v = self.compile_expr(rhs, ctx)?;
 
-            // Bind the name into locals BEFORE compiling the next binding.
+            // Bind the name BEFORE compiling the next binding.
             // Path-A increment 4: typed `mov` propagates scalar RHS types.
             // E4 string RHSs mirror compile_let by aliasing the producer
             // register instead of emitting backend-unsupported `mov [str]`.
-            //
-            // `type_of(&v)` is read BEFORE `shadow`, because `v` may be the
-            // name's own register (`(let* ((x x)) …)`), whose type `shadow`
-            // clears.
-            let rhs_is_str = ctx.type_of(&v) == "str";
-            outer_bindings.push(ctx.shadow(name));
-            if rhs_is_str {
-                ctx.local_aliases.insert(name.to_string(), v);
+            if ctx.type_of(&v) == "str" {
+                ctx.push_binding(name, v);
             } else {
-                ctx.emit_move(name, &v, loc);
+                ctx.bind_move(name, &v, loc);
             }
+            bound.push(name);
         }
 
         // Compile body — `check_cst`-enforced at least one expression.
@@ -2042,10 +2097,10 @@ impl Compiler {
         }
         let last = last.expect("check_cst rejects empty let* body");
 
-        // Restore every name's outer meaning — locals, aliases and types —
-        // in reverse order, so they don't leak into enclosing scope peers.
-        for outer in outer_bindings.into_iter().rev() {
-            ctx.unshadow(outer);
+        // Close the scope in reverse order, so each name's outer binding (if
+        // any) is visible again.
+        for name in bound.into_iter().rev() {
+            ctx.pop_binding(name);
         }
         Ok(last)
     }
@@ -2202,24 +2257,22 @@ impl Compiler {
     fn is_known_main_value_type(&self, name: &str, ctx: &FnCtx, ty: &str) -> bool {
         // A `let` binding of the same name hides the value-global (#18435):
         // its type is the local's, not the global's register's.
-        !ctx.locals.contains(name)
+        !ctx.is_bound(name)
             && matches!(self.value_global_locals.get(name), Some(reg) if ctx.type_of(reg) == ty)
     }
 
     /// Does the lexical name `name` statically hold a `ty` value?
     ///
-    /// An aliased local is answered by its alias REGISTER's type, which is
-    /// what a read of the name returns.  If that register was overwritten
-    /// since the alias was made — `(let ((y x)) (let ((x 5)) (string-length y)))`
-    /// with `x` a `str` parameter, where `y` aliases register `x` (#18439) —
-    /// the register's type now says `i64`, so `y` is no longer a known
-    /// string and never reaches a typed `str_len`.
+    /// The answer is the type of the register a read of `name` returns —
+    /// its own binding register or, for an E4 alias, the producer's.  That
+    /// register has exactly one writer (#18439), so its recorded type holds
+    /// for as long as the name can be read:
+    /// `(let ((y x)) (let ((x 5)) (string-length y)))` with `x` a `str`
+    /// parameter reads register `x`, which the inner `x` (register
+    /// `__r1_x`) never touches — a sound typed `str_len`.
     fn is_known_value_type(&self, name: &str, ctx: &FnCtx, ty: &str) -> bool {
         self.is_known_main_value_type(name, ctx, ty)
-            || (ctx.locals.contains(name) && {
-                let reg = ctx.local_aliases.get(name).map_or(name, String::as_str);
-                ctx.type_of(reg) == ty
-            })
+            || ctx.lookup(name).is_some_and(|reg| ctx.type_of(reg) == ty)
     }
 
     fn can_compile_e4_string_expr(&self, expr: ExprNode<'_>, ctx: &FnCtx) -> bool {
@@ -2227,7 +2280,7 @@ impl Compiler {
             ExprKind::StrLit(_) => true,
             ExprKind::VarRef(name) => self.is_known_value_type(name, ctx, "str"),
             ExprKind::Apply(_) => {
-                if let Some((f, args)) = Self::unshadowed_apply(expr, &ctx.locals) {
+                if let Some((f, args)) = Self::unshadowed_apply(expr, &|n| ctx.is_bound(n)) {
                     let arg = |i: usize| args.get(i).expect("length checked first");
                     match f {
                         "string-append" => {
@@ -2259,7 +2312,7 @@ impl Compiler {
                     || self.is_known_value_type(name, ctx, "i32")
             }
             ExprKind::Apply(_) => {
-                let Some((f, args)) = Self::unshadowed_apply(expr, &ctx.locals) else {
+                let Some((f, args)) = Self::unshadowed_apply(expr, &|n| ctx.is_bound(n)) else {
                     return false;
                 };
                 match f {
@@ -2497,7 +2550,7 @@ impl Compiler {
         //   (define (f helper) (helper 1))
         //     before: call helper, 1          ; the GLOBAL helper
         //     after:  call_closure helper, 1  ; f's PARAMETER
-        let direct_fn_name = expr.fn_name().filter(|name| !ctx.locals.contains(*name));
+        let direct_fn_name = expr.fn_name().filter(|name| !ctx.is_bound(name));
         if let Some(fn_name) = direct_fn_name {
             if self.fn_globals.contains(fn_name) {
                 let return_type = self
@@ -2563,7 +2616,7 @@ impl Compiler {
                         return Ok(dest);
                     }
                     if let Some((append_fn, append_args)) =
-                        Self::unshadowed_apply(arg(0), &ctx.locals)
+                        Self::unshadowed_apply(arg(0), &|n| ctx.is_bound(n))
                     {
                         if append_fn == "string-append" && append_args.len() == 2 {
                             let append_arg = |i: usize| {
@@ -3001,7 +3054,7 @@ impl Compiler {
                     // Path A increment 6c: typed `field_load[1]` (cdr) and
                     // `field_load[0]` (car) instead of `call_builtin "cdr"`
                     // and `call_builtin "car"`.  Phase 2 convention.
-                    let mut outer_bindings: Vec<OuterBinding> = Vec::new();
+                    let mut bound: Vec<&str> = Vec::new();
                     let mut cur_cdr = matched.clone();
                     for binding in pat.bound_names() {
                         // Advance one cdr step
@@ -3025,9 +3078,10 @@ impl Compiler {
                         ), arm_loc);
                         ctx.record_type(&field_reg, "ref<any>");
 
-                        // Bind field to name in ctx.locals via typed `mov`.
-                        outer_bindings.push(ctx.shadow(binding));
-                        ctx.emit_move(binding, &field_reg, arm_loc);
+                        // Bind the field to the name in a register of its
+                        // own (#18439) via typed `mov`.
+                        ctx.bind_move(binding, &field_reg, arm_loc);
+                        bound.push(binding);
                     }
 
                     // Evaluate body
@@ -3040,9 +3094,10 @@ impl Compiler {
                     // Copy to result register via typed `mov`.
                     ctx.emit_move(&result, &body_v, arm_loc);
 
-                    // Unbind field names, restoring their outer meaning.
-                    for outer in outer_bindings.into_iter().rev() {
-                        ctx.unshadow(outer);
+                    // Unbind field names, so their outer bindings (if any)
+                    // are visible again.
+                    for name in bound.into_iter().rev() {
+                        ctx.pop_binding(name);
                     }
 
                     // jmp to end
@@ -3105,7 +3160,7 @@ impl Compiler {
         Ok(result)
     }
 
-    /// Helper: bind `matched_reg` to `name` in locals, evaluate `body`,
+    /// Helper: bind `matched_reg` to `name` (in its own register), evaluate `body`,
     /// then remove the binding.  Returns the body's result register.
     fn compile_match_binding_arm(
         &mut self,
@@ -3115,15 +3170,15 @@ impl Compiler {
         ctx: &mut FnCtx,
         loc: SourceLoc,
     ) -> Result<String, TwigCompileError> {
-        let outer = ctx.shadow(name);
-        // Path-A increment 5: typed `mov` for the binding-arm helper.
-        ctx.emit_move(name, matched_reg, loc);
+        // Path-A increment 5: typed `mov` for the binding-arm helper, into
+        // a register of the binding's own (#18439).
+        ctx.bind_move(name, matched_reg, loc);
         let mut last: Option<String> = None;
         for e in body.iter() {
             last = Some(self.compile_expr(e, ctx)?);
         }
         let last = last.expect("arm body non-empty (check_cst-enforced)");
-        ctx.unshadow(outer);
+        ctx.pop_binding(name);
         Ok(last)
     }
 
@@ -3144,10 +3199,8 @@ impl Compiler {
         // Builds (cons f0 (cons f1 (… (cons fn nil) …))).
         {
             let mut ctx = FnCtx::new();
-            let params: Vec<String> = rec.fields().map(str::to_string).collect();
-            for p in &params {
-                ctx.locals.insert(p.clone());
-            }
+            // Parameter registers (renamed only if a field name repeats).
+            let params: Vec<String> = rec.fields().map(|f| ctx.bind_param(f)).collect();
 
             // Start from the nil end and fold right.
             //
@@ -3233,7 +3286,7 @@ impl Compiler {
         // instead of `call_builtin "car"` / `"cdr"`.  Phase 2 convention.
         for (i, field) in rec.fields().enumerate() {
             let mut ctx = FnCtx::new();
-            ctx.locals.insert("r".to_string());
+            ctx.bind_param("r"); // first binding in a fresh function: register `r`
 
             // Build the cdr chain: apply `cdr` i times.
             let mut cur = "r".to_string();
@@ -3277,7 +3330,7 @@ impl Compiler {
         // ── Predicate: <prefix>?(v) → (pair? v) ───────────────────────
         {
             let mut ctx = FnCtx::new();
-            ctx.locals.insert("v".to_string());
+            ctx.bind_param("v"); // first binding in a fresh function: register `v`
             let pred = ctx.fresh_var("pred");
             ctx.emit(IIRInstr::new(
                 "call_builtin",
@@ -3320,10 +3373,9 @@ impl Compiler {
             // → (cons tag (cons f0 (cons f1 (… (cons fn nil) …))))
             {
                 let mut ctx = FnCtx::new();
-                let params: Vec<String> = variant.fields().map(str::to_string).collect();
-                for p in &params {
-                    ctx.locals.insert(p.clone());
-                }
+                // Parameter registers (renamed only if a field name repeats).
+                let params: Vec<String> =
+                    variant.fields().map(|f| ctx.bind_param(f)).collect();
 
                 // Start from nil, fold right over fields.
                 //
@@ -3478,7 +3530,7 @@ impl Compiler {
             // ── Predicate: VarName?(v) → (= (car v) tag) ──────────────
             {
                 let mut ctx = FnCtx::new();
-                ctx.locals.insert("v".to_string());
+                ctx.bind_param("v"); // first binding in a fresh function: register `v`
 
                 // Path A increment 6c: typed `field_load[0]` instead of
                 // `call_builtin "car"`.
@@ -3534,7 +3586,7 @@ impl Compiler {
             // `field_load[0]` (car) instead of `call_builtin`.
             for (k, field) in variant.fields().enumerate() {
                 let mut ctx = FnCtx::new();
-                ctx.locals.insert("v".to_string());
+                ctx.bind_param("v"); // first binding in a fresh function: register `v`
 
                 // cdr^(k+1) v: skip the tag (1 cdr) then k more for field index.
                 let mut cur = "v".to_string();

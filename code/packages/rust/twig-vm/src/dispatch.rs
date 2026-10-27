@@ -4083,6 +4083,120 @@ mod tests {
         );
     }
 
+    // ── Every binding owns its register (#18439) ────────────────────
+    //
+    // A nested binding with the same name used to write over the outer
+    // binding's register, so the outer value was gone once the inner
+    // scope ended.  Each program is `(source, expected integer)`; the
+    // twig-ir-compiler tests check the same programs' IR shape.
+
+    fn run_int(src: &str) -> Option<i64> {
+        run_source(src)
+            .unwrap_or_else(|e| panic!("run failed for {src}: {e:?}"))
+            .as_int()
+    }
+
+    #[test]
+    fn inner_let_does_not_overwrite_outer_binding() {
+        // The issue's value-position program: expected 1, was 5.
+        assert_eq!(run_int("(define (f x) (begin (let ((x 5)) x) x)) (f 1)"), Some(1));
+        assert_eq!(run_int("(define (f x) (+ (let ((x 5)) x) x)) (f 1)"), Some(6));
+        assert_eq!(run_int("(let* ((x 1) (x (+ x 1)) (x (* x 10))) x)"), Some(20));
+    }
+
+    #[test]
+    fn inner_let_does_not_overwrite_outer_closure_in_call_position() {
+        // The issue's call-position program: `(helper 2)` calls the
+        // parameter (42), not the inner lambda (0).
+        assert_eq!(
+            run_int(
+                "(define (f helper) (begin (let ((helper (lambda (x) 0))) (helper 1)) (helper 2))) \
+                 (f (lambda (x) (+ x 40)))"
+            ),
+            Some(42),
+        );
+    }
+
+    #[test]
+    fn alias_to_a_rebound_name_keeps_the_string() {
+        // From the issue comment.  Before, `y` read the register holding 5:
+        // a TypeError on the VM, type confusion on native backends.
+        assert_eq!(run_int("(let* ((x \"abc\") (y x) (x 5)) (string-length y))"), Some(3));
+        assert_eq!(
+            run_int("(define (g x) (let ((y x)) (let ((x 5)) (string-length y)))) (g \"abc\")"),
+            Some(3),
+        );
+    }
+
+    #[test]
+    fn closure_captures_an_aliased_string_binding() {
+        // From the issue comment: the capture read a never-written register.
+        assert_eq!(
+            run_int("(let ((s (string-append \"a\" \"b\"))) (string-length ((lambda () s))))"),
+            Some(2),
+        );
+    }
+
+    #[test]
+    fn sibling_scope_result_survives_the_next_scope() {
+        // The first `let`'s result is still an operand of `+` when the
+        // second `let` binds `x` again.
+        assert_eq!(run_int("(+ (let ((x 1)) x) (begin (let ((x \"s\")) x) 2))"), Some(3));
+    }
+
+    #[test]
+    fn nested_lambdas_capture_the_right_binding() {
+        assert_eq!(
+            run_int("(define (f x) (let ((x (+ x 10))) ((lambda () ((lambda () x)))))) (f 1)"),
+            Some(11),
+        );
+        assert_eq!(
+            run_int("(define (f x) (begin (let ((x 5)) x) ((lambda () x)))) (f 1)"),
+            Some(1),
+        );
+        assert_eq!(
+            run_int("(define (f x) (let ((g (lambda () x))) (let ((x 99)) (+ (g) x)))) (f 1)"),
+            Some(100),
+        );
+        assert_eq!(run_int("((lambda (x) (+ ((lambda (x) x) 7) x)) 3)"), Some(10));
+    }
+
+    #[test]
+    fn match_binding_does_not_overwrite_the_parameter() {
+        assert_eq!(run_int("(define (f x) (+ (match 5 (x x)) x)) (f 1)"), Some(6));
+        assert_eq!(
+            run_int(
+                "(union T (A (v : int)) (B)) \
+                 (define (f v) (+ (match (A 41) ((A v) v) (_ 0)) v)) (f 1)"
+            ),
+            Some(42),
+        );
+    }
+
+    #[test]
+    fn recursion_through_shadowed_bindings() {
+        assert_eq!(
+            run_int(
+                "(define (sum n acc) (if (= n 0) acc \
+                   (let ((acc (+ acc n))) (let ((n (- n 1))) (sum n acc))))) (sum 4 0)"
+            ),
+            Some(10),
+        );
+        assert_eq!(
+            run_int("(define (f n) (if (= n 0) 0 (let ((n (- n 1))) (+ 1 (f n))))) (f 5)"),
+            Some(5),
+        );
+    }
+
+    #[test]
+    fn user_names_spelled_like_compiler_registers_are_kept_apart() {
+        assert_eq!(
+            run_int("(let ((__r1_x 7)) (let ((x 1)) (let ((x 2)) (+ x __r1_x))))"),
+            Some(9),
+        );
+        assert_eq!(run_int("(let ((_n1 \"s\")) (+ 1 (string-length _n1)))"), Some(2));
+    }
+
     // ── Error paths ─────────────────────────────────────────────────
 
     #[test]
