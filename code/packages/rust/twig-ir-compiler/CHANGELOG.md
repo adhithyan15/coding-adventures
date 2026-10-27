@@ -98,7 +98,7 @@
   pre-pass cases and a shadowed typed value-global. All except the
   scope-exit control failed before the fix.
 - 12 more tests for the follow-up fixes (11 failed before them; the
-  `str` control passes either way). Seven cover string-parameter
+  `str` control passes either way). Six cover string-parameter
   inference: a `let`/`let*` alias, a call in another function body, a
   `define` alias, calls in a lambda and a `match` arm, a function passed as
   an argument, and an exported function. Five cover scope type leaks: after a
