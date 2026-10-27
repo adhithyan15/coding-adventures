@@ -260,12 +260,12 @@ describe("handwriting ductus", () => {
     // 199 -> 211: the twelve characters A2 vocabulary tranche h writes
     // (chapters 248-277), each right after the word that anchors
     // it: 校 高 读 作 写 孩 工 热 假 笑 先 老.
-    // 211 -> 215: the first characters the B1 core writes
+    // 211 -> 219: the first characters the B1 core writes
     // (chapters 278-289), each right after the word that anchors it:
-    // 最 然 第 突.
-    expect(chinese.letters).toHaveLength(215);
+    // 最 然 第 突 意 如 所 该.
+    expect(chinese.letters).toHaveLength(219);
     expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(
-      215,
+      219,
     );
     expect(
       chinese.letters.every((letter) => letter.strokeOrderSource !== undefined),

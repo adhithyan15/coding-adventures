@@ -6597,3 +6597,160 @@ describe("Chinese 突 — nine cited strokes, eight lifts", () => {
     ).toBe(penPathD(letter.strokes[8], 1));
   });
 });
+
+// 意 (chapter 280): thirteen strokes, every one lifted, and none of them turns
+// in a second segment, so the strip is thirteen movements. The last frame must
+// still draw the exact Noto Sans SC character behind the last stroke.
+describe("Chinese 意 — thirteen cited strokes, twelve lifts", () => {
+  const letter = ductusFor("意", "chinese")!;
+  const outline = chineseOutline("意");
+  const steps = ductusSteps(letter);
+  const strip = ductusFilmstrip(letter, outline);
+
+  it("lifts before every stroke but the first", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+    ]);
+    expect(strip.frames).toHaveLength(13);
+    expect(strip.penLifts).toBe(12);
+    expect(strip.summary).toBe("13 strokes · 12 pen lifts · 13 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind the last stroke", () => {
+    const paths = byTag(strip.frames[12], "path");
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d,
+    ).toBe(outline.path);
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
+    ).toBe(penPathD(letter.strokes[12], 1));
+  });
+});
+
+// 如 (chapter 281): six strokes, every one lifted, and none of them turns in a
+// second segment, so the strip is six movements. The last frame must still draw
+// the exact Noto Sans SC character behind the last stroke.
+describe("Chinese 如 — six cited strokes, five lifts", () => {
+  const letter = ductusFor("如", "chinese")!;
+  const outline = chineseOutline("如");
+  const steps = ductusSteps(letter);
+  const strip = ductusFilmstrip(letter, outline);
+
+  it("lifts before every stroke but the first", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 3, 4, 5]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+    ]);
+    expect(strip.frames).toHaveLength(6);
+    expect(strip.penLifts).toBe(5);
+    expect(strip.summary).toBe("6 strokes · 5 pen lifts · 6 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind the last stroke", () => {
+    const paths = byTag(strip.frames[5], "path");
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d,
+    ).toBe(outline.path);
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
+    ).toBe(penPathD(letter.strokes[5], 1));
+  });
+});
+
+// 所 (chapter 281): eight strokes, every one lifted, and none of them turns in a
+// second segment, so the strip is eight movements. The last frame must still
+// draw the exact Noto Sans SC character behind the last stroke.
+describe("Chinese 所 — eight cited strokes, seven lifts", () => {
+  const letter = ductusFor("所", "chinese")!;
+  const outline = chineseOutline("所");
+  const steps = ductusSteps(letter);
+  const strip = ductusFilmstrip(letter, outline);
+
+  it("lifts before every stroke but the first", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([
+      0, 1, 2, 3, 4, 5, 6, 7,
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+    ]);
+    expect(strip.frames).toHaveLength(8);
+    expect(strip.penLifts).toBe(7);
+    expect(strip.summary).toBe("8 strokes · 7 pen lifts · 8 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind the last stroke", () => {
+    const paths = byTag(strip.frames[7], "path");
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d,
+    ).toBe(outline.path);
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
+    ).toBe(penPathD(letter.strokes[7], 1));
+  });
+});
+
+// 该 (chapter 282): eight strokes, every one lifted, and none of them turns in a
+// second segment, so the strip is eight movements. The last frame must still
+// draw the exact Noto Sans SC character behind the last stroke.
+describe("Chinese 该 — eight cited strokes, seven lifts", () => {
+  const letter = ductusFor("该", "chinese")!;
+  const outline = chineseOutline("该");
+  const steps = ductusSteps(letter);
+  const strip = ductusFilmstrip(letter, outline);
+
+  it("lifts before every stroke but the first", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([
+      0, 1, 2, 3, 4, 5, 6, 7,
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+    ]);
+    expect(strip.frames).toHaveLength(8);
+    expect(strip.penLifts).toBe(7);
+    expect(strip.summary).toBe("8 strokes · 7 pen lifts · 8 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind the last stroke", () => {
+    const paths = byTag(strip.frames[7], "path");
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d,
+    ).toBe(outline.path);
+    expect(
+      paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
+    ).toBe(penPathD(letter.strokes[7], 1));
+  });
+});
