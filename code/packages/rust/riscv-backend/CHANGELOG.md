@@ -14,8 +14,29 @@
   backends adopted. Its other callers widen a word to a pair or pick a
   divide/shift. A genuine 0 / 1 boolean gives the same result either way.
 
+- **A `bool`-suffixed comparison over `i64` register pairs compares the
+  whole pair.** The suffix names the result, so `cmp_lt_bool` can have
+  64-bit operands; Twig's `(< 3000000000 1)` lowers to exactly that. Such a
+  comparison passed `require_comparison_type`, and `var_src` handed the
+  word lowering only each operand's low word. So `3e9 < 1` compared
+  `0xB2D0_5E00` with 1, and `2^32 == 0` compared two zero words. The fix
+  above made the low-word compare signed, which broke values in
+  `[2^31, 2^32)`; before it, `sltu` had happened to get those right. When
+  either operand of a `cmp_*_bool` is a `Pair` / `PairSpill`, it now goes
+  through `lower_wide_comparison`, signed. Narrow suffixes (`cmp_lt_u8`, …)
+  still read the low word, which is the documented contract for frontends
+  such as Nib. This also fixes item 2 of #18463 (`eq` / `ne` on pairs).
+
 ### Tests
 
+- `bool_typed_compare_on_64_bit_pairs_compares_both_words` runs
+  `cmp_{lt,gt,le,ge,eq,ne}_bool` on `const_i64` pairs in the simulator:
+  `3e9 < 1`, `1 < 3e9`, `2^32 < 1`, `-5e9 < 0`, `-1 < 0`, `-2^32 < 0`,
+  `-(2^32 - 1) < 0`, `3e9 > 1`, `2^32 <= 0`, `-5e9 >= 0`, and `eq` / `ne`
+  on `2^32` vs 0 and `2^32 + 1` vs 1. Eleven of the 15 cases failed before
+  this change. `-5e9 < 0`, `-1 < 0`, `-5e9 >= 0` and the equal-pair `eq`
+  passed by accident, because those low words already compare correctly
+  as `i32`.
 - `bool_typed_compare_is_signed` runs `cmp_{lt,le,gt,ge}_bool` in the
   simulator on `i32` and `i64` operands, with negative left-hand sides
   (-1 < 0 is 1, -1 > 0 is 0, and so on), plus 0 / 1 controls. It failed

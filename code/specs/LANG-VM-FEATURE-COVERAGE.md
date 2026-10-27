@@ -27,7 +27,7 @@ refusal also does not imply the complete driver refuses that feature.
 
 | Frontend | Unified rows | Declared cells (all backends, Beam included) | Additional proof boundary |
 |---|---:|---:|---|
-| Twig | 53 | 420 | 52 of those cells are BEAM (VM-041 + this follow-up: `match`/`union` fusion fix). #18453 added four rows with negative comparison operands; three declare all eight columns. The fourth, `(define (f x) (if (< x 0) 42 7)) (f -5)`, declares NativeAot, LLVM, WASM and JVM only. Vm and Jit refuse its `call_builtin "<"` on a parameter, a capability gap. Its CLR and BEAM cells were not run. Dedicated heap/closure/string/union tests |
+| Twig | 53 | 420 | 52 of those rows declare BEAM (VM-041 + this follow-up: `match`/`union` fusion fix). #18453 added four rows with negative comparison operands; three declare all eight columns. The fourth, `(define (f x) (if (< x 0) 42 7)) (f -5)`, declares NativeAot, LLVM, WASM and JVM only. Vm and Jit refuse its `call_builtin "<"` on a parameter, a capability gap. Its CLR and BEAM cells were not run. Dedicated heap/closure/string/union tests |
 | Nib | 26 | 208 | All eight columns including real BEAM u4/u8 and BCD storage |
 | Brainfuck | 6 | 48 | All eight columns; BEAM09 proves byte input, all 256 byte values and repeated EOF on real Erlang |
 | Dartmouth BASIC | 52 | 416 | All 52 of those cells are BEAM (18 pure-string + 2 numeric-baseline + 2 neg/pow + 12 general-arithmetic/control-flow + 5 math builtins + 4 arrays/DATA + 2 string arrays + 5 `INPUT` rows + `RND`, BEAM03/VM-LOOP-24/BEAM04/BEAM06/BEAM07/BEAM08, + 1 asymmetric real negation `PRINT -X` with `X = 2.5`, added with the native `neg_f64` sign-bit fix); random differential suite and frontend JIT tests |
