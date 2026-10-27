@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Requires `mosaic-pkg-toolkit` `0.16.0` (was `0.11.0`). The old string was
+  never checked and no longer matched the toolkit on disk; it is now a caret
+  requirement the resolver enforces (mosaic-package-publishing-v1 §7.4). No
+  source change: the build already compiled against 0.16.0, and the only
+  breaking toolkit change since 0.11.0 (`SegmentedControl.options`, 0.15.0)
+  touches no component this package uses (`Select`).
 - Depends on `mosaic-pkg-grid` 0.3.0 (Cell's `row-height`, Column's `column-key`/`column-width`), whose Cell and Column load on Qt again.
 
 All notable changes to `mosaic-pkg-sheet` are documented in this file.
