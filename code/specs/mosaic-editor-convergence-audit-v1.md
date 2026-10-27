@@ -305,3 +305,139 @@ E5 to E8 (§6) are independent of this order.
   compositions build on all nine backends and measure their native drops.
   Behaviour (focus, commit chords, screen readers) is each follow-up's to
   test on real hosts.
+
+## 8. Addendum: E4 as built (`NoteEditor` 0.2.0)
+
+**Status:** E4 is implemented on branch `feat/note-editor-on-draft-editor`.
+It follows §4.2 and the §6 E4 row. Where those left a choice open, the
+decision is recorded below with its reason. Measured on `origin/main` at
+`4ff0435529e`.
+
+### 8.1 What `NoteEditor` mounts
+
+```
+Column [ note-editor ]
+  Text [ editor-title ]
+  Row  [ note-metadata ]          note id, note type, deck (unchanged)
+  Row  [ note-choice-row ]        note-type and deck option lists (unchanged)
+  Row  [ editor-body ]
+    Column [ field-list-column ]  one HostButton per field (unchanged)
+    Box    [ focused-field-column ]
+      pkg::mosaic-pkg-draft-editor::DraftEditor
+        title-label : ""                      no title field
+        body-label  : selected-field-label    visible label + accessible name
+        body-value  : selected-field-value
+        body-placeholder : selected-field-placeholder
+        save-label, delete-label, cancel-label : ""   no actions
+        onBodyChange → onFieldValueChange
+        onSave       → onSaveNote             Ctrl/Cmd+Enter
+      Text      [ tags-label ]
+      HostInput [ tags-input ]    a11y-label : tags-label   (new)
+  Row  [ editor-actions ]         Save note / Delete / Cancel (unchanged)
+```
+
+The parts `selected-field-label` and `selected-field-input` are gone. They
+are now `draft-editor-body-label` and `draft-editor-body`. Every other
+`NoteEditor` part keeps its name.
+
+### 8.2 Decisions
+
+- **D1. `NoteEditor`'s slot and event sets do not change.** DraftEditor's
+  `body-label` and `body-placeholder` are fed from the existing
+  `selected-field-label` and `selected-field-placeholder` slots, which already
+  carry the field's name and hint. So the package gains no slot, and Engram's
+  two layouts (`EngramApp.mll`, `EngramApp.touch.mll`) do not change. R1 (an
+  added slot breaks every consumer that does not bind it) does not apply.
+  `NoteEditor` already took every word as a slot, so no English moves out of
+  the package. The `""` bindings for DraftEditor's title and action labels
+  are not words: they are how a body-only mount switches those parts off.
+  The version is still a minor bump (0.2.0), because the field's behaviour
+  and its part names change, and it gains a package dependency
+  (`mosaic-pkg-draft-editor = "0.2.0"`).
+- **D2. The host sends "Field" when no field is selected.** §4.2 offered
+  this or gating the editor on a selected field. This takes the first
+  option: the field keeps a name in every state, and the layout does not
+  switch at runtime. The placeholder in that state stays "Select a field",
+  so the hint still says what to do. Gating would remove the field when a
+  note type has no fields, and would also make the form's height jump on
+  selection, which is a reachability risk in a native pane that does not
+  scroll (lesson `a-component-swap-that-passes-every-compile-gate-...`).
+  Every other state already sent the selected field's name.
+- **D3. Ctrl/Cmd+Enter raises `onSaveNote`.** DraftEditor raises its `onSave`
+  on the chord even when no Save button is drawn, so forwarding `onSave` to
+  `onSaveNote` is all it takes. The host needs no change: the chord raises
+  the same event as the Save note button, and the host handles it the same
+  way.
+- **D4. R2's nested drops are pinned, not fixed.** Both are measured, both
+  are explained, and neither loses anything 0.1.0 had:
+  - *SwiftUI `gap` on `draft-editor-title-group`* is a reporting artifact.
+    `title-label : ""` makes the title group's `If` a constant, so the
+    package inliner folds it away. The part never appears in the emitted
+    Swift, and the SwiftUI drop reporter reports the style of a part that has
+    no occurrence as not lowered. Nothing on screen is missing. Fixing that
+    is a SwiftUI reporter change that would also move other packages'
+    gates, so it is filed as new work rather than done here.
+  - *Flutter `width: 100%` on `draft-editor-body`* is a real constraint.
+    In `NoteEditor`, the field sits under `Row [ editor-body ]`, which gives
+    its children unbounded width. Flutter can fill 100% only of a bounded
+    parent, so the emitter declines rather than emit a layout that throws.
+    0.1.0's field asked for no width, so it is no narrower than it was.
+  - The body's `min-height` on Qt and Flutter is the drop DraftEditor's own
+    gate already pins. Mounted here it is the same drop on the same part.
+- **D5. `NoteEditor`'s gate pins by part, per theme, and counts.** It follows
+  the E2 gate for `Notes`: each pin is `(backend, property, part)`, the
+  inverse ratchet runs per theme, and the pin list's length is the exact
+  per-theme drop count. A `(backend, property)` pin for `(Flutter, "width")`
+  would license any part of the package to drop `width`.
+- **D6. Engram's app gate gains part-scoped pins for the new kinds.** Its
+  existing pins are by `(backend, property)` across the whole app. Three of
+  the four nested drops are kinds that list does not pin: SwiftUI `gap` was
+  removed from it on purpose, Qt `min-height` and Flutter `width` were never
+  there. Adding them as property pins would let any part of Engram drop them.
+  So they go in a separate `(backend, property, part)` list, checked in both
+  directions. Flutter `min-height` is already pinned by property.
+
+### 8.3 Measured drops
+
+Capability degradations stay at zero on all five native backends, in both
+themes, for `NoteEditor` and for Engram.
+
+`NoteEditor`'s style drops per theme (identical in dark and light):
+
+| Backend | 0.1.0 | 0.2.0 | Added |
+| --- | :-: | :-: | --- |
+| SwiftUI | 0 | 1 | `gap` on `draft-editor-title-group` (D4) |
+| Qt | 0 | 1 | `min-height` on `draft-editor-body` |
+| XAML | 0 | 0 | |
+| Flutter | 1 | 3 | `min-height` and `width` on `draft-editor-body` |
+| Compose | 0 | 0 | |
+| **Total** | **1** | **5** | |
+
+The one 0.1.0 drop (Flutter `font-weight` on `editor-title`) is unchanged.
+This is exactly what probe B (§3.1) measured.
+
+Engram (`theme: None`, both layouts) goes from 372 to 380 reported style
+drops: the same four drops, once for each of the two layouts that mount
+`NoteEditor`.
+
+### 8.4 R3: Engram's UI tests
+
+A search of every conformance tree and native host for `selected-field-input`,
+`selected-field-label`, `tags-input`, `note-field-option`, `focused-field` and
+`save-button` finds no Engram test or host that types into the focused field
+by its part tag. The one hit, `tags-input` in
+`journal-mosaic-app/conformance/compose/JournalScreenshots.kt`, is Journal's
+own part. Engram's hand-written XAML host applies props by name from the
+core's JSON, so it needs no change.
+
+### 8.5 What the user sees
+
+- The focused field is multi-line, about 160 px tall on backends that lower
+  `min-height`. Enter is a line break. It used to do nothing.
+- Ctrl+Enter (Cmd+Enter on macOS) saves the note, as Anki's Add dialog does.
+- The field draws inside DraftEditor's own frame (padding, border, and its
+  label), so it looks like Journal's editor body, not like the tags field
+  below it. DraftEditor's styles are its own, and a consumer cannot restyle
+  them. This is the visual cost of one shared editor.
+- A screen reader announces the field by its name, and announces the tags
+  field as "Tags". Neither had an accessible name before.

@@ -113,9 +113,15 @@ and size only (#15276).
 
 ## Adoption
 
-- **Journal (J3c)** uses it for new-entry and edit, and is its only consumer
-  today. It binds `body-placeholder : ""`.
-- **Trestle `Notes`** swaps its editing column for it (follow-up PR).
-- **Engram `NoteEditor`** could use it for the focused field (no title, no
-  actions), but that changes Engram's field from single-line to multi-line and
-  churns its pinned tests — a separate Engram PR.
+- **Journal (J3c)** uses it for new-entry and edit. It binds
+  `body-placeholder : ""`.
+- **Trestle `Notes`** swaps its editing column for it (E3).
+- **Engram `NoteEditor` 0.2.0** mounts it body-only for the focused field
+  (E4): `title-label`, `save-label`, `delete-label` and `cancel-label` are
+  `""`, `body-label` is the field's name, `body-placeholder` its hint, and
+  `onSave` (Ctrl/Cmd+Enter) is forwarded to `onSaveNote`. The field became
+  multi-line. Mounted there, it adds two style drops that its own gate cannot
+  see: SwiftUI `gap` on the folded-away title group, and Flutter `width` on
+  the body under `NoteEditor`'s Row. See
+  [`mosaic-editor-convergence-audit-v1.md`](mosaic-editor-convergence-audit-v1.md)
+  §8.
