@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C151-tingdong",
+    "language": "chinese",
+    "chapter": 151,
+    "sequence": 12320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17316767c9dbb1aa"
+  },
+  "findings": []
+}
