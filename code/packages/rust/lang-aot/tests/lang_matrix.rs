@@ -14117,6 +14117,131 @@ fn twig_truthiness_of_a_raw_word_matches_the_runtime_rule_it_replaced() {
     }
 }
 
+/// `car` / `cdr` of a value that is not a pair fail closed on every column —
+/// no column reads memory through the word.
+///
+/// On the tagged-word columns (LLVM, native x86-64) `(car 5)` lowers to a call
+/// of the C runtime's `__dyn_pair_first` with the boxed integer `5 << 3 = 40`.
+/// Before the runtime checked the tag it cleared the low bits and read the 8
+/// bytes at address 40 — a segfault here, but `(car 1000000)` reads address
+/// 8000000, wherever that lands: an arbitrary read steered by program data.
+/// The VM's `field_load` asks `heap::car`, which answers "not a cons cell", and
+/// the run fails with a `TypeError`; the C runtime now stops the program the
+/// same way (stderr names the call, then `abort()`), so every column agrees the
+/// program fails rather than returning something.
+///
+/// `Expect::Trap` is the data-less "fails at run time" expectation: a type
+/// error is not one of LANG83's closed trap kinds, so there is no kind to
+/// compare, only that no column completes. That alone cannot tell the fix
+/// from the bug — a read of address 40 also kills the process (SIGSEGV) — so
+/// the tagged-word columns are run once more and their stderr must carry the
+/// runtime's refusal (`dyn_pair_first: argument with tag 0 (int) is not a
+/// pair`), which only the tag check prints. The refusal names the tag, never
+/// the word, so no stderr here may carry a `0x…` value (a heap address there
+/// would be an ASLR leak).
+///
+/// Columns: the ones that compile a `car` with no `cons` in the program and
+/// can be checked here. WASM refuses that program at compile time (its
+/// `$LispyPair` type is registered only when a `cons` exists); CLR and BEAM
+/// are left to a host with `dotnet`/`erl`.
+#[test]
+fn twig_car_and_cdr_of_a_non_pair_fail_closed_on_every_column() {
+    const PROGRAMS: [&str; 6] = [
+        "(car 5)",
+        "(cdr 5)",
+        "(car 1000000)",
+        "(cdr 1000000)",
+        "(define (head x) (car x)) (head #t)",
+        "(define (tail x) (cdr x)) (tail (list))",
+    ];
+    let mut ran = Vec::new();
+    for src in PROGRAMS {
+        let p = Prog {
+            lang: Language::Twig,
+            ext: "twig",
+            src,
+            expect: Expect::Trap,
+            backends: &[Llvm, NativeAot, Vm, Jit, Jvm],
+            release: None,
+            case: None,
+        };
+        for &backend in p.backends {
+            if let Some(result) = run(backend, &p) {
+                assert_cell(backend, &p, result);
+                ran.push(backend);
+            }
+        }
+        for (column, stderr) in tagged_word_stderr(&p) {
+            assert!(
+                stderr.contains("argument with tag ") && stderr.contains("is not a pair"),
+                "{column} {src}: the C runtime must refuse the non-pair, not read \
+                 through it; stderr: {stderr:?}"
+            );
+            assert!(
+                !stderr.contains("0x"),
+                "{column} {src}: the refusal must name the tag, not print the word; \
+                 stderr: {stderr:?}"
+            );
+        }
+    }
+    assert!(ran.contains(&Vm), "the VM always runs");
+    if clang_ok() {
+        assert!(ran.contains(&Llvm), "clang is present, so the LLVM column must run");
+    }
+    if cfg!(all(target_os = "linux", target_arch = "x86_64")) && native_linker_ok() {
+        assert!(ran.contains(&NativeAot), "the native column must run on an x86-64 Linux host");
+    }
+}
+
+/// Run a Twig program that calls only `__dyn_*` runtime functions on the
+/// tagged-word columns available here (LLVM via `clang`, native x86-64 via the
+/// system linker) and return each column's stderr — what `run_llvm` /
+/// `run_native` compute and discard. A column whose toolchain is absent is
+/// left out, as `run` leaves it out.
+fn tagged_word_stderr(p: &Prog) -> Vec<(&'static str, String)> {
+    let mut out = Vec::new();
+    let dir = tempfile::tempdir().expect("stderr probe: create temp dir");
+    if clang_ok() {
+        let triple = String::from_utf8(
+            Command::new("clang").arg("-dumpmachine").output().expect("clang -dumpmachine").stdout,
+        )
+        .expect("clang -dumpmachine emitted valid UTF-8")
+        .trim()
+        .to_string();
+        let ll = prog_iir(p, "lm")
+            .and_then(|m| lang_aot::compile_iir_to_llvm(m, "lm", &triple))
+            .unwrap_or_else(|e| cell_failed("Llvm", p, "source → LLVM IR", format!("{e:?}")));
+        let ll_path = dir.path().join("probe.ll");
+        std::fs::write(&ll_path, &ll).expect("stderr probe: write .ll");
+        let exe = dir.path().join("probe_llvm");
+        let rt = |name: &str| {
+            std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime").join(name)
+        };
+        let built = Command::new("clang")
+            .arg("-x").arg("ir").arg(&ll_path)
+            .arg("-x").arg("none").arg(rt("dynval_runtime.c"))
+            .args(common::gc_link_args())
+            .arg(rt("twig_runtime.c"))
+            .arg("-o").arg(&exe)
+            .output()
+            .expect("stderr probe: spawn clang");
+        assert!(built.status.success(), "stderr probe: clang: {}", String::from_utf8_lossy(&built.stderr));
+        let run = Command::new(&exe).output().expect("stderr probe: run LLVM executable");
+        out.push(("Llvm", String::from_utf8_lossy(&run.stderr).into_owned()));
+    }
+    if cfg!(all(target_os = "linux", target_arch = "x86_64")) && native_linker_ok() {
+        let src_path = dir.path().join(format!("probe.{}", p.ext));
+        std::fs::write(&src_path, p.src).expect("stderr probe: write source");
+        let exe = dir.path().join("probe_native");
+        if let Err(e) = compile_native(&src_path, &exe, request(p)) {
+            cell_failed("NativeAot", p, "source → native executable", e);
+        }
+        let run = Command::new(&exe).output().expect("stderr probe: run native executable");
+        out.push(("NativeAot", String::from_utf8_lossy(&run.stderr).into_owned()));
+    }
+    out
+}
+
 /// LANG83 PR7f-2 security review: the Lisp lowering recognises its own
 /// helpers (`__lisp_equal`, …) and inline-rule markers (`__lisp_not`, …) by
 /// name, so no program may define or call one. Twig refuses the name at the

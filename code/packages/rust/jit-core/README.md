@@ -132,7 +132,9 @@ registers with vm-core and in `JITCore::execute` — so the failure surfaces as
 of a failing compiled function stops at the `call`.  `GenericCirJit` maps its
 error slot to `VMError::Trap { kind }` (`trap: <kind>`),
 `VMError::DivisionByZero`, or `VMError::Custom`, and the slot is empty again
-when `JITCore` returns.
+when `JITCore` returns. An embedder's builtin callback can fail the run the
+same way: it captures `error_handle()`, stores a message, and returns any
+placeholder. The interpreter stops right after that `CALL_BUILTIN`.
 
 ### Compiling functions with parameters
 
