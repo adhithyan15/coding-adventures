@@ -14189,6 +14189,108 @@ fn twig_car_and_cdr_of_a_non_pair_fail_closed_on_every_column() {
     }
 }
 
+/// #18416: on the LLVM column a program function is `internal` (only `main`
+/// is exported), so a program cannot replace a libc function the linked C
+/// runtime or the collector calls.
+///
+/// | program                                     | before (external linkage)                              | now        |
+/// |---------------------------------------------|--------------------------------------------------------|------------|
+/// | `(define (abort) 0) (car 5)`                | the runtime's `abort()` returned; only the pair guard's `__builtin_trap` stopped it (SIGILL) | SIGABRT, the refusal on stderr |
+/// | `(define (malloc n) 0) (car (cons 3 4))`    | gc-core-capi's allocations failed: "memory allocation of 32 bytes failed", SIGABRT | exit 3 |
+/// | `(define (calloc a b) 0) (car (cons 3 4))`  | the cons cell came back null; `car` refused it          | exit 3     |
+/// | `(define (exit n) 7) (car (cons 3 4))`      | exit 3 (glibc's start-up code does not call `exit` through the program's symbol) | exit 3 |
+///
+/// Each runs on the native column too (where program functions were never
+/// exported) and on the VM, which never links C.
+#[test]
+fn twig_programs_cannot_interpose_libc_on_the_llvm_column() {
+    let mut ran = Vec::new();
+    for src in [
+        "(define (malloc n) 0) (car (cons 3 4))",
+        "(define (calloc a b) 0) (car (cons 3 4))",
+        "(define (exit n) 7) (car (cons 3 4))",
+        "(define (fflush x) 0) (define (printf x) 0) (car (cons 3 4))",
+    ] {
+        let p = Prog {
+            lang: Language::Twig,
+            ext: "twig",
+            src,
+            expect: Expect::Exit(3),
+            backends: &[Llvm, NativeAot, Vm],
+            release: None,
+            case: None,
+        };
+        for &backend in p.backends {
+            if let Some(result) = run(backend, &p) {
+                assert_cell(backend, &p, result);
+                ran.push(backend);
+            }
+        }
+    }
+    if clang_ok() {
+        assert!(ran.contains(&Llvm), "clang is present, so the LLVM column must run");
+        // Every non-entry function of the LLVM module is internal.
+        let iir = lang_aot::compile_source_to_iir(Language::Twig, "(define (abort) 0) (car 5)", "m").expect("iir");
+        let ll = lang_aot::compile_iir_to_llvm(iir, "m", "x86_64-unknown-linux-gnu").expect("llvm");
+        assert!(ll.contains("define internal i64 @abort("), "{ll}");
+        assert!(ll.lines().any(|l| l.starts_with("define i64 @main(")), "{ll}");
+    }
+
+    // A program `abort` does not stop the pair guard's real abort: the process
+    // dies of SIGABRT (not the SIGILL of the guard's backstop trap, which is
+    // what happened while `abort` was the program's) with the refusal on stderr.
+    let p = Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (abort) 0) (car 5)",
+        expect: Expect::Trap,
+        backends: &[Llvm, NativeAot, Vm],
+        release: None,
+        case: None,
+    };
+    for &backend in p.backends {
+        if let Some(result) = run(backend, &p) {
+            assert_cell(backend, &p, result);
+        }
+    }
+    #[cfg(unix)]
+    if clang_ok() {
+        use std::os::unix::process::ExitStatusExt;
+        let (status, stderr) = llvm_status_and_stderr(&p);
+        assert_eq!(status.signal(), Some(6), "SIGABRT expected, got {status:?}; stderr {stderr:?}");
+        assert!(stderr.contains("is not a pair"), "{stderr:?}");
+    }
+}
+
+/// Build `p` on the LLVM column (clang, linking the C runtime and the
+/// collector as `run_llvm` does) and run it, returning its status and stderr.
+#[cfg(unix)]
+fn llvm_status_and_stderr(p: &Prog) -> (std::process::ExitStatus, String) {
+    let dir = tempfile::tempdir().expect("llvm probe: temp dir");
+    let triple = String::from_utf8(Command::new("clang").arg("-dumpmachine").output().expect("clang -dumpmachine").stdout)
+        .expect("clang -dumpmachine emitted valid UTF-8")
+        .trim()
+        .to_string();
+    let ll = prog_iir(p, "lm")
+        .and_then(|m| lang_aot::compile_iir_to_llvm(m, "lm", &triple))
+        .unwrap_or_else(|e| cell_failed("Llvm", p, "source → LLVM IR", format!("{e:?}")));
+    let ll_path = dir.path().join("probe.ll");
+    std::fs::write(&ll_path, &ll).expect("llvm probe: write .ll");
+    let exe = dir.path().join("probe_llvm");
+    let rt = |name: &str| std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime").join(name);
+    let built = Command::new("clang")
+        .arg("-x").arg("ir").arg(&ll_path)
+        .arg("-x").arg("none").arg(rt("dynval_runtime.c"))
+        .args(common::gc_link_args())
+        .arg(rt("twig_runtime.c"))
+        .arg("-o").arg(&exe)
+        .output()
+        .expect("llvm probe: spawn clang");
+    assert!(built.status.success(), "llvm probe: clang: {}", String::from_utf8_lossy(&built.stderr));
+    let run = Command::new(&exe).output().expect("llvm probe: run");
+    (run.status, String::from_utf8_lossy(&run.stderr).into_owned())
+}
+
 /// Run a Twig program that calls only `__dyn_*` runtime functions on the
 /// tagged-word columns available here (LLVM via `clang`, native x86-64 via the
 /// system linker) and return each column's stderr — what `run_llvm` /
