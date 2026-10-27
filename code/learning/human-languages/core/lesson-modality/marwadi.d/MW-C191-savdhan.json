@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C191-savdhan",
+    "language": "marwadi",
+    "chapter": 191,
+    "sequence": 13030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f82075183332bde"
+  },
+  "findings": []
+}

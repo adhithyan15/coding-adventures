@@ -1,0 +1,19 @@
+{
+  "chapter": 200,
+  "title": "Scales and Weights",
+  "label": "ch:mw-scales-and-weights",
+  "canDo": "I can ask for a weight of something.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "MW-C200-litar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 200: I can ask for a weight of something.",
+    "assesses": [
+      "MW-LEX-C200-WEIGH200-03",
+      "MW-LEX-C200-WEIGH200-04",
+      "MW-LEX-C200-WEIGH200-05"
+    ]
+  }
+}

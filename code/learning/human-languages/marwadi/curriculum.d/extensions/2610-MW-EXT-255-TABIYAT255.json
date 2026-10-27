@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-255-TABIYAT255",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether my health got better.",
+  "prerequisites": []
+}

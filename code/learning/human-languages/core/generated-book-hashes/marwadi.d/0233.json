@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:28cdaed4ab3c52a4",
+  "lessonIds": [
+    "MW-C233-palan",
+    "MW-C233-nakel",
+    "MW-C233-saj",
+    "MW-C233-kasno",
+    "MW-C233-ghughro"
+  ],
+  "tex": "marwadi/book/chapters/ch233-camel-gear.tex"
+}

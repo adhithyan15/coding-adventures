@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:a3f2b2ea6c5c2fb6",
+  "lessonIds": [
+    "MW-C287-sikhavno",
+    "MW-C287-bhanavno",
+    "MW-C287-guru",
+    "MW-C287-chelo",
+    "MW-C287-akharo"
+  ],
+  "tex": "marwadi/book/chapters/ch287-teachers-and-pupils.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:3394f8e008f0223b",
+  "lessonIds": [
+    "MW-C227-kuvo",
+    "MW-C227-udo",
+    "MW-C227-tisayo",
+    "MW-C227-rahat",
+    "MW-C227-dukal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch227.txt",
+  "json": "marwadi/narration/ch227.json",
+  "textHash": "fnv1a64:f20e986a60679f89",
+  "jsonHash": "fnv1a64:85213f668040e105",
+  "findings": []
+}

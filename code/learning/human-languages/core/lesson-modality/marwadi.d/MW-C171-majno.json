@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C171-majno",
+    "language": "marwadi",
+    "chapter": 171,
+    "sequence": 11270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e350709bd00d5a31"
+  },
+  "findings": []
+}

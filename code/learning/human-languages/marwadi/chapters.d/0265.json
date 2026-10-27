@@ -1,0 +1,21 @@
+{
+  "chapter": 265,
+  "title": "Shoes, Shaves and Shirts",
+  "label": "ch:mw-shoes-shaves-and-shirts",
+  "canDo": "I can say what the cobbler, the barber and the tailor do.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "MW-R265-review-final-265",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 265: I can say what the cobbler, the barber and the tailor do.",
+    "assesses": [
+      "MW-LEX-C265-MOCHI265-01",
+      "MW-LEX-C265-MOCHI265-02",
+      "MW-LEX-C265-MOCHI265-03",
+      "MW-LEX-C265-MOCHI265-04",
+      "MW-LEX-C265-MOCHI265-05"
+    ]
+  }
+}

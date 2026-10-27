@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:342057751006a8a5",
+  "lessonIds": [
+    "MW-C191-suchna",
+    "MW-C191-niyam",
+    "MW-C191-mana",
+    "MW-C191-savdhan",
+    "MW-C191-manno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch191.txt",
+  "json": "marwadi/narration/ch191.json",
+  "textHash": "fnv1a64:75c52e169156c4c6",
+  "jsonHash": "fnv1a64:59d58bbe7ee92686",
+  "findings": []
+}

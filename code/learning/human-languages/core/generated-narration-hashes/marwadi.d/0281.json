@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:997be5c54a06c115",
+  "lessonIds": [
+    "MW-C281-chak",
+    "MW-C281-ghumavno",
+    "MW-C281-thapno",
+    "MW-C281-korno",
+    "MW-C281-bhatti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch281.txt",
+  "json": "marwadi/narration/ch281.json",
+  "textHash": "fnv1a64:94c806646992ccc3",
+  "jsonHash": "fnv1a64:6dbfc708d330df71",
+  "findings": []
+}

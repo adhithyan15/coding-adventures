@@ -1,0 +1,11 @@
+{
+  "id": "MW-C172-dhur",
+  "pathSegment": "MW-PATH-172-JHADU172",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-172-JHADU172",
+      "order": 1
+    }
+  ]
+}

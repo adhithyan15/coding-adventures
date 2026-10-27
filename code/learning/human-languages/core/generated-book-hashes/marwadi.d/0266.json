@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:ee77c6be9cba34da",
+  "lessonIds": [
+    "MW-C266-hajar",
+    "MW-C266-madad",
+    "MW-C266-meharbani",
+    "MW-C266-araj",
+    "MW-C266-asis"
+  ],
+  "tex": "marwadi/book/chapters/ch266-please-come-in.tex"
+}

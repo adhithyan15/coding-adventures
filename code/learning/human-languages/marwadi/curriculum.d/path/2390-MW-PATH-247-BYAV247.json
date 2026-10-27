@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-247-BYAV247",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "before": [],
+  "inline": [
+    "MW-EXT-247-BYAV247"
+  ],
+  "after": []
+}

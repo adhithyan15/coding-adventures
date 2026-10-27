@@ -1,0 +1,11 @@
+{
+  "id": "MW-C204-kinaro",
+  "pathSegment": "MW-PATH-204-OUT204",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-204-OUT204",
+      "order": 3
+    }
+  ]
+}

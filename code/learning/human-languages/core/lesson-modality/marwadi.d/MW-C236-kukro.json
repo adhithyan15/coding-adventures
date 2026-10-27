@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C236-kukro",
+    "language": "marwadi",
+    "chapter": 236,
+    "sequence": 16040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:afcc401dbff8246d"
+  },
+  "findings": []
+}

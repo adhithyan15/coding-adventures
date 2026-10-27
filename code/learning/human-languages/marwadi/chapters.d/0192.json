@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "Danger on the Road",
+  "label": "ch:mw-danger-on-the-road",
+  "canDo": "I can understand a warning by the road.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "MW-C192-sudharno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can understand a warning by the road.",
+    "assesses": [
+      "MW-LEX-C192-BOARD192-03",
+      "MW-LEX-C192-BOARD192-04",
+      "MW-LEX-C192-BOARD192-05"
+    ]
+  }
+}

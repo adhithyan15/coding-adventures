@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "Water for the House",
+  "label": "ch:mw-water-for-the-house",
+  "canDo": "I can say who fetches the water and what it is carried in.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-C175-jhari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: I can say who fetches the water and what it is carried in.",
+    "assesses": [
+      "MW-LEX-C175-PANI175-03",
+      "MW-LEX-C175-PANI175-04",
+      "MW-LEX-C175-PANI175-05"
+    ]
+  }
+}

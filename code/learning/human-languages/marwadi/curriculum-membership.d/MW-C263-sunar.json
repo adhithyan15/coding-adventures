@@ -1,0 +1,11 @@
+{
+  "id": "MW-C263-sunar",
+  "pathSegment": "MW-PATH-263-TELI263",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-263-TELI263",
+      "order": 4
+    }
+  ]
+}

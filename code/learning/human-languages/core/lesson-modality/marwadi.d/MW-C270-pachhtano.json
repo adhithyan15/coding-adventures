@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C270-pachhtano",
+    "language": "marwadi",
+    "chapter": 270,
+    "sequence": 19220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cbb38fa5c8624ab"
+  },
+  "findings": []
+}

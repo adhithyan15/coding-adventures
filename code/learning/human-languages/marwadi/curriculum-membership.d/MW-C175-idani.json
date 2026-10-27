@@ -1,0 +1,11 @@
+{
+  "id": "MW-C175-idani",
+  "pathSegment": "MW-PATH-175-PANI175",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-175-PANI175",
+      "order": 1
+    }
+  ]
+}

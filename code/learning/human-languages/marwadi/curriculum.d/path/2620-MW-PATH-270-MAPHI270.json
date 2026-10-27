@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-270-MAPHI270",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "MW-EXT-270-MAPHI270"
+  ],
+  "after": []
+}

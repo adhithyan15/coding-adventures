@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C169-belno",
+    "language": "marwadi",
+    "chapter": 169,
+    "sequence": 11160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31715841df2b2232"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C203-disno",
+    "language": "marwadi",
+    "chapter": 203,
+    "sequence": 13650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e45d0f7ba46971e9"
+  },
+  "findings": []
+}

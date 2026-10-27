@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:156db54db0395ae9",
+  "lessonIds": [
+    "MW-C196-dak",
+    "MW-C196-liphapho",
+    "MW-C196-parsal",
+    "MW-C196-thikano",
+    "MW-C196-mokalno"
+  ],
+  "tex": "marwadi/book/chapters/ch196-at-the-post.tex"
+}

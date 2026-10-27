@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C195-baki",
+    "language": "marwadi",
+    "chapter": 195,
+    "sequence": 13230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47c1fbd767bca267"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C219-utavlo",
+  "pathSegment": "MW-PATH-219-GUEST219",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-219-GUEST219",
+      "order": 4
+    }
+  ]
+}

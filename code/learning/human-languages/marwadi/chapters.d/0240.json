@@ -1,0 +1,21 @@
+{
+  "chapter": 240,
+  "title": "Harvest",
+  "label": "ch:mw-harvest",
+  "canDo": "I can say the millet ripens and I will reap it.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-R240-review-final-240",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say the millet ripens and I will reap it.",
+    "assesses": [
+      "MW-LEX-C240-HARV240-01",
+      "MW-LEX-C240-HARV240-02",
+      "MW-LEX-C240-HARV240-03",
+      "MW-LEX-C240-HARV240-04",
+      "MW-LEX-C240-HARV240-05"
+    ]
+  }
+}

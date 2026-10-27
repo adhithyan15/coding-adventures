@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:bf470c3faa1c6c57",
+  "lessonIds": [
+    "MW-C193-rupiyo",
+    "MW-C193-sikko",
+    "MW-C193-not",
+    "MW-C193-nagad",
+    "MW-C193-chukavno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch193.txt",
+  "json": "marwadi/narration/ch193.json",
+  "textHash": "fnv1a64:6c5db6184ee098f4",
+  "jsonHash": "fnv1a64:a39c89a60488107d",
+  "findings": []
+}

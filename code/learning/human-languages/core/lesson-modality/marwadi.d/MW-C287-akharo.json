@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C287-akharo",
+    "language": "marwadi",
+    "chapter": 287,
+    "sequence": 20120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db8a3c78889fcce2"
+  },
+  "findings": []
+}

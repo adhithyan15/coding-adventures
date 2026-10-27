@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:5457afdf7a3b4402",
+  "lessonIds": [
+    "MW-C227-kuvo",
+    "MW-C227-udo",
+    "MW-C227-tisayo",
+    "MW-C227-rahat",
+    "MW-C227-dukal"
+  ],
+  "tex": "marwadi/book/chapters/ch227-the-village-well.tex"
+}

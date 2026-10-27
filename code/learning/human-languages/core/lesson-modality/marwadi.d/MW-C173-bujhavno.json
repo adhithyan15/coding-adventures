@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C173-bujhavno",
+    "language": "marwadi",
+    "chapter": 173,
+    "sequence": 11390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb84ca7637cc889a"
+  },
+  "findings": []
+}

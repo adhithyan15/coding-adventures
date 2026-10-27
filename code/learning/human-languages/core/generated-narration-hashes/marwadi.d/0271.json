@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:bc3e3ff91155d49d",
+  "lessonIds": [
+    "MW-C271-kharo",
+    "MW-C271-galat",
+    "MW-C271-sabut",
+    "MW-C271-sakhi",
+    "MW-C271-kasam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch271.txt",
+  "json": "marwadi/narration/ch271.json",
+  "textHash": "fnv1a64:138818b47450451b",
+  "jsonHash": "fnv1a64:66a0e75d7cbe15fe",
+  "findings": []
+}

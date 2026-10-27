@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:14ceef930fe2df45",
+  "lessonIds": [
+    "MW-C250-manavno",
+    "MW-C250-pakvan",
+    "MW-C250-uchhav",
+    "MW-C250-arti",
+    "MW-C250-rolo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch250.txt",
+  "json": "marwadi/narration/ch250.json",
+  "textHash": "fnv1a64:e817dfa3a65af738",
+  "jsonHash": "fnv1a64:bb88f39637421fc8",
+  "findings": []
+}

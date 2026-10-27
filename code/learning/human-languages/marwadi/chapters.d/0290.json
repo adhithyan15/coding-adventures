@@ -1,0 +1,21 @@
+{
+  "chapter": 290,
+  "title": "Starting and Finishing",
+  "label": "ch:mw-starting-and-finishing",
+  "canDo": "I can say when work starts and when it is finished.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-R290-review-final-290",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: I can say when work starts and when it is finished.",
+    "assesses": [
+      "MW-LEX-C290-SARU290-01",
+      "MW-LEX-C290-SARU290-02",
+      "MW-LEX-C290-SARU290-03",
+      "MW-LEX-C290-SARU290-04",
+      "MW-LEX-C290-SARU290-05"
+    ]
+  }
+}

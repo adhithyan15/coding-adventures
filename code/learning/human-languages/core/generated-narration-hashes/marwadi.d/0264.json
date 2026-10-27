@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:20ad1293e5d0142b",
+  "lessonIds": [
+    "MW-C264-gharno",
+    "MW-C264-luhar",
+    "MW-C264-thokno",
+    "MW-C264-kumhar",
+    "MW-C264-suthar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch264.txt",
+  "json": "marwadi/narration/ch264.json",
+  "textHash": "fnv1a64:eb16e5c88759baec",
+  "jsonHash": "fnv1a64:efc39cf6801592ed",
+  "findings": []
+}

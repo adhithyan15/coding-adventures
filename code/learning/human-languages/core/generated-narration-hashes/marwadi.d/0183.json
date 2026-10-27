@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 183,
+  "sourceHash": "fnv1a64:25f43c2eac95601e",
+  "lessonIds": [
+    "MW-C183-karchhi",
+    "MW-C183-tokri",
+    "MW-C183-angochho",
+    "MW-C183-kajal",
+    "MW-C183-besan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch183.txt",
+  "json": "marwadi/narration/ch183.json",
+  "textHash": "fnv1a64:1e709d4536313b53",
+  "jsonHash": "fnv1a64:5bee805a54b29e84",
+  "findings": []
+}

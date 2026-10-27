@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:4c5ddc37a9bcece3",
+  "lessonIds": [
+    "MW-C261-masi",
+    "MW-C261-bhatijo",
+    "MW-C261-bhanjo",
+    "MW-C261-poto",
+    "MW-C261-dohito"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch261.txt",
+  "json": "marwadi/narration/ch261.json",
+  "textHash": "fnv1a64:274787ebd287b6ef",
+  "jsonHash": "fnv1a64:e15ee6dc8f5d1ee7",
+  "findings": []
+}

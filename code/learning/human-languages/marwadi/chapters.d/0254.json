@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "At the Healer's",
+  "label": "ch:mw-at-the-healer-s",
+  "canDo": "I can say what the healer gave me and what I need.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MW-C254-alas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can say what the healer gave me and what I need.",
+    "assesses": [
+      "MW-LEX-C254-VAID254-03",
+      "MW-LEX-C254-VAID254-04",
+      "MW-LEX-C254-VAID254-05"
+    ]
+  }
+}

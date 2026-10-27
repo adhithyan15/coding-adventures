@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:7b75d5488c42ce9b",
+  "lessonIds": [
+    "MW-C175-panihari",
+    "MW-C175-idani",
+    "MW-C175-dhovno",
+    "MW-C175-kalsiyo",
+    "MW-C175-jhari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch175.txt",
+  "json": "marwadi/narration/ch175.json",
+  "textHash": "fnv1a64:fd3bec5559021a82",
+  "jsonHash": "fnv1a64:53ffd7ba16dbd9fe",
+  "findings": []
+}

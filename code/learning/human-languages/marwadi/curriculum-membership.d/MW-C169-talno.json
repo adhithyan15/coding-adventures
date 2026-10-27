@@ -1,0 +1,11 @@
+{
+  "id": "MW-C169-talno",
+  "pathSegment": "MW-PATH-169-ROTI169",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-169-ROTI169",
+      "order": 3
+    }
+  ]
+}

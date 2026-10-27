@@ -1,0 +1,15 @@
+{
+  "language": "marwadi",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:7da0dafd72fed04e",
+  "lessonIds": [
+    "MW-C240-pakno",
+    "MW-C240-lunno",
+    "MW-C240-khalo",
+    "MW-C240-bali",
+    "MW-C240-dher",
+    "MW-R240-review-235-240",
+    "MW-R240-review-final-240"
+  ],
+  "tex": "marwadi/book/chapters/ch240-harvest.tex"
+}

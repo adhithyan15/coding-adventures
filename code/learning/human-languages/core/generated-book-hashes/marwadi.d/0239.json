@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:1970a35ec2fff48c",
+  "lessonIds": [
+    "MW-C239-juvar",
+    "MW-C239-sarsu",
+    "MW-C239-kapas",
+    "MW-C239-badhno-grow",
+    "MW-C239-kupal"
+  ],
+  "tex": "marwadi/book/chapters/ch239-crops.tex"
+}

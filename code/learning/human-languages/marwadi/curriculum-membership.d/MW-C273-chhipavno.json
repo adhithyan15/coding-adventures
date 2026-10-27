@@ -1,0 +1,11 @@
+{
+  "id": "MW-C273-chhipavno",
+  "pathSegment": "MW-PATH-273-CHUP273",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-273-CHUP273",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C275-inam",
+    "language": "marwadi",
+    "chapter": 275,
+    "sequence": 19480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:baf06d3a513964c6"
+  },
+  "findings": []
+}

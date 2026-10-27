@@ -1,0 +1,19 @@
+{
+  "chapter": 273,
+  "title": "Hush, a Secret",
+  "label": "ch:mw-hush-a-secret",
+  "canDo": "I can ask for quiet and keep a secret.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "MW-C273-vachan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 273: I can ask for quiet and keep a secret.",
+    "assesses": [
+      "MW-LEX-C273-CHUP273-03",
+      "MW-LEX-C273-CHUP273-04",
+      "MW-LEX-C273-CHUP273-05"
+    ]
+  }
+}

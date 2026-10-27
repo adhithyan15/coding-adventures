@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C221-jhari",
+    "language": "marwadi",
+    "chapter": 221,
+    "sequence": 15290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fbd093be0fd25750"
+  },
+  "findings": []
+}

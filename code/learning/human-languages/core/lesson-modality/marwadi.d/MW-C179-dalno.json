@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C179-dalno",
+    "language": "marwadi",
+    "chapter": 179,
+    "sequence": 11690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b76e983a5a43b966"
+  },
+  "findings": []
+}

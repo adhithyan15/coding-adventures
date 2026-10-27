@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:92617da418bb9a75",
+  "lessonIds": [
+    "MW-C277-bhajan",
+    "MW-C277-rag",
+    "MW-C277-lay",
+    "MW-C277-dolno",
+    "MW-C277-rijhno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch277.txt",
+  "json": "marwadi/narration/ch277.json",
+  "textHash": "fnv1a64:14d1b1a815befacc",
+  "jsonHash": "fnv1a64:146339d451c6acea",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:3da99aedbe7ab39c",
+  "lessonIds": [
+    "MW-C242-jalno",
+    "MW-C242-bujhno",
+    "MW-C242-phutno",
+    "MW-C242-thikro",
+    "MW-C242-dubno"
+  ],
+  "tex": "marwadi/book/chapters/ch242-fire-water-and-a-broken-pot.tex"
+}

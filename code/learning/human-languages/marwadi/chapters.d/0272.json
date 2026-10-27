@@ -1,0 +1,21 @@
+{
+  "chapter": 272,
+  "title": "Only This, and Me Too",
+  "label": "ch:mw-only-this-and-me-too",
+  "canDo": "I can say only, also, of course and certainly.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "MW-R272-review-266-272",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 272: I can say only, also, of course and certainly.",
+    "assesses": [
+      "MW-LEX-C272-PHAGAT272-01",
+      "MW-LEX-C272-PHAGAT272-02",
+      "MW-LEX-C272-PHAGAT272-03",
+      "MW-LEX-C272-PHAGAT272-04",
+      "MW-LEX-C272-PHAGAT272-05"
+    ]
+  }
+}

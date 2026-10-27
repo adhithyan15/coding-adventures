@@ -1,0 +1,11 @@
+{
+  "id": "MW-C234-charno",
+  "pathSegment": "MW-PATH-234-HERD234",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-234-HERD234",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C190-gahno",
+    "language": "marwadi",
+    "chapter": 190,
+    "sequence": 12270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9077fbfc3e0f3fb6"
+  },
+  "findings": []
+}

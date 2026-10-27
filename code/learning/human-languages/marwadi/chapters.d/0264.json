@@ -1,0 +1,19 @@
+{
+  "chapter": 264,
+  "title": "Smith, Potter and Carpenter",
+  "label": "ch:mw-smith-potter-and-carpenter",
+  "canDo": "I can say what the smith, the potter and the carpenter make.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "MW-C264-suthar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 264: I can say what the smith, the potter and the carpenter make.",
+    "assesses": [
+      "MW-LEX-C264-LUHAR264-03",
+      "MW-LEX-C264-LUHAR264-04",
+      "MW-LEX-C264-LUHAR264-05"
+    ]
+  }
+}

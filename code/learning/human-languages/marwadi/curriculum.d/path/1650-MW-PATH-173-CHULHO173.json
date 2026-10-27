@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-173-CHULHO173",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "MW-EXT-173-CHULHO173"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-193-MONEY193",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "MW-EXT-193-MONEY193"
+  ],
+  "after": []
+}

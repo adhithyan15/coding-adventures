@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 257,
+  "title": "Anger and Shame",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:99566dc0261d211e",
+  "lessons": [
+    {
+      "id": "MW-C257-ris",
+      "sequence": 17820,
+      "title": "रीस (rīs) — anger",
+      "headword": "रीस",
+      "romanization": "rīs",
+      "gloss": "anger",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cce0bc6cadbabbf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for joy, then the Marwadi for high spirits."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रीस",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रीस — rīs — \"anger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रीस मत करो। rīs mat karo. Don't get angry."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रीस (rīs) is inherited from Sanskrit riṣ, \"injury\". CDIAL gives no Marwari form in this entry; it lists Gujarati rīs and Hindi ris, both \"anger\", under it; how harm became anger is not spelled out there (CDIAL 10746)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rīs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rīs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rīs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rīs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rīs mat karo. — Don't get angry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rīs mat karo.* — Don't get angry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for joy, then the Marwadi for high spirits, then say rīs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for joy, then the Marwadi for high spirits, then say *rīs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रीस (rīs) mean? (\"Anger\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C257-ris-type",
+              "prompt": "Say the Marwadi for 'anger'.",
+              "assesses": [
+                "MW-LEX-C257-RIS257-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "रीस",
+                "rīs"
+              ],
+              "feedback": {
+                "correct": "Right: रीस (rīs) is 'anger'.",
+                "incorrect": "'anger' is रीस (rīs)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C257-rusno",
+      "sequence": 17830,
+      "title": "रूसणो (rūsṇo) — to sulk; to take offence",
+      "headword": "रूसणो",
+      "romanization": "rūsṇo",
+      "gloss": "to sulk; to take offence",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:abea399ec0eeb0e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for high spirits, then the Marwadi for anger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रूसणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रूसणो — rūsṇo — \"to sulk; to take offence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छोटी बहन रोज रूसै है। chhoṭī bahan roj rūsai hai. My little sister sulks every day."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वो बेटो रूस्यो, vo beṭo rūsyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रूसणो (rūsṇo) is inherited from Sanskrit ruṣyati, \"is angry\"; CDIAL lists Old Marwari rūsaï, \"to get angry\", under it (CDIAL 10794)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rūsṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rūsṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rūsṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rūsṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhoṭī bahan roj rūsai hai. — My little sister sulks every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhoṭī bahan roj rūsai hai.* — My little sister sulks every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for high spirits, then the Marwadi for anger, then say rūsṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for high spirits, then the Marwadi for anger, then say *rūsṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रूसणो (rūsṇo) mean? (\"To sulk; to take offence\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C257-rusno-type",
+              "prompt": "Say the Marwadi for 'to sulk'.",
+              "assesses": [
+                "MW-LEX-C257-RIS257-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "रूसणो",
+                "rūsṇo"
+              ],
+              "feedback": {
+                "correct": "Right: रूसणो (rūsṇo) is 'to sulk; to take offence'.",
+                "incorrect": "'to sulk' is रूसणो (rūsṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C257-laj",
+      "sequence": 17840,
+      "title": "लाज (lāj) — modesty; shame",
+      "headword": "लाज",
+      "romanization": "lāj",
+      "gloss": "modesty; shame",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:572d66edb949e977",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for anger, then the Marwadi for to sulk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लाज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लाज — lāj — \"modesty; shame\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छोरी घणी लाज करै है। chhorī ghaṇī lāj karai hai. The girl is very modest."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लाज (lāj) is inherited from Sanskrit lajjā, \"shame, modesty\"; CDIAL lists Marwari lāj under it (CDIAL 10910)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhorī ghaṇī lāj karai hai. — The girl is very modest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhorī ghaṇī lāj karai hai.* — The girl is very modest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for anger, then the Marwadi for to sulk, then say lāj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for anger, then the Marwadi for to sulk, then say *lāj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लाज (lāj) mean? (\"Modesty; shame\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C257-laj-type",
+              "prompt": "Say the Marwadi for 'modesty'.",
+              "assesses": [
+                "MW-LEX-C257-RIS257-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "लाज",
+                "lāj"
+              ],
+              "feedback": {
+                "correct": "Right: लाज (lāj) is 'modesty; shame'.",
+                "incorrect": "'modesty' is लाज (lāj)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C257-nisaso",
+      "sequence": 17850,
+      "title": "निसासो (nisāso) — a sigh",
+      "headword": "निसासो",
+      "romanization": "nisāso",
+      "gloss": "a sigh",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:abcd50895ae3167a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to sulk, then the Marwadi for modesty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निसासो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निसासो — nisāso — \"a sigh\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी निसासो नाखै है। dādī nisāso nākhai hai. Grandmother heaves a sigh."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निसासो (nisāso) is inherited from Sanskrit niḥśvāsa, \"a sigh\"; CDIAL lists Marwari nisāso under it (CDIAL 7111)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nisāso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nisāso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nisāso, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nisāso*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī nisāso nākhai hai. — Grandmother heaves a sigh.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī nisāso nākhai hai.* — Grandmother heaves a sigh.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to sulk, then the Marwadi for modesty, then say nisāso again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to sulk, then the Marwadi for modesty, then say *nisāso* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निसासो (nisāso) mean? (\"A sigh\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C257-nisaso-type",
+              "prompt": "Say the Marwadi for 'a sigh'.",
+              "assesses": [
+                "MW-LEX-C257-RIS257-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "निसासो",
+                "nisāso"
+              ],
+              "feedback": {
+                "correct": "Right: निसासो (nisāso) is 'a sigh'.",
+                "incorrect": "'a sigh' is निसासो (nisāso)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C257-olmo",
+      "sequence": 17860,
+      "title": "ओळमो (oḷmo) — a reproach; a complaint",
+      "headword": "ओळमो",
+      "romanization": "oḷmo",
+      "gloss": "a reproach; a complaint",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6feba492f124a73d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for modesty, then the Marwadi for a sigh."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ओळमो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओळमो — oḷmo — \"a reproach; a complaint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यो ओळमो साचो है। yo oḷmo sācho hai. This complaint is fair."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओळमो (oḷmo) is inherited from Sanskrit upālambha, \"reproach\"; CDIAL lists Marwari olamũ, \"reproach\", under it (CDIAL 2314). This book writes its l as ळ, as in काळो and ओळखणो."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḷmo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḷmo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḷmo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḷmo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yo oḷmo sācho hai. — This complaint is fair.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yo oḷmo sācho hai.* — This complaint is fair.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for modesty, then the Marwadi for a sigh, then say oḷmo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for modesty, then the Marwadi for a sigh, then say *oḷmo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ओळमो (oḷmo) mean? (\"A reproach; a complaint\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C257-olmo-type",
+              "prompt": "Say the Marwadi for 'a reproach'.",
+              "assesses": [
+                "MW-LEX-C257-RIS257-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ओळमो",
+                "oḷmo"
+              ],
+              "feedback": {
+                "correct": "Right: ओळमो (oḷmo) is 'a reproach; a complaint'.",
+                "incorrect": "'a reproach' is ओळमो (oḷmo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

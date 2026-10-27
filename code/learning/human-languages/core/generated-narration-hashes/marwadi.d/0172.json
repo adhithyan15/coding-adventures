@@ -1,0 +1,20 @@
+{
+  "language": "marwadi",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:9ea29a82c60e58b2",
+  "lessonIds": [
+    "MW-C172-jharno",
+    "MW-C172-dhur",
+    "MW-C172-jalo",
+    "MW-C172-lipno",
+    "MW-C172-garo",
+    "MW-R172-review-166-172"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marwadi/narration/ch172.txt",
+  "json": "marwadi/narration/ch172.json",
+  "textHash": "fnv1a64:da55a45f6f12efc9",
+  "jsonHash": "fnv1a64:937d16d4b20d5c90",
+  "findings": []
+}

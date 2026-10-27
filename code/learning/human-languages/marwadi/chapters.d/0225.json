@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "Packing for the Road",
+  "label": "ch:mw-packing-for-the-road",
+  "canDo": "I can name what I will pack for a journey.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "MW-C225-kamli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can name what I will pack for a journey.",
+    "assesses": [
+      "MW-LEX-C225-PACK225-03",
+      "MW-LEX-C225-PACK225-04",
+      "MW-LEX-C225-PACK225-05"
+    ]
+  }
+}

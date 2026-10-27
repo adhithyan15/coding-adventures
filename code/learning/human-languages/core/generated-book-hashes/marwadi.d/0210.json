@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:d1696fce0719e817",
+  "lessonIds": [
+    "MW-C210-parakhno",
+    "MW-C210-bhat",
+    "MW-C210-namuno",
+    "MW-C210-nakli",
+    "MW-C210-chunno"
+  ],
+  "tex": "marwadi/book/chapters/ch210-choosing-the-right-one.tex"
+}

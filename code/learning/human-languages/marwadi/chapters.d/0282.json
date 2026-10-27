@@ -1,0 +1,19 @@
+{
+  "chapter": 282,
+  "title": "Spinning and Beads",
+  "label": "ch:mw-spinning-and-beads",
+  "canDo": "I can say how thread is spun and beads are strung.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "MW-C282-guthno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 282: I can say how thread is spun and beads are strung.",
+    "assesses": [
+      "MW-LEX-C282-CHARKHO282-03",
+      "MW-LEX-C282-CHARKHO282-04",
+      "MW-LEX-C282-CHARKHO282-05"
+    ]
+  }
+}
