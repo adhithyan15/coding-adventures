@@ -25,6 +25,15 @@ fn initialized_functional() -> Mos6502Simulator {
 
 #[test]
 fn exact_persistent_topology_is_dff_backed() {
+    let cpu = GateLevelCpu::new();
+    let inventory = cpu.physical_storage_inventory();
+    assert_eq!(inventory.memory_dffs, 524_288);
+    assert_eq!(inventory.register_dffs, 55);
+    assert_eq!(inventory.halt_dffs, 1);
+    assert_eq!(inventory.input_dffs, 1_920);
+    assert_eq!(inventory.output_dffs, 1_920);
+    assert_eq!(inventory.total(), 528_184);
+    assert_eq!(inventory.total(), FLIP_FLOP_COUNT);
     assert_eq!(
         FLIP_FLOP_COUNT,
         65_536 * 8 + 4 * 8 + 16 + 7 + 1 + 240 * 8 + 240 * 8

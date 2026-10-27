@@ -848,7 +848,7 @@ fn emit_instr(
     //                      scvtf d1,x0 ; fcmp d0,d1      ; round-trip check
     //                      b.vs trap ; b.ne trap         ; NaN / out of range
     //                      mov x2,#i64::MAX ; cmp x0,x2 ; b.ne ok
-    //               trap:  udf #0xDEAD
+    //               trap:  movz x0,#4 ; bl __twig_trap ; udf   ; Trap.ConvRange
     //                 ok:  str x0,[dest]
     //
     // `fcvtzs` does not trap. On NaN, ±∞ and out-of-range values it
@@ -867,6 +867,10 @@ fn emit_instr(
     // The last check is needed because i64::MAX rounds to 2^63 as a double.
     // No in-range double truncates to i64::MAX (doubles near 2^63 are 1024
     // apart), so that result always means saturation.
+    //
+    // The trap is the LANG83 typed `Trap.ConvRange` (stable id 4) through the
+    // shared `__twig_trap` call, as `Trap.DivZero` is: stdout is flushed and
+    // the program reports `trap: Trap.ConvRange`, not a bare `udf` (SIGILL).
     if op == "int_to_real" {
         let dest = require_dest(instr)?;
         let src = instr.srcs.first()
@@ -899,7 +903,11 @@ fn emit_instr(
         asm.cmp(Reg::X0, Reg::X2);
         asm.b_cond(Cond::Ne, ok);                   // not the +2^63 saturation
         asm.bind(trap).map_err(BackendError::from)?;
-        asm.udf(0xDEAD);
+        let conv_range = interpreter_ir::exception_kind::trap_kind_id(
+            interpreter_ir::exception_kind::TRAP_CONV_RANGE,
+        )
+        .expect("Trap.ConvRange is a built-in kind");
+        emit_trap_call(asm, conv_range)?;
         asm.bind(ok).map_err(BackendError::from)?;
         let slot = alloc.slot_of(dest);
         asm.str_(Reg::X0, Reg::Sp, slot)?;          // store the integer
@@ -4283,11 +4291,13 @@ mod tests {
     }
 
     /// Narrowing fails closed: each conversion rounds with the matching
-    /// `frint*`, round-trips through `scvtf` + `fcmp`, and reaches a
-    /// `udf #0xDEAD` trap instead of storing a saturated integer.
+    /// `frint*`, round-trips through `scvtf` + `fcmp`, and reaches the typed
+    /// `Trap.ConvRange` trap (`movz x0, #4; bl __twig_trap; udf #0x7EA9`)
+    /// instead of storing a saturated integer.
     #[test]
     fn e8_narrowing_traps_instead_of_saturating() {
-        const UDF_DEAD: u32 = 0x0000_DEAD;
+        const MOVZ_X0_4: u32 = 0xD280_0080; // movz x0, #4
+        let trap_udf = u32::from(TRAP_UDF_IMM);
         const FRINTZ_D0: u32 = 0x1E65_C000;
         const FRINTM_D0: u32 = 0x1E65_4000;
         const SCVTF_D1_X0: u32 = 0x9E62_0001;
@@ -4298,7 +4308,9 @@ mod tests {
             let w = words(e8_round_module(op, 45, 0.0));
             assert!(w.contains(&frint), "{op}: expected its frint* rounding");
             assert!(w.contains(&SCVTF_D1_X0), "{op}: expected the scvtf round trip");
-            assert!(w.contains(&UDF_DEAD), "{op}: expected a udf trap");
+            let at = w.iter().position(|x| *x == MOVZ_X0_4)
+                .unwrap_or_else(|| panic!("{op}: expected movz x0, #4 (Trap.ConvRange)"));
+            assert_eq!(w[at + 2], trap_udf, "{op}: udf after the noreturn bl __twig_trap");
         }
     }
 

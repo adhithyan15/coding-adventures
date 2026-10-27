@@ -1,0 +1,8 @@
+[package]
+name = "msp430-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked classic MSP430 functional simulator pinned to the MSP430F2274 CPU"
+license = "MIT"
+
+[dependencies]
