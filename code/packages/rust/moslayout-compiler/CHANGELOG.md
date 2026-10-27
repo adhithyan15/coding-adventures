@@ -11,7 +11,9 @@ differently per backend: `tsc`, `swiftc`, `kotlinc` and `dart analyze`
 errors, or a runtime `ReferenceError` that blanked the whole Web Component.
 
 - `validate` now rejects it with the new `ErrorKind::UnboundName`, one
-  error per occurrence, naming the component, the bare name, the prop and
+  error per occurrence (at most 100 per layout, then one count of the rest;
+  layout text in the message is cut to 64 characters, so a malformed
+  dependency cannot produce unbounded error output), naming the component, the bare name, the prop and
   the node path, and suggesting the fixes:
 
   ```text

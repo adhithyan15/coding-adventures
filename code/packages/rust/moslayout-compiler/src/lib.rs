@@ -1309,6 +1309,29 @@ fn validate_for_node(
 // are to every other check in this validator; their free names are the
 // resolver's business for packages and are not yet checked for apps.
 
+/// At most this many `UnboundName` errors are reported for one layout; the
+/// rest are counted in one summary error. A layout can hold an unbound name
+/// in every node, and layouts can come from third-party packages, so an
+/// uncapped report would let a small malformed dependency produce gigabytes
+/// of error text. The resolver caps its own errors the same way
+/// (`MAX_REPORTED_ERRORS`).
+const MAX_UNBOUND_REPORTS: usize = 100;
+
+/// Layout text echoed into an `UnboundName` message (names, tags, part
+/// names) is cut to this many characters, for the same reason.
+const MAX_ECHOED_CHARS: usize = 64;
+
+/// `text`, or its first [`MAX_ECHOED_CHARS`] characters followed by `…`.
+fn echo(text: &str) -> String {
+    if text.chars().count() <= MAX_ECHOED_CHARS {
+        text.to_string()
+    } else {
+        let mut cut: String = text.chars().take(MAX_ECHOED_CHARS).collect();
+        cut.push('…');
+        cut
+    }
+}
+
 /// Report every bare NAME in a name-reference position of `def` that no
 /// enclosing `For` binds and that names none of `known_slots`.
 fn check_bare_names(
@@ -1326,9 +1349,22 @@ fn check_bare_names(
         component: &def.component_name,
         slot_names,
         path: Vec::new(),
+        reported: 0,
+        omitted: 0,
         errors,
     };
     walk.visit(&def.root, None, &HashSet::new());
+    if walk.omitted > 0 {
+        let component = echo(&def.component_name);
+        walk.errors.push(CompileError {
+            kind: ErrorKind::UnboundName,
+            message: format!(
+                "`{component}` layout: {} more unbound bare names omitted \
+                 (only the first {MAX_UNBOUND_REPORTS} are reported)",
+                walk.omitted
+            ),
+        });
+    }
 }
 
 struct BareNameCheck<'a> {
@@ -1338,6 +1374,10 @@ struct BareNameCheck<'a> {
     /// `Tag[part]` / `Tag#n` segments from the root to the node visited,
     /// the call-site path format of the resolver's `SlotBindingMissing`.
     path: Vec<String>,
+    /// `UnboundName` errors pushed so far, at most [`MAX_UNBOUND_REPORTS`].
+    reported: usize,
+    /// Unbound names found past the cap, reported as one count.
+    omitted: usize,
     errors: &'a mut Vec<CompileError>,
 }
 
@@ -1350,10 +1390,11 @@ impl BareNameCheck<'_> {
     /// Visit `node`, the `position`-th child of its parent (`None` for the
     /// root), with `loops` the `For` bindings in scope.
     fn visit(&mut self, node: &LayoutNode, position: Option<usize>, loops: &HashSet<String>) {
+        let tag = echo(&node.tag);
         self.path.push(match (&node.part_name, position) {
-            (Some(part), _) => format!("{}[{part}]", node.tag),
-            (None, Some(index)) => format!("{}#{}", node.tag, index + 1),
-            (None, None) => node.tag.clone(),
+            (Some(part), _) => format!("{tag}[{}]", echo(part)),
+            (None, Some(index)) => format!("{tag}#{}", index + 1),
+            (None, None) => tag,
         });
 
         let control_flow = matches!(node.tag.as_str(), "For" | "If" | "Else");
@@ -1374,9 +1415,11 @@ impl BareNameCheck<'_> {
         }
 
         // A `For`'s own props are evaluated outside it; only its children
-        // see its `as:` and `index:`.
-        let mut inner = loops.clone();
+        // see its `as:` and `index:`. Only a `For` adds bindings, so only a
+        // `For` pays for a copy of the scope; every other node passes its
+        // own scope down unchanged.
         if node.tag == "For" {
+            let mut inner = loops.clone();
             for prop in &node.props {
                 if let ("as" | "index", LayoutPropValue::Keyword(name)) =
                     (prop.name.as_str(), &prop.value)
@@ -1384,15 +1427,25 @@ impl BareNameCheck<'_> {
                     inner.insert(name.clone());
                 }
             }
-        }
-        for (index, child) in node.children.iter().enumerate() {
-            self.visit(child, Some(index), &inner);
+            for (index, child) in node.children.iter().enumerate() {
+                self.visit(child, Some(index), &inner);
+            }
+        } else {
+            for (index, child) in node.children.iter().enumerate() {
+                self.visit(child, Some(index), loops);
+            }
         }
         self.path.pop();
     }
 
     fn unbound(&mut self, tag: &str, prop: &str, word: &str) {
-        let component = self.component;
+        if self.reported >= MAX_UNBOUND_REPORTS {
+            self.omitted += 1;
+            return;
+        }
+        self.reported += 1;
+        let component = echo(self.component);
+        let (tag, prop, word) = (echo(tag), echo(prop), echo(word));
         self.errors.push(CompileError {
             kind: ErrorKind::UnboundName,
             message: format!(
@@ -4533,6 +4586,36 @@ mod bare_name_tests {
              at Column[root] > Text#1 is not bound — no enclosing `For` binds it and \
              Greeting.mil declares no slot `hello`. Declare `slot hello : …` in Greeting.mil, \
              bind it with `For ( …, as: hello )`, or quote it as a string literal \"hello\""
+        );
+    }
+
+    /// A layout full of unbound names reports at most MAX_UNBOUND_REPORTS of
+    /// them plus one count, and long layout text is cut in the message, so a
+    /// malformed dependency cannot turn its layout into gigabytes of errors.
+    #[test]
+    fn unbound_reports_are_capped_and_echoed_text_is_truncated() {
+        let long = "x".repeat(MAX_ECHOED_CHARS * 4);
+        let texts: String = (0..MAX_UNBOUND_REPORTS + 7)
+            .map(|i| format!("  Text ( content: {long}{i} )\n"))
+            .collect();
+        let errors = check(&format!("Column [ {long} ] {{\n{texts}}}"), &[])
+            .expect_err("every name is free");
+        let unbound = unbound(&errors);
+        assert_eq!(
+            unbound.len(),
+            MAX_UNBOUND_REPORTS + 1,
+            "the cap plus one summary"
+        );
+        let summary = &unbound[MAX_UNBOUND_REPORTS].message;
+        assert!(
+            summary.contains("7 more unbound bare names omitted"),
+            "{summary}"
+        );
+        let first = &unbound[0].message;
+        assert!(!first.contains(&long), "long text is truncated: {first}");
+        assert!(
+            first.contains(&format!("{}…", &long[..MAX_ECHOED_CHARS])),
+            "{first}"
         );
     }
 
