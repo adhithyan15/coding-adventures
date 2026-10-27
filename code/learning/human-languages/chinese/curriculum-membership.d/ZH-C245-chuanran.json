@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C245-chuanran",
+  "pathSegment": "ZH-PATH-245-MASK245",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-245-MASK245",
+      "order": 1
+    }
+  ]
+}

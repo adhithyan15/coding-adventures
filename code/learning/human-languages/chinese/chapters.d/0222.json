@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "Under the Weather",
+  "label": "ch:zh-under-the-weather",
+  "canDo": "I can say I caught a chill, I have a cough and a sore throat, I keep sneezing, and why I feel awful.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ZH-C222-nanshou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say I caught a chill, I have a cough and a sore throat, I keep sneezing, and why I feel awful.",
+    "assesses": [
+      "ZH-LEX-C222-CHILL222-03",
+      "ZH-LEX-C222-CHILL222-04",
+      "ZH-LEX-C222-CHILL222-05"
+    ]
+  }
+}

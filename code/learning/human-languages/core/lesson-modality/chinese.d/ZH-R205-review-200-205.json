@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R205-review-200-205",
+    "language": "chinese",
+    "chapter": 205,
+    "sequence": 15920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7b4b83822aaf683"
+  },
+  "findings": []
+}

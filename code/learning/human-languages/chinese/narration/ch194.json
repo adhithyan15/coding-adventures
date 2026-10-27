@@ -1,0 +1,868 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 194,
+  "title": "Roads and Crossings",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:1c19ff684b97508c",
+  "lessons": [
+    {
+      "id": "ZH-C194-malu",
+      "sequence": 15310,
+      "title": "马路 (mǎlù) — road; a street for traffic",
+      "headword": "马路",
+      "romanization": "mǎlù",
+      "gloss": "road; a street for traffic",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2da4b6d5e47b160",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to haggle, then the Mandarin for quality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 马路",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "马路 — mǎlù — \"road; a street for traffic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我家在马路对面 wǒ jiā zài mǎlù duìmiàn — My home is across the road."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 路 (lù) — thirteen strokes in two halves: on the left the foot piece, 口 over four short strokes; on the right a short fall, a bar that turns and falls to the left, a long stroke falling to the right, and 口 under them. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "马路 (mǎlù) is built from 马 'horse' and 路 (lù) 'road', both inherited from Middle Chinese, maeX and luH (Guangyun, in Baxter's transcription). Why a road for traffic is named after horses is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking where things are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mǎlù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mǎlù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mǎlù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mǎlù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ jiā zài mǎlù duìmiàn — My home is across the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ jiā zài mǎlù duìmiàn* — My home is across the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to haggle, then the Mandarin for quality, then say mǎlù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to haggle, then the Mandarin for quality, then say *mǎlù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 马路 (mǎlù) mean? (\"Road; a street for traffic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W194-lu-road",
+      "sequence": 15315,
+      "title": "路 (lù) — the foot piece, then three strokes over 口",
+      "headword": "路",
+      "romanization": "lù",
+      "gloss": "路 — the foot piece on the left, three strokes over 口 on the right",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5c824fbe52a908ce",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the foot piece, then three strokes over 口",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the foot piece, then three strokes over 口 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mǎlù — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mǎlù* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "马 口."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — mǎ, kǒu",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *mǎ*, *kǒu*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the foot piece, then three strokes over 口",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "路 (lù)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two halves, left before right, and each has 口 in it."
+            },
+            {
+              "kind": "speech",
+              "text": "The left half, the foot piece, seven strokes. 口 at the top, narrow. Under it a short vertical, a short bar from its middle to the right, a short vertical on the left, and a stroke along the foot that rises to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "The right half, six strokes. A short stroke falling to the left. A bar that turns and falls down to the left. A long stroke falling down to the right. Then 口 underneath."
+            },
+            {
+              "kind": "speech",
+              "text": "7 + 6 = thirteen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "路 (lù), all thirteen, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 路, all thirteen, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 路 (lù)? (Thirteen.) Where is 口 in the left half? (At the top.) And in the right half? (At the bottom.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 路 (lù), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C194-zoulu",
+      "sequence": 15320,
+      "title": "zǒulù — to walk; to go on foot",
+      "headword": "zǒulù",
+      "romanization": "zǒulù",
+      "gloss": "to walk; to go on foot",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0135e54cb835547",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for quality, then the Mandarin for a street for traffic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zǒulù",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zǒulù — \"to walk; to go on foot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ měitiān zǒulù qù shàngbān — I walk to work every day."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zǒulù is built from zǒu and 路 (lù) 'road', both inherited from Middle Chinese, tsuwX and luH (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to hurry'; in Mandarin it has come to mean walking."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking where things are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zǒulù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zǒulù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zǒulù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zǒulù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ měitiān zǒulù qù shàngbān — I walk to work every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ měitiān zǒulù qù shàngbān* — I walk to work every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for quality, then the Mandarin for a street for traffic, then say zǒulù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for quality, then the Mandarin for a street for traffic, then say *zǒulù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zǒulù mean? (\"To walk; to go on foot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C194-banmaxian",
+      "sequence": 15330,
+      "title": "bānmǎxiàn — zebra crossing; pedestrian crossing",
+      "headword": "bānmǎxiàn",
+      "romanization": "bānmǎxiàn",
+      "gloss": "zebra crossing; pedestrian crossing",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8078d64fdce7848c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a street for traffic, then the Mandarin for to go on foot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: bānmǎxiàn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bānmǎxiàn — \"zebra crossing; pedestrian crossing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhèr méiyǒu bānmǎxiàn — There's no zebra crossing here."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bānmǎxiàn is built from bānmǎ 'zebra', literally a mottled horse, and xiàn 'a line'. 马 and xiàn are inherited from Middle Chinese, maeX and sjenH (Guangyun, in Baxter's transcription); the dictionary lists bān as paen, glossed 'mottled' and 'patterned': a crossing striped like a zebra."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking where things are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bānmǎxiàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bānmǎxiàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bānmǎxiàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bānmǎxiàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhèr méiyǒu bānmǎxiàn — There's no zebra crossing here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhèr méiyǒu bānmǎxiàn* — There's no zebra crossing here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a street for traffic, then the Mandarin for to go on foot, then say bānmǎxiàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a street for traffic, then the Mandarin for to go on foot, then say *bānmǎxiàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does bānmǎxiàn mean? (\"Zebra crossing; pedestrian crossing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C194-guangchang",
+      "sequence": 15340,
+      "title": "guǎngchǎng — public square",
+      "headword": "guǎngchǎng",
+      "romanization": "guǎngchǎng",
+      "gloss": "public square",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a6540299a96b4d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to go on foot, then the Mandarin for zebra crossing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: guǎngchǎng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "guǎngchǎng — \"public square\"."
+            },
+            {
+              "kind": "speech",
+              "text": "huǒchēzhàn qiánbian yǒu yí ge guǎngchǎng — There's a square in front of the station."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "Two third tones meet in this word: guǎng is said with a rising tone before chǎng, and the spelling keeps both marks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "guǎngchǎng is built from guǎng 'wide' and chǎng 'an open ground', both inherited from Middle Chinese, kwangX and drjang (Guangyun, in Baxter's transcription), which glosses the first 'big' and 'broad'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking where things are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guǎngchǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guǎngchǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guǎngchǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guǎngchǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huǒchēzhàn qiánbian yǒu yí ge guǎngchǎng — There's a square in front of the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huǒchēzhàn qiánbian yǒu yí ge guǎngchǎng* — There's a square in front of the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to go on foot, then the Mandarin for zebra crossing, then say guǎngchǎng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to go on foot, then the Mandarin for zebra crossing, then say *guǎngchǎng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does guǎngchǎng mean? (\"Public square\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C194-hongludeng",
+      "sequence": 15350,
+      "title": "hónglǜdēng — traffic lights",
+      "headword": "hónglǜdēng",
+      "romanization": "hónglǜdēng",
+      "gloss": "traffic lights",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:729892f850d0ee7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for zebra crossing, then the Mandarin for public square."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: hónglǜdēng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hónglǜdēng — \"traffic lights\"."
+            },
+            {
+              "kind": "speech",
+              "text": "lùkǒu yǒu hónglǜdēng hé bānmǎxiàn — There are traffic lights and a zebra crossing at the junction."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hónglǜdēng is built from hóng 'red', lǜ 'green' and dēng 'a lamp', all inherited from Middle Chinese, huwng, ljowk and tong (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking where things are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hónglǜdēng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hónglǜdēng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hónglǜdēng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hónglǜdēng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lùkǒu yǒu hónglǜdēng hé bānmǎxiàn — There are traffic lights and a zebra crossing at the junction.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lùkǒu yǒu hónglǜdēng hé bānmǎxiàn* — There are traffic lights and a zebra crossing at the junction.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for zebra crossing, then the Mandarin for public square, then say hónglǜdēng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for zebra crossing, then the Mandarin for public square, then say *hónglǜdēng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hónglǜdēng mean? (\"Traffic lights\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

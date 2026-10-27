@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C217-meiguanxi",
+    "language": "chinese",
+    "chapter": 217,
+    "sequence": 16490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca8532b57bc8a695"
+  },
+  "findings": []
+}

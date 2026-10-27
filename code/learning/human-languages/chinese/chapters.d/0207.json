@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "Where and When",
+  "label": "ch:zh-where-and-when",
+  "canDo": "I can agree on a place to meet, talk about plans, arrange things, take photos and visit the sights.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C207-jingdian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can agree on a place to meet, talk about plans, arrange things, take photos and visit the sights.",
+    "assesses": [
+      "ZH-LEX-C207-PLACE207-03",
+      "ZH-LEX-C207-PLACE207-04",
+      "ZH-LEX-C207-PLACE207-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 251,
+  "title": "Essays and New Characters",
+  "label": "ch:zh-essays-and-new-characters",
+  "canDo": "I can count essays and stories, talk about a school essay, writing and new characters, and put mistakes right.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C251-xiugai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 251: I can count essays and stories, talk about a school essay, writing and new characters, and put mistakes right.",
+    "assesses": [
+      "ZH-LEX-C251-ESSAY251-01",
+      "ZH-LEX-C251-ESSAY251-02",
+      "ZH-LEX-C251-ESSAY251-03",
+      "ZH-LEX-C251-ESSAY251-04",
+      "ZH-LEX-C251-ESSAY251-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:a61a851af1a22d9e",
+  "lessonIds": [
+    "ZH-C167-qiantian",
+    "ZH-C167-fasheng",
+    "ZH-C167-meishi",
+    "ZH-W167-shi-matter",
+    "ZH-C167-tingdian",
+    "ZH-C167-shengyin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "chinese/narration/ch167.txt",
+  "json": "chinese/narration/ch167.json",
+  "textHash": "fnv1a64:46aeccea3c014927",
+  "jsonHash": "fnv1a64:2681b4ce15fbadd1",
+  "findings": []
+}

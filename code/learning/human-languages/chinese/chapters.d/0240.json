@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "Feeling Ill",
+  "label": "ch:zh-feeling-ill",
+  "canDo": "I can say I'm ill and why: an infection, a swelling, being sick and an upset stomach.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ZH-C240-laduzi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say I'm ill and why: an infection, a swelling, being sick and an upset stomach.",
+    "assesses": [
+      "ZH-LEX-C240-SICK240-03",
+      "ZH-LEX-C240-SICK240-04",
+      "ZH-LEX-C240-SICK240-05"
+    ]
+  }
+}

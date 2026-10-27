@@ -1,0 +1,21 @@
+{
+  "chapter": 259,
+  "title": "What Do You Do?",
+  "label": "ch:zh-what-do-you-do",
+  "canDo": "I can ask what someone does for a living and name an author, a lawyer, a journalist and an electrician.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-R259-review-254-259",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 259: I can ask what someone does for a living and name an author, a lawyer, a journalist and an electrician.",
+    "assesses": [
+      "ZH-LEX-C259-JOB259-01",
+      "ZH-LEX-C259-JOB259-02",
+      "ZH-LEX-C259-JOB259-03",
+      "ZH-LEX-C259-JOB259-04",
+      "ZH-LEX-C259-JOB259-05"
+    ]
+  }
+}

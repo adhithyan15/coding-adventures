@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C204-shipin",
+    "language": "chinese",
+    "chapter": 204,
+    "sequence": 15850,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f24c05a987a98b5d"
+  },
+  "findings": []
+}

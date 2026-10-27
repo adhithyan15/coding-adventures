@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C226-caoyuan",
+  "pathSegment": "ZH-PATH-226-LAKE226",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-226-LAKE226",
+      "order": 4
+    }
+  ]
+}
