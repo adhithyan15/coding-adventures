@@ -204,7 +204,9 @@ fn c_pair_p_returns_tagged_booleans() {
 
 /// The environment variable that turns a run of
 /// [`c_pair_reads_of_a_non_pair_fail_closed`] into the child that makes the
-/// bad call: `"first:<hex word>"` or `"rest:<hex word>"`.
+/// bad call: `"first:<hex word>"` or `"rest:<hex word>"`.  Unix-only,
+/// like the test that reads it, so Windows builds see no unused constant.
+#[cfg(unix)]
 const NOT_A_PAIR_CHILD: &str = "DYNVAL_GOLDEN_NOT_A_PAIR_CHILD";
 
 #[cfg(unix)]
