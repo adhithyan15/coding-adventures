@@ -1,0 +1,11 @@
+{
+  "id": "JA-C433-koishii",
+  "pathSegment": "JA-PATH-433-LONG433",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-433-LONG433",
+      "order": 1
+    }
+  ]
+}

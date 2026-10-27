@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:9bc521f70a22a1f3",
+  "lessonIds": [
+    "JA-C419-kokuseki",
+    "JA-C419-nenrei",
+    "JA-C419-seibetsu",
+    "JA-C419-shimei",
+    "JA-C419-uketsukeru",
+    "JA-R419-review-414-419"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch419.txt",
+  "json": "japanese/narration/ch419.json",
+  "textHash": "fnv1a64:825baed76c4e014a",
+  "jsonHash": "fnv1a64:d68dac0a46efde76",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C330-minarau",
+    "language": "japanese",
+    "chapter": 330,
+    "sequence": 19690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a0d9be051800b46"
+  },
+  "findings": []
+}

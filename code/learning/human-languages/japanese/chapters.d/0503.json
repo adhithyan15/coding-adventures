@@ -1,0 +1,21 @@
+{
+  "chapter": 503,
+  "title": "Melodies and Dances",
+  "label": "ch:ja-melodies-and-dances",
+  "canDo": "I can talk about music and dance.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-R503-review-498-503",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can talk about music and dance.",
+    "assesses": [
+      "JA-LEX-C503-SONG503-01",
+      "JA-LEX-C503-SONG503-02",
+      "JA-LEX-C503-SONG503-03",
+      "JA-LEX-C503-SONG503-04",
+      "JA-LEX-C503-SONG503-05"
+    ]
+  }
+}

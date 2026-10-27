@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:ffb87cfb0a636079",
+  "lessonIds": [
+    "JA-C287-yochiyochi",
+    "JA-C287-haeru",
+    "JA-C287-obaasan",
+    "JA-C287-shinseki",
+    "JA-C287-seichou-suru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch287.txt",
+  "json": "japanese/narration/ch287.json",
+  "textHash": "fnv1a64:adab47ace8de7d5d",
+  "jsonHash": "fnv1a64:4e1bf73087533837",
+  "findings": []
+}

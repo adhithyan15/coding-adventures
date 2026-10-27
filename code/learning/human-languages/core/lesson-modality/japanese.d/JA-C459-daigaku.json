@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C459-daigaku",
+    "language": "japanese",
+    "chapter": 459,
+    "sequence": 26700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d45934b80ff6df6d"
+  },
+  "findings": []
+}

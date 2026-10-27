@@ -1,0 +1,11 @@
+{
+  "id": "JA-C445-hakike",
+  "pathSegment": "JA-PATH-445-ACHE445",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-445-ACHE445",
+      "order": 3
+    }
+  ]
+}

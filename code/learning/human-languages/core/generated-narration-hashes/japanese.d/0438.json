@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:09fb2c5bcc4fbe41",
+  "lessonIds": [
+    "JA-C438-ganko",
+    "JA-C438-sekkachi",
+    "JA-C438-tanki",
+    "JA-C438-nonbiri",
+    "JA-C438-ibaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch438.txt",
+  "json": "japanese/narration/ch438.json",
+  "textHash": "fnv1a64:b07fbdd7e3b3f574",
+  "jsonHash": "fnv1a64:3c23295b73718d2d",
+  "findings": []
+}

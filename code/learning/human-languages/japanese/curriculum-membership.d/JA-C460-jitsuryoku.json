@@ -1,0 +1,11 @@
+{
+  "id": "JA-C460-jitsuryoku",
+  "pathSegment": "JA-PATH-460-GOAL460",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-460-GOAL460",
+      "order": 2
+    }
+  ]
+}

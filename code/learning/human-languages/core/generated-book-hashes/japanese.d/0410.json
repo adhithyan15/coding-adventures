@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:7695eb0725ce8bad",
+  "lessonIds": [
+    "JA-C410-jimoto",
+    "JA-C410-shusshin",
+    "JA-C410-hatake",
+    "JA-C410-nohara",
+    "JA-C410-shigeru"
+  ],
+  "tex": "japanese/book/chapters/ch410-where-i-come-from.tex"
+}

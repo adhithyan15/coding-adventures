@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C378-gyuugyuu",
+    "language": "japanese",
+    "chapter": 378,
+    "sequence": 22330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38308cb899b9cdfd"
+  },
+  "findings": []
+}

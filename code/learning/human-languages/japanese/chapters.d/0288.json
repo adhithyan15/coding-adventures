@@ -1,0 +1,19 @@
+{
+  "chapter": 288,
+  "title": "Starting School",
+  "label": "ch:ja-starting-school",
+  "canDo": "I can say who started school and who came to the ceremony.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C288-oiwai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 288: I can say who started school and who came to the ceremony.",
+    "assesses": [
+      "JA-LEX-C288-NYUUGAKU288-03",
+      "JA-LEX-C288-NYUUGAKU288-04",
+      "JA-LEX-C288-NYUUGAKU288-05"
+    ]
+  }
+}

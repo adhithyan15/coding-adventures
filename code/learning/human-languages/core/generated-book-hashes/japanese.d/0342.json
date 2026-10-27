@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:1ebda8ea664f8735",
+  "lessonIds": [
+    "JA-C342-gen-in",
+    "JA-C342-eikyou",
+    "JA-C342-kekka",
+    "JA-C342-nazenara",
+    "JA-C342-taido"
+  ],
+  "tex": "japanese/book/chapters/ch342-causes-and-effects.tex"
+}

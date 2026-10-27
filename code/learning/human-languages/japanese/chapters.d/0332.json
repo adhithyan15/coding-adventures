@@ -1,0 +1,19 @@
+{
+  "chapter": 332,
+  "title": "Rights and Duties",
+  "label": "ch:ja-rights-and-duties",
+  "canDo": "I can say what people have a right to and what they must do.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C332-zen-in",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can say what people have a right to and what they must do.",
+    "assesses": [
+      "JA-LEX-C332-KENRI332-03",
+      "JA-LEX-C332-KENRI332-04",
+      "JA-LEX-C332-KENRI332-05"
+    ]
+  }
+}

@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 436,
+  "title": "Cheerful or Quiet",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c5e7f902d064bf31",
+  "lessons": [
+    {
+      "id": "JA-C436-hogaraka",
+      "sequence": 25510,
+      "title": "ほがらか (hogaraka) — cheerful; sunny-natured",
+      "headword": "ほがらか",
+      "romanization": "hogaraka",
+      "gloss": "cheerful; sunny-natured",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:393a6789fea38912",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to smile gently, then the Japanese for to fall silent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほがらか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほがらか — hogaraka — \"cheerful; sunny-natured\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あねは いつも ほがらかです。 — ane wa itsumo hogaraka desu — \"My elder sister is cheerful all the time.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほがらか (hogaraka) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hogaraka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hogaraka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hogaraka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hogaraka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ane wa itsumo hogaraka desu — My elder sister is cheerful all the time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ane wa itsumo hogaraka desu* — My elder sister is cheerful all the time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to smile gently, then the Japanese for to fall silent, then say hogaraka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to smile gently, then the Japanese for to fall silent, then say *hogaraka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほがらか (hogaraka) mean? (\"Cheerful; sunny-natured\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C436-hogaraka-type",
+              "prompt": "Say the Japanese for 'cheerful'.",
+              "assesses": [
+                "JA-LEX-C436-BRIGHT436-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほがらか",
+                "hogaraka"
+              ],
+              "feedback": {
+                "correct": "Right: ほがらか (hogaraka) is 'cheerful; sunny-natured'.",
+                "incorrect": "'Cheerful' is ほがらか (hogaraka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C436-akarui",
+      "sequence": 25520,
+      "title": "あかるい (akarui) — bright; light",
+      "headword": "あかるい",
+      "romanization": "akarui",
+      "gloss": "bright; light",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d88d6e235355bff7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to fall silent, then the Japanese for cheerful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あかるい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あかるい — akarui — \"bright; light\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かれは あかるい せいかくです。 — kare wa akarui seikaku desu — \"He has a bright personality.\""
+            },
+            {
+              "kind": "speech",
+              "text": "An i-adjective."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あかるい (akarui) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akarui",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akarui*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akarui, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akarui*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare wa akarui seikaku desu — He has a bright personality.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare wa akarui seikaku desu* — He has a bright personality.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to fall silent, then the Japanese for cheerful, then say akarui again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to fall silent, then the Japanese for cheerful, then say *akarui* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あかるい (akarui) mean? (\"Bright; light\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C436-akarui-type",
+              "prompt": "Say the Japanese for 'bright'.",
+              "assesses": [
+                "JA-LEX-C436-BRIGHT436-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あかるい",
+                "akarui"
+              ],
+              "feedback": {
+                "correct": "Right: あかるい (akarui) is 'bright; light'.",
+                "incorrect": "'Bright' is あかるい (akarui)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C436-mukuchi",
+      "sequence": 25530,
+      "title": "むくち (mukuchi) — taciturn; of few words",
+      "headword": "むくち",
+      "romanization": "mukuchi",
+      "gloss": "taciturn; of few words",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5109c76ee5554c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for cheerful, then the Japanese for bright."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: むくち",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むくち — mukuchi — \"taciturn; of few words\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは あさは むくちです。 — chichi wa asa wa mukuchi desu — \"My father says little in the mornings.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むくち (mukuchi) is a mixed word: Sino-Japanese mu, \"nothing\" (Middle Chinese mju), borrowed from Chinese, joined to native kuchi, \"mouth\", the kun'yomi of its second kanji (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukuchi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukuchi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukuchi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukuchi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi wa asa wa mukuchi desu — My father says little in the mornings.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi wa asa wa mukuchi desu* — My father says little in the mornings.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for cheerful, then the Japanese for bright, then say mukuchi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for cheerful, then the Japanese for bright, then say *mukuchi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does むくち (mukuchi) mean? (\"Taciturn; of few words\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C436-mukuchi-type",
+              "prompt": "Say the Japanese for 'taciturn'.",
+              "assesses": [
+                "JA-LEX-C436-BRIGHT436-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "むくち",
+                "mukuchi"
+              ],
+              "feedback": {
+                "correct": "Right: むくち (mukuchi) is 'taciturn; of few words'.",
+                "incorrect": "'Taciturn' is むくち (mukuchi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C436-hitomishiri",
+      "sequence": 25540,
+      "title": "ひとみしり (hitomishiri) — shy with strangers",
+      "headword": "ひとみしり",
+      "romanization": "hitomishiri",
+      "gloss": "shy with strangers",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c59bf1cd920d70d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for bright, then the Japanese for taciturn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひとみしり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひとみしり — hitomishiri — \"shy with strangers\"."
+            },
+            {
+              "kind": "speech",
+              "text": "むすめは すこし ひとみしりです。 — musume wa sukoshi hitomishiri desu — \"My daughter is a little shy with strangers.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひとみしり (hitomishiri) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: hito, \"person\", mi, \"seeing (miru)\", and shiri, \"knowing (shiru)\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hitomishiri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hitomishiri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hitomishiri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hitomishiri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musume wa sukoshi hitomishiri desu — My daughter is a little shy with strangers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musume wa sukoshi hitomishiri desu* — My daughter is a little shy with strangers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for bright, then the Japanese for taciturn, then say hitomishiri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for bright, then the Japanese for taciturn, then say *hitomishiri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひとみしり (hitomishiri) mean? (\"Shy with strangers\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C436-hitomishiri-type",
+              "prompt": "Say the Japanese for 'shy with strangers'.",
+              "assesses": [
+                "JA-LEX-C436-BRIGHT436-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひとみしり",
+                "hitomishiri"
+              ],
+              "feedback": {
+                "correct": "Right: ひとみしり (hitomishiri) is 'shy with strangers'.",
+                "incorrect": "'Shy with strangers' is ひとみしり (hitomishiri)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C436-furumau",
+      "sequence": 25550,
+      "title": "ふるまう (furumau) — to behave; to conduct oneself",
+      "headword": "ふるまう",
+      "romanization": "furumau",
+      "gloss": "to behave; to conduct oneself",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd754de759f81c48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for taciturn, then the Japanese for shy with strangers."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふるまう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふるまう — furumau — \"to behave; to conduct oneself\"."
+            },
+            {
+              "kind": "speech",
+              "text": "むすこは あかるく ふるまいました。 — musuko wa akaruku furumaimashita — \"My son acted cheerful.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ふるまいます, furumaimasu; a godan verb. Past (polite): こどもが おとなしく ふるまいました。, kodomo ga otonashiku furumaimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふるまう (furumau) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "furumau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *furumau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "furumau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *furumau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musuko wa akaruku furumaimashita — My son acted cheerful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musuko wa akaruku furumaimashita* — My son acted cheerful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for taciturn, then the Japanese for shy with strangers, then say furumau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for taciturn, then the Japanese for shy with strangers, then say *furumau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふるまう (furumau) mean? (\"To behave; to conduct oneself\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C436-furumau-type",
+              "prompt": "Say the Japanese for 'to behave'.",
+              "assesses": [
+                "JA-LEX-C436-BRIGHT436-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふるまう",
+                "furumau"
+              ],
+              "feedback": {
+                "correct": "Right: ふるまう (furumau) is 'to behave; to conduct oneself'.",
+                "incorrect": "'To behave' is ふるまう (furumau)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

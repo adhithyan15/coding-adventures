@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:c8d1ddeca3192f29",
+  "lessonIds": [
+    "JA-C432-nayamu",
+    "JA-C432-kuyokuyo-suru",
+    "JA-C432-koukai-suru",
+    "JA-C432-munashii",
+    "JA-C432-akirameru"
+  ],
+  "tex": "japanese/book/chapters/ch432-worry-and-regret.tex"
+}

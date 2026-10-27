@@ -1,0 +1,11 @@
+{
+  "id": "JA-C417-korogasu",
+  "pathSegment": "JA-PATH-417-TENIMOTSU417",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-417-TENIMOTSU417",
+      "order": 4
+    }
+  ]
+}

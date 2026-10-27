@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:1e4d9d32b02c99e3",
+  "lessonIds": [
+    "JA-C464-kankyaku",
+    "JA-C464-shinpan",
+    "JA-C464-tokuten",
+    "JA-C464-semeru",
+    "JA-C464-ubau"
+  ],
+  "tex": "japanese/book/chapters/ch464-at-the-match.tex"
+}

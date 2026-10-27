@@ -1,0 +1,11 @@
+{
+  "id": "JA-C479-shitashii",
+  "pathSegment": "JA-PATH-479-BOND479",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-479-BOND479",
+      "order": 2
+    }
+  ]
+}

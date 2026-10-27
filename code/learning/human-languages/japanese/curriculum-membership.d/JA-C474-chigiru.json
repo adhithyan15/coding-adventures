@@ -1,0 +1,11 @@
+{
+  "id": "JA-C474-chigiru",
+  "pathSegment": "JA-PATH-474-PREP474",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-474-PREP474",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-298-MUKASHI298",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-298-MUKASHI298"
+  ],
+  "after": []
+}

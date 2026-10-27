@@ -1,0 +1,1044 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 533,
+  "title": "Worth the Effort",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:af7d76b590dbc2e2",
+  "lessons": [
+    {
+      "id": "JA-C533-yarigai",
+      "sequence": 30730,
+      "title": "やりがい (yarigai) — a sense of reward; satisfaction (in a task)",
+      "headword": "やりがい",
+      "romanization": "yarigai",
+      "gloss": "a sense of reward; satisfaction (in a task)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c390ba38c5e1adc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for advantageous, then the Japanese for surprising."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: やりがい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やりがい — yarigai — \"a sense of reward; satisfaction (in a task)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やりがいは しごとに よります。 — yarigai wa shigoto ni yorimasu — \"How rewarding it is depends on the job.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やりがい (yarigai) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yarigai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yarigai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yarigai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yarigai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yarigai wa shigoto ni yorimasu — How rewarding it is depends on the job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yarigai wa shigoto ni yorimasu* — How rewarding it is depends on the job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for advantageous, then the Japanese for surprising, then say yarigai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for advantageous, then the Japanese for surprising, then say *yarigai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does やりがい (yarigai) mean? (\"A sense of reward; satisfaction (in a task)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C533-yarigai-type",
+              "prompt": "Say the Japanese for 'a sense of reward'.",
+              "assesses": [
+                "JA-LEX-C533-WORTH533-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "やりがい",
+                "yarigai"
+              ],
+              "feedback": {
+                "correct": "Right: やりがい (yarigai) is 'a sense of reward; satisfaction (in a task)'.",
+                "incorrect": "'A sense of reward' is やりがい (yarigai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C533-ikigai",
+      "sequence": 30740,
+      "title": "いきがい (ikigai) — a purpose in life",
+      "headword": "いきがい",
+      "romanization": "ikigai",
+      "gloss": "a purpose in life",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0be0e08c7072f3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for surprising, then the Japanese for a sense of reward."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いきがい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いきがい — ikigai — \"a purpose in life\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし いきがいが みつかったら、まいにち たのしいでしょう。 — moshi ikigai ga mitsukattara, mainichi tanoshii deshō — \"If you find a purpose in life, every day will surely be enjoyable.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いきがい (ikigai) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikigai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikigai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikigai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikigai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi ikigai ga mitsukattara, mainichi tanoshii deshō — If you find a purpose in life, every day will surely be enjoyable.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi ikigai ga mitsukattara, mainichi tanoshii deshō* — If you find a purpose in life, every day will surely be enjoyable.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for surprising, then the Japanese for a sense of reward, then say ikigai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for surprising, then the Japanese for a sense of reward, then say *ikigai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いきがい (ikigai) mean? (\"A purpose in life\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C533-ikigai-type",
+              "prompt": "Say the Japanese for 'a purpose in life'.",
+              "assesses": [
+                "JA-LEX-C533-WORTH533-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いきがい",
+                "ikigai"
+              ],
+              "feedback": {
+                "correct": "Right: いきがい (ikigai) is 'a purpose in life'.",
+                "incorrect": "'A purpose in life' is いきがい (ikigai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C533-netchuu-suru",
+      "sequence": 30750,
+      "title": "ねっちゅうする (netchū suru) — to be absorbed (in)",
+      "headword": "ねっちゅうする",
+      "romanization": "netchū suru",
+      "gloss": "to be absorbed (in)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01419d75d6b38efc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a sense of reward, then the Japanese for a purpose in life."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ねっちゅうする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねっちゅうする — netchū suru — \"to be absorbed (in)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし しゅみに ねっちゅうしたら、あには じかんを わすれるでしょう。 — moshi shumi ni netchū shitara, ani wa jikan o wasureru deshō — \"If my elder brother gets absorbed in a hobby, he will forget the time.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ねっちゅうします, netchūshimasu; a する verb. Past (polite): おとうとが しょうぎに ねっちゅうしました。, otōto ga shōgi ni netchūshimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねっちゅうする (netchū suru) is the Sino-Japanese (kango) noun netchū with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ne, \"heat\" (Middle Chinese nyet) and chū, \"in\" (trjuwng) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "netchū suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *netchū suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "netchū suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *netchū suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi shumi ni netchū shitara, ani wa jikan o wasureru deshō — If my elder brother gets absorbed in a hobby, he will forget the time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi shumi ni netchū shitara, ani wa jikan o wasureru deshō* — If my elder brother gets absorbed in a hobby, he will forget the time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a sense of reward, then the Japanese for a purpose in life, then say netchū suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a sense of reward, then the Japanese for a purpose in life, then say *netchū suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ねっちゅうする (netchū suru) mean? (\"To be absorbed (in)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C533-netchuu-suru-type",
+              "prompt": "Say the Japanese for 'to be absorbed (in)'.",
+              "assesses": [
+                "JA-LEX-C533-WORTH533-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ねっちゅうする",
+                "netchū suru",
+                "netchuu suru",
+                "netchu suru"
+              ],
+              "feedback": {
+                "correct": "Right: ねっちゅうする (netchū suru) is 'to be absorbed (in)'.",
+                "incorrect": "'To be absorbed (in)' is ねっちゅうする (netchū suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C533-uchikomu",
+      "sequence": 30760,
+      "title": "うちこむ (uchikomu) — to throw oneself (into)",
+      "headword": "うちこむ",
+      "romanization": "uchikomu",
+      "gloss": "to throw oneself (into)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cdffb18ed3c414a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a purpose in life, then the Japanese for to be absorbed (in)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うちこむ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うちこむ — uchikomu — \"to throw oneself (into)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし べんきょうに うちこんだら、いもうとは しけんに うかるでしょう。 — moshi benkyō ni uchikondara, imōto wa shiken ni ukaru deshō — \"If my younger sister throws herself into her studies, she will pass the exam.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite うちこみます, uchikomimasu; a godan verb. Past (polite): あねが れんしゅうに うちこみました。, ane ga renshū ni uchikomimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うちこむ (uchikomu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uchikomu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uchikomu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uchikomu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uchikomu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi benkyō ni uchikondara, imōto wa shiken ni ukaru deshō — If my younger sister throws herself into her studies, she will pass the exam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi benkyō ni uchikondara, imōto wa shiken ni ukaru deshō* — If my younger sister throws herself into her studies, she will pass the exam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a purpose in life, then the Japanese for to be absorbed (in), then say uchikomu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a purpose in life, then the Japanese for to be absorbed (in), then say *uchikomu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うちこむ (uchikomu) mean? (\"To throw oneself (into)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C533-uchikomu-type",
+              "prompt": "Say the Japanese for 'to throw oneself (into)'.",
+              "assesses": [
+                "JA-LEX-C533-WORTH533-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うちこむ",
+                "uchikomu"
+              ],
+              "feedback": {
+                "correct": "Right: うちこむ (uchikomu) is 'to throw oneself (into)'.",
+                "incorrect": "'To throw oneself (into)' is うちこむ (uchikomu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C533-joutatsu-suru",
+      "sequence": 30770,
+      "title": "じょうたつする (jōtatsu suru) — to improve (in a skill)",
+      "headword": "じょうたつする",
+      "romanization": "jōtatsu suru",
+      "gloss": "to improve (in a skill)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b9e2c97d5f5b31d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be absorbed (in), then the Japanese for to throw oneself (into)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じょうたつする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じょうたつする — jōtatsu suru — \"to improve (in a skill)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし まいにち れんしゅうしたら、あねは じょうたつするでしょう。 — moshi mainichi renshū shitara, ane wa jōtatsu suru deshō — \"If my elder sister practises every day, she will get better.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite じょうたつします, jōtatsushimasu; a する verb. Past (polite): あにの 日本語が じょうたつしました。, ani no nihongo ga jōtatsushimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じょうたつする (jōtatsu suru) is the Sino-Japanese (kango) noun jōtatsu with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jō, \"above\" (Middle Chinese dzyangH) and tatsu, \"accomplished\" (dat) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōtatsu suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōtatsu suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōtatsu suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōtatsu suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi mainichi renshū shitara, ane wa jōtatsu suru deshō — If my elder sister practises every day, she will get better.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi mainichi renshū shitara, ane wa jōtatsu suru deshō* — If my elder sister practises every day, she will get better.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be absorbed (in), then the Japanese for to throw oneself (into), then say jōtatsu suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be absorbed (in), then the Japanese for to throw oneself (into), then say *jōtatsu suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じょうたつする (jōtatsu suru) mean? (\"To improve (in a skill)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C533-joutatsu-suru-type",
+              "prompt": "Say the Japanese for 'to improve (in a skill)'.",
+              "assesses": [
+                "JA-LEX-C533-WORTH533-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じょうたつする",
+                "jōtatsu suru",
+                "joutatsu suru",
+                "jootatsu suru",
+                "jotatsu suru"
+              ],
+              "feedback": {
+                "correct": "Right: じょうたつする (jōtatsu suru) is 'to improve (in a skill)'.",
+                "incorrect": "'To improve (in a skill)' is じょうたつする (jōtatsu suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R533-review-528-533",
+      "sequence": 30780,
+      "title": "Looking back: from This or That to Worth the Effort",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from This or That to Worth the Effort",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57987495102ea594",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for or perhaps and or."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "or perhaps, or, or (in a question), or else, either one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: or perhaps, or, or (in a question), or else, either one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "for some reason, by the way, anyway, would sooner, as one would expect",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: for some reason, by the way, anyway, would sooner, as one would expect]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fairly, at the very least, nearly, about, (not) at all",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fairly, at the very least, nearly, about, (not) at all]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "on purpose, without meaning to, recklessly, desirable, somehow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: on purpose, without meaning to, recklessly, desirable, somehow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to limit, a limit, extra, advantageous, surprising",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to limit, a limit, extra, advantageous, surprising]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sense of reward, a purpose in life, to be absorbed (in), to throw oneself (into), to improve (in a skill)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sense of reward, a purpose in life, to be absorbed (in), to throw oneself (into), to improve (in a skill)]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Or perhaps? (あるいは, aruiwa.) Or? (または, matawa.) Or (in a question)? (それとも, soretomo.) Or else? (もしくは, moshikuwa.) Either one? (いずれか, izureka.) For some reason? (なぜか, nazeka.) By the way? (ところで, tokorode.) Anyway? (どうせ, dōse.) Would sooner? (いっそ, isso.) As one would expect? (さすが, sasuga.) Fairly? (かなり, kanari.) At the very least? (すくなくとも, sukunakutomo.) Nearly? (ほぼ, hobo.) About? (およそ, oyoso.) (not) at all? (まったく, mattaku.) On purpose? (わざと, wazato.) Without meaning to? (つい, tsui.) Recklessly? (むやみに, muyamini.) Desirable? (のぞましい, nozomashii.) Somehow? (なんとなく, nantonaku.) To limit? (かぎる, kagiru.) A limit? (せいげん, seigen.) Extra? (よぶん, yobun.) Advantageous? (ゆうり, yūri.) Surprising? (いがい, igai.) A sense of reward? (やりがい, yarigai.) A purpose in life? (いきがい, ikigai.) To be absorbed (in)? (ねっちゅうする, netchū suru.) To throw oneself (into)? (うちこむ, uchikomu.) To improve (in a skill)? (じょうたつする, jōtatsu suru.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R533-review-528-533-type",
+              "prompt": "Say the Japanese for 'or perhaps'.",
+              "assesses": [
+                "JA-LEX-C528-OR528-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あるいは",
+                "aruiwa"
+              ],
+              "feedback": {
+                "correct": "Right: あるいは (aruiwa) is 'or perhaps; or'.",
+                "incorrect": "'Or perhaps' is あるいは (aruiwa)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R533-review-final-533",
+      "sequence": 30790,
+      "title": "Worth the Effort — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb2fe911691fa0cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for a sense of reward and a purpose in life."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sense of reward, a purpose in life, to be absorbed (in), to throw oneself (into), to improve (in a skill)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sense of reward, a purpose in life, to be absorbed (in), to throw oneself (into), to improve (in a skill)]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A sense of reward? (やりがい, yarigai.) A purpose in life? (いきがい, ikigai.) To be absorbed (in)? (ねっちゅうする, netchū suru.) To throw oneself (into)? (うちこむ, uchikomu.) To improve (in a skill)? (じょうたつする, jōtatsu suru.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R533-review-final-533-type",
+              "prompt": "Say the Japanese for 'a sense of reward'.",
+              "assesses": [
+                "JA-LEX-C533-WORTH533-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "やりがい",
+                "yarigai"
+              ],
+              "feedback": {
+                "correct": "Right: やりがい (yarigai) is 'a sense of reward; satisfaction (in a task)'.",
+                "incorrect": "'A sense of reward' is やりがい (yarigai)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

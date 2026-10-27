@@ -1,0 +1,11 @@
+{
+  "id": "JA-C402-meguru",
+  "pathSegment": "JA-PATH-402-KANKOU402",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-402-KANKOU402",
+      "order": 4
+    }
+  ]
+}

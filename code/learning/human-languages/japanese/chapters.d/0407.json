@@ -1,0 +1,21 @@
+{
+  "chapter": 407,
+  "title": "Inside the Temple",
+  "label": "ch:ja-inside-the-temple",
+  "canDo": "I can visit a temple and describe what is inside.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-R407-review-402-407",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can visit a temple and describe what is inside.",
+    "assesses": [
+      "JA-LEX-C407-SANPAI407-01",
+      "JA-LEX-C407-SANPAI407-02",
+      "JA-LEX-C407-SANPAI407-03",
+      "JA-LEX-C407-SANPAI407-04",
+      "JA-LEX-C407-SANPAI407-05"
+    ]
+  }
+}

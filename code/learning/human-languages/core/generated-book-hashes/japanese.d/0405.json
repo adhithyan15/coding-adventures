@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:82e379162b7394d7",
+  "lessonIds": [
+    "JA-C405-teien",
+    "JA-C405-yuumei",
+    "JA-C405-migoto",
+    "JA-C405-areru",
+    "JA-C405-suzumu"
+  ],
+  "tex": "japanese/book/chapters/ch405-a-famous-garden.tex"
+}

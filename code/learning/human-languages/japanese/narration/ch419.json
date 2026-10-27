@@ -1,0 +1,938 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 419,
+  "title": "Name, Age and Nationality",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:9bc521f70a22a1f3",
+  "lessons": [
+    {
+      "id": "JA-C419-kokuseki",
+      "sequence": 24420,
+      "title": "こくせき (kokuseki) — nationality",
+      "headword": "こくせき",
+      "romanization": "kokuseki",
+      "gloss": "nationality",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d65876acc7297f38",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a box on a form, then the Japanese for a date."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こくせき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こくせき — kokuseki — \"nationality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ようしに こくせきを きにゅうしました。 — yōshi ni kokuseki o kinyū shimashita — \"I filled in my nationality on the form.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こくせき (kokuseki) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are koku, \"country\" (Middle Chinese kwok) and seki, \"domiciliary register\" (dzjek) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kokuseki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kokuseki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kokuseki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kokuseki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōshi ni kokuseki o kinyū shimashita — I filled in my nationality on the form.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōshi ni kokuseki o kinyū shimashita* — I filled in my nationality on the form.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a box on a form, then the Japanese for a date, then say kokuseki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a box on a form, then the Japanese for a date, then say *kokuseki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こくせき (kokuseki) mean? (\"Nationality\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C419-kokuseki-type",
+              "prompt": "Say the Japanese for 'nationality'.",
+              "assesses": [
+                "JA-LEX-C419-KOKUSEKI419-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こくせき",
+                "kokuseki"
+              ],
+              "feedback": {
+                "correct": "Right: こくせき (kokuseki) is 'nationality'.",
+                "incorrect": "'Nationality' is こくせき (kokuseki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C419-nenrei",
+      "sequence": 24430,
+      "title": "ねんれい (nenrei) — age (a formal word)",
+      "headword": "ねんれい",
+      "romanization": "nenrei",
+      "gloss": "age (a formal word)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:550d5d8f8acc436a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a date, then the Japanese for nationality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ねんれい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねんれい — nenrei — \"age (a formal word)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ここに ねんれいを かいて ください。 — koko ni nenrei o kaite kudasai — \"Please write your age here.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねんれい (nenrei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are nen, \"year\" (Middle Chinese nen) and rei, \"age\" (leng) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nenrei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nenrei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nenrei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nenrei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koko ni nenrei o kaite kudasai — Please write your age here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koko ni nenrei o kaite kudasai* — Please write your age here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a date, then the Japanese for nationality, then say nenrei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a date, then the Japanese for nationality, then say *nenrei* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ねんれい (nenrei) mean? (\"Age (a formal word)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C419-nenrei-type",
+              "prompt": "Say the Japanese for 'age (a formal word)'.",
+              "assesses": [
+                "JA-LEX-C419-KOKUSEKI419-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ねんれい",
+                "nenrei"
+              ],
+              "feedback": {
+                "correct": "Right: ねんれい (nenrei) is 'age (a formal word)'.",
+                "incorrect": "'Age (a formal word)' is ねんれい (nenrei)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C419-seibetsu",
+      "sequence": 24440,
+      "title": "せいべつ (seibetsu) — sex (on a form)",
+      "headword": "せいべつ",
+      "romanization": "seibetsu",
+      "gloss": "sex (on a form)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13104b7b7794e506",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for nationality, then the Japanese for age (a formal word)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せいべつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せいべつ — seibetsu — \"sex (on a form)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せいべつの らんも あります。 — seibetsu no ran mo arimasu — \"There is a box for sex as well.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せいべつ (seibetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sei, \"sex\" (Middle Chinese sjengH) and betsu, \"separate\" (bjet) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seibetsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seibetsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seibetsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seibetsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seibetsu no ran mo arimasu — There is a box for sex as well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seibetsu no ran mo arimasu* — There is a box for sex as well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for nationality, then the Japanese for age (a formal word), then say seibetsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for nationality, then the Japanese for age (a formal word), then say *seibetsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does せいべつ (seibetsu) mean? (\"Sex (on a form)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C419-seibetsu-type",
+              "prompt": "Say the Japanese for 'sex (on a form)'.",
+              "assesses": [
+                "JA-LEX-C419-KOKUSEKI419-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せいべつ",
+                "seibetsu"
+              ],
+              "feedback": {
+                "correct": "Right: せいべつ (seibetsu) is 'sex (on a form)'.",
+                "incorrect": "'Sex (on a form)' is せいべつ (seibetsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C419-shimei",
+      "sequence": 24450,
+      "title": "しめい (shimei) — one's full name",
+      "headword": "しめい",
+      "romanization": "shimei",
+      "gloss": "one's full name",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb20c11f86475a14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for age (a formal word), then the Japanese for sex (on a form)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しめい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しめい — shimei — \"one's full name\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しめいと じゅうしょを かいて ください。 — shimei to jūsho o kaite kudasai — \"Please write your full name and address.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しめい (shimei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shi, \"family name\" (Middle Chinese dzyeX) and mei, \"name\" (mjieng) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shimei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shimei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shimei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shimei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shimei to jūsho o kaite kudasai — Please write your full name and address.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shimei to jūsho o kaite kudasai* — Please write your full name and address.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for age (a formal word), then the Japanese for sex (on a form), then say shimei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for age (a formal word), then the Japanese for sex (on a form), then say *shimei* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しめい (shimei) mean? (\"One's full name\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C419-shimei-type",
+              "prompt": "Say the Japanese for 'one's full name'.",
+              "assesses": [
+                "JA-LEX-C419-KOKUSEKI419-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しめい",
+                "shimei"
+              ],
+              "feedback": {
+                "correct": "Right: しめい (shimei) is 'one's full name'.",
+                "incorrect": "'One's full name' is しめい (shimei)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C419-uketsukeru",
+      "sequence": 24460,
+      "title": "うけつける (uketsukeru) — to accept applications; to take bookings",
+      "headword": "うけつける",
+      "romanization": "uketsukeru",
+      "gloss": "to accept applications; to take bookings",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab45d525d53dadf6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for sex (on a form), then the Japanese for one's full name."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うけつける",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うけつける — uketsukeru — \"to accept applications; to take bookings\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まどぐちは ごじまで よやくを うけつけます。 — madoguchi wa goji made yoyaku o uketsukemasu — \"The counter takes bookings until five.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite うけつけます, uketsukemasu; an ichidan verb. Past (polite): まどぐちが ようしを うけつけました。, madoguchi ga yōshi o uketsukemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うけつける (uketsukeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from uke, \"receiving\" (from ukeru) and tsukeru, \"to attach\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uketsukeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uketsukeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uketsukeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uketsukeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madoguchi wa goji made yoyaku o uketsukemasu — The counter takes bookings until five.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madoguchi wa goji made yoyaku o uketsukemasu* — The counter takes bookings until five.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for sex (on a form), then the Japanese for one's full name, then say uketsukeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for sex (on a form), then the Japanese for one's full name, then say *uketsukeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うけつける (uketsukeru) mean? (\"To accept applications; to take bookings\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C419-uketsukeru-type",
+              "prompt": "Say the Japanese for 'to accept applications'.",
+              "assesses": [
+                "JA-LEX-C419-KOKUSEKI419-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うけつける",
+                "uketsukeru"
+              ],
+              "feedback": {
+                "correct": "Right: うけつける (uketsukeru) is 'to accept applications; to take bookings'.",
+                "incorrect": "'To accept applications' is うけつける (uketsukeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R419-review-414-419",
+      "sequence": 24470,
+      "title": "Looking back: from Hot, Damp Days to Name, Age and Nationality",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Hot, Damp Days to Name, Age and Nationality",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:759f5ef63346a011",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for humidity and damp and humid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "humidity, damp and humid, the sun's rays, shade, dazzling",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: humidity, damp and humid, the sun's rays, shade, dazzling]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sudden evening shower, light rain, soaking wet, to get something wet, sheltering from the rain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sudden evening shower, light rain, soaking wet, to get something wet, sheltering from the rain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dawn, sunrise, a sunset glow, to turn very cold, to shine on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dawn, sunrise, a sunset glow, to turn very cold, to shine on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hand luggage, a luggage tag, to carry on one's back, to carry in one's arms, to wheel along",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hand luggage, a luggage tag, to carry on one's back, to carry in one's arms, to wheel along]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a signature, a blank form, filling in a form, a box on a form, a date",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a signature, a blank form, filling in a form, a box on a form, a date]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nationality, age (a formal word), sex (on a form), one's full name, to accept applications",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: nationality, age (a formal word), sex (on a form), one's full name, to accept applications]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Humidity? (しつど, shitsudo.) Damp and humid? (じめじめ, jimejime.) The sun's rays? (ひざし, hizashi.) Shade? (ひかげ, hikage.) Dazzling? (まぶしい, mabushii.) A sudden evening shower? (ゆうだち, yūdachi.) Light rain? (こさめ, kosame.) Soaking wet? (びっしょり, bisshori.) To get something wet? (ぬらす, nurasu.) Sheltering from the rain? (あまやどり, amayadori.) Dawn? (よあけ, yoake.) Sunrise? (ひので, hinode.) A sunset glow? (ゆうやけ, yūyake.) To turn very cold? (ひえこむ, hiekomu.) To shine on? (てらす, terasu.) Hand luggage? (てにもつ, tenimotsu.) A luggage tag? (にふだ, nifuda.) To carry on one's back? (せおう, seou.) To carry in one's arms? (かかえる, kakaeru.) To wheel along? (ころがす, korogasu.) A signature? (しょめい, shomei.) A blank form? (ようし, yōshi.) Filling in a form? (きにゅう, kinyū.) A box on a form? (らん, ran.) A date? (ひにち, hinichi.) Nationality? (こくせき, kokuseki.) Age (a formal word)? (ねんれい, nenrei.) Sex (on a form)? (せいべつ, seibetsu.) One's full name? (しめい, shimei.) To accept applications? (うけつける, uketsukeru.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R419-review-414-419-type",
+              "prompt": "Say the Japanese for 'humidity'.",
+              "assesses": [
+                "JA-LEX-C414-SHITSUDO414-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しつど",
+                "shitsudo"
+              ],
+              "feedback": {
+                "correct": "Right: しつど (shitsudo) is 'humidity'.",
+                "incorrect": "'Humidity' is しつど (shitsudo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

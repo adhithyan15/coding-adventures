@@ -1,0 +1,11 @@
+{
+  "id": "JA-C491-konro",
+  "pathSegment": "JA-PATH-491-STOVE491",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-491-STOVE491",
+      "order": 2
+    }
+  ]
+}

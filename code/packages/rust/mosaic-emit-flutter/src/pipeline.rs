@@ -6062,6 +6062,8 @@ fn validate_font_sizes(node: &LayoutNode, slots: &[SlotDecl]) -> Result<(), Pipe
 /// an Expr that evaluates in the surrounding closure scope. Expr
 /// passes verbatim into `Text(...)` so For-loop bindings like
 /// `Text ( content: ( v ) )` reach the Flutter widget unchanged.
+/// A bare NAME (`Text ( content: row )`) reads the variable it names,
+/// a For binding or the component's own slot, as `row.toString()`.
 fn emit_text(
     node: &LayoutNode,
     indent: usize,
@@ -6082,6 +6084,42 @@ fn emit_text(
     } else if let Some(slot) = find_slot_ref_prop(node, "content") {
         let camel = to_camel_case_first_lower(slot);
         (camel, false)
+    } else if let Some(name) = find_keyword_prop(node, "content") {
+        // A bare NAME is a variable, not a string (UI29 §3.3
+        // `name_ref ::= NAME`). In
+        //
+        //     For ( each: slot: rows, as: row ) { Text ( content: row ) }
+        //
+        // each label must show that row's value, as React (`{row}`),
+        // HTML (`{{row}}`) and XAML (`{x:Bind Row}`) do. This arm used to
+        // fall through to `const Text("")`, and because the loop's
+        // parameter is chosen by scanning the emitted body for the binding
+        // (`dart_source_references_identifier`), the blank body also made
+        // the loop discard it: `rows.map((_) => const Text(""))`. Naming
+        // the binding here is what makes the loop bind `(row)` again, and
+        // an `index:` binding `final i = entry.key;`.
+        //
+        // Dart's own scoping gives UI29 §3.4's "For wins": the closure
+        // parameter shadows a widget field of the same name, and outside
+        // any loop the NAME reads the component's own slot field, as
+        // React's destructured prop does. A NAME bound by neither fails
+        // `dart analyze` with "Undefined name", as React fails `tsc`.
+        //
+        // `Text` takes a `String`, and a bound value need not be one: an
+        // `index:` binding is an `int` and a `list<number>` element a
+        // `double`. `.toString()` renders any of them, as
+        // `drag_text_prop_expression` already does for a bare NAME. The
+        // result is never a constant, so the widget is never `const`:
+        //
+        //   authored                 emitted
+        //   ------------------------ ------------------------------
+        //   content: row             Text(row.toString())
+        //   content: row-item        Text(rowItem.toString())
+        //   content: i   (index:)    Text(i.toString())          "0"
+        //   content: display-name    Text(displayName.toString())
+        let binding = to_camel_case_first_lower(name);
+        validate_slot_or_field_name(&binding)?;
+        (format!("{binding}.toString()"), false)
     } else if let Some(expr_text) = node
         .props
         .iter()
@@ -10367,6 +10405,114 @@ mod tests {
             props,
             children,
         }
+    }
+
+    // ----- A bare-NAME Text reads the variable ---------------------------
+
+    fn bare_text(name: &str) -> LayoutNode {
+        node_with(
+            "Text",
+            vec![LayoutProp {
+                name: "content".into(),
+                value: LayoutPropValue::Keyword(name.into()),
+            }],
+            vec![],
+        )
+    }
+
+    fn for_over_rows(binding: &str, index: Option<&str>, body: LayoutNode) -> LayoutNode {
+        let mut props = vec![
+            LayoutProp {
+                name: "each".into(),
+                value: LayoutPropValue::SlotRef("rows".into()),
+            },
+            LayoutProp {
+                name: "as".into(),
+                value: LayoutPropValue::Keyword(binding.into()),
+            },
+        ];
+        if let Some(index) = index {
+            props.push(LayoutProp {
+                name: "index".into(),
+                value: LayoutPropValue::Keyword(index.into()),
+            });
+        }
+        node_with("For", props, vec![body])
+    }
+
+    /// A bare NAME in `content:` reads the variable it names, in both `For`
+    /// lowerings: the spread a Column's children list takes, and the
+    /// standalone `Column(children: …)` a single-child parent takes.
+    ///
+    /// | authored                      | emitted                                      |
+    /// |-------------------------------|----------------------------------------------|
+    /// | `content: display-name`       | `Text(displayName.toString())`               |
+    /// | spread, `as: row-item`        | `...rows.map((rowItem) => Text(rowItem.toString()))` |
+    /// | spread, `index: i`            | `final i = entry.key;` … `Text(i.toString())` |
+    /// | standalone, `as: row`         | `rows.map((row) => Text(row.toString()))`    |
+    ///
+    /// Before the fix each was `const Text("")`, and because a loop picks its
+    /// parameter by scanning the emitted body, the loops also threw the
+    /// binding away: `rows.map((_) => const Text(""))`.
+    #[test]
+    fn text_content_bare_name_reads_the_variable() {
+        let m = component(
+            "Ledger",
+            vec![
+                slot("rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("display-name", SlotType::Text, true),
+            ],
+            vec![],
+        );
+        let l = layout(
+            "Ledger",
+            node_with(
+                "Column",
+                vec![],
+                vec![
+                    bare_text("display-name"),
+                    for_over_rows("row-item", None, bare_text("row-item")),
+                    for_over_rows("row", Some("i"), bare_text("i")),
+                    node_with(
+                        "Box",
+                        vec![],
+                        vec![for_over_rows("row", None, bare_text("row"))],
+                    ),
+                ],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Ledger"))
+            .unwrap()
+            .output;
+        for needle in [
+            "Text(displayName.toString())",
+            "...rows.map((rowItem) => Text(rowItem.toString()))",
+            "final i = entry.key;",
+            "return Text(i.toString());",
+            "Column(children: rows.map((row) => Text(row.toString())).toList())",
+        ] {
+            assert!(out.contains(needle), "missing `{needle}` in:\n{out}");
+        }
+        assert!(!out.contains("const Text(\"\")"), "{out}");
+        assert!(!out.contains("map((_) =>"), "{out}");
+    }
+
+    /// A bare-NAME `content:` becomes a Dart identifier, so a spelling that
+    /// cannot be one is refused, the gate every other bare-NAME prop applies
+    /// (`validate_slot_or_field_name`). The moslayout lexer cannot produce
+    /// such a NAME today; this pins the defence if it ever loosens.
+    #[test]
+    fn text_bare_name_content_refuses_an_unsafe_identifier() {
+        let m = component("Hostile", vec![], vec![]);
+        let l = layout(
+            "Hostile",
+            node_with("Column", vec![], vec![bare_text("x\"); evil(\"")]),
+        );
+        let err = from_pipeline(&m, &l, &empty_style("Hostile")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsafeSlotName(_)),
+            "unexpected error: {err:?}"
+        );
     }
 
     // ----- Smoke: empty Box compiles to a Container ---------------------

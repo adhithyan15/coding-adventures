@@ -1,0 +1,11 @@
+{
+  "id": "JA-C428-koufun-suru",
+  "pathSegment": "JA-PATH-428-JOY428",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-428-JOY428",
+      "order": 1
+    }
+  ]
+}

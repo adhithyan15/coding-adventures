@@ -1,0 +1,11 @@
+{
+  "id": "JA-C495-assari",
+  "pathSegment": "JA-PATH-495-SMELL495",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-495-SMELL495",
+      "order": 4
+    }
+  ]
+}

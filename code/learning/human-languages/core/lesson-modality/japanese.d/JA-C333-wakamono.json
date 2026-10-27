@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C333-wakamono",
+    "language": "japanese",
+    "chapter": 333,
+    "sequence": 19820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d67197b028e1d53"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Getting the Food Ready",
+  "label": "ch:ja-getting-the-food-ready",
+  "canDo": "I can say how food is prepared.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C474-usumeru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can say how food is prepared.",
+    "assesses": [
+      "JA-LEX-C474-PREP474-03",
+      "JA-LEX-C474-PREP474-04",
+      "JA-LEX-C474-PREP474-05"
+    ]
+  }
+}
