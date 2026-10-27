@@ -151,7 +151,8 @@ fn the_emitted_swiftui_host_answers_effects() {
             .env("MOSAIC_PROBE_STATE_D", project.join("state-d.json"))
             .env("MOSAIC_PROBE_STATE_E", project.join("state-e.json"))
             .env("MOSAIC_PROBE_STATE_F", project.join("state-f.json"))
-            .env("MOSAIC_PROBE_STATE_G", project.join("state-g.json")),
+            .env("MOSAIC_PROBE_STATE_G", project.join("state-g.json"))
+            .env("MOSAIC_PROBE_STATE_H", project.join("state-h.json")),
         "swift effect driver",
     );
 
@@ -203,6 +204,14 @@ fn the_emitted_swiftui_host_answers_effects() {
         "the report taken is held back",
         "the app is left taking environment changes",
         "a macOS app starts with a fine, hovering pointer",
+        "an earlier quarantine is never replaced",
+        "a rejected file moves to the first free name",
+        "a file moved aside leaves saving on",
+        "fresh state is saved once the rejected file is aside",
+        "with every name taken, the warning says nothing is saved",
+        "a file that could not move aside is not written over",
+        "the warning stays showing after an event",
+        "no quarantine was replaced",
     ] {
         assert!(
             stdout.contains(expected),
