@@ -1614,7 +1614,7 @@ the frontends.
   | `dyn_unbox_int` | dyn → `i64` | a dynamic integer's value, arithmetic `>> 3` |
   | `dyn_tag` | dyn → `i64` | the low three bits: 0 integer, 1 nil, 2 symbol, 3 false, 5 true, 7 pair |
   | `dyn_pair_new` | dyn, dyn → dyn | a fresh, garbage-collected pair |
-  | `dyn_pair_first` / `dyn_pair_rest` | dyn → dyn | a pair's fields; undefined for a non-pair |
+  | `dyn_pair_first` / `dyn_pair_rest` | dyn → dyn | a pair's fields; a non-pair stops the program (see below) |
   | `dyn_is_pair` / `dyn_is_nil` | dyn → dyn | the pair and nil tests, as the dynamic booleans (words 5 and 3) |
   | `dyn_nil` | → dyn | nil (the word 1) |
   | `dyn_symbol` | literal → dyn | the symbol a name denotes |
@@ -1628,6 +1628,32 @@ the frontends.
   (call `__dyn_<name>`) *is* their lowering, and it fires only for a name in
   the backend's builtin table, so an unregistered `dyn_` name is still
   refused (`dyn_new` is still a name-rule violation).
+- *A non-pair stops the program* (follow-up to PR7f-2). `dyn_pair_first` /
+  `dyn_pair_rest` of a word that is not a pair never reads through it. The
+  VM's `field_load` and `dynval-runtime`'s `car` return a `TypeError`; the
+  `extern "C"` functions in `dynval-runtime` panic; and `dynval_runtime.c` — which
+  read the cell at `word & ~7` unconditionally until this change, so Twig's
+  `(car 1000000)` read the 8 bytes at address 8000000 on LLVM and native —
+  checks for the pair tag `0b111`, flushes stdout, prints
+  `dyn_pair_first: argument with tag 0 (int) is not a pair` on stderr and
+  aborts. The message names the word's tag and kind, never the word, so no
+  heap address reaches stderr; `dynval-runtime`'s panic uses the same words.
+  If `abort` returns — a program-defined `abort` replaced libc's, possible on
+  LLVM before #18416 — a trap instruction (`__builtin_trap`, or `__fastfail`
+  on MSVC) still ends the process; `abort` is called through a `volatile`
+  pointer so the compiler cannot delete that trap as unreachable. The
+  op's traps list stays empty: a type error is not one of the closed
+  `Trap.*` kinds, so it is not catchable, and `lang_matrix`'s
+  `twig_car_and_cdr_of_a_non_pair_fail_closed_on_every_column` pins the
+  agreement (LLVM, native x86-64, VM, JIT, JVM). A heap-tagged word that is
+  some other heap object is still read as a pair by the C runtime; that is a
+  type confusion inside a live GC block, not a wild read, and telling the
+  kinds apart there needs `__gc_kind_of`, a heap walk. `lang_aot::jit_lisp`'s
+  McCarthy callbacks used to answer nil for `car` of a non-pair; they now
+  fail on both JIT tiers (#18417). The interpreter tier returns a
+  `VMError::TypeError`. The compiled tier records the refusal in the JIT's
+  error slot, and `GenericCirJit` stops after the call. Both use the same
+  tag-only text.
 - *Renamed everywhere they are lowered or handled.* `iir-builtin-lowering`'s
   native runtime-call path (`heap.rs`'s `RUNTIME_RENAMES`, `dyn_repr.rs`,
   `list_ops.rs`, `closure_heap.rs`, `dynamic_arith.rs`); the x86-64 and
