@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C283-zai-again",
+  "pathSegment": "ZH-PATH-283-WAY",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-283-WAY",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "chapter": 287,
+  "title": "What I Want to Be",
+  "label": "ch:zh-what-i-want-to-be",
+  "canDo": "I can say what I want to do or be later.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C287-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Saying what you want to do or be with 以后我想 and 当, a dream and a goal, and 最 before 喜欢 or an adjective, built on one new written character: 当.",
+    "assesses": [
+      "ZH-LEX-C287-DANG-01",
+      "ZH-SCRIPT-DANG-01",
+      "ZH-GRAMMAR-AMBITION-01",
+      "ZH-LEX-C287-MENGXIANG-01",
+      "ZH-LEX-C287-MUBIAO-01",
+      "ZH-GRAMMAR-ZUI-MOST-01",
+      "ZH-PERFORMANCE-AMBITION-01"
+    ]
+  }
+}

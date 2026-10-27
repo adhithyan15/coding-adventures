@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C284-practice",
+  "pathSegment": "ZH-PATH-284-TICKETS",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "ZH-EXT-284-TICKETS",
+      "order": 8
+    }
+  ]
+}

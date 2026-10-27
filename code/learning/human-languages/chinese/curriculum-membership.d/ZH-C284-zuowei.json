@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C284-zuowei",
+  "pathSegment": "ZH-PATH-284-TICKETS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-284-TICKETS",
+      "order": 4
+    }
+  ]
+}
