@@ -1,4 +1,4 @@
-# Added
+### Add ARM7TDMI educational gate simulator
 
 - Added the educational ARM7TDMI gate-level companion with an exact
   525,522-DFF stable-Q inventory, independent ARM/Thumb transition engine,
