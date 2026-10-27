@@ -81,6 +81,17 @@
 //!   `pkg::` graph is checked. [`LayoutPackageResolver::check_dependencies`]
 //!   checks the consuming package itself, which the inliner never sees.
 //!
+//! ## Declared dependencies (publishing-v1 §10 Phase 1b)
+//!
+//! A version check is only as good as the declaration it checks. The
+//! inliner finds `pkg::P::C`'s package by manifest name anywhere on the
+//! search path, so it also refuses a reference to a `P` that the
+//! referencing package does not declare:
+//! [`LayoutResolveError::UndeclaredPackageReference`]. A package
+//! component's references are checked against its own manifest. The
+//! layout being resolved is checked against the manifest passed to
+//! [`LayoutPackageResolver::with_consumer`], when one is.
+//!
 //! ## Error surface
 //!
 //! ```text
@@ -293,6 +304,46 @@ impl std::fmt::Display for VersionMismatch {
             self.found,
             self.found_at.display(),
             self.dependent_manifest.display()
+        )
+    }
+}
+
+/// The details of a [`LayoutResolveError::UndeclaredPackageReference`].
+#[derive(Debug, Clone, PartialEq)]
+pub struct UndeclaredPackageReference {
+    /// The component whose layout holds the call site, in
+    /// [`LayoutResolveError::SlotBindingMissing`]'s convention: the layout being
+    /// resolved (`JournalApp`), or `pkg::P::C` for a reference inside
+    /// another package component's own layout.
+    pub consumer: String,
+    /// The package referenced without being declared.
+    pub package: String,
+    /// The component of `package` that the call site mounts.
+    pub component: String,
+    /// Where the first such call site is in `consumer`'s layout, as in
+    /// [`LayoutResolveError::SlotBindingMissing`]. One error per manifest and package,
+    /// however many call sites name it: the fix is a single line.
+    pub call_site: String,
+    /// The manifest whose `[dependencies]` must list `package`.
+    pub manifest_path: PathBuf,
+    /// `package`'s `[package].version` on the search path, when it is
+    /// there: the requirement the message suggests adding.
+    pub found_version: Option<String>,
+}
+
+impl std::fmt::Display for UndeclaredPackageReference {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "`{}` mounts `pkg::{}::{}` at {}, but `{}` is not a declared dependency; add `{} = \"{}\"` to [dependencies] in {}",
+            self.consumer,
+            self.package,
+            self.component,
+            self.call_site,
+            self.package,
+            self.package,
+            self.found_version.as_deref().unwrap_or("<version>"),
+            self.manifest_path.display()
         )
     }
 }
@@ -715,6 +766,24 @@ pub enum LayoutResolveError {
         /// offers "or give it a default" as a fix.
         defaultable: bool,
     },
+    /// A `pkg::P::C` call site names a package `P` that is neither the
+    /// referencing package nor one of its declared `[dependencies]`
+    /// (mosaic-package-publishing-v1 §10 Phase 1b).
+    ///
+    /// ```text
+    /// # journal-app/mosaic-package.toml     // JournalApp.mll
+    /// [dependencies]                        pkg::mosaic-pkg-toolkit::Button ( … )
+    /// mosaic-pkg-sheet = "0.4.0"            ↑ mosaic-pkg-toolkit is not listed
+    /// ```
+    ///
+    /// The inliner finds `P` by manifest name anywhere on the search path,
+    /// so before this check such a reference compiled. But nothing compared
+    /// a version requirement for it (§7.4), because there was none, and the
+    /// build tool, which draws its edges from `[dependencies]`, never
+    /// rebuilt the consumer when `P` changed.
+    ///
+    /// Boxed, as [`Self::VersionMismatch`] is, to keep `Result`s small.
+    UndeclaredPackageReference(Box<UndeclaredPackageReference>),
     /// A package component's expression names something that is neither
     /// one of its slots nor a `For` binding in scope.
     ///
@@ -864,6 +933,7 @@ impl std::fmt::Display for LayoutResolveError {
                     write!(f, " (a slot of this type cannot have a default)")
                 }
             }
+            Self::UndeclaredPackageReference(reference) => write!(f, "{reference}"),
             Self::UndeclaredExpressionIdentifier {
                 package,
                 component,
@@ -922,6 +992,49 @@ pub struct LayoutPackageResolver {
     /// Packages whose own `[dependencies]` have already been checked, so a
     /// package inlined from many times is checked once.
     checked: Mutex<HashSet<String>>,
+    /// The `[dependencies]` of the package whose layout is being resolved,
+    /// when the caller supplied its manifest ([`Self::with_consumer`]).
+    /// `None` leaves the consumer's own `pkg::` references unchecked; the
+    /// references inside package components are checked regardless, against
+    /// each package's own manifest.
+    consumer: Option<DeclaredDependencies>,
+}
+
+/// What one manifest lets its layouts reference: the package itself and
+/// its declared dependencies (mosaic-package-publishing-v1 §10 Phase 1b).
+///
+/// ```text
+/// [package] name = "journal-app"     pkg::journal-app::Entry          → itself, fine
+/// [dependencies]                     pkg::mosaic-pkg-sheet::Sheet     → declared, fine
+/// mosaic-pkg-sheet = "0.4.0"         pkg::mosaic-pkg-toolkit::Button  → UNDECLARED
+/// ```
+///
+/// Self-references are allowed because authors never write them but the
+/// artifact builder does: it rewrites a package's bare sibling references
+/// to `pkg::<self>::C` before resolving.
+#[derive(Debug, Clone)]
+struct DeclaredDependencies {
+    /// `[package].name`.
+    package: String,
+    /// The `[dependencies]` keys, which are package names.
+    dependencies: HashSet<String>,
+    /// Where the manifest lives: the file an error tells the author to fix.
+    manifest_path: PathBuf,
+}
+
+impl DeclaredDependencies {
+    fn from_manifest(manifest: &MosaicPackage, manifest_path: &Path) -> Self {
+        Self {
+            package: manifest.package.name.clone(),
+            dependencies: manifest.dependencies.keys().cloned().collect(),
+            manifest_path: manifest_path.to_path_buf(),
+        }
+    }
+
+    /// Whether a layout governed by this manifest may reference `pkg`.
+    fn allows(&self, pkg: &str) -> bool {
+        pkg == self.package || self.dependencies.contains(pkg)
+    }
 }
 
 /// A component's declared slots, as its `.mil` lists them.
@@ -971,7 +1084,28 @@ impl LayoutPackageResolver {
             interfaces: Mutex::new(HashMap::new()),
             located: Mutex::new(HashMap::new()),
             checked: Mutex::new(HashSet::new()),
+            consumer: None,
         }
+    }
+
+    /// Name the package whose layouts this resolver resolves, so the
+    /// layouts' own `pkg::P::C` references are checked against its
+    /// `[dependencies]` (mosaic-package-publishing-v1 §10 Phase 1b).
+    ///
+    /// ```text
+    /// LayoutPackageResolver::new(search_paths)
+    ///     .with_consumer(&manifest, &package_root.join("mosaic-package.toml"))
+    /// ```
+    ///
+    /// Without it, only the references *inside* package components are
+    /// checked, each against its own package's manifest: a resolver handed
+    /// a bare layout has no `[dependencies]` to check that layout against.
+    /// `manifest_path` is where `manifest` was read from. An
+    /// [`LayoutResolveError::UndeclaredPackageReference`] names it as the
+    /// file to fix.
+    pub fn with_consumer(mut self, manifest: &MosaicPackage, manifest_path: &Path) -> Self {
+        self.consumer = Some(DeclaredDependencies::from_manifest(manifest, manifest_path));
+        self
     }
 
     /// Check a package's `[dependencies]` requirements against the packages
@@ -1398,20 +1532,32 @@ impl LayoutPackageResolver {
     // every package component reachable from it, so a missing binding deep
     // inside a package is found in the same build. Every miss is collected
     // and reported together.
+    //
+    // The same walk asks the one other question that must be asked of
+    // every call site, which package it names (Phase 1b). A layout may
+    // name only its own package or a declared dependency:
+    //
+    //   layout being walked          declared set it is checked against
+    //   ──────────────────────────   ─────────────────────────────────────
+    //   the consumer's               `with_consumer`'s manifest, or none
+    //   package P's component C      P's own mosaic-package.toml
 
-    /// Check every `pkg::P::C` call site reachable from `layout` binds every
-    /// required slot of `C`. Returns all misses (and any package that could
-    /// not be loaded along the way) as one error.
+    /// Check every `pkg::P::C` call site reachable from `layout`: that it
+    /// binds every required slot of `C`, and that `P` is declared by the
+    /// manifest governing the layout it appears in. Returns all misses (and
+    /// any package that could not be loaded along the way) as one error.
     fn check_required_bindings(&self, layout: &LayoutDef) -> Result<(), LayoutResolveError> {
         let mut walk = BindingCheck {
             errors: Vec::new(),
             omitted: 0,
             loads_reported: HashSet::new(),
             checked: HashSet::new(),
+            undeclared_reported: HashSet::new(),
         };
         let scope = CallScope {
             consumer: layout.component_name.clone(),
             local_package: None,
+            declared: self.consumer.clone(),
         };
         let mut path = Vec::new();
         self.check_tree(&layout.root, None, &scope, &mut path, &mut walk);
@@ -1435,6 +1581,7 @@ impl LayoutPackageResolver {
         path.push(call_site_segment(node, position));
 
         if let Some((pkg, comp)) = scope.call_target(node) {
+            self.check_declared(&pkg, &comp, scope, path, walk);
             match self.resolve_component(&pkg, &comp) {
                 Ok(resolved) => {
                     let missing = missing_required_slots(
@@ -1472,10 +1619,55 @@ impl LayoutPackageResolver {
         path.pop();
     }
 
+    /// Report the call site at `path`, which mounts `pkg::comp`, if the
+    /// manifest governing `scope` does not declare `pkg`. Once per manifest
+    /// and package: after the first call site, more add nothing to the fix.
+    ///
+    /// The binding check still runs on an undeclared call site, so one
+    /// build reports everything wrong with it.
+    fn check_declared(
+        &self,
+        pkg: &str,
+        comp: &str,
+        scope: &CallScope,
+        path: &[String],
+        walk: &mut BindingCheck,
+    ) {
+        let Some(declared) = &scope.declared else {
+            return;
+        };
+        if declared.allows(pkg)
+            || !walk
+                .undeclared_reported
+                .insert((declared.manifest_path.clone(), pkg.to_string()))
+        {
+            return;
+        }
+        // The version to suggest, when the package is there to read. A
+        // package that is not is also reported as `PackageNotFound`, by
+        // the load that follows.
+        let found_version = self
+            .locate_package(pkg)
+            .and_then(|root| self.read_manifest(pkg, &root))
+            .ok()
+            .map(|manifest| manifest.package.version);
+        walk.push(LayoutResolveError::UndeclaredPackageReference(Box::new(
+            UndeclaredPackageReference {
+                consumer: scope.consumer.clone(),
+                package: pkg.to_string(),
+                component: comp.to_string(),
+                call_site: path.join(" > "),
+                manifest_path: declared.manifest_path.clone(),
+                found_version,
+            },
+        )));
+    }
+
     /// Check the call sites inside package component `pkg::comp`'s own
     /// layout. Inside a package an unqualified tag naming one of the
     /// package's exports is a call site too: the inliner qualifies it
-    /// (`qualify_local_refs`) only after substitution.
+    /// (`qualify_local_refs`) only after substitution. Every call site is
+    /// checked against `pkg`'s own `[dependencies]`.
     fn check_component_layout(
         &self,
         pkg: &str,
@@ -1483,16 +1675,22 @@ impl LayoutPackageResolver {
         layout: &LayoutDef,
         walk: &mut BindingCheck,
     ) {
-        let exports = match self.package_exports(pkg) {
-            Ok(exports) => exports,
+        let (manifest, pkg_root) = match self
+            .locate_package(pkg)
+            .and_then(|root| Ok((self.read_manifest(pkg, &root)?, root)))
+        {
+            Ok(found) => found,
             Err(error) => {
                 walk.push_load(error, pkg, comp);
                 return;
             }
         };
+        let declared =
+            DeclaredDependencies::from_manifest(&manifest, &pkg_root.join("mosaic-package.toml"));
         let scope = CallScope {
             consumer: format!("pkg::{pkg}::{comp}"),
-            local_package: Some((pkg.to_string(), exports)),
+            local_package: Some((pkg.to_string(), manifest.components.exports)),
+            declared: Some(declared),
         };
         let mut path = Vec::new();
         self.check_tree(&layout.root, None, &scope, &mut path, walk);
@@ -1673,6 +1871,9 @@ struct BindingCheck {
     loads_reported: HashSet<(&'static str, String, String)>,
     /// The package components whose own layouts have been checked.
     checked: HashSet<(String, String)>,
+    /// The (manifest, package) pairs already reported as
+    /// `UndeclaredPackageReference`.
+    undeclared_reported: HashSet<(PathBuf, String)>,
 }
 
 impl BindingCheck {
@@ -1764,6 +1965,9 @@ struct CallScope {
     consumer: String,
     /// Inside a package component, that package and its exports.
     local_package: Option<(String, Vec<String>)>,
+    /// What this layout's manifest lets it reference. `None` for a
+    /// consumer resolved without [`LayoutPackageResolver::with_consumer`].
+    declared: Option<DeclaredDependencies>,
 }
 
 impl CallScope {
@@ -5506,6 +5710,305 @@ version = "1"
         }
     }
 
+    // ---- Undeclared package references (publishing-v1 §10 Phase 1b) ----
+    //
+    // Fixture: `packages/` holds `mosaic-pkg-lib` (exports `Card`, no slots)
+    // and `mosaic-pkg-other` (exports `Chip`), both at 0.1.0. The consumer
+    // is `probe-app` in `apps/probe-app`, whose `[dependencies]` each test
+    // chooses.
+
+    struct DeclFixture {
+        _tmp: TempDir,
+        pkgs: PathBuf,
+        app: PathBuf,
+    }
+
+    impl DeclFixture {
+        fn new() -> Self {
+            let tmp = TempDir::new().unwrap();
+            let pkgs = tmp.path().join("packages");
+            fs::create_dir_all(&pkgs).unwrap();
+            let lib = make_pkg(&pkgs, "mosaic-pkg-lib", "mosaic-pkg-lib", &["Card"]);
+            write_component(
+                &lib,
+                "Card",
+                "component Card { }",
+                "layout Card { Column [ card ] }",
+            );
+            let other = make_pkg(&pkgs, "mosaic-pkg-other", "mosaic-pkg-other", &["Chip"]);
+            write_component(
+                &other,
+                "Chip",
+                "component Chip { }",
+                "layout Chip { Row [ chip ] }",
+            );
+            let app = tmp.path().join("apps/probe-app");
+            fs::create_dir_all(&app).unwrap();
+            Self {
+                _tmp: tmp,
+                pkgs,
+                app,
+            }
+        }
+
+        /// A resolver whose consumer is `probe-app` declaring `deps`.
+        fn resolver(&self, deps: &[(&str, &str)]) -> LayoutPackageResolver {
+            write_manifest(&self.app, "probe-app", &["ProbeApp"], deps);
+            let manifest_path = self.app.join("mosaic-package.toml");
+            let manifest = mosaic_package_manifest::parse_path(&manifest_path).unwrap();
+            LayoutPackageResolver::new(vec![self.pkgs.clone()])
+                .with_consumer(&manifest, &manifest_path)
+        }
+
+        fn app_manifest(&self) -> PathBuf {
+            self.app.join("mosaic-package.toml")
+        }
+    }
+
+    /// The `(manifest, package)` of every `UndeclaredPackageReference` in
+    /// `error`, in report order, and how many other errors it holds.
+    fn undeclared(error: &LayoutResolveError) -> (Vec<(PathBuf, String)>, usize) {
+        let errors = match error {
+            LayoutResolveError::Multiple { errors, .. } => errors.as_slice(),
+            single => std::slice::from_ref(single),
+        };
+        let mut found = Vec::new();
+        let mut others = 0;
+        for error in errors {
+            match error {
+                LayoutResolveError::UndeclaredPackageReference(reference) => {
+                    found.push((reference.manifest_path.clone(), reference.package.clone()))
+                }
+                _ => others += 1,
+            }
+        }
+        (found, others)
+    }
+
+    /// A consumer that mounts a package its manifest does not declare is
+    /// refused, before anything is substituted, naming the manifest to fix
+    /// and the version on the search path.
+    #[test]
+    fn an_undeclared_package_reference_is_refused() {
+        let fixture = DeclFixture::new();
+        let resolver = fixture.resolver(&[]);
+        let mut layout = consumer_layout(
+            "layout ProbeApp { Column [ app-root ] { pkg::mosaic-pkg-lib::Card [ hero ] } }",
+        );
+
+        let error = resolver
+            .resolve(&mut layout)
+            .expect_err("lib is undeclared");
+        assert_eq!(
+            error,
+            LayoutResolveError::UndeclaredPackageReference(Box::new(UndeclaredPackageReference {
+                consumer: "ProbeApp".to_string(),
+                package: "mosaic-pkg-lib".to_string(),
+                component: "Card".to_string(),
+                call_site: "Column[app-root] > pkg::mosaic-pkg-lib::Card[hero]".to_string(),
+                manifest_path: fixture.app_manifest(),
+                found_version: Some("0.1.0".to_string()),
+            }))
+        );
+        assert_eq!(
+            error.to_string(),
+            format!(
+                "`ProbeApp` mounts `pkg::mosaic-pkg-lib::Card` at \
+                 Column[app-root] > pkg::mosaic-pkg-lib::Card[hero], but `mosaic-pkg-lib` \
+                 is not a declared dependency; add `mosaic-pkg-lib = \"0.1.0\"` to \
+                 [dependencies] in {}",
+                fixture.app_manifest().display()
+            )
+        );
+        assert_eq!(
+            first_qualified_tag(&layout.root),
+            Some("pkg::mosaic-pkg-lib::Card")
+        );
+    }
+
+    /// The same reference, declared, resolves.
+    #[test]
+    fn a_declared_package_reference_resolves() {
+        let fixture = DeclFixture::new();
+        let resolver = fixture.resolver(&[("mosaic-pkg-lib", "0.1.0")]);
+        let mut layout = consumer_layout(
+            "layout ProbeApp { Column [ app-root ] { pkg::mosaic-pkg-lib::Card } }",
+        );
+
+        resolver.resolve(&mut layout).expect("lib is declared");
+        assert_eq!(first_qualified_tag(&layout.root), None);
+    }
+
+    /// A package's own layout may name its own exports as `pkg::<self>::C`,
+    /// the form the artifact builder rewrites bare sibling references to,
+    /// and its components may mount siblings by bare name.
+    #[test]
+    fn a_self_reference_needs_no_declaration() {
+        let fixture = DeclFixture::new();
+        let lib = fixture.pkgs.join("mosaic-pkg-lib");
+        write_manifest(&lib, "mosaic-pkg-lib", &["Card", "Badge", "Panel"], &[]);
+        write_component(
+            &lib,
+            "Badge",
+            "component Badge { }",
+            "layout Badge { Text ( content: \"b\" ) }",
+        );
+        // Nested: a component of the package mounting a sibling bare.
+        write_component(
+            &lib,
+            "Panel",
+            "component Panel { }",
+            "layout Panel { Column { Badge } }",
+        );
+        let manifest_path = lib.join("mosaic-package.toml");
+        let manifest = mosaic_package_manifest::parse_path(&manifest_path).unwrap();
+        let resolver = LayoutPackageResolver::new(vec![fixture.pkgs.clone()])
+            .with_consumer(&manifest, &manifest_path);
+        let mut layout = consumer_layout(
+            "layout Card { Column [ card ] { pkg::mosaic-pkg-lib::Badge pkg::mosaic-pkg-lib::Panel } }",
+        );
+
+        resolver
+            .resolve(&mut layout)
+            .expect("self-references are allowed");
+        assert_eq!(first_qualified_tag(&layout.root), None);
+    }
+
+    /// A resolver with no consumer manifest has nothing to check the
+    /// consumer's own references against, so it accepts them, as before.
+    #[test]
+    fn without_a_consumer_manifest_the_consumer_is_unchecked() {
+        let fixture = DeclFixture::new();
+        let resolver = LayoutPackageResolver::new(vec![fixture.pkgs.clone()]);
+        let mut layout = consumer_layout("layout ProbeApp { pkg::mosaic-pkg-lib::Card }");
+
+        resolver
+            .resolve(&mut layout)
+            .expect("no declared set to check against");
+    }
+
+    /// A reference inside a package component is checked against that
+    /// package's own manifest, with or without a consumer manifest, and
+    /// reported against that component.
+    #[test]
+    fn a_nested_undeclared_reference_names_the_nested_manifest() {
+        let fixture = DeclFixture::new();
+        let outer = make_pkg(
+            &fixture.pkgs,
+            "mosaic-pkg-outer",
+            "mosaic-pkg-outer",
+            &["Shell"],
+        );
+        write_component(
+            &outer,
+            "Shell",
+            "component Shell { }",
+            "layout Shell { Column [ shell ] { Row { pkg::mosaic-pkg-lib::Card } } }",
+        );
+        let outer_manifest = outer.join("mosaic-package.toml");
+        let expected =
+            LayoutResolveError::UndeclaredPackageReference(Box::new(UndeclaredPackageReference {
+                consumer: "pkg::mosaic-pkg-outer::Shell".to_string(),
+                package: "mosaic-pkg-lib".to_string(),
+                component: "Card".to_string(),
+                call_site: "Column[shell] > Row#1 > pkg::mosaic-pkg-lib::Card#1".to_string(),
+                manifest_path: outer_manifest.clone(),
+                found_version: Some("0.1.0".to_string()),
+            }));
+
+        // The consumer declares outer, which is fine; outer does not
+        // declare lib, which is not.
+        let resolver = fixture.resolver(&[("mosaic-pkg-outer", "0.1.0")]);
+        let mut layout = consumer_layout("layout ProbeApp { pkg::mosaic-pkg-outer::Shell }");
+        assert_eq!(
+            resolver.resolve(&mut layout).expect_err("outer → lib"),
+            expected
+        );
+
+        // A resolver without a consumer manifest still checks the nested one.
+        let bare = LayoutPackageResolver::new(vec![fixture.pkgs.clone()]);
+        let mut layout = consumer_layout("layout ProbeApp { pkg::mosaic-pkg-outer::Shell }");
+        assert_eq!(
+            bare.resolve(&mut layout).expect_err("outer → lib"),
+            expected
+        );
+
+        // Declaring it in outer's manifest fixes it.
+        write_manifest(
+            &outer,
+            "mosaic-pkg-outer",
+            &["Shell"],
+            &[("mosaic-pkg-lib", "0.1.0")],
+        );
+        let fixed = LayoutPackageResolver::new(vec![fixture.pkgs.clone()]);
+        let mut layout = consumer_layout("layout ProbeApp { pkg::mosaic-pkg-outer::Shell }");
+        fixed.resolve(&mut layout).expect("outer declares lib");
+    }
+
+    /// Every undeclared package is reported in one build, once per
+    /// manifest however many call sites name it, beside the other errors
+    /// the same walk finds: a missing package, and a missing binding.
+    #[test]
+    fn undeclared_references_are_reported_together_once_each() {
+        let fixture = DeclFixture::new();
+        let lib = fixture.pkgs.join("mosaic-pkg-lib");
+        write_component(
+            &lib,
+            "Card",
+            "component Card { slot title : text ; }",
+            "layout Card { Text ( content: slot: title ) }",
+        );
+        let resolver = fixture.resolver(&[]);
+        let mut layout = consumer_layout(
+            r#"layout ProbeApp { Column [ app-root ] {
+  pkg::mosaic-pkg-lib::Card ( title: "one" )
+  pkg::mosaic-pkg-other::Chip
+  pkg::mosaic-pkg-lib::Card
+  pkg::mosaic-pkg-other::Chip
+  pkg::mosaic-pkg-gone::Thing
+} }"#,
+        );
+
+        let error = resolver.resolve(&mut layout).expect_err("three undeclared");
+        let manifest = fixture.app_manifest();
+        assert_eq!(
+            undeclared(&error),
+            (
+                vec![
+                    (manifest.clone(), "mosaic-pkg-lib".to_string()),
+                    (manifest.clone(), "mosaic-pkg-other".to_string()),
+                    (manifest, "mosaic-pkg-gone".to_string()),
+                ],
+                // The unbound `title` of the second Card, and gone's
+                // PackageNotFound.
+                2
+            )
+        );
+        let LayoutResolveError::Multiple { errors, omitted } = &error else {
+            panic!("expected Multiple, got {error:?}");
+        };
+        assert_eq!(*omitted, 0);
+        assert!(matches!(
+            &errors[2],
+            LayoutResolveError::SlotBindingMissing { slot, .. } if slot == "title"
+        ));
+        // Gone is not on the search path, so no version can be suggested.
+        assert!(matches!(
+            &errors[3],
+            LayoutResolveError::UndeclaredPackageReference(reference)
+                if reference.package == "mosaic-pkg-gone" && reference.found_version.is_none()
+        ));
+        assert!(errors[3]
+            .to_string()
+            .contains("add `mosaic-pkg-gone = \"<version>\"`"));
+        assert_eq!(
+            errors[4],
+            LayoutResolveError::PackageNotFound {
+                package: "mosaic-pkg-gone".to_string()
+            }
+        );
+    }
+
     // ---- The repository's own packages, apps and manifests ----
 
     /// `code/` in this checkout: this crate is `code/packages/rust/<crate>`.
@@ -5563,6 +6066,14 @@ version = "1"
     ///
     /// When it was added, it found no layout in the repository relying on
     /// an unbound required slot, and no export with a scope error.
+    ///
+    /// It is also the undeclared-reference guard (publishing-v1 §10
+    /// Phase 1b): each layout is checked with its own package's manifest
+    /// as the consumer, and every package layout it reaches against that
+    /// package's manifest, so a `pkg::P::` reference that neither names its
+    /// own package nor a declared dependency fails here, naming the
+    /// manifest. When that check was added, every reference in the
+    /// repository was already declared.
     #[test]
     fn every_repository_layout_binds_every_required_slot() {
         let code = repository_code_root();
@@ -5588,11 +6099,15 @@ version = "1"
             };
             let package_root = manifest_path.parent().unwrap();
             let src = package_root.join("src");
+            // The package's own manifest is the consumer, so its layouts'
+            // `pkg::` references are checked against its `[dependencies]`
+            // (Phase 1b) as a package build checks them.
             let resolver = LayoutPackageResolver::new(vec![
                 package_root.parent().unwrap().to_path_buf(),
                 packages.clone(),
                 packages.join("mosaic"),
-            ]);
+            ])
+            .with_consumer(&manifest, manifest_path);
             for component in &manifest.components.exports {
                 // Every export, mounted or not, must pass the callee scope
                 // check: it is what any future consumer would inline.

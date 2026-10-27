@@ -12,6 +12,61 @@ component with one outside a call site therefore fails to load as
 are still the callee-scope check's, since only it sees the mounted
 component's `one-of` values.
 
+### Added — `UndeclaredPackageReference`: a `pkg::` reference must be declared (publishing-v1 §10 Phase 1b)
+
+`LayoutPackageResolver` finds `pkg::P::C`'s package by manifest name
+anywhere on the search path, and it never asked whether the referencing
+package declares `P`. So an undeclared dependency compiled, but:
+
+- no version requirement was checked for it (§7.4), because none existed;
+- the build tool, which takes its CI edges from `[dependencies]`, never
+  rebuilt or retested the consumer when `P` changed.
+
+What changed:
+
+- **The rule.** Every `pkg::P::C` call site must name the referencing
+  package itself or a declared dependency.
+  - `pkg::<self>::C` is allowed, because the artifact builder qualifies bare
+    sibling references to that form.
+  - Bare sibling references inside a package component are local, so they
+    are never checked.
+- **Where the declared set comes from.**
+  - For a package component's own layout, it is that package's
+    `mosaic-package.toml`. This is always checked.
+  - For the layout being resolved, it is the manifest passed to the new
+    `LayoutPackageResolver::with_consumer(&manifest, &manifest_path)`.
+    Without that call, the consumer's own references are accepted as
+    before, which keeps every existing `new(..)` caller working.
+- **New variant `LayoutResolveError::UndeclaredPackageReference(Box<..>)`.**
+  It holds a new public struct `UndeclaredPackageReference { consumer,
+  package, component, call_site, manifest_path, found_version }`. It is
+  boxed, like `VersionMismatch`, so `Result`s stay small (clippy
+  `result_large_err`).
+  - The message names the manifest to fix and the line to add. It suggests
+    the version found on the search path, or `<version>` when the package
+    is not there.
+  - Each undeclared package is reported once per manifest, at its first
+    call site.
+- **One walk, one report.** The check runs in the pre-substitution walk
+  that `SlotBindingMissing` uses. So undeclared packages, unbound slots and
+  load failures come back together in one `Multiple`, under the same cap
+  of 100.
+- **Repository guard.** `every_repository_layout_binds_every_required_slot`
+  now resolves each layout with its own package's manifest as the
+  consumer.
+  - Every `pkg::` reference in the repository is already declared.
+  - Treating every dependency as undeclared makes the guard report 45
+    references across 8 manifests, which shows it reaches them.
+- Tests cover:
+  - an undeclared reference, with its exact error and message;
+  - a declared reference;
+  - `pkg::<self>::` and bare sibling references;
+  - a resolver with no consumer manifest;
+  - a nested package's undeclared reference, which names that package's
+    manifest with or without a consumer manifest;
+  - three undeclared packages reported once each, beside a missing
+    binding and a `PackageNotFound`.
+
 ### Added — `SlotBindingMissing`: a required slot must be bound (UI34 §7, E6 F1)
 
 UI13 §1 says a slot without a default is required, and that the compiler
