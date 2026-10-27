@@ -241,9 +241,12 @@ describe("handwriting ductus", () => {
     // 163 -> 175: the twelve characters A2 vocabulary tranche e writes
     // (chapters 158-187), each right after the word that anchors
     // it: 房 米 衣 茶 事 觉 杯 冷 候 面 常 间.
-    expect(chinese.letters).toHaveLength(175);
+    // 175 -> 181: the first characters A2 vocabulary tranche f writes
+    // (chapters 188-217), each right after the word that anchors
+    // it: 钱 号 店 回 路 票.
+    expect(chinese.letters).toHaveLength(181);
     expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(
-      175,
+      181,
     );
     expect(
       chinese.letters.every((letter) => letter.strokeOrderSource !== undefined),
