@@ -14,11 +14,21 @@
 - **Fix.** Both handlers now go through one helper, `checked_field_offset`,
   which asks gc-core's new `FlatHeap::payload_size_at_base` (gc-core 0.37.0)
   for the size of the object that starts *exactly* at `obj`. Anything else
-  traps with `"<op>: 0x… is not the base address of a live heap object"`
-  before any memory is touched. Valid base addresses behave exactly as before,
+  traps with `"<op>: HeapRef is not the base address of a live heap object"`
+  before any memory is touched. The message deliberately does not include
+  the address, so VM errors never echo heap layout. Valid base addresses behave exactly as before,
   including the `"index N out of bounds for a S-byte object"` trap.
 - **Visible change:** null, garbage and freed `HeapRef`s still trap, but with
   the not-a-base message instead of `"out of bounds for a 0-byte object"`.
+- **32-bit index truncation closed (pre-existing).** The word index was
+  converted with `idx as usize`, which on a 32-bit target (wasm32) silently
+  truncates an index of `1 << 32` or more to a small one that then passes the
+  bounds check as a different field. It is now converted with
+  `usize::try_from` and traps on failure. On 64-bit targets every
+  non-negative `i64` fits, so nothing changes there; there is no 32-bit test
+  target in this workspace, so this is covered by a comment rather than a test.
+- Order of checks, all before any memory access: index non-negative and
+  fits in `usize`, then base address, then `idx*8 + 8 <= size`.
 - Tests (`tests/gc_heap.rs`), all with real heap allocations passed in as
   host arguments: `gc_field_ops_accept_a_host_supplied_base_heap_ref`,
   `gc_field_load_traps_on_an_interior_heap_ref`,

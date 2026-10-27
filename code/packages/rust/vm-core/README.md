@@ -204,7 +204,7 @@ traps. See `tests/gc_heap.rs` for the full round-trip and reclamation proofs.
 the object that starts *exactly* at `obj`, and only then check
 `idx*8 + 8 <= size`. Null, a freed or foreign address, an address inside an
 object, and the address one past an object's end all trap with
-`"<op>: 0x… is not the base address of a live heap object"` before any memory
+`"<op>: HeapRef is not the base address of a live heap object"` before any memory
 is touched. No IIR op produces such a `HeapRef`, but a host can pass one
 through `VMCore::execute`'s arguments; checking the size alone against an
 interior address would bound the access from the wrong starting point and let

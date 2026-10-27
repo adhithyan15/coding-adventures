@@ -23,7 +23,8 @@
 - Tests: `payload_size_at_base_reports_the_size_of_a_real_base_address`,
   `…_refuses_an_interior_address`, `…_refuses_a_one_past_the_end_address`,
   `…_refuses_null_garbage_and_freed_addresses`,
-  `…_follows_the_object_across_compaction`. None of them dereferences a
+  `…_follows_the_object_across_compaction` (which also checks the pre-move
+  address now gives `None`). None of them dereferences a
   refused address. They also pass under Miri.
 
 ## 0.36.0 — 2026-08-11 — re-export the NaN-box tag constants at the crate root (AOT00-T10 PR-3 follow-up)

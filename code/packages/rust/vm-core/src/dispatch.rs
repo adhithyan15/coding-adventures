@@ -1472,12 +1472,18 @@ const FIELD_TAG_HEAP_REF: i64 = gc_core::NAN_BOX_REF_TAG as i64;
 /// `VMCore::execute`'s arguments, and a future op could do pointer
 /// arithmetic; neither may turn into a heap read or write out of bounds.
 ///
-/// | `obj`                    | `idx*8 + 8 <= size` | result                     |
-/// |--------------------------|---------------------|----------------------------|
-/// | live block base          | yes                 | `Ok(idx * 8)`              |
-/// | live block base          | no                  | trap: out of bounds        |
-/// | anything else            | (not evaluated)     | trap: not the base address |
-/// | (any `obj`, `idx < 0`)   | (not evaluated)     | trap: negative index       |
+/// The checks run in this order; the first that fails decides the trap:
+///
+/// | step | condition                                  | trap on failure            |
+/// |------|--------------------------------------------|----------------------------|
+/// | 1    | `idx >= 0` and `idx` fits in a `usize`     | negative / too-large index |
+/// | 2    | `obj` is exactly a live block's base       | not the base address       |
+/// | 3    | `idx*8 + 8 <= size`                        | out of bounds              |
+///
+/// The not-a-base trap deliberately does **not** print `obj`'s address: VM
+/// errors can reach whoever supplied the program or the host arguments, and a
+/// heap address is exactly the kind of layout detail that helps an attacker
+/// aim a later bug. The op name and the reason are enough to debug with.
 ///
 /// Cost: one O(live objects) walk of the block list, the same as the
 /// `payload_size` lookup it replaces (and bounded the same way, by
@@ -1491,14 +1497,20 @@ fn checked_field_offset(
     if idx < 0 {
         return Err(VMError::Custom(format!("{op}: negative index {idx}")));
     }
-    let addr = obj.addr();
-    let size = heap.payload_size_at_base(addr).ok_or_else(|| {
+    // `idx as usize` would silently truncate on a 32-bit target (wasm32, for
+    // one): `idx = 1 << 32` would become word 0 and pass the bounds check as a
+    // different field than the program asked for. `try_from` refuses instead.
+    // On 64-bit targets every non-negative `i64` fits, so this never fires there.
+    let idx_words = usize::try_from(idx).map_err(|_| {
+        VMError::Custom(format!("{op}: index {idx} does not fit in this target's address width"))
+    })?;
+    let size = heap.payload_size_at_base(obj.addr()).ok_or_else(|| {
         VMError::Custom(format!(
-            "{op}: {addr:#x} is not the base address of a live heap object \
+            "{op}: HeapRef is not the base address of a live heap object \
              (null, freed, foreign, or pointing inside or past the end of an object)"
         ))
     })?;
-    let byte_off = (idx as usize).saturating_mul(8);
+    let byte_off = idx_words.saturating_mul(8);
     if byte_off.saturating_add(8) > size {
         return Err(VMError::Custom(format!(
             "{op}: index {idx} out of bounds for a {size}-byte object"
@@ -1511,16 +1523,17 @@ fn checked_field_offset(
 /// `gc_alloc`'d object's payload.
 ///
 /// Bounds-checked against the object's *actual* allocated size, resolved by
-/// [`checked_field_offset`] (see there for the full argument). Two checks,
-/// in order:
+/// [`checked_field_offset`] (see there for the full argument). Three checks,
+/// in order, all before any memory is touched:
 ///
-/// 1. `obj` must be **exactly the base address** of a live `FlatHeap` block
+/// 1. `idx` must be non-negative and fit in a `usize`.
+/// 2. `obj` must be **exactly the base address** of a live `FlatHeap` block
 ///    (`FlatHeap::payload_size_at_base`). Null, a garbage address, a freed
 ///    block, an address *inside* a block and the address one past a block's
-///    end all trap here, before any memory is touched.
-/// 2. Word `idx` must fit: `idx*8 + 8 <= size`.
+///    end all trap here.
+/// 3. Word `idx` must fit: `idx*8 + 8 <= size`.
 ///
-/// Check 1 is what makes check 2 mean anything (issue #18471): `size` is
+/// Check 2 is what makes check 3 mean anything (issue #18471): `size` is
 /// measured from the block's base, so it bounds `obj + idx*8` only when `obj`
 /// *is* that base.
 ///

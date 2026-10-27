@@ -78,9 +78,11 @@ natively. This is **additive**: the existing array-heap ops are unchanged.
   NaN-boxing, mirroring exactly how the native cons-cell path represents a
   pair (`aarch64-backend`'s `alloc` op doc comment: *"Values are raw 64-bit
   words — no NaN-boxing"*). A word is either a nested `Value::HeapRef`'s raw
-  address or a plain `Value::Int`; decoded on load by `instr.type_hint`
-  (`"ref..."` vs. anything else) — the same convention `gc_core::HeapRef`'s
-  own docs establish (*"registers typed `ref<T>`"*). Bounds-checked against
+  address or a plain `Value::Int`. *(Amended: originally decoded on load by
+  `instr.type_hint`; since the tagged-field rework described below, a load
+  decodes from the word's own low 3 tag bits — `111` → `HeapRef`, anything
+  else → `Int` — and ignores `type_hint`, which cannot tell the two apart in
+  a dynamically typed `ref<any>` field.)* Bounds-checked against
   the object's *actual* allocated size via a new, general-purpose
   `FlatHeap::payload_size(addr) -> usize` (a `kind_of` sibling — resolved
   fresh from the live block's header, so it never goes stale across a
@@ -97,14 +99,18 @@ natively. This is **additive**: the existing array-heap ops are unchanged.
   object's end. No op produces an interior `HeapRef`, but a host can pass
   one in through `execute`'s arguments. The field ops now use
   `FlatHeap::payload_size_at_base(addr) -> Option<usize>` (gc-core 0.37.0),
-  which answers only when `addr` is exactly a live block's base, and the rule
-  is:
+  which answers only when `addr` is exactly a live block's base. The checks
+  run in this order, and the first failure decides the trap:
 
-  1. `obj` must be the base address of a live block, or the op traps with
-     `"<op>: 0x… is not the base address of a live heap object"` — this
-     covers null, garbage, freed, interior and one-past-the-end addresses;
-  2. then `idx >= 0` and `idx*8 + 8 <= size`, or the op traps as out of
-     bounds.
+  1. `idx >= 0`, and `idx` fits in the target's `usize` (it always does on
+     64-bit targets; on a 32-bit target a larger index traps instead of
+     truncating), or the op traps on the index;
+  2. `obj` must be the base address of a live block, or the op traps with
+     `"<op>: HeapRef is not the base address of a live heap object"` — this
+     covers null, garbage, freed, interior and one-past-the-end addresses.
+     The message deliberately omits the address, so VM errors never echo
+     heap layout;
+  3. `idx*8 + 8 <= size`, or the op traps as out of bounds.
 
   `payload_size` itself is unchanged.
 - **`safepoint`** (paced) / **`gc_collect`** (unconditional) — mirrors

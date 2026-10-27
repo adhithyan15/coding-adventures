@@ -608,9 +608,19 @@ use gc_core::HeapRef;
 /// Allocate a `bytes`-byte object on `vm`'s heap, write `fill[i]` into word
 /// `i`, and return the object's base address.
 ///
-/// The object is unrooted once this `execute` returns. That is fine here:
-/// nothing in these tests runs `gc_collect` or `safepoint`, which are the only
-/// ops that collect, so the block stays live for the rest of the test.
+/// The object is unrooted once this `execute` returns, so it stays allocated
+/// only as long as no collection runs. Two things can collect:
+///
+/// - the explicit `gc_collect` / `safepoint` ops, which these tests never emit;
+/// - the dispatch loop's automatic safepoint, which calls `run_safepoint` every
+///   `AUTO_SAFEPOINT_INTERVAL` (4096) instructions, counted over the VM's whole
+///   lifetime, not per `execute`.
+///
+/// Each test below uses a fresh `VMCore` and dispatches well under 100
+/// instructions in total, so the automatic safepoint never fires. Even if it
+/// did, `run_safepoint` is paced: it collects only once live bytes reach
+/// `FlatHeap`'s threshold (1 MiB initially), and these tests hold a few dozen
+/// bytes. Either reason alone keeps the block live for the whole test.
 fn alloc_filled(vm: &mut VMCore, bytes: i64, fill: &[i64]) -> usize {
     let mut instrs = vec![ins("gc_alloc", Some("c"), vec![Operand::Int(bytes)], "ref<bytes>")];
     for (i, v) in fill.iter().enumerate() {
@@ -667,7 +677,8 @@ fn assert_not_a_base_trap(r: Result<Option<Value>, vm_core::errors::VMError>, op
         Ok(v) => panic!("{op} on a non-base HeapRef must trap, but it returned {v:?}"),
     };
     assert!(err.contains(op), "the trap names the op: {err}");
-    assert!(err.contains("not the base address"), "the trap says why: {err}");
+    assert!(err.contains("HeapRef is not the base address"), "the trap says why: {err}");
+    assert!(!err.contains("0x"), "the trap must not echo a heap address: {err}");
 }
 
 /// The control: a `HeapRef` that is a real block's base, handed in from the

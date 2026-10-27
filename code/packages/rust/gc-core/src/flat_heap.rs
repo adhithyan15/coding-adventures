@@ -4372,12 +4372,17 @@ mod tests {
         let mut heap = FlatHeap::new();
         let cons = heap.register_kind(&[0, 8]);
         let root = heap.alloc(16, cons) as usize;
+        let before = root;
         let slots = [&root as *const usize as usize];
         unsafe {
             heap.collect_compacting(&slots, &[]);
         }
+        assert_ne!(root, before, "sanity: a rooted, precise-kind object is actually moved");
         assert_eq!(heap.payload_size_at_base(root), Some(16), "the relocated address is a base");
         assert_eq!(heap.payload_size_at_base(root + 8), None, "and its interior still is not");
+        // The old block was freed when the object moved; its address is only
+        // compared against the live-block list here, never dereferenced.
+        assert_eq!(heap.payload_size_at_base(before), None, "the pre-move address is no longer a base");
     }
 
     /// A compacting collection relocates the object; `payload_size` resolved at
