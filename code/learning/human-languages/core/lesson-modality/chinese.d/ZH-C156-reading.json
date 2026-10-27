@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C156-reading",
+    "language": "chinese",
+    "chapter": 156,
+    "sequence": 12690,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0c8ecb6c200e5a09"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:c7eae2a241c11d01",
+  "lessonIds": [
+    "ZH-C147-houtian",
+    "ZH-W147-hou-after",
+    "ZH-C147-hui-future",
+    "ZH-C147-keneng",
+    "ZH-C147-yiding",
+    "ZH-C147-tianqi-yubao",
+    "ZH-C147-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch147.txt",
+  "json": "chinese/narration/ch147.json",
+  "textHash": "fnv1a64:f64da7fb4ed049b4",
+  "jsonHash": "fnv1a64:7d0874b287849164",
+  "findings": []
+}

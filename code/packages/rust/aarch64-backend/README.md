@@ -69,6 +69,8 @@ LANG83 PR4 adds the overflow-checked `i64_add_ovf`/`i64_sub_ovf`/`i64_neg_ovf`
 (`adds`/`subs`/`negs`, then `b.vc` over a `Trap.Overflow` trap call) and
 `i64_mul_ovf` (`mul` + `smulh`, `cmp hi, lo, asr #63`, `b.eq` over the trap).
 
-LANG83 PR6a adds `write_f64_py` / `write_f64_js`: plain V1 builtin calls (`bl __twig_write_f64_*`) with the f64's raw bits in `x0`. The native runtime prints Python's `repr` or JavaScript's `toString` of the value.
+LANG83 PR6a's float writers `write_f64_py` / `write_f64_js` (`bl __twig_write_f64_*`) were removed in LANG83 PR7e, because a backend may not carry a language's layout. A `call_builtin` of either is now an unknown builtin and is refused. A compiler prints a float with its own helper over the PR7b digit ops below.
 
 LANG83 PR6c adds the non-trapping IEEE `f64_add`/`f64_sub`/`f64_mul`/`f64_div` (`fadd` … `fdiv`) and, on the raw bits in `x0`, `f64_neg` (`eor` with the sign mask) and `f64_signbit` (`lsr` by 63).
+
+LANG83 PR7b adds `f64_class` (inline: one `cmp` with +Infinity's bits and three `cset`s summed) and `f64_digits` / `f64_exp10` (`bl __twig_f64_digits` / `__twig_f64_exp10` with the raw bits in `x0`).

@@ -1,0 +1,1110 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 154,
+  "title": "This One or That One",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:2ae16c11a9ca5c8d",
+  "lessons": [
+    {
+      "id": "ZH-C154-hai",
+      "sequence": 12500,
+      "title": "还 (hái) — still; yet",
+      "headword": "还",
+      "romanization": "hái",
+      "gloss": "still; yet",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d4781e2b6eb0a4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and it opens on a word for what has not changed yet."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 我比他大 — wǒ bǐ tā dà — R1, the chapter you have finished",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 我比他大 — *wǒ bǐ tā dà* — **R1**, the chapter you have finished]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 那么 — nàme — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 那么 — *nàme* — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hái xíng, not bad — R4, recognition at distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hái xíng*, not bad — **R4**, recognition at distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yǐjīng, already — R2, a few chapters back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yǐjīng*, already — **R2**, a few chapters back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 还",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "还 — hái — \"still; yet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他还在家 tā hái zài jiā — He's still at home."
+            },
+            {
+              "kind": "speech",
+              "text": "我还没吃饭 wǒ hái méi chī fàn — I haven't eaten yet."
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson puts the character in your hand. It is the hái of hái xíng."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "还 (hái) is the hái of hái xíng, inherited from Middle Chinese hwaen (Guangyun, in Baxter's transcription), glossed 'to return'. The regular sound change gives huán, the huán 'to give back' you know, not hái; how hái split off from it, and how it came to mean 'still', are not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "还 (hái) goes before the verb: still. 还没 before a verb is not yet: 我还没吃饭."
+            },
+            {
+              "kind": "speech",
+              "text": "Set it against yǐjīng, already: wǒ yǐjīng chī le, I've eaten already; 我还没吃饭, not yet."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hái",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hái*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hái, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hái*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "他还在家 — tā hái zài jiā — He's still at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 他还在家 — *tā hái zài jiā* — He's still at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我还没吃饭 — wǒ hái méi chī fàn — I haven't eaten yet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我还没吃饭 — *wǒ hái méi chī fàn* — I haven't eaten yet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yǐjīng, then 还没",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yǐjīng*, then 还没]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 还 (hái) mean? (\"Still; yet\".) How do you say not yet? (还没, before the verb.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W154-hai-still",
+      "sequence": 12510,
+      "title": "还 (hái) — 不, then the walking piece last",
+      "headword": "还",
+      "romanization": "hái",
+      "gloss": "还 — 不, then the walking piece last",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4933be39fd67f338",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — 不, then the walking piece last",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — 不, then the walking piece last and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hái — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hái* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "不 这 过."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — bù, zhè, guò",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *bù*, *zhè*, *guò*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — 不, then the walking piece last",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "还 (hái)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces you own, in the order of 这 and 过."
+            },
+            {
+              "kind": "speech",
+              "text": "不, four strokes, on the upper right: the bar, the left-falling stroke, the vertical, the dot."
+            },
+            {
+              "kind": "speech",
+              "text": "辶, three strokes, last: the dot, the stroke that turns down, turns again and falls to the left, then the long base under 不."
+            },
+            {
+              "kind": "speech",
+              "text": "4 + 3 = seven."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "还 (hái), all seven, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 还, all seven, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 还 (hái)? (Seven.) Which piece goes in first? (不.) Which other characters put the walking piece last? (这, 进 and 过.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 还 (hái), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C154-haishi",
+      "sequence": 12520,
+      "title": "还是 (háishi) — or, in a question",
+      "headword": "还是",
+      "romanization": "háishi",
+      "gloss": "or (in a question)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb7c1fc7a597d9e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: read the character you have written, then a sentence with 要."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "还没, aloud — hái méi, not yet",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 还没, aloud — *hái méi*, not yet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 我要水 — wǒ yào shuǐ, I want some water — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 我要水 — *wǒ yào shuǐ*, I want some water — **R3**, durable]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 还是",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "还是 — háishi — \"or\", in a question."
+            },
+            {
+              "kind": "speech",
+              "text": "你要水还是要饭 nǐ yào shuǐ háishi yào fàn — Do you want water or food?"
+            },
+            {
+              "kind": "speech",
+              "text": "你去还是他去 nǐ qù háishi tā qù — Are you going, or is he?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "还是 (háishi) is built from 还 (hái) 'still', the character you have written, and 是 'to be'. Both are inherited from Middle Chinese, hwaen and dzyeX (Guangyun, in Baxter's transcription); 'or' is the pair's own sense, which neither gloss gives."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "还是 (háishi) goes between the two choices, and the answer picks one: 我要水."
+            },
+            {
+              "kind": "speech",
+              "text": "Each choice can keep its own verb: 要水还是要饭. The question needs no 吗: 还是 (háishi) already makes it one."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "háishi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *háishi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "háishi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *háishi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你要水还是要饭 — nǐ yào shuǐ háishi yào fàn — Do you want water or food?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你要水还是要饭 — *nǐ yào shuǐ háishi yào fàn* — Do you want water or food?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我要水 — wǒ yào shuǐ — Water, please.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我要水 — *wǒ yào shuǐ* — Water, please.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 还没, then 还是 (háishi), and hear the same hái",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 还没, then 还是, and hear the same hái]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 还是 (háishi) do? (Asks which of two.) Does the question need 吗? (No.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C154-huozhe",
+      "sequence": 12530,
+      "title": "huòzhě — or, in a statement",
+      "headword": "huòzhě",
+      "romanization": "huòzhě",
+      "gloss": "or (in a statement)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dca25a82203cdff3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's sentence, then the or that asks."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 你要水还是要饭 — nǐ yào shuǐ háishi yào fàn — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 你要水还是要饭 — *nǐ yào shuǐ háishi yào fàn* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 我还没吃饭 — wǒ hái méi chī fàn — R1, this chapter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 我还没吃饭 — *wǒ hái méi chī fàn* — **R1**, this chapter]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: huòzhě",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "huòzhě — \"or\", in a statement."
+            },
+            {
+              "kind": "speech",
+              "text": "míngtiān huòzhě hòutiān dōu kěyǐ — Tomorrow or the day after: either is fine."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "huòzhě is built from huò and zhě. Both are inherited from Middle Chinese, hwok and tsyaeX (Guangyun, in Baxter's transcription), glossed 'not fixed; in doubt' and 'a particle'. 'Or' for the pair is assumed here, not quoted."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "还是 asks; huòzhě states. 你去还是他去 nǐ qù háishi tā qù wants an answer; nǐ qù huòzhě tā qù dōu kěyǐ says either will do."
+            },
+            {
+              "kind": "speech",
+              "text": "都 after the two choices says both are fine."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huòzhě",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huòzhě*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huòzhě, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huòzhě*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "míngtiān huòzhě hòutiān dōu kěyǐ — Tomorrow or the day after: either is fine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *míngtiān huòzhě hòutiān dōu kěyǐ* — Tomorrow or the day after: either is fine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你去还是他去 — nǐ qù háishi tā qù — Are you going, or is he?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你去还是他去 — *nǐ qù háishi tā qù* — Are you going, or is he?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 还是 (háishi), then huòzhě: one asks, one states",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 还是, then *huòzhě*: one asks, one states]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which or asks, 还是 (háishi) or huòzhě? (还是 (háishi).) Which one states? (huòzhě.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C154-bie",
+      "sequence": 12540,
+      "title": "bié — don't",
+      "headword": "bié",
+      "romanization": "bié",
+      "gloss": "don't",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e2fc9c77077d382",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, then the don't you already know."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say huòzhě, or — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *huòzhě*, or — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 不要说 — bú yào shuō, don't say it — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 不要说 — *bú yào shuō*, don't say it — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say biérén, other people — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *biérén*, other people — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: bié",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bié — \"don't\"."
+            },
+            {
+              "kind": "speech",
+              "text": "bié qù — Don't go."
+            },
+            {
+              "kind": "speech",
+              "text": "bié shuō le — Don't say any more."
+            },
+            {
+              "kind": "speech",
+              "text": "Its character comes later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bié is inherited from Middle Chinese bjet (Guangyun, in Baxter's transcription), glossed 'different; to part'. It is the bié of biérén and biéde. How it came to mean 'don't' is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bié and 不要 both stop someone: bié qù and 不要去 say the same thing, and bié is shorter."
+            },
+            {
+              "kind": "speech",
+              "text": "With 了 at the end it means stop now, enough: bié shuō le."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bié",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bié*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bié, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bié*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bié qù — Don't go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bié qù* — Don't go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "不要去 — bú yào qù — Don't go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 不要去 — *bú yào qù* — Don't go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bié shuō le — Don't say any more.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bié shuō le* — Don't say any more.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 不要说, then bié shuō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 不要说, then *bié shuō*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does bié mean? (\"Don't\".) Which longer words say the same? (不要.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C154-practice",
+      "sequence": 12550,
+      "title": "你要水还是要饭 (nǐ yào shuǐ háishi yào fàn)",
+      "headword": "你要水还是要饭",
+      "romanization": "nǐ yào shuǐ háishi yào fàn",
+      "gloss": "two speakers choose between things, put things off and say don't",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84ba08a94ec4f79a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter closes here, with two people choosing between things."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bié, don't — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bié*, don't — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say huòzhě, or — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *huòzhě*, or — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 还没 — hái méi, not yet — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 还没 — *hái méi*, not yet — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: 你要水还是要饭 nǐ yào shuǐ háishi yào fàn — Do you want water or food? B: 我要水 wǒ yào shuǐ — Water, please. A: 你吃饭了吗 nǐ chī fàn le ma — Have you eaten? B: 还没 hái méi — Not yet. A: 我们去吃饭还是在家吃 wǒmen qù chī fàn háishi zài jiā chī — Shall we go out to eat, or eat at home? B: 在家吃 妈妈还在做饭 zài jiā chī, māma hái zài zuò fàn — At home. Mum's still cooking. A: 我们明天去还是后天去 wǒmen míngtiān qù háishi hòutiān qù — Are we going tomorrow or the day after? B: míngtiān huòzhě hòutiān dōu kěyǐ — Tomorrow or the day after: either is fine. A: hǎo, bié wàng le — Fine. Don't forget."
+            },
+            {
+              "kind": "speech",
+              "text": "还是 (háishi) asks, and the answer picks one; huòzhě refuses to pick. 还没 is a whole answer: not yet. bié wàng le: don't forget."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading — the exchange at once",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the exchange through once without stopping, then answer the question below",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the exchange through once without stopping, then answer the question below]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C154-practice-eaten",
+              "prompt": "Has B eaten yet?",
+              "assesses": [
+                "ZH-PERFORMANCE-OR-01",
+                "ZH-LEX-C154-HAI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "no",
+                "还没",
+                "hái méi",
+                "hai mei",
+                "not yet"
+              ],
+              "feedback": {
+                "correct": "Not yet: 还没.",
+                "incorrect": "B says 还没: not yet."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built — or, still, not yet, don't",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four small words that steer a conversation:"
+            },
+            {
+              "kind": "speech",
+              "text": "你要水还是要饭 nǐ yào shuǐ háishi yào fàn — water or food?"
+            },
+            {
+              "kind": "speech",
+              "text": "míngtiān huòzhě hòutiān dōu kěyǐ — tomorrow or the day after, either is fine."
+            },
+            {
+              "kind": "speech",
+              "text": "我还没吃饭 wǒ hái méi chī fàn — I haven't eaten yet."
+            },
+            {
+              "kind": "speech",
+              "text": "bié qù — don't go."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen. Nǐ hē chá háishi hē shuǐ?"
+            },
+            {
+              "kind": "speech",
+              "text": "Speak. Offer a friend two choices, then tell them not to forget."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "还 (hái) — 不 first, the walking piece last",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 还 — 不 first, the walking piece last]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你要水还是要饭 — nǐ yào shuǐ háishi yào fàn — Do you want water or food?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你要水还是要饭 — *nǐ yào shuǐ háishi yào fàn* — Do you want water or food?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "还没 — hái méi — Not yet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 还没 — *hái méi* — Not yet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "你要水还是要饭 (nǐ yào shuǐ háishi yào fàn)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 你要水还是要饭]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask water or food. (你要水还是要饭 (nǐ yào shuǐ háishi yào fàn).) Say not yet. (还没.) Say either is fine. (míngtiān huòzhě hòutiān dōu kěyǐ.) Say don't go. (bié qù.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
