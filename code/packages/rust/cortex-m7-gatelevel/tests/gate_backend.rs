@@ -1,5 +1,5 @@
 use cortex_m7_gatelevel::{
-    encoding::{qadd, qsub, sadd8, uadd8},
+    encoding::{qadd, qsub, sadd8, uadd8, ApsrMask},
     gates::{self, GateBackend, RepositoryGates},
 };
 
@@ -100,6 +100,29 @@ fn every_named_compiled_helper_depends_on_the_gate_backend() {
     mutation_changes(expected, |backend| {
         gates::transport_ge(backend, 3, 0x000b_0000, 1)
     });
+    for words in [
+        cortex_m7_gatelevel::encoding::msr_masked(0, 0, ApsrMask::Ge),
+        cortex_m7_gatelevel::encoding::msr_masked(0, 0, ApsrMask::Nzcvq),
+        cortex_m7_gatelevel::encoding::msr_masked(0, 0, ApsrMask::NzcvqGe),
+    ] {
+        let expected = gates::apsr_msr_mask(&mut RepositoryGates, words[1]);
+        mutation_changes(expected, |backend| gates::apsr_msr_mask(backend, words[1]));
+        let expected = gates::apsr_msr_owned(&mut RepositoryGates, words[0], words[1]);
+        mutation_changes(expected, |backend| {
+            gates::apsr_msr_owned(backend, words[0], words[1])
+        });
+    }
+    let expected = gates::msr_prefix(&mut RepositoryGates, 0xf380);
+    mutation_changes(expected, |backend| gates::msr_prefix(backend, 0xf380));
+    let expected = gates::msr_source(&mut RepositoryGates, 0xf38d);
+    mutation_changes(expected, |backend| gates::msr_source(backend, 0xf38d));
+    for write in 0..=1 {
+        let expected =
+            gates::transport_nzcvq(&mut RepositoryGates, 0x6000_0000, 0x5007_0000, write);
+        mutation_changes(expected, |backend| {
+            gates::transport_nzcvq(backend, 0x6000_0000, 0x5007_0000, write)
+        });
+    }
     let words = cortex_m7_gatelevel::encoding::mrs(1, 0);
     let expected = gates::apsr_transport_lines(&mut RepositoryGates, words[0], words[1]);
     mutation_changes(expected, |backend| {

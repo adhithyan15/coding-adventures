@@ -106,8 +106,15 @@ maintaining a second M3 state, or relying on its current infallible public
 
 ## 4. Status transport and exact compatibility
 
-APSR-family `MRS` and `MSR` views transport GE through the added DFF bank while
-preserving the inherited N/Z/C/V/Q behavior and privilege checks. Reset and a
+APSR-family `MRS` views read GE from the added DFF bank while preserving the
+inherited N/Z/C/V/Q behavior and privilege checks. APSR-family `MSR` honours
+the Armv7-M mask field (bits 11:10) as Spec 07an1 requires of the functional
+core: `APSR_nzcvq` (`10`) runs through the inherited engine and preserves GE;
+`APSR_g` (`01`) and `APSR_nzcvqg` (`11`) are refused by the non-DSP inherited
+engine and therefore execute in this crate, where gate-decoded `nzcvq` and
+`g` wires, each ANDed with the IT write enable, select the NZCVQ and GE muxes
+independently. Mask `00`, GE masks on non-APSR `SYSm`, and SP/LR/PC sources
+fault atomically with the oracle's error. Reset and a
 successful load clear GE. Restore rejects values above four bits before any
 DFF clocks. Ordinary inherited instructions preserve GE; QADD/QSUB preserve
 GE while updating sticky Q; SADD8/UADD8 replace all four GE bits while

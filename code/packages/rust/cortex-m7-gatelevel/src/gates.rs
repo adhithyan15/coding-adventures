@@ -331,3 +331,108 @@ pub fn apsr_transport_lines<B: GateBackend>(backend: &mut B, first: u16, second:
         backend.and(apsr_alias, msr_opcode),
     )
 }
+
+// ---------------------------------------------------------------------------
+// APSR MSR write masks
+// ---------------------------------------------------------------------------
+//
+// `MSR <spec_reg>, Rn` (T1) is two halfwords:
+//
+// ```text
+//   first : 1111 0011 1000 nnnn          0xf380 | Rn
+//   second: 10m0 mm00 SYSm SYSm          bits 15:12 = 1000, bits 9:8 = 00
+//                ^^                      bits 11:10 = mask<1:0>
+// ```
+//
+// For the APSR aliases (`SYSm` 0..=3: APSR, IAPSR, EAPSR, XPSR) the two mask
+// bits name *which* APSR field groups the write touches:
+//
+// | mask (11:10) | assembler form   | NZCVQ written | GE written | M3  | M7  |
+// |--------------|------------------|---------------|------------|-----|-----|
+// | `00`         | (reserved)       | -             | -          | UND | UND |
+// | `01`         | `APSR_g`         | no            | yes        | UND | ok  |
+// | `10`         | `APSR_nzcvq`     | yes           | no         | ok  | ok  |
+// | `11`         | `APSR_nzcvqg`    | yes           | yes        | UND | ok  |
+//
+// GE only exists with the DSP extension, so the inherited Cortex-M3 gate
+// engine owns exactly mask `10` and refuses every other mask. The Cortex-M7
+// companion therefore splits the work:
+//
+// * mask `10` is delegated to the inherited engine, which writes NZCVQ; the
+//   GE transport below is qualified by mask bit `g` (bit 10), which is 0 for
+//   this form, so the GE DFFs keep their old value.
+// * masks `01` and `11` are *owned* by this crate: `apsr_msr_owned` raises a
+//   line that routes the instruction to the M7 path, where NZCVQ moves only
+//   through a mux selected by bit `nzcvq` (bit 11) and GE only through a mux
+//   selected by bit `g` (bit 10).
+// * mask `00`, and any GE-writing mask aimed at a non-APSR `SYSm`, is left to
+//   the inherited decoder, which refuses it exactly as the functional
+//   Cortex-M7 simulator does.
+//
+// Every one of these decisions is a gate output: the host code only reads a
+// settled wire to choose which already-built network's output to clock.
+
+/// Opcode line for the T1 `MSR` first halfword (`0xf380 | Rn`).
+pub fn msr_prefix<B: GateBackend>(backend: &mut B, first: u16) -> u8 {
+    equal_masked(backend, first, 0xfff0, 0xf380)
+}
+
+/// The two architectural mask wires of an `MSR` second halfword.
+///
+/// Returns `(nzcvq, g)`: bit 11 enables the N/Z/C/V/Q group and bit 10
+/// enables the `GE[3:0]` group. Each wire is produced by an equality network
+/// so a faulty gate is observable rather than hidden behind a host shift.
+pub fn apsr_msr_mask<B: GateBackend>(backend: &mut B, second: u16) -> (u8, u8) {
+    let nzcvq = equal_masked(backend, second, 0x0800, 0x0800);
+    let g = equal_masked(backend, second, 0x0400, 0x0400);
+    (nzcvq, g)
+}
+
+/// Line that is 1 exactly for the GE-writing APSR `MSR` forms (masks `01` and
+/// `11`) that the inherited non-DSP engine refuses and this crate executes.
+///
+/// ```text
+///   owned = msr_prefix(first)
+///         AND (second & 0xf3fc == 0x8000)   -- fixed bits and SYSm 0..=3
+///         AND g                             -- mask bit 10
+/// ```
+pub fn apsr_msr_owned<B: GateBackend>(backend: &mut B, first: u16, second: u16) -> u8 {
+    let opcode = msr_prefix(backend, first);
+    let apsr_shape = equal_masked(backend, second, 0xf3fc, 0x8000);
+    let (_, g) = apsr_msr_mask(backend, second);
+    let shaped = backend.and(opcode, apsr_shape);
+    backend.and(shaped, g)
+}
+
+/// Source-register field of an `MSR`, with the gate-derived "is R0..R12" line.
+///
+/// SP, LR, and PC are UNPREDICTABLE sources and fault, exactly like the
+/// functional simulator and the DSP operand checks above.
+pub fn msr_source<B: GateBackend>(backend: &mut B, first: u16) -> (usize, u8) {
+    let rn = (first & 0xf) as u8;
+    (rn as usize, valid_low_register(backend, rn))
+}
+
+/// Mask-qualified NZCVQ transport for `MSR APSR_nzcvq*`.
+///
+/// Each of the 32 APSR output wires is a 2:1 mux. With `write = 0` the old Q
+/// value passes through untouched. With `write = 1` the mux selects the
+/// source register bit ANDed with the NZCVQ field mask `0xf800_0000`, so bits
+/// 31:27 copy `Rn` and bits 26:0 become 0, which is the same replacement the
+/// functional core performs (`apsr = Rn & 0xf800_0000`).
+pub fn transport_nzcvq<B: GateBackend>(
+    backend: &mut B,
+    old_apsr: u32,
+    source: u32,
+    write: u8,
+) -> u32 {
+    const NZCVQ_FIELD: u32 = 0xf800_0000;
+    let old = bits32(old_apsr);
+    let source = bits32(source);
+    let field = bits32(NZCVQ_FIELD);
+    let result = std::array::from_fn(|bit| {
+        let masked = backend.and(source[bit], field[bit]);
+        backend.mux(old[bit], masked, write)
+    });
+    from_bits32(result)
+}

@@ -14,6 +14,28 @@ backend that production binds to repository gates. Hostile-backend tests run
 the identical compiled helpers and prove architectural dependence on those
 primitives.
 
+APSR `MSR` honours its two mask bits exactly as the functional core does
+after the Cortex-M APSR mask repair (Spec 07an1). `APSR_nzcvq` (mask `10`) is
+executed by the inherited engine and leaves GE untouched; `APSR_g` (`01`) and
+`APSR_nzcvqg` (`11`), which the non-DSP inherited engine refuses, are executed
+by this crate. Gate equality networks decode the `nzcvq` (bit 11) and `g`
+(bit 10) wires, and each field group moves only through a mux selected by its
+own wire ANDed with the IT write enable. Mask `00`, GE masks on non-APSR
+`SYSm` values, and SP/LR/PC sources fault atomically, matching the oracle.
+
+```rust
+use cortex_m7_gatelevel::{encoding::{self, ApsrMask}, CortexM7GateLevel};
+
+let mut cpu = CortexM7GateLevel::new();
+let only_ge = encoding::msr_masked(0, 0, ApsrMask::Ge);
+cpu.load(&encoding::program(&only_ge), 0x100)?;
+cpu.write_register(0, 0xf80b_0000)?;
+let trace = cpu.step()?;
+assert_eq!(trace.state_after.ge, 0b1011);
+assert_eq!(trace.state_after.core.apsr, 0); // NZCVQ untouched by APSR_g
+# Ok::<(), cortex_m7_gatelevel::CortexM7Error>(())
+```
+
 ```rust
 use cortex_m7_gatelevel::{encoding, CortexM7GateLevel};
 
@@ -34,4 +56,5 @@ back whole `run` and `execute` calls on fault. Caches, TCM, buses, timing,
 NVIC, MPU, FPU, debug, and vendor peripherals remain explicit later CPU/SoC
 cells.
 
-The completion suite reports 93.94% package-source line coverage (697/742).
+The completion suite reported 93.94% package-source line coverage (697/742)
+before the APSR mask change; the figure has not been re-measured since.

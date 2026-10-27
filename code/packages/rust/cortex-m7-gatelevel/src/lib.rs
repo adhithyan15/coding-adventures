@@ -8,7 +8,7 @@ use cortex_m3_gatelevel::{
 use logic_gates::sequential::{register, FlipFlopState};
 
 pub mod gates;
-use gates::{DspClass, RepositoryGates};
+use gates::{DspClass, GateBackend, RepositoryGates};
 
 pub use cortex_m3_gatelevel::{MEMORY_SIZE, PC};
 pub const MAX_RETAINED_STEPS: usize = cortex_m3_gatelevel::MAX_RETAINED_STEPS;
@@ -234,18 +234,83 @@ impl CortexM7GateLevel {
             return Err(CortexM3Error::Sleeping.into());
         }
         let first = fetch16(&before_core, before_core.pc)?;
-        let dsp = if gates::dsp_prefix(&mut RepositoryGates, first) == 1 {
-            let second = fetch_second(&before_core, before_core.pc)?;
-            gates::classify(&mut RepositoryGates, first, second).map(|class| (second, class))
+        // Two first-halfword prefixes can lead to an M7-owned transition: the
+        // DSP group (`0xfa8x`) and T1 `MSR` (`0xf38x`), whose GE-writing APSR
+        // masks the inherited non-DSP engine refuses. Either prefix needs the
+        // second halfword before the owned-instruction lines can settle; a
+        // missing one is the same 4-byte fetch fault the functional core
+        // reports.
+        let mut backend = RepositoryGates;
+        let dsp_prefix = gates::dsp_prefix(&mut backend, first);
+        let msr_prefix = gates::msr_prefix(&mut backend, first);
+        let wide_owned_prefix = backend.or(dsp_prefix, msr_prefix);
+        let second = if wide_owned_prefix == 1 {
+            Some(fetch_second(&before_core, before_core.pc)?)
         } else {
             None
         };
-        match dsp {
-            Some((second, class)) => {
-                self.step_dsp(before_core, before_memory, first, second, class)
-            }
+        let Some(second) = second else {
+            return self.step_inherited(before_core, before_memory, validation_memory);
+        };
+        if gates::apsr_msr_owned(&mut backend, first, second) == 1 {
+            return self.step_apsr_msr(before_core, before_memory, first, second);
+        }
+        match gates::classify(&mut backend, first, second) {
+            Some(class) => self.step_dsp(before_core, before_memory, first, second, class),
             None => self.step_inherited(before_core, before_memory, validation_memory),
         }
+    }
+
+    /// Execute `MSR APSR_g, Rn` or `MSR APSR_nzcvqg, Rn` (masks `01`/`11`).
+    ///
+    /// The inherited Cortex-M3 engine has no GE field and refuses these masks,
+    /// so the companion owns them, mirroring the functional simulator's
+    /// masked-APSR path step for step:
+    ///
+    /// 1. `Rn` must be R0..R12 (gate line), else the step faults with no
+    ///    state change, before any IT condition is consulted;
+    /// 2. the IT write enable is `NOT in_it OR condition` (gate mux);
+    /// 3. NZCVQ is written through `transport_nzcvq` with enable
+    ///    `execute AND nzcvq`, and GE through `transport_ge` with enable
+    ///    `execute AND g`, so mask `01` leaves NZCVQ untouched and mask `11`
+    ///    moves both groups from the same source register;
+    /// 4. PC advances by 4 and an active IT block advances one slot whether or
+    ///    not the instruction executed.
+    fn step_apsr_msr(
+        &mut self,
+        before: CortexM3State,
+        candidate_memory: Vec<u8>,
+        first: u16,
+        second: u16,
+    ) -> Result<StepTrace, CortexM7Error> {
+        let mut backend = RepositoryGates;
+        let (rn, source_ok) = gates::msr_source(&mut backend, first);
+        if source_ok == 0 {
+            return Err(CortexM3Error::UnknownInstruction32 {
+                first,
+                second,
+                pc: before.pc,
+            }
+            .into());
+        }
+        let mut after = integration::clone_into(&before, candidate_memory, &self.allocations)?;
+        let pc = before.pc;
+        after.pc = cortex_m3_gatelevel::gates::add_32(pc, 4, 0).0;
+        let ge_before = read_ge(&self.ge);
+        let in_it = gates::it_active(&mut backend, before.itstate);
+        let condition = gates::condition_holds(&mut backend, before.apsr, before.itstate >> 4);
+        let execute = gates::write_enable(&mut backend, in_it, condition);
+        let (nzcvq, g) = gates::apsr_msr_mask(&mut backend, second);
+        let write_nzcvq = backend.and(execute, nzcvq);
+        let write_ge = backend.and(execute, g);
+        let source = before.registers[rn];
+        after.apsr = gates::transport_nzcvq(&mut backend, before.apsr, source, write_nzcvq);
+        let ge_after = gates::transport_ge(&mut backend, ge_before, source, write_ge);
+        let mnemonic = if execute == 1 { "msr" } else { "it-skip" };
+        if in_it == 1 {
+            after.itstate = gates::advance_itstate(&mut backend, before.itstate);
+        }
+        self.commit_owned(before, after, ge_before, ge_after, first, second, mnemonic)
     }
 
     fn step_inherited(
@@ -353,6 +418,26 @@ impl CortexM7GateLevel {
         if in_it == 1 {
             after.itstate = gates::advance_itstate(&mut backend, before.itstate);
         }
+        self.commit_owned(before, after, ge_before, ge_after, first, second, mnemonic)
+    }
+
+    /// Settle, validate, and clock a 32-bit transition computed by this crate
+    /// (DSP or masked APSR `MSR`), then report its exact trace. Inherited DFFs
+    /// are committed through the fallible M3 boundary first; the four GE DFFs
+    /// clock only after that commit succeeded, so a refused candidate leaves
+    /// every flip-flop untouched.
+    #[allow(clippy::too_many_arguments)]
+    fn commit_owned(
+        &mut self,
+        before: CortexM3State,
+        after: CortexM3State,
+        ge_before: u8,
+        ge_after: u8,
+        first: u16,
+        second: u16,
+        mnemonic: &'static str,
+    ) -> Result<StepTrace, CortexM7Error> {
+        let pc = before.pc;
         let state_before = CortexM7State {
             core: before,
             ge: ge_before,
@@ -518,8 +603,14 @@ fn apply_ge_transport(
         after.registers[rd] |= u32::from(old_ge) << 16;
         old_ge
     } else if msr == 1 {
+        // Only mask `10` (`APSR_nzcvq`) reaches this inherited path; the
+        // GE-writing masks are owned by `step_apsr_msr`. The GE mux is still
+        // driven by the decoded `g` wire rather than a constant, so this path
+        // preserves GE because the instruction says so, not because of where
+        // it was routed.
         let rn = (first & 0xf) as usize;
-        gates::transport_ge(&mut backend, old_ge, before_registers[rn], 1)
+        let (_, g) = gates::apsr_msr_mask(&mut backend, second);
+        gates::transport_ge(&mut backend, old_ge, before_registers[rn], g)
     } else {
         old_ge
     }
@@ -563,6 +654,16 @@ fn check_retention(max_steps: usize) -> Result<(), CortexM7Error> {
 }
 
 pub fn classify(first: u16, second: Option<u16>) -> Result<InstructionClass, CortexM7Error> {
+    if gates::msr_prefix(&mut RepositoryGates, first) == 1 {
+        let Some(second) = second else {
+            return Err(CortexM3Error::FetchOutsideProgram { pc: 0, width: 4 }.into());
+        };
+        if gates::apsr_msr_owned(&mut RepositoryGates, first, second) == 1 {
+            return Ok(InstructionClass::Inherited(
+                cortex_m3_gatelevel::InstructionClass::SpecialRegister,
+            ));
+        }
+    }
     if gates::dsp_prefix(&mut RepositoryGates, first) == 1 {
         let Some(second) = second else {
             return Err(CortexM3Error::FetchOutsideProgram { pc: 0, width: 4 }.into());

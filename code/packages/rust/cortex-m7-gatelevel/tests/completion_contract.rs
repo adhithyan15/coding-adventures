@@ -134,7 +134,8 @@ fn saturation_parallel_lanes_and_status_transport_match_the_contract() {
     assert_eq!(unsigned.get_state().ge, 0b1110);
 
     for sysm in 0..=3 {
-        let write = msr(0, sysm);
+        // `APSR_nzcvqg` moves both groups, so MRS reads the full image back.
+        let write = msr_masked(0, sysm, ApsrMask::NzcvqGe);
         let read = mrs(1, sysm);
         let mut core = loaded(&[write[0], write[1], read[0], read[1]]);
         core.write_register(0, 0xa80b_0000).unwrap();
@@ -142,6 +143,15 @@ fn saturation_parallel_lanes_and_status_transport_match_the_contract() {
         assert_eq!(core.get_state().ge, 0b1011);
         core.step().unwrap();
         assert_eq!(core.read_register(1).unwrap(), 0xa80b_0000);
+
+        // The default `APSR_nzcvq` encoder leaves the GE DFFs untouched.
+        let write = msr(0, sysm);
+        let mut core = loaded(&[write[0], write[1], read[0], read[1]]);
+        core.write_register(0, 0xa80b_0000).unwrap();
+        core.step().unwrap();
+        assert_eq!(core.get_state().ge, 0);
+        core.step().unwrap();
+        assert_eq!(core.read_register(1).unwrap(), 0xa800_0000);
     }
 }
 
