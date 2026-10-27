@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C86-nar-where",
+    "language": "chinese",
+    "chapter": 86,
+    "sequence": 7060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c0c0be9c9f76042"
+  },
+  "findings": []
+}

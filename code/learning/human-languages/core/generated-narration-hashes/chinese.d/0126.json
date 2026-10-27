@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:0e552f6bfd675511",
+  "lessonIds": [
+    "ZH-C126-changchang",
+    "ZH-C126-youshihou",
+    "ZH-C126-yiqian",
+    "ZH-W126-yi-use",
+    "ZH-C126-gangcai",
+    "ZH-C126-yijing"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "chinese/narration/ch126.txt",
+  "json": "chinese/narration/ch126.json",
+  "textHash": "fnv1a64:4e534ac94c9769a2",
+  "jsonHash": "fnv1a64:973efaef61b9d816",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 62,
+  "title": "Fast, Far and Near",
+  "label": "ch:zh-fast-far-and-near",
+  "canDo": "I can say fast, old, far and near, and say that I know something.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-C62-zhidao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 62: I can say fast, old, far and near, and say that I know something.",
+    "assesses": [
+      "ZH-LEX-C62-FAST62-03",
+      "ZH-LEX-C62-FAST62-04",
+      "ZH-LEX-C62-FAST62-05"
+    ]
+  }
+}

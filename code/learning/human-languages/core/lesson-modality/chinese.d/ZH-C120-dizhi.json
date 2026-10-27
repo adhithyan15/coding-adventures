@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C120-dizhi",
+    "language": "chinese",
+    "chapter": 120,
+    "sequence": 9100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed29d6fd7d9ccd34"
+  },
+  "findings": []
+}

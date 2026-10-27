@@ -1,0 +1,22 @@
+{
+  "chapter": 91,
+  "title": "What I'd Like",
+  "label": "ch:zh-what-id-like",
+  "canDo": "I can say what I want and what I do not want.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ZH-C91-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Saying what you would like, what you need and what you do not want, and asking for a little, built on one new written character: 要.",
+    "assesses": [
+      "ZH-LEX-C91-XIANGYAO-01",
+      "ZH-SCRIPT-YAO-01",
+      "ZH-LEX-C91-BUYAO-01",
+      "ZH-LEX-C91-XUYAO-01",
+      "ZH-LEX-C91-YIDIANR-01",
+      "ZH-PERFORMANCE-WANT-01"
+    ]
+  }
+}

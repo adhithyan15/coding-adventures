@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:b323cafdf25aec56",
+  "lessonIds": [
+    "ZH-C111-qianbian",
+    "ZH-W111-bian",
+    "ZH-C111-houbian",
+    "ZH-C111-fujin",
+    "ZH-C111-lukou",
+    "ZH-C111-guai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch111.txt",
+  "json": "chinese/narration/ch111.json",
+  "textHash": "fnv1a64:99c58a71d4e454e0",
+  "jsonHash": "fnv1a64:1749207356449921",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "What People Are Like",
+  "label": "ch:zh-what-people-are-like",
+  "canDo": "I can say that someone is clever, serious, lovable, warm or caring.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C123-guanxin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 123: I can say that someone is clever, serious, lovable, warm or caring.",
+    "assesses": [
+      "ZH-LEX-C123-PEOPLE123-03",
+      "ZH-LEX-C123-PEOPLE123-04",
+      "ZH-LEX-C123-PEOPLE123-05"
+    ]
+  }
+}

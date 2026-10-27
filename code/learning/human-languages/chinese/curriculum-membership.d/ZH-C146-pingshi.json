@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C146-pingshi",
+  "pathSegment": "ZH-PATH-146-NIGHT146",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-146-NIGHT146",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "language": "chinese",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:8c552d94f3ebaaed",
+  "lessonIds": [
+    "ZH-C63-dianhua",
+    "ZH-W63-dian-electric",
+    "ZH-C63-dadianhua",
+    "ZH-W63-da-hit",
+    "ZH-C63-wei",
+    "ZH-C63-haoma",
+    "ZH-C63-zhao",
+    "ZH-R63-review-58-63"
+  ],
+  "tex": "chinese/book/chapters/ch63-on-the-phone.tex"
+}

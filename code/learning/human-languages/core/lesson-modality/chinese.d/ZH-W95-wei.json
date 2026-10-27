@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W95-wei",
+    "language": "chinese",
+    "chapter": 95,
+    "sequence": 7670,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:18641f6145662c6c",
+    "detachableSegments": [
+      "Script — a dot, a long fall, the hook of 男, a dot"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

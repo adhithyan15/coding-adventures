@@ -1,0 +1,9 @@
+# oracle: Ripper.lex, ruby 3.3.6 (2024-11-05 revision 75015d4c1f)
+1	0	on_embdoc_beg	=begin\n
+2	0	on_embdoc	a document at offset 0\n
+3	0	on_embdoc_end	=end\n
+4	0	on_ident	x
+4	2	on_op	=
+4	4	on_int	1
+4	5	on_nl	\n
+5	0	on___end__	__END__\n

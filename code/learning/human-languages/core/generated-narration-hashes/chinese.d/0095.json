@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:14157652fab7ad32",
+  "lessonIds": [
+    "ZH-C95-weishenme",
+    "ZH-W95-wei",
+    "ZH-C95-youshi",
+    "ZH-C95-duche",
+    "ZH-C95-wang",
+    "ZH-C95-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch95.txt",
+  "json": "chinese/narration/ch95.json",
+  "textHash": "fnv1a64:6ac22f31f2991386",
+  "jsonHash": "fnv1a64:5f2dc4394812cd14",
+  "findings": []
+}

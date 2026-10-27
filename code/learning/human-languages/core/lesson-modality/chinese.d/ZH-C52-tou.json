@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C52-tou",
+    "language": "chinese",
+    "chapter": 52,
+    "sequence": 4090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f3c83b6b16dcb4d"
+  },
+  "findings": []
+}

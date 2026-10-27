@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:95285d41b734ce4f",
+  "lessonIds": [
+    "ZH-C44-che",
+    "ZH-W44-che",
+    "ZH-C44-fandian",
+    "ZH-C44-yiyuan",
+    "ZH-C44-zuo",
+    "ZH-C44-chuzuche"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch44.txt",
+  "json": "chinese/narration/ch44.json",
+  "textHash": "fnv1a64:a84150cdf43e3ae1",
+  "jsonHash": "fnv1a64:a22b394105d929b0",
+  "findings": []
+}

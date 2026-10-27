@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C47-mingnian",
+    "language": "chinese",
+    "chapter": 47,
+    "sequence": 3840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3afe8160d4b4157"
+  },
+  "findings": []
+}

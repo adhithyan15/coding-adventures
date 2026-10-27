@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:1b97505f00d67790",
+  "lessonIds": [
+    "ZH-C64-duibuqi",
+    "ZH-W64-qi-rise",
+    "ZH-C64-bang",
+    "ZH-C64-bangmang",
+    "ZH-C64-jie",
+    "ZH-C64-huan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch64.txt",
+  "json": "chinese/narration/ch64.json",
+  "textHash": "fnv1a64:e677d9b568ddfa1a",
+  "jsonHash": "fnv1a64:9a0875b3706c11b8",
+  "findings": []
+}

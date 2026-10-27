@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:abaa853a775980c2",
+  "lessonIds": [
+    "ZH-C93-taihaole",
+    "ZH-W93-tai",
+    "ZH-C93-youdianr",
+    "ZH-C93-ganjing",
+    "ZH-C93-zang",
+    "ZH-C93-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch93.txt",
+  "json": "chinese/narration/ch93.json",
+  "textHash": "fnv1a64:e0cd1c7640ad4c0c",
+  "jsonHash": "fnv1a64:bf45eaadf39f32c7",
+  "findings": []
+}

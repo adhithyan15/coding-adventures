@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C45-zuotian",
+    "language": "chinese",
+    "chapter": 45,
+    "sequence": 3740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ae0ba7e92d94fa2"
+  },
+  "findings": []
+}

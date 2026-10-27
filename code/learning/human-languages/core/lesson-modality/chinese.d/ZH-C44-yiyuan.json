@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C44-yiyuan",
+    "language": "chinese",
+    "chapter": 44,
+    "sequence": 3690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1ef3b6a85096c2f"
+  },
+  "findings": []
+}

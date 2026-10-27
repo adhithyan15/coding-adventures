@@ -50,6 +50,10 @@ impl DffMemory {
         }
     }
 
+    pub(crate) fn bit_len(&self) -> usize {
+        self.q.len() * 8
+    }
+
     pub(crate) fn snapshot(&self) -> Vec<u8> {
         self.q.clone()
     }

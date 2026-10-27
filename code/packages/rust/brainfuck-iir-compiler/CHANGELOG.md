@@ -5,6 +5,10 @@
 - Every `IIRModule { .. }` struct literal (code, tests and doc examples)
   names the new `release: None` field from interpreter-ir (LANG84 phase 4b). No
   behaviour change: backends do not read the field.
+- The custom `load_mem` opcode handler propagates `VMFrame::assign`'s new
+  `Result` with `?` (vm-core 0.32.0: a frame's 65,537th register is a
+  `RegisterLimitExceeded` error instead of a silent drop). No behaviour change
+  for Brainfuck, whose frames use four registers.
 
 ## [0.4.2] — 2026-10-20 (LANG83 PR1b security review — follow vm-core's fallible JIT handlers)
 

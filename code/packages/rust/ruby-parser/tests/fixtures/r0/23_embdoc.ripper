@@ -1,0 +1,27 @@
+# oracle: Ripper.lex, ruby 3.3.6 (2024-11-05 revision 75015d4c1f)
+1	0	on_comment	# R1b: embedded documents, only at a line start\n
+2	0	on_ident	x
+2	2	on_op	=
+2	4	on_int	1
+2	5	on_nl	\n
+3	0	on_embdoc_beg	=begin\n
+4	0	on_embdoc	puts 2\n
+5	0	on_embdoc	  =end is not the end, and neither is the next line\n
+6	0	on_embdoc	=endx\n
+7	0	on_embdoc_end	=end trailing text is ignored\n
+8	0	on_ident	y
+8	2	on_op	=
+8	4	on_ident	x
+8	6	on_op	+
+8	7	on_ignored_nl	\n
+9	0	on_embdoc_beg	=begin\n
+10	0	on_embdoc	between an operator and its operand\n
+11	0	on_embdoc_end	=end\n
+12	2	on_int	2
+12	3	on_nl	\n
+13	0	on_embdoc_beg	=begin\ta tab after the word\n
+14	0	on_embdoc_end	=end\n
+15	0	on_ident	z
+15	2	on_op	=
+15	4	on_ident	y
+15	5	on_nl	\n

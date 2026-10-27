@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C141-sanbu",
+  "pathSegment": "ZH-PATH-141-FUN141",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-141-FUN141",
+      "order": 3
+    }
+  ]
+}

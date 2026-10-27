@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:2ecb9d523d682f2e",
+  "lessonIds": [
+    "ZH-C132-qian",
+    "ZH-W132-qian-thousand",
+    "ZH-C132-wan",
+    "ZH-C132-ling",
+    "ZH-C132-yigong",
+    "ZH-C132-shu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch132.txt",
+  "json": "chinese/narration/ch132.json",
+  "textHash": "fnv1a64:d74486314fef3111",
+  "jsonHash": "fnv1a64:02b5d6a7bee293ea",
+  "findings": []
+}

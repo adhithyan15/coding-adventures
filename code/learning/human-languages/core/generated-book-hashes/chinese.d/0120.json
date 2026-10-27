@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:cad14e31ca8e4ab1",
+  "lessonIds": [
+    "ZH-C120-waimai",
+    "ZH-C120-ding",
+    "ZH-C120-dizhi",
+    "ZH-C120-dabao",
+    "ZH-C120-dianxin"
+  ],
+  "tex": "chinese/book/chapters/ch120-takeaway.tex"
+}

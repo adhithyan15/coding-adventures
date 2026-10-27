@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W36-lai",
+    "language": "chinese",
+    "chapter": 36,
+    "sequence": 3255,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:146968f54cadf8b7",
+    "detachableSegments": [
+      "Script — one piece, top to bottom"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

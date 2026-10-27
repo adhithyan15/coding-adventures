@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:78a129c4c931c74a",
+  "sourceHash": "fnv1a64:015154c43a38ca8c",
   "lessons": [
     {
       "id": "ZH-C19-hear-ma",
@@ -1226,7 +1226,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:001d8f81f26b5fda",
+      "sourceHash": "fnv1a64:6e58d7ab9a3e74be",
       "notice": null,
       "blocks": [
         {

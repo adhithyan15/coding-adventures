@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W40-mai",
+    "language": "chinese",
+    "chapter": 40,
+    "sequence": 3465,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:efcfecc6ac8f40a2",
+    "detachableSegments": [
+      "Script — a lid, two dots, and a cut-down 大"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C59-piaoliang",
+    "language": "chinese",
+    "chapter": 59,
+    "sequence": 5090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a371b4dc3b1aa26"
+  },
+  "findings": []
+}

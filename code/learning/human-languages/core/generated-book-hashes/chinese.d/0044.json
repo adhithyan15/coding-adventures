@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:c5cd075bf1b65a00",
+  "lessonIds": [
+    "ZH-C44-che",
+    "ZH-W44-che",
+    "ZH-C44-fandian",
+    "ZH-C44-yiyuan",
+    "ZH-C44-zuo",
+    "ZH-C44-chuzuche"
+  ],
+  "tex": "chinese/book/chapters/ch44-places-in-town.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C63-dadianhua",
+    "language": "chinese",
+    "chapter": 63,
+    "sequence": 5260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8bb9c2edf04d6459"
+  },
+  "findings": []
+}

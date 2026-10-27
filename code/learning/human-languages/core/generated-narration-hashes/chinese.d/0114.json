@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:f5893cf334c35016",
+  "lessonIds": [
+    "ZH-C114-maidan",
+    "ZH-C114-fu",
+    "ZH-C114-xianjin",
+    "ZH-C114-shuaka",
+    "ZH-C114-zhaoqian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch114.txt",
+  "json": "chinese/narration/ch114.json",
+  "textHash": "fnv1a64:4fb67d587efb23cd",
+  "jsonHash": "fnv1a64:a4930bb5a69df0b9",
+  "findings": []
+}

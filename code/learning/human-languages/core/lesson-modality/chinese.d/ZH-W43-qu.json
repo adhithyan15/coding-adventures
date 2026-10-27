@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W43-qu",
+    "language": "chinese",
+    "chapter": 43,
+    "sequence": 3625,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:07529bdc85e4de0a",
+    "detachableSegments": [
+      "Script — a cross on a bar, and a corner below"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

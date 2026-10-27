@@ -1,0 +1,19 @@
+{
+  "chapter": 78,
+  "title": "Age and Growing Up",
+  "label": "ch:zh-age-and-growing-up",
+  "canDo": "I can ask how old somebody is and talk about growing up and years ago.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C78-xiaoshihou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 78: I can ask how old somebody is and talk about growing up and years ago.",
+    "assesses": [
+      "ZH-LEX-C78-AGE78-03",
+      "ZH-LEX-C78-AGE78-04",
+      "ZH-LEX-C78-AGE78-05"
+    ]
+  }
+}

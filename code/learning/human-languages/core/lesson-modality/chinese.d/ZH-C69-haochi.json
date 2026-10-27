@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C69-haochi",
+    "language": "chinese",
+    "chapter": 69,
+    "sequence": 5600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e311c8fe9815cde4"
+  },
+  "findings": []
+}
