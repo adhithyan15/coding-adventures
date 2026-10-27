@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 57249,
+    "totalLessons": 57311,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -27,10 +27,10 @@
     "scriptRampOverBudgetLessons": 0,
     "lessonsOpeningMultipleScripts": 0,
     "scriptClosureViolations": 0,
-    "scriptExposureExemptedGlyphs": 1749,
+    "scriptExposureExemptedGlyphs": 1755,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 3,
-    "wordLessons": 51663,
+    "wordLessons": 51682,
     "wordLessonsWithoutEtymologyHook": 0,
     "wordLessonsWithoutVisibleEtymology": 0,
     "wordLessonsWithEmptyEtymologyBlock": 0,
@@ -44,7 +44,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 17,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 55210,
+    "drivableLessons": 55258,
     "drivablePercent": 96,
     "chaptersWithoutDrivablePrefix": 210,
     "chaptersWithoutDrivablePrefixByType": 202,
@@ -22772,7 +22772,19 @@
           246,
           247,
           248,
-          249
+          249,
+          250,
+          251,
+          252,
+          253,
+          254,
+          255,
+          256,
+          257,
+          258,
+          259,
+          260,
+          261
         ],
         "bookChapters": [
           1,
@@ -23023,7 +23035,19 @@
           246,
           247,
           248,
-          249
+          249,
+          250,
+          251,
+          252,
+          253,
+          254,
+          255,
+          256,
+          257,
+          258,
+          259,
+          260,
+          261
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -23212,9 +23236,9 @@
       {
         "language": "japanese",
         "status": "version-2",
-        "lessonCount": 1384,
+        "lessonCount": 1446,
         "versions": {
-          "2": 1384
+          "2": 1446
         }
       }
     ]
@@ -23288,8 +23312,8 @@
       },
       {
         "language": "japanese",
-        "bookChapters": 249,
-        "declaredChapters": 249,
+        "bookChapters": 261,
+        "declaredChapters": 261,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -23408,8 +23432,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 11264,
-      "declaredChapters": 11264,
+      "bookChapters": 11276,
+      "declaredChapters": 11276,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 0,
@@ -23421,12 +23445,12 @@
     }
   },
   "levels": {
-    "totalLessons": 57249,
+    "totalLessons": 57311,
     "byLevel": {
       "pre-A1": 9460,
       "A1": 18617,
-      "A2": 2960,
-      "B1": 26167,
+      "A2": 2967,
+      "B1": 26222,
       "B2": 17,
       "C1": 10,
       "C2": 18
@@ -23556,18 +23580,18 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 1384,
+        "lessonCount": 1446,
         "byLevel": {
           "pre-A1": 384,
           "A1": 428,
-          "A2": 572,
-          "B1": 0,
+          "A2": 579,
+          "B1": 55,
           "B2": 0,
           "C1": 0,
           "C2": 0
         },
         "unmapped": 0,
-        "reach": "A2"
+        "reach": "B1"
       },
       {
         "language": "kannada",
@@ -24290,8 +24314,8 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 1384,
-        "measurable": 1384,
+        "lessonCount": 1446,
+        "measurable": 1446,
         "unmeasurable": 0,
         "lessonViolations": 0,
         "chapterViolations": 0
@@ -24501,8 +24525,8 @@
           "language": "japanese",
           "script": "japanese",
           "latinScript": false,
-          "lessonCount": 1384,
-          "totalGlyphs": 84,
+          "lessonCount": 1446,
+          "totalGlyphs": 90,
           "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 0
@@ -99127,7 +99151,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C163-HOME163-03",
@@ -99271,7 +99295,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C171-ORDER171-04",
@@ -99727,7 +99751,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C200-CHANGE200-03",
@@ -99751,7 +99775,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C200-CHANGE200-05",
@@ -99775,7 +99799,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 6
       },
       {
         "atom": "JA-LEX-C203-FLY203-03",
@@ -99883,7 +99907,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C209-SEASON209-04",
@@ -100099,7 +100123,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C221-FEVER221-02",
@@ -100160,18 +100184,6 @@
           "R4"
         ],
         "revisits": 4
-      },
-      {
-        "atom": "JA-LEX-C223-SAFETY223-04",
-        "language": "japanese",
-        "introducedBy": "JA-C223-tasukeru",
-        "introducedAt": 1244,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 3
       },
       {
         "atom": "JA-LEX-C223-SAFETY223-05",
@@ -100291,7 +100303,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C23-HEALTH23-02",
@@ -100315,7 +100327,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C23-HEALTH23-04",
@@ -100327,7 +100339,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C23-HEALTH23-05",
@@ -100382,6 +100394,102 @@
         "language": "japanese",
         "introducedBy": "JA-C232-shiraseru",
         "introducedAt": 1293,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C235-BALL235-02",
+        "language": "japanese",
+        "introducedBy": "JA-C235-keru",
+        "introducedAt": 1305,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C235-BALL235-03",
+        "language": "japanese",
+        "introducedBy": "JA-C235-yakyuu",
+        "introducedAt": 1306,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C235-BALL235-04",
+        "language": "japanese",
+        "introducedBy": "JA-C235-juudou",
+        "introducedAt": 1307,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C235-BALL235-05",
+        "language": "japanese",
+        "introducedBy": "JA-C235-yuushou",
+        "introducedAt": 1308,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C238-BOOKS238-02",
+        "language": "japanese",
+        "introducedBy": "JA-C238-shousetsu",
+        "introducedAt": 1321,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C238-BOOKS238-03",
+        "language": "japanese",
+        "introducedBy": "JA-C238-dokusho",
+        "introducedAt": 1322,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C238-BOOKS238-04",
+        "language": "japanese",
+        "introducedBy": "JA-C238-bangumi",
+        "introducedAt": 1323,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C238-BOOKS238-05",
+        "language": "japanese",
+        "introducedBy": "JA-C238-tsumaranai",
+        "introducedAt": 1324,
         "missed": [
           "R2",
           "R3",
@@ -100450,6 +100558,102 @@
         "revisits": 3
       },
       {
+        "atom": "JA-LEX-C241-OUTING241-02",
+        "language": "japanese",
+        "introducedBy": "JA-C241-shibai",
+        "introducedAt": 1336,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C241-OUTING241-03",
+        "language": "japanese",
+        "introducedBy": "JA-C241-yukai",
+        "introducedAt": 1337,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C241-OUTING241-04",
+        "language": "japanese",
+        "introducedBy": "JA-C241-moushikomu",
+        "introducedAt": 1338,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C241-OUTING241-05",
+        "language": "japanese",
+        "introducedBy": "JA-C241-yaru",
+        "introducedAt": 1339,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "JA-LEX-C244-MEET244-02",
+        "language": "japanese",
+        "introducedBy": "JA-C244-deau",
+        "introducedAt": 1352,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C244-MEET244-03",
+        "language": "japanese",
+        "introducedBy": "JA-C244-wakareru",
+        "introducedAt": 1353,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C244-MEET244-04",
+        "language": "japanese",
+        "introducedBy": "JA-C244-mukaeru",
+        "introducedAt": 1354,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C244-MEET244-05",
+        "language": "japanese",
+        "introducedBy": "JA-C244-kekkon",
+        "introducedAt": 1355,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "JA-LEX-C25-FAMILY25-01",
         "language": "japanese",
         "introducedBy": "JA-C25-tomodachi",
@@ -100459,7 +100663,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 5
+        "revisits": 11
       },
       {
         "atom": "JA-LEX-C25-FAMILY25-02",
@@ -100507,7 +100711,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C34-FOOD34-03",
@@ -100651,7 +100855,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C40-HOME40-02",
@@ -100675,7 +100879,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C40-HOME40-04",
@@ -100711,7 +100915,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C41-SCHOOL41-02",
@@ -100723,7 +100927,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 8
       },
       {
         "atom": "JA-LEX-C41-SCHOOL41-03",
@@ -100747,7 +100951,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C41-SCHOOL41-05",
@@ -100759,7 +100963,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 8
       },
       {
         "atom": "JA-LEX-C42-NATURE42-01",
@@ -100783,7 +100987,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 8
       },
       {
         "atom": "JA-LEX-C42-NATURE42-03",
@@ -100879,7 +101083,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C54-TIME54-04",
@@ -100939,7 +101143,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C56-TIME56-05",
@@ -100951,7 +101155,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C57-PLACE57-01",
@@ -101011,7 +101215,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C58-PLACE58-01",
@@ -101071,7 +101275,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C59-CLOTHES59-01",
@@ -101431,7 +101635,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-SCRIPT-HANDAKUTEN-01",
@@ -367863,6 +368067,105 @@
         "revisits": 2
       },
       {
+        "atom": "JA-GRAMMAR-C250-PAST-02",
+        "language": "japanese",
+        "introducedBy": "JA-C250-mita",
+        "introducedAt": 1384,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-GRAMMAR-C251-FUTURE-02",
+        "language": "japanese",
+        "introducedBy": "JA-C251-ashita-iku",
+        "introducedAt": 1387,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-GRAMMAR-C252-TE-KARA-02",
+        "language": "japanese",
+        "introducedBy": "JA-C252-tabete-kara",
+        "introducedAt": 1392,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-GRAMMAR-C253-ONGOING-01",
+        "language": "japanese",
+        "introducedBy": "JA-C253-futte-imasu",
+        "introducedAt": 1398,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-GRAMMAR-C255-SHOULD-02",
+        "language": "japanese",
+        "introducedBy": "JA-C255-itta-hou-ga-ii",
+        "introducedAt": 1410,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-GRAMMAR-C256-DIRECTION-02",
+        "language": "japanese",
+        "introducedBy": "JA-C256-dou-yatte",
+        "introducedAt": 1414,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-GRAMMAR-C256-TICKET-01",
+        "language": "japanese",
+        "introducedBy": "JA-C256-kippu-o-nimai",
+        "introducedAt": 1416,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-GRAMMAR-C257-PROBLEM-02",
+        "language": "japanese",
+        "introducedBy": "JA-C257-nakushimashita",
+        "introducedAt": 1420,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-GRAMMAR-C258-FEELING-02",
+        "language": "japanese",
+        "introducedBy": "JA-C258-tanoshikatta",
+        "introducedAt": 1425,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "JA-GRAMMAR-COUNTER-01",
         "language": "japanese",
         "introducedBy": "JA-C18-tsu-counter",
@@ -368476,7 +368779,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C113-THINGS113-01",
@@ -368806,7 +369109,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C141-RAIGETSU",
@@ -368828,7 +369131,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 7
       },
       {
         "atom": "JA-LEX-C141-RAISHUU",
@@ -368839,7 +369142,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C141-TSUMORI",
@@ -368850,7 +369153,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C142-CHUUI",
@@ -368938,7 +369241,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C147-WASH147-02",
@@ -368949,7 +369252,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C147-WASH147-03",
@@ -369136,7 +369439,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C152-READY152-03",
@@ -369147,7 +369450,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 6
       },
       {
         "atom": "JA-LEX-C152-READY152-04",
@@ -369169,7 +369472,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C153-OUTING153-01",
@@ -369213,7 +369516,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C153-OUTING153-05",
@@ -369367,7 +369670,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C158-LIGHTS158-02",
@@ -369411,7 +369714,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C159-TIDY159-01",
@@ -369543,7 +369846,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C162-REPAIR162-02",
@@ -369642,7 +369945,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C164-WEEK164-05",
@@ -369774,7 +370077,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C168-DELAY168-01",
@@ -369961,7 +370264,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C172-MEALS172-05",
@@ -370236,7 +370539,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C179-DRINK179-03",
@@ -370500,7 +370803,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C185-SALE185-05",
@@ -370709,7 +371012,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C191-SHUT191-02",
@@ -370764,7 +371067,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C193-SIGHT193-01",
@@ -370830,7 +371133,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C194-WAY194-02",
@@ -370841,7 +371144,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C194-WAY194-03",
@@ -370852,7 +371155,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C194-WAY194-04",
@@ -370973,7 +371276,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C198-RIDE198-02",
@@ -371006,7 +371309,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C198-RIDE198-05",
@@ -371017,7 +371320,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C199-DEPART199-01",
@@ -371061,7 +371364,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C199-DEPART199-05",
@@ -371149,7 +371452,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C201-ROAD201-02",
@@ -371259,7 +371562,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C204-TRIP204-01",
@@ -371270,7 +371573,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 6
       },
       {
         "atom": "JA-LEX-C204-TRIP204-02",
@@ -371325,7 +371628,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C205-TICKET205-02",
@@ -371358,7 +371661,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C205-TICKET205-05",
@@ -371369,7 +371672,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C206-TRAFFIC206-01",
@@ -371391,18 +371694,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C207-WEATHER207-02",
-        "language": "japanese",
-        "introducedBy": "JA-C207-furu",
-        "introducedAt": 1159,
-        "missed": [
-          "R3",
-          "R4"
-        ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C207-WEATHER207-03",
@@ -371413,7 +371705,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C207-WEATHER207-04",
@@ -371424,7 +371716,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C207-WEATHER207-05",
@@ -371464,17 +371756,6 @@
         "language": "japanese",
         "introducedBy": "JA-C208-tenkiyohou",
         "introducedAt": 1165,
-        "missed": [
-          "R3",
-          "R4"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C208-FORECAST208-04",
-        "language": "japanese",
-        "introducedBy": "JA-C208-sora",
-        "introducedAt": 1166,
         "missed": [
           "R3",
           "R4"
@@ -371684,17 +371965,6 @@
         "language": "japanese",
         "introducedBy": "JA-C213-hikaru",
         "introducedAt": 1189,
-        "missed": [
-          "R3",
-          "R4"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C213-SKY213-02",
-        "language": "japanese",
-        "introducedBy": "JA-C213-tsuki",
-        "introducedAt": 1190,
         "missed": [
           "R3",
           "R4"
@@ -372109,17 +372379,6 @@
         "revisits": 3
       },
       {
-        "atom": "JA-LEX-C223-SAFETY223-01",
-        "language": "japanese",
-        "introducedBy": "JA-C223-abunai",
-        "introducedAt": 1241,
-        "missed": [
-          "R3",
-          "R4"
-        ],
-        "revisits": 4
-      },
-      {
         "atom": "JA-LEX-C223-SAFETY223-02",
         "language": "japanese",
         "introducedBy": "JA-C223-kiken",
@@ -372127,6 +372386,17 @@
         "missed": [
           "R3",
           "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "JA-LEX-C223-SAFETY223-04",
+        "language": "japanese",
+        "introducedBy": "JA-C223-tasukeru",
+        "introducedAt": 1244,
+        "missed": [
+          "R2",
+          "R3"
         ],
         "revisits": 4
       },
@@ -372428,17 +372698,6 @@
         "revisits": 3
       },
       {
-        "atom": "JA-LEX-C231-PHONE231-01",
-        "language": "japanese",
-        "introducedBy": "JA-C231-moshimoshi",
-        "introducedAt": 1284,
-        "missed": [
-          "R2",
-          "R4"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "JA-LEX-C231-PHONE231-02",
         "language": "japanese",
         "introducedBy": "JA-C231-bangou",
@@ -372489,28 +372748,6 @@
         "introducedAt": 1289,
         "missed": [
           "R2",
-          "R4"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C233-SPORT233-01",
-        "language": "japanese",
-        "introducedBy": "JA-C233-asobu",
-        "introducedAt": 1294,
-        "missed": [
-          "R3",
-          "R4"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C233-SPORT233-02",
-        "language": "japanese",
-        "introducedBy": "JA-C233-oyogu",
-        "introducedAt": 1295,
-        "missed": [
-          "R3",
           "R4"
         ],
         "revisits": 3
@@ -372604,10 +372841,450 @@
         "revisits": 3
       },
       {
-        "atom": "JA-LEX-C235-BALL235-02",
+        "atom": "JA-LEX-C235-BALL235-01",
         "language": "japanese",
-        "introducedBy": "JA-C235-keru",
-        "introducedAt": 1305,
+        "introducedBy": "JA-C235-nageru",
+        "introducedAt": 1304,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C236-FILM236-02",
+        "language": "japanese",
+        "introducedBy": "JA-C236-miru",
+        "introducedAt": 1311,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "JA-LEX-C236-FILM236-04",
+        "language": "japanese",
+        "introducedBy": "JA-C236-ongaku",
+        "introducedAt": 1313,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C236-FILM236-05",
+        "language": "japanese",
+        "introducedBy": "JA-C236-ensou",
+        "introducedAt": 1314,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C237-PHOTO237-01",
+        "language": "japanese",
+        "introducedBy": "JA-C237-shashin",
+        "introducedAt": 1315,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C237-PHOTO237-02",
+        "language": "japanese",
+        "introducedBy": "JA-C237-toru",
+        "introducedAt": 1316,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C237-PHOTO237-03",
+        "language": "japanese",
+        "introducedBy": "JA-C237-atsumeru",
+        "introducedAt": 1317,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C237-PHOTO237-04",
+        "language": "japanese",
+        "introducedBy": "JA-C237-atsumaru",
+        "introducedAt": 1318,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C237-PHOTO237-05",
+        "language": "japanese",
+        "introducedBy": "JA-C237-ningyou",
+        "introducedAt": 1319,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C238-BOOKS238-01",
+        "language": "japanese",
+        "introducedBy": "JA-C238-manga",
+        "introducedAt": 1320,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C239-PASTIME239-01",
+        "language": "japanese",
+        "introducedBy": "JA-C239-odoru",
+        "introducedAt": 1325,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C239-PASTIME239-02",
+        "language": "japanese",
+        "introducedBy": "JA-C239-tsuru",
+        "introducedAt": 1326,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C239-PASTIME239-03",
+        "language": "japanese",
+        "introducedBy": "JA-C239-sanpo",
+        "introducedAt": 1327,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C239-PASTIME239-04",
+        "language": "japanese",
+        "introducedBy": "JA-C239-tejina",
+        "introducedAt": 1328,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C239-PASTIME239-05",
+        "language": "japanese",
+        "introducedBy": "JA-C239-shougi",
+        "introducedAt": 1329,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C240-LIKES240-02",
+        "language": "japanese",
+        "introducedBy": "JA-C240-heta",
+        "introducedAt": 1331,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C240-LIKES240-04",
+        "language": "japanese",
+        "introducedBy": "JA-C240-kirai",
+        "introducedAt": 1333,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C240-LIKES240-05",
+        "language": "japanese",
+        "introducedBy": "JA-C240-akiru",
+        "introducedAt": 1334,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C241-OUTING241-01",
+        "language": "japanese",
+        "introducedBy": "JA-C241-sasou",
+        "introducedAt": 1335,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C242-FRIENDS242-01",
+        "language": "japanese",
+        "introducedBy": "JA-C242-kare",
+        "introducedAt": 1341,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C242-FRIENDS242-02",
+        "language": "japanese",
+        "introducedBy": "JA-C242-kanojo",
+        "introducedAt": 1342,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C242-FRIENDS242-03",
+        "language": "japanese",
+        "introducedBy": "JA-C242-koibito",
+        "introducedAt": 1343,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C242-FRIENDS242-04",
+        "language": "japanese",
+        "introducedBy": "JA-C242-shinyuu",
+        "introducedAt": 1344,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C242-FRIENDS242-05",
+        "language": "japanese",
+        "introducedBy": "JA-C242-tsukiau",
+        "introducedAt": 1345,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C243-KIN243-01",
+        "language": "japanese",
+        "introducedBy": "JA-C243-ryoushin",
+        "introducedAt": 1346,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C243-KIN243-02",
+        "language": "japanese",
+        "introducedBy": "JA-C243-sofu",
+        "introducedAt": 1347,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C243-KIN243-03",
+        "language": "japanese",
+        "introducedBy": "JA-C243-sobo",
+        "introducedAt": 1348,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C243-KIN243-04",
+        "language": "japanese",
+        "introducedBy": "JA-C243-kyoudai",
+        "introducedAt": 1349,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C243-KIN243-05",
+        "language": "japanese",
+        "introducedBy": "JA-C243-sodateru",
+        "introducedAt": 1350,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C244-MEET244-01",
+        "language": "japanese",
+        "introducedBy": "JA-C244-shiriai",
+        "introducedAt": 1351,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C245-JOY245-01",
+        "language": "japanese",
+        "introducedBy": "JA-C245-ureshii",
+        "introducedAt": 1356,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "JA-LEX-C245-JOY245-02",
+        "language": "japanese",
+        "introducedBy": "JA-C245-sabishii",
+        "introducedAt": 1357,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C245-JOY245-03",
+        "language": "japanese",
+        "introducedBy": "JA-C245-yorokobu",
+        "introducedAt": 1358,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C245-JOY245-04",
+        "language": "japanese",
+        "introducedBy": "JA-C245-warau",
+        "introducedAt": 1359,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C245-JOY245-05",
+        "language": "japanese",
+        "introducedBy": "JA-C245-egao",
+        "introducedAt": 1360,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C246-ANGER246-01",
+        "language": "japanese",
+        "introducedBy": "JA-C246-okoru",
+        "introducedAt": 1361,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C246-ANGER246-02",
+        "language": "japanese",
+        "introducedBy": "JA-C246-kenka",
+        "introducedAt": 1362,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C246-ANGER246-03",
+        "language": "japanese",
+        "introducedBy": "JA-C246-ayamaru",
+        "introducedAt": 1363,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C246-ANGER246-04",
+        "language": "japanese",
+        "introducedBy": "JA-C246-yurusu",
+        "introducedAt": 1364,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C246-ANGER246-05",
+        "language": "japanese",
+        "introducedBy": "JA-C246-zannen",
+        "introducedAt": 1365,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C247-PRAISE247-02",
+        "language": "japanese",
+        "introducedBy": "JA-C247-shikaru",
+        "introducedAt": 1367,
         "missed": [
           "R2",
           "R3"
@@ -372615,10 +373292,10 @@
         "revisits": 3
       },
       {
-        "atom": "JA-LEX-C235-BALL235-03",
+        "atom": "JA-LEX-C247-PRAISE247-03",
         "language": "japanese",
-        "introducedBy": "JA-C235-yakyuu",
-        "introducedAt": 1306,
+        "introducedBy": "JA-C247-hazukashii",
+        "introducedAt": 1368,
         "missed": [
           "R2",
           "R3"
@@ -372626,10 +373303,10 @@
         "revisits": 3
       },
       {
-        "atom": "JA-LEX-C235-BALL235-04",
+        "atom": "JA-LEX-C247-PRAISE247-05",
         "language": "japanese",
-        "introducedBy": "JA-C235-juudou",
-        "introducedAt": 1307,
+        "introducedBy": "JA-C247-yuuki",
+        "introducedAt": 1370,
         "missed": [
           "R2",
           "R3"
@@ -372637,10 +373314,21 @@
         "revisits": 3
       },
       {
-        "atom": "JA-LEX-C235-BALL235-05",
+        "atom": "JA-LEX-C249-HEART249-03",
         "language": "japanese",
-        "introducedBy": "JA-C235-yuushou",
-        "introducedAt": 1308,
+        "introducedBy": "JA-C249-seikaku",
+        "introducedAt": 1379,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "JA-LEX-C249-HEART249-04",
+        "language": "japanese",
+        "introducedBy": "JA-C249-majime",
+        "introducedAt": 1380,
         "missed": [
           "R2",
           "R3"
@@ -372648,10 +373336,21 @@
         "revisits": 3
       },
       {
-        "atom": "JA-LEX-C238-BOOKS238-02",
+        "atom": "JA-LEX-C249-HEART249-05",
         "language": "japanese",
-        "introducedBy": "JA-C238-shousetsu",
-        "introducedAt": 1321,
+        "introducedBy": "JA-C249-wagamama",
+        "introducedAt": 1381,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-LEX-C253-TOKI-01",
+        "language": "japanese",
+        "introducedBy": "JA-C253-toki",
+        "introducedAt": 1399,
         "missed": [
           "R2",
           "R3"
@@ -372659,10 +373358,10 @@
         "revisits": 3
       },
       {
-        "atom": "JA-LEX-C238-BOOKS238-03",
+        "atom": "JA-LEX-C254-IIDASU-01",
         "language": "japanese",
-        "introducedBy": "JA-C238-dokusho",
-        "introducedAt": 1322,
+        "introducedBy": "JA-C254-iidasu",
+        "introducedAt": 1406,
         "missed": [
           "R2",
           "R3"
@@ -372670,114 +373369,26 @@
         "revisits": 3
       },
       {
-        "atom": "JA-LEX-C238-BOOKS238-04",
+        "atom": "JA-LEX-C255-DAKARA-01",
         "language": "japanese",
-        "introducedBy": "JA-C238-bangumi",
-        "introducedAt": 1323,
+        "introducedBy": "JA-C255-dakara",
+        "introducedAt": 1411,
         "missed": [
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 2
       },
       {
-        "atom": "JA-LEX-C238-BOOKS238-05",
+        "atom": "JA-LEX-C256-MAI-01",
         "language": "japanese",
-        "introducedBy": "JA-C238-tsumaranai",
-        "introducedAt": 1324,
+        "introducedBy": "JA-C256-mai",
+        "introducedAt": 1415,
         "missed": [
           "R2",
           "R3"
         ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C241-OUTING241-02",
-        "language": "japanese",
-        "introducedBy": "JA-C241-shibai",
-        "introducedAt": 1336,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C241-OUTING241-03",
-        "language": "japanese",
-        "introducedBy": "JA-C241-yukai",
-        "introducedAt": 1337,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C241-OUTING241-04",
-        "language": "japanese",
-        "introducedBy": "JA-C241-moushikomu",
-        "introducedAt": 1338,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C241-OUTING241-05",
-        "language": "japanese",
-        "introducedBy": "JA-C241-yaru",
-        "introducedAt": 1339,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C244-MEET244-02",
-        "language": "japanese",
-        "introducedBy": "JA-C244-deau",
-        "introducedAt": 1352,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C244-MEET244-03",
-        "language": "japanese",
-        "introducedBy": "JA-C244-wakareru",
-        "introducedAt": 1353,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C244-MEET244-04",
-        "language": "japanese",
-        "introducedBy": "JA-C244-mukaeru",
-        "introducedAt": 1354,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C244-MEET244-05",
-        "language": "japanese",
-        "introducedBy": "JA-C244-kekkon",
-        "introducedAt": 1355,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
+        "revisits": 2
       },
       {
         "atom": "JA-LEX-C26-FAMILY26-01",
@@ -372810,7 +373421,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 8
       },
       {
         "atom": "JA-LEX-C26-FAMILY26-04",
@@ -372821,7 +373432,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 6
       },
       {
         "atom": "JA-LEX-C26-FAMILY26-05",
@@ -372832,7 +373443,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 7
       },
       {
         "atom": "JA-LEX-C27-VERBS27-01",
@@ -372843,7 +373454,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C27-VERBS27-02",
@@ -372854,7 +373465,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C27-VERBS27-03",
@@ -372865,7 +373476,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C27-VERBS27-04",
@@ -372876,7 +373487,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 6
       },
       {
         "atom": "JA-LEX-C27-VERBS27-05",
@@ -372920,7 +373531,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C28-VERBS28-04",
@@ -372931,7 +373542,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C28-VERBS28-05",
@@ -372975,7 +373586,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C29-VERBS29-04",
@@ -372986,7 +373597,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C29-VERBS29-05",
@@ -373063,7 +373674,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C31-VERBS31-02",
@@ -373261,7 +373872,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C35-FOOD35-04",
@@ -373272,7 +373883,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 7
       },
       {
         "atom": "JA-LEX-C35-FOOD35-05",
@@ -373349,7 +373960,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C37-HOME37-02",
@@ -373536,7 +374147,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 11
       },
       {
         "atom": "JA-LEX-C45-ANIMALS45-01",
@@ -373734,7 +374345,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C48-ANIMALS48-04",
@@ -373800,7 +374411,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C49-ADJ49-05",
@@ -373965,7 +374576,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C53-ADJ53-04",
@@ -373976,7 +374587,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 7
       },
       {
         "atom": "JA-LEX-C53-ADJ53-05",
@@ -374009,7 +374620,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 8
       },
       {
         "atom": "JA-LEX-C55-TIME55-01",
@@ -374020,7 +374631,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C55-TIME55-02",
@@ -374031,7 +374642,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C55-TIME55-03",
@@ -374042,7 +374653,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C55-TIME55-04",
@@ -374251,7 +374862,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C63-WORLD63-02",
@@ -374262,7 +374873,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C63-WORLD63-03",
@@ -374878,7 +375489,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C76-TIME76-01",
@@ -374999,7 +375610,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C78-LOC78-02",
@@ -375010,7 +375621,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C79-LOC79-02",
@@ -375032,7 +375643,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C79-LOC79-04",
@@ -375197,7 +375808,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C83-DEF83-02",
@@ -375219,7 +375830,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C83-DEF83-04",
@@ -375956,7 +376567,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C99-THINGS99-02",
@@ -376077,7 +376688,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "JA-LEX-TOO",
@@ -625482,6 +626093,206 @@
         "revisits": 3
       },
       {
+        "atom": "JA-GRAMMAR-C250-PAST-01",
+        "language": "japanese",
+        "introducedBy": "JA-C250-mita",
+        "introducedAt": 1384,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "JA-GRAMMAR-C251-FUTURE-01",
+        "language": "japanese",
+        "introducedBy": "JA-C251-ashita-iku",
+        "introducedAt": 1387,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-GRAMMAR-C251-NAI-01",
+        "language": "japanese",
+        "introducedBy": "JA-C251-ikanai",
+        "introducedAt": 1388,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "JA-GRAMMAR-C251-NAI-02",
+        "language": "japanese",
+        "introducedBy": "JA-C251-ikanai",
+        "introducedAt": 1388,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-GRAMMAR-C252-TE-KARA-01",
+        "language": "japanese",
+        "introducedBy": "JA-C252-tabete-kara",
+        "introducedAt": 1392,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-GRAMMAR-C254-OPINION-02",
+        "language": "japanese",
+        "introducedBy": "JA-C254-to-omoimasu",
+        "introducedAt": 1404,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-GRAMMAR-C254-REASON-02",
+        "language": "japanese",
+        "introducedBy": "JA-C254-kara-node",
+        "introducedAt": 1405,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-GRAMMAR-C255-SHOULD-01",
+        "language": "japanese",
+        "introducedBy": "JA-C255-itta-hou-ga-ii",
+        "introducedAt": 1410,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-GRAMMAR-C255-SO-01",
+        "language": "japanese",
+        "introducedBy": "JA-C255-desu-kara",
+        "introducedAt": 1412,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-GRAMMAR-C255-SO-02",
+        "language": "japanese",
+        "introducedBy": "JA-C255-desu-kara",
+        "introducedAt": 1412,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-GRAMMAR-C256-DIRECTION-01",
+        "language": "japanese",
+        "introducedBy": "JA-C256-dou-yatte",
+        "introducedAt": 1414,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-GRAMMAR-C256-TICKET-02",
+        "language": "japanese",
+        "introducedBy": "JA-C256-kippu-o-nimai",
+        "introducedAt": 1416,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-GRAMMAR-C257-PROBLEM-01",
+        "language": "japanese",
+        "introducedBy": "JA-C257-nakushimashita",
+        "introducedAt": 1420,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-GRAMMAR-C258-AMBITION-01",
+        "language": "japanese",
+        "introducedBy": "JA-C258-naritai",
+        "introducedAt": 1427,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-GRAMMAR-C258-AMBITION-02",
+        "language": "japanese",
+        "introducedBy": "JA-C258-naritai",
+        "introducedAt": 1427,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-GRAMMAR-C258-FEELING-01",
+        "language": "japanese",
+        "introducedBy": "JA-C258-tanoshikatta",
+        "introducedAt": 1425,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "JA-GRAMMAR-C258-TA-KOTO-02",
+        "language": "japanese",
+        "introducedBy": "JA-C258-itta-koto",
+        "introducedAt": 1428,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-GRAMMAR-C259-COMPARE-01",
+        "language": "japanese",
+        "introducedBy": "JA-C259-yori",
+        "introducedAt": 1432,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-GRAMMAR-C259-COMPARE-02",
+        "language": "japanese",
+        "introducedBy": "JA-C259-yori",
+        "introducedAt": 1432,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-GRAMMAR-C260-TARA-02",
+        "language": "japanese",
+        "introducedBy": "JA-C260-futtara",
+        "introducedAt": 1437,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "JA-GRAMMAR-JUU-COMPOUND",
         "language": "japanese",
         "introducedBy": "JA-C15-juu",
@@ -625509,7 +626320,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "JA-LEX-ANCHOR-DENWA",
@@ -625519,7 +626330,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "JA-LEX-ANCHOR-ENPITSU",
@@ -625539,7 +626350,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-ANCHOR-GINKOU",
@@ -625549,7 +626360,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-ANCHOR-HEYA",
@@ -625619,7 +626430,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 6
+        "revisits": 7
       },
       {
         "atom": "JA-LEX-ANCHOR-KIPPU",
@@ -625629,7 +626440,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
+        "revisits": 8
       },
       {
         "atom": "JA-LEX-ANCHOR-MIZU",
@@ -625659,7 +626470,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-ANCHOR-TABERU",
@@ -625669,7 +626480,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
+        "revisits": 7
       },
       {
         "atom": "JA-LEX-ANE",
@@ -625689,7 +626500,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 7
+        "revisits": 8
       },
       {
         "atom": "JA-LEX-ATAMA",
@@ -625699,7 +626510,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C112-THINGS112-04",
@@ -626099,7 +626910,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 4
+        "revisits": 6
       },
       {
         "atom": "JA-LEX-C125-QUAL125-01",
@@ -626309,7 +627120,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
+        "revisits": 9
       },
       {
         "atom": "JA-LEX-C135-DEGUCHI",
@@ -626339,7 +627150,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C136-KAZOERU",
@@ -626379,7 +627190,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C137-TENPURA",
@@ -626399,7 +627210,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "JA-LEX-C138-HATARAKIMASU",
@@ -626409,7 +627220,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 6
+        "revisits": 8
       },
       {
         "atom": "JA-LEX-C138-KAERIMASU",
@@ -626419,7 +627230,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 5
+        "revisits": 7
       },
       {
         "atom": "JA-LEX-C138-NEMASU",
@@ -626429,7 +627240,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 5
+        "revisits": 7
       },
       {
         "atom": "JA-LEX-C138-OKIMASU",
@@ -626439,7 +627250,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 7
+        "revisits": 10
       },
       {
         "atom": "JA-LEX-C139-CHIGAIMASU",
@@ -626492,14 +627303,74 @@
         "revisits": 10
       },
       {
-        "atom": "JA-LEX-C235-BALL235-01",
+        "atom": "JA-LEX-C207-WEATHER207-02",
         "language": "japanese",
-        "introducedBy": "JA-C235-nageru",
-        "introducedAt": 1304,
+        "introducedBy": "JA-C207-furu",
+        "introducedAt": 1159,
         "missed": [
           "R3"
         ],
-        "revisits": 3
+        "revisits": 9
+      },
+      {
+        "atom": "JA-LEX-C208-FORECAST208-04",
+        "language": "japanese",
+        "introducedBy": "JA-C208-sora",
+        "introducedAt": 1166,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "JA-LEX-C213-SKY213-02",
+        "language": "japanese",
+        "introducedBy": "JA-C213-tsuki",
+        "introducedAt": 1190,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "JA-LEX-C223-SAFETY223-01",
+        "language": "japanese",
+        "introducedBy": "JA-C223-abunai",
+        "introducedAt": 1241,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "JA-LEX-C231-PHONE231-01",
+        "language": "japanese",
+        "introducedBy": "JA-C231-moshimoshi",
+        "introducedAt": 1284,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "JA-LEX-C233-SPORT233-01",
+        "language": "japanese",
+        "introducedBy": "JA-C233-asobu",
+        "introducedAt": 1294,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "JA-LEX-C233-SPORT233-02",
+        "language": "japanese",
+        "introducedBy": "JA-C233-oyogu",
+        "introducedAt": 1295,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 6
       },
       {
         "atom": "JA-LEX-C236-FILM236-01",
@@ -626509,17 +627380,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C236-FILM236-02",
-        "language": "japanese",
-        "introducedBy": "JA-C236-miru",
-        "introducedAt": 1311,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
+        "revisits": 9
       },
       {
         "atom": "JA-LEX-C236-FILM236-03",
@@ -626529,137 +627390,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C236-FILM236-04",
-        "language": "japanese",
-        "introducedBy": "JA-C236-ongaku",
-        "introducedAt": 1313,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C236-FILM236-05",
-        "language": "japanese",
-        "introducedBy": "JA-C236-ensou",
-        "introducedAt": 1314,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C237-PHOTO237-01",
-        "language": "japanese",
-        "introducedBy": "JA-C237-shashin",
-        "introducedAt": 1315,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C237-PHOTO237-02",
-        "language": "japanese",
-        "introducedBy": "JA-C237-toru",
-        "introducedAt": 1316,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C237-PHOTO237-03",
-        "language": "japanese",
-        "introducedBy": "JA-C237-atsumeru",
-        "introducedAt": 1317,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C237-PHOTO237-04",
-        "language": "japanese",
-        "introducedBy": "JA-C237-atsumaru",
-        "introducedAt": 1318,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C237-PHOTO237-05",
-        "language": "japanese",
-        "introducedBy": "JA-C237-ningyou",
-        "introducedAt": 1319,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C238-BOOKS238-01",
-        "language": "japanese",
-        "introducedBy": "JA-C238-manga",
-        "introducedAt": 1320,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C239-PASTIME239-01",
-        "language": "japanese",
-        "introducedBy": "JA-C239-odoru",
-        "introducedAt": 1325,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C239-PASTIME239-02",
-        "language": "japanese",
-        "introducedBy": "JA-C239-tsuru",
-        "introducedAt": 1326,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C239-PASTIME239-03",
-        "language": "japanese",
-        "introducedBy": "JA-C239-sanpo",
-        "introducedAt": 1327,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C239-PASTIME239-04",
-        "language": "japanese",
-        "introducedBy": "JA-C239-tejina",
-        "introducedAt": 1328,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C239-PASTIME239-05",
-        "language": "japanese",
-        "introducedBy": "JA-C239-shougi",
-        "introducedAt": 1329,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C240-LIKES240-01",
@@ -626669,17 +627400,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C240-LIKES240-02",
-        "language": "japanese",
-        "introducedBy": "JA-C240-heta",
-        "introducedAt": 1331,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C240-LIKES240-03",
@@ -626689,245 +627410,15 @@
         "missed": [
           "R3"
         ],
-        "revisits": 3
+        "revisits": 6
       },
       {
-        "atom": "JA-LEX-C240-LIKES240-04",
+        "atom": "JA-LEX-C247-PRAISE247-01",
         "language": "japanese",
-        "introducedBy": "JA-C240-kirai",
-        "introducedAt": 1333,
+        "introducedBy": "JA-C247-homeru",
+        "introducedAt": 1366,
         "missed": [
           "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C240-LIKES240-05",
-        "language": "japanese",
-        "introducedBy": "JA-C240-akiru",
-        "introducedAt": 1334,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C241-OUTING241-01",
-        "language": "japanese",
-        "introducedBy": "JA-C241-sasou",
-        "introducedAt": 1335,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C242-FRIENDS242-01",
-        "language": "japanese",
-        "introducedBy": "JA-C242-kare",
-        "introducedAt": 1341,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C242-FRIENDS242-02",
-        "language": "japanese",
-        "introducedBy": "JA-C242-kanojo",
-        "introducedAt": 1342,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C242-FRIENDS242-03",
-        "language": "japanese",
-        "introducedBy": "JA-C242-koibito",
-        "introducedAt": 1343,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C242-FRIENDS242-04",
-        "language": "japanese",
-        "introducedBy": "JA-C242-shinyuu",
-        "introducedAt": 1344,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C242-FRIENDS242-05",
-        "language": "japanese",
-        "introducedBy": "JA-C242-tsukiau",
-        "introducedAt": 1345,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C243-KIN243-01",
-        "language": "japanese",
-        "introducedBy": "JA-C243-ryoushin",
-        "introducedAt": 1346,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C243-KIN243-02",
-        "language": "japanese",
-        "introducedBy": "JA-C243-sofu",
-        "introducedAt": 1347,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C243-KIN243-03",
-        "language": "japanese",
-        "introducedBy": "JA-C243-sobo",
-        "introducedAt": 1348,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C243-KIN243-04",
-        "language": "japanese",
-        "introducedBy": "JA-C243-kyoudai",
-        "introducedAt": 1349,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C243-KIN243-05",
-        "language": "japanese",
-        "introducedBy": "JA-C243-sodateru",
-        "introducedAt": 1350,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C244-MEET244-01",
-        "language": "japanese",
-        "introducedBy": "JA-C244-shiriai",
-        "introducedAt": 1351,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C245-JOY245-01",
-        "language": "japanese",
-        "introducedBy": "JA-C245-ureshii",
-        "introducedAt": 1356,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C245-JOY245-02",
-        "language": "japanese",
-        "introducedBy": "JA-C245-sabishii",
-        "introducedAt": 1357,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C245-JOY245-03",
-        "language": "japanese",
-        "introducedBy": "JA-C245-yorokobu",
-        "introducedAt": 1358,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C245-JOY245-04",
-        "language": "japanese",
-        "introducedBy": "JA-C245-warau",
-        "introducedAt": 1359,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C245-JOY245-05",
-        "language": "japanese",
-        "introducedBy": "JA-C245-egao",
-        "introducedAt": 1360,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C246-ANGER246-01",
-        "language": "japanese",
-        "introducedBy": "JA-C246-okoru",
-        "introducedAt": 1361,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C246-ANGER246-02",
-        "language": "japanese",
-        "introducedBy": "JA-C246-kenka",
-        "introducedAt": 1362,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C246-ANGER246-03",
-        "language": "japanese",
-        "introducedBy": "JA-C246-ayamaru",
-        "introducedAt": 1363,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C247-PRAISE247-02",
-        "language": "japanese",
-        "introducedBy": "JA-C247-shikaru",
-        "introducedAt": 1367,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-C247-PRAISE247-03",
-        "language": "japanese",
-        "introducedBy": "JA-C247-hazukashii",
-        "introducedAt": 1368,
-        "missed": [
-          "R2"
         ],
         "revisits": 3
       },
@@ -626939,17 +627430,157 @@
         "missed": [
           "R2"
         ],
+        "revisits": 4
+      },
+      {
+        "atom": "JA-LEX-C248-TRUST248-01",
+        "language": "japanese",
+        "introducedBy": "JA-C248-shinjiru",
+        "introducedAt": 1372,
+        "missed": [
+          "R3"
+        ],
         "revisits": 3
       },
       {
-        "atom": "JA-LEX-C247-PRAISE247-05",
+        "atom": "JA-LEX-C248-TRUST248-02",
         "language": "japanese",
-        "introducedBy": "JA-C247-yuuki",
-        "introducedAt": 1370,
+        "introducedBy": "JA-C248-uso",
+        "introducedAt": 1373,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C248-TRUST248-03",
+        "language": "japanese",
+        "introducedBy": "JA-C248-yakusoku",
+        "introducedAt": 1374,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C248-TRUST248-04",
+        "language": "japanese",
+        "introducedBy": "JA-C248-himitsu",
+        "introducedAt": 1375,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C248-TRUST248-05",
+        "language": "japanese",
+        "introducedBy": "JA-C248-utagau",
+        "introducedAt": 1376,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C249-HEART249-01",
+        "language": "japanese",
+        "introducedBy": "JA-C249-kokoro",
+        "introducedAt": 1377,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "JA-LEX-C249-HEART249-02",
+        "language": "japanese",
+        "introducedBy": "JA-C249-kimochi",
+        "introducedAt": 1378,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "JA-LEX-C251-NARU-01",
+        "language": "japanese",
+        "introducedBy": "JA-C251-naru",
+        "introducedAt": 1389,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-LEX-C252-SOREKARA-01",
+        "language": "japanese",
+        "introducedBy": "JA-C252-sorekara",
+        "introducedAt": 1393,
         "missed": [
           "R2"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C252-SOSHITE-01",
+        "language": "japanese",
+        "introducedBy": "JA-C252-soshite",
+        "introducedAt": 1394,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C253-NENJUU-01",
+        "language": "japanese",
+        "introducedBy": "JA-C253-nenjuu",
+        "introducedAt": 1400,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "JA-LEX-C254-IKEN-01",
+        "language": "japanese",
+        "introducedBy": "JA-C254-iken",
+        "introducedAt": 1408,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-LEX-C257-NIHONJUU-01",
+        "language": "japanese",
+        "introducedBy": "JA-C257-nihonjuu",
+        "introducedAt": 1422,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C257-NORIOKURERU-01",
+        "language": "japanese",
+        "introducedBy": "JA-C257-noriokureru",
+        "introducedAt": 1421,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C259-DOCHIRA-01",
+        "language": "japanese",
+        "introducedBy": "JA-C259-dochira",
+        "introducedAt": 1433,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "JA-LEX-CHICHI",
@@ -626959,7 +627590,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 7
+        "revisits": 10
       },
       {
         "atom": "JA-LEX-FUTATSU",
@@ -627009,7 +627640,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 6
+        "revisits": 8
       },
       {
         "atom": "JA-LEX-HITOTSU",
@@ -627029,7 +627660,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 17
+        "revisits": 19
       },
       {
         "atom": "JA-LEX-IMOUTO",
@@ -627079,7 +627710,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "JA-LEX-KOSHI",
@@ -627139,7 +627770,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 14
+        "revisits": 15
       },
       {
         "atom": "JA-LEX-ONAKA",
@@ -627189,7 +627820,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 13
+        "revisits": 14
       },
       {
         "atom": "JA-LEX-SENAKA",
@@ -627382,6 +628013,56 @@
         "revisits": 8
       },
       {
+        "atom": "JA-SCRIPT-KANJI-DASU-01",
+        "language": "japanese",
+        "introducedBy": "JA-W254-da-kanji",
+        "introducedAt": 1407,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-SCRIPT-KANJI-JIN-01",
+        "language": "japanese",
+        "introducedBy": "JA-W256-jin-kanji",
+        "introducedAt": 1418,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "JA-SCRIPT-KANJI-JUU-01",
+        "language": "japanese",
+        "introducedBy": "JA-W257-juu-kanji",
+        "introducedAt": 1423,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-SCRIPT-KANJI-NEN-01",
+        "language": "japanese",
+        "introducedBy": "JA-W253-nen-kanji",
+        "introducedAt": 1401,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-SCRIPT-KANJI-TSUKI-01",
+        "language": "japanese",
+        "introducedBy": "JA-W252-tsuki-kanji",
+        "introducedAt": 1396,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "JA-SCRIPT-NU-01",
         "language": "japanese",
         "introducedBy": "JA-W133-nu",
@@ -627490,6 +628171,16 @@
           "R4"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "JA-SKILL-READ-STORY-B1-01",
+        "language": "japanese",
+        "introducedBy": "JA-C253-kawa-no-hi",
+        "introducedAt": 1402,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "KA-ETYMON-C07-NUMBERS-6-10-03",
@@ -653001,11 +653692,11 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 1384,
+        "lessonCount": 1446,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 1321,
+        "atomsTaught": 1393,
         "atomsNeverRevisited": 0,
         "forwardReferences": 0
       },
@@ -653155,14 +653846,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 56867,
+      "atomsTaught": 56939,
       "atomsNeverRevisited": 2,
       "neverRevisitedPercent": 0,
       "missedByWindow": {
-        "R1": 1576,
-        "R2": 38401,
-        "R3": 29444,
-        "R4": 51017
+        "R1": 1585,
+        "R2": 38431,
+        "R3": 29484,
+        "R4": 51065
       },
       "forwardReferences": 788
     }
@@ -653237,14 +653928,14 @@
       {
         "language": "japanese",
         "script": "japanese",
-        "lessonCount": 1384,
-        "scriptLessons": 84,
-        "taughtGlyphs": 84,
-        "shownGlyphs": 84,
+        "lessonCount": 1446,
+        "scriptLessons": 91,
+        "taughtGlyphs": 90,
+        "shownGlyphs": 90,
         "neverTaughtGlyphs": 0,
         "violations": 0,
-        "exposureOnly": 34,
-        "exposureExemptedGlyphs": 42,
+        "exposureOnly": 40,
+        "exposureExemptedGlyphs": 48,
         "headwordsWithoutRomanization": 0
       },
       {
@@ -653396,8 +654087,8 @@
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
       "violations": 0,
-      "exposureOnly": 777,
-      "exposureExemptedGlyphs": 1749,
+      "exposureOnly": 783,
+      "exposureExemptedGlyphs": 1755,
       "headwordsWithoutRomanization": 3,
       "tracksWithUnknownScript": 0
     },
@@ -653471,7 +654162,7 @@
       },
       {
         "language": "japanese",
-        "wordLessons": 1215,
+        "wordLessons": 1234,
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
         "wordLessonsWithoutAnyEtymology": 0,
@@ -653591,7 +654282,7 @@
       }
     ],
     "summary": {
-      "wordLessons": 51663,
+      "wordLessons": 51682,
       "wordLessonsWithoutEtymologyHook": 0,
       "wordLessonsWithoutVisibleEtymology": 0,
       "wordLessonsWithoutAnyEtymology": 0,
@@ -662139,6 +662830,15 @@
             "stage": "connected-composition",
             "level": "A1",
             "sequence": 8770
+          },
+          {
+            "language": "japanese",
+            "lessonId": "JA-W261-six-lines",
+            "blockIndex": 2,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "B1",
+            "sequence": 15600
           }
         ],
         "validEvidence": [
@@ -662204,6 +662904,15 @@
             "stage": "connected-composition",
             "level": "A1",
             "sequence": 8770
+          },
+          {
+            "language": "japanese",
+            "lessonId": "JA-W261-six-lines",
+            "blockIndex": 2,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "B1",
+            "sequence": 15600
           }
         ],
         "defects": [],
@@ -675350,7 +676059,7 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 23,
       "tracksCompleteAtPreA1": 23,
-      "evidenceBlocks": 995,
+      "evidenceBlocks": 996,
       "invalidEvidenceBlocks": 0,
       "missingTrackLevelStages": 17
     }
@@ -675869,8 +676578,8 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 1384,
-        "atomMeasurableLessons": 1384,
+        "lessonCount": 1446,
+        "atomMeasurableLessons": 1446,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -675885,24 +676594,24 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 0,
-        "atomsTaught": 1321,
+        "atomsTaught": 1393,
         "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 2398,
+        "reinforcementWindowMisses": 2525,
         "reinforcementMissesByWindow": {
-          "R1": 1,
-          "R2": 773,
-          "R3": 590,
-          "R4": 1034
+          "R1": 10,
+          "R2": 803,
+          "R3": 630,
+          "R4": 1082
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 94,
+        "writingPracticeLessons": 101,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
           {
             "language": "japanese",
             "kind": "reinforcement",
-            "count": 2398,
+            "count": 2525,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           }
@@ -675910,7 +676619,7 @@
         "next": {
           "language": "japanese",
           "kind": "reinforcement",
-          "count": 2398,
+          "count": 2525,
           "unit": "missed window(s)",
           "detail": "add retrieval at the expanding R1-R4 intervals"
         }
@@ -677166,7 +677875,7 @@
       {
         "language": "japanese",
         "kind": "reinforcement",
-        "count": 2398,
+        "count": 2525,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -677534,22 +678243,17 @@
       },
       {
         "language": "japanese",
-        "touches": "A2",
+        "touches": "B1",
         "attained": "A2",
         "inProgressAt": "B1",
         "blockers": [
           {
-            "criterion": "spine-nodes",
-            "detail": "5 of 5 B1 spine node(s) unrealized: SPINE-NARRATE-EVENTS, SPINE-GIVE-REASONS, SPINE-HANDLE-TRAVEL, SPINE-DESCRIBE-EXPERIENCE…",
-            "shortfall": 5
-          },
-          {
             "criterion": "vocabulary",
-            "detail": "teaches 1214 distinct headwords at or below B1, against 2500",
-            "shortfall": 1286
+            "detail": "teaches 1233 distinct headwords at or below B1, against 2500",
+            "shortfall": 1267
           }
         ],
-        "vocabulary": 1214
+        "vocabulary": 1233
       },
       {
         "language": "kannada",
@@ -677839,7 +678543,7 @@
       }
     ],
     "summary": {
-      "tracksOverstating": 4,
+      "tracksOverstating": 5,
       "tracksWithAnyLevel": 22,
       "attainedByLevel": {
         "pre-A1": 0,
@@ -677854,12 +678558,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 57249,
-    "voice": 54639,
-    "sight": 1011,
-    "pen": 1599,
-    "coreVoice": 55210,
-    "lessonsWithWritingSegments": 1064,
+    "totalLessons": 57311,
+    "voice": 54687,
+    "sight": 1018,
+    "pen": 1606,
+    "coreVoice": 55258,
+    "lessonsWithWritingSegments": 1065,
     "drivablePercent": 96,
     "tracks": [
       {
@@ -735928,13 +736632,13 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 1384,
-        "voice": 1281,
-        "sight": 17,
-        "pen": 86,
-        "coreVoice": 1290,
+        "lessonCount": 1446,
+        "voice": 1329,
+        "sight": 24,
+        "pen": 93,
+        "coreVoice": 1338,
         "drivablePercent": 93,
-        "drivablePrefixTotal": 1186,
+        "drivablePrefixTotal": 1226,
         "chapters": [
           {
             "language": "japanese",
@@ -739712,6 +740416,200 @@
             ],
             "drivablePrefix": 7,
             "firstNonVoiceLesson": null,
+            "unstartable": null
+          },
+          {
+            "language": "japanese",
+            "chapter": 250,
+            "lessonCount": 3,
+            "voice": 3,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 3,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": null,
+            "unstartable": null
+          },
+          {
+            "language": "japanese",
+            "chapter": 251,
+            "lessonCount": 4,
+            "voice": 4,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null,
+            "unstartable": null
+          },
+          {
+            "language": "japanese",
+            "chapter": 252,
+            "lessonCount": 7,
+            "voice": 5,
+            "sight": 1,
+            "pen": 1,
+            "coreVoice": 5,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": "JA-C252-tsukihi",
+            "unstartable": null
+          },
+          {
+            "language": "japanese",
+            "chapter": 253,
+            "lessonCount": 6,
+            "voice": 3,
+            "sight": 2,
+            "pen": 1,
+            "coreVoice": 3,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": "JA-C253-nenjuu",
+            "unstartable": null
+          },
+          {
+            "language": "japanese",
+            "chapter": 254,
+            "lessonCount": 6,
+            "voice": 4,
+            "sight": 1,
+            "pen": 1,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": "JA-C254-iidasu",
+            "unstartable": null
+          },
+          {
+            "language": "japanese",
+            "chapter": 255,
+            "lessonCount": 4,
+            "voice": 4,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null,
+            "unstartable": null
+          },
+          {
+            "language": "japanese",
+            "chapter": 256,
+            "lessonCount": 6,
+            "voice": 4,
+            "sight": 1,
+            "pen": 1,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": "JA-C256-nihonjin",
+            "unstartable": null
+          },
+          {
+            "language": "japanese",
+            "chapter": 257,
+            "lessonCount": 5,
+            "voice": 3,
+            "sight": 1,
+            "pen": 1,
+            "coreVoice": 3,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": "JA-C257-nihonjuu",
+            "unstartable": null
+          },
+          {
+            "language": "japanese",
+            "chapter": 258,
+            "lessonCount": 7,
+            "voice": 5,
+            "sight": 1,
+            "pen": 1,
+            "coreVoice": 5,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": "JA-C258-imamade",
+            "unstartable": null
+          },
+          {
+            "language": "japanese",
+            "chapter": 259,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null,
+            "unstartable": null
+          },
+          {
+            "language": "japanese",
+            "chapter": 260,
+            "lessonCount": 4,
+            "voice": 4,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null,
+            "unstartable": null
+          },
+          {
+            "language": "japanese",
+            "chapter": 261,
+            "lessonCount": 5,
+            "voice": 4,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": "JA-W261-six-lines",
             "unstartable": null
           }
         ]
@@ -848865,23 +849763,23 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 34128,
-    "underspent": 31671,
-    "neverSpent": 24169,
+    "roots": 34130,
+    "underspent": 31669,
+    "neverSpent": 24167,
     "payoffDistribution": {
-      "0": 24169,
-      "1": 5359,
-      "2": 2143,
-      "3": 980,
+      "0": 24167,
+      "1": 5357,
+      "2": 2145,
+      "3": 978,
       "4": 538,
-      "5": 313,
-      "6": 184,
-      "7": 127,
-      "8": 73,
-      "9": 50,
+      "5": 316,
+      "6": 187,
+      "7": 125,
+      "8": 74,
+      "9": 51,
       "10": 31,
-      "11": 30,
-      "12": 24,
+      "11": 29,
+      "12": 25,
       "13": 14,
       "14": 12,
       "15": 10,
@@ -848914,7 +849812,7 @@
     "underspentPercent": 93
   },
   "infoDump": {
-    "lessons": 57249,
+    "lessons": 57311,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -848922,11 +849820,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 57249,
-    "measuredLessons": 51485,
-    "idiomMeasuredLessons": 51485,
-    "senseMeasuredLessons": 51486,
-    "cultureClaimMeasuredLessons": 51485,
+    "lessons": 57311,
+    "measuredLessons": 51547,
+    "idiomMeasuredLessons": 51547,
+    "senseMeasuredLessons": 51548,
+    "cultureClaimMeasuredLessons": 51547,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -848935,18 +849833,18 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 56348,
-    "usesBeforeIntroduction": 110094,
-    "technicalUsesBeforeIntroduction": 19384,
-    "technicalLessons": 14770,
+    "lessonsUsingTerms": 56399,
+    "usesBeforeIntroduction": 110195,
+    "technicalUsesBeforeIntroduction": 19413,
+    "technicalLessons": 14791,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 6575
+        "lessons": 6586
       },
       {
         "term": "noun",
-        "lessons": 5498
+        "lessons": 5502
       },
       {
         "term": "participle",
@@ -848954,11 +849852,11 @@
       },
       {
         "term": "adjective",
-        "lessons": 997
+        "lessons": 1003
       },
       {
         "term": "case",
-        "lessons": 561
+        "lessons": 565
       },
       {
         "term": "declension",
@@ -848967,14 +849865,14 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 57249,
+    "lessonsScanned": 57311,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 11333,
+    "filesScanned": 11345,
     "mainCharacters": 163,
-    "scriptCharacters": 856,
+    "scriptCharacters": 859,
     "gaps": 0
   }
 }
