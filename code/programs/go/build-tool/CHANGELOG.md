@@ -125,16 +125,21 @@ All notable changes to the Go build tool will be documented in this file.
     Cargo name or text: the discovered package at that path is the trigger.
     A crate that is not a package root (an orphan, or one nested in another
     package or in the dependent) has its own `[dependencies]` and
-    `[build-dependencies]` followed recursively (visited set, depth cap 16),
-    and a containing package is a trigger too. An uncovered crate must be
+    `[build-dependencies]` followed recursively (depth cap 16), and a
+    containing package is a trigger too. Package roots are followed the same
+    way, because the build graph records only a Rust or WASM package's
+    top-level `[dependencies]`, not its target or build dependencies or a
+    native extension's `Cargo.toml`. Each crate's closure is cached, and a
+    cycle among these tables is refused, as Cargo refuses it. An uncovered crate must be
     listed exactly in `code/BUILD-EXEMPTIONS`. This is how `engram-app`
     reaches `engram-core` through `engram-core-wasm`. Anything else
     unresolvable (a case variant, a crate under `vendor/` or outside
     `code/`, a missing, absolute or empty path) is an error. `-language` runs
     resolve against every discovered package (`ResolveWithTestTriggersAgainst`).
   - `[patch.<source>]` tables are triggers. `[replace]` is refused, as is a
+    `git` source that is not `https://` or `ssh://`, and a
     `.cargo/config(.toml)` from the package up to the repository root that
-    sets `paths` or `[patch]`.
+    sets `paths`, `[patch]` or `[source]`.
   - The triggers stay out of the graph and are applied one hop past the build
     closure, before prerequisite expansion (`withDevDependents`). A
     dev-dependent's own dependents are not selected, and prerequisites
