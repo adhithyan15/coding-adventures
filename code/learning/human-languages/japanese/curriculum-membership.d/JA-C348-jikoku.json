@@ -1,0 +1,11 @@
+{
+  "id": "JA-C348-jikoku",
+  "pathSegment": "JA-PATH-348-KESSEKI348",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-348-KESSEKI348",
+      "order": 3
+    }
+  ]
+}

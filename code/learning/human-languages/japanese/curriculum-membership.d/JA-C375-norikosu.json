@@ -1,0 +1,11 @@
+{
+  "id": "JA-C375-norikosu",
+  "pathSegment": "JA-PATH-375-SHUUDEN375",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-375-SHUUDEN375",
+      "order": 3
+    }
+  ]
+}

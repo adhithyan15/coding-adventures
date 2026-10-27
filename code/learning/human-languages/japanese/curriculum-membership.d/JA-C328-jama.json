@@ -1,0 +1,11 @@
+{
+  "id": "JA-C328-jama",
+  "pathSegment": "JA-PATH-328-KOUKYOU328",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-328-KOUKYOU328",
+      "order": 1
+    }
+  ]
+}

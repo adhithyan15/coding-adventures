@@ -1,0 +1,11 @@
+{
+  "id": "JA-C264-butsukeru",
+  "pathSegment": "JA-PATH-264-KOROBU264",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-264-KOROBU264",
+      "order": 1
+    }
+  ]
+}

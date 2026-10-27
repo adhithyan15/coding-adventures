@@ -1,0 +1,11 @@
+{
+  "id": "JA-C402-meisho",
+  "pathSegment": "JA-PATH-402-KANKOU402",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-402-KANKOU402",
+      "order": 2
+    }
+  ]
+}

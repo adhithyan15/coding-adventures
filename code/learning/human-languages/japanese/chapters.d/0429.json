@@ -1,0 +1,19 @@
+{
+  "chapter": 429,
+  "title": "Feeling Down",
+  "label": "ch:ja-feeling-down",
+  "canDo": "I can say I am disappointed and comfort a friend.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C429-nagusameru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can say I am disappointed and comfort a friend.",
+    "assesses": [
+      "JA-LEX-C429-DOWN429-03",
+      "JA-LEX-C429-DOWN429-04",
+      "JA-LEX-C429-DOWN429-05"
+    ]
+  }
+}

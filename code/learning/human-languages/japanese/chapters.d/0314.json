@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "Everything Has Changed",
+  "label": "ch:ja-everything-has-changed",
+  "canDo": "I can say how a place has changed over time.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C314-omoitsuku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can say how a place has changed over time.",
+    "assesses": [
+      "JA-LEX-C314-SUKKARI314-03",
+      "JA-LEX-C314-SUKKARI314-04",
+      "JA-LEX-C314-SUKKARI314-05"
+    ]
+  }
+}

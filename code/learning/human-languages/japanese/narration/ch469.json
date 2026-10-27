@@ -1,0 +1,804 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 469,
+  "title": "Instruments",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d9ba04f63c1c3d96",
+  "lessons": [
+    {
+      "id": "JA-C469-gakki",
+      "sequence": 27220,
+      "title": "がっき (gakki) — a musical instrument",
+      "headword": "がっき",
+      "romanization": "gakki",
+      "gloss": "a musical instrument",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ad360a6a413dec0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a masterpiece, then the Japanese for to assemble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: がっき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "がっき — gakki — \"a musical instrument\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あねは がっきが じょうずです。 — ane wa gakki ga jōzu desu — \"My elder sister is good at instruments.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "がっき (gakki) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ga, \"music\" (Middle Chinese ngaewk) and ki, \"instrument\" (khijH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gakki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gakki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gakki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gakki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ane wa gakki ga jōzu desu — My elder sister is good at instruments.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ane wa gakki ga jōzu desu* — My elder sister is good at instruments.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a masterpiece, then the Japanese for to assemble, then say gakki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a masterpiece, then the Japanese for to assemble, then say *gakki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does がっき (gakki) mean? (\"A musical instrument\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C469-gakki-type",
+              "prompt": "Say the Japanese for 'a musical instrument'.",
+              "assesses": [
+                "JA-LEX-C469-INSTR469-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "がっき",
+                "gakki"
+              ],
+              "feedback": {
+                "correct": "Right: がっき (gakki) is 'a musical instrument'.",
+                "incorrect": "'A musical instrument' is がっき (gakki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C469-suzu",
+      "sequence": 27230,
+      "title": "すず (suzu) — a small bell",
+      "headword": "すず",
+      "romanization": "suzu",
+      "gloss": "a small bell",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2fcf285bfdf632c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to assemble, then the Japanese for a musical instrument."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すず",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すず — suzu — \"a small bell\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ねこの くびに すずが あります。 — neko no kubi ni suzu ga arimasu — \"The cat has a little bell on its neck.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すず (suzu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suzu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suzu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suzu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suzu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neko no kubi ni suzu ga arimasu — The cat has a little bell on its neck.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neko no kubi ni suzu ga arimasu* — The cat has a little bell on its neck.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to assemble, then the Japanese for a musical instrument, then say suzu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to assemble, then the Japanese for a musical instrument, then say *suzu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すず (suzu) mean? (\"A small bell\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C469-suzu-type",
+              "prompt": "Say the Japanese for 'a small bell'.",
+              "assesses": [
+                "JA-LEX-C469-INSTR469-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すず",
+                "suzu"
+              ],
+              "feedback": {
+                "correct": "Right: すず (suzu) is 'a small bell'.",
+                "incorrect": "'A small bell' is すず (suzu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C469-tataku",
+      "sequence": 27240,
+      "title": "たたく (tataku) — to beat; to tap",
+      "headword": "たたく",
+      "romanization": "tataku",
+      "gloss": "to beat; to tap",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:626aaa49c1207695",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a musical instrument, then the Japanese for a small bell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たたく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たたく — tataku — \"to beat; to tap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こどもが たいこを たたいています。 — kodomo ga taiko o tataite imasu — \"The children are beating a drum.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite たたきます, tatakimasu; a godan verb. Past (polite): おとうとが たいこを たたきました。, otōto ga taiko o tatakimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たたく (tataku) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tataku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tataku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tataku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tataku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kodomo ga taiko o tataite imasu — The children are beating a drum.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kodomo ga taiko o tataite imasu* — The children are beating a drum.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a musical instrument, then the Japanese for a small bell, then say tataku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a musical instrument, then the Japanese for a small bell, then say *tataku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たたく (tataku) mean? (\"To beat; to tap\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C469-tataku-type",
+              "prompt": "Say the Japanese for 'to beat a drum'.",
+              "assesses": [
+                "JA-LEX-C469-INSTR469-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たたく",
+                "tataku"
+              ],
+              "feedback": {
+                "correct": "Right: たたく (tataku) is 'to beat; to tap'.",
+                "incorrect": "'To beat a drum' is たたく (tataku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C469-kanaderu",
+      "sequence": 27250,
+      "title": "かなでる (kanaderu) — to play music",
+      "headword": "かなでる",
+      "romanization": "kanaderu",
+      "gloss": "to play music",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa8e8fd31e795c8a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a small bell, then the Japanese for to beat a drum."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かなでる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かなでる — kanaderu — \"to play music\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かのじょは ふえで うたを かなでました。 — kanojo wa fue de uta o kanademashita — \"She played a song on the flute.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite かなでます, kanademasu; an ichidan verb. Past (polite): せんせいが ふえを かなでました。, sensei ga fue o kanademashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かなでる (kanaderu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanaderu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanaderu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanaderu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanaderu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanojo wa fue de uta o kanademashita — She played a song on the flute.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanojo wa fue de uta o kanademashita* — She played a song on the flute.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a small bell, then the Japanese for to beat a drum, then say kanaderu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a small bell, then the Japanese for to beat a drum, then say *kanaderu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かなでる (kanaderu) mean? (\"To play music\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C469-kanaderu-type",
+              "prompt": "Say the Japanese for 'to play music'.",
+              "assesses": [
+                "JA-LEX-C469-INSTR469-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かなでる",
+                "kanaderu"
+              ],
+              "feedback": {
+                "correct": "Right: かなでる (kanaderu) is 'to play music'.",
+                "incorrect": "'To play music' is かなでる (kanaderu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C469-neiro",
+      "sequence": 27260,
+      "title": "ねいろ (neiro) — the tone of an instrument",
+      "headword": "ねいろ",
+      "romanization": "neiro",
+      "gloss": "the tone of an instrument",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:404a6894a7f92471",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to beat a drum, then the Japanese for to play music."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ねいろ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねいろ — neiro — \"the tone of an instrument\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この ふえは ねいろが きれいです。 — kono fue wa neiro ga kirei desu — \"This flute has a beautiful tone.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねいろ (neiro) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: ne, \"sound\" and iro, \"colour\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neiro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neiro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neiro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neiro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono fue wa neiro ga kirei desu — This flute has a beautiful tone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono fue wa neiro ga kirei desu* — This flute has a beautiful tone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to beat a drum, then the Japanese for to play music, then say neiro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to beat a drum, then the Japanese for to play music, then say *neiro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ねいろ (neiro) mean? (\"The tone of an instrument\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C469-neiro-type",
+              "prompt": "Say the Japanese for 'the tone of an instrument'.",
+              "assesses": [
+                "JA-LEX-C469-INSTR469-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ねいろ",
+                "neiro"
+              ],
+              "feedback": {
+                "correct": "Right: ねいろ (neiro) is 'the tone of an instrument'.",
+                "incorrect": "'The tone of an instrument' is ねいろ (neiro)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

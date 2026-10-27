@@ -1,0 +1,11 @@
+{
+  "id": "JA-C479-mimamoru",
+  "pathSegment": "JA-PATH-479-BOND479",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-479-BOND479",
+      "order": 3
+    }
+  ]
+}

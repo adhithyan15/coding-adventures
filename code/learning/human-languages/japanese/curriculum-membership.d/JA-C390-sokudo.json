@@ -1,0 +1,11 @@
+{
+  "id": "JA-C390-sokudo",
+  "pathSegment": "JA-PATH-390-KOUSOKU390",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-390-KOUSOKU390",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C484-shibaru",
+    "language": "japanese",
+    "chapter": 484,
+    "sequence": 28240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25bd88f0239d05dd"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C399-mezameru",
+  "pathSegment": "JA-PATH-399-MAKURA399",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-399-MAKURA399",
+      "order": 3
+    }
+  ]
+}

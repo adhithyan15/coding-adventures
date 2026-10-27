@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C378-tachiagaru",
+    "language": "japanese",
+    "chapter": 378,
+    "sequence": 22350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6f5071627a70556"
+  },
+  "findings": []
+}

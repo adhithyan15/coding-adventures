@@ -2,6 +2,25 @@
 
 ## [Unreleased]
 
+### Added — `KEYWORD_LITERAL_PROPS` and `is_keyword_literal` (E6 F1)
+
+A bare NAME prop value parses as `LayoutPropValue::Keyword`. Nothing in the
+IR says whether it is an enum value (`axis: both`) or a variable the emitters
+read (`content: row` becomes React `{row}`).
+
+- `KEYWORD_LITERAL_PROPS` lists the `(tag, prop)` positions where it is an
+  enum value on every backend: `Text a11y-role`, `Box`/`Text
+  table-cell-role`, `HostScroll axis`, `HostNavigationSplit collapse`,
+  `Path kind`, `HostTable dir` and `HostLink target`.
+- `is_keyword_literal` adds `true`/`false` in any position.
+- The package resolver uses the table to decide which bare NAMEs in a
+  package component must name one of its slots.
+- Literal positions are listed rather than identifier ones so that an
+  omission fails closed. A missing entry is a compile error naming the prop,
+  not a silent read of the consumer's scope.
+- `mosaic-package-artifact-builder` builds every entry on React, SwiftUI
+  and HTML to prove it.
+
 ### Added — `HostNavigationSplit` requires `pane-title` (UI29-6, #15481)
 
 UI29-6 §4.1 makes the prop required, and this is where that is enforced rather

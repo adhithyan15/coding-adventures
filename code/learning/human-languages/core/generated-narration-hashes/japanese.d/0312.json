@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:cd4d5997c47f5ea9",
+  "lessonIds": [
+    "JA-C312-rekishi",
+    "JA-C312-jidai",
+    "JA-C312-kako",
+    "JA-C312-izen",
+    "JA-C312-touji"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch312.txt",
+  "json": "japanese/narration/ch312.json",
+  "textHash": "fnv1a64:9198acc020c4f0a8",
+  "jsonHash": "fnv1a64:aedf98cf3f2610f0",
+  "findings": []
+}

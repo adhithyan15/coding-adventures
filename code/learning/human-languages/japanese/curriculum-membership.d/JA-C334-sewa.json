@@ -1,0 +1,11 @@
+{
+  "id": "JA-C334-sewa",
+  "pathSegment": "JA-PATH-334-FUKUSHI334",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-334-FUKUSHI334",
+      "order": 3
+    }
+  ]
+}

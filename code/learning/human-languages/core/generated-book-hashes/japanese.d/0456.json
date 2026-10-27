@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:9bbdf85f2cd09090",
+  "lessonIds": [
+    "JA-C456-kyuuryou",
+    "JA-C456-kasegu",
+    "JA-C456-kyuuka",
+    "JA-C456-yatou",
+    "JA-C456-shokuba"
+  ],
+  "tex": "japanese/book/chapters/ch456-pay-and-time-off.tex"
+}

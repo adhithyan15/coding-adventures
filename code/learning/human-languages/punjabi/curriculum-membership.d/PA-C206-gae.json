@@ -1,0 +1,11 @@
+{
+  "id": "PA-C206-gae",
+  "pathSegment": "PA-PATH-206-A2-GAE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-206-A2-GAE",
+      "order": 1
+    }
+  ]
+}

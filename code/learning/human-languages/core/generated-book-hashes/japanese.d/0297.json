@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:f20bf6423fe9346e",
+  "lessonIds": [
+    "JA-C297-oni",
+    "JA-C297-omen",
+    "JA-C297-kowagaru",
+    "JA-C297-oidasu",
+    "JA-C297-mezurashii"
+  ],
+  "tex": "japanese/book/chapters/ch297-the-ogre-at-the-door.tex"
+}

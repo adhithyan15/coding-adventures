@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C289-fuufu",
+    "language": "japanese",
+    "chapter": 289,
+    "sequence": 17430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c1ffa066212fc34"
+  },
+  "findings": []
+}

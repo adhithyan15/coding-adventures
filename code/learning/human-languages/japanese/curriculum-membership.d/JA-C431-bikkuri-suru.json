@@ -1,0 +1,11 @@
+{
+  "id": "JA-C431-bikkuri-suru",
+  "pathSegment": "JA-PATH-431-SHOCK431",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-431-SHOCK431",
+      "order": 1
+    }
+  ]
+}

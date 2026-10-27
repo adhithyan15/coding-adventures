@@ -1,0 +1,11 @@
+{
+  "id": "JA-C377-houmen",
+  "pathSegment": "JA-PATH-377-CHIEN377",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-377-CHIEN377",
+      "order": 3
+    }
+  ]
+}

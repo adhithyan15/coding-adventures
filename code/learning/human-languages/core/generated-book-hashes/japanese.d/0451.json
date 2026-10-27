@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:7c365c8fa228cef1",
+  "lessonIds": [
+    "JA-C451-shukkin-suru",
+    "JA-C451-tsuukin-suru",
+    "JA-C451-chikoku-suru",
+    "JA-C451-kyuukei-suru",
+    "JA-C451-zangyou-suru"
+  ],
+  "tex": "japanese/book/chapters/ch451-off-to-work.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:50a2b45d2d9f2ba9",
+  "lessonIds": [
+    "JA-C336-kankyou",
+    "JA-C336-shizen",
+    "JA-C336-chikyuu",
+    "JA-C336-kuuki",
+    "JA-C336-osen"
+  ],
+  "tex": "japanese/book/chapters/ch336-the-environment.tex"
+}

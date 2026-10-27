@@ -1,0 +1,11 @@
+{
+  "id": "JA-C462-hikiwake",
+  "pathSegment": "JA-PATH-462-CONTEST462",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-462-CONTEST462",
+      "order": 1
+    }
+  ]
+}

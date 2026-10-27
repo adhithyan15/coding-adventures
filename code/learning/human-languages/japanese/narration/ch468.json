@@ -1,0 +1,803 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 468,
+  "title": "Works of Art",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9a7be1ba8694bbe0",
+  "lessons": [
+    {
+      "id": "JA-C468-sakuhin",
+      "sequence": 27170,
+      "title": "さくひん (sakuhin) — a work of art; a piece",
+      "headword": "さくひん",
+      "romanization": "sakuhin",
+      "gloss": "a work of art; a piece",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00c15698b3851390",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for embroidery, then the Japanese for to whittle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さくひん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さくひん — sakuhin — \"a work of art; a piece\"."
+            },
+            {
+              "kind": "speech",
+              "text": "これは そふの さくひんです。 — kore wa sofu no sakuhin desu — \"This is a work by my grandfather.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さくひん (sakuhin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are saku, \"make\" (Middle Chinese tsak) and hin, \"article\" (phimX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakuhin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakuhin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakuhin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakuhin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kore wa sofu no sakuhin desu — This is a work by my grandfather.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kore wa sofu no sakuhin desu* — This is a work by my grandfather.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for embroidery, then the Japanese for to whittle, then say sakuhin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for embroidery, then the Japanese for to whittle, then say *sakuhin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さくひん (sakuhin) mean? (\"A work of art; a piece\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C468-sakuhin-type",
+              "prompt": "Say the Japanese for 'a work of art'.",
+              "assesses": [
+                "JA-LEX-C468-WORKS468-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さくひん",
+                "sakuhin"
+              ],
+              "feedback": {
+                "correct": "Right: さくひん (sakuhin) is 'a work of art; a piece'.",
+                "incorrect": "'A work of art' is さくひん (sakuhin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C468-tenrankai",
+      "sequence": 27180,
+      "title": "てんらんかい (tenrankai) — an exhibition",
+      "headword": "てんらんかい",
+      "romanization": "tenrankai",
+      "gloss": "an exhibition",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:804910d7da239952",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to whittle, then the Japanese for a work of art."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: てんらんかい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てんらんかい — tenrankai — \"an exhibition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "びじゅつかんで てんらんかいを みました。 — bijutsukan de tenrankai o mimashita — \"I saw an exhibition at the art museum.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てんらんかい (tenrankai) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ten, \"unfold\" (Middle Chinese trjenX), ran, \"see\" (lamX), and kai, \"meeting\" (hwajH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tenrankai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tenrankai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tenrankai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tenrankai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bijutsukan de tenrankai o mimashita — I saw an exhibition at the art museum.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bijutsukan de tenrankai o mimashita* — I saw an exhibition at the art museum.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to whittle, then the Japanese for a work of art, then say tenrankai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to whittle, then the Japanese for a work of art, then say *tenrankai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does てんらんかい (tenrankai) mean? (\"An exhibition\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C468-tenrankai-type",
+              "prompt": "Say the Japanese for 'an exhibition'.",
+              "assesses": [
+                "JA-LEX-C468-WORKS468-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "てんらんかい",
+                "tenrankai"
+              ],
+              "feedback": {
+                "correct": "Right: てんらんかい (tenrankai) is 'an exhibition'.",
+                "incorrect": "'An exhibition' is てんらんかい (tenrankai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C468-choukoku",
+      "sequence": 27190,
+      "title": "ちょうこく (chōkoku) — a sculpture; carving",
+      "headword": "ちょうこく",
+      "romanization": "chōkoku",
+      "gloss": "a sculpture; carving",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cabc5dfb430632c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a work of art, then the Japanese for an exhibition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちょうこく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちょうこく — chōkoku — \"a sculpture; carving\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こうえんに いしの ちょうこくが あります。 — kōen ni ishi no chōkoku ga arimasu — \"There is a stone sculpture in the park.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちょうこく (chōkoku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chō, \"carve\" (Middle Chinese tew) and koku, \"time\" (khok) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōkoku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōkoku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōkoku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōkoku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōen ni ishi no chōkoku ga arimasu — There is a stone sculpture in the park.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōen ni ishi no chōkoku ga arimasu* — There is a stone sculpture in the park.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a work of art, then the Japanese for an exhibition, then say chōkoku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a work of art, then the Japanese for an exhibition, then say *chōkoku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちょうこく (chōkoku) mean? (\"A sculpture; carving\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C468-choukoku-type",
+              "prompt": "Say the Japanese for 'a sculpture'.",
+              "assesses": [
+                "JA-LEX-C468-WORKS468-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちょうこく",
+                "chōkoku",
+                "choukoku",
+                "chookoku",
+                "chokoku"
+              ],
+              "feedback": {
+                "correct": "Right: ちょうこく (chōkoku) is 'a sculpture; carving'.",
+                "incorrect": "'A sculpture' is ちょうこく (chōkoku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C468-kessaku",
+      "sequence": 27200,
+      "title": "けっさく (kessaku) — a masterpiece",
+      "headword": "けっさく",
+      "romanization": "kessaku",
+      "gloss": "a masterpiece",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4816b839d62bbcef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an exhibition, then the Japanese for a sculpture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けっさく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けっさく — kessaku — \"a masterpiece\"."
+            },
+            {
+              "kind": "speech",
+              "text": "これは かれの けっさくです。 — kore wa kare no kessaku desu — \"This is his masterpiece.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けっさく (kessaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ke, \"excellence\" (Middle Chinese gjet) and saku, \"make\" (tsak) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kessaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kessaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kessaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kessaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kore wa kare no kessaku desu — This is his masterpiece.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kore wa kare no kessaku desu* — This is his masterpiece.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an exhibition, then the Japanese for a sculpture, then say kessaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an exhibition, then the Japanese for a sculpture, then say *kessaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けっさく (kessaku) mean? (\"A masterpiece\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C468-kessaku-type",
+              "prompt": "Say the Japanese for 'a masterpiece'.",
+              "assesses": [
+                "JA-LEX-C468-WORKS468-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けっさく",
+                "kessaku"
+              ],
+              "feedback": {
+                "correct": "Right: けっさく (kessaku) is 'a masterpiece'.",
+                "incorrect": "'A masterpiece' is けっさく (kessaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C468-kumitateru",
+      "sequence": 27210,
+      "title": "くみたてる (kumitateru) — to assemble; to put together",
+      "headword": "くみたてる",
+      "romanization": "kumitateru",
+      "gloss": "to assemble; to put together",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94eef6e048c885ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a sculpture, then the Japanese for a masterpiece."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: くみたてる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くみたてる — kumitateru — \"to assemble; to put together\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは たなを くみたてています。 — chichi wa tana o kumitatete imasu — \"My father is putting a shelf together.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite くみたてます, kumitatemasu; an ichidan verb. Past (polite): だいくが いすを くみたてました。, daiku ga isu o kumitatemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くみたてる (kumitateru) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: kumi, \"putting together (kumu)\" and tateru, \"to set up\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumitateru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumitateru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumitateru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumitateru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi wa tana o kumitatete imasu — My father is putting a shelf together.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi wa tana o kumitatete imasu* — My father is putting a shelf together.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a sculpture, then the Japanese for a masterpiece, then say kumitateru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a sculpture, then the Japanese for a masterpiece, then say *kumitateru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does くみたてる (kumitateru) mean? (\"To assemble; to put together\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C468-kumitateru-type",
+              "prompt": "Say the Japanese for 'to assemble'.",
+              "assesses": [
+                "JA-LEX-C468-WORKS468-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "くみたてる",
+                "kumitateru"
+              ],
+              "feedback": {
+                "correct": "Right: くみたてる (kumitateru) is 'to assemble; to put together'.",
+                "incorrect": "'To assemble' is くみたてる (kumitateru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

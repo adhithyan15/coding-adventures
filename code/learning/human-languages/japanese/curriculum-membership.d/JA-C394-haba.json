@@ -1,0 +1,11 @@
+{
+  "id": "JA-C394-haba",
+  "pathSegment": "JA-PATH-394-SAKAMICHI394",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-394-SAKAMICHI394",
+      "order": 2
+    }
+  ]
+}

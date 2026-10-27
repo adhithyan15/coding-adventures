@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-460-GOAL460",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "JA-EXT-460-GOAL460"
+  ],
+  "after": []
+}

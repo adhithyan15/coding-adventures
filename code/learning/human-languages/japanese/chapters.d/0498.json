@@ -1,0 +1,19 @@
+{
+  "chapter": 498,
+  "title": "A Day Off",
+  "label": "ch:ja-a-day-off",
+  "canDo": "I can talk about rest and holidays.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C498-yuukyuu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 498: I can talk about rest and holidays.",
+    "assesses": [
+      "JA-LEX-C498-REST498-03",
+      "JA-LEX-C498-REST498-04",
+      "JA-LEX-C498-REST498-05"
+    ]
+  }
+}

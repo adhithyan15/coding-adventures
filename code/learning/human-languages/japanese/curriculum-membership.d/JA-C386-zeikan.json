@@ -1,0 +1,11 @@
+{
+  "id": "JA-C386-zeikan",
+  "pathSegment": "JA-PATH-386-ZEIKAN386",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-386-ZEIKAN386",
+      "order": 1
+    }
+  ]
+}

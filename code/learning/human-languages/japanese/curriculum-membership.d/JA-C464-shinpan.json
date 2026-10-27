@@ -1,0 +1,11 @@
+{
+  "id": "JA-C464-shinpan",
+  "pathSegment": "JA-PATH-464-CROWD464",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-464-CROWD464",
+      "order": 1
+    }
+  ]
+}

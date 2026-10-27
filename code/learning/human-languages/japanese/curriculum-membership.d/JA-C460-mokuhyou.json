@@ -1,0 +1,11 @@
+{
+  "id": "JA-C460-mokuhyou",
+  "pathSegment": "JA-PATH-460-GOAL460",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-460-GOAL460",
+      "order": 0
+    }
+  ]
+}

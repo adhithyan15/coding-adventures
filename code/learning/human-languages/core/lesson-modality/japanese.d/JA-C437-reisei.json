@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C437-reisei",
+    "language": "japanese",
+    "chapter": 437,
+    "sequence": 25570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e61b084e3033f32"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "Filling In a Form",
+  "label": "ch:ja-filling-in-a-form",
+  "canDo": "I can fill in a form at a counter.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C418-hinichi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can fill in a form at a counter.",
+    "assesses": [
+      "JA-LEX-C418-SHOMEI418-03",
+      "JA-LEX-C418-SHOMEI418-04",
+      "JA-LEX-C418-SHOMEI418-05"
+    ]
+  }
+}

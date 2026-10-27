@@ -115,6 +115,14 @@ fn oracle_corpus(
 fn exact_topology_and_checked_lifecycle_are_pinned() {
     assert_eq!(FLIP_FLOP_COUNT, 528_597);
     let mut gate = GateLevelCpuZ80::new();
+    let inventory = gate.physical_storage_inventory();
+    assert_eq!(inventory.memory_dffs, 524_288);
+    assert_eq!(inventory.register_dffs, 160);
+    assert_eq!(inventory.control_dffs, 52);
+    assert_eq!(inventory.halt_dffs, 1);
+    assert_eq!(inventory.input_dffs, 2_048);
+    assert_eq!(inventory.output_dffs, 2_048);
+    assert_eq!(inventory.total(), FLIP_FLOP_COUNT);
     let before = gate.snapshot();
     assert_eq!(before.memory.len(), 65_536);
     assert_eq!(

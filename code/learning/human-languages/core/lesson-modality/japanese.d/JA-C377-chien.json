@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C377-chien",
+    "language": "japanese",
+    "chapter": 377,
+    "sequence": 22250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42d717b1fc5e5c1f"
+  },
+  "findings": []
+}
