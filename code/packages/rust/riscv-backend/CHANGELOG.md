@@ -1,5 +1,26 @@
 # Changelog — riscv-backend
 
+## Unreleased — a `bool`-typed comparison is signed (#18453)
+
+### Fixed
+
+- **`cmp_lt_bool` / `cmp_le_bool` / `cmp_gt_bool` / `cmp_ge_bool` compare
+  signed (`slt`, not `sltu`).** A comparison's suffix is its *result* type
+  when the frontend gave one. Twig types every `(< a b)` and `(string<? a b)`
+  result `bool` while its operands are signed. `string<?` compares
+  `str_cmp`'s -1/0/1 against 0. Because `is_signed` treated `bool` as
+  unsigned, `cmp_lt_bool -1, 0` returned 0. `is_signed` now treats `i*` and
+  `bool` as signed and `u*` as unsigned, the same rule the x86-64 and AArch64
+  backends adopted. Its other callers widen a word to a pair or pick a
+  divide/shift. A genuine 0 / 1 boolean gives the same result either way.
+
+### Tests
+
+- `bool_typed_compare_is_signed` runs `cmp_{lt,le,gt,ge}_bool` in the
+  simulator on `i32` and `i64` operands, with negative left-hand sides
+  (-1 < 0 is 1, -1 > 0 is 0, and so on), plus 0 / 1 controls. It failed
+  before the fix: `i32 -1 < 0` gave 0.
+
 ## Unreleased
 
 - Added typed CIR move lowering for scalar and full-width values. Dead moves

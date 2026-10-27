@@ -964,12 +964,18 @@ const PROGRAMS: &[Prog] = &[
         release: None,
         case: None,
     },
+    // A negative argument. Not on Vm / Jit: the `<` on the parameter reaches
+    // vm-core as `call_builtin "<"`, which it does not register
+    // (`UnknownOpcode("builtin \"<\"")`, with or without an `(x : int)`
+    // annotation) — a capability gap, not a sign bug. Not on Clr / Beam: not
+    // probed (no `dotnet` / `erl` where this row was added), and no other row
+    // proves a comparison on a function parameter there.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (f x) (if (< x 0) 42 7)) (f -5)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        backends: &[NativeAot, Llvm, Wasm, Jvm],
         release: None,
         case: None,
     },
@@ -14793,7 +14799,10 @@ fn feature_coverage_doc_counts_match_programs_source() {
     // (language, expected rows, expected total declared cells — all backends
     // including Beam). Order matches the doc table.
     let expected = [
-        (Language::Twig, 49, 392),
+        // Twig: 49 rows on all eight columns, then #18453's four negative-
+        // operand comparison rows — three on all eight, and the negative
+        // function argument on NativeAot / Llvm / Wasm / Jvm only (see its row).
+        (Language::Twig, 53, 420),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 48),
         (Language::DartmouthBasic, 52, 416),

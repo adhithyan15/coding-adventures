@@ -15,7 +15,7 @@ false, and the `lang_matrix` `string<?` row exited 0 instead of 42 natively.
 The same flaw was already live for Twig's `(< -5 0)`; no row had a negative
 operand to show it.
 
-The fix: both backends treat `bool` as signed (`is_signed_ty`). For a real
+The fix: the x86-64, AArch64 and RISC-V backends now treat `bool` as signed (`is_signed_ty` / `is_signed`). LLVM, WASM, JVM, CLR and BEAM were already correct, because they treat only `u*` as unsigned. For a real
 0/1 boolean, signed and unsigned agree.
 
 What to do differently: a change to a `type_hint` on an arithmetic or

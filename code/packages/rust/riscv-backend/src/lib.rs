@@ -3497,8 +3497,26 @@ fn comparison_parts(op: &str) -> Option<(&str, &str)> {
     None
 }
 
+/// Is a CIR type suffix compared, divided, shifted and widened as a
+/// **signed** integer?
+///
+/// `i*` types are signed and `u*` types unsigned, as the names say.  `bool`
+/// is signed too.  A comparison's suffix is its *result* type when the
+/// frontend gave one (`aot-core`'s `spec_type` prefers the type hint), and
+/// Twig types every `(< a b)` / `string<?` result `bool` over signed
+/// operands — `string<?` compares `str_cmp`'s -1 / 0 / 1 against 0.  With
+/// `bool` unsigned, `cmp_lt_bool -1, 0` became `sltu` and returned 0, so
+/// `(< -5 0)` and `(string<? "a" "b")` were `#f` (#18453; the x86-64 and
+/// AArch64 backends had the same rule and the same fix).  A genuine 0 / 1
+/// boolean compares and sign-extends identically either way.
+///
+/// | suffix          | signed? | `cmp_lt -1, 0` |
+/// |-----------------|---------|----------------|
+/// | `i8` … `i64`    | yes     | 1 (`slt`)      |
+/// | `bool`          | yes     | 1 (`slt`)      |
+/// | `u4` … `u64`    | no      | 0 (`sltu`)     |
 fn is_signed(ty: &str) -> bool {
-    ty.starts_with('i')
+    ty.starts_with('i') || ty == "bool"
 }
 
 /// Is `ty` a floating-point CIR scalar type?

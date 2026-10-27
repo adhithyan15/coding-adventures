@@ -951,6 +951,39 @@ fn executes_pair_aware_signed_64_bit_division_and_modulo() {
 }
 
 #[test]
+fn bool_typed_compare_is_signed() {
+    // #18453: a comparison's suffix is its RESULT type when the frontend gave
+    // one, and Twig types every `(< a b)` / `string<?` result `bool` over
+    // signed operands (`string<?` compares `str_cmp`'s -1/0/1 against 0).
+    // `bool` used to select the unsigned `sltu`, so -1 < 0 was 0.
+    let evaluate = |relation: &str, const_op: &str, ty: &str, a: i64, b: i64| {
+        let cir = vec![
+            ci(const_op, Some("a"), vec![CIROperand::Int(a)], ty),
+            ci(const_op, Some("b"), vec![CIROperand::Int(b)], ty),
+            ci(
+                &format!("cmp_{relation}_bool"),
+                Some("result"),
+                vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
+                "bool",
+            ),
+            ci("ret_bool", None, vec![CIROperand::Var("result".into())], "bool"),
+        ];
+        compile_and_run(&cir)
+    };
+    for (const_op, ty) in [("const_i32", "i32"), ("const_i64", "i64")] {
+        assert_eq!(evaluate("lt", const_op, ty, -1, 0), 1, "{ty} -1 < 0");
+        assert_eq!(evaluate("le", const_op, ty, -5, 0), 1, "{ty} -5 <= 0");
+        assert_eq!(evaluate("gt", const_op, ty, -1, 0), 0, "{ty} -1 > 0");
+        assert_eq!(evaluate("ge", const_op, ty, -5, 0), 0, "{ty} -5 >= 0");
+        assert_eq!(evaluate("lt", const_op, ty, 1, 0), 0, "{ty} 1 < 0");
+        assert_eq!(evaluate("gt", const_op, ty, 1, -1), 1, "{ty} 1 > -1");
+    }
+    // Genuine 0 / 1 booleans compare the same either way.
+    assert_eq!(evaluate("lt", "const_i32", "i32", 0, 1), 1);
+    assert_eq!(evaluate("gt", "const_i32", "i32", 1, 0), 1);
+}
+
+#[test]
 fn executes_pair_aware_signed_and_unsigned_64_bit_comparisons() {
     let signed = vec![
         ci(
