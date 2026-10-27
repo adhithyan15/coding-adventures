@@ -762,12 +762,19 @@ pub fn compile_module_tree(
 /// Derive a Twig module name from a file path.
 ///
 /// Strategy (in order):
-/// 1. For the nearest matching search root, return the relative path
-///    stem (slash-joined, no extension).
+/// 1. Try the file's own directory, then each search root.  For the first
+///    one that contains the file, return the relative path stem
+///    (slash-joined, no extension).
 /// 2. Otherwise return the file stem.
 ///
+/// Because the file's own directory is tried first and always contains
+/// the file, step 1 in practice yields just the file stem: the search
+/// roots only matter if canonicalisation makes the parent look unrelated.
+/// Two files with the same stem in different directories therefore get
+/// the same name here; `unique_module_name` makes them distinct.
+///
 /// Examples:
-///   `/project/compiler/lexer.tw` with root `/project` → `"compiler/lexer"`
+///   `/project/compiler/lexer.tw` with root `/project` → `"lexer"`
 ///   `/project/utils.tw` with root `/project` → `"utils"`
 ///   `/standalone.tw` with no roots → `"standalone"`
 fn derive_module_name(path: &Path, search_roots: &[&Path]) -> String {

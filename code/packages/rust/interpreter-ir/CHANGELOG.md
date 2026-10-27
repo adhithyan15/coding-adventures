@@ -1,13 +1,5 @@
 # Changelog — interpreter-ir
 
-## Unreleased (#18429 — spawn `fn` operand is a function name)
-
-- **Docs only.**  The `is_task` / `is_task_group` tables now say that the
-  `fn` operand of `task_spawn` (`srcs[0]`) and `group_spawn` (`srcs[1]`) is a
-  function *name*, never a closure register, matching the contract LANG28
-  now pins and the operand `iir-linker` rewrites when it renames a function.
-  No code or behaviour change.
-
 ## Unreleased (LANG84 phase 6e — `Trap.ReferenceError`)
 
 - **`exception_kind::TRAP_REFERENCE_ERROR`** (`"Trap.ReferenceError"`) joins
