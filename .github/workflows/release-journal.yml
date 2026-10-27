@@ -1,114 +1,644 @@
-# Electron Release — Journal App
-#
-# Builds the Journal desktop app for macOS, Windows, and Linux,
-# then attaches the installers to a GitHub Release.
-#
-# Triggered by pushing a tag matching `journal-v*`:
-#   git tag journal-v0.1.0
-#   git push origin journal-v0.1.0
-#
-# The workflow:
-#   1. Builds on macOS, Ubuntu, and Windows runners in parallel
-#   2. Uploads build artifacts per platform
-#   3. A single "release" job collects all artifacts and creates one GitHub Release
-
 name: Release Journal
 
+run-name: ${{ github.event_name == 'workflow_dispatch' && format('Release Journal {0}', inputs.tag) || 'Validate Journal release payloads' }}
+
+# Releases the MOSAIC Journal (code/programs/mosaic/journal-app): J5e of
+# #14416. The spec is code/specs/journal-mosaic-app.md, "Release (J5e)".
+#
+# What this replaced
+# ------------------
+# This file used to build the old TypeScript Electron app
+# (code/programs/typescript/journal-app) and attach its installers whenever a
+# `journal-v*` tag was pushed. It never ran -- no such tag exists -- and pushing
+# one would have published the app the Mosaic Journal already replaced on the
+# web (deploy-journal.yml, J5d). The Electron build and the tag-push trigger are
+# gone. The old program is untouched and still builds; nothing releases it.
+#
+# How it runs
+# -----------
+#   workflow_dispatch (version, tag)  validate -> build -> publish, from main
+#   pull_request (lane inputs)        validate -> build, as 0.0.0-ci; no publish
+#
+# A dispatch names the version and tag up front, so they are checked against
+# each other, the changelog and the package manifest before anything is built,
+# and the workflow creates the tag itself at the validated commit. A tag push
+# would publish whatever the tag points at. Same choice as release-task-app.yml
+# and release-engram.yml.
+#
+# What ships
+# ----------
+# Only hosts CI LAUNCHES: web, Qt on Linux and Compose Desktop on Linux. Each
+# payload is launched again here, from its extracted archive. SwiftUI only
+# compiles in CI, and Flutter desktop and XAML have no Journal lane, so they
+# join once they do.
+#
+# Security model
+# --------------
+# - `contents: read` everywhere except the dispatch-only publish job, which
+#   gets `contents: write` and nothing else.
+# - Every action is pinned to a commit SHA. Every checkout drops its token
+#   (`persist-credentials: false`), and `gh` gets the publish token from
+#   GH_TOKEN only.
+# - No `${{ }}` inside `run:`; values reach the shell through `env:`.
+# - Smoke launches use a scratch MOSAIC_APP_STATE_PATH, never a real journal.
+# code/scripts/tests/test_journal_release.py checks each of these rules on
+# this file, and the validate job runs it.
+
 on:
-  push:
-    tags:
-      - "journal-v*"
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/release-journal.yml
+      - code/scripts/journal_release.py
+      - code/scripts/tests/test_journal_release.py
+      # journal_release.py archives through engram_release.py's hardened zip
+      # writer, so a change there changes Journal's payloads too.
+      - code/scripts/engram_release.py
+      - code/scripts/verify_relocatable_bundle.py
+      - code/scripts/run-under-xvfb.sh
+      - code/programs/mosaic/journal-app/**
+      - code/packages/rust/journal-core/**
+      - code/packages/rust/journal-mosaic-app/**
+      - code/packages/mosaic/mosaic-pkg-toolkit/**
+      - code/packages/mosaic/mosaic-pkg-draft-editor/**
+      - code/packages/rust/mosaic-app-bindings/**
+      - code/packages/rust/mosaic-app-wasm/**
+      - code/packages/rust/mosaic-package-artifact-builder/**
+      - code/packages/rust/mosaic-compile/**
+      - code/packages/rust/mosaic-emit-react/**
+      - code/packages/rust/mosaic-emit-qt/**
+      - code/packages/rust/mosaic-emit-compose/**
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Strict SemVer without the product prefix (for example, 0.1.0)"
+        required: true
+        type: string
+      tag:
+        description: "Matching product tag (for example, journal-v0.1.0)"
+        required: true
+        type: string
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  # Publication is serialized; each pull request keeps its own validation run.
+  group: ${{ github.event_name == 'pull_request' && format('release-journal-pr-{0}', github.event.pull_request.number) || 'release-journal-publish' }}
+  cancel-in-progress: false
 
 jobs:
-  build:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: macos-latest
-            platform: mac
-          - os: ubuntu-latest
-            platform: linux
-          - os: windows-latest
-            platform: win
-
-    runs-on: ${{ matrix.os }}
-
+  validate:
+    name: Validate release identity
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      version: ${{ steps.release.outputs.version }}
+      tag: ${{ steps.release.outputs.tag }}
+      commit: ${{ steps.release.outputs.commit }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v7
+      - name: Checkout the selected release commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+
+      # The helper decides what may ship, and its test also checks this file's
+      # security rules. Running it here is what makes those checks real: a
+      # guard test that no job runs guards nothing.
+      - name: Test the release helper and this workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s code/scripts/tests -p 'test_journal_release.py'
+
+      - name: Validate version, tag, changelog, ref, and publication availability
+        id: release
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          RELEASE_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || '0.0.0-ci' }}
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || 'journal-v0.0.0-ci' }}
+          RELEASE_REF: ${{ github.ref }}
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          commit="$(git rev-parse HEAD)"
+          python code/scripts/journal_release.py validate \
+            --version "$RELEASE_VERSION" --tag "$RELEASE_TAG" --commit "$commit"
+
+          changelog_args=(
+            --changelog-dir code/programs/mosaic/journal-app/CHANGELOG.d
+            --manifest code/programs/mosaic/journal-app/mosaic-package.toml
+          )
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            changelog_args+=(--release-version "$RELEASE_VERSION")
+          fi
+          python code/scripts/journal_release.py validate-changelog "${changelog_args[@]}"
+
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            if [[ "$RELEASE_REF" != "refs/heads/main" ]]; then
+              echo "::error::Journal releases must be dispatched from main, not $RELEASE_REF"
+              exit 1
+            fi
+
+            # Exit 2 is "no such ref". Anything else that is not 0 is a failed
+            # lookup, which is not evidence of absence.
+            set +e
+            git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1
+            tag_status=$?
+            set -e
+            case "$tag_status" in
+              0)
+                echo "::error::Tag $RELEASE_TAG already exists and will not be reused."
+                exit 1
+                ;;
+              2)
+                ;;
+              *)
+                echo "::error::Could not verify whether tag $RELEASE_TAG exists."
+                exit 1
+                ;;
+            esac
+
+            set +e
+            gh release view "$RELEASE_TAG" --repo "$REPOSITORY" \
+              >/dev/null 2>release-view-error.txt
+            release_status=$?
+            set -e
+            if [[ "$release_status" -eq 0 ]]; then
+              echo "::error::Release $RELEASE_TAG is already published."
+              exit 1
+            fi
+            if ! grep -Fq "release not found" release-view-error.txt; then
+              cat release-view-error.txt >&2
+              echo "::error::Could not verify whether release $RELEASE_TAG exists."
+              exit 1
+            fi
+          fi
+
+          {
+            echo "version=$RELEASE_VERSION"
+            echo "tag=$RELEASE_TAG"
+            echo "commit=$commit"
+          } >> "$GITHUB_OUTPUT"
+
+  build-web:
+    name: Build and verify the web release
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout the validated release commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.validate.outputs.commit }}
+          persist-credentials: false
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
 
-      - name: Install local package dependencies
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+
+      # mosaic-compile links cairo through the paint backend.
+      - name: Install Linux build dependencies
+        shell: bash
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        run: |
+          set -euo pipefail
+          bash code/scripts/ci/apt-install.sh libcairo2-dev
+
+      - name: Test the Rust runtime
         shell: bash
         run: |
-          cd code/packages/typescript/directed-graph && npm install
-          cd ../grammar-tools && npm install
-          cd ../lexer && npm install
-          cd ../state-machine && npm install
-          cd ../parser && npm install
-          cd ../document-ast && npm install
-          cd ../document-ast-to-html && npm install
-          cd ../document-ast-sanitizer && npm install
-          cd ../gfm-parser && npm install
-          cd ../gfm && npm install
-          cd ../sql-lexer && npm install
-          cd ../sql-parser && npm install
-          cd ../sql-execution-engine && npm install
-          cd ../storage && npm install
-          cd ../indexeddb && npm install
-          cd ../store && npm install
-          cd ../ui-components && npm install
-          cd ../../../programs/typescript/journal-app && npm install
+          set -euo pipefail
+          cargo test --manifest-path code/packages/rust/Cargo.toml -p journal-mosaic-app
 
-      - name: Build renderer (Vite) + main process (tsc)
-        working-directory: code/programs/typescript/journal-app
+      - name: Install web dependencies
+        working-directory: code/programs/mosaic/journal-app/host/web
         shell: bash
-        run: |
-          npm run build
-          npx tsc -p electron/tsconfig.json
+        run: npm ci --no-audit --no-fund
 
-      - name: Package with electron-builder
-        working-directory: code/programs/typescript/journal-app
+      # Both scripts regenerate JournalApp and the wasm first (build-web.sh), so
+      # the tests run against the same release runtime the bundle ships.
+      - name: Test the web host against the release runtime, then build it
+        working-directory: code/programs/mosaic/journal-app/host/web
         shell: bash
-        run: npx electron-builder --${{ matrix.platform }} --publish never
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOURNAL_WASM_PROFILE: release
+        run: |
+          set -euo pipefail
+          npm test
+          npm run build
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v7
+      # Pages serves this from /journal/, and a user may unzip it anywhere, so
+      # the references between its files must resolve from a subdirectory. The
+      # runtime is fetched by script, so index.html cannot show where from; it
+      # must not be asked for from the site root.
+      - name: Verify the bundle works when served from a subdirectory
+        shell: bash
+        run: |
+          set -euo pipefail
+          dist=code/programs/mosaic/journal-app/host/web/dist
+          python code/scripts/verify_relocatable_bundle.py "$dist"
+          if grep -q '"/journal_mosaic_app.wasm"' "$dist"/assets/*.js; then
+            echo "::error::the page fetches the wasm from the site root; it must be page-relative"
+            exit 1
+          fi
+
+      - name: Archive the verified web bundle
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+        run: |
+          set -euo pipefail
+          python code/scripts/journal_release.py archive-web \
+            --version "$RELEASE_VERSION" \
+            --commit "$RELEASE_COMMIT" \
+            --source code/programs/mosaic/journal-app/host/web/dist \
+            --expected-wasm code/packages/rust/target/wasm32-unknown-unknown/release/journal_mosaic_app.wasm \
+            --output-dir release-assets
+
+      - name: Upload the verified web payload
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: release-${{ matrix.platform }}
-          path: |
-            code/programs/typescript/journal-app/release/*.AppImage
-            code/programs/typescript/journal-app/release/*.dmg
-            code/programs/typescript/journal-app/release/*.dmg.blockmap
-            code/programs/typescript/journal-app/release/*.zip
-            code/programs/typescript/journal-app/release/*.zip.blockmap
-            code/programs/typescript/journal-app/release/*.exe
-            code/programs/typescript/journal-app/release/*.yml
+          name: journal-web-release
+          path: release-assets/*.zip
           if-no-files-found: error
+          retention-days: 7
 
-  release:
-    needs: build
+  build-native:
+    name: Build and launch the ${{ matrix.toolkit }} Linux release
+    needs: validate
     runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      # One toolkit failing must not hide whether the other works; the publish
+      # job requires both payloads anyway.
+      fail-fast: false
+      matrix:
+        include:
+          - backend: qt
+            toolkit: Qt
+          - backend: compose
+            toolkit: Compose Desktop
     steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v8
+      - name: Checkout the validated release commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          path: artifacts
+          ref: ${{ needs.validate.outputs.commit }}
+          persist-credentials: false
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+
+      # The same Qt, JDK and Gradle setup as ci.yml's Mosaic Linux runtime
+      # job, which is where Journal is proven on these toolkits.
+      - name: Set up Qt
+        if: matrix.backend == 'qt'
+        uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1
+        with:
+          version: "6.8.3"
+          cache: true
+
+      - name: Set up Java
+        if: matrix.backend == 'compose'
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Gradle
+        if: matrix.backend == 'compose'
+        uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+
+      - name: Install Linux build dependencies
+        shell: bash
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        run: |
+          set -euo pipefail
+          bash code/scripts/ci/apt-install.sh libcairo2-dev xvfb unzip
+
+      - name: Build the release runtime and the strict generated project
+        shell: bash
+        env:
+          BACKEND: ${{ matrix.backend }}
+        run: |
+          set -euo pipefail
+          cargo build --release --manifest-path code/packages/rust/Cargo.toml -p journal-mosaic-app
+          runtime="$PWD/code/packages/rust/target/release/libjournal_mosaic_app.so"
+          test -f "$runtime"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- \
+            pkg code/programs/mosaic/journal-app \
+            --backend "$BACKEND" \
+            --output release-work/generated \
+            --emit-project \
+            --profile native-complete \
+            --runtime-library "$runtime"
+          python code/scripts/journal_release.py check-native-report \
+            --report "release-work/generated/$BACKEND/mosaic-degradations.json"
+
+      - name: Build and archive the Qt Linux app
+        if: matrix.backend == 'qt'
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+        run: |
+          set -euo pipefail
+          generated="$PWD/release-work/generated/qt"
+          bundle="$PWD/release-work/bundle"
+          cmake -S "$generated" -B "$generated/build" \
+            -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$bundle"
+          cmake --build "$generated/build" --config Release --parallel
+          cmake --install "$generated/build" --config Release
+          runtime="$(find "$bundle" -type f -name libmosaic_app.so -print -quit)"
+          if [[ -z "$runtime" ]]; then
+            echo "::error::the Qt install has no libmosaic_app.so"
+            exit 1
+          fi
+          python code/scripts/journal_release.py archive-native \
+            --version "$RELEASE_VERSION" \
+            --commit "$RELEASE_COMMIT" \
+            --backend qt \
+            --source "$bundle" \
+            --executable "$(dirname "$runtime")/JournalApp" \
+            --runtime "$runtime" \
+            --expected-runtime "$PWD/code/packages/rust/target/release/libjournal_mosaic_app.so" \
+            --output-dir release-assets
+          printf '%s\n' "${runtime#"$bundle"/}" > release-work/runtime-path
+          printf '%s\n' "$(dirname "${runtime#"$bundle"/}")/JournalApp" > release-work/executable-path
+
+      - name: Build and archive the Compose Desktop Linux app
+        if: matrix.backend == 'compose'
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+        run: |
+          set -euo pipefail
+          generated="$PWD/release-work/generated/compose"
+          gradle --no-daemon --stacktrace \
+            -Pcompose.desktop.packaging.checkJdkVendor=false \
+            -p "$generated" compileKotlin createDistributable
+          executable="$(find "$generated/build/compose/binaries/main/app" -type f -path '*/bin/journal_app' -perm -111 -print -quit)"
+          if [[ -z "$executable" ]]; then
+            echo "::error::createDistributable produced no bin/journal_app"
+            exit 1
+          fi
+          bundle="$(dirname "$(dirname "$executable")")"
+          runtime="$(find "$bundle" -type f -path '*/resources/libmosaic_app.so' -print -quit)"
+          if [[ -z "$runtime" ]]; then
+            echo "::error::the Compose app image has no resources/libmosaic_app.so"
+            exit 1
+          fi
+          python code/scripts/journal_release.py archive-native \
+            --version "$RELEASE_VERSION" \
+            --commit "$RELEASE_COMMIT" \
+            --backend compose \
+            --source "$bundle" \
+            --executable "$executable" \
+            --runtime "$runtime" \
+            --expected-runtime "$PWD/code/packages/rust/target/release/libjournal_mosaic_app.so" \
+            --output-dir release-assets
+          printf '%s\n' "${runtime#"$bundle"/}" > release-work/runtime-path
+          printf '%s\n' "${executable#"$bundle"/}" > release-work/executable-path
+
+      # The payload is judged by what a user gets: the archive is extracted to
+      # a fresh directory and launched from `/`, with MOSAIC_APP_LIBRARY unset,
+      # so only the engine inside the archive can be loaded. Three launches
+      # share one scratch state file:
+      #
+      #   first      no state yet; must still be running when `timeout` fires
+      #   restored   starts from the state the first launch left
+      #   corrupt    an unreadable state file: the app must start anyway and
+      #              keep the bytes, byte-for-byte, as `<state>.corrupt`
+      #
+      # Exit 124 is `timeout` killing an app that was still up. Every log check
+      # is an explicit `if grep ...; then exit 1`, because `set -e` ignores a
+      # failing `! grep`.
+      - name: Launch the extracted payload
+        shell: bash
+        env:
+          BACKEND: ${{ matrix.backend }}
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+        run: |
+          set -euo pipefail
+          label="$BACKEND-linux"
+          root="journal-$label-v$RELEASE_VERSION"
+          unpacked="$PWD/release-work/unpacked"
+          mkdir -p "$unpacked"
+          unzip -q "release-assets/$root.zip" -d "$unpacked"
+          app="$unpacked/$root/$(cat release-work/executable-path)"
+          shipped_runtime="$unpacked/$root/$(cat release-work/runtime-path)"
+          test -x "$app"
+          cmp "$PWD/code/packages/rust/target/release/libjournal_mosaic_app.so" "$shipped_runtime"
+          test -f "$unpacked/$root/SOURCE_COMMIT"
+          test -f "$unpacked/$root/INSTALL.txt"
+
+          state_dir="$PWD/release-work/state"
+          mkdir -p "$state_dir"
+          state="$state_dir/mosaic-state.v1.json"
+
+          launch() {
+            local name="$1"
+            local log="$PWD/release-work/launch-$name.log"
+            local status
+            set +e
+            if [[ "$BACKEND" == "qt" ]]; then
+              (cd / && env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen \
+                MOSAIC_APP_STATE_PATH="$state" timeout 8s "$app") >"$log" 2>&1
+            else
+              (cd / && env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state" \
+                bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" timeout 12s "$app") \
+                >"$log" 2>&1
+            fi
+            status=$?
+            set -e
+            cat "$log"
+            if [[ "$status" -ne 124 ]]; then
+              echo "::error::the $name launch exited with $status before the timeout"
+              exit 1
+            fi
+            if grep -F "Mosaic Rust runtime unavailable" "$log"; then
+              echo "::error::the $name launch could not load the bundled runtime"
+              exit 1
+            fi
+            if grep -E "missing required MIL prop|Mosaic runtime failed|ReferenceError|TypeError" "$log"; then
+              echo "::error::the $name launch reported a runtime error"
+              exit 1
+            fi
+          }
+
+          rm -f "$state" "$state.corrupt" "$state.tmp"
+          launch first
+          launch restored
+
+          printf 'not a Journal state file\n' > "$state"
+          cp "$state" "$PWD/release-work/corrupt-probe"
+          launch corrupt
+          if ! cmp "$PWD/release-work/corrupt-probe" "$state.corrupt"; then
+            echo "::error::an unreadable state file was not kept, byte for byte, as .corrupt"
+            exit 1
+          fi
+
+      - name: Upload the verified native payload
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: journal-${{ matrix.backend }}-release
+          path: release-assets/*.zip
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: Publish one Journal release
+    if: github.event_name == 'workflow_dispatch'
+    needs: [validate, build-web, build-native]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout release metadata from the validated commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.validate.outputs.commit }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+
+      - name: Download every verified payload
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: journal-*-release
+          path: release-assets
           merge-multiple: true
 
-      - name: Upload to GitHub Release
-        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
-        with:
-          files: artifacts/*
+      # write-checksums refuses a set that is not exactly the declared one, so
+      # a build job that silently produced nothing cannot shrink the release.
+      - name: Check the payload set, write checksums and release notes
+        shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+        run: |
+          set -euo pipefail
+          python code/scripts/journal_release.py write-checksums \
+            --version "$RELEASE_VERSION" --assets-dir release-assets
+          (cd release-assets && sha256sum --check SHA256SUMS)
+          python code/scripts/journal_release.py write-notes \
+            --version "$RELEASE_VERSION" \
+            --commit "$RELEASE_COMMIT" \
+            --changelog-dir code/programs/mosaic/journal-app/CHANGELOG.d \
+            --manifest code/programs/mosaic/journal-app/mosaic-package.toml \
+            --output release-notes.md
+          cat release-notes.md
+          cat release-assets/SHA256SUMS
+
+      - name: Revalidate publication availability after the builds
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ needs.validate.outputs.tag }}
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          set +e
+          git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1
+          tag_status=$?
+          set -e
+          case "$tag_status" in
+            0)
+              echo "::error::Tag $RELEASE_TAG appeared while the payloads were building."
+              exit 1
+              ;;
+            2)
+              ;;
+            *)
+              echo "::error::Could not revalidate tag $RELEASE_TAG."
+              exit 1
+              ;;
+          esac
+
+          set +e
+          gh release view "$RELEASE_TAG" --repo "$REPOSITORY" \
+            >/dev/null 2>release-view-error.txt
+          release_status=$?
+          set -e
+          if [[ "$release_status" -eq 0 ]]; then
+            echo "::error::Release $RELEASE_TAG appeared while the payloads were building."
+            exit 1
+          fi
+          if ! grep -Fq "release not found" release-view-error.txt; then
+            cat release-view-error.txt >&2
+            echo "::error::Could not revalidate release $RELEASE_TAG."
+            exit 1
+          fi
+
+      # The tag is created first, atomically, at the validated commit: the
+      # refs API refuses (422) a ref that already exists, so a tag pushed
+      # between the revalidation above and this step cannot be adopted (for an
+      # existing tag, `gh release create --target` would silently ignore the
+      # target and attach the release to whatever that tag points at). The
+      # tag is read back and compared, then the release is created with
+      # `--verify-tag`, which only ever uses an existing tag. `--latest=false`
+      # because this repository releases many products, and one product's
+      # release must not become the repository's "latest".
+      - name: Publish the release and all payloads exactly once
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          RELEASE_TAG: ${{ needs.validate.outputs.tag }}
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mapfile -t assets < <(find release-assets -maxdepth 1 -type f -print | sort)
+          release_flags=(--latest=false)
+          # A SemVer prerelease is a `-` before any `+build` metadata; a `-`
+          # inside the metadata (0.1.0+build-7) does not make one.
+          version_core="${RELEASE_VERSION%%+*}"
+          if [[ "$version_core" == *-* ]]; then
+            release_flags+=(--prerelease)
+          fi
+          gh api --method POST "repos/$REPOSITORY/git/refs" \
+            -f ref="refs/tags/$RELEASE_TAG" -f sha="$RELEASE_COMMIT" >/dev/null
+          tagged_commit="$(gh api "repos/$REPOSITORY/git/ref/tags/$RELEASE_TAG" --jq .object.sha)"
+          if [[ "$tagged_commit" != "$RELEASE_COMMIT" ]]; then
+            echo "::error::Tag $RELEASE_TAG points at $tagged_commit, not the validated $RELEASE_COMMIT."
+            exit 1
+          fi
+          gh release create "$RELEASE_TAG" "${assets[@]}" \
+            --repo "$REPOSITORY" \
+            --verify-tag \
+            --title "Journal v$RELEASE_VERSION" \
+            --notes-file release-notes.md \
+            "${release_flags[@]}"
+          gh release view "$RELEASE_TAG" --repo "$REPOSITORY" \
+            --json tagName,targetCommitish,url,assets

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:2b74fbecb5677639",
+  "lessonIds": [
+    "JA-C493-reitouko",
+    "JA-C493-todana",
+    "JA-C493-suihanki",
+    "JA-C493-araimono",
+    "JA-C493-reitou-suru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch493.txt",
+  "json": "japanese/narration/ch493.json",
+  "textHash": "fnv1a64:9d0fb27c55403b33",
+  "jsonHash": "fnv1a64:f5f319d096947e58",
+  "findings": []
+}

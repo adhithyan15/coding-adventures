@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "Along the Railway Line",
+  "label": "ch:ja-along-the-railway-line",
+  "canDo": "I can talk about trains stopping and leaving.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C374-chikayoru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can talk about trains stopping and leaving.",
+    "assesses": [
+      "JA-LEX-C374-SENRO374-03",
+      "JA-LEX-C374-SENRO374-04",
+      "JA-LEX-C374-SENRO374-05"
+    ]
+  }
+}

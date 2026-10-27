@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Saving Energy",
+  "label": "ch:ja-saving-energy",
+  "canDo": "I can say how we save energy and why we should.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C337-mottainai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can say how we save energy and why we should.",
+    "assesses": [
+      "JA-LEX-C337-SETSUYAKU337-03",
+      "JA-LEX-C337-SETSUYAKU337-04",
+      "JA-LEX-C337-SETSUYAKU337-05"
+    ]
+  }
+}

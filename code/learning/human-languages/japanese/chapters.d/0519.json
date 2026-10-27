@@ -1,0 +1,19 @@
+{
+  "chapter": 519,
+  "title": "Giving Up and Thinking Again",
+  "label": "ch:ja-giving-up-and-thinking-again",
+  "canDo": "I can talk about giving up, thinking again and letting others down.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C519-bunan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can talk about giving up, thinking again and letting others down.",
+    "assesses": [
+      "JA-LEX-C519-GIVEUP519-03",
+      "JA-LEX-C519-GIVEUP519-04",
+      "JA-LEX-C519-GIVEUP519-05"
+    ]
+  }
+}

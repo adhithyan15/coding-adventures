@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:e5750d420952e145",
+  "lessonIds": [
+    "JA-C351-man-ichi",
+    "JA-C351-hoken",
+    "JA-C351-kakunin-suru",
+    "JA-C351-anpi",
+    "JA-C351-nen-no-tame",
+    "JA-R351-review-347-351"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch351.txt",
+  "json": "japanese/narration/ch351.json",
+  "textHash": "fnv1a64:ba78e9319e4f51fd",
+  "jsonHash": "fnv1a64:6b0a207097c9142c",
+  "findings": []
+}

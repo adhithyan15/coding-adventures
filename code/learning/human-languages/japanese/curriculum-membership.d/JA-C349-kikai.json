@@ -1,0 +1,11 @@
+{
+  "id": "JA-C349-kikai",
+  "pathSegment": "JA-PATH-349-YOSOU349",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-349-YOSOU349",
+      "order": 2
+    }
+  ]
+}

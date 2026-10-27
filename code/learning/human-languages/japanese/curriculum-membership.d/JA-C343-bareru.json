@@ -1,0 +1,11 @@
+{
+  "id": "JA-C343-bareru",
+  "pathSegment": "JA-PATH-343-SHINYOU343",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-343-SHINYOU343",
+      "order": 3
+    }
+  ]
+}

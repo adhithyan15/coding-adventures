@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C486-hameru",
+    "language": "japanese",
+    "chapter": 486,
+    "sequence": 28340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e16f44dd2d9c96b9"
+  },
+  "findings": []
+}

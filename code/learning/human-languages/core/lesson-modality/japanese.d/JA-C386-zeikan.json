@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C386-zeikan",
+    "language": "japanese",
+    "chapter": 386,
+    "sequence": 22730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e22658c08f04955e"
+  },
+  "findings": []
+}

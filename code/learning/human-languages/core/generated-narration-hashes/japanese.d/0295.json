@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:d265e28c6314975a",
+  "lessonIds": [
+    "JA-C295-hatsumoude",
+    "JA-C295-omikuji",
+    "JA-C295-omamori",
+    "JA-C295-narasu",
+    "JA-C295-hibiku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch295.txt",
+  "json": "japanese/narration/ch295.json",
+  "textHash": "fnv1a64:ba59804b747a2ada",
+  "jsonHash": "fnv1a64:e2898b52ac57d4a2",
+  "findings": []
+}

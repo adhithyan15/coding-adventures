@@ -1,0 +1,806 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 362,
+  "title": "What Will It Cost?",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c0dd557faa68ac3a",
+  "lessons": [
+    {
+      "id": "JA-C362-hiyou",
+      "sequence": 21330,
+      "title": "ひよう (hiyō) — a cost; an expense",
+      "headword": "ひよう",
+      "romanization": "hiyō",
+      "gloss": "a cost; an expense",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f28d3125d1aa8a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a loss, then the Japanese for to go out of business."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひよう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひよう — hiyō — \"a cost; an expense\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ひようは ばしょに よります。 — hiyō wa basho ni yorimasu — \"The cost depends on the place.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひよう (hiyō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hi, \"expense\" (Middle Chinese phj+jH) and yō, \"utilize\" (yowngH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiyō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiyō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiyō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiyō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiyō wa basho ni yorimasu — The cost depends on the place.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiyō wa basho ni yorimasu* — The cost depends on the place.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a loss, then the Japanese for to go out of business, then say hiyō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a loss, then the Japanese for to go out of business, then say *hiyō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひよう (hiyō) mean? (\"A cost; an expense\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C362-hiyou-type",
+              "prompt": "Say the Japanese for 'an expense'.",
+              "assesses": [
+                "JA-LEX-C362-HIYOU362-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひよう",
+                "hiyō",
+                "hiyou",
+                "hiyoo",
+                "hiyo"
+              ],
+              "feedback": {
+                "correct": "Right: ひよう (hiyō) is 'a cost; an expense'.",
+                "incorrect": "'An expense' is ひよう (hiyō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C362-keisan-suru",
+      "sequence": 21340,
+      "title": "けいさんする (keisan suru) — to calculate",
+      "headword": "けいさんする",
+      "romanization": "keisan suru",
+      "gloss": "to calculate",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52a5c9e253bfca26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to go out of business, then the Japanese for an expense."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けいさんする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けいさんする — keisan suru — \"to calculate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かいものが おわったら、けいさんして ください。 — kaimono ga owattara, keisan shite kudasai — \"When the shopping is done, please add it up.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite けいさんします, keisanshimasu; a する verb. Past (polite): てんいんが けいさんしました。, ten'in ga keisan shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けいさんする (keisan suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, keisan, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: kei, \"plan\" (Middle Chinese kejH) and san, \"calculate\" (swanX) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keisan suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keisan suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keisan suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keisan suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaimono ga owattara, keisan shite kudasai — When the shopping is done, please add it up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaimono ga owattara, keisan shite kudasai* — When the shopping is done, please add it up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to go out of business, then the Japanese for an expense, then say keisan suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to go out of business, then the Japanese for an expense, then say *keisan suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けいさんする (keisan suru) mean? (\"To calculate\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C362-keisan-suru-type",
+              "prompt": "Say the Japanese for 'to calculate'.",
+              "assesses": [
+                "JA-LEX-C362-HIYOU362-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けいさんする",
+                "keisan suru"
+              ],
+              "feedback": {
+                "correct": "Right: けいさんする (keisan suru) is 'to calculate'.",
+                "incorrect": "'To calculate' is けいさんする (keisan suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C362-goukei",
+      "sequence": 21350,
+      "title": "ごうけい (gōkei) — the total; the sum",
+      "headword": "ごうけい",
+      "romanization": "gōkei",
+      "gloss": "the total; the sum",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9adfa22650f8471",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an expense, then the Japanese for to calculate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ごうけい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ごうけい — gōkei — \"the total; the sum\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ごうけいが ちがったら、おしえて ください。 — gōkei ga chigattara, oshiete kudasai — \"If the total is wrong, please tell me.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ごうけい (gōkei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gō, \"join\" (Middle Chinese hop) and kei, \"plan\" (kejH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gōkei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gōkei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gōkei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gōkei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gōkei ga chigattara, oshiete kudasai — If the total is wrong, please tell me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gōkei ga chigattara, oshiete kudasai* — If the total is wrong, please tell me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an expense, then the Japanese for to calculate, then say gōkei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an expense, then the Japanese for to calculate, then say *gōkei* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ごうけい (gōkei) mean? (\"The total; the sum\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C362-goukei-type",
+              "prompt": "Say the Japanese for 'the total'.",
+              "assesses": [
+                "JA-LEX-C362-HIYOU362-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ごうけい",
+                "gōkei",
+                "goukei",
+                "gookei",
+                "gokei"
+              ],
+              "feedback": {
+                "correct": "Right: ごうけい (gōkei) is 'the total; the sum'.",
+                "incorrect": "'The total' is ごうけい (gōkei)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C362-bukka",
+      "sequence": 21360,
+      "title": "ぶっか (bukka) — prices in general; the cost of living",
+      "headword": "ぶっか",
+      "romanization": "bukka",
+      "gloss": "prices in general; the cost of living",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:340d571c4b81a333",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to calculate, then the Japanese for the total."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぶっか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぶっか — bukka — \"prices in general; the cost of living\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ぶっかが あがったら、こまるでしょう。 — bukka ga agattara, komaru deshō — \"If prices go up, people will have a hard time.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぶっか (bukka) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are butsu, \"thing\" (Middle Chinese mjut) and ka, \"value\" (kaeH) (KANJIDIC2; Middle Chinese in Baxter's transcription). The two join as buk-ka."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bukka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bukka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bukka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bukka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bukka ga agattara, komaru deshō — If prices go up, people will have a hard time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bukka ga agattara, komaru deshō* — If prices go up, people will have a hard time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to calculate, then the Japanese for the total, then say bukka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to calculate, then the Japanese for the total, then say *bukka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぶっか (bukka) mean? (\"Prices in general; the cost of living\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C362-bukka-type",
+              "prompt": "Say the Japanese for 'prices in general'.",
+              "assesses": [
+                "JA-LEX-C362-HIYOU362-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぶっか",
+                "bukka"
+              ],
+              "feedback": {
+                "correct": "Right: ぶっか (bukka) is 'prices in general; the cost of living'.",
+                "incorrect": "'Prices in general' is ぶっか (bukka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C362-shikikin",
+      "sequence": 21370,
+      "title": "しききん (shikikin) — a rental deposit",
+      "headword": "しききん",
+      "romanization": "shikikin",
+      "gloss": "a rental deposit",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f917d9055079e824",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the total, then the Japanese for prices in general."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しききん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しききん — shikikin — \"a rental deposit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "へやを でたら、しききんが もどるでしょう。 — heya o detara, shikikin ga modoru deshō — \"When you move out, you will probably get your deposit back.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しききん (shikikin) is built from the native shiki, \"spreading\" or laying down, a kun'yomi, and the Sino-Japanese kin, \"gold\" or money, an on'yomi borrowed from Chinese (Middle Chinese kim) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shikikin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shikikin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shikikin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shikikin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heya o detara, shikikin ga modoru deshō — When you move out, you will probably get your deposit back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *heya o detara, shikikin ga modoru deshō* — When you move out, you will probably get your deposit back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the total, then the Japanese for prices in general, then say shikikin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the total, then the Japanese for prices in general, then say *shikikin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しききん (shikikin) mean? (\"A rental deposit\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C362-shikikin-type",
+              "prompt": "Say the Japanese for 'a rental deposit'.",
+              "assesses": [
+                "JA-LEX-C362-HIYOU362-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しききん",
+                "shikikin"
+              ],
+              "feedback": {
+                "correct": "Right: しききん (shikikin) is 'a rental deposit'.",
+                "incorrect": "'A rental deposit' is しききん (shikikin)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

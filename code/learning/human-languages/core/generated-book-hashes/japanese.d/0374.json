@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:9348e9ed12a32c15",
+  "lessonIds": [
+    "JA-C374-senro",
+    "JA-C374-fumikiri",
+    "JA-C374-teisha",
+    "JA-C374-hassha",
+    "JA-C374-chikayoru"
+  ],
+  "tex": "japanese/book/chapters/ch374-along-the-railway-line.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:6fba1a98781070ac",
+  "lessonIds": [
+    "JA-C303-ryuu",
+    "JA-C303-numa",
+    "JA-C303-ukabu",
+    "JA-C303-hokora",
+    "JA-C303-medetai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch303.txt",
+  "json": "japanese/narration/ch303.json",
+  "textHash": "fnv1a64:c263e5899b62d27b",
+  "jsonHash": "fnv1a64:d2a5ef0a318c0a24",
+  "findings": []
+}

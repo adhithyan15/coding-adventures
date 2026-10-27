@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "Guesses and Forecasts",
+  "label": "ch:ja-guesses-and-forecasts",
+  "canDo": "I can talk about what is likely to happen.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C514-mitoushi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can talk about what is likely to happen.",
+    "assesses": [
+      "JA-LEX-C514-GUESS514-03",
+      "JA-LEX-C514-GUESS514-04",
+      "JA-LEX-C514-GUESS514-05"
+    ]
+  }
+}

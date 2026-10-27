@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C380-utouto",
+    "language": "japanese",
+    "chapter": 380,
+    "sequence": 22440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:479bc0f30ed92e03"
+  },
+  "findings": []
+}

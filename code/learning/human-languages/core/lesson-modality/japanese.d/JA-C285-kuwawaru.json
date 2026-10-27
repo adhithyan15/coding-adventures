@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C285-kuwawaru",
+    "language": "japanese",
+    "chapter": 285,
+    "sequence": 17200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd0f2f8b31a75918"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:d68db1dcc0c73b62",
+  "lessonIds": [
+    "JA-C486-buhin",
+    "JA-C486-kanagu",
+    "JA-C486-sabiru",
+    "JA-C486-hameru",
+    "JA-C486-hagasu"
+  ],
+  "tex": "japanese/book/chapters/ch486-parts-and-fittings.tex"
+}

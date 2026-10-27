@@ -1,0 +1,19 @@
+{
+  "chapter": 370,
+  "title": "Reaching Agreement",
+  "label": "ch:ja-reaching-agreement",
+  "canDo": "I can say what we will do once we agree.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C370-pittari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can say what we will do once we agree.",
+    "assesses": [
+      "JA-LEX-C370-MATOMARU370-03",
+      "JA-LEX-C370-MATOMARU370-04",
+      "JA-LEX-C370-MATOMARU370-05"
+    ]
+  }
+}

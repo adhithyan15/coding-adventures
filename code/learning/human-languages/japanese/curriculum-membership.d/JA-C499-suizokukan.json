@@ -1,0 +1,11 @@
+{
+  "id": "JA-C499-suizokukan",
+  "pathSegment": "JA-PATH-499-PARK499",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-499-PARK499",
+      "order": 2
+    }
+  ]
+}

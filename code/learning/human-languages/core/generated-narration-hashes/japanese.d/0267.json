@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:acd7d6980ae6b814",
+  "lessonIds": [
+    "JA-C267-maigo",
+    "JA-C267-yobidasu",
+    "JA-C267-housou",
+    "JA-C267-nakigoe",
+    "JA-C267-hotto",
+    "JA-R267-review-262-267"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch267.txt",
+  "json": "japanese/narration/ch267.json",
+  "textHash": "fnv1a64:4b54b2da4962825a",
+  "jsonHash": "fnv1a64:3e9ae917d1c5c265",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C425-tsuujiru",
+    "language": "japanese",
+    "chapter": 425,
+    "sequence": 24760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c326adbaf57c470b"
+  },
+  "findings": []
+}

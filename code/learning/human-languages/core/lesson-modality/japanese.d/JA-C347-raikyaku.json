@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C347-raikyaku",
+    "language": "japanese",
+    "chapter": 347,
+    "sequence": 20590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01dbe831c18ca790"
+  },
+  "findings": []
+}

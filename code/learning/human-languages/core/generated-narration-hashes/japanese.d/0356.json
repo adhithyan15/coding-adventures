@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:4207ec178a24cf3c",
+  "lessonIds": [
+    "JA-C356-jouken",
+    "JA-C356-tadashi",
+    "JA-C356-angai",
+    "JA-C356-taitei",
+    "JA-C356-itsumademo",
+    "JA-R356-review-352-356"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch356.txt",
+  "json": "japanese/narration/ch356.json",
+  "textHash": "fnv1a64:f63e2384d943edef",
+  "jsonHash": "fnv1a64:4ec994dfd283a9f7",
+  "findings": []
+}

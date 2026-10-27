@@ -1,0 +1,19 @@
+{
+  "chapter": 329,
+  "title": "Common Sense",
+  "label": "ch:ja-common-sense",
+  "canDo": "I can say what everyone is expected to know and do.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C329-suigara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can say what everyone is expected to know and do.",
+    "assesses": [
+      "JA-LEX-C329-JOUSHIKI329-03",
+      "JA-LEX-C329-JOUSHIKI329-04",
+      "JA-LEX-C329-JOUSHIKI329-05"
+    ]
+  }
+}

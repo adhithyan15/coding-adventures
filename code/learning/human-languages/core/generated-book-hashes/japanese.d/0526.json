@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:3c66123907bb4acb",
+  "lessonIds": [
+    "JA-C526-shinpo-suru",
+    "JA-C526-hatten-suru",
+    "JA-C526-kaizen-suru",
+    "JA-C526-kouten-suru",
+    "JA-C526-dondon"
+  ],
+  "tex": "japanese/book/chapters/ch526-progress.tex"
+}

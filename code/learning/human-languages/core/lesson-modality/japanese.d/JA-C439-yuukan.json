@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C439-yuukan",
+    "language": "japanese",
+    "chapter": 439,
+    "sequence": 25710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7dff8740ade8401e"
+  },
+  "findings": []
+}

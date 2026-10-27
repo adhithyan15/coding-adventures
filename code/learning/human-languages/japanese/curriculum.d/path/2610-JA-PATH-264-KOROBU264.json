@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-264-KOROBU264",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-264-KOROBU264"
+  ],
+  "after": []
+}

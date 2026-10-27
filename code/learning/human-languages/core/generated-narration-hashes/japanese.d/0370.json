@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:b39e48155f91dc02",
+  "lessonIds": [
+    "JA-C370-matomaru",
+    "JA-C370-tagaini",
+    "JA-C370-onaji",
+    "JA-C370-daitai",
+    "JA-C370-pittari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch370.txt",
+  "json": "japanese/narration/ch370.json",
+  "textHash": "fnv1a64:221d898a1d493f6e",
+  "jsonHash": "fnv1a64:0608fad60e09811e",
+  "findings": []
+}

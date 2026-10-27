@@ -1,0 +1,11 @@
+{
+  "id": "JA-C418-kinyuu",
+  "pathSegment": "JA-PATH-418-SHOMEI418",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-418-SHOMEI418",
+      "order": 2
+    }
+  ]
+}

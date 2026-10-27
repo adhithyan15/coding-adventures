@@ -19,6 +19,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 11,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"SYMBOL"#.to_string(),
@@ -26,6 +27,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 12,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"STRING"#.to_string(),
@@ -33,6 +35,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 13,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"LPAREN"#.to_string(),
@@ -40,6 +43,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 14,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"RPAREN"#.to_string(),
@@ -47,6 +51,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 15,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"QUOTE"#.to_string(),
@@ -54,6 +59,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 16,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"DOT"#.to_string(),
@@ -61,6 +67,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 17,
                 alias: None,
+                guard: Default::default(),
             },
         ],
         keywords: vec![],
@@ -72,6 +79,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 8,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"COMMENT"#.to_string(),
@@ -79,6 +87,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 9,
                 alias: None,
+                guard: Default::default(),
             },
         ],
         reserved_keywords: vec![],

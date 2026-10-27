@@ -1,0 +1,806 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 303,
+  "title": "The Dragon in the Marsh",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6fba1a98781070ac",
+  "lessons": [
+    {
+      "id": "JA-C303-ryuu",
+      "sequence": 18120,
+      "title": "りゅう (ryū) — a dragon",
+      "headword": "りゅう",
+      "romanization": "ryū",
+      "gloss": "a dragon",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:795075a62ac8845c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a legend, then the Japanese for a god."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: りゅう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りゅう — ryū — \"a dragon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "むかし、りゅうが そらを とんでいました。 — mukashi, ryū ga sora o tonde imashita — \"Long ago a dragon flew in the sky.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りゅう (ryū) is Sino-Japanese (kango): one Chinese character read with its on'yomi, a reading borrowed from Chinese. It is ryū, \"dragon\" (Middle Chinese ljowng) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ryū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ryū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ryū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ryū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukashi, ryū ga sora o tonde imashita — Long ago a dragon flew in the sky.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukashi, ryū ga sora o tonde imashita* — Long ago a dragon flew in the sky.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a legend, then the Japanese for a god, then say ryū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a legend, then the Japanese for a god, then say *ryū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does りゅう (ryū) mean? (\"A dragon\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C303-ryuu-type",
+              "prompt": "Say the Japanese for 'a dragon'.",
+              "assesses": [
+                "JA-LEX-C303-RYUU303-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "りゅう",
+                "ryū",
+                "ryuu",
+                "ryu"
+              ],
+              "feedback": {
+                "correct": "Right: りゅう (ryū) is 'a dragon'.",
+                "incorrect": "'A dragon' is りゅう (ryū)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C303-numa",
+      "sequence": 18130,
+      "title": "ぬま (numa) — a marsh; a pond",
+      "headword": "ぬま",
+      "romanization": "numa",
+      "gloss": "a marsh; a pond",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73e663e3d9d3eef7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a god, then the Japanese for a dragon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぬま",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぬま — numa — \"a marsh; a pond\"."
+            },
+            {
+              "kind": "speech",
+              "text": "りゅうは ぬまに すんでいました。 — ryū wa numa ni sunde imashita — \"The dragon lived in a marsh.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぬま (numa) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "numa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *numa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "numa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *numa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ryū wa numa ni sunde imashita — The dragon lived in a marsh.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ryū wa numa ni sunde imashita* — The dragon lived in a marsh.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a god, then the Japanese for a dragon, then say numa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a god, then the Japanese for a dragon, then say *numa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぬま (numa) mean? (\"A marsh; a pond\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C303-numa-type",
+              "prompt": "Say the Japanese for 'a marsh'.",
+              "assesses": [
+                "JA-LEX-C303-RYUU303-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぬま",
+                "numa"
+              ],
+              "feedback": {
+                "correct": "Right: ぬま (numa) is 'a marsh; a pond'.",
+                "incorrect": "'A marsh' is ぬま (numa)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C303-ukabu",
+      "sequence": 18140,
+      "title": "うかぶ (ukabu) — to float up; to come to mind",
+      "headword": "うかぶ",
+      "romanization": "ukabu",
+      "gloss": "to float up; to come to mind",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8bfb6b20d68ebdef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a dragon, then the Japanese for a marsh."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うかぶ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うかぶ — ukabu — \"to float up; to come to mind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ぬまに とりが うかんでいます。 — numa ni tori ga ukande imasu — \"Birds are floating on the marsh.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite うかびます, ukabimasu; a godan verb. Past (polite): ふねが うかびました。, fune ga ukabimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うかぶ (ukabu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukabu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukabu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukabu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukabu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "numa ni tori ga ukande imasu — Birds are floating on the marsh.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *numa ni tori ga ukande imasu* — Birds are floating on the marsh.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a dragon, then the Japanese for a marsh, then say ukabu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a dragon, then the Japanese for a marsh, then say *ukabu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うかぶ (ukabu) mean? (\"To float up; to come to mind\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C303-ukabu-type",
+              "prompt": "Say the Japanese for 'to float up'.",
+              "assesses": [
+                "JA-LEX-C303-RYUU303-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うかぶ",
+                "ukabu"
+              ],
+              "feedback": {
+                "correct": "Right: うかぶ (ukabu) is 'to float up; to come to mind'.",
+                "incorrect": "'To float up' is うかぶ (ukabu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C303-hokora",
+      "sequence": 18150,
+      "title": "ほこら (hokora) — a small wayside shrine",
+      "headword": "ほこら",
+      "romanization": "hokora",
+      "gloss": "a small wayside shrine",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:101f79d9f123748e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a marsh, then the Japanese for to float up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほこら",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほこら — hokora — \"a small wayside shrine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ぬまの ちかくに ちいさい ほこらが あります。 — numa no chikaku ni chiisai hokora ga arimasu — \"There is a little shrine near the marsh.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほこら (hokora) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hokora",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hokora*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hokora, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hokora*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "numa no chikaku ni chiisai hokora ga arimasu — There is a little shrine near the marsh.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *numa no chikaku ni chiisai hokora ga arimasu* — There is a little shrine near the marsh.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a marsh, then the Japanese for to float up, then say hokora again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a marsh, then the Japanese for to float up, then say *hokora* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほこら (hokora) mean? (\"A small wayside shrine\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C303-hokora-type",
+              "prompt": "Say the Japanese for 'a small wayside shrine'.",
+              "assesses": [
+                "JA-LEX-C303-RYUU303-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほこら",
+                "hokora"
+              ],
+              "feedback": {
+                "correct": "Right: ほこら (hokora) is 'a small wayside shrine'.",
+                "incorrect": "'A small wayside shrine' is ほこら (hokora)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C303-medetai",
+      "sequence": 18160,
+      "title": "めでたい (medetai) — auspicious; joyful",
+      "headword": "めでたい",
+      "romanization": "medetai",
+      "gloss": "auspicious; joyful",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:302686f0cfbbaf6b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to float up, then the Japanese for a small wayside shrine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: めでたい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めでたい — medetai — \"auspicious; joyful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あにの けっこんは めでたいです。 — ani no kekkon wa medetai desu — \"My brother's wedding is a happy event.\""
+            },
+            {
+              "kind": "speech",
+              "text": "An i-adjective."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めでたい (medetai) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "medetai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *medetai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "medetai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *medetai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ani no kekkon wa medetai desu — My brother's wedding is a happy event.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ani no kekkon wa medetai desu* — My brother's wedding is a happy event.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to float up, then the Japanese for a small wayside shrine, then say medetai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to float up, then the Japanese for a small wayside shrine, then say *medetai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does めでたい (medetai) mean? (\"Auspicious; joyful\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C303-medetai-type",
+              "prompt": "Say the Japanese for 'auspicious'.",
+              "assesses": [
+                "JA-LEX-C303-RYUU303-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "めでたい",
+                "medetai"
+              ],
+              "feedback": {
+                "correct": "Right: めでたい (medetai) is 'auspicious; joyful'.",
+                "incorrect": "'Auspicious' is めでたい (medetai)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

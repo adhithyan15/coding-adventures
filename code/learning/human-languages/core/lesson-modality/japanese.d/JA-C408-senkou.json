@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C408-senkou",
+    "language": "japanese",
+    "chapter": 408,
+    "sequence": 23860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be3add2dd0acb928"
+  },
+  "findings": []
+}

@@ -19,6 +19,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 85,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"NAME"#.to_string(),
@@ -26,6 +27,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 103,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"LPAREN"#.to_string(),
@@ -33,6 +35,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 178,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"RPAREN"#.to_string(),
@@ -40,6 +43,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 179,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"PERIOD"#.to_string(),
@@ -47,6 +51,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 180,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"SEMICOLON"#.to_string(),
@@ -54,6 +59,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 181,
                 alias: None,
+                guard: Default::default(),
             },
         ],
         keywords: vec![r#"INPUT"#.to_string(), r#"OUTPUT"#.to_string(), r#"HSP"#.to_string(), r#"COMPARE"#.to_string(), r#"WITH"#.to_string(), r#"IF"#.to_string(), r#"GREATER"#.to_string(), r#"EQUAL"#.to_string(), r#"LESS"#.to_string(), r#"GO"#.to_string(), r#"TO"#.to_string(), r#"OPERATION"#.to_string(), r#"OTHERWISE"#.to_string(), r#"JUMP"#.to_string(), r#"TRANSFER"#.to_string(), r#"MOVE"#.to_string(), r#"WRITE-ITEM"#.to_string(), r#"READ-ITEM"#.to_string(), r#"END"#.to_string(), r#"OF"#.to_string(), r#"DATA"#.to_string(), r#"TEST"#.to_string(), r#"AGAINST"#.to_string(), r#"REWIND"#.to_string(), r#"CLOSE-OUT"#.to_string(), r#"FILES"#.to_string(), r#"STOP"#.to_string(), r#"SET"#.to_string(), r#"ADD"#.to_string(), r#"SUBTRACT"#.to_string(), r#"MULTIPLY"#.to_string(), r#"DIVIDE"#.to_string(), r#"BY"#.to_string(), r#"FROM"#.to_string(), r#"INTO"#.to_string(), r#"EXECUTE"#.to_string(), r#"DEFINE"#.to_string()],
@@ -65,6 +71,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 191,
                 alias: None,
+                guard: Default::default(),
             },
         ],
         reserved_keywords: vec![],
@@ -76,6 +83,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 202,
                 alias: None,
+                guard: Default::default(),
             },
         ],
         groups: HashMap::new(),

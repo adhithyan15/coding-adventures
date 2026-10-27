@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:3b1e85da96a3cd7a",
+  "lessonIds": [
+    "JA-C266-oboreru",
+    "JA-C266-tobikomu",
+    "JA-C266-hipparu",
+    "JA-C266-yatto",
+    "JA-C266-buji"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch266.txt",
+  "json": "japanese/narration/ch266.json",
+  "textHash": "fnv1a64:28ec85816645e49f",
+  "jsonHash": "fnv1a64:23c56455025c2acf",
+  "findings": []
+}

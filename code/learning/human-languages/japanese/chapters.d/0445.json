@@ -1,0 +1,19 @@
+{
+  "chapter": 445,
+  "title": "Aches and Pains",
+  "label": "ch:ja-aches-and-pains",
+  "canDo": "I can say where it hurts and how.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C445-aza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can say where it hurts and how.",
+    "assesses": [
+      "JA-LEX-C445-ACHE445-03",
+      "JA-LEX-C445-ACHE445-04",
+      "JA-LEX-C445-ACHE445-05"
+    ]
+  }
+}

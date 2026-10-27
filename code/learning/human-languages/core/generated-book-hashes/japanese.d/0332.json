@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:98585d928c904bab",
+  "lessonIds": [
+    "JA-C332-kenri",
+    "JA-C332-gimu",
+    "JA-C332-byoudou",
+    "JA-C332-sabetsu",
+    "JA-C332-zen-in"
+  ],
+  "tex": "japanese/book/chapters/ch332-rights-and-duties.tex"
+}

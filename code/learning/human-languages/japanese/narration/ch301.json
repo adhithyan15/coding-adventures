@@ -1,0 +1,944 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 301,
+  "title": "Buried Treasure",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:e62dcc35ac264e5d",
+  "lessons": [
+    {
+      "id": "JA-C301-takara",
+      "sequence": 18010,
+      "title": "たから (takara) — a treasure",
+      "headword": "たから",
+      "romanization": "takara",
+      "gloss": "a treasure",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f4d40c2fdf3a75e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a curse, then the Japanese for sly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たから",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たから — takara — \"a treasure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "むかし ここに たからが ありました。 — mukashi koko ni takara ga arimashita — \"Long ago there was treasure here.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たから (takara) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukashi koko ni takara ga arimashita — Long ago there was treasure here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukashi koko ni takara ga arimashita* — Long ago there was treasure here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a curse, then the Japanese for sly, then say takara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a curse, then the Japanese for sly, then say *takara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たから (takara) mean? (\"A treasure\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C301-takara-type",
+              "prompt": "Say the Japanese for 'a treasure'.",
+              "assesses": [
+                "JA-LEX-C301-TAKARA301-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たから",
+                "takara"
+              ],
+              "feedback": {
+                "correct": "Right: たから (takara) is 'a treasure'.",
+                "incorrect": "'A treasure' is たから (takara)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C301-horu",
+      "sequence": 18020,
+      "title": "ほる (horu) — to dig",
+      "headword": "ほる",
+      "romanization": "horu",
+      "gloss": "to dig",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0cd795360598205b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for sly, then the Japanese for a treasure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほる — horu — \"to dig\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いぬが にわを ほっています。 — inu ga niwa o hotte imasu — \"The dog is digging in the garden.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ほります, horimasu; a godan verb. Past (polite): おじいさんが にわを ほりました。, ojiisan ga niwa o horimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほる (horu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "horu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *horu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "horu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *horu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inu ga niwa o hotte imasu — The dog is digging in the garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inu ga niwa o hotte imasu* — The dog is digging in the garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for sly, then the Japanese for a treasure, then say horu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for sly, then the Japanese for a treasure, then say *horu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほる (horu) mean? (\"To dig\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C301-horu-type",
+              "prompt": "Say the Japanese for 'to dig'.",
+              "assesses": [
+                "JA-LEX-C301-TAKARA301-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほる",
+                "horu"
+              ],
+              "feedback": {
+                "correct": "Right: ほる (horu) is 'to dig'.",
+                "incorrect": "'To dig' is ほる (horu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C301-umeru",
+      "sequence": 18030,
+      "title": "うめる (umeru) — to bury",
+      "headword": "うめる",
+      "romanization": "umeru",
+      "gloss": "to bury",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2739d9b29caa3968",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a treasure, then the Japanese for to dig."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うめる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うめる — umeru — \"to bury\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おとこは たからを やまに うめました。 — otoko wa takara o yama ni umemashita — \"The man buried the treasure in the mountains.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite うめます, umemasu; an ichidan verb. Past (polite): とのさまが たからを うめました。, tonosama ga takara o umemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うめる (umeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "umeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *umeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "umeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *umeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otoko wa takara o yama ni umemashita — The man buried the treasure in the mountains.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otoko wa takara o yama ni umemashita* — The man buried the treasure in the mountains.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a treasure, then the Japanese for to dig, then say umeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a treasure, then the Japanese for to dig, then say *umeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うめる (umeru) mean? (\"To bury\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C301-umeru-type",
+              "prompt": "Say the Japanese for 'to bury'.",
+              "assesses": [
+                "JA-LEX-C301-TAKARA301-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うめる",
+                "umeru"
+              ],
+              "feedback": {
+                "correct": "Right: うめる (umeru) is 'to bury'.",
+                "incorrect": "'To bury' is うめる (umeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C301-binbou",
+      "sequence": 18040,
+      "title": "びんぼう (binbō) — poor; poverty",
+      "headword": "びんぼう",
+      "romanization": "binbō",
+      "gloss": "poor; poverty",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f24b456626c1e3d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to dig, then the Japanese for to bury."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: びんぼう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "びんぼう — binbō — \"poor; poverty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "その おじいさんは びんぼうでした。 — sono ojiisan wa binbō deshita — \"The old man was poor.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "びんぼう (binbō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are bin, \"poor\" (Middle Chinese bin) and bō, \"scarce\" (bjop) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "binbō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *binbō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "binbō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *binbō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sono ojiisan wa binbō deshita — The old man was poor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sono ojiisan wa binbō deshita* — The old man was poor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to dig, then the Japanese for to bury, then say binbō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to dig, then the Japanese for to bury, then say *binbō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does びんぼう (binbō) mean? (\"Poor; poverty\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C301-binbou-type",
+              "prompt": "Say the Japanese for 'poor'.",
+              "assesses": [
+                "JA-LEX-C301-TAKARA301-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "びんぼう",
+                "binbō",
+                "binbou",
+                "binboo",
+                "binbo"
+              ],
+              "feedback": {
+                "correct": "Right: びんぼう (binbō) is 'poor; poverty'.",
+                "incorrect": "'Poor' is びんぼう (binbō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C301-yokubari",
+      "sequence": 18050,
+      "title": "よくばり (yokubari) — greedy; a greedy person",
+      "headword": "よくばり",
+      "romanization": "yokubari",
+      "gloss": "greedy; a greedy person",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d4870b7b6a34bfb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to bury, then the Japanese for poor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: よくばり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よくばり — yokubari — \"greedy; a greedy person\"."
+            },
+            {
+              "kind": "speech",
+              "text": "となりの おじいさんは よくばりでした。 — tonari no ojiisan wa yokubari deshita — \"The old man next door was greedy.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よくばり (yokubari) is a mixed word, native and Sino-Japanese: yoku, \"greed\", is a Chinese character read with its on'yomi, a reading borrowed from Chinese (Middle Chinese yowk), and bari, \"stretch\", is native Japanese (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yokubari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yokubari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yokubari, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yokubari*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tonari no ojiisan wa yokubari deshita — The old man next door was greedy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tonari no ojiisan wa yokubari deshita* — The old man next door was greedy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to bury, then the Japanese for poor, then say yokubari again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to bury, then the Japanese for poor, then say *yokubari* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does よくばり (yokubari) mean? (\"Greedy; a greedy person\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C301-yokubari-type",
+              "prompt": "Say the Japanese for 'greedy'.",
+              "assesses": [
+                "JA-LEX-C301-TAKARA301-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "よくばり",
+                "yokubari"
+              ],
+              "feedback": {
+                "correct": "Right: よくばり (yokubari) is 'greedy; a greedy person'.",
+                "incorrect": "'Greedy' is よくばり (yokubari)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R301-review-297-301",
+      "sequence": 18060,
+      "title": "Looking back: from The Ogre at the Door to Buried Treasure",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from The Ogre at the Door to Buried Treasure",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed6ec3112fed950f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for an ogre and a mask."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an ogre, a mask, to be afraid, to drive out, rare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an ogre, a mask, to be afraid, to drive out, rare]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "long ago, a folk tale, to tell (a story), a village, a hard worker",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: long ago, a folk tale, to tell (a story), a village, a hard worker]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a king, a princess, a samurai, to protect, a feudal lord",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a king, a princess, a samurai, to protect, a feudal lord]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fox, a raccoon dog, to take the form of, a curse, sly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fox, a raccoon dog, to take the form of, a curse, sly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a treasure, to dig, to bury, poor, greedy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a treasure, to dig, to bury, poor, greedy]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An ogre? (おに, oni.) A mask? (おめん, omen.) To be afraid? (こわがる, kowagaru.) To drive out? (おいだす, oidasu.) Rare? (めずらしい, mezurashii.) Long ago? (むかし, mukashi.) A folk tale? (むかしばなし, mukashibanashi.) To tell (a story)? (かたる, kataru.) A village? (むら, mura.) A hard worker? (はたらきもの, hatarakimono.) A king? (おうさま, ōsama.) A princess? (おひめさま, ohimesama.) A samurai? (さむらい, samurai.) To protect? (まもる, mamoru.) A feudal lord? (とのさま, tonosama.) A fox? (きつね, kitsune.) A raccoon dog? (たぬき, tanuki.) To take the form of? (ばける, bakeru.) A curse? (のろい, noroi.) Sly? (ずるい, zurui.) A treasure? (たから, takara.) To dig? (ほる, horu.) To bury? (うめる, umeru.) Poor? (びんぼう, binbō.) Greedy? (よくばり, yokubari.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R301-review-297-301-type",
+              "prompt": "Say the Japanese for 'an ogre'.",
+              "assesses": [
+                "JA-LEX-C297-ONI297-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おに",
+                "oni"
+              ],
+              "feedback": {
+                "correct": "Right: おに (oni) is 'an ogre; a demon'.",
+                "incorrect": "'An ogre' is おに (oni)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

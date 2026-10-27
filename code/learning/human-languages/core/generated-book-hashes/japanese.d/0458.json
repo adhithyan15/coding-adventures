@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:175308d0165003ce",
+  "lessonIds": [
+    "JA-C458-bengoshi",
+    "JA-C458-koumuin",
+    "JA-C458-haiyuu",
+    "JA-C458-sakka",
+    "JA-C458-shokunin"
+  ],
+  "tex": "japanese/book/chapters/ch458-jobs-people-do.tex"
+}

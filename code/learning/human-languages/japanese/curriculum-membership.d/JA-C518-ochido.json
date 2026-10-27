@@ -1,0 +1,11 @@
+{
+  "id": "JA-C518-ochido",
+  "pathSegment": "JA-PATH-518-REGRET518",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-518-REGRET518",
+      "order": 4
+    }
+  ]
+}
