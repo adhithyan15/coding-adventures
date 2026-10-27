@@ -46,21 +46,31 @@ two translation units:
 - `runtime/twig_runtime.c` — portable I/O + heap helpers (`__twig_print_i64`,
   `__twig_print_string`, `__twig_putchar`, `__twig_alloc_bytes`, …), plus the
   LANG83 helpers `__twig_write_i64` (no newline) and `__twig_trap(kind_id)`,
-  which flushes stdout, prints `trap: <kind>` on stderr and aborts, and the
-  LANG83 PR6a float writers `__twig_write_f64_py` / `__twig_write_f64_js`
-  (`int64_t bits` → Python `repr` / JavaScript `toString`, no newline): a
-  self-contained Burger–Dybvig shortest-digits core over fixed 40-limb big
-  integers, the commented reference the LLVM and WASM backends port.
-- `runtime/lispy_runtime.c` — the **shared lisp value model** (LANG77):
-  `__twig_lispy_cons`/`car`/`cdr`/`pair_p`/`equal`/`not`/`truthy`/`make_symbol`/`nil`
-  plus int box/unbox, implementing `dynval-runtime`'s 3-bit-tagged 64-bit
-  `LispyValue` ABI. This is what lets *any* lisp-family frontend (Twig,
-  McCarthy Lisp, future lisps) compile cons cells and interned symbols to a
-  native binary — it is a language-agnostic primitive, not tied to one
-  frontend.
+  which flushes stdout, prints `trap: <kind>` on stderr and aborts, and
+  `__twig_f64_digits(bits)` / `__twig_f64_exp10(bits)` (LANG83 PR7b: the
+  shortest round-trip significand of a double and the exponent of its
+  leading digit), which the native backends call for the `f64_digits` /
+  `f64_exp10` ops. They run a self-contained Burger–Dybvig shortest-digits
+  core over fixed 40-limb big integers, the commented reference the LLVM and
+  WASM backends port. The runtime holds no float *layout*: LANG83 PR7e
+  removed the PR6a writers `__twig_write_f64_py` / `__twig_write_f64_js`
+  (Python `repr` / JavaScript `toString`), and each compiler now lays a
+  float out in its own module.
+- `runtime/dynval_runtime.c` — the **shared dynamic-value model** (LANG77,
+  DVAL01): the LANG83 PR7f primitives `__dyn_box_int` / `__dyn_unbox_int`,
+  `__dyn_tag`, `__dyn_pair_new` / `__dyn_pair_first` / `__dyn_pair_rest`,
+  `__dyn_is_pair` / `__dyn_is_nil`, `__dyn_nil` and `__dyn_symbol` (the
+  native backends call `__dyn_<name>` for a registered `dyn_<name>`),
+  implementing `dynval-runtime`'s 3-bit-tagged 64-bit `LispyValue` ABI. This
+  is what lets *any* dynamically typed frontend (Twig, McCarthy Lisp, the CAS
+  languages) compile pairs and interned symbols to a native binary. The
+  primitives were `__dyn_cons` / `car` / `cdr` / `pair_p` / `null_p` /
+  `make_symbol` before PR7f. It holds no language's rules: Lisp truthiness,
+  `not`, `equal?` and the exit coercion (`__dyn_truthy` … until LANG83
+  PR7f-2) are written by the Lisp-family lowering as IIR in each module.
 
 The C lisp runtime and the Rust `dynval-runtime` crate (used by the VM/JIT)
-are two implementations of one documented ABI. The `lispy_runtime_golden`
+are two implementations of one documented ABI. The `dynval_runtime_golden`
 unit test pins the C side to the Rust `pub const`s/constructors so they can
 never silently diverge. See `code/specs/LANG77-lisp-native-runtime.md`.
 
@@ -72,7 +82,7 @@ never silently diverge. See `code/specs/LANG77-lisp-native-runtime.md`.
   `libgc_core_capi.a` and embeds it; each AOT link site writes it to a temp `.a` and
   passes it to the linker alongside the runtime archive, so every emitted binary's
   `__twig_gc_alloc` / `__twig_gc_safepoint` references resolve against one generic
-  collector. `__dyn_cons` still allocates cons cells via `__twig_gc_alloc` — that ABI
+  collector. `__dyn_pair_new` still allocates pairs on the managed heap — that ABI
   is unchanged; only its implementation moved. See `code/specs/AOT00-T1-precise-gc.md`
   and `code/specs/LANG16-gc-core.md`.
 

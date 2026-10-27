@@ -119,9 +119,10 @@ pub enum ModuleDriverError {
 
     /// The `iir_linker::link` step failed.
     ///
-    /// This normally means two modules define functions with the same name —
-    /// a name collision that the Twig type-checker would have caught in
-    /// strict mode.
+    /// This normally means two modules *export* functions with the same name
+    /// (`LinkError::ConflictingExport`): Twig calls across modules by bare
+    /// name, so the call target would be ambiguous.  Same-named *private*
+    /// functions are fine — the linker renames them apart.
     Link(Vec<LinkError>),
 
     /// The import graph exceeds [`MAX_MODULES`].
@@ -361,6 +362,8 @@ pub fn compile_module_tree(
         std::collections::HashMap::new();
     let mut visited: HashSet<PathBuf> = HashSet::new();
     let mut queue: VecDeque<PathBuf> = VecDeque::new();
+    // Module names handed out so far — see `unique_module_name`.
+    let mut used_module_names: HashSet<String> = HashSet::new();
 
     queue.push_back(root_canonical.clone());
     visited.insert(root_canonical.clone());
@@ -374,7 +377,10 @@ pub fn compile_module_tree(
             }
         })?;
 
-        let module_name = derive_module_name(&current_path, search_roots);
+        let module_name = unique_module_name(
+            derive_module_name(&current_path, search_roots),
+            &mut used_module_names,
+        );
 
         // Parse: source → CST (for the IIR compiler) → typed AST (for the
         // driver's own analyses).  Together these are exactly
@@ -714,8 +720,21 @@ pub fn compile_module_tree(
         // Only the root module keeps `entry_point = Some("main")`.
         // Library modules have their entry_point cleared so the linker knows
         // that only the root provides the program's starting function.
+        //
+        // A library may also *export* its `main` — `compiler/main.tw` does,
+        // so that it can be run on its own — and the root usually exports
+        // `main` too.  Since #18429 the linker rejects two modules exporting
+        // the same public name (`LinkError::ConflictingExport`), so the
+        // export goes with the entry point: a library's `main` is never the
+        // program's entry, and no other module can call it by that name
+        // anyway (a bare `main` in the root means the root's own).  The
+        // function stays in the library as a private function; the linker
+        // renames it to `<library>::main` and the library's own references
+        // follow the rename.
         if path.as_path() != root_canonical.as_path() {
-            iir_mod.entry_point = None;
+            if let Some(entry) = iir_mod.entry_point.take() {
+                iir_mod.exports.retain(|e| e.public_name() != entry);
+            }
         }
 
         modules.push(iir_mod);
@@ -724,8 +743,15 @@ pub fn compile_module_tree(
     // ── Phase 5: Link ─────────────────────────────────────────────────────────
     //
     // `iir_linker::link` merges all functions into one self-contained module.
-    // It returns `Err` if two modules define the same public function name
-    // (a name collision that would make the final call target ambiguous).
+    // It returns `Err` if two modules export the same public function name
+    // (`LinkError::ConflictingExport` — a collision that would make the final
+    // call target ambiguous, because Twig calls across modules by bare name),
+    // if two modules share a module name (`DuplicateModuleName`; Phase 1
+    // gives every file a distinct name, so this cannot come from the
+    // driver), or if the root's entry point does not resolve
+    // (`UnresolvedEntryPoint`; the IR compiler always emits `main`).
+    // Private functions that share a name are *not* an error: the linker
+    // renames them apart.
     iir_linker::link(&modules).map_err(ModuleDriverError::Link)
 }
 
@@ -736,12 +762,19 @@ pub fn compile_module_tree(
 /// Derive a Twig module name from a file path.
 ///
 /// Strategy (in order):
-/// 1. For the nearest matching search root, return the relative path
-///    stem (slash-joined, no extension).
+/// 1. Try the file's own directory, then each search root.  For the first
+///    one that contains the file, return the relative path stem
+///    (slash-joined, no extension).
 /// 2. Otherwise return the file stem.
 ///
+/// Because the file's own directory is tried first and always contains
+/// the file, step 1 in practice yields just the file stem: the search
+/// roots only matter if canonicalisation makes the parent look unrelated.
+/// Two files with the same stem in different directories therefore get
+/// the same name here; `unique_module_name` makes them distinct.
+///
 /// Examples:
-///   `/project/compiler/lexer.tw` with root `/project` → `"compiler/lexer"`
+///   `/project/compiler/lexer.tw` with root `/project` → `"lexer"`
 ///   `/project/utils.tw` with root `/project` → `"utils"`
 ///   `/standalone.tw` with no roots → `"standalone"`
 fn derive_module_name(path: &Path, search_roots: &[&Path]) -> String {
@@ -773,6 +806,38 @@ fn derive_module_name(path: &Path, search_roots: &[&Path]) -> String {
         .and_then(|s| s.to_str())
         .unwrap_or("unknown")
         .to_string()
+}
+
+/// Make `name` distinct from every module name handed out so far, and
+/// record it.
+///
+/// `derive_module_name` yields the file stem, so `a/util.tw` and `b/util.tw`
+/// both come out as `util`.  The linker keys exports and imports by module
+/// name and rejects duplicates (`LinkError::DuplicateModuleName`, #18429),
+/// so the second file needs a different name.  The module name is only an
+/// identity inside the link — it shows up as the prefix of renamed private
+/// functions (`util~2::helper`) — so a numeric suffix is enough:
+///
+/// | Discovery order | Derived | Assigned |
+/// |-----------------|---------|----------|
+/// | `a/util.tw`     | `util`  | `util`   |
+/// | `b/util.tw`     | `util`  | `util~2` |
+/// | `c/util.tw`     | `util`  | `util~3` |
+///
+/// Every candidate is checked against `used`, so the result is unique even
+/// if a file is literally called `util~2.tw`.  The BFS order is
+/// deterministic, so the names are stable from run to run.  The loop is
+/// bounded: it tries at most `used.len() + 1` candidates, and at most
+/// `MAX_MODULES` names are ever in `used`.
+fn unique_module_name(name: String, used: &mut HashSet<String>) -> String {
+    let mut candidate = name.clone();
+    let mut n: usize = 2;
+    while used.contains(&candidate) {
+        candidate = format!("{name}~{n}");
+        n += 1;
+    }
+    used.insert(candidate.clone());
+    candidate
 }
 
 /// Canonicalize a path, falling back to the original if canonicalization
@@ -1151,6 +1216,198 @@ mod tests {
             "{:?}",
             strlen.instructions
         );
+    }
+
+
+    // ── Issue #18421: per-module lambda names must survive linking ───────────
+    //
+    // Every module is compiled by a fresh `twig-ir-compiler::Compiler`, so
+    // every module numbers its anonymous functions from zero: the first
+    // `(lambda …)` in *each* file becomes `__lambda_0`.  The linker keeps the
+    // first module's `__lambda_0` and renames the second module's copy to
+    // `<module>::__lambda_0` — but the second module's `alloc_closure`
+    // instruction names its body with an inline `Operand::Str("__lambda_0")`.
+    // Before the fix only `call` callees were rewritten, so the second
+    // module's closure silently ran the *first* module's lambda body.
+    //
+    // The two libraries below are deliberately shaped so the bug is
+    // visible in the result and not just as a crash:
+    //
+    //   adder:   (lambda (x) (+ x n))          1 capture,  1 param
+    //   scaler:  (lambda (x) (* x (* a b)))    2 captures, 1 param
+    //   subber:  (lambda (x) (- x n))          1 capture,  1 param  (same arity
+    //            as adder — a mis-dispatch here type-checks fine and just
+    //            computes the wrong number)
+    //
+    //   expected:  (+ ((make-adder 1) 10)        11
+    //                 ((make-scaler 2 3) 100)    600
+    //                 ((make-subber 5) 1000))    995   → 1606
+
+    /// Write the three-library program used by the lambda-name tests and
+    /// return the root `main.tw` path.
+    fn write_three_lambda_libs(dir: &Path) -> PathBuf {
+        write_temp(dir, "adder.tw", "
+            (module adder (export make-adder))
+            (define (make-adder n) (lambda (x) (+ x n)))
+        ");
+        write_temp(dir, "scaler.tw", "
+            (module scaler (export make-scaler))
+            (define (make-scaler a b) (lambda (x) (* x (* a b))))
+        ");
+        write_temp(dir, "subber.tw", "
+            (module subber (export make-subber))
+            (define (make-subber n) (lambda (x) (- x n)))
+        ");
+        write_temp(dir, "main.tw", "
+            (module main (import adder) (import scaler) (import subber))
+            (let ((add1 (make-adder 1))
+                  (mul6 (make-scaler 2 3))
+                  (sub5 (make-subber 5)))
+              (+ (add1 10) (+ (mul6 100) (sub5 1000))))
+        ")
+    }
+
+    #[test]
+    fn lambdas_from_different_modules_keep_their_own_bodies() {
+        let dir = make_tempdir("lambda_names_18421_vm");
+        let root = write_three_lambda_libs(&dir);
+        let v = run_in_large_stack(root, dir, "lambda_names_18421");
+        assert_eq!(
+            v,
+            twig_vm::LispyValue::int(1606),
+            "each module's closure must run that module's own lambda body",
+        );
+    }
+
+    #[test]
+    fn same_arity_lambdas_from_different_modules_do_not_alias() {
+        // The quiet variant of the bug: both lambdas take 1 capture + 1
+        // param, so a mis-dispatched closure runs without any arity error
+        // and just computes `(+ 1000 5)` = 1005 instead of `(- 1000 5)` = 995,
+        // turning the expected 1006 into 1016.
+        let dir = make_tempdir("lambda_names_18421_same_arity");
+        write_temp(&dir, "adder.tw", "
+            (module adder (export make-adder))
+            (define (make-adder n) (lambda (x) (+ x n)))
+        ");
+        write_temp(&dir, "subber.tw", "
+            (module subber (export make-subber))
+            (define (make-subber n) (lambda (x) (- x n)))
+        ");
+        let root = write_temp(&dir, "main.tw", "
+            (module main (import adder) (import subber))
+            (let ((add1 (make-adder 1))
+                  (sub5 (make-subber 5)))
+              (+ (add1 10) (sub5 1000)))
+        ");
+        let v = run_in_large_stack(root, dir, "lambda_names_18421_same_arity");
+        assert_eq!(v, twig_vm::LispyValue::int(1006));
+    }
+
+    #[test]
+    fn unique_module_name_suffixes_repeats() {
+        let mut used = HashSet::new();
+        assert_eq!(unique_module_name("util".into(), &mut used), "util");
+        assert_eq!(unique_module_name("util".into(), &mut used), "util~2");
+        assert_eq!(unique_module_name("main".into(), &mut used), "main");
+        assert_eq!(unique_module_name("util".into(), &mut used), "util~3");
+    }
+
+    // ── Issue #18429: a public name may be claimed by only one module ────────
+    //
+    // Twig resolves a cross-module call by its *bare* name (every defined
+    // name is passed to the IR compiler as an extern), and the linker keeps
+    // an exported function's bare name.  So if two libraries both export
+    // `foo`, the merged module holds two functions called `foo` and every
+    // `(foo)` — including the second library's own — runs whichever came
+    // first.  Before the fix the link "succeeded" and quietly called the
+    // wrong function; now it is a link error naming both modules.
+
+    #[test]
+    fn two_libraries_exporting_the_same_name_is_a_link_error() {
+        let dir = make_tempdir("dup_export_18429");
+        write_temp(&dir, "left.tw", "
+            (module left (export foo))
+            (define (foo) 1)
+        ");
+        write_temp(&dir, "right.tw", "
+            (module right (export foo))
+            (define (foo) 2)
+        ");
+        let root = write_temp(&dir, "main.tw", "
+            (module main (import left) (import right))
+            (foo)
+        ");
+        let err = compile_module_tree(&root, &[])
+            .expect_err("two modules exporting `foo` must not link");
+        match err {
+            ModuleDriverError::Link(errors) => {
+                assert!(
+                    errors.iter().any(|e| matches!(
+                        e,
+                        LinkError::ConflictingExport { function_name, .. } if function_name == "foo"
+                    )),
+                    "expected ConflictingExport for `foo`, got {errors:?}",
+                );
+            }
+            other => panic!("expected ModuleDriverError::Link, got {other}"),
+        }
+    }
+
+    #[test]
+    fn library_exporting_main_does_not_clash_with_the_root_main() {
+        // The TW05 self-compile tests link a root `main-test.tw` that
+        // exports `main` against `compiler/main.tw`, which *also* exports
+        // `main` so it can be run on its own.  A library's `main` is never
+        // the program's entry, so the driver withdraws that export along
+        // with the library's entry point — the link must still succeed,
+        // run the root's `main`, and leave the library's `main` reachable
+        // from inside the library under a renamed, private name.
+        let dir = make_tempdir("lib_main_export_18429");
+        write_temp(&dir, "tool.tw", "
+            (module tool (export main helper))
+            (define (main) (helper))
+            (define (helper) 7)
+        ");
+        let root = write_temp(&dir, "app.tw", "
+            (module app (export main) (import tool))
+            (define (main) (+ (helper) 100))
+        ");
+        let m = compile_module_tree(&root, &[]).expect("link must succeed");
+        assert_eq!(m.entry_point.as_deref(), Some("main"));
+        assert!(m.get_function("tool::main").is_some(),
+            "the library's own `main` is kept under a module-qualified name");
+        // Exactly one function owns the bare name `main` — the root's.
+        // (Before #18429 both user `main`s kept the bare name.)
+        assert_eq!(m.functions.iter().filter(|f| f.name == "main").count(), 1);
+        // And the program that runs is the root's: (+ 7 100), not tool's 7.
+        let v = run_in_large_stack(root, dir, "lib_main_export_18429");
+        assert_eq!(v, twig_vm::LispyValue::int(107));
+    }
+
+    #[test]
+    fn files_with_the_same_stem_get_distinct_module_names() {
+        // Module names are derived from the file stem, so `a/util.tw` and
+        // `b/util.tw` both start out as `util`.  The linker now rejects
+        // duplicate module names (#18429), so the driver must give the
+        // second file a distinct name instead of failing the link.
+        let dir = make_tempdir("same_stem_18429");
+        write_temp(&dir, "a/util.tw", "
+            (module util (export a-val))
+            (define (helper) 1)
+            (define (a-val) (helper))
+        ");
+        write_temp(&dir, "b/util.tw", "
+            (module util (export b-val))
+            (define (helper) 2)
+            (define (b-val) (helper))
+        ");
+        let root = write_temp(&dir, "main.tw", "
+            (module main (import a/util) (import b/util))
+            (+ (a-val) (* 10 (b-val)))
+        ");
+        let v = run_in_large_stack(root, dir, "same_stem_18429");
+        assert_eq!(v, twig_vm::LispyValue::int(21));
     }
 }
 

@@ -2,6 +2,10 @@
 
 All notable changes to this crate are documented here.
 
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- Doc comments name `__dyn_pair_new`, the runtime symbol that was `__dyn_cons` before LANG83 PR7f. No code change.
+
 ## Unreleased — the precise walk builds its own anchor (every ABI)
 
 - **Every precise collect entry is now a naked frame-building trampoline.**

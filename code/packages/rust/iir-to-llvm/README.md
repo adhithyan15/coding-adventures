@@ -252,6 +252,8 @@ flushes stdout before reporting the kind on stderr and aborting. LANG83 PR4 adds
 `@llvm.s{add,sub,mul}.with.overflow.i64` (negation is `ssub(0, a)`) with a branch
 on the overflow bit to `@__iir_trap(Trap.Overflow)`.
 
-LANG83 PR6a adds `write_f64_py` / `write_f64_js` → `call @__iir_write_f64(double, i32 layout)`. That module-local `linkonce_odr` IR carries a Burger–Dybvig shortest-round-trip digit core over stack big integers, and prints Python's `repr` or JavaScript's `toString` layout with libc `putchar` (see `src/lang83_f64.rs`).
+LANG83 PR6a added a module-local Burger–Dybvig shortest-round-trip digit core over stack big integers (see `src/lang83_f64.rs`), first behind the float writers `write_f64_py` / `write_f64_js`. Those writers, which laid the digits out in Python's `repr` or JavaScript's `toString` style (`@__iir_write_f64`), were removed in LANG83 PR7e: a backend may not carry a language's layout, so a `call_builtin` of either is refused. The core stays, behind the PR7b ops below, and each compiler lays a float out in its own module.
 
 LANG83 PR6c adds the non-trapping IEEE `f64_add`/`f64_sub`/`f64_mul`/`f64_div` → `fadd`/`fsub`/`fmul`/`fdiv double` (no fast-math flags), `f64_neg` → `fneg double`, and `f64_signbit` → `bitcast double to i64` + `lshr 63`.
+
+LANG83 PR7b adds `f64_class` (inline `bitcast` and three `icmp`s summed) and `f64_digits` / `f64_exp10` → `call i64 @__iir_f64_shortest_digits(double)` / `@__iir_f64_shortest_exp10(double)`, two `internal` wrappers around that digit core. All the float helpers have `internal` linkage, so a symbol of the same name in a linked runtime cannot interpose on them. The core writes nothing, so it needs no `putchar`.

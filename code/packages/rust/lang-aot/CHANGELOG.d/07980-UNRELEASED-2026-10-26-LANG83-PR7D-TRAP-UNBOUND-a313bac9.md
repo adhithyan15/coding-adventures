@@ -1,0 +1,4 @@
+## Unreleased — LANG83 PR7d — ReferenceError traps `Trap.Unbound`
+
+- LANG83 PR7d renames trap kind 7 from `Trap.ReferenceError` to `Trap.Unbound` (same id): a trap kind names the condition, not one language's exception class. `javascript-iir-compiler` lowers a ReferenceError to `trap "Trap.Unbound"`, so `javascript_reference_errors_trap_after_output_on_every_available_backend` now expects `StdoutThenTrap("1", "Trap.Unbound")` on every column (native `trap: Trap.Unbound` on stderr, the LLVM message, the WASM host's name for id 7, the JVM/CLR exception message, the BEAM reason atom, and `VMError::Trap` on the VM and JIT).
+- `Language::JavaScript`'s docs, the README's JavaScript table, and the `BUILD` / `Cargo.toml` comments name `Trap.Unbound` (the `Cargo.toml` comment also stops describing the pre-PR7c-js `write_f64_js` lowering).

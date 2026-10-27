@@ -1,0 +1,24 @@
+{
+  "chapter": 155,
+  "title": "Trains and Opening Hours",
+  "label": "ch:zh-trains-and-opening-hours",
+  "canDo": "I can find times in a timetable and opening hours.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C155-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Reading a station timetable and a bookshop's opening hours, with 从 … 到 …, setting off, opening and closing, built on one new written character: 从.",
+    "assesses": [
+      "ZH-LEX-C155-CONG-01",
+      "ZH-SCRIPT-CONG-FROM-01",
+      "ZH-GRAMMAR-CONG-DAO-01",
+      "ZH-LEX-C155-CHUFA-01",
+      "ZH-LEX-C155-KAIMEN-01",
+      "ZH-LEX-C155-GUANMEN-01",
+      "ZH-SKILL-READ-TIMETABLE-01",
+      "ZH-PERFORMANCE-TIMETABLE-01"
+    ]
+  }
+}

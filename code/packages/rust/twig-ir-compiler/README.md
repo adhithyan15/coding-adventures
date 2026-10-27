@@ -189,6 +189,21 @@ print
 
 Builtin references in non-call positions wrap into a `make_builtin_closure` so they can be passed as values to higher-order functions.
 
+## Reserved names
+
+Names beginning with `__lisp_` or `__dyn_` (ignoring ASCII case, in any
+`/`-separated segment) belong to the functions later lowering passes add to
+the module and to the native runtime's symbols, which those passes recognise
+by name. A program may not define, bind or reference one:
+
+```text
+(define (__lisp_equal a b) 42)   → TwigCompileError at 1:10: the name "__lisp_equal" is reserved
+'__lisp_equal                    → fine: a quoted symbol is data, not a name
+```
+
+`RESERVED_PREFIXES` and `reserved_prefix` are exported for tools that want
+the same rule.
+
 ## Usage
 
 ```rust
