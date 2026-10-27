@@ -13,6 +13,35 @@
 //! is `IIRExport::public_name()` — the alias if one was set, otherwise the
 //! function name.
 //!
+//! # One owner per public name (issue #18429)
+//!
+//! The export map is keyed per module, but the *merged* module has one flat
+//! namespace: an exported function keeps its bare public name there, because
+//! that is the name its importers call.  So two different modules may not
+//! export the same public name, even though their export-map keys differ:
+//!
+//! ```text
+//!   key ("left",  "foo") ─┐            merged module
+//!                         ├─ both ──►  foo   (left's)
+//!   key ("right", "foo") ─┘            foo   (right's — unreachable: every
+//!                                             `call foo` binds to the first)
+//! ```
+//!
+//! `build_export_map` therefore also records which module first claimed each
+//! public name and reports `ConflictingExport` when a second module claims
+//! it.  A name exported twice by the *same* module is the older
+//! `DuplicateExport`.
+//!
+//! # Link-wide sanity checks
+//!
+//! Two more checks guard names the merge pass would otherwise bind to the
+//! wrong function:
+//!
+//! * [`check_module_names`] — module names must be unique, because exports
+//!   and import rewrites are keyed by module name.
+//! * [`check_entry_point`] — the entry point must resolve inside the module
+//!   it came from (a function it defines, or the local name of an import).
+//!
 //! # Type checking
 //!
 //! Type checking only fires when the import provides non-empty `param_types`
@@ -23,7 +52,7 @@
 //! about types (e.g., a dynamically typed language frontend) can still use the
 //! linker.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use interpreter_ir::function::IIRFunction;
 use interpreter_ir::module::IIRModule;
@@ -39,8 +68,11 @@ pub struct ResolvedExport<'a> {
 
 /// Build an export map from a set of modules.
 ///
-/// Returns `(map, errors)` where `errors` contains one `DuplicateExport` per
-/// collision.
+/// Returns `(map, errors)` where `errors` contains:
+///
+/// * one `DuplicateExport` per `(module_name, public_name)` key seen twice;
+/// * one `ConflictingExport` per public name claimed by a second, *different*
+///   module (see the module docs — the merged namespace is flat).
 ///
 /// # Key
 ///
@@ -51,6 +83,12 @@ pub fn build_export_map<'a>(
 ) -> (HashMap<(String, String), ResolvedExport<'a>>, Vec<LinkError>) {
     let mut map: HashMap<(String, String), ResolvedExport<'a>> = HashMap::new();
     let mut errors: Vec<LinkError> = Vec::new();
+    // public name → name of the module that claimed it first.  Comparing
+    // module *names* (not slice positions) keeps the two error kinds
+    // disjoint: same-named modules collide on the map key above and are
+    // reported as `DuplicateExport` (plus `DuplicateModuleName` from
+    // `check_module_names`), never also as `ConflictingExport`.
+    let mut owner_of: HashMap<&'a str, &'a str> = HashMap::new();
 
     for module in modules {
         // If the module has no explicit exports, it exports *nothing* —
@@ -67,6 +105,23 @@ pub fn build_export_map<'a>(
                 // resolving later imports and can report more errors.
                 continue;
             }
+            // Issue #18429: a public name has exactly one owner across the
+            // whole link.  We still insert the second module's entry below
+            // so imports of it resolve and the user sees only the real
+            // problem, not a cascade of `Unresolved` errors.
+            match owner_of.get(export.public_name()) {
+                Some(&first) if first != module.name => {
+                    errors.push(LinkError::ConflictingExport {
+                        function_name: export.public_name().to_string(),
+                        first_module: first.to_string(),
+                        second_module: module.name.clone(),
+                    });
+                }
+                Some(_) => {}
+                None => {
+                    owner_of.insert(export.public_name(), &module.name);
+                }
+            }
             // The validator already checked that function_name exists, so
             // `unwrap_or_else` is a belt-and-suspenders fallback.
             if let Some(fn_) = module.get_function(&export.function_name) {
@@ -82,6 +137,53 @@ pub fn build_export_map<'a>(
     }
 
     (map, errors)
+}
+
+/// Report every module name that appears more than once in `modules`.
+///
+/// One `DuplicateModuleName` per distinct repeated name, in input order —
+/// three modules called `util` are one problem, not two.
+pub fn check_module_names(modules: &[IIRModule]) -> Vec<LinkError> {
+    let mut seen: HashSet<&str> = HashSet::new();
+    let mut reported: HashSet<&str> = HashSet::new();
+    let mut errors = Vec::new();
+    for module in modules {
+        if !seen.insert(&module.name) && reported.insert(&module.name) {
+            errors.push(LinkError::DuplicateModuleName {
+                module_name: module.name.clone(),
+            });
+        }
+    }
+    errors
+}
+
+/// Check that the merged module's entry point resolves inside its module.
+///
+/// The merged entry point comes from the first module (input order) whose
+/// `entry_point` is `Some`; later modules' entry points are ignored, so they
+/// are not checked either.  The name resolves when the module
+///
+/// | defines a function with that name | e.g. Twig's synthesized `main` |
+/// |-----------------------------------|--------------------------------|
+/// | or imports a function under that local name | `import lib::run as start` |
+///
+/// Anything else is `UnresolvedEntryPoint`: left alone, the bare name would
+/// bind to whichever function owns it after merging — possibly another
+/// module's private function.
+pub fn check_entry_point(modules: &[IIRModule]) -> Option<LinkError> {
+    let (module, entry) = modules
+        .iter()
+        .find_map(|m| m.entry_point.as_deref().map(|ep| (m, ep)))?;
+    let defined = module.get_function(entry).is_some();
+    let imported = module.imports.iter().any(|i| i.local_name() == entry);
+    if defined || imported {
+        None
+    } else {
+        Some(LinkError::UnresolvedEntryPoint {
+            module_name: module.name.clone(),
+            entry_point: entry.to_string(),
+        })
+    }
 }
 
 /// Resolve all imports in `modules` against the export map.
@@ -261,6 +363,68 @@ mod tests {
         let (_, errs) = build_export_map(&modules);
         assert_eq!(errs.len(), 1);
         assert!(matches!(&errs[0], LinkError::DuplicateExport { function_name, .. } if function_name == "add"));
+    }
+
+    #[test]
+    fn same_public_name_from_two_modules_is_a_conflict() {
+        let mut m1 = make_math_module();
+        m1.name = "left".into();
+        let mut m2 = make_math_module();
+        m2.name = "right".into();
+        let modules = vec![m1, m2];
+        let (map, errs) = build_export_map(&modules);
+        assert_eq!(
+            errs,
+            vec![LinkError::ConflictingExport {
+                function_name: "add".into(),
+                first_module: "left".into(),
+                second_module: "right".into(),
+            }]
+        );
+        // Both entries stay in the map so their importers still resolve.
+        assert!(map.contains_key(&("left".to_string(), "add".to_string())));
+        assert!(map.contains_key(&("right".to_string(), "add".to_string())));
+    }
+
+    #[test]
+    fn same_named_modules_report_duplicate_export_not_conflict() {
+        let modules = vec![make_math_module(), make_math_module()];
+        let (_, errs) = build_export_map(&modules);
+        assert_eq!(errs.len(), 1);
+        assert!(matches!(errs[0], LinkError::DuplicateExport { .. }));
+    }
+
+    #[test]
+    fn check_module_names_accepts_unique_names() {
+        let mut other = make_math_module();
+        other.name = "other".into();
+        assert!(check_module_names(&[make_math_module(), other]).is_empty());
+    }
+
+    #[test]
+    fn check_entry_point_with_no_entry_is_fine() {
+        assert_eq!(check_entry_point(&[make_math_module()]), None);
+        assert_eq!(check_entry_point(&[]), None);
+    }
+
+    #[test]
+    fn check_entry_point_accepts_defined_function() {
+        let mut m = make_math_module();
+        m.entry_point = Some("add".into());
+        assert_eq!(check_entry_point(&[m]), None);
+    }
+
+    #[test]
+    fn check_entry_point_rejects_missing_function() {
+        let mut m = make_math_module();
+        m.entry_point = Some("main".into());
+        assert_eq!(
+            check_entry_point(&[m]),
+            Some(LinkError::UnresolvedEntryPoint {
+                module_name: "math".into(),
+                entry_point: "main".into(),
+            })
+        );
     }
 
     #[test]
