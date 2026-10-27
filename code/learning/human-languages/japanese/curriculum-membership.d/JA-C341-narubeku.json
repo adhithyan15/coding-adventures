@@ -1,0 +1,11 @@
+{
+  "id": "JA-C341-narubeku",
+  "pathSegment": "JA-PATH-341-SETTOKU341",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-341-SETTOKU341",
+      "order": 3
+    }
+  ]
+}

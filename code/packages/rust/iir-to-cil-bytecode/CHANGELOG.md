@@ -35,6 +35,16 @@
   output), both queries and the inline `f64_class` over the PR6a table in
   every `"R"` layout. Structural here: there is no `dotnet`.
 
+## Unreleased — a failed narrowing raises `Trap.ConvRange`
+
+- `real_to_int_trunc` / `real_to_int_floor` range-check the (floored) operand
+  against the destination's bounds (`blt.un` −2⁶³ / `ble.un` −2³¹−1, then an
+  ordered `blt` against 2⁶³ / 2³¹) and raise `Trap.ConvRange` through the
+  shared LANG83 trap sequence ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). Before, `conv.ovf.i8`/`conv.ovf.i4`
+  threw an untyped `OverflowException`. The overflow-checked conversion stays
+  after the check, so a wrong check would still fail closed.
+- Test: `e8_failed_narrowing_raises_trap_conv_range`.
+
 ## [0.50.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
 
 - **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /

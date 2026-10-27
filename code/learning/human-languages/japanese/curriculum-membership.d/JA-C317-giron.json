@@ -1,0 +1,11 @@
+{
+  "id": "JA-C317-giron",
+  "pathSegment": "JA-PATH-317-SANSEI317",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-317-SANSEI317",
+      "order": 2
+    }
+  ]
+}

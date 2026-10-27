@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:4a0ad5a77b7478bc",
+  "lessonIds": [
+    "JA-C486-buhin",
+    "JA-C486-kanagu",
+    "JA-C486-sabiru",
+    "JA-C486-hameru",
+    "JA-C486-hagasu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch486.txt",
+  "json": "japanese/narration/ch486.json",
+  "textHash": "fnv1a64:09883bf217f33077",
+  "jsonHash": "fnv1a64:720f2f755354e2a6",
+  "findings": []
+}

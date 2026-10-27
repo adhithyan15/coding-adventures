@@ -1,0 +1,11 @@
+{
+  "id": "JA-C345-zurasu",
+  "pathSegment": "JA-PATH-345-HENKOU345",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-345-HENKOU345",
+      "order": 3
+    }
+  ]
+}

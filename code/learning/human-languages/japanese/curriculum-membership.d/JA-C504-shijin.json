@@ -1,0 +1,11 @@
+{
+  "id": "JA-C504-shijin",
+  "pathSegment": "JA-PATH-504-ART504",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-504-ART504",
+      "order": 1
+    }
+  ]
+}

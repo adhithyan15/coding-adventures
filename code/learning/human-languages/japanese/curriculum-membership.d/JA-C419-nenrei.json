@@ -1,0 +1,11 @@
+{
+  "id": "JA-C419-nenrei",
+  "pathSegment": "JA-PATH-419-KOKUSEKI419",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-419-KOKUSEKI419",
+      "order": 1
+    }
+  ]
+}

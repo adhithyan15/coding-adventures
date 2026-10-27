@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:c7230cf367f03f6b",
+  "lessonIds": [
+    "JA-C313-kiroku",
+    "JA-C313-sakaeru",
+    "JA-C313-horobiru",
+    "JA-C313-senjitsu",
+    "JA-C313-iseki"
+  ],
+  "tex": "japanese/book/chapters/ch313-what-remains.tex"
+}

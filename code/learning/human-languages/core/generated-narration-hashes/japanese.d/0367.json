@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:e42033c73c78de5a",
+  "lessonIds": [
+    "JA-C367-hakkiri",
+    "JA-C367-tsumari",
+    "JA-C367-juubun",
+    "JA-C367-teido",
+    "JA-C367-wariai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch367.txt",
+  "json": "japanese/narration/ch367.json",
+  "textHash": "fnv1a64:a36f166e98ddde80",
+  "jsonHash": "fnv1a64:190da894266886bd",
+  "findings": []
+}

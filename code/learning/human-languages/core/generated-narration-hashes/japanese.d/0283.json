@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:82bb755bf7a67916",
+  "lessonIds": [
+    "JA-C283-happyou-suru",
+    "JA-C283-houkoku-suru",
+    "JA-C283-chousa-suru",
+    "JA-C283-jouhou",
+    "JA-C283-jijitsu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch283.txt",
+  "json": "japanese/narration/ch283.json",
+  "textHash": "fnv1a64:d0d7efd9537860c0",
+  "jsonHash": "fnv1a64:88ad66bdb6331004",
+  "findings": []
+}

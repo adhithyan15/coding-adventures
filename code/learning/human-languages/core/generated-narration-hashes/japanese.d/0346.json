@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:da71909d7d21c134",
+  "lessonIds": [
+    "JA-C346-kondo",
+    "JA-C346-konkai",
+    "JA-C346-zenkai",
+    "JA-C346-jikai",
+    "JA-C346-jiki",
+    "JA-R346-review-341-346"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch346.txt",
+  "json": "japanese/narration/ch346.json",
+  "textHash": "fnv1a64:7895d0d3c2845b1a",
+  "jsonHash": "fnv1a64:0495e545817d3fa3",
+  "findings": []
+}

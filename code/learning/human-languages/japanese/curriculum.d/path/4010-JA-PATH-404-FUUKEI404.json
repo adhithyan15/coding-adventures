@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-404-FUUKEI404",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "JA-EXT-404-FUUKEI404"
+  ],
+  "after": []
+}

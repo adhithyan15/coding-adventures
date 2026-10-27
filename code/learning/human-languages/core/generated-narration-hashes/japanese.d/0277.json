@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:bb79c8f36379c095",
+  "lessonIds": [
+    "JA-C277-ouyuki",
+    "JA-C277-tsumoru",
+    "JA-C277-fubuki",
+    "JA-C277-teiden",
+    "JA-C277-kogoeru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch277.txt",
+  "json": "japanese/narration/ch277.json",
+  "textHash": "fnv1a64:8899050b72f118ad",
+  "jsonHash": "fnv1a64:196216cba8e755c0",
+  "findings": []
+}

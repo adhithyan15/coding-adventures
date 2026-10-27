@@ -1,0 +1,11 @@
+{
+  "id": "JA-C491-jaguchi",
+  "pathSegment": "JA-PATH-491-STOVE491",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-491-STOVE491",
+      "order": 1
+    }
+  ]
+}

@@ -2535,7 +2535,9 @@ fn real_to_int_emits_round_check_and_fptosi() {
     assert!(ll.contains("call double @llvm.floor.f64(double %x)"), "expected floor intrinsic:\n{ll}");
     assert!(ll.contains("fcmp oge double") && ll.contains("fcmp olt double"),
         "expected ordered range comparisons:\n{ll}");
-    assert!(ll.contains("call void @llvm.trap()"), "expected trap on out-of-range:\n{ll}");
+    // LANG83: out of range is the typed `Trap.ConvRange` (id 4) through the
+    // shared `@__iir_trap`, which flushes stdout and names the kind.
+    assert!(ll.contains("call void @__iir_trap(ptr @__iir_trap_msg.4,"), "expected Trap.ConvRange on out-of-range:\n{ll}");
     assert!(ll.contains("fptosi double") && ll.contains("to i64"), "expected fptosi to i64:\n{ll}");
     assert!(ll.contains("declare double @llvm.floor.f64(double)"), "expected floor declare:\n{ll}");
 

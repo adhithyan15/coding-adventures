@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C317-teian-suru",
+    "language": "japanese",
+    "chapter": 317,
+    "sequence": 19030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2ce4bb8ea8e2b65"
+  },
+  "findings": []
+}

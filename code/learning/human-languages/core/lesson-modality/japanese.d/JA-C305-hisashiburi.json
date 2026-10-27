@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C305-hisashiburi",
+    "language": "japanese",
+    "chapter": 305,
+    "sequence": 18260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9b36c238f3c87ce"
+  },
+  "findings": []
+}

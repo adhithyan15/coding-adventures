@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-368-ZENTAI368",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "JA-EXT-368-ZENTAI368"
+  ],
+  "after": []
+}

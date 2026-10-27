@@ -1,0 +1,799 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 529,
+  "title": "Anyway and After All",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:280e3a7773d35d40",
+  "lessons": [
+    {
+      "id": "JA-C529-nazeka",
+      "sequence": 30530,
+      "title": "なぜか (nazeka) — for some reason",
+      "headword": "なぜか",
+      "romanization": "nazeka",
+      "gloss": "for some reason",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50d9d350ea5d9a85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for or else, then the Japanese for either one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: なぜか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なぜか — nazeka — \"for some reason\"."
+            },
+            {
+              "kind": "speech",
+              "text": "なぜか あじは みずに よります。 — nazeka aji wa mizu ni yorimasu — \"For some reason, the taste depends on the water.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なぜか (nazeka) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana: built from naze, \"why\", and the particle ka (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazeka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazeka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazeka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazeka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazeka aji wa mizu ni yorimasu — For some reason, the taste depends on the water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazeka aji wa mizu ni yorimasu* — For some reason, the taste depends on the water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for or else, then the Japanese for either one, then say nazeka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for or else, then the Japanese for either one, then say *nazeka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does なぜか (nazeka) mean? (\"For some reason\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C529-nazeka-type",
+              "prompt": "Say the Japanese for 'for some reason'.",
+              "assesses": [
+                "JA-LEX-C529-ANYWAY529-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "なぜか",
+                "nazeka"
+              ],
+              "feedback": {
+                "correct": "Right: なぜか (nazeka) is 'for some reason'.",
+                "incorrect": "'For some reason' is なぜか (nazeka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C529-tokorode",
+      "sequence": 30540,
+      "title": "ところで (tokorode) — by the way",
+      "headword": "ところで",
+      "romanization": "tokorode",
+      "gloss": "by the way",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:869b0c1c2f80efc4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for either one, then the Japanese for for some reason."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ところで",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ところで — tokorode — \"by the way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ところで、もし じかんが あったら、えいがに いきませんか。 — tokorode, moshi jikan ga attara, eiga ni ikimasen ka — \"By the way, if you have time, would you like to see a film?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ところで (tokorode) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana: built from tokoro, \"place\", and the particle de (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokorode",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokorode*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokorode, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokorode*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokorode, moshi jikan ga attara, eiga ni ikimasen ka — By the way, if you have time, would you like to see a film?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokorode, moshi jikan ga attara, eiga ni ikimasen ka* — By the way, if you have time, would you like to see a film?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for either one, then the Japanese for for some reason, then say tokorode again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for either one, then the Japanese for for some reason, then say *tokorode* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ところで (tokorode) mean? (\"By the way\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C529-tokorode-type",
+              "prompt": "Say the Japanese for 'by the way'.",
+              "assesses": [
+                "JA-LEX-C529-ANYWAY529-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ところで",
+                "tokorode"
+              ],
+              "feedback": {
+                "correct": "Right: ところで (tokorode) is 'by the way'.",
+                "incorrect": "'By the way' is ところで (tokorode)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C529-douse",
+      "sequence": 30550,
+      "title": "どうせ (dōse) — anyway; in any case",
+      "headword": "どうせ",
+      "romanization": "dōse",
+      "gloss": "anyway; in any case",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:938663e7e2557a68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for for some reason, then the Japanese for by the way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: どうせ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どうせ — dōse — \"anyway; in any case\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし あめが ふったら、どうせ しあいは ちゅうしでしょう。 — moshi ame ga futtara, dōse shiai wa chūshi deshō — \"If it rains, the match will be called off anyway.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どうせ (dōse) is usually counted a native Japanese word (wago), inherited rather than borrowed from Chinese: JMdict gives it no kanji spelling, and no dictionary we use records an older form, so its history is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dōse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dōse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dōse, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dōse*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi ame ga futtara, dōse shiai wa chūshi deshō — If it rains, the match will be called off anyway.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi ame ga futtara, dōse shiai wa chūshi deshō* — If it rains, the match will be called off anyway.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for for some reason, then the Japanese for by the way, then say dōse again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for for some reason, then the Japanese for by the way, then say *dōse* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does どうせ (dōse) mean? (\"Anyway; in any case\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C529-douse-type",
+              "prompt": "Say the Japanese for 'anyway'.",
+              "assesses": [
+                "JA-LEX-C529-ANYWAY529-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "どうせ",
+                "dōse",
+                "douse",
+                "doose",
+                "dose"
+              ],
+              "feedback": {
+                "correct": "Right: どうせ (dōse) is 'anyway; in any case'.",
+                "incorrect": "'Anyway' is どうせ (dōse)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C529-isso",
+      "sequence": 30560,
+      "title": "いっそ (isso) — would sooner; rather",
+      "headword": "いっそ",
+      "romanization": "isso",
+      "gloss": "would sooner; rather",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68b9d1ce02092229",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for by the way, then the Japanese for anyway."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いっそ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いっそ — isso — \"would sooner; rather\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし あしたも まけたら、いっそ やめた ほうが いいです。 — moshi ashita mo maketara, isso yameta hō ga ii desu — \"If we lose tomorrow as well, it would be better to quit altogether.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いっそ (isso) is usually counted a native Japanese word (wago), inherited rather than borrowed from Chinese, though that is not certain: JMdict gives it no kanji spelling at all, and no dictionary we use records its history, so where it comes from is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *isso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isso, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *isso*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi ashita mo maketara, isso yameta hō ga ii desu — If we lose tomorrow as well, it would be better to quit altogether.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi ashita mo maketara, isso yameta hō ga ii desu* — If we lose tomorrow as well, it would be better to quit altogether.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for by the way, then the Japanese for anyway, then say isso again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for by the way, then the Japanese for anyway, then say *isso* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いっそ (isso) mean? (\"Would sooner; rather\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C529-isso-type",
+              "prompt": "Say the Japanese for 'would sooner'.",
+              "assesses": [
+                "JA-LEX-C529-ANYWAY529-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いっそ",
+                "isso"
+              ],
+              "feedback": {
+                "correct": "Right: いっそ (isso) is 'would sooner; rather'.",
+                "incorrect": "'Would sooner' is いっそ (isso)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C529-sasuga",
+      "sequence": 30570,
+      "title": "さすが (sasuga) — as one would expect",
+      "headword": "さすが",
+      "romanization": "sasuga",
+      "gloss": "as one would expect",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88012964b81f25ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for anyway, then the Japanese for would sooner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さすが",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さすが — sasuga — \"as one would expect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし あの せんしゅが かったら、さすがでしょう。 — moshi ano senshu ga kattara, sasuga deshō — \"If that athlete wins, it will be what you would expect of her.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さすが (sasuga) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sasuga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sasuga*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sasuga, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sasuga*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi ano senshu ga kattara, sasuga deshō — If that athlete wins, it will be what you would expect of her.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi ano senshu ga kattara, sasuga deshō* — If that athlete wins, it will be what you would expect of her.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for anyway, then the Japanese for would sooner, then say sasuga again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for anyway, then the Japanese for would sooner, then say *sasuga* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さすが (sasuga) mean? (\"As one would expect\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C529-sasuga-type",
+              "prompt": "Say the Japanese for 'as one would expect'.",
+              "assesses": [
+                "JA-LEX-C529-ANYWAY529-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さすが",
+                "sasuga"
+              ],
+              "feedback": {
+                "correct": "Right: さすが (sasuga) is 'as one would expect'.",
+                "incorrect": "'As one would expect' is さすが (sasuga)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

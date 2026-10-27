@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:9906ec6d38908d1c",
+  "lessonIds": [
+    "JA-C401-choushoku",
+    "JA-C401-yuushoku",
+    "JA-C401-chuushoku",
+    "JA-C401-kigaeru",
+    "JA-C401-motenasu",
+    "JA-R401-review-396-401"
+  ],
+  "tex": "japanese/book/chapters/ch401-meals-at-the-inn.tex"
+}

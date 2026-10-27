@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:41c86f7063f6f8c0",
+  "lessonIds": [
+    "JA-C391-oudanhodou",
+    "JA-C391-hokousha",
+    "JA-C391-ippoutsuukou",
+    "JA-C391-tachidomaru",
+    "JA-C391-saegiru"
+  ],
+  "tex": "japanese/book/chapters/ch391-crossing-safely.tex"
+}

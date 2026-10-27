@@ -1,0 +1,11 @@
+{
+  "id": "JA-C463-nerau",
+  "pathSegment": "JA-PATH-463-TRAIN463",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-463-TRAIN463",
+      "order": 2
+    }
+  ]
+}

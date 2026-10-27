@@ -1,0 +1,813 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 344,
+  "title": "Making Plans",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:64f1493f4532c8d1",
+  "lessons": [
+    {
+      "id": "JA-C344-keikaku",
+      "sequence": 20390,
+      "title": "けいかく (keikaku) — a scheme; a detailed plan",
+      "headword": "けいかく",
+      "romanization": "keikaku",
+      "gloss": "a scheme; a detailed plan",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb84800db4178879",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be found out, then the Japanese for to jump to conclusions."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けいかく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けいかく — keikaku — \"a scheme; a detailed plan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし けいかくが かわったら、れんらくして ください。 — moshi keikaku ga kawattara, renraku shite kudasai — \"If the plan changes, please let me know.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けいかく (keikaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kei, \"plan\" (Middle Chinese kejH) and kaku, \"brush-stroke\" (hweak) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keikaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keikaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keikaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keikaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi keikaku ga kawattara, renraku shite kudasai — If the plan changes, please let me know.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi keikaku ga kawattara, renraku shite kudasai* — If the plan changes, please let me know.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be found out, then the Japanese for to jump to conclusions, then say keikaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be found out, then the Japanese for to jump to conclusions, then say *keikaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けいかく (keikaku) mean? (\"A scheme; a detailed plan\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C344-keikaku-type",
+              "prompt": "Say the Japanese for 'a detailed plan'.",
+              "assesses": [
+                "JA-LEX-C344-KEIKAKU344-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けいかく",
+                "keikaku"
+              ],
+              "feedback": {
+                "correct": "Right: けいかく (keikaku) is 'a scheme; a detailed plan'.",
+                "incorrect": "'A detailed plan' is けいかく (keikaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C344-youi-suru",
+      "sequence": 20400,
+      "title": "よういする (yōi suru) — to get things ready; to prepare",
+      "headword": "よういする",
+      "romanization": "yōi suru",
+      "gloss": "to get things ready; to prepare",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c49922e3fed1923d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to jump to conclusions, then the Japanese for a detailed plan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: よういする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よういする — yōi suru — \"to get things ready; to prepare\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あめが ふったら、かさを よういして ください。 — ame ga futtara, kasa o yōi shite kudasai — \"If it rains, please have an umbrella ready.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite よういします, yōishimasu; a する verb. Past (polite): ははが おべんとうを よういしました。, haha ga obentō o yōi shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よういする (yōi suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, yōi, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: yō, \"utilize\" (Middle Chinese yowngH) and i, \"mind\" ('iH) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōi suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōi suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōi suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōi suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ame ga futtara, kasa o yōi shite kudasai — If it rains, please have an umbrella ready.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ame ga futtara, kasa o yōi shite kudasai* — If it rains, please have an umbrella ready.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to jump to conclusions, then the Japanese for a detailed plan, then say yōi suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to jump to conclusions, then the Japanese for a detailed plan, then say *yōi suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does よういする (yōi suru) mean? (\"To get things ready; to prepare\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C344-youi-suru-type",
+              "prompt": "Say the Japanese for 'to get things ready'.",
+              "assesses": [
+                "JA-LEX-C344-KEIKAKU344-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "よういする",
+                "yōi suru",
+                "youi suru",
+                "yooi suru",
+                "yoi suru"
+              ],
+              "feedback": {
+                "correct": "Right: よういする (yōi suru) is 'to get things ready; to prepare'.",
+                "incorrect": "'To get things ready' is よういする (yōi suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C344-youji",
+      "sequence": 20410,
+      "title": "ようじ (yōji) — an errand; something to do",
+      "headword": "ようじ",
+      "romanization": "yōji",
+      "gloss": "an errand; something to do",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98abe05d74fbfd9c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a detailed plan, then the Japanese for to get things ready."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ようじ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ようじ — yōji — \"an errand; something to do\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ようじが あったら、はやく かえって ください。 — yōji ga attara, hayaku kaette kudasai — \"If you have something to do, please go home early.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ようじ (yōji) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yō, \"utilize\" (Middle Chinese yowngH) and ji, \"matter\" (dzriH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōji",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōji*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōji, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōji*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōji ga attara, hayaku kaette kudasai — If you have something to do, please go home early.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōji ga attara, hayaku kaette kudasai* — If you have something to do, please go home early.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a detailed plan, then the Japanese for to get things ready, then say yōji again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a detailed plan, then the Japanese for to get things ready, then say *yōji* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ようじ (yōji) mean? (\"An errand; something to do\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C344-youji-type",
+              "prompt": "Say the Japanese for 'an errand'.",
+              "assesses": [
+                "JA-LEX-C344-KEIKAKU344-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ようじ",
+                "yōji",
+                "youji",
+                "yooji",
+                "yoji"
+              ],
+              "feedback": {
+                "correct": "Right: ようじ (yōji) is 'an errand; something to do'.",
+                "incorrect": "'An errand' is ようじ (yōji)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C344-nittei",
+      "sequence": 20420,
+      "title": "にってい (nittei) — a schedule (of days)",
+      "headword": "にってい",
+      "romanization": "nittei",
+      "gloss": "a schedule (of days)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d323a89cc2cde2ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to get things ready, then the Japanese for an errand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: にってい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にってい — nittei — \"a schedule (of days)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "にっていが きまったら、おしえて ください。 — nittei ga kimattara, oshiete kudasai — \"When the dates are fixed, please tell me.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にってい (nittei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are nichi, \"day\" (Middle Chinese nyit) and tei, \"extent\" (drjeng) (KANJIDIC2; Middle Chinese in Baxter's transcription). The two join as nit-tei."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nittei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nittei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nittei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nittei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nittei ga kimattara, oshiete kudasai — When the dates are fixed, please tell me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nittei ga kimattara, oshiete kudasai* — When the dates are fixed, please tell me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to get things ready, then the Japanese for an errand, then say nittei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to get things ready, then the Japanese for an errand, then say *nittei* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does にってい (nittei) mean? (\"A schedule (of days)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C344-nittei-type",
+              "prompt": "Say the Japanese for 'a schedule'.",
+              "assesses": [
+                "JA-LEX-C344-KEIKAKU344-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "にってい",
+                "nittei"
+              ],
+              "feedback": {
+                "correct": "Right: にってい (nittei) is 'a schedule (of days)'.",
+                "incorrect": "'A schedule' is にってい (nittei)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C344-junchou",
+      "sequence": 20430,
+      "title": "じゅんちょう (junchō) — going smoothly; favourable",
+      "headword": "じゅんちょう",
+      "romanization": "junchō",
+      "gloss": "going smoothly; favourable",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73879f1ab9de4dab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an errand, then the Japanese for a schedule."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じゅんちょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅんちょう — junchō — \"going smoothly; favourable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "はれたら、けいかくは じゅんちょうでしょう。 — haretara, keikaku wa junchō deshō — \"If the weather clears, the plan will probably go smoothly.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅんちょう (junchō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jun, \"order\" (Middle Chinese zywinH) and chō, \"tune\" (dew) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "junchō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *junchō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "junchō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *junchō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haretara, keikaku wa junchō deshō — If the weather clears, the plan will probably go smoothly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haretara, keikaku wa junchō deshō* — If the weather clears, the plan will probably go smoothly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an errand, then the Japanese for a schedule, then say junchō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an errand, then the Japanese for a schedule, then say *junchō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じゅんちょう (junchō) mean? (\"Going smoothly; favourable\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C344-junchou-type",
+              "prompt": "Say the Japanese for 'going smoothly'.",
+              "assesses": [
+                "JA-LEX-C344-KEIKAKU344-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じゅんちょう",
+                "junchō",
+                "junchou",
+                "junchoo",
+                "juncho"
+              ],
+              "feedback": {
+                "correct": "Right: じゅんちょう (junchō) is 'going smoothly; favourable'.",
+                "incorrect": "'Going smoothly' is じゅんちょう (junchō)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

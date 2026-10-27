@@ -1,0 +1,19 @@
+{
+  "chapter": 265,
+  "title": "Smoke on the Stairs",
+  "label": "ch:ja-smoke-on-the-stairs",
+  "canDo": "I can say what happened in a fire and who came.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C265-kaketsukeru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 265: I can say what happened in a fire and who came.",
+    "assesses": [
+      "JA-LEX-C265-KEMURI265-03",
+      "JA-LEX-C265-KEMURI265-04",
+      "JA-LEX-C265-KEMURI265-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C347-youken",
+  "pathSegment": "JA-PATH-347-HOUMON347",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-347-HOUMON347",
+      "order": 1
+    }
+  ]
+}

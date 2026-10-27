@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:43ab5568346fec9b",
+  "lessonIds": [
+    "JA-C393-mejirushi",
+    "JA-C393-kanban",
+    "JA-C393-hyoushiki",
+    "JA-C393-yajirushi",
+    "JA-C393-furimuku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch393.txt",
+  "json": "japanese/narration/ch393.json",
+  "textHash": "fnv1a64:2b929fc2c79969fb",
+  "jsonHash": "fnv1a64:67f25e916df293df",
+  "findings": []
+}

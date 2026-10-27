@@ -1,0 +1,11 @@
+{
+  "id": "JA-C289-shoutai-suru",
+  "pathSegment": "JA-PATH-289-KEKKON289",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-289-KEKKON289",
+      "order": 3
+    }
+  ]
+}

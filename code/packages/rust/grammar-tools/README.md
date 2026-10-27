@@ -70,6 +70,30 @@ byte-identically), and validation rejects a repetition built only from
 zero-width elements. Unknown names and `@asi(...)` (not yet implemented) are
 parse errors. See `code/specs/F11-grammar-token-adjacency-predicates.md`.
 
+### Line-start guards and refusal transitions (LANG84 E1, E8)
+
+A `.tokens` definition can say *where* it may match, and a transition rule
+can stop the lexer on a construct the grammar does not support yet:
+
+```text
+EMBDOC  = /=begin[^\n]*\n(?:[^\n]*\n)*?=end[^\n]*/  @line_start
+SHEBANG = /#![^\n]*/                                   @input_start
+
+transitions:
+  on (SLASH | LEFT_SHIFT | PERCENT) in beg -> refuse
+  on SLASH in arg if space_before && !space_after -> refuse
+```
+
+- `@line_start` holds at offset 0 or right after a `\n`; `@input_start` only
+  at offset 0. Parsed into `TokenDefinition::guard` (`TokenGuard`).
+- `-> refuse` (`TransitionAction::Refuse`) must be a rule's only action.
+- `if` conditions are `space_before`, `space_after` and `line_start`, each
+  optionally negated with `!` and joined with `&&`
+  (`ModeTransition::conditions`).
+- `@column(…)` and `line_terminators:` are specified but rejected as not
+  implemented yet. See `code/specs/LANG84-grammar-driven-versioned-frontends.md`
+  (E1, E8) and the F10 amendment.
+
 ## Modules
 
 - **`token_grammar`** — Parse `.tokens` files into `TokenGrammar` structs. Includes validation for duplicate names, invalid regex, and naming conventions.

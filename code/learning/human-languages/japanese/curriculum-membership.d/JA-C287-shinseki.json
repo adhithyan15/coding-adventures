@@ -1,0 +1,11 @@
+{
+  "id": "JA-C287-shinseki",
+  "pathSegment": "JA-PATH-287-SODATSU287",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-287-SODATSU287",
+      "order": 3
+    }
+  ]
+}

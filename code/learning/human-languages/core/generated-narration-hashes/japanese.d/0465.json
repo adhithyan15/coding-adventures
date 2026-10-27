@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:1080b23540ed3f57",
+  "lessonIds": [
+    "JA-C465-enogu",
+    "JA-C465-fude",
+    "JA-C465-egaku",
+    "JA-C465-gaka",
+    "JA-C465-bijutsu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch465.txt",
+  "json": "japanese/narration/ch465.json",
+  "textHash": "fnv1a64:ac965118dd2b0f5c",
+  "jsonHash": "fnv1a64:eb49359f9332c083",
+  "findings": []
+}

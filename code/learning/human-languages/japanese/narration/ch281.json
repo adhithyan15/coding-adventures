@@ -1,0 +1,807 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 281,
+  "title": "Word Gets Around",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bf19184aed968cbb",
+  "lessons": [
+    {
+      "id": "JA-C281-uwasa",
+      "sequence": 16980,
+      "title": "うわさ (uwasa) — a rumour; gossip",
+      "headword": "うわさ",
+      "romanization": "uwasa",
+      "gloss": "a rumour; gossip",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39ede97dcc559e93",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a reporter, then the Japanese for to hand out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うわさ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うわさ — uwasa — \"a rumour; gossip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "その うわさは ほんとうですか。 — sono uwasa wa hontō desu ka — \"Is the rumour true?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うわさ (uwasa) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uwasa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uwasa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uwasa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uwasa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sono uwasa wa hontō desu ka — Is the rumour true?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sono uwasa wa hontō desu ka* — Is the rumour true?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a reporter, then the Japanese for to hand out, then say uwasa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a reporter, then the Japanese for to hand out, then say *uwasa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うわさ (uwasa) mean? (\"A rumour; gossip\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C281-uwasa-type",
+              "prompt": "Say the Japanese for 'a rumour'.",
+              "assesses": [
+                "JA-LEX-C281-UWASA281-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うわさ",
+                "uwasa"
+              ],
+              "feedback": {
+                "correct": "Right: うわさ (uwasa) is 'a rumour; gossip'.",
+                "incorrect": "'A rumour' is うわさ (uwasa)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C281-tsutawaru",
+      "sequence": 16990,
+      "title": "つたわる (tsutawaru) — to be passed on; to spread (of news)",
+      "headword": "つたわる",
+      "romanization": "tsutawaru",
+      "gloss": "to be passed on; to spread (of news)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5428be426d3664c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to hand out, then the Japanese for a rumour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つたわる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つたわる — tsutawaru — \"to be passed on; to spread (of news)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じけんは すぐ まちの みんなに つたわりました。 — jiken wa sugu machi no minna ni tsutawarimashita — \"News of the incident soon reached the whole town.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite つたわります, tsutawarimasu; a godan verb. Past (polite): うわさが つたわりました。, uwasa ga tsutawarimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つたわる (tsutawaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict). It is the intransitive partner of tsutaeru, \"to pass on\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsutawaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsutawaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsutawaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsutawaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiken wa sugu machi no minna ni tsutawarimashita — News of the incident soon reached the whole town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiken wa sugu machi no minna ni tsutawarimashita* — News of the incident soon reached the whole town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to hand out, then the Japanese for a rumour, then say tsutawaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to hand out, then the Japanese for a rumour, then say *tsutawaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つたわる (tsutawaru) mean? (\"To be passed on; to spread (of news)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C281-tsutawaru-type",
+              "prompt": "Say the Japanese for 'to be passed on'.",
+              "assesses": [
+                "JA-LEX-C281-UWASA281-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つたわる",
+                "tsutawaru"
+              ],
+              "feedback": {
+                "correct": "Right: つたわる (tsutawaru) is 'to be passed on; to spread (of news)'.",
+                "incorrect": "'To be passed on' is つたわる (tsutawaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C281-hiromaru",
+      "sequence": 17000,
+      "title": "ひろまる (hiromaru) — to spread widely; to get about",
+      "headword": "ひろまる",
+      "romanization": "hiromaru",
+      "gloss": "to spread widely; to get about",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9ca0b9b2fcbbca8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a rumour, then the Japanese for to be passed on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひろまる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひろまる — hiromaru — \"to spread widely; to get about\"."
+            },
+            {
+              "kind": "speech",
+              "text": "その うわさは がっこうで ひろまっています。 — sono uwasa wa gakkō de hiromatte imasu — \"The rumour is going round the school.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ひろまります, hiromarimasu; a godan verb. Past (polite): うわさが ひろまりました。, uwasa ga hiromarimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひろまる (hiromaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiromaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiromaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiromaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiromaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sono uwasa wa gakkō de hiromatte imasu — The rumour is going round the school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sono uwasa wa gakkō de hiromatte imasu* — The rumour is going round the school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a rumour, then the Japanese for to be passed on, then say hiromaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a rumour, then the Japanese for to be passed on, then say *hiromaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひろまる (hiromaru) mean? (\"To spread widely; to get about\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C281-hiromaru-type",
+              "prompt": "Say the Japanese for 'to spread widely'.",
+              "assesses": [
+                "JA-LEX-C281-UWASA281-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひろまる",
+                "hiromaru"
+              ],
+              "feedback": {
+                "correct": "Right: ひろまる (hiromaru) is 'to spread widely; to get about'.",
+                "incorrect": "'To spread widely' is ひろまる (hiromaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C281-wadai",
+      "sequence": 17010,
+      "title": "わだい (wadai) — a topic of conversation",
+      "headword": "わだい",
+      "romanization": "wadai",
+      "gloss": "a topic of conversation",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc71a7d1a9645fe0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be passed on, then the Japanese for to spread widely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: わだい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わだい — wadai — \"a topic of conversation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "その じけんが わだいに なっています。 — sono jiken ga wadai ni natte imasu — \"Everyone is talking about the incident.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わだい (wadai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are wa, \"talk\" (Middle Chinese hwaejH) and dai, \"topic\" (dej) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wadai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wadai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wadai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wadai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sono jiken ga wadai ni natte imasu — Everyone is talking about the incident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sono jiken ga wadai ni natte imasu* — Everyone is talking about the incident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be passed on, then the Japanese for to spread widely, then say wadai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be passed on, then the Japanese for to spread widely, then say *wadai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does わだい (wadai) mean? (\"A topic of conversation\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C281-wadai-type",
+              "prompt": "Say the Japanese for 'a topic of conversation'.",
+              "assesses": [
+                "JA-LEX-C281-UWASA281-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "わだい",
+                "wadai"
+              ],
+              "feedback": {
+                "correct": "Right: わだい (wadai) is 'a topic of conversation'.",
+                "incorrect": "'A topic of conversation' is わだい (wadai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C281-ousawagi",
+      "sequence": 17020,
+      "title": "おおさわぎ (ōsawagi) — an uproar; a commotion",
+      "headword": "おおさわぎ",
+      "romanization": "ōsawagi",
+      "gloss": "an uproar; a commotion",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7828ac7625b03a7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to spread widely, then the Japanese for a topic of conversation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おおさわぎ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おおさわぎ — ōsawagi — \"an uproar; a commotion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "えきで おおさわぎに なりました。 — eki de ōsawagi ni narimashita — \"There was a great commotion at the station.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おおさわぎ (ōsawagi) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from ō, \"big\", and sawagi, \"noise\" (from sawagu) (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōsawagi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōsawagi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōsawagi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōsawagi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eki de ōsawagi ni narimashita — There was a great commotion at the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eki de ōsawagi ni narimashita* — There was a great commotion at the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to spread widely, then the Japanese for a topic of conversation, then say ōsawagi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to spread widely, then the Japanese for a topic of conversation, then say *ōsawagi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おおさわぎ (ōsawagi) mean? (\"An uproar; a commotion\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C281-ousawagi-type",
+              "prompt": "Say the Japanese for 'an uproar'.",
+              "assesses": [
+                "JA-LEX-C281-UWASA281-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おおさわぎ",
+                "ōsawagi",
+                "ousawagi",
+                "oosawagi",
+                "osawagi"
+              ],
+              "feedback": {
+                "correct": "Right: おおさわぎ (ōsawagi) is 'an uproar; a commotion'.",
+                "incorrect": "'An uproar' is おおさわぎ (ōsawagi)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

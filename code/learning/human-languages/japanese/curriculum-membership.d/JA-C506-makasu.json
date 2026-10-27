@@ -1,0 +1,11 @@
+{
+  "id": "JA-C506-makasu",
+  "pathSegment": "JA-PATH-506-RACE506",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-506-RACE506",
+      "order": 4
+    }
+  ]
+}

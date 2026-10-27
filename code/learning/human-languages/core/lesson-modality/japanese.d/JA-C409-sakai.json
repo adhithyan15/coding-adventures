@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C409-sakai",
+    "language": "japanese",
+    "chapter": 409,
+    "sequence": 23940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff575655ed2eb864"
+  },
+  "findings": []
+}

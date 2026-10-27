@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C414-shitsudo",
+    "language": "japanese",
+    "chapter": 414,
+    "sequence": 24170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d91efaf5dde10955"
+  },
+  "findings": []
+}

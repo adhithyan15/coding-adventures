@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C497-shokuhi",
+    "language": "japanese",
+    "chapter": 497,
+    "sequence": 28880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b3de89349b474fb"
+  },
+  "findings": []
+}

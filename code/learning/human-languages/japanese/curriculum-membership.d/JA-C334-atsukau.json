@@ -1,0 +1,11 @@
+{
+  "id": "JA-C334-atsukau",
+  "pathSegment": "JA-PATH-334-FUKUSHI334",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-334-FUKUSHI334",
+      "order": 4
+    }
+  ]
+}

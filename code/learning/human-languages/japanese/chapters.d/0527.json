@@ -1,0 +1,21 @@
+{
+  "chapter": 527,
+  "title": "Now and the Future",
+  "label": "ch:ja-now-and-the-future",
+  "canDo": "I can talk about now, recently and what lies ahead.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-R527-review-522-527",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can talk about now, recently and what lies ahead.",
+    "assesses": [
+      "JA-LEX-C527-TIME527-01",
+      "JA-LEX-C527-TIME527-02",
+      "JA-LEX-C527-TIME527-03",
+      "JA-LEX-C527-TIME527-04",
+      "JA-LEX-C527-TIME527-05"
+    ]
+  }
+}

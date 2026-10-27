@@ -20,6 +20,8 @@ pub use cortex_m3_simulator::{CortexM3Error, CortexM3State, MEMORY_SIZE};
 
 /// Sticky saturation flag in the inherited APSR.
 const APSR_Q: u32 = 1 << 27;
+/// N, Z, C, V, and Q bits writable through APSR_nzcvq.
+const APSR_NZCVQ_MASK: u32 = 0xf800_0000;
 /// The complete-state retention limit inherited from the 8 MiB teaching budget.
 pub const MAX_RETAINED_STEPS: usize = cortex_m3_simulator::MAX_RETAINED_STEPS;
 
@@ -206,18 +208,14 @@ impl CortexM7Simulator {
             return Err(CortexM3Error::Sleeping.into());
         }
         let first = fetch16(&before.core, before.core.pc)?;
+        if first & 0xfff0 == 0xf380 {
+            let second = fetch_second(&before.core)?;
+            if let Some(mask) = cortex_m7_apsr_mask(second) {
+                return self.step_apsr_masked(before, first, second, mask);
+            }
+        }
         if first & 0xfff0 == 0xfa80 {
-            let second =
-                fetch16(&before.core, before.core.pc.wrapping_add(2)).map_err(|error| {
-                    if matches!(error, CortexM3Error::FetchOutsideProgram { .. }) {
-                        CortexM3Error::FetchOutsideProgram {
-                            pc: before.core.pc,
-                            width: 4,
-                        }
-                    } else {
-                        error
-                    }
-                })?;
+            let second = fetch_second(&before.core)?;
             if let Some(class) = classify_dsp(first, second) {
                 return self.step_dsp(before, first, second, class);
             }
@@ -274,6 +272,54 @@ impl CortexM7Simulator {
         let committed = try_clone_state(&after)?;
         self.restore(committed)?;
 
+        Ok(StepTrace {
+            pc_before: pc,
+            pc_after: after.core.pc,
+            raw: [
+                first as u8,
+                (first >> 8) as u8,
+                second as u8,
+                (second >> 8) as u8,
+            ],
+            width: 4,
+            mnemonic,
+            state_before: before,
+            state_after: after,
+        })
+    }
+
+    fn step_apsr_masked(
+        &mut self,
+        before: CortexM7State,
+        first: u16,
+        second: u16,
+        mask: u8,
+    ) -> Result<StepTrace, CortexM7Error> {
+        let pc = before.core.pc;
+        let rn = (first & 0xf) as usize;
+        if rn > 12 {
+            return Err(CortexM3Error::UnknownInstruction32 { first, second, pc }.into());
+        }
+        let mut after = self.try_snapshot()?;
+        after.core.pc = pc.wrapping_add(4);
+        let execute =
+            before.core.itstate == 0 || condition_holds(before.core.apsr, before.core.itstate >> 4);
+        let mnemonic = if execute {
+            let value = before.core.registers[rn];
+            if mask & 2 != 0 {
+                after.core.apsr = value & APSR_NZCVQ_MASK;
+            }
+            after.ge = ((value >> 16) & 0xf) as u8;
+            "msr"
+        } else {
+            "it-skip"
+        };
+        if before.core.itstate != 0 {
+            after.core.itstate = advance_itstate(before.core.itstate);
+        }
+
+        let committed = try_clone_state(&after)?;
+        self.restore(committed)?;
         Ok(StepTrace {
             pc_before: pc,
             pc_after: after.core.pc,
@@ -387,9 +433,12 @@ impl CortexM7Simulator {
                     .write_register(rd, value | (u32::from(self.ge) << 16))?;
             }
             "msr" if first & 0xfff0 == 0xf380 => {
-                let rn = (first & 0xf) as u8;
-                let value = self.core.read_register(rn)?;
-                self.ge = ((value >> 16) & 0xf) as u8;
+                let mask = ((second >> 10) & 3) as u8;
+                if mask & 1 != 0 {
+                    let rn = (first & 0xf) as u8;
+                    let value = self.core.read_register(rn)?;
+                    self.ge = ((value >> 16) & 0xf) as u8;
+                }
             }
             _ => {}
         }
@@ -404,6 +453,16 @@ impl CortexM7Simulator {
 
 /// Classify an encoded instruction without executing it.
 pub fn classify(first: u16, second: Option<u16>) -> Result<InstructionClass, CortexM7Error> {
+    if first & 0xfff0 == 0xf380 {
+        let Some(second) = second else {
+            return Err(CortexM3Error::FetchOutsideProgram { pc: 0, width: 4 }.into());
+        };
+        if cortex_m7_apsr_mask(second).is_some() {
+            return Ok(InstructionClass::Inherited(
+                cortex_m3_simulator::InstructionClass::SpecialRegister,
+            ));
+        }
+    }
     if first & 0xfff0 == 0xfa80 {
         let Some(second) = second else {
             return Err(CortexM3Error::FetchOutsideProgram { pc: 0, width: 4 }.into());
@@ -415,6 +474,14 @@ pub fn classify(first: u16, second: Option<u16>) -> Result<InstructionClass, Cor
     cortex_m3_simulator::classify(first, second)
         .map(InstructionClass::Inherited)
         .map_err(Into::into)
+}
+
+fn cortex_m7_apsr_mask(second: u16) -> Option<u8> {
+    if second & 0xf300 != 0x8000 || !matches!(second as u8, 0..=3) {
+        return None;
+    }
+    let mask = ((second >> 10) & 3) as u8;
+    matches!(mask, 1 | 3).then_some(mask)
 }
 
 fn classify_dsp(first: u16, second: u16) -> Option<InstructionClass> {
@@ -580,6 +647,19 @@ fn fetch16(state: &CortexM3State, pc: u32) -> Result<u16, CortexM3Error> {
     ]))
 }
 
+fn fetch_second(state: &CortexM3State) -> Result<u16, CortexM3Error> {
+    fetch16(state, state.pc.wrapping_add(2)).map_err(|error| {
+        if matches!(error, CortexM3Error::FetchOutsideProgram { .. }) {
+            CortexM3Error::FetchOutsideProgram {
+                pc: state.pc,
+                width: 4,
+            }
+        } else {
+            error
+        }
+    })
+}
+
 fn condition_holds(apsr: u32, condition: u8) -> bool {
     let n = apsr & (1 << 31) != 0;
     let z = apsr & (1 << 30) != 0;
@@ -704,6 +784,21 @@ mod allocation_regressions {
         let mut state = simulator.get_state();
         state.ge = 0b1011;
         simulator.restore(state).unwrap();
+        let before = simulator.get_state();
+        simulator.fail_snapshot_after(1);
+
+        assert_eq!(simulator.step(), Err(CortexM7Error::AllocationFailed));
+        assert_eq!(simulator.get_state(), before);
+    }
+
+    #[test]
+    fn masked_apsr_candidate_snapshot_failure_is_atomic() {
+        let mut simulator = CortexM7Simulator::new();
+        load_words(
+            &mut simulator,
+            &encoding::msr_masked(0, 0, encoding::ApsrMask::NzcvqGe),
+        );
+        simulator.write_register(0, 0xa80b_0000).unwrap();
         let before = simulator.get_state();
         simulator.fail_snapshot_after(1);
 

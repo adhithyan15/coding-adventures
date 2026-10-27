@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C382-kaigan",
+    "language": "japanese",
+    "chapter": 382,
+    "sequence": 22510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e95d1901e20bb517"
+  },
+  "findings": []
+}

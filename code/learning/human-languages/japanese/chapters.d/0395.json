@@ -1,0 +1,21 @@
+{
+  "chapter": 395,
+  "title": "Car Trouble and Wrong Turns",
+  "label": "ch:ja-car-trouble-and-wrong-turns",
+  "canDo": "I can say what went wrong on the road.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-R395-review-390-395",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can say what went wrong on the road.",
+    "assesses": [
+      "JA-LEX-C395-KOSHOU395-01",
+      "JA-LEX-C395-KOSHOU395-02",
+      "JA-LEX-C395-KOSHOU395-03",
+      "JA-LEX-C395-KOSHOU395-04",
+      "JA-LEX-C395-KOSHOU395-05"
+    ]
+  }
+}

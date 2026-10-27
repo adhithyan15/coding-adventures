@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C359-kingaku",
+    "language": "japanese",
+    "chapter": 359,
+    "sequence": 21210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1568e9d77a73da3"
+  },
+  "findings": []
+}

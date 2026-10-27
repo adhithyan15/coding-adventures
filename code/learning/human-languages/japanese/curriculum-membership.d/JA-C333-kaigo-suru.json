@@ -1,0 +1,11 @@
+{
+  "id": "JA-C333-kaigo-suru",
+  "pathSegment": "JA-PATH-333-WAKAMONO333",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-333-WAKAMONO333",
+      "order": 3
+    }
+  ]
+}

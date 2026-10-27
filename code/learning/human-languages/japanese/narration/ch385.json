@@ -1,0 +1,800 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 385,
+  "title": "Going Abroad",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0443f1f63f0a6246",
+  "lessons": [
+    {
+      "id": "JA-C385-kaigai",
+      "sequence": 22670,
+      "title": "かいがい (kaigai) — overseas; abroad",
+      "headword": "かいがい",
+      "romanization": "kaigai",
+      "gloss": "overseas; abroad",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc2aef96222a6a32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for landing (of a plane), then the Japanese for to set off on a journey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かいがい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かいがい — kaigai — \"overseas; abroad\"."
+            },
+            {
+              "kind": "speech",
+              "text": "らいねん かいがいに いきたいです。 — rainen kaigai ni ikitai desu — \"I want to go abroad next year.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かいがい (kaigai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kai, \"sea\" (Middle Chinese xojX) and gai, \"outside\" (ngwajH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaigai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaigai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaigai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaigai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rainen kaigai ni ikitai desu — I want to go abroad next year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rainen kaigai ni ikitai desu* — I want to go abroad next year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for landing (of a plane), then the Japanese for to set off on a journey, then say kaigai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for landing (of a plane), then the Japanese for to set off on a journey, then say *kaigai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かいがい (kaigai) mean? (\"Overseas; abroad\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C385-kaigai-type",
+              "prompt": "Say the Japanese for 'overseas'.",
+              "assesses": [
+                "JA-LEX-C385-KAIGAI385-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かいがい",
+                "kaigai"
+              ],
+              "feedback": {
+                "correct": "Right: かいがい (kaigai) is 'overseas; abroad'.",
+                "incorrect": "'Overseas' is かいがい (kaigai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C385-gaikoku",
+      "sequence": 22680,
+      "title": "がいこく (gaikoku) — a foreign country",
+      "headword": "がいこく",
+      "romanization": "gaikoku",
+      "gloss": "a foreign country",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8777bf56382a818c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to set off on a journey, then the Japanese for overseas."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: がいこく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "がいこく — gaikoku — \"a foreign country\"."
+            },
+            {
+              "kind": "speech",
+              "text": "がいこくの おかねに りょうがえしました。 — gaikoku no okane ni ryōgae shimashita — \"I changed my money into foreign currency.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "がいこく (gaikoku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gai, \"outside\" (Middle Chinese ngwajH) and koku, \"country\" (kwok) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaikoku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaikoku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaikoku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaikoku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaikoku no okane ni ryōgae shimashita — I changed my money into foreign currency.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaikoku no okane ni ryōgae shimashita* — I changed my money into foreign currency.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to set off on a journey, then the Japanese for overseas, then say gaikoku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to set off on a journey, then the Japanese for overseas, then say *gaikoku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does がいこく (gaikoku) mean? (\"A foreign country\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C385-gaikoku-type",
+              "prompt": "Say the Japanese for 'a foreign country'.",
+              "assesses": [
+                "JA-LEX-C385-KAIGAI385-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "がいこく",
+                "gaikoku"
+              ],
+              "feedback": {
+                "correct": "Right: がいこく (gaikoku) is 'a foreign country'.",
+                "incorrect": "'A foreign country' is がいこく (gaikoku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C385-kokusai",
+      "sequence": 22690,
+      "title": "こくさい (kokusai) — international",
+      "headword": "こくさい",
+      "romanization": "kokusai",
+      "gloss": "international",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e8e975daaf055d33",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for overseas, then the Japanese for a foreign country."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こくさい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こくさい — kokusai — \"international\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この くうこうは こくさい くうこうです。 — kono kūkō wa kokusai kūkō desu — \"This airport is an international airport.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こくさい (kokusai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are koku, \"country\" (Middle Chinese kwok) and sai, \"edge\" (tsjejH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kokusai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kokusai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kokusai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kokusai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono kūkō wa kokusai kūkō desu — This airport is an international airport.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono kūkō wa kokusai kūkō desu* — This airport is an international airport.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for overseas, then the Japanese for a foreign country, then say kokusai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for overseas, then the Japanese for a foreign country, then say *kokusai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こくさい (kokusai) mean? (\"International\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C385-kokusai-type",
+              "prompt": "Say the Japanese for 'international'.",
+              "assesses": [
+                "JA-LEX-C385-KAIGAI385-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こくさい",
+                "kokusai"
+              ],
+              "feedback": {
+                "correct": "Right: こくさい (kokusai) is 'international'.",
+                "incorrect": "'International' is こくさい (kokusai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C385-jisa",
+      "sequence": 22700,
+      "title": "じさ (jisa) — a time difference",
+      "headword": "じさ",
+      "romanization": "jisa",
+      "gloss": "a time difference",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30683d50fedef209",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a foreign country, then the Japanese for international."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じさ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じさ — jisa — \"a time difference\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じさで つかれました。 — jisa de tsukaremashita — \"The time difference left me tired.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じさ (jisa) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ji, \"time\" (Middle Chinese dzyi) and sa, \"difference\" (tsrhae) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jisa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jisa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jisa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jisa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jisa de tsukaremashita — The time difference left me tired.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jisa de tsukaremashita* — The time difference left me tired.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a foreign country, then the Japanese for international, then say jisa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a foreign country, then the Japanese for international, then say *jisa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じさ (jisa) mean? (\"A time difference\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C385-jisa-type",
+              "prompt": "Say the Japanese for 'a time difference'.",
+              "assesses": [
+                "JA-LEX-C385-KAIGAI385-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じさ",
+                "jisa"
+              ],
+              "feedback": {
+                "correct": "Right: じさ (jisa) is 'a time difference'.",
+                "incorrect": "'A time difference' is じさ (jisa)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C385-mezasu",
+      "sequence": 22710,
+      "title": "めざす (mezasu) — to aim for; to make for",
+      "headword": "めざす",
+      "romanization": "mezasu",
+      "gloss": "to aim for; to make for",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7246b9df4e552ae2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for international, then the Japanese for a time difference."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: めざす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めざす — mezasu — \"to aim for; to make for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ふねは みなみの しまを めざしています。 — fune wa minami no shima o mezashite imasu — \"The ship is making for the southern islands.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite めざします, mezashimasu; a godan verb. Past (polite): ふねが しまを めざしました。, fune ga shima o mezashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めざす (mezasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from me, \"eye\" and zasu, \"pointing\" (from sasu); its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mezasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mezasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mezasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mezasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fune wa minami no shima o mezashite imasu — The ship is making for the southern islands.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fune wa minami no shima o mezashite imasu* — The ship is making for the southern islands.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for international, then the Japanese for a time difference, then say mezasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for international, then the Japanese for a time difference, then say *mezasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does めざす (mezasu) mean? (\"To aim for; to make for\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C385-mezasu-type",
+              "prompt": "Say the Japanese for 'to aim for'.",
+              "assesses": [
+                "JA-LEX-C385-KAIGAI385-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "めざす",
+                "mezasu"
+              ],
+              "feedback": {
+                "correct": "Right: めざす (mezasu) is 'to aim for; to make for'.",
+                "incorrect": "'To aim for' is めざす (mezasu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

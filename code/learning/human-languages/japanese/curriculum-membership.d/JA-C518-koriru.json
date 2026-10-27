@@ -1,0 +1,11 @@
+{
+  "id": "JA-C518-koriru",
+  "pathSegment": "JA-PATH-518-REGRET518",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-518-REGRET518",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C392-hikikaesu",
+  "pathSegment": "JA-PATH-392-YORIMICHI392",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-392-YORIMICHI392",
+      "order": 3
+    }
+  ]
+}

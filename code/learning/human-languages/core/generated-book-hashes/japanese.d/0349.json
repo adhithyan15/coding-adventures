@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:fc8b9194e79bbce3",
+  "lessonIds": [
+    "JA-C349-yosou",
+    "JA-C349-joukyou",
+    "JA-C349-kikai",
+    "JA-C349-nogasu",
+    "JA-C349-sekkaku"
+  ],
+  "tex": "japanese/book/chapters/ch349-expecting-the-unexpected.tex"
+}

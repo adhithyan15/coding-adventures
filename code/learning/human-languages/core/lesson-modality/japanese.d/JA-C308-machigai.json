@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C308-machigai",
+    "language": "japanese",
+    "chapter": 308,
+    "sequence": 18380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:099bb4d514bbabc0"
+  },
+  "findings": []
+}

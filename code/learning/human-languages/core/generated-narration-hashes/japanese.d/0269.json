@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:e1cc7047ca3d493e",
+  "lessonIds": [
+    "JA-C269-dorobou",
+    "JA-C269-nusumu",
+    "JA-C269-yuube",
+    "JA-C269-hoeru",
+    "JA-C269-sawagu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch269.txt",
+  "json": "japanese/narration/ch269.json",
+  "textHash": "fnv1a64:bb0abab4fb177dd5",
+  "jsonHash": "fnv1a64:64587901416cd8e5",
+  "findings": []
+}

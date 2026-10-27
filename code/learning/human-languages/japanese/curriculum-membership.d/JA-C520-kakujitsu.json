@@ -1,0 +1,11 @@
+{
+  "id": "JA-C520-kakujitsu",
+  "pathSegment": "JA-PATH-520-WORRY520",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-520-WORRY520",
+      "order": 4
+    }
+  ]
+}

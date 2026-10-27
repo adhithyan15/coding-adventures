@@ -1,5 +1,60 @@
 # Changelog — twig-vm
 
+## Unreleased — host stdin seam: stdin tests no longer abort Miri
+
+### Fixed — `miri-twig-vm.sh` aborted at `host_read_byte_returns_value_in_dest`
+
+`dispatch::tests::host_read_byte_returns_value_in_dest` read the process's
+**real** stdin. Under Miri (host isolation on) a stdin `read` is an
+*unsupported operation*, which does not return an `io::Error` the VM could map
+to EOF — it aborts the whole lib test binary. Every twig-vm lib test scheduled
+after it therefore never ran under `code/scripts/miri-twig-vm.sh` or the
+nightly `miri-twig-vm` job. (`-Zmiri-isolation-error=warn` would not have
+helped: that flag only softens *isolation errors*, and stdin is rejected as
+unsupported, not as an isolation error.) The test was also non-deterministic
+natively: it only ever saw EOF in CI (`/dev/null`) and would block waiting for
+a keypress when run from a terminal.
+
+### Added — `with_host_stdin` seam (test-only override)
+
+`host/read_byte` and `host/read_line` now get their byte source from a private
+`with_host_stdin` helper instead of naming `std::io::stdin()` directly. In a
+normal build that is the real, locked stdin — the same behaviour as before,
+with no extra lookup. In `cfg(test)` builds a thread-local
+`Box<dyn BufRead>` installed by the test helper `with_fake_stdin` takes its
+place, so tests feed the VM in-memory input. No public API change.
+
+### Tests
+
+The real-stdin test is replaced by seven in-memory ones that run natively
+**and** under Miri:
+
+- `host_read_byte_returns_value_in_dest` — `b"A"` → `65`.
+- `host_read_byte_returns_eof_sentinel_on_empty_input` — `b""` → `-1`.
+- `host_read_byte_reads_consecutive_bytes_then_eof` — `b"\x00\xFF"` →
+  `0, 255, -1` (zero byte is not EOF; `0xFF` is zero-extended, not `-1`).
+- `host_read_byte_surfaces_read_error_as_host_io` — a failing reader gives
+  `RunError::HostIo`, not a silent EOF.
+- `host_read_line_strips_lf_and_crlf_then_returns_empty_on_eof` — LF, CRLF,
+  unterminated last line, then `""` at EOF.
+- `host_read_line_rejects_invalid_utf8_as_host_io` and
+  `host_read_line_surfaces_read_error_as_host_io` — error paths.
+
+`host/read_line` previously had no tests at all.
+
+### Changed — four cap-exhaustion tests skip under Miri only
+
+With the abort gone, the Miri run reached tests it had never reached before and
+could not finish: `execution_budget_enforces_cap` alone ticks a `u64` counter
+2^25 times and took ~75 min under Miri, past the 120-min CI timeout. It and
+`ic_table_rejects_too_many_functions` (2^16 inserts),
+`profile_table_rejects_too_many_functions` (2^16) and
+`profile_table_rejects_too_many_instruction_slots` (2^20) are pure safe Rust
+over counters and `HashMap`s — no `unsafe`, no dynval-runtime seam — so Miri
+has nothing to check in them. They now carry
+`#[cfg_attr(miri, ignore = "<reason>")]` and still run under native
+`cargo test`.
+
 ## Unreleased — LANG84 phase 4b — `IIRModule::release`
 
 - Every `IIRModule { .. }` struct literal (code, tests and doc examples)
