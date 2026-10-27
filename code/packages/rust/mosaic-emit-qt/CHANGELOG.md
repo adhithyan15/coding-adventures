@@ -2,6 +2,54 @@
 
 ## [Unreleased]
 
+- **Content inside a bounded `HostScroll` has a height (UI21 §2.2, rules 6
+  and 7).** With the viewport bounded (below), Engram's screens and
+  TaskApp's main view still did not scroll: two lowerings published
+  `0 x 0`, so the content measured almost nothing.
+  - *A styled `Box` sizes itself from its content plus its padding* (6d13).
+    A `Box [part]` lowers to a `Rectangle`, which had a size only from an
+    authored `width` / `height` or a table's column-width thread. Each open
+    axis is now `implicitWidth: <child>.implicitWidth + left + right` (the
+    `Math.max` of several children, which share the box's origin), read by
+    id from each direct child. An id the child already has is reused;
+    otherwise it gets `mosaicBoxChild<N>` from its own counter, so no
+    existing numbered id moves. Children are found by brace depth, so an
+    elevation wrapper's element is not mistaken for a sibling. Implicit
+    sizes rather than `childrenRect`, because a cell's content anchors to
+    the box. A child that does not anchor is inset by `x: left` /
+    `y: top`, and the per-edge padding is read, so its longhands leave the
+    drop report. A `For` child (a `Repeater`) is neither measured nor
+    inset.
+  - *A multi-child `If` / `Else` body is a layout* (6d14). It was a bare
+    `Item`: `0 x 0`, with its children piled on its origin. It now copies
+    the parent's axis and spacing (`RowLayout` / `ColumnLayout`), is a
+    `ColumnLayout` with `spacing: 0` outside a layout, stays an `Item` in a
+    `Stack`, and takes `spacing: 0` when its only child is an `If` /
+    `Else` pair. An inactive `Loader` still takes a layout spacing slot
+    (measured: 20 + 14 + 0 + 14 + 10 = 58px). No `Layout.fill*` reaches
+    through the `Loader`, so a `flex-grow` inside a branch stays reported,
+    as it does in a single-child body. The body's descendants stop
+    inheriting a styled cell's `anchors.fill` text geometry, because a
+    layout child must not anchor.
+  - Measured headless with PySide6 6.12: TaskApp's main `ScrollView`
+    content 82 → 4609px in a 561px viewport; Engram's Options screen (with
+    #18477) 104 → 1314px in 659px. No binding loops before or after.
+    `qmllint` findings are identical across all 203 emitted files (87
+    package and theme emits), and loading every file as a window root and embedded in a layout gives no
+    new errors or warnings; the toolkit `Alert` / `Badge` and Grid `Cell`
+    roots now report a non-zero implicit size.
+  - New fixture `fixtures/content-sized-regions`, measured in CI by the
+    shared `qt-column-shell-scroll-render-check.qml`: 894px of content in
+    519px. #18481's emitter gives 16px; reverting only the box sizing
+    gives 439px, only the branch body 471px, and both fail.
+  - Output changes: Engram, Journal, TaskApp, VisiCalc, Photo Picker and
+    the Card, Checklist, CollectionActions, DeckStats, Dialog, Grid,
+    NoteEditor, ReviewCard, ReviewHistory, SessionProgress, Sheet and
+    toolkit packages. Qt drop reports: Engram 38 → 22, Journal 7 → 3,
+    Card 3 → 1, Dialog 1 → 0; TaskApp's Qt contract is unchanged.
+  - Tests: 14 new `content_sizing_tests`; the multi-child `If` test now
+    pins the `ColumnLayout` body.
+
 - **A vertical `HostScroll` scrolls under a plain `Column` shell (UI21 §2.2,
   the EN-6 follow-up to #18477).** Engram's screens scrolled on SwiftUI,
   Compose, Flutter and XAML but not on Qt. Measured with the real Qt runtime
