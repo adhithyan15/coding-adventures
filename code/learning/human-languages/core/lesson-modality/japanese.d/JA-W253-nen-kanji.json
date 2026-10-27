@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "JA-W253-nen-kanji",
+    "language": "japanese",
+    "chapter": 253,
+    "sequence": 15170,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4b2e3f58d8017156",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C252-sorekara",
+    "language": "japanese",
+    "chapter": 252,
+    "sequence": 15090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:116fc990b8b93041"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R255-advice-and-so",
+    "language": "japanese",
+    "chapter": 255,
+    "sequence": 15290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e1f122103368781"
+  },
+  "findings": []
+}

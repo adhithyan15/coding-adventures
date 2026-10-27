@@ -2,6 +2,46 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] - LANG84 E1 line-start guards and E8 refusal transitions
+
+### Added
+- **E1 definition guards.** A `.tokens` definition (top-level, `group`,
+  `skip:` or `errors:`) may end with `@line_start` or `@input_start`, after
+  any `-> ALIAS`. `TokenDefinition` gains `guard: TokenGuard` (`None`,
+  `LineStart`, `InputStart`; `#[derive(Default)]`). An unknown `@…` word is a
+  parse error; `@column(…)` and a `line_terminators:` directive are specified
+  but rejected as "not implemented yet". An `@` inside the pattern or a
+  trailing `#` comment is not a guard.
+- **E8 refusal transitions (F10 amendment).** `-> refuse` is a new
+  `TransitionAction::Refuse`; it must be a rule's only action. A rule head may
+  end with `if COND [&& COND …]`, where `COND` is `space_before`,
+  `space_after` or `line_start`, optionally negated with `!`.
+  `ModeTransition` gains `conditions: Vec<TransitionCondition>`. A
+  `KEYWORD="if"` value is not mistaken for a condition list.
+- The code generator writes `guard: Default::default(),` and
+  `conditions: vec![],` for the defaults, and fully qualified paths otherwise,
+  so a generated file's `use` line never changes.
+
+### Changed
+- Every committed generated `_grammar*.rs` (and hand-written test literals)
+  gained exactly those two default lines, inserted mechanically after each
+  `alias:` / `in_mode:` field rather than by regeneration, so no unrelated
+  source drift (#14202) came along. The CI-checked stems (Mosaic, MacroOct,
+  Nib, Ruby, Python) were then regenerated and match byte for byte; Ruby's
+  and Python's dedup module names (`g_<hash>`) changed because the hash covers
+  the generated text.
+- Security review follow-ups (fail closed, never silently drop a rule):
+  - `if` in a transition head is a whitespace-delimited word, so
+    `on X\tif …` splits and a bare `on X if -> …` is an error; before, the
+    trigger became `X if` and the rule never fired (L1).
+  - An alias containing `@` is an error: `->Y@line_start` used to become the
+    alias `Y@line_start` with no guard (L3).
+  - `validate_token_grammar` rejects `refuse` rules and `if` conditions in
+    `mode: indentation` grammars, whose tokenizer never applies transitions
+    (L2), and any transition trigger that names no token the grammar can
+    emit (a definition or alias, an error definition, `KEYWORD` when there
+    are keywords, or `NEWLINE`/`INDENT`/`DEDENT`/`EOF`).
+
 ## [Unreleased] - F11 token-adjacency predicates (LANG84 E6)
 
 ### Added

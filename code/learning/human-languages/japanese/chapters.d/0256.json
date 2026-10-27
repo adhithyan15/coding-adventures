@@ -1,0 +1,23 @@
+{
+  "chapter": 256,
+  "title": "Which Way to the Station",
+  "label": "ch:ja-which-way-to-the-station",
+  "canDo": "I can ask the way (eki wa doko desu ka; kūkō made dō yatte ikimasu ka), follow directions (massugu itte, migi ni magatte kudasai), buy tickets with the counter mai, and ask when the next train leaves.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-R256-which-way-to-the-station",
+    "kind": "production",
+    "summary": "Complete JA-R256-which-way-to-the-station: ask the way, buy two tickets and ask when the train leaves.",
+    "assesses": [
+      "JA-GRAMMAR-C256-DIRECTION-01",
+      "JA-LEX-C256-MAI-01",
+      "JA-GRAMMAR-C256-DIRECTION-02",
+      "JA-GRAMMAR-C256-TICKET-01",
+      "JA-GRAMMAR-C256-TICKET-02",
+      "JA-LEX-C256-NIHONJIN-01",
+      "JA-SCRIPT-KANJI-JIN-01"
+    ]
+  }
+}

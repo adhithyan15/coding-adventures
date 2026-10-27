@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-252-NARRATE252",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can tell what I did in order, joining actions with the -te form (okite, kao o aratte, dekakemashita), say what came after what (tabete kara; sore kara; soshite), and recognise 月 in 月日.",
+  "prerequisites": []
+}

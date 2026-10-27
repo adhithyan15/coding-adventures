@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Changed
+
+- `verify` now delegates equal-length tag comparison to the repository-owned
+  `coding_adventures_ct_compare` compiler-preserved full-scan primitive. The
+  external `subtle` executable dependency has been removed. Public length
+  mismatches still fail directly, and the HMAC API is unchanged.
+
 ### Fixed
 
 - **Key-derived intermediates are now wiped.** `hmac()` built `key_prime`,
