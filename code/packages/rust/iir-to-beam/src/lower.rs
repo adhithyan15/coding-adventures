@@ -179,6 +179,85 @@ fn array_substrate_map(
 }
 
 // ===========================================================================
+// Call arguments are a PARALLEL move
+// ===========================================================================
+//
+// A local `call f(a, b, c)` must leave `a` in x0, `b` in x1 and `c` in x2.
+// Each argument already sits in its own x-register, so the call is preceded
+// by a handful of `move {x,src} {x,i}`. Those moves are *parallel*: every
+// source is meant to be read with the value it held BEFORE any of them ran.
+// Emitting them one after another in argument order is only right when no
+// move overwrites a register that a later move still has to read.
+//
+// LANG83 PR7c-py's `__py_write_float` is exactly the shape that breaks the
+// naive order. Its first registers are `x` (x0, the parameter), `zero` (x1)
+// and `one` (x2), and it calls `__py_write_digits(d, n, zero, e1)`:
+//
+// ```text
+//   naive, in argument order            what real BEAM then holds
+//   move {x,d}    {x,0}                 x0 = d
+//   move {x,n}    {x,1}   ← clobbers    x1 = n        (zero is gone)
+//   move {x,1}    {x,2}   ← reads x1    x2 = n        (should be 0)
+//   move {x,e1}   {x,3}                 x3 = e1
+// ```
+//
+// So `from` arrived as `n` instead of `0`, and every run of digits that
+// starts at the leading digit printed nothing: `print(1.5)` wrote `.5`,
+// `print(0.25)` wrote `0.`, `print(1e16)` wrote `e+16` (CI, real OTP, PR
+// #18400). The call arm's comment had always claimed it "collects the pairs
+// first to avoid aliasing issues"; it never did.
+//
+// The fix is the textbook sequentialisation of a parallel move:
+//
+// 1. Drop the moves that are already in place (`src == dst`).
+// 2. Repeatedly emit a move whose destination no pending move still reads.
+//    Writing it cannot destroy anything anyone needs. Taking the FIRST such
+//    move each time means a call whose naive order was already safe keeps
+//    exactly the same instruction stream (byte-identical modules).
+// 3. When no move qualifies, what is left is a set of pure cycles (each
+//    destination is distinct and is also some pending source, so sources and
+//    destinations are the same set and nothing fans out). Break one by parking
+//    a destination's current value in a `scratch` register and redirecting
+//    its readers there, then go back to step 2.
+//
+// ```text
+//   call f(b, a) with a in x0, b in x1     (a swap: one 2-cycle)
+//   pending {x1→x0, x0→x1}: neither can go first
+//   move {x,0} {x,scratch}   park a        pending {x1→x0, scratch→x1}
+//   move {x,1} {x,0}         b → x0        pending {scratch→x1}
+//   move {x,scratch} {x,1}   a → x1        done
+// ```
+//
+// `scratch` must be a register no pending move reads AND no emitted move has
+// written: the caller passes one at or above both `next_reg` (every
+// variable's register lies below it) and the arity (every destination lies
+// below it). It is needed only for a cycle, so `None` is fine until one
+// appears; the function then returns `None` and the caller reports it.
+fn sequence_parallel_moves(moves: &[(u8, u8)], scratch: Option<u8>) -> Option<Vec<(u8, u8)>> {
+    let mut pending: Vec<(u8, u8)> = moves.iter().copied().filter(|(src, dst)| src != dst).collect();
+    let mut ordered = Vec::with_capacity(pending.len() + 1);
+    while !pending.is_empty() {
+        let safe = pending
+            .iter()
+            .position(|&(_, dst)| !pending.iter().any(|&(src, _)| src == dst));
+        if let Some(k) = safe {
+            ordered.push(pending.remove(k));
+            continue;
+        }
+        // Only cycles remain: park the first destination's value.
+        let parked = scratch?;
+        let (_, dst) = pending[0];
+        ordered.push((dst, parked));
+        for (src, _) in &mut pending {
+            if *src == dst {
+                *src = parked;
+            }
+        }
+    }
+    Some(ordered)
+}
+
+// ===========================================================================
 // BEAM opcode constants
 // ===========================================================================
 //
@@ -4198,12 +4277,13 @@ pub fn lower_iir_to_beam(
                     let arg_srcs = &instr.srcs[1..];
                     let arity = arg_srcs.len() as u32;
 
-                    // Move each argument into x0, x1, …
-                    // We collect the (arg_reg, target_x) pairs first to avoid
-                    // aliasing issues (moving x1 → x0 then x0 → x1 would be
-                    // wrong if we emit eagerly).  For a simple sequential move
-                    // into fresh positions this is fine, but being explicit is
-                    // clearer.
+                    // Move each argument into x0, x1, … as ONE parallel move:
+                    // collect every (arg_reg, target_x) pair first, then let
+                    // `sequence_parallel_moves` order them so no move
+                    // overwrites a register a later one still reads (the
+                    // PR7c-py `__py_write_digits(d, n, zero, e1)` bug; see the
+                    // comment on that function).
+                    let mut arg_moves: Vec<(u8, u8)> = Vec::with_capacity(arg_srcs.len());
                     for (i, src) in arg_srcs.iter().enumerate() {
                         let arg_reg = operand_reg!(src);
                         // Bounds check: BEAM x-registers are 0..254; a call
@@ -4217,13 +4297,25 @@ pub fn lower_iir_to_beam(
                                 ),
                             });
                         }
-                        let target_x = i as u8;
-                        if arg_reg != target_x {
-                            instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                                BEAMOperand::x(arg_reg),
-                                BEAMOperand::x(target_x),
-                            ]));
+                        arg_moves.push((arg_reg, i as u8));
+                    }
+                    // The cycle-breaking scratch: above every variable's
+                    // register and every argument slot, and below x255.
+                    let scratch = meta.next_reg.max(arg_moves.len() as u8);
+                    let scratch = (scratch < u8::MAX).then_some(scratch);
+                    let ordered = sequence_parallel_moves(&arg_moves, scratch).ok_or_else(|| {
+                        IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: "call: its arguments form a register cycle and no scratch \
+                                 register remains below x255 to break it"
+                                .into(),
                         }
+                    })?;
+                    for (from, to) in ordered {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(from),
+                            BEAMOperand::x(to),
+                        ]));
                     }
 
                     // Emit the call.
