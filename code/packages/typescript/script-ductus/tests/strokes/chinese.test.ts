@@ -252,9 +252,12 @@ describe("handwriting ductus", () => {
     // 187 -> 199: the twelve characters A2 vocabulary tranche g writes
     // (chapters 218-247), each right after the word that anchors
     // it: 风 云 雪 花 草 头 疼 身 体 医 西 现.
-    expect(chinese.letters).toHaveLength(199);
+    // 199 -> 205: the first characters A2 vocabulary tranche h writes
+    // (chapters 248-277), each right after the word that anchors
+    // it: 校 高 读 作 写 孩.
+    expect(chinese.letters).toHaveLength(205);
     expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(
-      199,
+      205,
     );
     expect(
       chinese.letters.every((letter) => letter.strokeOrderSource !== undefined),
