@@ -116,10 +116,17 @@ All notable changes to the Go build tool will be documented in this file.
   `mosaic-pkg-notes` and `engram-app` were not selected by a change to
   `mosaic-emit-qt/src/pipeline.rs`; now they are.
   - `ResolveWithTestTriggers` returns the build graph plus `TestTriggers`
-    (dependency → packages that dev-depend on it), read for `rust`, `wasm`
-    and `mosaic`. Entries resolve exactly like `[dependencies]` (path entries
-    only, key or `package =` rename, same name tables; Rust's table for a
-    Mosaic harness). `ResolveDependencies` wraps it.
+    (dependency → packages that dev-depend on it). `ResolveDependencies`
+    wraps it. Read for `rust` and `wasm` from `[dev-dependencies]` and every
+    `[target.<cfg>.dev-dependencies]` (union over targets); for a `mosaic`
+    harness also from `[dependencies]` and `[build-dependencies]` and their
+    target forms, since a Mosaic package has no Cargo graph edges.
+  - Path entries resolve by directory, not by Cargo name: the discovered
+    package at, or containing, the entry's path. A crate claiming another's
+    `name` cannot capture its triggers. An existing crate directory that no
+    discovered package covers (the four `BUILD-EXEMPTIONS` orphans referenced
+    today) yields no trigger; any other unresolvable, absolute or empty path is
+    an error.
   - The triggers stay out of the graph and are applied one hop past the build
     closure, before prerequisite expansion (`withDevDependents`). A
     dev-dependent's own dependents are not selected, and prerequisites
@@ -127,15 +134,22 @@ All notable changes to the Go build tool will be documented in this file.
     (`closure-pass-dce` ⇄ `closure-pass-fold-control-flow`,
     `wolfram-to-semantic-ir` ⇄ `semantic-ir-to-javascript`); as graph edges
     they would have failed every package's build.
-  - Fails closed (`CargoManifestError`) on sub-table headers,
-    `[dev_dependencies]`, dotted or quoted keys, multi-line values,
-    `workspace = true`, other value shapes, and keys that spell the table from
-    elsewhere. Target-specific tables are not read, matching `[dependencies]`.
+  - Fails closed (`CargoManifestError`) after a security review: any
+    multi-line string; an open string, mismatched brackets or a value open at
+    end of file; an undecodable header or key (quoted segments are decoded, so
+    `["dev-dependencies"]` is the table; backslashes are refused); a trigger
+    table as a sub-table, an array of tables, or spelled by a key or inline
+    table elsewhere; entries other than `key = "version"` or a one-line inline
+    table whose fields are bare, exactly-lowercase, unique keys with string,
+    boolean or string-array values (only an array may span lines; nested
+    tables, trailing commas, escapes and `workspace = true` are refused); a
+    non-regular or over-1 MiB manifest. A leading BOM is stripped.
   - Fan-out, accepted: a one-line change to `mosaic-emit-qt`,
-    `mosaic-emit-flutter` or `mosaic-package-artifact-builder` now selects 151
-    packages instead of 73 (`moslayout-compiler`: 153 instead of 74). That is
-    the 27–28 Mosaic suites, `rust/venture-browser-qt`, and about 51 of its
-    prerequisites.
+    `mosaic-emit-flutter` or `mosaic-package-artifact-builder` now selects 158
+    packages instead of 73 (`moslayout-compiler`: 160 instead of 74). That is
+    the 27–28 Mosaic suites, `rust/venture-browser-qt`, `-macos` and
+    `-windows`, and their prerequisites (about 51 for `-qt` alone). 151 was
+    accepted before target tables were read; they add the last 7.
 - `toolchainForPackageLanguage("mosaic")` now returns `rust`. Every Mosaic
   package and app BUILD runs `cargo test` on its smoke harness, but the
   language mapped to the unknown toolchain `mosaic`, so a plan whose only
