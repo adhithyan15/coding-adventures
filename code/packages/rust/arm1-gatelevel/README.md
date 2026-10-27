@@ -16,6 +16,13 @@ Memory and registers use a packed stable-Q representation. On every
 simulator-owned write, the internal master/slave latch state is reconstructed
 and clocked through `logic_gates::sequential::register`.
 
+The HALT DFF Q output is the sole architectural halt authority. The historical
+private host Boolean is only a synchronized observation mirror: deliberately
+diverging it cannot change snapshots, execution, or fault behavior. A concrete
+physical-storage inventory and exact source-transition locks prevent a host
+mirror, direct-Q assignment, helper indirection, dead gate anchor, or
+post-dispatch overwrite from replacing the clocked path.
+
 ## Checked lifecycle
 
 ```rust
@@ -38,11 +45,15 @@ force-user LDM/STM transfers and external mask-aware IRQ/FIQ entry.
 
 ## Conformance
 
-The original 21 unit/program tests remain green. Eight lifecycle tests cover
-topology and typed transactional boundaries. An aggregate 599-vector test
-matches every full-state Python/functional hash across all conditions,
-instructions, and addressing families. Strict formatting, Clippy, and rustdoc
-pass; total Rust line coverage is 93.12% (1,042/1,119).
+Twenty-three unit/program tests, eight lifecycle tests, three structural
+integrity tests, and the aggregate 599-vector differential are green. They
+cover the concrete topology, both deliberate mirror divergences, every HALT
+lifecycle transition, typed rollback, and hostile source mutations as well as
+all prior conditions, instructions, and addressing families. Each hostile
+full-source mutation is independently type-checked before structural rejection.
+Strict
+formatting, Clippy, and rustdoc pass; total Rust line coverage is 93.27%
+(1,189/1,269).
 
 See `code/specs/07e2-arm1-gatelevel.md` for the normative contract.
 

@@ -748,6 +748,13 @@ style TaskApp {
     font-size : 12 ;
     padding-left : 8 ;
   }
+  // Why the last note Save was refused (E5), above the Notes view. The
+  // composer errors' treatment, so every refusal in TaskApp reads alike.
+  part note-error {
+    color : "#a13727" ;
+    font-size : 12 ;
+    padding-left : 8 ;
+  }
   part add-btn {
     background : "#e0942a" ;
     color : "#ffffff" ;
