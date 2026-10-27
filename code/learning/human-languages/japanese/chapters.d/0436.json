@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "Cheerful or Quiet",
+  "label": "ch:ja-cheerful-or-quiet",
+  "canDo": "I can describe a cheerful or a quiet person.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C436-furumau",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can describe a cheerful or a quiet person.",
+    "assesses": [
+      "JA-LEX-C436-BRIGHT436-03",
+      "JA-LEX-C436-BRIGHT436-04",
+      "JA-LEX-C436-BRIGHT436-05"
+    ]
+  }
+}

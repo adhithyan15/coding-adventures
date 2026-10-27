@@ -1,0 +1,11 @@
+{
+  "id": "JA-C336-kuuki",
+  "pathSegment": "JA-PATH-336-KANKYOU336",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-336-KANKYOU336",
+      "order": 3
+    }
+  ]
+}

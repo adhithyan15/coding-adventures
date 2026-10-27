@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C331-seiji",
+    "language": "japanese",
+    "chapter": 331,
+    "sequence": 19750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2a55c1c214ffa81"
+  },
+  "findings": []
+}

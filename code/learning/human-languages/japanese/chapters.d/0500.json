@@ -1,0 +1,19 @@
+{
+  "chapter": 500,
+  "title": "Toys and Games",
+  "label": "ch:ja-toys-and-games",
+  "canDo": "I can talk about children's games.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C500-suberidai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can talk about children's games.",
+    "assesses": [
+      "JA-LEX-C500-TOY500-03",
+      "JA-LEX-C500-TOY500-04",
+      "JA-LEX-C500-TOY500-05"
+    ]
+  }
+}

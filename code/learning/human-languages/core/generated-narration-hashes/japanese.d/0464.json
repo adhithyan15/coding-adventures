@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:530c6e7f7e145294",
+  "lessonIds": [
+    "JA-C464-kankyaku",
+    "JA-C464-shinpan",
+    "JA-C464-tokuten",
+    "JA-C464-semeru",
+    "JA-C464-ubau"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch464.txt",
+  "json": "japanese/narration/ch464.json",
+  "textHash": "fnv1a64:9f27abd33e31eeb2",
+  "jsonHash": "fnv1a64:5fef8c41a780a819",
+  "findings": []
+}

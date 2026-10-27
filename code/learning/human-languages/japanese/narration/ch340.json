@@ -1,0 +1,948 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 340,
+  "title": "Giving Advice",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:fd44c1788de10970",
+  "lessons": [
+    {
+      "id": "JA-C340-jogen",
+      "sequence": 20180,
+      "title": "じょげん (jogen) — advice",
+      "headword": "じょげん",
+      "romanization": "jogen",
+      "gloss": "advice",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1337cad97fb8a2fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to adopt an idea, then the Japanese for scattered."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じょげん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じょげん — jogen — \"advice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんぱいの じょげんを きいた ほうが いいです。 — senpai no jogen o kiita hō ga ii desu — \"You should listen to your senior's advice.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じょげん (jogen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jo, \"help\" (Middle Chinese dzrjoH) and gen, \"word\" (ngjon) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jogen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jogen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jogen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jogen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senpai no jogen o kiita hō ga ii desu — You should listen to your senior's advice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senpai no jogen o kiita hō ga ii desu* — You should listen to your senior's advice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to adopt an idea, then the Japanese for scattered, then say jogen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to adopt an idea, then the Japanese for scattered, then say *jogen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じょげん (jogen) mean? (\"Advice\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C340-jogen-type",
+              "prompt": "Say the Japanese for 'advice'.",
+              "assesses": [
+                "JA-LEX-C340-JOGEN340-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じょげん",
+                "jogen"
+              ],
+              "feedback": {
+                "correct": "Right: じょげん (jogen) is 'advice'.",
+                "incorrect": "'Advice' is じょげん (jogen)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C340-chuukoku-suru",
+      "sequence": 20190,
+      "title": "ちゅうこくする (chūkoku suru) — to warn; to advise against",
+      "headword": "ちゅうこくする",
+      "romanization": "chūkoku suru",
+      "gloss": "to warn; to advise against",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3483b9161ddcd5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for scattered, then the Japanese for advice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちゅうこくする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちゅうこくする — chūkoku suru — \"to warn; to advise against\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あぶないから、いしゃが ちゅうこくしました。 — abunai kara, isha ga chūkoku shimashita — \"It is dangerous, so the doctor warned me.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ちゅうこくします, chūkokushimasu; a する verb. Past (polite): いしゃが ちゅうこくしました。, isha ga chūkoku shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちゅうこくする (chūkoku suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, chūkoku, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: chū, \"loyalty\" and koku, \"tell\" (Middle Chinese kowk) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūkoku suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūkoku suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūkoku suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūkoku suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abunai kara, isha ga chūkoku shimashita — It is dangerous, so the doctor warned me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abunai kara, isha ga chūkoku shimashita* — It is dangerous, so the doctor warned me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for scattered, then the Japanese for advice, then say chūkoku suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for scattered, then the Japanese for advice, then say *chūkoku suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちゅうこくする (chūkoku suru) mean? (\"To warn; to advise against\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C340-chuukoku-suru-type",
+              "prompt": "Say the Japanese for 'to warn'.",
+              "assesses": [
+                "JA-LEX-C340-JOGEN340-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちゅうこくする",
+                "chūkoku suru",
+                "chuukoku suru",
+                "chukoku suru"
+              ],
+              "feedback": {
+                "correct": "Right: ちゅうこくする (chūkoku suru) is 'to warn; to advise against'.",
+                "incorrect": "'To warn' is ちゅうこくする (chūkoku suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C340-kokorogakeru",
+      "sequence": 20200,
+      "title": "こころがける (kokorogakeru) — to keep in mind; to make a point of",
+      "headword": "こころがける",
+      "romanization": "kokorogakeru",
+      "gloss": "to keep in mind; to make a point of",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2e0dc86053e2dba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for advice, then the Japanese for to warn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こころがける",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こころがける — kokorogakeru — \"to keep in mind; to make a point of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "けんこうの ために、はやく ねる ことを こころがけて ください。 — kenkō no tame ni, hayaku neru koto o kokorogakete kudasai — \"For your health, make a point of going to bed early.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite こころがけます, kokorogakemasu; an ichidan verb. Past (polite): あには あさの うんどうを こころがけました。, ani wa asa no undō o kokorogakemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こころがける (kokorogakeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese: it is built from kokoro, \"heart\" and kakeru, \"to hang\", and its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kokorogakeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kokorogakeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kokorogakeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kokorogakeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kenkō no tame ni, hayaku neru koto o kokorogakete kudasai — For your health, make a point of going to bed early.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kenkō no tame ni, hayaku neru koto o kokorogakete kudasai* — For your health, make a point of going to bed early.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for advice, then the Japanese for to warn, then say kokorogakeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for advice, then the Japanese for to warn, then say *kokorogakeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こころがける (kokorogakeru) mean? (\"To keep in mind; to make a point of\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C340-kokorogakeru-type",
+              "prompt": "Say the Japanese for 'to make a point of'.",
+              "assesses": [
+                "JA-LEX-C340-JOGEN340-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こころがける",
+                "kokorogakeru"
+              ],
+              "feedback": {
+                "correct": "Right: こころがける (kokorogakeru) is 'to keep in mind; to make a point of'.",
+                "incorrect": "'To make a point of' is こころがける (kokorogakeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C340-doryoku-suru",
+      "sequence": 20210,
+      "title": "どりょくする (doryoku suru) — to make an effort",
+      "headword": "どりょくする",
+      "romanization": "doryoku suru",
+      "gloss": "to make an effort",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46c2077c262e033a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to warn, then the Japanese for to make a point of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: どりょくする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どりょくする — doryoku suru — \"to make an effort\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しけんが あるから、どりょくした ほうが いいです。 — shiken ga aru kara, doryoku shita hō ga ii desu — \"There is an exam, so you should make an effort.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite どりょくします, doryokushimasu; a する verb. Past (polite): がくせいが どりょくしました。, gakusei ga doryoku shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どりょくする (doryoku suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, doryoku, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: do, \"toil\" (Middle Chinese nuX) and ryoku, \"power\" (lik) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doryoku suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doryoku suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doryoku suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doryoku suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiken ga aru kara, doryoku shita hō ga ii desu — There is an exam, so you should make an effort.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiken ga aru kara, doryoku shita hō ga ii desu* — There is an exam, so you should make an effort.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to warn, then the Japanese for to make a point of, then say doryoku suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to warn, then the Japanese for to make a point of, then say *doryoku suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does どりょくする (doryoku suru) mean? (\"To make an effort\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C340-doryoku-suru-type",
+              "prompt": "Say the Japanese for 'to make an effort'.",
+              "assesses": [
+                "JA-LEX-C340-JOGEN340-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "どりょくする",
+                "doryoku suru"
+              ],
+              "feedback": {
+                "correct": "Right: どりょくする (doryoku suru) is 'to make an effort'.",
+                "incorrect": "'To make an effort' is どりょくする (doryoku suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C340-keikoku",
+      "sequence": 20220,
+      "title": "けいこく (keikoku) — a warning",
+      "headword": "けいこく",
+      "romanization": "keikoku",
+      "gloss": "a warning",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76217ec8792fce35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to make a point of, then the Japanese for to make an effort."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けいこく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けいこく — keikoku — \"a warning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "けいこくを きいたので、みんな うちに かえりました。 — keikoku o kiita node, minna uchi ni kaerimashita — \"Everyone heard the warning, so they went home.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けいこく (keikoku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kei, \"admonish\" (Middle Chinese kjaengX) and koku, \"tell\" (kowk) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keikoku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keikoku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keikoku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keikoku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keikoku o kiita node, minna uchi ni kaerimashita — Everyone heard the warning, so they went home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keikoku o kiita node, minna uchi ni kaerimashita* — Everyone heard the warning, so they went home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to make a point of, then the Japanese for to make an effort, then say keikoku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to make a point of, then the Japanese for to make an effort, then say *keikoku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けいこく (keikoku) mean? (\"A warning\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C340-keikoku-type",
+              "prompt": "Say the Japanese for 'a warning'.",
+              "assesses": [
+                "JA-LEX-C340-JOGEN340-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けいこく",
+                "keikoku"
+              ],
+              "feedback": {
+                "correct": "Right: けいこく (keikoku) is 'a warning'.",
+                "incorrect": "'A warning' is けいこく (keikoku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R340-review-335-340",
+      "sequence": 20230,
+      "title": "Looking back: from Groups and Members to Giving Advice",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Groups and Members to Giving Advice",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f2ac1e1fb8c317f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for an organization and a club member."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an organization, a club member, a membership fee, oneself, other people",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an organization, a club member, a membership fee, oneself, other people]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the environment, nature, the earth, air, pollution",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the environment, nature, the earth, air, pollution]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to economize, electric power, fuel, petroleum, too good to waste",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to economize, electric power, fuel, petroleum, too good to waste]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "useless, to reduce, to increase something, to burn something, resources",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: useless, to reduce, to increase something, to burn something, resources]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sort rubbish, to preserve, to safeguard, to adopt an idea, scattered",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sort rubbish, to preserve, to safeguard, to adopt an idea, scattered]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "advice, to warn, to make a point of, to make an effort, a warning",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: advice, to warn, to make a point of, to make an effort, a warning]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An organization? (だんたい, dantai.) A club member? (かいいん, kaiin.) A membership fee? (かいひ, kaihi.) Oneself? (じぶん, jibun.) Other people? (たにん, tanin.) The environment? (かんきょう, kankyō.) Nature? (しぜん, shizen.) The earth? (ちきゅう, chikyū.) Air? (くうき, kūki.) Pollution? (おせん, osen.) To economize? (せつやくする, setsuyaku suru.) Electric power? (でんりょく, denryoku.) Fuel? (ねんりょう, nenryō.) Petroleum? (せきゆ, sekiyu.) Too good to waste? (もったいない, mottainai.) Useless? (むだ, muda.) To reduce? (へらす, herasu.) To increase something? (ふやす, fuyasu.) To burn something? (もやす, moyasu.) Resources? (しげん, shigen.) To sort rubbish? (ぶんべつする, bunbetsu suru.) To preserve? (ほぞんする, hozon suru.) To safeguard? (ほごする, hogo suru.) To adopt an idea? (とりいれる, toriireru.) Scattered? (ばらばら, barabara.) Advice? (じょげん, jogen.) To warn? (ちゅうこくする, chūkoku suru.) To make a point of? (こころがける, kokorogakeru.) To make an effort? (どりょくする, doryoku suru.) A warning? (けいこく, keikoku.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R340-review-335-340-type",
+              "prompt": "Say the Japanese for 'an organization'.",
+              "assesses": [
+                "JA-LEX-C335-DANTAI335-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "だんたい",
+                "dantai"
+              ],
+              "feedback": {
+                "correct": "Right: だんたい (dantai) is 'a group; an organization'.",
+                "incorrect": "'An organization' is だんたい (dantai)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

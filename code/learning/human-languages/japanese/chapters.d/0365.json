@@ -1,0 +1,19 @@
+{
+  "chapter": 365,
+  "title": "The Economy",
+  "label": "ch:ja-the-economy",
+  "canDo": "I can say what would happen if the economy got better.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C365-heikin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 365: I can say what would happen if the economy got better.",
+    "assesses": [
+      "JA-LEX-C365-KEIZAI365-03",
+      "JA-LEX-C365-KEIZAI365-04",
+      "JA-LEX-C365-KEIZAI365-05"
+    ]
+  }
+}

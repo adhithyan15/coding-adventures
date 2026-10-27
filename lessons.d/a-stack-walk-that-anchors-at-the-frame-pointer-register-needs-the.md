@@ -30,8 +30,16 @@ linked. Never rely on compiler defaults; they change between rustc versions
 and profiles. A test that passes in CI and fails locally on another
 toolchain is evidence of an unenforced property, not a flaky host.
 
-**Caveat (security review).** The flag fixes SysV x86-64 and AArch64 only.
-On Windows x64, LLVM anchors `rbp` with `lea rbp, [rsp+N]` even under
-`-Cforce-frame-pointers=yes`. A walk that needs a classic `[rbp]` record on
-every ABI should get it from a small frame-building trampoline on the collect
-entry points, not from a compiler flag.
+**Caveat (security review), since resolved.** The flag fixes SysV x86-64 and
+AArch64 only. On Windows x64, LLVM anchors `rbp` with `lea rbp, [rsp+N]` even
+under `-Cforce-frame-pointers=yes`, so `[rbp]` is a local, not a saved frame
+pointer. The durable fix was to stop reading the register at all: each precise
+collect entry is now a naked trampoline (`push rbp; mov rbp, rsp; …; call
+body` / `stp x29, x30, [sp, #-16]!; mov x29, sp; …; bl body`) that builds the
+record and passes its address as an argument (gc-core-capi `stack_scan.rs`
+section 2b). The x86-64 Linux differentials pass with that archive even when
+it is built with `-Cforce-frame-pointers=no`. Prefer that shape from the start:
+when a layout is load-bearing, write the few instructions that fix it rather
+than asking the compiler for it. A naked function also gets no unwind info, so
+add `.cfi_*` / `.seh_*` directives and check them with `llvm-readobj --unwind`
+or `llvm-objdump --dwarf=frames`.

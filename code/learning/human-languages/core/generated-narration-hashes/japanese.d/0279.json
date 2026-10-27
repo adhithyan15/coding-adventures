@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:a0048da68f0691f0",
+  "lessonIds": [
+    "JA-C279-kazan",
+    "JA-C279-funka",
+    "JA-C279-saigai",
+    "JA-C279-fusegu",
+    "JA-C279-oukii",
+    "JA-R279-review-274-279"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch279.txt",
+  "json": "japanese/narration/ch279.json",
+  "textHash": "fnv1a64:228eff282f176834",
+  "jsonHash": "fnv1a64:1a76d0062cd5cec0",
+  "findings": []
+}

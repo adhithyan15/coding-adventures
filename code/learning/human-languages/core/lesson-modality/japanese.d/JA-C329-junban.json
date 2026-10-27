@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C329-junban",
+    "language": "japanese",
+    "chapter": 329,
+    "sequence": 19650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef458f65adb69a76"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:468d355f4ae9e508",
+  "lessonIds": [
+    "JA-C461-takkyuu",
+    "JA-C461-kendou",
+    "JA-C461-karate",
+    "JA-C461-taisou",
+    "JA-C461-kantoku",
+    "JA-R461-review-456-461"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch461.txt",
+  "json": "japanese/narration/ch461.json",
+  "textHash": "fnv1a64:1e9f9df5cde43b12",
+  "jsonHash": "fnv1a64:f67d46cf9b128572",
+  "findings": []
+}

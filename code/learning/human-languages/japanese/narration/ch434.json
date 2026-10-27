@@ -1,0 +1,819 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 434,
+  "title": "Thanks and Sympathy",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1880a6a3277e3e4e",
+  "lessons": [
+    {
+      "id": "JA-C434-kansha-suru",
+      "sequence": 25410,
+      "title": "かんしゃする (kansha suru) — to be grateful; to thank",
+      "headword": "かんしゃする",
+      "romanization": "kansha suru",
+      "gloss": "to be grateful; to thank",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8e934cbdd86a1a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an interest, then the Japanese for admiration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かんしゃする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かんしゃする — kansha suru — \"to be grateful; to thank\"."
+            },
+            {
+              "kind": "speech",
+              "text": "りょうしんに かんしゃしています。 — ryōshin ni kansha shite imasu — \"I am grateful to my parents.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite かんしゃします, kanshashimasu; a する verb. Past (polite): がくせいが せんせいに かんしゃしました。, gakusei ga sensei ni kansha shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かんしゃする (kansha suru) is Sino-Japanese (kango) kansha with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kan, \"emotion\" (Middle Chinese komX) and sha, \"thank\" (zjaeH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kansha suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kansha suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kansha suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kansha suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ryōshin ni kansha shite imasu — I am grateful to my parents.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ryōshin ni kansha shite imasu* — I am grateful to my parents.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an interest, then the Japanese for admiration, then say kansha suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an interest, then the Japanese for admiration, then say *kansha suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かんしゃする (kansha suru) mean? (\"To be grateful; to thank\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C434-kansha-suru-type",
+              "prompt": "Say the Japanese for 'to be grateful'.",
+              "assesses": [
+                "JA-LEX-C434-THANK434-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かんしゃする",
+                "kansha suru"
+              ],
+              "feedback": {
+                "correct": "Right: かんしゃする (kansha suru) is 'to be grateful; to thank'.",
+                "incorrect": "'To be grateful' is かんしゃする (kansha suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C434-doujou-suru",
+      "sequence": 25420,
+      "title": "どうじょうする (dōjō suru) — to feel sympathy",
+      "headword": "どうじょうする",
+      "romanization": "dōjō suru",
+      "gloss": "to feel sympathy",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0903404ad3082dab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for admiration, then the Japanese for to be grateful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: どうじょうする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どうじょうする — dōjō suru — \"to feel sympathy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かれが けがを して、みんなが どうじょうしました。 — kare ga kega o shite, minna ga dōjō shimashita — \"He got hurt, and everyone felt for him.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite どうじょうします, dōjōshimasu; a する verb. Past (polite): ともだちが どうじょうしました。, tomodachi ga dōjō shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どうじょうする (dōjō suru) is Sino-Japanese (kango) dōjō with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are dō, \"same\" (Middle Chinese duwng) and jō, \"sympathy\" (dzjeng) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dōjō suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dōjō suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dōjō suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dōjō suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare ga kega o shite, minna ga dōjō shimashita — He got hurt, and everyone felt for him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare ga kega o shite, minna ga dōjō shimashita* — He got hurt, and everyone felt for him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for admiration, then the Japanese for to be grateful, then say dōjō suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for admiration, then the Japanese for to be grateful, then say *dōjō suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does どうじょうする (dōjō suru) mean? (\"To feel sympathy\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C434-doujou-suru-type",
+              "prompt": "Say the Japanese for 'to feel sympathy'.",
+              "assesses": [
+                "JA-LEX-C434-THANK434-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "どうじょうする",
+                "dōjō suru",
+                "doujou suru",
+                "doojoo suru",
+                "dojo suru"
+              ],
+              "feedback": {
+                "correct": "Right: どうじょうする (dōjō suru) is 'to feel sympathy'.",
+                "incorrect": "'To feel sympathy' is どうじょうする (dōjō suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C434-kinodoku",
+      "sequence": 25430,
+      "title": "きのどく (kinodoku) — pitiable; unfortunate",
+      "headword": "きのどく",
+      "romanization": "kinodoku",
+      "gloss": "pitiable; unfortunate",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:92bcf33569538075",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be grateful, then the Japanese for to feel sympathy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きのどく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きのどく — kinodoku — \"pitiable; unfortunate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ともだちは さいふを なくして、きのどくでした。 — tomodachi wa saifu o nakushite, kinodoku deshita — \"My friend lost his wallet, poor thing.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きのどく (kinodoku) is a mixed phrase: Sino-Japanese ki, \"spirit\" (Middle Chinese khj+jH), and doku, \"poison\" (dowk), both borrowed from Chinese, joined by the native particle no, \"of\" (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinodoku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinodoku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinodoku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinodoku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomodachi wa saifu o nakushite, kinodoku deshita — My friend lost his wallet, poor thing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomodachi wa saifu o nakushite, kinodoku deshita* — My friend lost his wallet, poor thing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be grateful, then the Japanese for to feel sympathy, then say kinodoku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be grateful, then the Japanese for to feel sympathy, then say *kinodoku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きのどく (kinodoku) mean? (\"Pitiable; unfortunate\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C434-kinodoku-type",
+              "prompt": "Say the Japanese for 'pitiable'.",
+              "assesses": [
+                "JA-LEX-C434-THANK434-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きのどく",
+                "kinodoku"
+              ],
+              "feedback": {
+                "correct": "Right: きのどく (kinodoku) is 'pitiable; unfortunate'.",
+                "incorrect": "'Pitiable' is きのどく (kinodoku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C434-mijime",
+      "sequence": 25440,
+      "title": "みじめ (mijime) — miserable; wretched",
+      "headword": "みじめ",
+      "romanization": "mijime",
+      "gloss": "miserable; wretched",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ceac270b2fdbd75a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to feel sympathy, then the Japanese for pitiable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: みじめ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みじめ — mijime — \"miserable; wretched\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あめの なかの ねこは みじめでした。 — ame no naka no neko wa mijime deshita — \"The cat out in the rain was miserable.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みじめ (mijime) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mijime",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mijime*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mijime, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mijime*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ame no naka no neko wa mijime deshita — The cat out in the rain was miserable.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ame no naka no neko wa mijime deshita* — The cat out in the rain was miserable.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to feel sympathy, then the Japanese for pitiable, then say mijime again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to feel sympathy, then the Japanese for pitiable, then say *mijime* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does みじめ (mijime) mean? (\"Miserable; wretched\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C434-mijime-type",
+              "prompt": "Say the Japanese for 'miserable'.",
+              "assesses": [
+                "JA-LEX-C434-THANK434-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "みじめ",
+                "mijime"
+              ],
+              "feedback": {
+                "correct": "Right: みじめ (mijime) is 'miserable; wretched'.",
+                "incorrect": "'Miserable' is みじめ (mijime)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C434-hagemasu",
+      "sequence": 25450,
+      "title": "はげます (hagemasu) — to encourage; to cheer up",
+      "headword": "はげます",
+      "romanization": "hagemasu",
+      "gloss": "to encourage; to cheer up",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dcf6600f70944af8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for pitiable, then the Japanese for miserable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はげます",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はげます — hagemasu — \"to encourage; to cheer up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ともだちが おちこんだので、はげましました。 — tomodachi ga ochikonda node, hagemashimashita — \"My friend was feeling down, so I cheered him up.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite はげまします, hagemashimasu; a godan verb. Past (polite): ははが むすこを はげましました。, haha ga musuko o hagemashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はげます (hagemasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hagemasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hagemasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hagemasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hagemasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomodachi ga ochikonda node, hagemashimashita — My friend was feeling down, so I cheered him up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomodachi ga ochikonda node, hagemashimashita* — My friend was feeling down, so I cheered him up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for pitiable, then the Japanese for miserable, then say hagemasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for pitiable, then the Japanese for miserable, then say *hagemasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はげます (hagemasu) mean? (\"To encourage; to cheer up\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C434-hagemasu-type",
+              "prompt": "Say the Japanese for 'to encourage'.",
+              "assesses": [
+                "JA-LEX-C434-THANK434-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はげます",
+                "hagemasu"
+              ],
+              "feedback": {
+                "correct": "Right: はげます (hagemasu) is 'to encourage; to cheer up'.",
+                "incorrect": "'To encourage' is はげます (hagemasu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

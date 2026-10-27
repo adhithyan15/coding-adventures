@@ -1,0 +1,19 @@
+{
+  "chapter": 523,
+  "title": "Anyone, Any One",
+  "label": "ch:ja-anyone-any-one",
+  "canDo": "I can offer things and guess how they will turn out.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C523-nantoka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can offer things and guess how they will turn out.",
+    "assesses": [
+      "JA-LEX-C523-ANY523-03",
+      "JA-LEX-C523-ANY523-04",
+      "JA-LEX-C523-ANY523-05"
+    ]
+  }
+}

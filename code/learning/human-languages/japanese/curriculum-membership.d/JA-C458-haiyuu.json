@@ -1,0 +1,11 @@
+{
+  "id": "JA-C458-haiyuu",
+  "pathSegment": "JA-PATH-458-CAREER458",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-458-CAREER458",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 275,
+  "title": "The Great Wave",
+  "label": "ch:ja-the-great-wave",
+  "canDo": "I can say what the sea carried away.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C275-mata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 275: I can say what the sea carried away.",
+    "assesses": [
+      "JA-LEX-C275-TSUNAMI275-03",
+      "JA-LEX-C275-TSUNAMI275-04",
+      "JA-LEX-C275-TSUNAMI275-05"
+    ]
+  }
+}

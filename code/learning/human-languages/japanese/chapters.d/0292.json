@@ -1,0 +1,19 @@
+{
+  "chapter": 292,
+  "title": "A Long Life",
+  "label": "ch:ja-a-long-life",
+  "canDo": "I can say how people age and who looks after them.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C292-sasaeru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: I can say how people age and who looks after them.",
+    "assesses": [
+      "JA-LEX-C292-JINSEI292-03",
+      "JA-LEX-C292-JINSEI292-04",
+      "JA-LEX-C292-JINSEI292-05"
+    ]
+  }
+}

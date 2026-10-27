@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:f31a13fd0eb4cd63",
+  "lessonIds": [
+    "JA-C371-joudan",
+    "JA-C371-sankou",
+    "JA-C371-waruguchi",
+    "JA-C371-tereru",
+    "JA-C371-shaberu",
+    "JA-R371-review-367-371",
+    "JA-R371-review-final-371"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "japanese/narration/ch371.txt",
+  "json": "japanese/narration/ch371.json",
+  "textHash": "fnv1a64:bc3c48658ab1038d",
+  "jsonHash": "fnv1a64:9362c8e4d190710d",
+  "findings": []
+}

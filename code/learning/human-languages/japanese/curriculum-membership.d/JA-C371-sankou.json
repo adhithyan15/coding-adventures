@@ -1,0 +1,11 @@
+{
+  "id": "JA-C371-sankou",
+  "pathSegment": "JA-PATH-371-JOUDAN371",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-371-JOUDAN371",
+      "order": 1
+    }
+  ]
+}

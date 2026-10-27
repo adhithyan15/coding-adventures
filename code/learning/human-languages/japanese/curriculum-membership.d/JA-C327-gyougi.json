@@ -1,0 +1,11 @@
+{
+  "id": "JA-C327-gyougi",
+  "pathSegment": "JA-PATH-327-REIGI327",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-327-REIGI327",
+      "order": 1
+    }
+  ]
+}

@@ -39,6 +39,18 @@
   `putchar` import without output, one core with both users. The wrappers
   were also checked against `python3` on 30 527 corpus values.
 
+## Unreleased — a failed narrowing raises `Trap.ConvRange`
+
+- `real_to_int_trunc` / `real_to_int_floor` round with `f64.trunc` (new
+  `F64_TRUNC` constant, 0x9D) / `f64.floor`, then range-check the rounded
+  value (`f64.ge -2⁶³` and `f64.lt 2⁶³`, both false for NaN) and call
+  `env.__trap(4)` + `unreachable` on failure ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). Before, they relied on
+  `i64.trunc_f64_s`'s own untyped WASM trap. A module with a narrowing now
+  imports `env.__trap`.
+- Tests: `lang83_pr1b.rs` runs NaN, ±∞, 2⁶³ and −1e30 through both ops (kind
+  4 after earlier output) and the −2⁶³ and 2⁶³−1024 edges; `e8_conversions.rs`
+  gives its runtime the `env.__trap` import.
+
 ## [0.53.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
 
 - **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /

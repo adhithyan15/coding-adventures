@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C425-toiawaseru",
+    "language": "japanese",
+    "chapter": 425,
+    "sequence": 24750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ddf56e325ad0c411"
+  },
+  "findings": []
+}

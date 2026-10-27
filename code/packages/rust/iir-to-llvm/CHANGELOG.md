@@ -48,6 +48,14 @@
   `clang` against host `python3`. The wrappers were also checked against
   `python3` on a 122 108-value corpus at `-O0` and `-O2`.
 
+## Unreleased — a failed narrowing raises `Trap.ConvRange`
+
+- `real_to_int_trunc` / `real_to_int_floor`'s range-check failure block calls
+  `@__iir_trap(ptr @__iir_trap_msg.4, …)` instead of `@llvm.trap()`, so the
+  program flushes stdout and reports `trap: Trap.ConvRange` ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). A
+  module that narrows now collects kind 4 in its trap set, so the runtime
+  helper and message global are emitted.
+
 ## [0.63.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
 
 - **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /

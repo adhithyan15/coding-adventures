@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C344-youji",
+    "language": "japanese",
+    "chapter": 344,
+    "sequence": 20410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98abe05d74fbfd9c"
+  },
+  "findings": []
+}

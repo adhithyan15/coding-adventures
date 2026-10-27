@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C274-kuzureru",
+    "language": "japanese",
+    "chapter": 274,
+    "sequence": 16630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e39422573f66d7e4"
+  },
+  "findings": []
+}

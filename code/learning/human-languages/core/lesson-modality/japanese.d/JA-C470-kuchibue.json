@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C470-kuchibue",
+    "language": "japanese",
+    "chapter": 470,
+    "sequence": 27310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce136821dbb87f78"
+  },
+  "findings": []
+}

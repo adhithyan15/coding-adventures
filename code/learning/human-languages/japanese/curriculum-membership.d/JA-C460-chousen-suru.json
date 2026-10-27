@@ -1,0 +1,11 @@
+{
+  "id": "JA-C460-chousen-suru",
+  "pathSegment": "JA-PATH-460-GOAL460",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-460-GOAL460",
+      "order": 3
+    }
+  ]
+}

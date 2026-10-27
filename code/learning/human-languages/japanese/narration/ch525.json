@@ -1,0 +1,800 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 525,
+  "title": "Real or Fake",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:edfbd918509d8c7e",
+  "lessons": [
+    {
+      "id": "JA-C525-honmono",
+      "sequence": 30320,
+      "title": "ほんもの (honmono) — the real thing; genuine",
+      "headword": "ほんもの",
+      "romanization": "honmono",
+      "gloss": "the real thing; genuine",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0aa974f905c2ef06",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for reasoning, then the Japanese for to be realized."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほんもの",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほんもの — honmono — \"the real thing; genuine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし ほんものを かったら、たかいでしょう。 — moshi honmono o kattara, takai deshō — \"If you buy the real thing, it will probably be expensive.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほんもの (honmono) mixes the two layers, native and Sino-Japanese: Sino-Japanese hon, \"true\" (Middle Chinese pwonX), borrowed from Chinese and native mono, \"thing\" (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "honmono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *honmono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "honmono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *honmono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi honmono o kattara, takai deshō — If you buy the real thing, it will probably be expensive.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi honmono o kattara, takai deshō* — If you buy the real thing, it will probably be expensive.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for reasoning, then the Japanese for to be realized, then say honmono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for reasoning, then the Japanese for to be realized, then say *honmono* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほんもの (honmono) mean? (\"The real thing; genuine\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C525-honmono-type",
+              "prompt": "Say the Japanese for 'the real thing'.",
+              "assesses": [
+                "JA-LEX-C525-REAL525-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほんもの",
+                "honmono"
+              ],
+              "feedback": {
+                "correct": "Right: ほんもの (honmono) is 'the real thing; genuine'.",
+                "incorrect": "'The real thing' is ほんもの (honmono)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C525-nisemono",
+      "sequence": 30330,
+      "title": "にせもの (nisemono) — a fake; a forgery",
+      "headword": "にせもの",
+      "romanization": "nisemono",
+      "gloss": "a fake; a forgery",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5710927b665c4f04",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be realized, then the Japanese for the real thing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: にせもの",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にせもの — nisemono — \"a fake; a forgery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし にせものが みつかったら、けいさつに しらせて ください。 — moshi nisemono ga mitsukattara, keisatsu ni shirasete kudasai — \"If you find a fake, please inform the police.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にせもの (nisemono) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: built from nise, \"false\" and mono, \"thing\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nisemono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nisemono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nisemono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nisemono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi nisemono ga mitsukattara, keisatsu ni shirasete kudasai — If you find a fake, please inform the police.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi nisemono ga mitsukattara, keisatsu ni shirasete kudasai* — If you find a fake, please inform the police.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be realized, then the Japanese for the real thing, then say nisemono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be realized, then the Japanese for the real thing, then say *nisemono* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does にせもの (nisemono) mean? (\"A fake; a forgery\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C525-nisemono-type",
+              "prompt": "Say the Japanese for 'a fake'.",
+              "assesses": [
+                "JA-LEX-C525-REAL525-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "にせもの",
+                "nisemono"
+              ],
+              "feedback": {
+                "correct": "Right: にせもの (nisemono) is 'a fake; a forgery'.",
+                "incorrect": "'A fake' is にせもの (nisemono)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C525-marude",
+      "sequence": 30340,
+      "title": "まるで (marude) — (not) in the least; completely",
+      "headword": "まるで",
+      "romanization": "marude",
+      "gloss": "(not) in the least; completely",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3941675e17777e39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the real thing, then the Japanese for a fake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: まるで",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まるで — marude — \"(not) in the least; completely\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし ふゆに いったら、うみには まるで だれも いません。 — moshi fuyu ni ittara, umi ni wa marude daremo imasen — \"If you go in winter, there is nobody at all at the sea.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まるで (marude) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marude",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marude*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marude, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marude*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi fuyu ni ittara, umi ni wa marude daremo imasen — If you go in winter, there is nobody at all at the sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi fuyu ni ittara, umi ni wa marude daremo imasen* — If you go in winter, there is nobody at all at the sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the real thing, then the Japanese for a fake, then say marude again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the real thing, then the Japanese for a fake, then say *marude* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does まるで (marude) mean? (\"(not) in the least; completely\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C525-marude-type",
+              "prompt": "Say the Japanese for '(not) in the least'.",
+              "assesses": [
+                "JA-LEX-C525-REAL525-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "まるで",
+                "marude"
+              ],
+              "feedback": {
+                "correct": "Right: まるで (marude) is '(not) in the least; completely'.",
+                "incorrect": "'(not) in the least' is まるで (marude)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C525-tatoeru",
+      "sequence": 30350,
+      "title": "たとえる (tatoeru) — to compare (to); to liken",
+      "headword": "たとえる",
+      "romanization": "tatoeru",
+      "gloss": "to compare (to); to liken",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2bd9b3d7257096e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a fake, then the Japanese for (not) in the least."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たとえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たとえる — tatoeru — \"to compare (to); to liken\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし いのちを はなに たとえたら、どの はなでしょう。 — moshi inochi o hana ni tatoetara, dono hana deshō — \"If you compared life to a flower, which flower would it be?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite たとえます, tatoemasu; an ichidan verb. Past (polite): しじんが こいを はなに たとえました。, shijin ga koi o hana ni tatoemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たとえる (tatoeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tatoeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tatoeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tatoeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tatoeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi inochi o hana ni tatoetara, dono hana deshō — If you compared life to a flower, which flower would it be?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi inochi o hana ni tatoetara, dono hana deshō* — If you compared life to a flower, which flower would it be?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a fake, then the Japanese for (not) in the least, then say tatoeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a fake, then the Japanese for (not) in the least, then say *tatoeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たとえる (tatoeru) mean? (\"To compare (to); to liken\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C525-tatoeru-type",
+              "prompt": "Say the Japanese for 'to compare (to)'.",
+              "assesses": [
+                "JA-LEX-C525-REAL525-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たとえる",
+                "tatoeru"
+              ],
+              "feedback": {
+                "correct": "Right: たとえる (tatoeru) is 'to compare (to); to liken'.",
+                "incorrect": "'To compare (to)' is たとえる (tatoeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C525-izure",
+      "sequence": 30360,
+      "title": "いずれ (izure) — sooner or later; some day",
+      "headword": "いずれ",
+      "romanization": "izure",
+      "gloss": "sooner or later; some day",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:67f87728a7b94f80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for (not) in the least, then the Japanese for to compare (to)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いずれ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いずれ — izure — \"sooner or later; some day\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いずれ おとなに なったら、むすこも わかるでしょう。 — izure otona ni nattara, musuko mo wakaru deshō — \"Some day, when he grows up, my son will understand too.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いずれ (izure) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "izure",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *izure*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "izure, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *izure*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "izure otona ni nattara, musuko mo wakaru deshō — Some day, when he grows up, my son will understand too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *izure otona ni nattara, musuko mo wakaru deshō* — Some day, when he grows up, my son will understand too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for (not) in the least, then the Japanese for to compare (to), then say izure again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for (not) in the least, then the Japanese for to compare (to), then say *izure* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いずれ (izure) mean? (\"Sooner or later; some day\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C525-izure-type",
+              "prompt": "Say the Japanese for 'sooner or later'.",
+              "assesses": [
+                "JA-LEX-C525-REAL525-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いずれ",
+                "izure"
+              ],
+              "feedback": {
+                "correct": "Right: いずれ (izure) is 'sooner or later; some day'.",
+                "incorrect": "'Sooner or later' is いずれ (izure)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

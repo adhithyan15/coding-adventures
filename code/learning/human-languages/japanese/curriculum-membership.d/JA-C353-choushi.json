@@ -1,0 +1,11 @@
+{
+  "id": "JA-C353-choushi",
+  "pathSegment": "JA-PATH-353-TENKEN353",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-353-TENKEN353",
+      "order": 1
+    }
+  ]
+}

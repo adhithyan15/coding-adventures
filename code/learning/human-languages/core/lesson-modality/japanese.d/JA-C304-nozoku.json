@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C304-nozoku",
+    "language": "japanese",
+    "chapter": 304,
+    "sequence": 18200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aeaf893363c8f211"
+  },
+  "findings": []
+}

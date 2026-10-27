@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:4e81a9b320d9b470",
+  "lessonIds": [
+    "JA-C360-shuunyuu",
+    "JA-C360-shishutsu",
+    "JA-C360-seikatsuhi",
+    "JA-C360-tamaru",
+    "JA-C360-osaeru"
+  ],
+  "tex": "japanese/book/chapters/ch360-income-and-spending.tex"
+}

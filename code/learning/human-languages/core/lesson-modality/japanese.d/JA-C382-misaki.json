@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C382-misaki",
+    "language": "japanese",
+    "chapter": 382,
+    "sequence": 22530,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:361c1d3d6d46a4eb"
+  },
+  "findings": []
+}

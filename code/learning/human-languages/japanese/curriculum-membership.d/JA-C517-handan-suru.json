@@ -1,0 +1,11 @@
+{
+  "id": "JA-C517-handan-suru",
+  "pathSegment": "JA-PATH-517-DECIDE517",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-517-DECIDE517",
+      "order": 3
+    }
+  ]
+}

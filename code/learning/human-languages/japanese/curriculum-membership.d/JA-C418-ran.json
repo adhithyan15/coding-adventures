@@ -1,0 +1,11 @@
+{
+  "id": "JA-C418-ran",
+  "pathSegment": "JA-PATH-418-SHOMEI418",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-418-SHOMEI418",
+      "order": 3
+    }
+  ]
+}

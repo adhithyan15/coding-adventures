@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C276-gake",
+    "language": "japanese",
+    "chapter": 276,
+    "sequence": 16750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3d3e054c0e6636c"
+  },
+  "findings": []
+}

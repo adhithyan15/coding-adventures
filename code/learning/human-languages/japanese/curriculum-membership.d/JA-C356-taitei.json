@@ -1,0 +1,11 @@
+{
+  "id": "JA-C356-taitei",
+  "pathSegment": "JA-PATH-356-JOUKEN356",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-356-JOUKEN356",
+      "order": 3
+    }
+  ]
+}

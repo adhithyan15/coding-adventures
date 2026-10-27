@@ -15,8 +15,11 @@ When you execute `ADD R3`, the value in R3 is read from flip-flops, the accumula
 
 All persistent architectural bits (other than read-only program ROM) are held
 in D flip-flops, and every arithmetic, logical, decode, increment, and selector
-datapath passes through gate functions. Host values are used only for control,
-trace bookkeeping, and ROM addressing.
+datapath passes through gate functions. The HALT register's Q output is the
+sole halt authority for observation, snapshots, lifecycle transitions, and
+execution. Its private host Boolean is only a synchronized diagnostic observer.
+Host values are otherwise used only for control, trace bookkeeping, and ROM
+addressing.
 
 ## How it fits in the stack
 
@@ -84,8 +87,12 @@ All 46 Intel 4004 instructions are implemented:
 cargo test -p intel4004-gatelevel
 ```
 
-The suite contains 88 component/unit tests and four full-machine integration
-tests. It differentially executes every one of the 254 specified first-byte
-encodings plus RAM, port, branch, indirect, stack, reset, topology, and atomic
-failure workloads against `intel4004-simulator`. Core line coverage is 95.15%
-(686/721).
+The suite contains 90 component/unit tests, seven integration tests, and four
+doctests. It differentially executes all 256 first-byte classifications against
+`intel4004-simulator`: 240 valid transitions and 16 identical typed, atomic
+unknown-opcode faults. Additional workloads cover RAM, ports, branches,
+indirect execution, the stack, reset, complete checked restore, transactional
+run rollback, deliberate two-way HALT-observer divergence, and the exact
+container-derived 1,428-DFF topology. Five hostile full-crate variants each
+type-check before the structural validator rejects their attempted authority
+bypass. Package-source line coverage is 96.69% (1,607/1,662).

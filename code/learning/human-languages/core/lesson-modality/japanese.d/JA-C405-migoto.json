@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C405-migoto",
+    "language": "japanese",
+    "chapter": 405,
+    "sequence": 23720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd97900dd3b56793"
+  },
+  "findings": []
+}
