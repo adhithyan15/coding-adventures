@@ -1094,6 +1094,58 @@ const PROGRAMS: &[Prog] = &[
         release: None,
         case: None,
     },
+    // Twig — **dynamic comparisons on the generic VM / JIT (#18463).** A compare
+    // whose operand is an un-annotated parameter cannot use the typed `cmp_lt`
+    // opcode (the parameter is `any`), so the compiler emits
+    // `call_builtin "<", x, 0`. vm-core registered `=`, `equal?` and `+ - *`
+    // but no ordering builtin, so these programs stopped with
+    // `UnknownOpcode("builtin \"<\"")` on Vm and Jit while `twig-vm` ran them.
+    // vm-core now registers `<`/`<=`/`>`/`>=` (two integers → a signed
+    // compare, a non-number → a `TypeError`, as on `twig-vm`).
+    //
+    // The Jit cells need nothing beyond the VM fix: `f` is not FullyTyped (an
+    // `any` parameter and result), so `execute_with_jit` runs it on the vm-core
+    // interpreter tier, and `GenericCirJit` would refuse an unregistered
+    // `call_builtin` anyway. These cells prove the JIT pipeline's fallback, not
+    // JIT-compiled code (see the lesson on `execute_with_jit`).
+    //
+    // Only Vm / Jit here: #18453 (PR #18464) adds the same `(f -5)` program on
+    // the code-gen columns together with the signed-compare fix they need.
+    // When both land, fold the two rows into one.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (if (< x 0) 42 7)) (f -5)",
+        expect: Expect::Exit(42),
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // The other three orderings, nested so each has its own wrong answer: a
+    // broken `<=` gives 3, `>` gives 2, `>=` gives 1. `-5` sits on the
+    // boundary of `>=` (non-strict) and below zero (sign).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (if (<= x 0) (if (> x -10) (if (>= x -5) 42 1) 2) 3)) (f -5)",
+        expect: Expect::Exit(42),
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // `pair?` on a parameter (#18463): the shared lowering turns `cons`/`car`/
+    // `cdr`/`null?` into heap ops but leaves `pair?` a `call_builtin`, which the
+    // VM did not register either. A cell answers 40, an integer 2: a `pair?`
+    // stuck at true gives 80, stuck at false 4.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (if (pair? x) 40 2)) (+ (f (cons 1 2)) (f 5))",
+        expect: Expect::Exit(42),
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
     // Nib — typed functions: define `double`, call it, return the result. Greened on
     // WASM in LM-W Nib by completing the i64 materialization: `nib_ty_str` and the
     // un-annotated-literal fallback now emit `i64` (not `u8`), so the const argument
@@ -14804,7 +14856,9 @@ fn feature_coverage_doc_counts_match_programs_source() {
     // (language, expected rows, expected total declared cells — all backends
     // including Beam). Order matches the doc table.
     let expected = [
-        (Language::Twig, 49, 392),
+        // Twig: 49 rows on all eight columns, then #18463's three dynamic
+        // compare / `pair?` rows on Vm and Jit only (see the rows).
+        (Language::Twig, 52, 398),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 48),
         (Language::DartmouthBasic, 52, 416),
