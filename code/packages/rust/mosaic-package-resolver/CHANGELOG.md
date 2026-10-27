@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Changed — the layout validator now rejects unbound bare names first (6f1p)
+
+`moslayout_compiler::validate` now rejects a bare NAME that no enclosing
+`For` binds and no slot declares (`UnboundName`, UI29 §3.4). A package
+component with one outside a call site therefore fails to load as
+`NestedCompileError` carrying that error, before `check_callee_scope` runs;
+`a_bare_name_naming_nothing_is_rejected` now asserts that. Call-site values
+are still the callee-scope check's, since only it sees the mounted
+component's `one-of` values.
+
 ### Added — `UndeclaredPackageReference`: a `pkg::` reference must be declared (publishing-v1 §10 Phase 1b)
 
 `LayoutPackageResolver` finds `pkg::P::C`'s package by manifest name

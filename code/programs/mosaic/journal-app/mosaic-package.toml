@@ -1,10 +1,11 @@
 # mosaic-package.toml — the Journal app on Mosaic (J3c-2 of #14416).
 #
-# A timeline beside one editor. The timeline is the toolkit's RecordList (its
-# first product consumer), the editor is DraftEditor, and the Rust app behind
-# both is `journal-mosaic-app` (J3c-1), loaded by every generated host as
-# `libmosaic_app`. See code/specs/journal-mosaic-app.md for the slot/event
-# contract this package's interface mirrors exactly.
+# A timeline beside one editor. The timeline draws each entry as a
+# mosaic-pkg-card Card (Card's first real consumer, Mosaic backlog item 4),
+# "On this day" is the toolkit's RecordList, the editor is DraftEditor, and
+# the Rust app behind them is `journal-mosaic-app` (J3c-1), loaded by every
+# generated host as `libmosaic_app`. See code/specs/journal-mosaic-app.md for
+# the slot/event contract this package's interface mirrors exactly.
 
 [package]
 name = "journal-app"
@@ -18,6 +19,7 @@ exports = ["JournalApp"]
 [dependencies]
 mosaic-pkg-toolkit = "0.16.0"
 mosaic-pkg-draft-editor = "0.2.0"
+mosaic-pkg-card = "0.2.0"
 
 [app]
 initial-window-width = 1100
