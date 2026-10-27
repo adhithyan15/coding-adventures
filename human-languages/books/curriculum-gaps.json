@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 59432,
+    "totalLessons": 59510,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -27,10 +27,10 @@
     "scriptRampOverBudgetLessons": 0,
     "lessonsOpeningMultipleScripts": 0,
     "scriptClosureViolations": 0,
-    "scriptExposureExemptedGlyphs": 1845,
+    "scriptExposureExemptedGlyphs": 1854,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 3,
-    "wordLessons": 53612,
+    "wordLessons": 53657,
     "wordLessonsWithoutEtymologyHook": 0,
     "wordLessonsWithoutVisibleEtymology": 0,
     "wordLessonsWithEmptyEtymologyBlock": 0,
@@ -42,9 +42,9 @@
     "chapterPayoffsNotRepresentative": 0,
     "chapterGateCleanTracks": 23,
     "tracksWithoutWritingStageEvidence": 0,
-    "missingWritingStagePairs": 5,
+    "missingWritingStagePairs": 0,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 57271,
+    "drivableLessons": 57333,
     "drivablePercent": 96,
     "chaptersWithoutDrivablePrefix": 210,
     "chaptersWithoutDrivablePrefixByType": 202,
@@ -22602,7 +22602,18 @@
           143,
           144,
           145,
-          146
+          146,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152,
+          153,
+          154,
+          155,
+          156,
+          157
         ],
         "bookChapters": [
           1,
@@ -22750,7 +22761,18 @@
           143,
           144,
           145,
-          146
+          146,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152,
+          153,
+          154,
+          155,
+          156,
+          157
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -24008,9 +24030,9 @@
       {
         "language": "chinese",
         "status": "version-2",
-        "lessonCount": 953,
+        "lessonCount": 1031,
         "versions": {
-          "2": 953
+          "2": 1031
         }
       },
       {
@@ -24044,8 +24066,8 @@
       },
       {
         "language": "chinese",
-        "bookChapters": 146,
-        "declaredChapters": 146,
+        "bookChapters": 157,
+        "declaredChapters": 157,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -24212,8 +24234,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 11666,
-      "declaredChapters": 11666,
+      "bookChapters": 11677,
+      "declaredChapters": 11677,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 0,
@@ -24225,11 +24247,11 @@
     }
   },
   "levels": {
-    "totalLessons": 59432,
+    "totalLessons": 59510,
     "byLevel": {
       "pre-A1": 9804,
-      "A1": 18976,
-      "A2": 2973,
+      "A1": 18983,
+      "A2": 3044,
       "B1": 27634,
       "B2": 17,
       "C1": 10,
@@ -24270,11 +24292,11 @@
       },
       {
         "language": "chinese",
-        "lessonCount": 953,
+        "lessonCount": 1031,
         "byLevel": {
           "pre-A1": 522,
-          "A1": 416,
-          "A2": 15,
+          "A1": 423,
+          "A2": 86,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -25046,8 +25068,8 @@
       },
       {
         "language": "chinese",
-        "lessonCount": 953,
-        "measurable": 933,
+        "lessonCount": 1031,
+        "measurable": 1011,
         "unmeasurable": 20,
         "lessonViolations": 0,
         "chapterViolations": 0
@@ -25245,8 +25267,8 @@
           "language": "chinese",
           "script": "chinese",
           "latinScript": false,
-          "lessonCount": 953,
-          "totalGlyphs": 183,
+          "lessonCount": 1031,
+          "totalGlyphs": 195,
           "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 0
@@ -177249,7 +177271,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ZH-LEX-C104-DESK104-03",
@@ -177588,18 +177610,6 @@
         "revisits": 3
       },
       {
-        "atom": "ZH-LEX-C126-OFTEN126-03",
-        "language": "chinese",
-        "introducedBy": "ZH-C126-yiqian",
-        "introducedAt": 833,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 4
-      },
-      {
         "atom": "ZH-LEX-C128-MUSIC128-02",
         "language": "chinese",
         "introducedBy": "ZH-C128-ge",
@@ -177676,6 +177686,162 @@
         "language": "chinese",
         "introducedBy": "ZH-C132-wan",
         "introducedAt": 870,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C134-THING134-02",
+        "language": "chinese",
+        "introducedBy": "ZH-C134-ruan",
+        "introducedAt": 882,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C134-THING134-03",
+        "language": "chinese",
+        "introducedBy": "ZH-C134-ying",
+        "introducedAt": 883,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C134-THING134-04",
+        "language": "chinese",
+        "introducedBy": "ZH-C134-kong",
+        "introducedAt": 884,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C134-THING134-05",
+        "language": "chinese",
+        "introducedBy": "ZH-C134-man",
+        "introducedAt": 885,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C137-HOLIDAY137-04",
+        "language": "chinese",
+        "introducedBy": "ZH-C137-fangjia",
+        "introducedAt": 901,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C137-HOLIDAY137-05",
+        "language": "chinese",
+        "introducedBy": "ZH-C137-jiaqi",
+        "introducedAt": 902,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C138-EVERY138-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C138-mei",
+        "introducedAt": 903,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ZH-LEX-C140-ORDER140-03",
+        "language": "chinese",
+        "introducedBy": "ZH-C140-ci",
+        "introducedAt": 917,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C143-CLOCK143-03",
+        "language": "chinese",
+        "introducedBy": "ZH-C143-cha",
+        "introducedAt": 933,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C143-CLOCK143-04",
+        "language": "chinese",
+        "introducedBy": "ZH-C143-zhunshi",
+        "introducedAt": 934,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ZH-LEX-C143-CLOCK143-05",
+        "language": "chinese",
+        "introducedBy": "ZH-C143-bantian",
+        "introducedAt": 935,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C146-NIGHT146-04",
+        "language": "chinese",
+        "introducedBy": "ZH-C146-xing-wake",
+        "introducedAt": 949,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C146-NIGHT146-05",
+        "language": "chinese",
+        "introducedBy": "ZH-C146-pingshi",
+        "introducedAt": 950,
         "missed": [
           "R2",
           "R3",
@@ -177789,7 +177955,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C40-FRUIT40-02",
@@ -177849,7 +178015,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C45-TODAY45-02",
@@ -177861,7 +178027,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 6
+        "revisits": 7
       },
       {
         "atom": "ZH-LEX-C45-TODAY45-03",
@@ -177873,7 +178039,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ZH-LEX-C45-TODAY45-04",
@@ -177885,7 +178051,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ZH-LEX-C47-DATE47-03",
@@ -177897,7 +178063,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 6
       },
       {
         "atom": "ZH-LEX-C47-DATE47-04",
@@ -177957,7 +178123,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ZH-LEX-C54-LEARN54-04",
@@ -178269,7 +178435,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C88-ZHANG-01",
@@ -178437,7 +178603,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 4
       },
       {
         "atom": "ZH-LEX-C95-DUCHE-01",
@@ -178461,7 +178627,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "ZH-LEX-C95-YOUSHI-01",
@@ -178596,18 +178762,6 @@
         "revisits": 2
       },
       {
-        "atom": "ZH-SCRIPT-BING-ILL-01",
-        "language": "chinese",
-        "introducedBy": "ZH-W130-bing-ill",
-        "introducedAt": 857,
-        "missed": [
-          "R1",
-          "R2",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "ZH-SCRIPT-CHANG-LONG-01",
         "language": "chinese",
         "introducedBy": "ZH-W61-chang-long",
@@ -178713,7 +178867,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "ZH-SCRIPT-KAI-01",
@@ -178776,6 +178930,18 @@
         "revisits": 3
       },
       {
+        "atom": "ZH-SCRIPT-MEI-EVERY-01",
+        "language": "chinese",
+        "introducedBy": "ZH-W138-mei-every",
+        "introducedAt": 904,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ZH-SCRIPT-MING-BRIGHT-01",
         "language": "chinese",
         "introducedBy": "ZH-W47-ming-bright",
@@ -178785,7 +178951,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-SCRIPT-NA-WHERE-01",
@@ -178809,7 +178975,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 4
       },
       {
         "atom": "ZH-SCRIPT-PHONETIC",
@@ -178845,7 +179011,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ZH-SCRIPT-SHI-TRY-01",
@@ -179013,7 +179179,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 6
       },
       {
         "atom": "ZH-SKILL-READ-A1-PASSAGE-01",
@@ -629302,6 +629468,17 @@
         "revisits": 2
       },
       {
+        "atom": "ZH-GRAMMAR-BI-COMPARE-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C153-bi-grammar",
+        "introducedAt": 998,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "ZH-GRAMMAR-BU-MEI-01",
         "language": "chinese",
         "introducedBy": "ZH-C87-bu-mei",
@@ -629310,7 +629487,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 10
       },
       {
         "atom": "ZH-GRAMMAR-HE-NOUNS-ONLY-01",
@@ -629324,6 +629501,17 @@
         "revisits": 2
       },
       {
+        "atom": "ZH-GRAMMAR-HUI-FUTURE-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C147-hui-future",
+        "introducedAt": 955,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 6
+      },
+      {
         "atom": "ZH-GRAMMAR-LE-CHANGED-STATE-01",
         "language": "chinese",
         "introducedBy": "ZH-C25-le-juwei",
@@ -629332,7 +629520,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 7
       },
       {
         "atom": "ZH-GRAMMAR-LE-COMPLETION-01",
@@ -629343,7 +629531,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "ZH-GRAMMAR-NE-FOLLOWUP-01",
@@ -629475,7 +629663,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C101-KITCHEN101-03",
@@ -629585,7 +629773,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C105-BATH105-01",
@@ -630281,39 +630469,6 @@
         "revisits": 3
       },
       {
-        "atom": "ZH-LEX-C121-LEARN121-03",
-        "language": "chinese",
-        "introducedBy": "ZH-C121-huida",
-        "introducedAt": 806,
-        "missed": [
-          "R3",
-          "R4"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C121-LEARN121-04",
-        "language": "chinese",
-        "introducedBy": "ZH-C121-fuxi",
-        "introducedAt": 807,
-        "missed": [
-          "R3",
-          "R4"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C121-LEARN121-05",
-        "language": "chinese",
-        "introducedBy": "ZH-C121-cuo",
-        "introducedAt": 808,
-        "missed": [
-          "R3",
-          "R4"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "ZH-LEX-C122-HOURS122-01",
         "language": "chinese",
         "introducedBy": "ZH-C122-yingye",
@@ -630490,21 +630645,21 @@
         "revisits": 3
       },
       {
+        "atom": "ZH-LEX-C126-OFTEN126-03",
+        "language": "chinese",
+        "introducedBy": "ZH-C126-yiqian",
+        "introducedAt": 833,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 5
+      },
+      {
         "atom": "ZH-LEX-C126-OFTEN126-04",
         "language": "chinese",
         "introducedBy": "ZH-C126-gangcai",
         "introducedAt": 835,
-        "missed": [
-          "R3",
-          "R4"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C126-OFTEN126-05",
-        "language": "chinese",
-        "introducedBy": "ZH-C126-yijing",
-        "introducedAt": 836,
         "missed": [
           "R3",
           "R4"
@@ -630754,92 +630909,323 @@
         "revisits": 3
       },
       {
-        "atom": "ZH-LEX-C134-THING134-02",
+        "atom": "ZH-LEX-C132-BIG132-05",
         "language": "chinese",
-        "introducedBy": "ZH-C134-ruan",
-        "introducedAt": 882,
+        "introducedBy": "ZH-C132-shu",
+        "introducedAt": 873,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "ZH-LEX-C134-THING134-03",
+        "atom": "ZH-LEX-C133-HOUSE133-01",
         "language": "chinese",
-        "introducedBy": "ZH-C134-ying",
-        "introducedAt": 883,
+        "introducedBy": "ZH-C133-dasao",
+        "introducedAt": 874,
         "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C134-THING134-04",
-        "language": "chinese",
-        "introducedBy": "ZH-C134-kong",
-        "introducedAt": 884,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C134-THING134-05",
-        "language": "chinese",
-        "introducedBy": "ZH-C134-man",
-        "introducedAt": 885,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C137-HOLIDAY137-04",
-        "language": "chinese",
-        "introducedBy": "ZH-C137-fangjia",
-        "introducedAt": 901,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C137-HOLIDAY137-05",
-        "language": "chinese",
-        "introducedBy": "ZH-C137-jiaqi",
-        "introducedAt": 902,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C138-EVERY138-01",
-        "language": "chinese",
-        "introducedBy": "ZH-C138-mei",
-        "introducedAt": 903,
-        "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
         "revisits": 4
       },
       {
-        "atom": "ZH-LEX-C140-ORDER140-03",
+        "atom": "ZH-LEX-C133-HOUSE133-02",
         "language": "chinese",
-        "introducedBy": "ZH-C140-ci",
-        "introducedAt": 917,
+        "introducedBy": "ZH-C133-jiawu",
+        "introducedAt": 876,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C133-HOUSE133-03",
+        "language": "chinese",
+        "introducedBy": "ZH-C133-shoushi",
+        "introducedAt": 877,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C133-HOUSE133-04",
+        "language": "chinese",
+        "introducedBy": "ZH-C133-ca",
+        "introducedAt": 878,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C133-HOUSE133-05",
+        "language": "chinese",
+        "introducedBy": "ZH-C133-die",
+        "introducedAt": 879,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C134-THING134-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C134-zhong",
+        "introducedAt": 880,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ZH-LEX-C135-SPORT135-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C135-zuqiu",
+        "introducedAt": 887,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C135-SPORT135-02",
+        "language": "chinese",
+        "introducedBy": "ZH-C135-lanqiu",
+        "introducedAt": 888,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C135-SPORT135-03",
+        "language": "chinese",
+        "introducedBy": "ZH-C135-ti",
+        "introducedAt": 889,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C135-SPORT135-05",
+        "language": "chinese",
+        "introducedBy": "ZH-C135-duanlian",
+        "introducedAt": 891,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C136-WEATHER136-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C136-qingtian",
+        "introducedAt": 892,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ZH-LEX-C136-WEATHER136-02",
+        "language": "chinese",
+        "introducedBy": "ZH-C136-yintian",
+        "introducedAt": 893,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C136-WEATHER136-03",
+        "language": "chinese",
+        "introducedBy": "ZH-C136-guafeng",
+        "introducedAt": 894,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C136-WEATHER136-04",
+        "language": "chinese",
+        "introducedBy": "ZH-C136-dalei",
+        "introducedAt": 895,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C136-WEATHER136-05",
+        "language": "chinese",
+        "introducedBy": "ZH-C136-liangkuai",
+        "introducedAt": 896,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C137-HOLIDAY137-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C137-jieri",
+        "introducedAt": 897,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ZH-LEX-C137-HOLIDAY137-02",
+        "language": "chinese",
+        "introducedBy": "ZH-C137-chunjie",
+        "introducedAt": 899,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C137-HOLIDAY137-03",
+        "language": "chinese",
+        "introducedBy": "ZH-C137-guonian",
+        "introducedAt": 900,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C138-EVERY138-02",
+        "language": "chinese",
+        "introducedBy": "ZH-C138-ziji",
+        "introducedAt": 905,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C138-EVERY138-04",
+        "language": "chinese",
+        "introducedBy": "ZH-C138-suoyou",
+        "introducedAt": 907,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C138-EVERY138-05",
+        "language": "chinese",
+        "introducedBy": "ZH-C138-qita",
+        "introducedAt": 908,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C139-COLOUR139-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C139-lu",
+        "introducedAt": 909,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C139-COLOUR139-02",
+        "language": "chinese",
+        "introducedBy": "ZH-C139-huang",
+        "introducedAt": 910,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C139-COLOUR139-03",
+        "language": "chinese",
+        "introducedBy": "ZH-C139-hui",
+        "introducedAt": 911,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C139-COLOUR139-04",
+        "language": "chinese",
+        "introducedBy": "ZH-C139-yuan",
+        "introducedAt": 912,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C139-COLOUR139-05",
+        "language": "chinese",
+        "introducedBy": "ZH-C139-fenhong",
+        "introducedAt": 913,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C140-ORDER140-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C140-diyi",
+        "introducedAt": 914,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C140-ORDER140-02",
+        "language": "chinese",
+        "introducedBy": "ZH-C140-yiban",
+        "introducedAt": 915,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
       },
       {
         "atom": "ZH-LEX-C140-ORDER140-04",
@@ -630850,7 +631236,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ZH-LEX-C140-ORDER140-05",
@@ -630859,7 +631245,128 @@
         "introducedAt": 919,
         "missed": [
           "R2",
-          "R3"
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ZH-LEX-C141-FUN141-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C141-luyou",
+        "introducedAt": 921,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C141-FUN141-02",
+        "language": "chinese",
+        "introducedBy": "ZH-C141-youxi",
+        "introducedAt": 922,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C141-FUN141-03",
+        "language": "chinese",
+        "introducedBy": "ZH-C141-guangjie",
+        "introducedAt": 923,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C141-FUN141-04",
+        "language": "chinese",
+        "introducedBy": "ZH-C141-sanbu",
+        "introducedAt": 924,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C141-FUN141-05",
+        "language": "chinese",
+        "introducedBy": "ZH-C141-diaoyu",
+        "introducedAt": 925,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C142-CHORE142-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C142-tuodi",
+        "introducedAt": 926,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ZH-LEX-C142-CHORE142-02",
+        "language": "chinese",
+        "introducedBy": "ZH-C142-laji",
+        "introducedAt": 927,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C142-CHORE142-03",
+        "language": "chinese",
+        "introducedBy": "ZH-C142-shai",
+        "introducedAt": 928,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C142-CHORE142-04",
+        "language": "chinese",
+        "introducedBy": "ZH-C142-zhengli",
+        "introducedAt": 929,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C142-CHORE142-05",
+        "language": "chinese",
+        "introducedBy": "ZH-C142-jiaohua",
+        "introducedAt": 930,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C143-CLOCK143-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C143-miao",
+        "introducedAt": 931,
+        "missed": [
+          "R2",
+          "R4"
         ],
         "revisits": 3
       },
@@ -630872,7 +631379,326 @@
           "R2",
           "R3"
         ],
+        "revisits": 4
+      },
+      {
+        "atom": "ZH-LEX-C144-MATTER144-04",
+        "language": "chinese",
+        "introducedBy": "ZH-C144-tebie",
+        "introducedAt": 939,
+        "missed": [
+          "R3",
+          "R4"
+        ],
         "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C145-LATE145-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C145-yuanyin",
+        "introducedAt": 941,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C145-LATE145-02",
+        "language": "chinese",
+        "introducedBy": "ZH-C145-wandian",
+        "introducedAt": 942,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C145-LATE145-03",
+        "language": "chinese",
+        "introducedBy": "ZH-C145-naozhong",
+        "introducedAt": 943,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C145-LATE145-04",
+        "language": "chinese",
+        "introducedBy": "ZH-C145-shuilanjiao",
+        "introducedAt": 944,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C145-LATE145-05",
+        "language": "chinese",
+        "introducedBy": "ZH-C145-gankuai",
+        "introducedAt": 945,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C146-NIGHT146-02",
+        "language": "chinese",
+        "introducedBy": "ZH-C146-yeli",
+        "introducedAt": 947,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ZH-LEX-C146-NIGHT146-03",
+        "language": "chinese",
+        "introducedBy": "ZH-C146-banye",
+        "introducedAt": 948,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "ZH-LEX-C147-KENENG-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C147-keneng",
+        "introducedAt": 956,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C147-TIANQIYUBAO-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C147-tianqi-yubao",
+        "introducedAt": 958,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C147-YIDING-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C147-yiding",
+        "introducedAt": 957,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C148-DASUAN-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C148-dasuan",
+        "introducedAt": 965,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-LEX-C148-JIANGLAI-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C148-jianglai",
+        "introducedAt": 966,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-LEX-C148-SHANGGEYUE-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C148-shang-ge-yue",
+        "introducedAt": 964,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-LEX-C148-XIAXINGQI-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C148-xia-xingqi",
+        "introducedAt": 963,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-LEX-C149-YIBIAN-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C149-yibian",
+        "introducedAt": 972,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-LEX-C149-ZHENGHAO-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C149-zhenghao",
+        "introducedAt": 971,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-LEX-C150-HOULAI-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C150-houlai",
+        "introducedAt": 977,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-LEX-C150-RANHOU-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C150-ranhou",
+        "introducedAt": 978,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-LEX-C151-KANDONG-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C151-kandong",
+        "introducedAt": 986,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-LEX-C151-TINGDONG-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C151-tingdong",
+        "introducedAt": 985,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-LEX-C151-XUEHUI-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C151-xuehui",
+        "introducedAt": 984,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-LEX-C151-ZUOWAN-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C151-zuowan",
+        "introducedAt": 987,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-LEX-C152-BUCUO-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C152-bucuo",
+        "introducedAt": 993,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-LEX-C152-LIULI-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C152-liuli",
+        "introducedAt": 992,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-LEX-C152-QINGCHU-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C152-qingchu",
+        "introducedAt": 994,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-LEX-C153-GEN-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C153-gen",
+        "introducedAt": 1000,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-LEX-C153-GENG-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C153-geng",
+        "introducedAt": 999,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-LEX-C154-HUOZHE-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C154-huozhe",
+        "introducedAt": 1006,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ZH-LEX-C31-PEOPLE31-01",
@@ -631158,7 +631984,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C37-THIS37-04",
@@ -631301,7 +632127,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 6
+        "revisits": 9
       },
       {
         "atom": "ZH-LEX-C41-MONEY41-02",
@@ -631312,7 +632138,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C41-MONEY41-03",
@@ -631323,7 +632149,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 6
       },
       {
         "atom": "ZH-LEX-C41-MONEY41-04",
@@ -631345,7 +632171,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 5
+        "revisits": 7
       },
       {
         "atom": "ZH-LEX-C42-SHOP42-01",
@@ -631400,7 +632226,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C43-GO43-05",
@@ -631488,7 +632314,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 6
       },
       {
         "atom": "ZH-LEX-C46-WEEK46-01",
@@ -631510,7 +632336,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C46-WEEK46-03",
@@ -631521,7 +632347,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C46-WEEK46-04",
@@ -631532,7 +632358,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ZH-LEX-C46-WEEK46-05",
@@ -631543,7 +632369,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 6
       },
       {
         "atom": "ZH-LEX-C47-DATE47-01",
@@ -631565,7 +632391,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ZH-LEX-C48-CLOCK48-01",
@@ -631576,7 +632402,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C48-CLOCK48-02",
@@ -631598,7 +632424,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C48-CLOCK48-05",
@@ -631653,7 +632479,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C50-SLEEP50-04",
@@ -631708,7 +632534,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ZH-LEX-C51-FEEL51-05",
@@ -631785,7 +632611,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C53-SPEAK53-04",
@@ -631796,7 +632622,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C54-LEARN54-02",
@@ -632005,7 +632831,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 4
+        "revisits": 6
       },
       {
         "atom": "ZH-LEX-C61-LONG61-05",
@@ -632027,7 +632853,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 7
       },
       {
         "atom": "ZH-LEX-C62-FAST62-02",
@@ -632071,7 +632897,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ZH-LEX-C63-PHONE63-01",
@@ -632093,7 +632919,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 6
       },
       {
         "atom": "ZH-LEX-C64-HELP64-01",
@@ -632170,7 +632996,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C66-WEATHER66-04",
@@ -632368,7 +633194,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 6
+        "revisits": 7
       },
       {
         "atom": "ZH-LEX-C72-TRAVEL72-05",
@@ -632379,7 +633205,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 6
       },
       {
         "atom": "ZH-LEX-C73-STATION73-01",
@@ -632533,7 +633359,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ZH-LEX-C78-AGE78-03",
@@ -632676,7 +633502,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "ZH-LEX-C82-SIDES82-03",
@@ -632775,7 +633601,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "ZH-LEX-C86-SHANGBIAN-01",
@@ -632819,7 +633645,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ZH-LEX-C90-NENG-01",
@@ -632852,7 +633678,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ZH-LEX-C91-XUYAO-01",
@@ -632918,7 +633744,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 7
+        "revisits": 9
       },
       {
         "atom": "ZH-LEX-C97-MEITIAN-01",
@@ -632951,7 +633777,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 5
+        "revisits": 7
       },
       {
         "atom": "ZH-LEX-C99-WASH99-01",
@@ -633017,7 +633843,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-HAO-FOND",
@@ -633050,7 +633876,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 7
+        "revisits": 9
       },
       {
         "atom": "ZH-LEX-JIAREN-01",
@@ -633083,7 +633909,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "ZH-LEX-NI",
@@ -633149,7 +633975,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ZH-LEX-RI",
@@ -633171,7 +633997,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ZH-LEX-SUI-01",
@@ -633182,7 +634008,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 6
+        "revisits": 8
       },
       {
         "atom": "ZH-LEX-WO",
@@ -633259,7 +634085,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "ZH-ORTHO-ZHONGXUESHENG-01",
@@ -633339,6 +634165,17 @@
         "revisits": 2
       },
       {
+        "atom": "ZH-PERFORMANCE-FUTURE-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C147-practice",
+        "introducedAt": 959,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ZH-PERFORMANCE-LE-FOUR-SKILL-01",
         "language": "chinese",
         "introducedBy": "ZH-C25-practice",
@@ -633379,6 +634216,17 @@
         "missed": [
           "R2",
           "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-PERFORMANCE-PLANS-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C148-practice",
+        "introducedAt": 967,
+        "missed": [
+          "R2",
+          "R3"
         ],
         "revisits": 2
       },
@@ -633479,7 +634327,7 @@
           "R1",
           "R2"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ZH-SCRIPT-BAO-WRAP-01",
@@ -633501,7 +634349,7 @@
           "R1",
           "R3"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "ZH-SCRIPT-BIAN-01",
@@ -633515,6 +634363,17 @@
         "revisits": 3
       },
       {
+        "atom": "ZH-SCRIPT-BING-ILL-01",
+        "language": "chinese",
+        "introducedBy": "ZH-W130-bing-ill",
+        "introducedAt": 857,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "ZH-SCRIPT-BU",
         "language": "chinese",
         "introducedBy": "ZH-W04-bu",
@@ -633523,7 +634382,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-SCRIPT-CAI-01",
@@ -633600,7 +634459,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "ZH-SCRIPT-DUO-01",
@@ -633688,7 +634547,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "ZH-SCRIPT-HUA-01",
@@ -633722,6 +634581,17 @@
           "R3"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "ZH-SCRIPT-JIE-JOINT-01",
+        "language": "chinese",
+        "introducedBy": "ZH-W137-jie-joint",
+        "introducedAt": 898,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ZH-SCRIPT-KUAI-FAST-01",
@@ -633797,17 +634667,6 @@
         "missed": [
           "R3",
           "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ZH-SCRIPT-MEI-EVERY-01",
-        "language": "chinese",
-        "introducedBy": "ZH-W138-mei-every",
-        "introducedAt": 904,
-        "missed": [
-          "R1",
-          "R2"
         ],
         "revisits": 2
       },
@@ -633930,7 +634789,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "ZH-SCRIPT-QI-RISE-01",
@@ -633952,7 +634811,7 @@
           "R1",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 6
       },
       {
         "atom": "ZH-SCRIPT-QING",
@@ -633986,6 +634845,17 @@
           "R4"
         ],
         "revisits": 16
+      },
+      {
+        "atom": "ZH-SCRIPT-SAO-SWEEP-01",
+        "language": "chinese",
+        "introducedBy": "ZH-W133-sao-sweep",
+        "introducedAt": 875,
+        "missed": [
+          "R1",
+          "R4"
+        ],
+        "revisits": 3
       },
       {
         "atom": "ZH-SCRIPT-SHAN-01",
@@ -634029,7 +634899,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "ZH-SCRIPT-SUI-01",
@@ -634183,7 +635053,29 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
+      },
+      {
+        "atom": "ZH-SCRIPT-ZHENG-01",
+        "language": "chinese",
+        "introducedBy": "ZH-W149-zheng",
+        "introducedAt": 969,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-SCRIPT-ZHONG-HEAVY-01",
+        "language": "chinese",
+        "introducedBy": "ZH-W134-zhong-heavy",
+        "introducedAt": 881,
+        "missed": [
+          "R1",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ZH-SCRIPT-ZI-01",
@@ -634216,7 +635108,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 6
       },
       {
         "atom": "AR-C01-FULL-GREETING-11",
@@ -669289,6 +670181,16 @@
         "revisits": 3
       },
       {
+        "atom": "ZH-GRAMMAR-DE-COMPLEMENT-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C152-de-grammar",
+        "introducedAt": 991,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 5
+      },
+      {
         "atom": "ZH-GRAMMAR-DE-POSSESSION-01",
         "language": "chinese",
         "introducedBy": "ZH-C23-de",
@@ -669296,7 +670198,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-GRAMMAR-DE-RELATIVE-01",
@@ -669325,6 +670227,16 @@
         "introducedAt": 206,
         "missed": [
           "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ZH-GRAMMAR-GUO-EXPERIENCE-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C150-guo-ever",
+        "introducedAt": 976,
+        "missed": [
+          "R2"
         ],
         "revisits": 4
       },
@@ -669379,6 +670291,16 @@
         "revisits": 4
       },
       {
+        "atom": "ZH-GRAMMAR-RESULT-COMPLEMENT-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C151-result",
+        "introducedAt": 983,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "ZH-GRAMMAR-TOPIC-COMMENT-01",
         "language": "chinese",
         "introducedBy": "ZH-C23-huati",
@@ -669386,7 +670308,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "ZH-GRAMMAR-VERB-INVARIANT-01",
@@ -669399,6 +670321,16 @@
         "revisits": 4
       },
       {
+        "atom": "ZH-GRAMMAR-YAO-FUTURE-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C148-yao-future",
+        "introducedAt": 962,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 6
+      },
+      {
         "atom": "ZH-GRAMMAR-YOU-EXISTENCE-01",
         "language": "chinese",
         "introducedBy": "ZH-C24-you",
@@ -669409,104 +670341,54 @@
         "revisits": 7
       },
       {
-        "atom": "ZH-LEX-C132-BIG132-05",
+        "atom": "ZH-GRAMMAR-ZAI-PROGRESSIVE-01",
         "language": "chinese",
-        "introducedBy": "ZH-C132-shu",
-        "introducedAt": 873,
+        "introducedBy": "ZH-C149-zai-progressive",
+        "introducedAt": 970,
         "missed": [
-          "R3"
+          "R2"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
-        "atom": "ZH-LEX-C133-HOUSE133-01",
+        "atom": "ZH-LEX-C121-LEARN121-03",
         "language": "chinese",
-        "introducedBy": "ZH-C133-dasao",
-        "introducedAt": 874,
+        "introducedBy": "ZH-C121-huida",
+        "introducedAt": 806,
         "missed": [
           "R3"
         ],
         "revisits": 4
       },
       {
-        "atom": "ZH-LEX-C133-HOUSE133-02",
+        "atom": "ZH-LEX-C121-LEARN121-04",
         "language": "chinese",
-        "introducedBy": "ZH-C133-jiawu",
-        "introducedAt": 876,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C133-HOUSE133-03",
-        "language": "chinese",
-        "introducedBy": "ZH-C133-shoushi",
-        "introducedAt": 877,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C133-HOUSE133-04",
-        "language": "chinese",
-        "introducedBy": "ZH-C133-ca",
-        "introducedAt": 878,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C133-HOUSE133-05",
-        "language": "chinese",
-        "introducedBy": "ZH-C133-die",
-        "introducedAt": 879,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C134-THING134-01",
-        "language": "chinese",
-        "introducedBy": "ZH-C134-zhong",
-        "introducedAt": 880,
+        "introducedBy": "ZH-C121-fuxi",
+        "introducedAt": 807,
         "missed": [
           "R3"
         ],
         "revisits": 4
       },
       {
-        "atom": "ZH-LEX-C135-SPORT135-01",
+        "atom": "ZH-LEX-C121-LEARN121-05",
         "language": "chinese",
-        "introducedBy": "ZH-C135-zuqiu",
-        "introducedAt": 887,
+        "introducedBy": "ZH-C121-cuo",
+        "introducedAt": 808,
         "missed": [
-          "R2"
+          "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
-        "atom": "ZH-LEX-C135-SPORT135-02",
+        "atom": "ZH-LEX-C126-OFTEN126-05",
         "language": "chinese",
-        "introducedBy": "ZH-C135-lanqiu",
-        "introducedAt": 888,
+        "introducedBy": "ZH-C126-yijing",
+        "introducedAt": 836,
         "missed": [
-          "R2"
+          "R3"
         ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C135-SPORT135-03",
-        "language": "chinese",
-        "introducedBy": "ZH-C135-ti",
-        "introducedAt": 889,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ZH-LEX-C135-SPORT135-04",
@@ -669516,107 +670398,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C135-SPORT135-05",
-        "language": "chinese",
-        "introducedBy": "ZH-C135-duanlian",
-        "introducedAt": 891,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C136-WEATHER136-01",
-        "language": "chinese",
-        "introducedBy": "ZH-C136-qingtian",
-        "introducedAt": 892,
-        "missed": [
-          "R2"
-        ],
         "revisits": 4
-      },
-      {
-        "atom": "ZH-LEX-C136-WEATHER136-02",
-        "language": "chinese",
-        "introducedBy": "ZH-C136-yintian",
-        "introducedAt": 893,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C136-WEATHER136-03",
-        "language": "chinese",
-        "introducedBy": "ZH-C136-guafeng",
-        "introducedAt": 894,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C136-WEATHER136-04",
-        "language": "chinese",
-        "introducedBy": "ZH-C136-dalei",
-        "introducedAt": 895,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C136-WEATHER136-05",
-        "language": "chinese",
-        "introducedBy": "ZH-C136-liangkuai",
-        "introducedAt": 896,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C137-HOLIDAY137-01",
-        "language": "chinese",
-        "introducedBy": "ZH-C137-jieri",
-        "introducedAt": 897,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "ZH-LEX-C137-HOLIDAY137-02",
-        "language": "chinese",
-        "introducedBy": "ZH-C137-chunjie",
-        "introducedAt": 899,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C137-HOLIDAY137-03",
-        "language": "chinese",
-        "introducedBy": "ZH-C137-guonian",
-        "introducedAt": 900,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C138-EVERY138-02",
-        "language": "chinese",
-        "introducedBy": "ZH-C138-ziji",
-        "introducedAt": 905,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
       },
       {
         "atom": "ZH-LEX-C138-EVERY138-03",
@@ -669626,237 +670408,167 @@
         "missed": [
           "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
-        "atom": "ZH-LEX-C138-EVERY138-04",
+        "atom": "ZH-LEX-C144-MATTER144-01",
         "language": "chinese",
-        "introducedBy": "ZH-C138-suoyou",
-        "introducedAt": 907,
+        "introducedBy": "ZH-C144-zhongyao",
+        "introducedAt": 936,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ZH-LEX-C144-MATTER144-02",
+        "language": "chinese",
+        "introducedBy": "ZH-C144-rongyi",
+        "introducedAt": 937,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ZH-LEX-C144-MATTER144-03",
+        "language": "chinese",
+        "introducedBy": "ZH-C144-jiandan",
+        "introducedAt": 938,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "ZH-LEX-C144-MATTER144-05",
+        "language": "chinese",
+        "introducedBy": "ZH-C144-juede",
+        "introducedAt": 940,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "ZH-LEX-C146-NIGHT146-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C146-baitian",
+        "introducedAt": 946,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "ZH-LEX-C148-XIAGEYUE-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C148-xia-ge-yue",
+        "introducedAt": 960,
         "missed": [
           "R3"
         ],
-        "revisits": 3
+        "revisits": 7
       },
       {
-        "atom": "ZH-LEX-C138-EVERY138-05",
+        "atom": "ZH-LEX-C149-ZHENGZAI-01",
         "language": "chinese",
-        "introducedBy": "ZH-C138-qita",
-        "introducedAt": 908,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C139-COLOUR139-01",
-        "language": "chinese",
-        "introducedBy": "ZH-C139-lu",
-        "introducedAt": 909,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C139-COLOUR139-02",
-        "language": "chinese",
-        "introducedBy": "ZH-C139-huang",
-        "introducedAt": 910,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C139-COLOUR139-03",
-        "language": "chinese",
-        "introducedBy": "ZH-C139-hui",
-        "introducedAt": 911,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C139-COLOUR139-04",
-        "language": "chinese",
-        "introducedBy": "ZH-C139-yuan",
-        "introducedAt": 912,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C139-COLOUR139-05",
-        "language": "chinese",
-        "introducedBy": "ZH-C139-fenhong",
-        "introducedAt": 913,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C140-ORDER140-01",
-        "language": "chinese",
-        "introducedBy": "ZH-C140-diyi",
-        "introducedAt": 914,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C140-ORDER140-02",
-        "language": "chinese",
-        "introducedBy": "ZH-C140-yiban",
-        "introducedAt": 915,
+        "introducedBy": "ZH-C149-zhengzai",
+        "introducedAt": 968,
         "missed": [
           "R3"
         ],
         "revisits": 4
       },
       {
-        "atom": "ZH-LEX-C141-FUN141-01",
+        "atom": "ZH-LEX-C150-CONGLAI-01",
         "language": "chinese",
-        "introducedBy": "ZH-C141-luyou",
-        "introducedAt": 921,
+        "introducedBy": "ZH-C150-conglai",
+        "introducedAt": 979,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "ZH-LEX-C141-FUN141-02",
+        "atom": "ZH-LEX-C150-GUOQU-01",
         "language": "chinese",
-        "introducedBy": "ZH-C141-youxi",
-        "introducedAt": 922,
+        "introducedBy": "ZH-C150-guoqu",
+        "introducedAt": 974,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C152-DE-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C152-de-complement",
+        "introducedAt": 989,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C153-BI-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C153-bi",
+        "introducedAt": 996,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-LEX-C153-NAME-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C153-name",
+        "introducedAt": 1001,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "ZH-LEX-C141-FUN141-03",
+        "atom": "ZH-LEX-C154-BIE-01",
         "language": "chinese",
-        "introducedBy": "ZH-C141-guangjie",
-        "introducedAt": 923,
+        "introducedBy": "ZH-C154-bie",
+        "introducedAt": 1007,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "ZH-LEX-C141-FUN141-04",
+        "atom": "ZH-LEX-C154-HAISHI-01",
         "language": "chinese",
-        "introducedBy": "ZH-C141-sanbu",
-        "introducedAt": 924,
+        "introducedBy": "ZH-C154-haishi",
+        "introducedAt": 1005,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "ZH-LEX-C141-FUN141-05",
+        "atom": "ZH-LEX-C155-CHUFA-01",
         "language": "chinese",
-        "introducedBy": "ZH-C141-diaoyu",
-        "introducedAt": 925,
+        "introducedBy": "ZH-C155-chufa",
+        "introducedAt": 1012,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "ZH-LEX-C142-CHORE142-01",
+        "atom": "ZH-LEX-C155-GUANMEN-01",
         "language": "chinese",
-        "introducedBy": "ZH-C142-tuodi",
-        "introducedAt": 926,
+        "introducedBy": "ZH-C155-guanmen",
+        "introducedAt": 1014,
         "missed": [
           "R2"
         ],
         "revisits": 4
-      },
-      {
-        "atom": "ZH-LEX-C142-CHORE142-02",
-        "language": "chinese",
-        "introducedBy": "ZH-C142-laji",
-        "introducedAt": 927,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C142-CHORE142-03",
-        "language": "chinese",
-        "introducedBy": "ZH-C142-shai",
-        "introducedAt": 928,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C142-CHORE142-04",
-        "language": "chinese",
-        "introducedBy": "ZH-C142-zhengli",
-        "introducedAt": 929,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C142-CHORE142-05",
-        "language": "chinese",
-        "introducedBy": "ZH-C142-jiaohua",
-        "introducedAt": 930,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C143-CLOCK143-01",
-        "language": "chinese",
-        "introducedBy": "ZH-C143-miao",
-        "introducedAt": 931,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C143-CLOCK143-03",
-        "language": "chinese",
-        "introducedBy": "ZH-C143-cha",
-        "introducedAt": 933,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C143-CLOCK143-04",
-        "language": "chinese",
-        "introducedBy": "ZH-C143-zhunshi",
-        "introducedAt": 934,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ZH-LEX-C143-CLOCK143-05",
-        "language": "chinese",
-        "introducedBy": "ZH-C143-bantian",
-        "introducedAt": 935,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
       },
       {
         "atom": "ZH-LEX-C38-EAT38-01",
@@ -669886,7 +670598,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 4
+        "revisits": 6
       },
       {
         "atom": "ZH-LEX-C50-SLEEP50-02",
@@ -669936,7 +670648,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 4
+        "revisits": 6
       },
       {
         "atom": "ZH-LEX-C54-LEARN54-01",
@@ -670046,7 +670758,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 5
+        "revisits": 8
       },
       {
         "atom": "ZH-LEX-C58-THINGS58-02",
@@ -670116,7 +670828,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "ZH-LEX-C65-SORRY65-04",
@@ -670126,7 +670838,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C65-SORRY65-05",
@@ -670136,7 +670848,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C66-WEATHER66-01",
@@ -670146,7 +670858,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "ZH-LEX-C67-ANIMALS67-03",
@@ -670166,7 +670878,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 7
+        "revisits": 10
       },
       {
         "atom": "ZH-LEX-C70-FOOD70-04",
@@ -670196,7 +670908,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 5
+        "revisits": 8
       },
       {
         "atom": "ZH-LEX-C72-TRAVEL72-04",
@@ -670286,7 +670998,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "ZH-LEX-C78-AGE78-04",
@@ -670306,7 +671018,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C79-SCHOOL79-01",
@@ -670316,7 +671028,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 6
+        "revisits": 7
       },
       {
         "atom": "ZH-LEX-C82-SIDES82-01",
@@ -670326,7 +671038,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C82-SIDES82-02",
@@ -670406,7 +671118,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 9
+        "revisits": 11
       },
       {
         "atom": "ZH-LEX-C88-LIANG-01",
@@ -670436,7 +671148,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 5
+        "revisits": 7
       },
       {
         "atom": "ZH-LEX-C91-XIANGYAO-01",
@@ -670456,7 +671168,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-LEX-C92-YE-01",
@@ -670466,7 +671178,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 8
+        "revisits": 9
       },
       {
         "atom": "ZH-LEX-C93-TAIHAOLE-01",
@@ -670476,7 +671188,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "ZH-LEX-C94-DOU-01",
@@ -670486,7 +671198,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "ZH-LEX-DA-01",
@@ -670506,7 +671218,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 6
+        "revisits": 7
       },
       {
         "atom": "ZH-LEX-DE-01",
@@ -670516,7 +671228,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 7
+        "revisits": 9
       },
       {
         "atom": "ZH-LEX-DUI-01",
@@ -670566,7 +671278,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 12
+        "revisits": 13
       },
       {
         "atom": "ZH-LEX-HAOBUHAO-01",
@@ -670586,7 +671298,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 12
+        "revisits": 13
       },
       {
         "atom": "ZH-LEX-MA-01",
@@ -670616,7 +671328,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 9
+        "revisits": 13
       },
       {
         "atom": "ZH-LEX-NIHAO",
@@ -670896,7 +671608,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 8
+        "revisits": 9
       },
       {
         "atom": "ZH-ORTHO-KANSHU-01",
@@ -670979,6 +671691,16 @@
         "revisits": 6
       },
       {
+        "atom": "ZH-PERFORMANCE-COMPARE-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C153-practice",
+        "introducedAt": 1002,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ZH-PERFORMANCE-COUNT-TEN",
         "language": "chinese",
         "introducedBy": "ZH-C20-practice",
@@ -671009,6 +671731,16 @@
         "revisits": 3
       },
       {
+        "atom": "ZH-PERFORMANCE-EVER-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C150-practice",
+        "introducedAt": 980,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ZH-PERFORMANCE-HAVE-COUNT-01",
         "language": "chinese",
         "introducedBy": "ZH-C24-practice",
@@ -671017,6 +671749,16 @@
           "R4"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "ZH-PERFORMANCE-HOW-WELL-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C152-practice",
+        "introducedAt": 995,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ZH-PERFORMANCE-LANGUAGE-IDENTITY-FIVE-FOUR-SKILL-01",
@@ -671057,6 +671799,36 @@
           "R4"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "ZH-PERFORMANCE-NOW-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C149-practice",
+        "introducedAt": 973,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-PERFORMANCE-OR-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C154-practice",
+        "introducedAt": 1008,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-PERFORMANCE-RESULT-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C151-practice",
+        "introducedAt": 988,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ZH-PERFORMANCE-SCHOOL-COMPOUNDS-FOUR-SKILL-01",
@@ -671116,7 +671888,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 6
+        "revisits": 7
       },
       {
         "atom": "ZH-SCRIPT-GE-01",
@@ -671126,7 +671898,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ZH-SCRIPT-GUO-01",
@@ -671139,6 +671911,16 @@
         "revisits": 7
       },
       {
+        "atom": "ZH-SCRIPT-HAI-STILL-01",
+        "language": "chinese",
+        "introducedBy": "ZH-W154-hai-still",
+        "introducedAt": 1004,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "ZH-SCRIPT-JIA-01",
         "language": "chinese",
         "introducedBy": "ZH-W12-jia",
@@ -671147,16 +671929,6 @@
           "R3"
         ],
         "revisits": 6
-      },
-      {
-        "atom": "ZH-SCRIPT-JIE-JOINT-01",
-        "language": "chinese",
-        "introducedBy": "ZH-W137-jie-joint",
-        "introducedAt": 898,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
       },
       {
         "atom": "ZH-SCRIPT-KE-LESSON-01",
@@ -671236,7 +672008,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 6
+        "revisits": 7
       },
       {
         "atom": "ZH-SCRIPT-NUM-JIU",
@@ -671266,7 +672038,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 6
+        "revisits": 7
       },
       {
         "atom": "ZH-SCRIPT-NUM-SAN",
@@ -671296,7 +672068,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 9
+        "revisits": 10
       },
       {
         "atom": "ZH-SCRIPT-REN-01",
@@ -671306,7 +672078,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 13
+        "revisits": 14
       },
       {
         "atom": "ZH-SCRIPT-REN-RADICAL-01",
@@ -671317,16 +672089,6 @@
           "R2"
         ],
         "revisits": 8
-      },
-      {
-        "atom": "ZH-SCRIPT-SAO-SWEEP-01",
-        "language": "chinese",
-        "introducedBy": "ZH-W133-sao-sweep",
-        "introducedAt": 875,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 3
       },
       {
         "atom": "ZH-SCRIPT-SHI",
@@ -671376,7 +672138,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 7
+        "revisits": 8
       },
       {
         "atom": "ZH-SCRIPT-TONG-01",
@@ -671449,6 +672211,16 @@
         "revisits": 5
       },
       {
+        "atom": "ZH-SCRIPT-YUE-MONTH-01",
+        "language": "chinese",
+        "introducedBy": "ZH-W148-yue-month",
+        "introducedAt": 961,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ZH-SCRIPT-ZAO",
         "language": "chinese",
         "introducedBy": "ZH-W07-zao",
@@ -671466,17 +672238,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 4
-      },
-      {
-        "atom": "ZH-SCRIPT-ZHONG-HEAVY-01",
-        "language": "chinese",
-        "introducedBy": "ZH-W134-zhong-heavy",
-        "introducedAt": 881,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 2
+        "revisits": 6
       },
       {
         "atom": "ZH-TONE-NEUTRAL",
@@ -671496,7 +672258,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 7
+        "revisits": 9
       },
       {
         "atom": "ZH-TONE-SANDHI-THIRD",
@@ -671516,7 +672278,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 7
+        "revisits": 9
       }
     ],
     "forwardReferences": [
@@ -677848,11 +678610,11 @@
       },
       {
         "language": "chinese",
-        "lessonCount": 953,
+        "lessonCount": 1031,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 893,
+        "atomsTaught": 969,
         "atomsNeverRevisited": 0,
         "forwardReferences": 0
       },
@@ -678062,14 +678824,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 58979,
+      "atomsTaught": 59055,
       "atomsNeverRevisited": 1,
       "neverRevisitedPercent": 0,
       "missedByWindow": {
         "R1": 1639,
-        "R2": 39672,
-        "R3": 30757,
-        "R4": 53033
+        "R2": 39717,
+        "R3": 30802,
+        "R4": 53098
       },
       "forwardReferences": 788
     }
@@ -678105,14 +678867,14 @@
       {
         "language": "chinese",
         "script": "chinese",
-        "lessonCount": 953,
-        "scriptLessons": 167,
-        "taughtGlyphs": 183,
-        "shownGlyphs": 183,
+        "lessonCount": 1031,
+        "scriptLessons": 178,
+        "taughtGlyphs": 195,
+        "shownGlyphs": 195,
         "neverTaughtGlyphs": 0,
         "violations": 0,
-        "exposureOnly": 92,
-        "exposureExemptedGlyphs": 96,
+        "exposureOnly": 101,
+        "exposureExemptedGlyphs": 105,
         "headwordsWithoutRomanization": 0
       },
       {
@@ -678303,8 +679065,8 @@
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
       "violations": 0,
-      "exposureOnly": 871,
-      "exposureExemptedGlyphs": 1845,
+      "exposureOnly": 880,
+      "exposureExemptedGlyphs": 1854,
       "headwordsWithoutRomanization": 3,
       "tracksWithUnknownScript": 0
     },
@@ -678330,7 +679092,7 @@
       },
       {
         "language": "chinese",
-        "wordLessons": 678,
+        "wordLessons": 723,
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
         "wordLessonsWithoutAnyEtymology": 0,
@@ -678498,7 +679260,7 @@
       }
     ],
     "summary": {
-      "wordLessons": 53612,
+      "wordLessons": 53657,
       "wordLessonsWithoutEtymologyHook": 0,
       "wordLessonsWithoutVisibleEtymology": 0,
       "wordLessonsWithoutAnyEtymology": 0,
@@ -680152,6 +680914,15 @@
             "stage": "timed-assessment-production",
             "level": "A1",
             "sequence": 7830
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W157-reply",
+            "blockIndex": 2,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "A2",
+            "sequence": 12760
           }
         ],
         "validEvidence": [
@@ -681045,6 +681816,15 @@
             "stage": "timed-assessment-production",
             "level": "A1",
             "sequence": 7830
+          },
+          {
+            "language": "chinese",
+            "lessonId": "ZH-W157-reply",
+            "blockIndex": 2,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "A2",
+            "sequence": 12760
           }
         ],
         "defects": [],
@@ -681104,12 +681884,11 @@
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
-            ],
-            "missingStages": [
+              "timed-assessment-production",
               "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "B1",
@@ -681128,12 +681907,11 @@
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
-            ],
-            "missingStages": [
+              "timed-assessment-production",
               "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "B2",
@@ -681152,12 +681930,11 @@
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
-            ],
-            "missingStages": [
+              "timed-assessment-production",
               "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "C1",
@@ -681176,12 +681953,11 @@
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
-            ],
-            "missingStages": [
+              "timed-assessment-production",
               "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "C2",
@@ -681200,12 +681976,11 @@
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
-            ],
-            "missingStages": [
+              "timed-assessment-production",
               "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           }
         ]
       },
@@ -700310,9 +701085,9 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 23,
       "tracksCompleteAtPreA1": 23,
-      "evidenceBlocks": 998,
+      "evidenceBlocks": 999,
       "invalidEvidenceBlocks": 0,
-      "missingTrackLevelStages": 5
+      "missingTrackLevelStages": 0
     }
   },
   "gentleRamp": {
@@ -700450,8 +701225,8 @@
       },
       {
         "language": "chinese",
-        "lessonCount": 953,
-        "atomMeasurableLessons": 933,
+        "lessonCount": 1031,
+        "atomMeasurableLessons": 1011,
         "atomMeasurementBlindLessons": 20,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -700466,24 +701241,24 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 0,
-        "atomsTaught": 893,
+        "atomsTaught": 969,
         "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 1618,
+        "reinforcementWindowMisses": 1773,
         "reinforcementMissesByWindow": {
           "R1": 73,
-          "R2": 461,
-          "R3": 460,
-          "R4": 624
+          "R2": 506,
+          "R3": 505,
+          "R4": 689
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 174,
+        "writingPracticeLessons": 185,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
           {
             "language": "chinese",
             "kind": "reinforcement",
-            "count": 1618,
+            "count": 1773,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -700498,7 +701273,7 @@
         "next": {
           "language": "chinese",
           "kind": "reinforcement",
-          "count": 1618,
+          "count": 1773,
           "unit": "missed window(s)",
           "detail": "add retrieval at the expanding R1-R4 intervals"
         }
@@ -702140,7 +702915,7 @@
       {
         "language": "chinese",
         "kind": "reinforcement",
-        "count": 1618,
+        "count": 1773,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -702380,22 +703155,12 @@
         "inProgressAt": "A2",
         "blockers": [
           {
-            "criterion": "writing-stage",
-            "detail": "1 cumulative writing stage(s) unproved at A2: connected-composition",
-            "shortfall": 1
-          },
-          {
-            "criterion": "spine-nodes",
-            "detail": "2 of 5 A2 spine node(s) unrealized: SPINE-TALK-ABOUT-FUTURE, SPINE-READ-PRACTICAL-TEXTS",
-            "shortfall": 2
-          },
-          {
             "criterion": "vocabulary",
-            "detail": "teaches 645 distinct headwords at or below A2, against 1200",
-            "shortfall": 555
+            "detail": "teaches 690 distinct headwords at or below A2, against 1200",
+            "shortfall": 510
           }
         ],
-        "vocabulary": 645
+        "vocabulary": 690
       },
       {
         "language": "french",
@@ -702814,12 +703579,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 59432,
-    "voice": 56699,
-    "sight": 1032,
-    "pen": 1701,
-    "coreVoice": 57271,
-    "lessonsWithWritingSegments": 1068,
+    "totalLessons": 59510,
+    "voice": 56761,
+    "sight": 1037,
+    "pen": 1712,
+    "coreVoice": 57333,
+    "lessonsWithWritingSegments": 1069,
     "drivablePercent": 96,
     "tracks": [
       {
@@ -719394,13 +720159,13 @@
       },
       {
         "language": "chinese",
-        "lessonCount": 953,
-        "voice": 747,
-        "sight": 37,
-        "pen": 169,
-        "coreVoice": 754,
+        "lessonCount": 1031,
+        "voice": 809,
+        "sight": 42,
+        "pen": 180,
+        "coreVoice": 816,
         "drivablePercent": 79,
-        "drivablePrefixTotal": 316,
+        "drivablePrefixTotal": 330,
         "chapters": [
           {
             "language": "chinese",
@@ -721800,6 +722565,193 @@
             ],
             "drivablePrefix": 7,
             "firstNonVoiceLesson": null,
+            "unstartable": null
+          },
+          {
+            "language": "chinese",
+            "chapter": 147,
+            "lessonCount": 7,
+            "voice": 6,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 6,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "ZH-W147-hou-after",
+            "unstartable": null
+          },
+          {
+            "language": "chinese",
+            "chapter": 148,
+            "lessonCount": 8,
+            "voice": 7,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 7,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "ZH-W148-yue-month",
+            "unstartable": null
+          },
+          {
+            "language": "chinese",
+            "chapter": 149,
+            "lessonCount": 6,
+            "voice": 5,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 5,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "ZH-W149-zheng",
+            "unstartable": null
+          },
+          {
+            "language": "chinese",
+            "chapter": 150,
+            "lessonCount": 7,
+            "voice": 6,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 6,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "ZH-W150-guo-pass",
+            "unstartable": null
+          },
+          {
+            "language": "chinese",
+            "chapter": 151,
+            "lessonCount": 8,
+            "voice": 7,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 7,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "ZH-W151-dao-arrive",
+            "unstartable": null
+          },
+          {
+            "language": "chinese",
+            "chapter": 152,
+            "lessonCount": 7,
+            "voice": 6,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 6,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "ZH-W152-de-complement",
+            "unstartable": null
+          },
+          {
+            "language": "chinese",
+            "chapter": 153,
+            "lessonCount": 7,
+            "voice": 6,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 6,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "ZH-W153-bi-compare",
+            "unstartable": null
+          },
+          {
+            "language": "chinese",
+            "chapter": 154,
+            "lessonCount": 6,
+            "voice": 5,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 5,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "ZH-W154-hai-still",
+            "unstartable": null
+          },
+          {
+            "language": "chinese",
+            "chapter": 155,
+            "lessonCount": 8,
+            "voice": 6,
+            "sight": 1,
+            "pen": 1,
+            "coreVoice": 6,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "ZH-W155-cong-from",
+            "unstartable": null
+          },
+          {
+            "language": "chinese",
+            "chapter": 156,
+            "lessonCount": 7,
+            "voice": 4,
+            "sight": 2,
+            "pen": 1,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "ZH-W156-yuan-money",
+            "unstartable": null
+          },
+          {
+            "language": "chinese",
+            "chapter": 157,
+            "lessonCount": 7,
+            "voice": 4,
+            "sight": 2,
+            "pen": 1,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": "ZH-C157-reading",
             "unstartable": null
           }
         ]
@@ -880035,33 +880987,33 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 35489,
-    "underspent": 32811,
-    "neverSpent": 24932,
+    "roots": 35513,
+    "underspent": 32826,
+    "neverSpent": 24943,
     "payoffDistribution": {
-      "0": 24932,
-      "1": 5606,
-      "2": 2273,
-      "3": 1053,
-      "4": 571,
+      "0": 24943,
+      "1": 5609,
+      "2": 2274,
+      "3": 1054,
+      "4": 575,
       "5": 344,
-      "6": 209,
-      "7": 138,
+      "6": 212,
+      "7": 139,
       "8": 86,
-      "9": 56,
-      "10": 37,
+      "9": 54,
+      "10": 38,
       "11": 33,
-      "12": 34,
-      "13": 16,
+      "12": 33,
+      "13": 18,
       "14": 13,
       "15": 10,
-      "16": 13,
-      "17": 4,
-      "18": 10,
+      "16": 11,
+      "17": 5,
+      "18": 11,
       "19": 9,
       "20": 5,
-      "21": 4,
-      "22": 3,
+      "21": 3,
+      "22": 4,
       "23": 3,
       "24": 1,
       "25": 7,
@@ -880085,7 +881037,7 @@
     "underspentPercent": 92
   },
   "infoDump": {
-    "lessons": 59432,
+    "lessons": 59510,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -880093,11 +881045,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 59432,
-    "measuredLessons": 53668,
-    "idiomMeasuredLessons": 53668,
-    "senseMeasuredLessons": 53669,
-    "cultureClaimMeasuredLessons": 53668,
+    "lessons": 59510,
+    "measuredLessons": 53746,
+    "idiomMeasuredLessons": 53746,
+    "senseMeasuredLessons": 53747,
+    "cultureClaimMeasuredLessons": 53746,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -880106,18 +881058,18 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 58475,
-    "usesBeforeIntroduction": 113722,
-    "technicalUsesBeforeIntroduction": 20199,
-    "technicalLessons": 15427,
+    "lessonsUsingTerms": 58548,
+    "usesBeforeIntroduction": 113865,
+    "technicalUsesBeforeIntroduction": 20250,
+    "technicalLessons": 15470,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 7052
+        "lessons": 7088
       },
       {
         "term": "noun",
-        "lessons": 5647
+        "lessons": 5649
       },
       {
         "term": "participle",
@@ -880125,7 +881077,7 @@
       },
       {
         "term": "adjective",
-        "lessons": 1110
+        "lessons": 1117
       },
       {
         "term": "case",
@@ -880138,14 +881090,14 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 59432,
+    "lessonsScanned": 59510,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 11735,
+    "filesScanned": 11746,
     "mainCharacters": 164,
-    "scriptCharacters": 955,
+    "scriptCharacters": 967,
     "gaps": 0
   }
 }
