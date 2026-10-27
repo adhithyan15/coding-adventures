@@ -139,7 +139,10 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "min-height": 1,
         "outline": 2,
         "position": 6,
-        "text-align": 6,
+        # Notes 0.3.0 (E3) lists notes with the toolkit RecordList, whose
+        # rows ask for no text-align, so the two Notes row buttons' drops
+        # went with them (6 -> 4).
+        "text-align": 4,
         "top": 6,
         # Supported control and Text widths now lower to native geometry;
         # any new width drop must fail rather than spend a stale allowance.
