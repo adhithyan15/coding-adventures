@@ -245,10 +245,17 @@ The rules:
    properties". So `content-scroll { flex-grow: 1 }` on a `HostScroll`, a
    part nothing ever asked about, vanished from the report entirely. Now
    every node that carries a part marks that part as reached when it is
-   emitted. Any property nothing consumed is then reported.
+   emitted. For a part whose own lowering asked about nothing, only the
+   parent-owned `flex-grow` is reported. Its other properties keep the old
+   "never asked" treatment for now. Reporting all of them is correct, but
+   it surfaces about seventy uncounted drops across seven packages (the
+   toolkit's `HostLink` parts alone are 45). That needs its own
+   re-measurement of every pinned gate.
 
 The emitted shape for a bound, padded `Column` shell whose `HostScroll`
-grows:
+grows is shown below. The content layout gets the fixed id
+`mosaicLayoutRootContent`, not a numbered `mosaicContent<N>`, so that the
+numbered ids other wrappers allocate do not shift.
 
 ```qml
 Item {
@@ -258,11 +265,11 @@ Item {
     Rectangle {
         id: mosaicLayoutRoot
         anchors.fill: parent
-        implicitWidth: mosaicContent0.implicitWidth + 24 + 24
-        implicitHeight: mosaicContent0.implicitHeight + 24 + 24
+        implicitWidth: mosaicLayoutRootContent.implicitWidth + 24 + 24
+        implicitHeight: mosaicLayoutRootContent.implicitHeight + 24 + 24
         color: "#f8fafc"
         ColumnLayout {
-            id: mosaicContent0
+            id: mosaicLayoutRootContent
             anchors.fill: parent
             anchors.leftMargin: 24
             anchors.topMargin: 24
@@ -270,8 +277,8 @@ Item {
             anchors.bottomMargin: 24
             RowLayout { … }                      // header: keeps its height
             ScrollView {
-                Layout.fillHeight: true          // flex-grow: 1
                 Layout.fillWidth: true           // pinned axis (rule 4)
+                Layout.fillHeight: true          // flex-grow: 1
                 contentWidth: availableWidth
                 ColumnLayout { … }               // taller than the window
             }
