@@ -1,0 +1,804 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 314,
+  "title": "Everything Has Changed",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:19cffa9ea7a827d3",
+  "lessons": [
+    {
+      "id": "JA-C314-sukkari",
+      "sequence": 18690,
+      "title": "すっかり (sukkari) — completely; quite",
+      "headword": "すっかり",
+      "romanization": "sukkari",
+      "gloss": "completely; quite",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c654552d9fcfbb27",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the other day, then the Japanese for ruins."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すっかり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すっかり — sukkari — \"completely; quite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まちは すっかり かわりました。 — machi wa sukkari kawarimashita — \"The town has changed completely.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すっかり (sukkari) is a native Japanese mimetic word, inherited rather than borrowed from Chinese, and its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sukkari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sukkari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sukkari, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sukkari*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "machi wa sukkari kawarimashita — The town has changed completely.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *machi wa sukkari kawarimashita* — The town has changed completely.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the other day, then the Japanese for ruins, then say sukkari again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the other day, then the Japanese for ruins, then say *sukkari* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すっかり (sukkari) mean? (\"Completely; quite\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C314-sukkari-type",
+              "prompt": "Say the Japanese for 'completely'.",
+              "assesses": [
+                "JA-LEX-C314-SUKKARI314-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すっかり",
+                "sukkari"
+              ],
+              "feedback": {
+                "correct": "Right: すっかり (sukkari) is 'completely; quite'.",
+                "incorrect": "'Completely' is すっかり (sukkari)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C314-itsunomanika",
+      "sequence": 18700,
+      "title": "いつのまにか (itsunomanika) — before one knows it",
+      "headword": "いつのまにか",
+      "romanization": "itsunomanika",
+      "gloss": "before one knows it",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f4cdb234136a7f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for ruins, then the Japanese for completely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いつのまにか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いつのまにか — itsunomanika — \"before one knows it\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いつのまにか ゆうがたに なっていました。 — itsunomanika yūgata ni natte imashita — \"Before we knew it, evening had come.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いつのまにか (itsunomanika) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from itsu, \"when\", and ma, \"an interval\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itsunomanika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itsunomanika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itsunomanika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itsunomanika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itsunomanika yūgata ni natte imashita — Before we knew it, evening had come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itsunomanika yūgata ni natte imashita* — Before we knew it, evening had come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for ruins, then the Japanese for completely, then say itsunomanika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for ruins, then the Japanese for completely, then say *itsunomanika* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いつのまにか (itsunomanika) mean? (\"Before one knows it\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C314-itsunomanika-type",
+              "prompt": "Say the Japanese for 'before one knows it'.",
+              "assesses": [
+                "JA-LEX-C314-SUKKARI314-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いつのまにか",
+                "itsunomanika"
+              ],
+              "feedback": {
+                "correct": "Right: いつのまにか (itsunomanika) is 'before one knows it'.",
+                "incorrect": "'Before one knows it' is いつのまにか (itsunomanika)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C314-yagate",
+      "sequence": 18710,
+      "title": "やがて (yagate) — before long; in time",
+      "headword": "やがて",
+      "romanization": "yagate",
+      "gloss": "before long; in time",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccf17efb53064889",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for completely, then the Japanese for before one knows it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: やがて",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やがて — yagate — \"before long; in time\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やがて あめが やみました。 — yagate ame ga yamimashita — \"Before long the rain stopped.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やがて (yagate) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yagate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yagate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yagate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yagate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yagate ame ga yamimashita — Before long the rain stopped.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yagate ame ga yamimashita* — Before long the rain stopped.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for completely, then the Japanese for before one knows it, then say yagate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for completely, then the Japanese for before one knows it, then say *yagate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does やがて (yagate) mean? (\"Before long; in time\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C314-yagate-type",
+              "prompt": "Say the Japanese for 'before long'.",
+              "assesses": [
+                "JA-LEX-C314-SUKKARI314-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "やがて",
+                "yagate"
+              ],
+              "feedback": {
+                "correct": "Right: やがて (yagate) is 'before long; in time'.",
+                "incorrect": "'Before long' is やがて (yagate)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C314-heru",
+      "sequence": 18720,
+      "title": "へる (heru) — to decrease; to go down",
+      "headword": "へる",
+      "romanization": "heru",
+      "gloss": "to decrease; to go down",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e747c4e0d7bd0583",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for before one knows it, then the Japanese for before long."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: へる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "へる — heru — \"to decrease; to go down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いなかの ひとが へっています。 — inaka no hito ga hette imasu — \"The number of people in the countryside is falling.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite へります, herimasu; a godan verb. Past (polite): むらの ひとが へりました。, mura no hito ga herimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "へる (heru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *heru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *heru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inaka no hito ga hette imasu — The number of people in the countryside is falling.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inaka no hito ga hette imasu* — The number of people in the countryside is falling.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for before one knows it, then the Japanese for before long, then say heru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for before one knows it, then the Japanese for before long, then say *heru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does へる (heru) mean? (\"To decrease; to go down\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C314-heru-type",
+              "prompt": "Say the Japanese for 'to decrease'.",
+              "assesses": [
+                "JA-LEX-C314-SUKKARI314-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "へる",
+                "heru"
+              ],
+              "feedback": {
+                "correct": "Right: へる (heru) is 'to decrease; to go down'.",
+                "incorrect": "'To decrease' is へる (heru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C314-omoitsuku",
+      "sequence": 18730,
+      "title": "おもいつく (omoitsuku) — to think of; to hit upon",
+      "headword": "おもいつく",
+      "romanization": "omoitsuku",
+      "gloss": "to think of; to hit upon",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8d1c8f96e637c83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for before long, then the Japanese for to decrease."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おもいつく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おもいつく — omoitsuku — \"to think of; to hit upon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いい ほうほうを おもいつきました。 — ii hōhō o omoitsukimashita — \"I have had a good idea how to do it.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite おもいつきます, omoitsukimasu; a godan verb. Past (polite): ちちが いい ほうほうを おもいつきました。, chichi ga ii hōhō o omoitsukimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おもいつく (omoitsuku) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from omoi, \"thinking\" (from omou), and tsuku, \"to arrive at\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "omoitsuku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *omoitsuku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "omoitsuku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *omoitsuku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ii hōhō o omoitsukimashita — I have had a good idea how to do it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ii hōhō o omoitsukimashita* — I have had a good idea how to do it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for before long, then the Japanese for to decrease, then say omoitsuku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for before long, then the Japanese for to decrease, then say *omoitsuku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おもいつく (omoitsuku) mean? (\"To think of; to hit upon\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C314-omoitsuku-type",
+              "prompt": "Say the Japanese for 'to think of'.",
+              "assesses": [
+                "JA-LEX-C314-SUKKARI314-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おもいつく",
+                "omoitsuku"
+              ],
+              "feedback": {
+                "correct": "Right: おもいつく (omoitsuku) is 'to think of; to hit upon'.",
+                "incorrect": "'To think of' is おもいつく (omoitsuku)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

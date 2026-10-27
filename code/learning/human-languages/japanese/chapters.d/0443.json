@@ -1,0 +1,21 @@
+{
+  "chapter": 443,
+  "title": "Wrists, Ankles and Lips",
+  "label": "ch:ja-wrists-ankles-and-lips",
+  "canDo": "I can name small parts of the body.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-R443-review-438-443",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can name small parts of the body.",
+    "assesses": [
+      "JA-LEX-C443-WRIST443-01",
+      "JA-LEX-C443-WRIST443-02",
+      "JA-LEX-C443-WRIST443-03",
+      "JA-LEX-C443-WRIST443-04",
+      "JA-LEX-C443-WRIST443-05"
+    ]
+  }
+}

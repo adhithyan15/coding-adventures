@@ -1,0 +1,11 @@
+{
+  "id": "JA-C505-yumi",
+  "pathSegment": "JA-PATH-505-SUMO505",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-505-SUMO505",
+      "order": 3
+    }
+  ]
+}

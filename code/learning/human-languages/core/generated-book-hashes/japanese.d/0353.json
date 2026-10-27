@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:fdce762ccd26e2ff",
+  "lessonIds": [
+    "JA-C353-tenken-suru",
+    "JA-C353-choushi",
+    "JA-C353-shoukaki",
+    "JA-C353-dansui",
+    "JA-C353-ichiou"
+  ],
+  "tex": "japanese/book/chapters/ch353-checking-things-work.tex"
+}

@@ -1,6 +1,11 @@
-use ibm_system360_gatelevel::gates;
+use std::{
+    fs,
+    path::{Path, PathBuf},
+    process::Command,
+    sync::atomic::{AtomicUsize, Ordering},
+};
 
-type MatchArmTokens = (Vec<String>, Vec<String>);
+use ibm_system360_gatelevel::{gates, System360GateLevel};
 
 fn rust_tokens(source: &str) -> Vec<String> {
     let bytes = source.as_bytes();
@@ -55,36 +60,7 @@ fn rust_tokens(source: &str) -> Vec<String> {
             cursor += 1;
         }
     }
-    let mut normalized = Vec::with_capacity(tokens.len());
-    for (index, token) in tokens.iter().enumerate() {
-        let redundant_trailing_comma = token == ","
-            && tokens
-                .get(index + 1)
-                .is_some_and(|next| matches!(next.as_str(), ")" | "]" | "}"));
-        if !redundant_trailing_comma {
-            normalized.push(token.clone());
-        }
-    }
-    normalized
-}
-
-fn function_body(tokens: &[String], name: &str) -> Result<Vec<String>, String> {
-    let starts: Vec<_> = tokens
-        .windows(2)
-        .enumerate()
-        .filter_map(|(index, pair)| (pair[0] == "fn" && pair[1] == name).then_some(index))
-        .collect();
-    if starts.len() != 1 {
-        return Err(format!(
-            "expected exactly one function named {name}, found {}",
-            starts.len()
-        ));
-    }
-    let open = (starts[0]..tokens.len())
-        .find(|&index| tokens[index] == "{")
-        .ok_or_else(|| format!("function {name} has no body"))?;
-    let close = matching_delimiter(tokens, open, "{", "}")?;
-    Ok(tokens[open + 1..close].to_vec())
+    tokens
 }
 
 fn matching_delimiter(
@@ -107,9 +83,93 @@ fn matching_delimiter(
     Err(format!("unclosed {opening} delimiter"))
 }
 
+fn function_body(tokens: &[String], name: &str) -> Result<Vec<String>, String> {
+    let starts: Vec<_> = tokens
+        .windows(2)
+        .enumerate()
+        .filter_map(|(index, pair)| (pair[0] == "fn" && pair[1] == name).then_some(index))
+        .collect();
+    if starts.len() != 1 {
+        return Err(format!(
+            "expected exactly one function named {name}, found {}",
+            starts.len()
+        ));
+    }
+    let open = (starts[0]..tokens.len())
+        .find(|&index| tokens[index] == "{")
+        .ok_or_else(|| format!("function {name} has no body"))?;
+    let close = matching_delimiter(tokens, open, "{", "}")?;
+    Ok(tokens[open + 1..close].to_vec())
+}
+
+fn require_exact_body(source: &str, function: &str, expected: &str) -> Result<(), String> {
+    let actual = function_body(&rust_tokens(source), function)?;
+    let expected = rust_tokens(expected);
+    if actual == expected {
+        Ok(())
+    } else {
+        Err(format!(
+            "{function} differs from its reviewed body\nactual: {actual:?}\nexpected: {expected:?}"
+        ))
+    }
+}
+
+fn token_digest(tokens: &[String]) -> u64 {
+    tokens
+        .iter()
+        .fold(0xcbf2_9ce4_8422_2325, |mut hash, token| {
+            for byte in token.bytes().chain(std::iter::once(0xff)) {
+                hash ^= u64::from(byte);
+                hash = hash.wrapping_mul(0x0000_0100_0000_01b3);
+            }
+            hash
+        })
+}
+
+fn require_body_digest(source: &str, function: &str, expected: u64) -> Result<(), String> {
+    let body = function_body(&rust_tokens(source), function)?;
+    let actual = token_digest(&body);
+    if actual == expected {
+        Ok(())
+    } else {
+        Err(format!(
+            "{function} parsed body digest changed: {actual:#018x}, expected {expected:#018x}"
+        ))
+    }
+}
+
+fn const_initializer(source: &str, name: &str) -> Result<Vec<String>, String> {
+    let tokens = rust_tokens(source);
+    let starts: Vec<_> = tokens
+        .windows(2)
+        .enumerate()
+        .filter_map(|(index, pair)| (pair == ["const", name]).then_some(index))
+        .collect();
+    if starts.len() != 1 {
+        return Err(format!("expected one const {name}, found {}", starts.len()));
+    }
+    let equals = (starts[0]..tokens.len())
+        .find(|&index| tokens[index] == "=")
+        .ok_or_else(|| format!("const {name} has no initializer"))?;
+    let semicolon = (equals..tokens.len())
+        .find(|&index| tokens[index] == ";")
+        .ok_or_else(|| format!("const {name} has no terminator"))?;
+    Ok(tokens[equals + 1..semicolon].to_vec())
+}
+
+fn require_const_digest(source: &str, name: &str, expected: u64) -> Result<(), String> {
+    let actual = token_digest(&const_initializer(source, name)?);
+    if actual == expected {
+        Ok(())
+    } else {
+        Err(format!(
+            "{name} parsed initializer digest changed: {actual:#018x}, expected {expected:#018x}"
+        ))
+    }
+}
+
 fn require_external_module(source: &str, name: &str, public: bool) -> Result<(), String> {
-    let syntax = syn::parse_file(source)
-        .map_err(|error| format!("validator is not valid Rust syntax: {error}"))?;
+    let syntax = syn::parse_file(source).map_err(|error| format!("invalid Rust: {error}"))?;
     let modules: Vec<_> = syntax
         .items
         .iter()
@@ -119,9 +179,7 @@ fn require_external_module(source: &str, name: &str, public: bool) -> Result<(),
         })
         .collect();
     if modules.len() != 1 {
-        return Err(format!(
-            "validator must contain exactly one top-level {name} module declaration"
-        ));
+        return Err(format!("expected one top-level {name} module"));
     }
     let module = modules[0];
     let visibility_matches = matches!(
@@ -133,195 +191,84 @@ fn require_external_module(source: &str, name: &str, public: bool) -> Result<(),
         || module.content.is_some()
         || module.semi.is_none()
     {
-        return Err(format!(
-            "validator {name} must be an exact un-attributed external module declaration"
-        ));
+        return Err(format!("{name} is not the reviewed external module"));
     }
     Ok(())
 }
 
-fn top_level_opcode_arms(body: &[String]) -> Result<Vec<MatchArmTokens>, String> {
-    let mut curly_depth = 0;
-    let mut match_open = None;
-    for index in 0..body.len().saturating_sub(2) {
-        match body[index].as_str() {
-            "{" => curly_depth += 1,
-            "}" => curly_depth -= 1,
-            "match" if curly_depth == 0 && body[index + 1] == "opcode" => {
-                match_open = (index + 2..body.len()).find(|&next| body[next] == "{");
-                break;
-            }
-            _ => {}
-        }
-    }
-    let open = match_open.ok_or_else(|| "missing top-level match opcode".to_owned())?;
-    let close = matching_delimiter(body, open, "{", "}")?;
-    let mut arms = Vec::new();
-    let mut cursor = open + 1;
-    while cursor < close {
-        while cursor < close && body[cursor] == "," {
-            cursor += 1;
-        }
-        if cursor == close {
-            break;
-        }
-        let pattern_start = cursor;
-        let mut nested = 0;
-        while cursor + 1 < close {
-            match body[cursor].as_str() {
-                "(" | "[" | "{" => nested += 1,
-                ")" | "]" | "}" => nested -= 1,
-                "=" if nested == 0 && body[cursor + 1] == ">" => break,
-                _ => {}
-            }
-            cursor += 1;
-        }
-        if cursor + 1 >= close {
-            return Err(format!(
-                "malformed opcode match arm near {:?}",
-                &body[pattern_start..close.min(pattern_start + 16)]
-            ));
-        }
-        let pattern = body[pattern_start..cursor].to_vec();
-        cursor += 2;
-        let value_start = cursor;
-        if body[cursor] == "{" {
-            cursor = matching_delimiter(body, cursor, "{", "}")? + 1;
-        } else {
-            let mut paren = 0;
-            let mut square = 0;
-            while cursor < close {
-                match body[cursor].as_str() {
-                    "(" => paren += 1,
-                    ")" => paren -= 1,
-                    "[" => square += 1,
-                    "]" => square -= 1,
-                    "," if paren == 0 && square == 0 => break,
-                    _ => {}
-                }
-                cursor += 1;
-            }
-        }
-        arms.push((pattern, body[value_start..cursor].to_vec()));
-    }
-    Ok(arms)
-}
-
-fn require_exact_body(source: &str, function: &str, expected: &str) -> Result<(), String> {
-    let actual = function_body(&rust_tokens(source), function)?;
-    let expected = rust_tokens(expected);
-    if actual == expected {
-        Ok(())
-    } else {
-        Err(format!(
-            "{function} does not match its approved gate body\nactual: {actual:?}\nexpected: {expected:?}"
-        ))
-    }
-}
-
-fn require_exact_arm(
-    source: &str,
-    function: &str,
-    pattern: &str,
-    expected: &str,
-) -> Result<(), String> {
-    let body = function_body(&rust_tokens(source), function)?;
-    if body.iter().any(|token| token == "use" || token == "mod") {
-        return Err(format!("{function} contains a local path shadow"));
-    }
+fn contains(tokens: &[String], pattern: &str) -> bool {
     let pattern = rust_tokens(pattern);
-    let matching: Vec<_> = top_level_opcode_arms(&body)
-        .map_err(|error| format!("{function}: {error}"))?
-        .into_iter()
-        .filter_map(|(candidate, value)| (candidate == pattern).then_some(value))
-        .collect();
-    if matching.len() != 1 {
-        return Err(format!(
-            "{function} must have exactly one {:?} opcode arm",
-            pattern
-        ));
-    }
-    if matching[0] == rust_tokens(expected) {
-        Ok(())
-    } else {
-        let expected = rust_tokens(expected);
-        Err(format!(
-            "{function} opcode pattern {:?} does not match its approved gate data flow\nactual: {:?}\nexpected: {:?}",
-            pattern, matching[0], expected
-        ))
-    }
+    tokens
+        .windows(pattern.len())
+        .any(|window| window == pattern.as_slice())
 }
 
-fn require_exact_opcode_match_shell(
-    source: &str,
-    function: &str,
-    expected_prefix: &str,
-    expected_tail: &str,
-) -> Result<(), String> {
-    let body = function_body(&rust_tokens(source), function)?;
-    let mut curly_depth = 0;
-    let mut match_start = None;
-    let mut match_open = None;
-    for index in 0..body.len().saturating_sub(2) {
-        match body[index].as_str() {
-            "{" => curly_depth += 1,
-            "}" => curly_depth -= 1,
-            "match" if curly_depth == 0 && body[index + 1] == "opcode" => {
-                match_start = Some(index);
-                match_open = (index + 2..body.len()).find(|&next| body[next] == "{");
-                break;
-            }
-            _ => {}
+fn candidate_lines(tokens: &[String]) -> Result<Vec<usize>, String> {
+    let mut lines = Vec::new();
+    for index in 0..tokens.len().saturating_sub(5) {
+        if tokens[index] == "candidate" && tokens[index + 1] == "!" && tokens[index + 2] == "(" {
+            let literal = tokens[index + 3].trim_start_matches("0x");
+            let radix = if tokens[index + 3].starts_with("0x") {
+                16
+            } else {
+                10
+            };
+            lines.push(
+                usize::from_str_radix(literal, radix)
+                    .map_err(|error| format!("invalid candidate line: {error}"))?,
+            );
         }
     }
-    let start = match_start.ok_or_else(|| format!("{function} has no top-level match opcode"))?;
-    let open = match_open.ok_or_else(|| format!("{function} has no top-level match opcode"))?;
-    let close = matching_delimiter(&body, open, "{", "}")?;
-    let actual_prefix = &body[..start];
-    let actual_tail = &body[close + 1..];
-    let expected_prefix = rust_tokens(expected_prefix);
-    let expected_tail = rust_tokens(expected_tail);
-    if actual_prefix == expected_prefix && actual_tail == expected_tail {
-        Ok(())
-    } else {
-        Err(format!(
-            "{function} has unapproved control flow around opcode dispatch\nactual prefix: {actual_prefix:?}\nexpected prefix: {expected_prefix:?}\nactual tail: {actual_tail:?}\nexpected tail: {expected_tail:?}"
-        ))
-    }
+    Ok(lines)
 }
 
-fn verify_branch_structure(networks: &str, executor: &str, validator: &str) -> Result<(), String> {
-    let network_tokens = rust_tokens(networks);
-    let decode_fn = network_tokens
-        .windows(2)
-        .position(|pair| pair == ["fn", "decode_byte"])
-        .ok_or_else(|| "missing decode_byte".to_owned())?;
-    let approved_imports = rust_tokens(
-        "use arithmetic::adders::ripple_carry_adder_with_carry;
-         use logic_gates::combinational::mux2;
-         use logic_gates::gates::{and_gate,not_gate,or_gate,xor_gate};
-         pub",
-    );
-    if network_tokens[..decode_fn] != approved_imports {
-        return Err("gate primitive bindings are shadowed or changed".to_owned());
-    }
-
-    let executor_tokens = rust_tokens(executor);
-    let execute_fn = executor_tokens
-        .windows(2)
-        .position(|pair| pair == ["fn", "execute"])
-        .ok_or_else(|| "missing execute".to_owned())?;
-    let approved_executor_bindings = rust_tokens(
-        "use crate::{gates,hfp::GateHfp,StepTrace,System360Error,System360State};
-         const ADDRESS_MASK:u32=0x00ff_ffff;
-         pub(crate)",
-    );
-    if executor_tokens[..execute_fn] != approved_executor_bindings {
-        return Err("executor gate-module binding is shadowed or changed".to_owned());
-    }
-
+fn verify_decode_authority(networks: &str, executor: &str, validator: &str) -> Result<(), String> {
+    syn::parse_file(networks).map_err(|error| format!("gates do not parse: {error}"))?;
+    syn::parse_file(executor).map_err(|error| format!("executor does not parse: {error}"))?;
+    syn::parse_file(validator).map_err(|error| format!("validator does not parse: {error}"))?;
     require_external_module(validator, "executor", false)?;
     require_external_module(validator, "gates", true)?;
+
+    // These are hashes of parsed Rust tokens, not source bytes.  They retain
+    // the former exact-body locks without making harmless whitespace or
+    // comment changes significant, while covering the complete authority,
+    // router, validator, branch/add/compare, and public commit chain.
+    for (function, digest) in [
+        ("decode_byte", 0x96cb_0cae_2d05_2ad9),
+        ("add_24", 0xa04f_a7e8_e3af_49b0),
+        ("add_32", 0x3d11_3f86_3d34_d438),
+        ("branch_selected", 0x7a7a_e79a_1519_1977),
+        ("index_branch_selected", 0x9c31_cac5_60a3_4171),
+        ("signed_compare_condition_code", 0x4e5c_8f7d_9b74_a639),
+    ] {
+        require_body_digest(networks, function, digest)?;
+    }
+    require_const_digest(executor, "CANDIDATES", 0x22b1_e37c_9a05_f100)?;
+    for (function, digest) in [
+        ("new", 0x93b8_b823_037f_bec8),
+        ("transport_width", 0x2040_ffc0_ac40_1d6b),
+        ("operation", 0x9ac2_8adf_5c72_d0b1),
+        ("format_matches_operation", 0x4ad6_bb6c_d234_da31),
+        ("execute", 0xd23f_a2ec_eb10_29a9),
+        ("execute_rr", 0x0eff_489c_cc30_d39b),
+        ("execute_rx", 0x0aca_3dbb_e40d_8499),
+        ("execute_rs", 0x5604_80ab_c44a_4da4),
+        ("execute_si", 0xc0c5_9ca1_85bf_6bdc),
+        ("execute_ss", 0xc14c_e106_eeee_a468),
+    ] {
+        require_body_digest(executor, function, digest)?;
+    }
+    for (function, digest) in [
+        ("decode_transition", 0x7de3_9596_a584_63e1),
+        ("validate_gate_transition", 0xe541_8847_1eff_e819),
+        ("validate_control_transition", 0x63cb_8bbd_bdfe_0fda),
+        ("commit_transition", 0x5fb6_3d73_0d97_42f6),
+        ("step", 0x49e8_10bf_f82d_108f),
+        ("run", 0xf70a_d777_3fa6_49be),
+        ("execute", 0x5050_4f02_0534_5e98),
+    ] {
+        require_body_digest(validator, function, digest)?;
+    }
 
     require_exact_body(
         networks,
@@ -335,693 +282,342 @@ fn verify_branch_structure(networks: &str, executor: &str, validator: &str) -> R
     )?;
     require_exact_body(
         networks,
-        "u32_to_bits",
-        "std::array::from_fn(|bit|((value>>bit)&1)as u8)",
-    )?;
-    require_exact_body(
-        networks,
-        "bits_to_u32",
-        "bits.iter().enumerate().fold(0,|value,(bit,q)|value|(u32::from(*q)<<bit))",
-    )?;
-    require_exact_body(
-        networks,
-        "select_u32",
-        "let d0=u32_to_bits(d0);
-         let d1=u32_to_bits(d1);
-         bits_to_u32(&std::array::from_fn::<_,32,_>(|bit|{mux2(d0[bit],d1[bit],select)}))",
-    )?;
-    require_exact_body(
-        networks,
-        "add_32",
-        "let a_bits=u32_to_bits(a);
-         let b_bits=u32_to_bits(b);
-         let full=ripple_carry_adder_with_carry(&a_bits,&b_bits,carry_in);
-         let low=ripple_carry_adder_with_carry(&a_bits[..31],&b_bits[..31],carry_in);
-         (bits_to_u32(&full.sum),full.carry_out,xor_gate(low.carry_out,full.carry_out),)",
-    )?;
-    require_exact_body(
-        networks,
-        "add_24",
-        "let a_bits=u32_to_bits(a);
-         let b_bits=u32_to_bits(b);
-         bits_to_u32(&ripple_carry_adder_with_carry(&a_bits[..24],&b_bits[..24],0).sum)",
-    )?;
-    require_exact_body(
-        networks,
-        "bit_not_32",
-        "bits_to_u32(&u32_to_bits(value).map(not_gate))",
-    )?;
-    require_exact_body(
-        networks,
-        "branch_selected",
-        "let condition=[condition_code&1,(condition_code>>1)&1];
-         let mask=[mask&1,(mask>>1)&1,(mask>>2)&1,(mask>>3)&1];
-         let cc_0_or_1=mux2(mask[3],mask[2],condition[0]);
-         let cc_2_or_3=mux2(mask[1],mask[0],condition[0]);
-         mux2(cc_0_or_1,cc_2_or_3,condition[1])",
-    )?;
-    require_exact_body(
-        networks,
-        "register_field_nonzero",
-        "(0..4).fold(0,|present,bit|or_gate(present,(field>>bit)&1))",
-    )?;
-    require_exact_body(networks, "nonzero_32", "not_gate(is_zero_32(value))")?;
-    require_exact_body(
-        networks,
-        "is_zero_32",
-        "not_gate(u32_to_bits(value).into_iter().fold(0,or_gate))",
-    )?;
-    require_exact_body(
-        networks,
-        "count_branch_selected",
-        "and_gate(nonzero_32(count),register_field_nonzero(target_register))",
-    )?;
-    require_exact_body(
-        networks,
         "index_branch_selected",
-        "let decode=decode_byte(opcode);
-         let low=compare_condition_code&1;
+        "let low=compare_condition_code&1;
          let high_bit=(compare_condition_code>>1)&1;
          let high=and_gate(high_bit,not_gate(low));
-         or_gate(and_gate(decode[0x86],high),and_gate(decode[0x87],not_gate(high)),)",
-    )?;
-    require_exact_body(
-        networks,
-        "signed_compare_condition_code",
-        "let a_sign=u32_to_bits(a)[31];
-         let b_sign=u32_to_bits(b)[31];
-         let signs_differ=xor_gate(a_sign,b_sign);
-         let(difference,_,_)=add_32(a,bit_not_32(b),1);
-         let same_sign_less=u32_to_bits(difference)[31];
-         let less=or_gate(and_gate(signs_differ,a_sign),and_gate(not_gate(signs_differ),same_sign_less),);
-         let equal=is_zero_32(difference);
-         let greater=and_gate(not_gate(less),not_gate(equal));
-         less|(greater<<1)",
-    )?;
-
-    require_exact_body(
-        executor,
-        "execute",
-        "let mut next=before.clone();
-         next.pc=gates::add_24(before.pc,u32::from(trace.width));
-         match trace.raw.len(){
-             2=>execute_rr(before,&mut next,&trace.raw)?,
-             4=>execute_four(before,&mut next,&trace.raw)?,
-             6=>execute_ss(before,&mut next,&trace.raw)?,
-             _=>return gate_error(\"reason\"),
-         }
-         Ok(next)",
-    )?;
-    require_exact_body(
-        executor,
-        "execute_four",
-        "match raw[0]{
-            0x91..=0x97=>execute_si(before,next,raw),
-            0x86..=0x90|0x98=>execute_rs(before,next,raw),
-            _=>execute_rx(before,next,raw),
-         }",
-    )?;
-    require_exact_opcode_match_shell(
-        executor,
-        "execute_rr",
-        "let opcode=raw[0];
-         let r1=usize::from(raw[1]>>4);
-         let r2=usize::from(raw[1]&15);
-         let a=before.gprs[r1];
-         let b=before.gprs[r2];",
-        "Ok(())",
-    )?;
-    require_exact_opcode_match_shell(
-        executor,
-        "execute_rx",
-        "let opcode=raw[0];
-         let register=usize::from(raw[1]>>4);
-         let address=effective_address_rx(raw,before)as usize;
-         let a=before.gprs[register];
-         if matches!(opcode,0x60..=0x7f){return execute_float_rx(before,next,opcode,register,address);}
-         let word=||read_be32(&before.memory,address);
-         let half=||i32::from(read_be16(&before.memory,address)as i16)as u32;",
-        "Ok(())",
-    )?;
-    require_exact_opcode_match_shell(
-        executor,
-        "execute_rs",
-        "let opcode=raw[0];
-         let r1=usize::from(raw[1]>>4);
-         let r3=usize::from(raw[1]&15);
-         let address=effective_address_base(raw,2,before)as usize;
-         let count=(address as u32)&63;
-         let source=before.gprs[r1];",
-        "Ok(())",
-    )?;
-    require_exact_opcode_match_shell(
-        validator,
-        "validate_control_transition",
-        "let opcode=trace.raw[0];let expected=",
-        ";if expected.is_some_and(|pc|next.pc!=(pc&0x00ff_ffff)){
-             return gate_disagrees(\"reason\");
-         }
-         Ok(())",
-    )?;
-    require_exact_body(
-        validator,
-        "validate_gate_transition",
-        r#"let sequential_pc=gates::add_24(before.pc,u32::from(trace.width));
-        let opcode=trace.raw[0];
-        let decode=gates::decode_byte(opcode);
-        if decode[usize::from(opcode)]!=1||decode.into_iter().map(u16::from).sum::<u16>()!=1{
-            return gate_disagrees("reason");
-        }
-        if matches!(opcode,0x10..=0x1f){
-            let r1=usize::from(trace.raw[1]>>4);
-            let r2=usize::from(trace.raw[1]&15);
-            let a=before.gprs[r1];
-            let b=before.gprs[r2];
-            let expected=match opcode{
-                0x10=>Some(if b&0x8000_0000==0{b}else{gates::negate_32(b).0}),
-                0x11=>Some(if b&0x8000_0000==0&&b!=0{gates::negate_32(b).0}else{b}),
-                0x12|0x18=>Some(b),
-                0x13=>Some(gates::negate_32(b).0),
-                0x14=>Some(gates::bit_and_32(a,b)),
-                0x16=>Some(gates::bit_or_32(a,b)),
-                0x17=>Some(gates::bit_xor_32(a,b)),
-                0x1a|0x1e=>Some(gates::add_32(a,b,0).0),
-                0x1b|0x1f=>Some(gates::add_32(a,gates::bit_not_32(b),1).0),
-                _=>None,
-            };
-            if expected.is_some_and(|value|next.gprs[r1]!=value){
-                return Err(System360Error::Specification{reason:"reason"});
-            }
-            let expected_cc=match opcode{
-                0x10..=0x13|0x1a|0x1b=>expected.map(gates::signed_condition_code),
-                0x14=>expected.map(gates::logical_condition_code),
-                0x15=>Some(gates::unsigned_compare_condition_code(a,b)),
-                0x16|0x17=>expected.map(gates::logical_condition_code),
-                0x19=>Some(gates::signed_compare_condition_code(a,b)),
-                0x1e=>expected.map(|value|{
-                    let carry=gates::add_32(a,b,0).1;
-                    (carry<<1)|gates::logical_condition_code(value)
-                }),
-                0x1f=>expected.map(|value|{
-                    let carry=gates::add_32(a,gates::bit_not_32(b),1).1;
-                    (carry<<1)|gates::logical_condition_code(value)
-                }),
-                _=>None,
-            };
-            if expected_cc.is_some_and(|condition_code|next.condition_code!=condition_code){
-                return Err(System360Error::Specification{reason:"reason"});
-            }
-            if opcode==0x1c{
-                let product=gates::multiply_signed_32(before.gprs[r1+1],b);
-                if next.gprs[r1]!=(product>>32)as u32||next.gprs[r1+1]!=product as u32{
-                    return gate_disagrees("reason");
-                }
-            }
-            if opcode==0x1d{
-                let dividend=(u64::from(before.gprs[r1])<<32)|u64::from(before.gprs[r1+1]);
-                let(remainder,quotient)=gates::divide_signed_64_by_32(dividend,b).ok_or(
-                    System360Error::Specification{reason:"reason"},
-                )?;
-                if next.gprs[r1]!=remainder||next.gprs[r1+1]!=quotient{
-                    return gate_disagrees("reason");
-                }
-            }
-        }
-        if matches!(opcode,0x20..=0x3f){
-            validate_float_rr_transition(before,next,trace)?;
-        }
-        if trace.raw.len()==4{
-            if matches!(opcode,0x91..=0x97){
-                validate_si_transition(before,next,trace)?;
-            }else if matches!(opcode,0x86..=0x90|0x98){
-                validate_rs_transition(before,next,trace)?;
-            }else{
-                validate_rx_transition(before,next,trace)?;
-            }
-        }else if trace.raw.len()==6{
-            validate_ss_transition(before,next,trace)?;
-        }
-        validate_control_transition(before,next,trace,sequential_pc)?;
-        if !matches!(opcode,0x05..=0x07|0x45..=0x47|0x86|0x87)&&next.pc!=sequential_pc{
-            return Err(System360Error::Specification{reason:"reason"});
-        }
-        Ok(())"#,
+         or_gate(and_gate(bxh_select,high),and_gate(bxle_select,not_gate(high)),)",
     )?;
     require_exact_body(
         validator,
         "step",
         r#"let before=self.get_state();
+        let(authority,fetched)=decode_transition(&before)?;
         let mut transition=System360Simulator::new();
         transition.restore(before.clone())?;
         let trace=transition.step()?;
         let oracle_next=transition.get_state();
-        let gate_next=executor::execute(&before,&trace)?;
-        validate_gate_transition(&before,&gate_next,&trace)?;
-        if gate_next!=oracle_next{
-            return Err(System360Error::Specification{reason:"reason"});
+        if trace.raw!=fetched||usize::from(trace.width)!=fetched.len(){
+            return Err(System360Error::Specification{reason:"reason",});
         }
+        let gate_next=executor::execute(&before,&trace,&authority)?;
+        validate_gate_transition(&before,&gate_next,&trace,&authority)?;
+        if gate_next!=oracle_next{return Err(System360Error::Specification{reason:"reason",});}
         self.commit_transition(&gate_next);
         Ok(trace)"#,
     )?;
-    require_exact_body(
-        validator,
-        "run",
-        r#"let before=self.get_state();
-        let mut traces=Vec::new();
-        for _ in 0..max_steps{
-            match self.step(){
-                Ok(trace)=>{
-                    traces.push(trace);
-                    if self.halted!=0{
-                        return Ok(ExecutionResult{
-                            halted:true,
-                            steps:traces.len(),
-                            final_state:self.get_state(),
-                            traces,
-                        });
-                    }
-                }
-                Err(error)=>{
-                    self.restore_validated(&before);
-                    return Err(error);
-                }
-            }
-        }
-        self.restore_validated(&before);
-        Err(System360Error::MaxStepsExceeded{max_steps})"#,
-    )?;
-    require_exact_body(
-        validator,
-        "execute",
-        "self.load(program,origin)?;self.run(max_steps)",
-    )?;
 
-    require_exact_arm(
-        executor,
-        "execute_rr",
-        "0x05",
-        "{next.gprs[r1]=next.pc;next.pc=gates::select_u32(next.pc,b&ADDRESS_MASK,gates::register_field_nonzero(r2 as u8));}",
-    )?;
-    require_exact_arm(
-        executor,
-        "execute_rr",
-        "0x06",
-        "{let value=gates::add_32(a,u32::MAX,0).0;next.gprs[r1]=value;next.pc=gates::select_u32(next.pc,b&ADDRESS_MASK,gates::count_branch_selected(value,r2 as u8));}",
-    )?;
-    require_exact_arm(
-        executor,
-        "execute_rr",
-        "0x07",
-        "{next.pc=gates::select_u32(next.pc,b&ADDRESS_MASK,gates::branch_selected(r1 as u8,before.condition_code));}",
-    )?;
-    require_exact_arm(
-        executor,
-        "execute_rx",
-        "0x46",
-        "{let decremented=gates::add_32(a,u32::MAX,0).0;next.gprs[register]=decremented;next.pc=gates::select_u32(next.pc,address as u32,gates::nonzero_32(decremented));}",
-    )?;
-    require_exact_arm(
-        executor,
-        "execute_rx",
-        "0x47",
-        "{next.pc=gates::select_u32(next.pc,address as u32,gates::branch_selected(register as u8,before.condition_code));}",
-    )?;
-    require_exact_arm(
-        executor,
-        "execute_rs",
-        "0x86|0x87",
-        "{let compare=if r3.is_multiple_of(2){r3+1}else{r3};let incremented=gates::add_32(source,before.gprs[r3],0).0;next.gprs[r1]=incremented;let comparison=gates::signed_compare_condition_code(incremented,before.gprs[compare]);next.pc=gates::select_u32(next.pc,address as u32,gates::index_branch_selected(opcode,comparison));}",
-    )?;
+    let executor_tokens = rust_tokens(executor);
+    let validator_tokens = rust_tokens(validator);
+    let network_tokens = rust_tokens(networks);
+    if !contains(
+        &executor_tokens,
+        "use crate::{gates,hfp::GateHfp,StepTrace,System360Error,System360State}",
+    ) {
+        return Err("executor does not bind the reviewed gate module".to_owned());
+    }
+    let decode_mentions = [&executor_tokens, &validator_tokens, &network_tokens]
+        .into_iter()
+        .map(|tokens| {
+            tokens
+                .windows(2)
+                .filter(|pair| pair[0] == "decode_byte" && pair[1] == "(")
+                .count()
+        })
+        .sum::<usize>();
+    if decode_mentions != 2 {
+        return Err(format!(
+            "expected one decode definition and one transition-boundary call, found {decode_mentions}"
+        ));
+    }
+    if !contains(&executor_tokens, "let lines=gates::decode_byte(opcode)")
+        || !contains(&executor_tokens, "gate_cardinality(&formats)")
+        || !contains(&executor_tokens, "legal_multiple=or_gate")
+        || !contains(&executor_tokens, "let operation=authority.operation()")
+        || !contains(&executor_tokens, "match operation")
+    {
+        return Err("decode-to-operation authority chain changed".to_owned());
+    }
+    if contains(&executor_tokens, "raw[0]")
+        || contains(&executor_tokens, "trace.raw[0]")
+        || contains(&validator_tokens, "match opcode")
+        || contains(&validator_tokens, "matches!(opcode")
+    {
+        return Err("raw opcode control escaped the transition decoder".to_owned());
+    }
+    let execute_body = function_body(&executor_tokens, "execute")?;
+    let authorization = execute_body
+        .windows(5)
+        .position(|window| window == rust_tokens("authority.operation()").as_slice())
+        .ok_or_else(|| "executor does not obtain the authorized operation".to_owned())?;
+    let first_storage = ["before.memory[", "next.memory["]
+        .into_iter()
+        .filter_map(|pattern| {
+            let pattern = rust_tokens(pattern);
+            execute_body
+                .windows(pattern.len())
+                .position(|window| window == pattern.as_slice())
+        })
+        .min();
+    if first_storage.is_some_and(|storage| storage < authorization) {
+        return Err("storage is observed before operation authorization".to_owned());
+    }
+    if !execute_body.ends_with(&rust_tokens("Ok(next)")) {
+        return Err("executor has control after the selected operation result".to_owned());
+    }
 
-    require_exact_arm(
-        validator,
-        "validate_control_transition",
-        "0x05",
-        "{let r1=usize::from(trace.raw[1]>>4);let r2=usize::from(trace.raw[1]&15);if next.gprs[r1]!=sequential_pc{return gate_disagrees(\"reason\");}Some(gates::select_u32(sequential_pc,before.gprs[r2]&0x00ff_ffff,gates::register_field_nonzero(r2 as u8)))}",
-    )?;
-    require_exact_arm(
-        validator,
-        "validate_control_transition",
-        "0x06",
-        "{let r1=usize::from(trace.raw[1]>>4);let r2=usize::from(trace.raw[1]&15);let decremented=gates::add_32(before.gprs[r1],u32::MAX,0).0;if next.gprs[r1]!=decremented{return gate_disagrees(\"reason\");}Some(gates::select_u32(sequential_pc,before.gprs[r2]&0x00ff_ffff,gates::count_branch_selected(decremented,r2 as u8)))}",
-    )?;
-    require_exact_arm(
-        validator,
-        "validate_control_transition",
-        "0x07",
-        "{let mask=trace.raw[1]>>4;let r2=usize::from(trace.raw[1]&15);Some(gates::select_u32(sequential_pc,before.gprs[r2]&0x00ff_ffff,gates::branch_selected(mask,before.condition_code)))}",
-    )?;
-    require_exact_arm(
-        validator,
-        "validate_control_transition",
-        "0x45..=0x47",
-        "{let r1=usize::from(trace.raw[1]>>4);let target=gate_ea_rx(&trace.raw,before);let select=match opcode{
-            0x45=>{if next.gprs[r1]!=sequential_pc{return gate_disagrees(\"reason\");}1}
-            0x46=>{let decremented=gates::add_32(before.gprs[r1],u32::MAX,0).0;if next.gprs[r1]!=decremented{return gate_disagrees(\"reason\");}gates::nonzero_32(decremented)}
-            0x47=>gates::branch_selected(r1 as u8,before.condition_code),
-            _=>unreachable!(),
-         };Some(gates::select_u32(sequential_pc,target,select))}",
-    )?;
-    require_exact_arm(
-        validator,
-        "validate_control_transition",
-        "0x86|0x87",
-        "{let r1=usize::from(trace.raw[1]>>4);let r3=usize::from(trace.raw[1]&15);let compare=if r3.is_multiple_of(2){r3+1}else{r3};let incremented=gates::add_32(before.gprs[r1],before.gprs[r3],0).0;let comparison=gates::signed_compare_condition_code(incremented,before.gprs[compare]);Some(gates::select_u32(sequential_pc,gate_ea_base(&trace.raw,2,before),gates::index_branch_selected(opcode,comparison)))}",
-    )?;
+    let lines = candidate_lines(&executor_tokens)?;
+    let mut unique = lines.clone();
+    unique.sort_unstable();
+    unique.dedup();
+    if lines.len() != 104 || unique.len() != lines.len() {
+        return Err(format!(
+            "candidate table must contain 104 unique legal lines, found {} / {} unique",
+            lines.len(),
+            unique.len()
+        ));
+    }
     Ok(())
+}
+
+fn replace_once(source: &str, anchor: &str, replacement: &str) -> String {
+    assert_eq!(
+        source.matches(anchor).count(),
+        1,
+        "mutation anchor: {anchor}"
+    );
+    source.replacen(anchor, replacement, 1)
+}
+
+static MUTANT_ID: AtomicUsize = AtomicUsize::new(0);
+
+struct MutantCrate(PathBuf);
+
+impl Drop for MutantCrate {
+    fn drop(&mut self) {
+        let _ = fs::remove_dir_all(&self.0);
+    }
+}
+
+fn toml_path(path: &Path) -> String {
+    path.display().to_string().replace('\\', "\\\\")
+}
+
+fn mutant_target() -> PathBuf {
+    std::env::temp_dir().join(format!(
+        "system360-authority-mutant-target-{}",
+        std::process::id()
+    ))
+}
+
+fn compile_mutant(executor: &str, validator: &str) {
+    let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let rust_packages = manifest_dir.parent().expect("Rust package parent");
+    let id = MUTANT_ID.fetch_add(1, Ordering::Relaxed);
+    let root = std::env::temp_dir().join(format!(
+        "system360-authority-mutant-{}-{id}",
+        std::process::id()
+    ));
+    let guard = MutantCrate(root.clone());
+    fs::create_dir_all(root.join("src")).expect("create mutant source directory");
+    let manifest = format!(
+        r#"[package]
+name = "system360-authority-mutant-{id}"
+version = "0.0.0"
+edition = "2021"
+
+[dependencies]
+arithmetic = {{ path = "{}" }}
+logic-gates = {{ path = "{}" }}
+ibm-system360-simulator = {{ path = "{}" }}
+"#,
+        toml_path(&rust_packages.join("arithmetic")),
+        toml_path(&rust_packages.join("logic-gates")),
+        toml_path(&rust_packages.join("ibm-system360-simulator")),
+    );
+    fs::write(root.join("Cargo.toml"), manifest).expect("write mutant manifest");
+    for file in ["gates.rs", "hfp.rs", "state.rs"] {
+        fs::copy(
+            manifest_dir.join("src").join(file),
+            root.join("src").join(file),
+        )
+        .expect("copy production source");
+    }
+    fs::write(root.join("src/executor.rs"), executor).expect("write mutant executor");
+    fs::write(root.join("src/lib.rs"), validator).expect("write mutant validator");
+    let output = Command::new(std::env::var_os("CARGO").unwrap_or_else(|| "cargo".into()))
+        .args(["check", "--quiet", "--manifest-path"])
+        .arg(root.join("Cargo.toml"))
+        .env("CARGO_TARGET_DIR", mutant_target())
+        .output()
+        .expect("run cargo check for hostile mutant");
+    assert!(
+        output.status.success(),
+        "hostile mutation must compile before the verifier rejects it:\n{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    drop(guard);
+}
+
+fn assert_executor_mutant_rejected(networks: &str, executor: &str, validator: &str) {
+    compile_mutant(executor, validator);
+    assert!(verify_decode_authority(networks, executor, validator).is_err());
+}
+
+fn assert_validator_mutant_rejected(networks: &str, executor: &str, validator: &str) {
+    compile_mutant(executor, validator);
+    assert!(verify_decode_authority(networks, executor, validator).is_err());
 }
 
 #[test]
 fn branch_predicates_cover_every_selector_wire_and_boundary() {
     for mask in 0_u8..16 {
         for condition_code in 0_u8..4 {
-            let expected = u8::from(mask & (8 >> condition_code) != 0);
             assert_eq!(
                 gates::branch_selected(mask, condition_code),
-                expected,
-                "mask={mask:#06b} cc={condition_code}"
+                u8::from(mask & (8 >> condition_code) != 0)
             );
         }
     }
-
     for target_register in 0_u8..16 {
-        let target_present = u8::from(target_register != 0);
-        assert_eq!(
-            gates::register_field_nonzero(target_register),
-            target_present
-        );
         for count in [0, 1, 2, u32::MAX, 0x8000_0000] {
             assert_eq!(
                 gates::count_branch_selected(count, target_register),
-                u8::from(count != 0 && target_register != 0),
-                "count={count:#010x} target=r{target_register}"
+                u8::from(count != 0 && target_register != 0)
             );
         }
     }
-
-    assert_eq!(gates::nonzero_32(0), 0);
-    for bit in 0..32 {
-        assert_eq!(gates::nonzero_32(1_u32 << bit), 1, "count wire {bit}");
-    }
-
-    for opcode in [0x86, 0x87] {
-        for comparison in 0_u8..4 {
-            let expected = u8::from(if opcode == 0x86 {
-                comparison == 2
-            } else {
-                comparison != 2
-            });
-            assert_eq!(
-                gates::index_branch_selected(opcode, comparison),
-                expected,
-                "opcode={opcode:#04x} comparison={comparison}"
-            );
-        }
-    }
-    assert_eq!(gates::index_branch_selected(0xff, 2), 0);
-}
-
-#[test]
-fn production_branch_paths_do_not_reconstruct_gate_predicates_on_the_host() {
-    let networks = include_str!("../src/gates.rs");
-    let executor = include_str!("../src/executor.rs");
-    let validator = include_str!("../src/lib.rs");
-    verify_branch_structure(networks, executor, validator)
-        .expect("production branch data flow must match the approved gate structure");
-}
-
-#[test]
-fn structural_verifier_rejects_adversarial_host_shortcuts_and_dead_anchors() {
-    let networks = include_str!("../src/gates.rs");
-    let executor = include_str!("../src/executor.rs");
-    let validator = include_str!("../src/lib.rs");
-
-    let alternate_host_predicate = executor.replacen(
-        "gates::nonzero_32(decremented)",
-        "u8::from(decremented > 0)",
-        1,
-    );
-    assert!(verify_branch_structure(networks, &alternate_host_predicate, validator).is_err());
-
-    let indirect_helper = executor.replacen(
-        "gates::nonzero_32(decremented)",
-        "branch_via_helper(decremented)",
-        1,
-    )
-        + "\nfn branch_via_helper(value: u32) -> u8 { gates::nonzero_32(value) }\n";
-    assert!(verify_branch_structure(networks, &indirect_helper, validator).is_err());
-
-    let comment_anchor = executor.replacen(
-        "gates::nonzero_32(decremented)",
-        "u8::from(decremented != 0) /* gates::nonzero_32(decremented) */",
-        1,
-    );
-    assert!(verify_branch_structure(networks, &comment_anchor, validator).is_err());
-
-    let dead_anchor = executor.replacen(
-        "gates::nonzero_32(decremented)",
-        "{ if false { let _ = gates::nonzero_32(decremented); } u8::from(decremented != 0) }",
-        1,
-    );
-    assert!(verify_branch_structure(networks, &dead_anchor, validator).is_err());
-
-    let shadowed_primitives = networks.replacen(
-        "use logic_gates::combinational::mux2;",
-        "use fake_gates::mux2;",
-        1,
-    );
-    assert!(verify_branch_structure(&shadowed_primitives, executor, validator).is_err());
-
-    let shadowed_helpers = executor.replacen(
-        "use crate::{gates, hfp::GateHfp, StepTrace, System360Error, System360State};",
-        "use fake_gates as gates;\nuse crate::{hfp::GateHfp, StepTrace, System360Error, System360State};",
-        1,
-    );
-    assert!(verify_branch_structure(networks, &shadowed_helpers, validator).is_err());
-
-    let host_select_with_dead_anchor = networks.replacen(
-        "bits_to_u32(&std::array::from_fn::<_, 32, _>(|bit| {\n        mux2(d0[bit], d1[bit], select)\n    }))",
-        "{ if false { let _ = mux2(d0[0], d1[0], select); } if select != 0 { d1 } else { d0 } }",
-        1,
-    );
-    assert!(verify_branch_structure(&host_select_with_dead_anchor, executor, validator).is_err());
-
-    let host_bit_expansion = networks.replacen(
-        "std::array::from_fn(|bit| ((value >> bit) & 1) as u8)",
-        "std::array::from_fn(|bit| u8::from(value & (1 << bit) != 0))",
-        1,
-    );
-    assert!(verify_branch_structure(&host_bit_expansion, executor, validator).is_err());
-
-    let host_add_with_dead_anchor = networks.replacen(
-        "let full = ripple_carry_adder_with_carry(&a_bits, &b_bits, carry_in);\n    let low = ripple_carry_adder_with_carry(&a_bits[..31], &b_bits[..31], carry_in);\n    (\n        bits_to_u32(&full.sum),",
-        "let full = ripple_carry_adder_with_carry(&a_bits, &b_bits, carry_in);\n    let low = ripple_carry_adder_with_carry(&a_bits[..31], &b_bits[..31], carry_in);\n    if false { let _ = bits_to_u32(&full.sum); }\n    (\n        a.wrapping_add(b).wrapping_add(u32::from(carry_in)),",
-        1,
-    );
-    assert!(verify_branch_structure(&host_add_with_dead_anchor, executor, validator).is_err());
-
-    let host_signed_compare = networks.replacen(
-        "let a_sign = u32_to_bits(a)[31];",
-        "if false { let _ = u32_to_bits(a)[31]; }\n    let a_sign = u8::from((a as i32) < (b as i32));",
-        1,
-    );
-    assert!(verify_branch_structure(&host_signed_compare, executor, validator).is_err());
-
-    let post_dispatch_overwrite = executor.replacen(
-        "    Ok(next)\n}",
-        "    if false { let _ = gates::select_u32(next.pc, next.pc, 0); }\n    next.pc = before.pc;\n    Ok(next)\n}",
-        1,
-    );
-    assert!(verify_branch_structure(networks, &post_dispatch_overwrite, validator).is_err());
-
-    let rr_post_match_overwrite = executor.replacen(
-        "    Ok(())\n}\n\nfn execute_four",
-        "    next.pc = before.pc;\n    Ok(())\n}\n\nfn execute_four",
-        1,
-    );
-    assert!(verify_branch_structure(networks, &rr_post_match_overwrite, validator).is_err());
-
-    let rx_post_match_overwrite = executor.replacen(
-        "    Ok(())\n}\n\nfn execute_rs",
-        "    next.pc = before.pc;\n    Ok(())\n}\n\nfn execute_rs",
-        1,
-    );
-    assert!(verify_branch_structure(networks, &rx_post_match_overwrite, validator).is_err());
-
-    let rs_post_match_overwrite = executor.replacen(
-        "    Ok(())\n}\n\nfn execute_si",
-        "    next.pc = before.pc;\n    Ok(())\n}\n\nfn execute_si",
-        1,
-    );
-    assert!(verify_branch_structure(networks, &rs_post_match_overwrite, validator).is_err());
-
-    let dead_four_byte_dispatch = executor.replacen(
-        "    match raw[0] {",
-        "    if false { return match raw[0] {",
-        1,
-    )
-        .replacen(
-            "        _ => execute_rx(before, next, raw),\n    }\n}\n\nfn execute_rx",
-            "        _ => execute_rx(before, next, raw),\n        }; }\n    Ok(())\n}\n\nfn execute_rx",
-            1,
+    for comparison in 0_u8..4 {
+        assert_eq!(
+            gates::index_branch_selected(1, 0, comparison),
+            u8::from(comparison == 2)
         );
-    assert!(verify_branch_structure(networks, &dead_four_byte_dispatch, validator).is_err());
+        assert_eq!(
+            gates::index_branch_selected(0, 1, comparison),
+            u8::from(comparison != 2)
+        );
+    }
+    assert_eq!(gates::index_branch_selected(0, 0, 2), 0);
+}
 
-    let shadowed_expected = validator.replacen(
-        "        _ => None,\n    };\n    if expected.is_some_and(|pc| next.pc != (pc & 0x00ff_ffff)) {",
-        "        _ => None,\n    };\n    let expected: Option<u32> = None;\n    if expected.is_some_and(|pc| next.pc != (pc & 0x00ff_ffff)) {",
-        1,
+#[test]
+fn production_decode_and_dispatch_match_the_reviewed_authority_chain() {
+    verify_decode_authority(
+        include_str!("../src/gates.rs"),
+        include_str!("../src/executor.rs"),
+        include_str!("../src/lib.rs"),
+    )
+    .expect("production decode authority must match the reviewed structure");
+}
+
+#[test]
+fn compile_checked_hostile_dispatch_shapes_are_rejected() {
+    let _target_guard = MutantCrate(mutant_target());
+    let networks = include_str!("../src/gates.rs");
+    let executor = include_str!("../src/executor.rs");
+    let validator = include_str!("../src/lib.rs");
+
+    let raw_match = replace_once(
+        executor,
+        "let operation = authority.operation().ok_or(System360Error::Specification {",
+        "let operation = match trace.raw[0] { _ => authority.operation() }.ok_or(System360Error::Specification {",
     );
-    assert!(verify_branch_structure(networks, executor, &shadowed_expected).is_err());
+    assert_executor_mutant_rejected(networks, &raw_match, validator);
 
-    let dead_validator_dispatch = validator.replacen(
-        "    validate_control_transition(before, next, trace, sequential_pc)?;",
-        "    if false { validate_control_transition(before, next, trace, sequential_pc)?; }",
-        1,
+    let raw_range = replace_once(
+        executor,
+        "let operation = authority.operation().ok_or(System360Error::Specification {",
+        "let operation = if (0x40..=0x7f).contains(&trace.raw[0]) { authority.operation() } else { authority.operation() }.ok_or(System360Error::Specification {",
     );
-    assert!(verify_branch_structure(networks, executor, &dead_validator_dispatch).is_err());
+    assert_executor_mutant_rejected(networks, &raw_range, validator);
 
-    let oracle_as_gate_result = validator.replacen(
-        "let gate_next = executor::execute(&before, &trace)?;",
+    let raw_equality = replace_once(
+        executor,
+        "let operation = authority.operation().ok_or(System360Error::Specification {",
+        "let operation = if trace.raw[0] == 0x05 { authority.operation() } else { authority.operation() }.ok_or(System360Error::Specification {",
+    );
+    assert_executor_mutant_rejected(networks, &raw_equality, validator);
+
+    let helper_indirection = replace_once(
+        executor,
+        "pub(crate) fn execute(\n",
+        "fn operation_from_trace(trace: &StepTrace, authority: &DecodeAuthority) -> Option<Operation> { let _ = trace.raw.first(); authority.operation() }\npub(crate) fn execute(\n",
+    );
+    let helper_indirection = replace_once(
+        &helper_indirection,
+        "let operation = authority.operation().ok_or(System360Error::Specification {",
+        "let operation = operation_from_trace(trace, authority).ok_or(System360Error::Specification {",
+    );
+    assert_executor_mutant_rejected(networks, &helper_indirection, validator);
+
+    let duplicate_decode = replace_once(
+        executor,
+        "let lines = gates::decode_byte(opcode);",
+        "let lines = gates::decode_byte(opcode); let _duplicate = gates::decode_byte(opcode);",
+    );
+    assert_executor_mutant_rejected(networks, &duplicate_decode, validator);
+
+    let dead_decode = replace_once(
+        executor,
+        "let lines = gates::decode_byte(opcode);",
+        "if false { let _ = gates::decode_byte(opcode); } let lines = [0; 256];",
+    );
+    assert_executor_mutant_rejected(networks, &dead_decode, validator);
+
+    let secondary_decode = replace_once(
+        executor,
+        "let operation = authority.operation().ok_or(System360Error::Specification {",
+        "let _secondary = gates::decode_byte(trace.raw[0]); let operation = authority.operation().ok_or(System360Error::Specification {",
+    );
+    assert_executor_mutant_rejected(networks, &secondary_decode, validator);
+
+    let inactive_access = replace_once(
+        executor,
+        "let operation = authority.operation().ok_or(System360Error::Specification {",
+        "let _inactive = before.memory[0]; let operation = authority.operation().ok_or(System360Error::Specification {",
+    );
+    assert_executor_mutant_rejected(networks, &inactive_access, validator);
+
+    let shadow = replace_once(
+        executor,
+        "use crate::{gates, hfp::GateHfp, StepTrace, System360Error, System360State};",
+        "mod fake_gates { pub(crate) use crate::gates::*; } use fake_gates as gates; use crate::{hfp::GateHfp, StepTrace, System360Error, System360State};",
+    );
+    assert_executor_mutant_rejected(networks, &shadow, validator);
+
+    let post_authorization_overwrite = replace_once(
+        executor,
+        "if authority.transport_width() != Some(trace.raw.len())",
+        "let operation = if trace.raw.first().copied() == Some(0x05) { Operation::Balr } else { operation }; if authority.transport_width() != Some(trace.raw.len())",
+    );
+    assert_executor_mutant_rejected(networks, &post_authorization_overwrite, validator);
+
+    let oracle_dispatch = replace_once(
+        validator,
+        "let gate_next = executor::execute(&before, &trace, &authority)?;",
         "let gate_next = oracle_next.clone();",
-        1,
     );
-    assert!(verify_branch_structure(networks, executor, &oracle_as_gate_result).is_err());
+    assert_validator_mutant_rejected(networks, executor, &oracle_dispatch);
 
-    let oracle_commit = validator.replacen(
+    let post_overwrite = replace_once(
+        validator,
         "self.commit_transition(&gate_next);",
         "self.commit_transition(&oracle_next);",
-        1,
     );
-    assert!(verify_branch_structure(networks, executor, &oracle_commit).is_err());
-
-    let bypassed_run_step = validator.replacen(
-        "match self.step() {",
-        "match System360Simulator::new().step() {",
-        1,
-    );
-    assert!(verify_branch_structure(networks, executor, &bypassed_run_step).is_err());
-
-    let bypassed_execute = validator.replacen(
-        "self.run(max_steps)",
-        "System360Simulator::new().execute(program, origin, max_steps)",
-        1,
-    );
-    assert!(verify_branch_structure(networks, executor, &bypassed_execute).is_err());
-
-    let inline_oracle_executor = validator.replacen(
-        "mod executor;",
-        r#"#[path = "executor.rs"]
-mod gate_executor;
-mod executor {
-    use super::{StepTrace, System360Error, System360Simulator, System360State};
-
-    pub(crate) fn execute(
-        before: &System360State,
-        _trace: &StepTrace,
-    ) -> Result<System360State, System360Error> {
-        let mut oracle = System360Simulator::new();
-        oracle.restore(before.clone())?;
-        let _ = oracle.step()?;
-        Ok(oracle.get_state())
-    }
-}"#,
-        1,
-    );
-    assert!(verify_branch_structure(networks, executor, &inline_oracle_executor).is_err());
-
-    let attributed_executor = validator.replacen(
-        "mod executor;",
-        "#[path = \"executor.rs\"]\nmod executor;",
-        1,
-    );
-    assert!(verify_branch_structure(networks, executor, &attributed_executor).is_err());
-
-    let aliased_executor = validator.replacen(
-        "mod executor;",
-        "#[path = \"executor.rs\"]\nmod routed_executor;\nuse routed_executor as executor;",
-        1,
-    );
-    assert!(verify_branch_structure(networks, executor, &aliased_executor).is_err());
-
-    let macro_generated_oracle_executor = validator.replacen(
-        "mod executor;",
-        r#"macro_rules! discard_routing_items {
-    ($($discarded:item)*) => {};
+    assert_validator_mutant_rejected(networks, executor, &post_overwrite);
 }
-discard_routing_items! {
-    type RoutingSeparator = ();
-    mod executor;
-}
-macro_rules! define_oracle_executor {
-    ($name:ident) => {
-        mod $name {
-            use super::{StepTrace, System360Error, System360Simulator, System360State};
 
-            pub(crate) fn execute(
-                before: &System360State,
-                _trace: &StepTrace,
-            ) -> Result<System360State, System360Error> {
-                let mut oracle = System360Simulator::new();
-                oracle.restore(before.clone())?;
-                let _ = oracle.step()?;
-                Ok(oracle.get_state())
-            }
-        }
-    };
-}
-define_oracle_executor!(executor);"#,
-        1,
-    );
-    assert!(verify_branch_structure(networks, executor, &macro_generated_oracle_executor).is_err());
-
-    let character_literal_depth_confuser = validator.replacen(
-        "mod executor;",
-        r#"macro_rules! discard_routing_items {
-    ($($discarded:item)*) => {};
-}
-discard_routing_items! {
-    const SYNTHETIC_CLOSING_DELIMITER: char = '}';
-    mod executor;
-}
-macro_rules! define_oracle_executor {
-    ($name:ident) => {
-        mod $name {
-            use super::{StepTrace, System360Error, System360Simulator, System360State};
-
-            pub(crate) fn execute(
-                before: &System360State,
-                _trace: &StepTrace,
-            ) -> Result<System360State, System360Error> {
-                let mut oracle = System360Simulator::new();
-                oracle.restore(before.clone())?;
-                let _ = oracle.step()?;
-                Ok(oracle.get_state())
-            }
-        }
-    };
-}
-define_oracle_executor!(executor);"#,
-        1,
-    );
-    assert!(
-        verify_branch_structure(networks, executor, &character_literal_depth_confuser).is_err()
-    );
-
-    let macro_generated_gates = validator.replacen(
-        "pub mod gates;",
-        r#"macro_rules! discard_gate_items {
-    ($($discarded:item)*) => {};
-}
-discard_gate_items! {
-    type GateRoutingSeparator = ();
-    pub mod gates;
-}
-macro_rules! define_gate_module {
-    ($name:ident) => { pub mod $name {} };
-}
-define_gate_module!(gates);"#,
-        1,
-    );
-    assert!(verify_branch_structure(networks, executor, &macro_generated_gates).is_err());
+#[test]
+fn inactive_storage_candidates_are_not_evaluated() {
+    let mut simulator = System360GateLevel::new();
+    simulator
+        .load(&[0x41, 0x00, 0x1f, 0xff], 0)
+        .expect("load LA");
+    simulator
+        .write_gpr(1, 0x00ff_f000)
+        .expect("install high base");
+    simulator
+        .step()
+        .expect("LA must not evaluate storage candidates");
+    assert_eq!(simulator.read_gpr(0).expect("read R0"), 0x00ff_ffff);
 }

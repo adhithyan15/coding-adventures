@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:37eb0796f88f89a5",
+  "lessonIds": [
+    "JA-C506-kyougi",
+    "JA-C506-senshuken",
+    "JA-C506-shouri",
+    "JA-C506-haiboku",
+    "JA-C506-makasu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch506.txt",
+  "json": "japanese/narration/ch506.json",
+  "textHash": "fnv1a64:c4fe3211f99543c8",
+  "jsonHash": "fnv1a64:e624ecf68ba020d2",
+  "findings": []
+}

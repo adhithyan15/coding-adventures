@@ -2949,6 +2949,22 @@ pub fn lower_iir_to_beam(
                 // VM-LOOP-24: `real_to_int_floor` joins this arm — confirmed
                 // a guard BIF (`{gc_bif,floor,...}`) by real `erlc -S`
                 // disassembly, exactly like `float`/`trunc` above it.
+                //
+                // `trunc/1` and `floor/1` return an *exact* Erlang integer,
+                // a bignum when the real is ≥ 2⁶³ in magnitude (`trunc(1.0e30)`
+                // is 10³⁰). So a narrowing then range-checks the result like
+                // the PR4 overflow-checked ops, raising LANG83's typed
+                // `Trap.ConvRange` instead of `Trap.Overflow`:
+                //
+                //   gc_bif1 trunc|floor r -> rd
+                //   is_lt {f,LO_OK} rd MIN ; <erlang:error('Trap.ConvRange')>
+                // LO_OK:
+                //   is_lt {f,DONE} MAX rd  ; <erlang:error('Trap.ConvRange')>
+                // DONE:
+                //
+                // An Erlang float is always finite and `validate_for_beam`
+                // refuses a non-finite constant, so NaN and ±∞ — the other
+                // two failures on IEEE backends — cannot reach this op.
                 "int_to_real" | "real_to_int_trunc" | "real_to_int_floor" => {
                     let import_idx = match instr.op.as_str() {
                         "int_to_real" => import_float,
@@ -2971,6 +2987,28 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::x(r),
                         BEAMOperand::x(rd),
                     ]));
+                    if instr.op != "int_to_real" {
+                        use interpreter_ir::exception_kind::TRAP_CONV_RANGE;
+                        let l_lo_ok = alloc_synth_label!("narrowing range labels");
+                        let l_done = alloc_synth_label!("narrowing range labels");
+                        let conv_range_atom = atoms.intern(TRAP_CONV_RANGE);
+                        let raise = || [
+                            BEAMInstruction::new(OP_MOVE, vec![BEAMOperand::a(conv_range_atom), BEAMOperand::x(0)]),
+                            BEAMInstruction::new(OP_CALL_EXT, vec![
+                                BEAMOperand::u(1), BEAMOperand::u(import_error as u64),
+                            ]),
+                        ];
+                        instrs.push(BEAMInstruction::new(OP_IS_LT, vec![
+                            BEAMOperand::f(l_lo_ok), BEAMOperand::x(rd), BEAMOperand::i(i64::MIN as u64),
+                        ]));
+                        instrs.extend(raise());
+                        instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(l_lo_ok as u64)]));
+                        instrs.push(BEAMInstruction::new(OP_IS_LT, vec![
+                            BEAMOperand::f(l_done), BEAMOperand::i(i64::MAX as u64), BEAMOperand::x(rd),
+                        ]));
+                        instrs.extend(raise());
+                        instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(l_done as u64)]));
+                    }
                 }
 
                 // ── f64_pow → math:pow/2 (BEAM03 continuation) ──────────────

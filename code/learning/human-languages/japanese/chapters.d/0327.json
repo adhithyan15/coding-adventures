@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "Good Manners",
+  "label": "ch:ja-good-manners",
+  "canDo": "I can say what good manners are and why they matter.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C327-ojigi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can say what good manners are and why they matter.",
+    "assesses": [
+      "JA-LEX-C327-REIGI327-03",
+      "JA-LEX-C327-REIGI327-04",
+      "JA-LEX-C327-REIGI327-05"
+    ]
+  }
+}

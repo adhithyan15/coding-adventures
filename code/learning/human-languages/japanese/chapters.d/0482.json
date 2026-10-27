@@ -1,0 +1,19 @@
+{
+  "chapter": 482,
+  "title": "Nails, Saws and Wire",
+  "label": "ch:ja-nails-saws-and-wire",
+  "canDo": "I can name the things a carpenter uses.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C482-sasaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can name the things a carpenter uses.",
+    "assesses": [
+      "JA-LEX-C482-NAIL482-03",
+      "JA-LEX-C482-NAIL482-04",
+      "JA-LEX-C482-NAIL482-05"
+    ]
+  }
+}

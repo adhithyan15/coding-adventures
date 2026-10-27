@@ -1,0 +1,11 @@
+{
+  "id": "JA-C495-shinsen",
+  "pathSegment": "JA-PATH-495-SMELL495",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-495-SMELL495",
+      "order": 3
+    }
+  ]
+}

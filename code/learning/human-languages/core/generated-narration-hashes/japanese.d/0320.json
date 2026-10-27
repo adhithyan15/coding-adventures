@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:400ce8cbf4041d7b",
+  "lessonIds": [
+    "JA-C320-tachiba",
+    "JA-C320-gimon",
+    "JA-C320-shuchou-suru",
+    "JA-C320-rikai-suru",
+    "JA-C320-tokuni"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch320.txt",
+  "json": "japanese/narration/ch320.json",
+  "textHash": "fnv1a64:35e280393aea8ed8",
+  "jsonHash": "fnv1a64:b1ffaeeaf189cc19",
+  "findings": []
+}

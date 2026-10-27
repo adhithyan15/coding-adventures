@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-375-SHUUDEN375",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say when the first and last trains run.",
+  "prerequisites": []
+}

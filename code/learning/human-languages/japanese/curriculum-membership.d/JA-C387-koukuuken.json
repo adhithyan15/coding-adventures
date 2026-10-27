@@ -1,0 +1,11 @@
+{
+  "id": "JA-C387-koukuuken",
+  "pathSegment": "JA-PATH-387-DEMUKAERU387",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-387-DEMUKAERU387",
+      "order": 3
+    }
+  ]
+}

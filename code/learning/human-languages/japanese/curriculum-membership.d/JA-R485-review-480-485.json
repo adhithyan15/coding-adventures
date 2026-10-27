@@ -1,0 +1,11 @@
+{
+  "id": "JA-R485-review-480-485",
+  "pathSegment": "JA-PATH-485-CLOTH485",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-485-CLOTH485",
+      "order": 5
+    }
+  ]
+}

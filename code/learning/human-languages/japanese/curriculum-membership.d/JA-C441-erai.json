@@ -1,0 +1,11 @@
+{
+  "id": "JA-C441-erai",
+  "pathSegment": "JA-PATH-441-PROUD441",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-441-PROUD441",
+      "order": 2
+    }
+  ]
+}

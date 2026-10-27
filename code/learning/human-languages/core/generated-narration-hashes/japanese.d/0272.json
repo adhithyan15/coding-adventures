@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:0d3806e840325da1",
+  "lessonIds": [
+    "JA-C272-sagi",
+    "JA-C272-damasu",
+    "JA-C272-odosu",
+    "JA-C272-kakusu",
+    "JA-C272-hontou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch272.txt",
+  "json": "japanese/narration/ch272.json",
+  "textHash": "fnv1a64:f66ab6dea7a39296",
+  "jsonHash": "fnv1a64:d9acc856bc473a16",
+  "findings": []
+}

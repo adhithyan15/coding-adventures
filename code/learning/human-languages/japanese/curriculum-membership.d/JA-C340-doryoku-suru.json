@@ -1,0 +1,11 @@
+{
+  "id": "JA-C340-doryoku-suru",
+  "pathSegment": "JA-PATH-340-JOGEN340",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-340-JOGEN340",
+      "order": 3
+    }
+  ]
+}

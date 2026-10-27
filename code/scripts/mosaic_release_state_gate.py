@@ -27,7 +27,7 @@ The three halves
                                                                             │
                      ┌──────────────────────────────────────────────────────┘
                      ▼
-              verify: no .corrupt, schema same, version accepted,
+              verify: no .corrupt[.N], schema same, version accepted,
                       bytes valid, pointers equal expected values
 
     garbage ──▶ live state file + probe copy ──(launch new build)──▶
@@ -571,10 +571,33 @@ def materialize_fixture(fixture: GateFixture, output: Path) -> Path:
 # --------------------------------------------------------------------------
 
 
+#: How many quarantine names a host tries: ``.corrupt``, then ``.corrupt.1``
+#: to ``.corrupt.9``. A host moves a rejected file to the first FREE one and
+#: never replaces an earlier quarantine.
+QUARANTINE_SLOTS = 10
+
+
 def corrupt_sibling(state_path: Path) -> Path:
-    """Where every generated host moves a state file it rejected."""
+    """Where a host moves a state file it rejected when no quarantine exists yet.
+
+    A release runner starts with no state, so this first slot is the one a
+    ``verify-quarantine`` probe lands in.
+    """
 
     return Path(f"{state_path}.corrupt")
+
+
+def corrupt_siblings(state_path: Path) -> list[Path]:
+    """Every name a host may quarantine to, first slot first.
+
+    ::
+
+        state.corrupt  state.corrupt.1  ...  state.corrupt.9
+    """
+
+    return [corrupt_sibling(state_path)] + [
+        Path(f"{state_path}.corrupt.{index}") for index in range(1, QUARANTINE_SLOTS)
+    ]
 
 
 def verify_state(fixture: GateFixture, state_path: Path) -> dict[str, Any]:
@@ -595,9 +618,13 @@ def verify_state(fixture: GateFixture, state_path: Path) -> dict[str, Any]:
     # quarantined the fixture either wrote a fresh empty state -- which would
     # otherwise fail later with a confusing "pointer missing" -- or wrote
     # nothing, which would otherwise read as "the state does not exist".
-    corrupt = corrupt_sibling(state_path)
-    if _path_is_occupied(corrupt):
-        raise GateError(f"{app}: quarantined a compatible upgrade fixture: {corrupt}")
+    # Any of the ten names counts: a leftover ``.corrupt`` pushes a fresh
+    # refusal to ``.corrupt.1``, and missing it would pass a lost upgrade.
+    for corrupt in corrupt_siblings(state_path):
+        if _path_is_occupied(corrupt):
+            raise GateError(
+                f"{app}: quarantined a compatible upgrade fixture: {corrupt}"
+            )
 
     # Is it there at all? (The size cap and symlink refusal live inside.)
     data = read_regular_file(state_path, MAX_STATE_BYTES, f"{app}: upgrade state")

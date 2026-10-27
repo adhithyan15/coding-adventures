@@ -1,0 +1,807 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 284,
+  "title": "Election Day",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0e19f2d6016cafa0",
+  "lessons": [
+    {
+      "id": "JA-C284-senkyo",
+      "sequence": 17130,
+      "title": "せんきょ (senkyo) — an election",
+      "headword": "せんきょ",
+      "romanization": "senkyo",
+      "gloss": "an election",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10691c3f7f68ff0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for information, then the Japanese for a fact."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せんきょ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せんきょ — senkyo — \"an election\"."
+            },
+            {
+              "kind": "speech",
+              "text": "らいげつ せんきょが あります。 — raigetsu senkyo ga arimasu — \"There is an election next month.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せんきょ (senkyo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, \"elect\" (Middle Chinese sjwenX) and kyo, \"raise\" (kjoX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senkyo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senkyo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senkyo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senkyo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raigetsu senkyo ga arimasu — There is an election next month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raigetsu senkyo ga arimasu* — There is an election next month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for information, then the Japanese for a fact, then say senkyo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for information, then the Japanese for a fact, then say *senkyo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does せんきょ (senkyo) mean? (\"An election\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C284-senkyo-type",
+              "prompt": "Say the Japanese for 'an election'.",
+              "assesses": [
+                "JA-LEX-C284-SENKYO284-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せんきょ",
+                "senkyo"
+              ],
+              "feedback": {
+                "correct": "Right: せんきょ (senkyo) is 'an election'.",
+                "incorrect": "'An election' is せんきょ (senkyo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C284-kokumin",
+      "sequence": 17140,
+      "title": "こくみん (kokumin) — the people (of a country); citizens",
+      "headword": "こくみん",
+      "romanization": "kokumin",
+      "gloss": "the people (of a country); citizens",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e8e18e56f5af2e53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a fact, then the Japanese for an election."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こくみん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こくみん — kokumin — \"the people (of a country); citizens\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんきょで こくみんが せいふを えらびます。 — senkyo de kokumin ga seifu o erabimasu — \"In an election the people choose the government.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こくみん (kokumin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are koku, \"country\" (Middle Chinese kwok) and min, \"people\" (mjin) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kokumin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kokumin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kokumin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kokumin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senkyo de kokumin ga seifu o erabimasu — In an election the people choose the government.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senkyo de kokumin ga seifu o erabimasu* — In an election the people choose the government.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a fact, then the Japanese for an election, then say kokumin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a fact, then the Japanese for an election, then say *kokumin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こくみん (kokumin) mean? (\"The people (of a country); citizens\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C284-kokumin-type",
+              "prompt": "Say the Japanese for 'the people (of a country)'.",
+              "assesses": [
+                "JA-LEX-C284-SENKYO284-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こくみん",
+                "kokumin"
+              ],
+              "feedback": {
+                "correct": "Right: こくみん (kokumin) is 'the people (of a country); citizens'.",
+                "incorrect": "'The people (of a country)' is こくみん (kokumin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C284-shushou",
+      "sequence": 17150,
+      "title": "しゅしょう (shushō) — the prime minister",
+      "headword": "しゅしょう",
+      "romanization": "shushō",
+      "gloss": "the prime minister",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d555b94028959eeb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an election, then the Japanese for the people (of a country)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゅしょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅしょう — shushō — \"the prime minister\"."
+            },
+            {
+              "kind": "speech",
+              "text": "けさ しゅしょうが はっぴょうしました。 — kesa shushō ga happyō shimashita — \"The prime minister made an announcement this morning.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅしょう (shushō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shu, \"neck\" (Middle Chinese syuwX) and shō, \"minister of state\" (sjangH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shushō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shushō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shushō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shushō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kesa shushō ga happyō shimashita — The prime minister made an announcement this morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kesa shushō ga happyō shimashita* — The prime minister made an announcement this morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an election, then the Japanese for the people (of a country), then say shushō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an election, then the Japanese for the people (of a country), then say *shushō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゅしょう (shushō) mean? (\"The prime minister\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C284-shushou-type",
+              "prompt": "Say the Japanese for 'the prime minister'.",
+              "assesses": [
+                "JA-LEX-C284-SENKYO284-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゅしょう",
+                "shushō",
+                "shushou",
+                "shushoo",
+                "shusho"
+              ],
+              "feedback": {
+                "correct": "Right: しゅしょう (shushō) is 'the prime minister'.",
+                "incorrect": "'The prime minister' is しゅしょう (shushō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C284-arasou",
+      "sequence": 17160,
+      "title": "あらそう (arasou) — to compete; to contend",
+      "headword": "あらそう",
+      "romanization": "arasou",
+      "gloss": "to compete; to contend",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21c576692aa27097",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the people (of a country), then the Japanese for the prime minister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あらそう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あらそう — arasou — \"to compete; to contend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんきょで ふたりが あらそっています。 — senkyo de futari ga arasotte imasu — \"Two candidates are fighting the election.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite あらそいます, arasoimasu; a godan verb. Past (polite): ふたりが あらそいました。, futari ga arasoimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あらそう (arasou) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arasou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arasou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arasou, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arasou*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senkyo de futari ga arasotte imasu — Two candidates are fighting the election.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senkyo de futari ga arasotte imasu* — Two candidates are fighting the election.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the people (of a country), then the Japanese for the prime minister, then say arasou again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the people (of a country), then the Japanese for the prime minister, then say *arasou* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あらそう (arasou) mean? (\"To compete; to contend\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C284-arasou-type",
+              "prompt": "Say the Japanese for 'to compete'.",
+              "assesses": [
+                "JA-LEX-C284-SENKYO284-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あらそう",
+                "arasou"
+              ],
+              "feedback": {
+                "correct": "Right: あらそう (arasou) is 'to compete; to contend'.",
+                "incorrect": "'To compete' is あらそう (arasou)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C284-warui",
+      "sequence": 17170,
+      "title": "わるい (warui) — bad",
+      "headword": "わるい",
+      "romanization": "warui",
+      "gloss": "bad",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff4122d549136301",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the prime minister, then the Japanese for to compete."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: わるい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わるい — warui — \"bad\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あしたは てんきが わるいでしょう。 — ashita wa tenki ga warui deshō — \"The weather will probably be poor tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "An i-adjective."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わるい (warui) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "warui",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *warui*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "warui, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *warui*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ashita wa tenki ga warui deshō — The weather will probably be poor tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ashita wa tenki ga warui deshō* — The weather will probably be poor tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the prime minister, then the Japanese for to compete, then say warui again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the prime minister, then the Japanese for to compete, then say *warui* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does わるい (warui) mean? (\"Bad\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C284-warui-type",
+              "prompt": "Say the Japanese for 'bad'.",
+              "assesses": [
+                "JA-LEX-C284-SENKYO284-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "わるい",
+                "warui"
+              ],
+              "feedback": {
+                "correct": "Right: わるい (warui) is 'bad'.",
+                "incorrect": "'Bad' is わるい (warui)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

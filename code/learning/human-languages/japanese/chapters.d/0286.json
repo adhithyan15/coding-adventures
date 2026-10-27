@@ -1,0 +1,19 @@
+{
+  "chapter": 286,
+  "title": "A Baby Is Born",
+  "label": "ch:ja-a-baby-is-born",
+  "canDo": "I can say when a baby was born and wish the family well.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C286-mago",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 286: I can say when a baby was born and wish the family well.",
+    "assesses": [
+      "JA-LEX-C286-AKACHAN286-03",
+      "JA-LEX-C286-AKACHAN286-04",
+      "JA-LEX-C286-AKACHAN286-05"
+    ]
+  }
+}

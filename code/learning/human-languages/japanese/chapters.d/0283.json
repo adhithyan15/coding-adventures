@@ -1,0 +1,19 @@
+{
+  "chapter": 283,
+  "title": "The Announcement",
+  "label": "ch:ja-the-announcement",
+  "canDo": "I can say what the authorities announced and looked into.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C283-jijitsu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 283: I can say what the authorities announced and looked into.",
+    "assesses": [
+      "JA-LEX-C283-HAPPYOU283-03",
+      "JA-LEX-C283-HAPPYOU283-04",
+      "JA-LEX-C283-HAPPYOU283-05"
+    ]
+  }
+}

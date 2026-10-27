@@ -1,0 +1,11 @@
+{
+  "id": "JA-C423-kanjou",
+  "pathSegment": "JA-PATH-423-GOCHISOU423",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-423-GOCHISOU423",
+      "order": 1
+    }
+  ]
+}

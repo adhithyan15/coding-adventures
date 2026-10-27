@@ -32,6 +32,15 @@
   iir-to-llvm's module-local 3-argument `@__iir_f64_digits` in any LLVM
   program that links this runtime (found in security review).
 
+## Unreleased — a failed narrowing raises `Trap.ConvRange`
+
+### Fixed
+
+- `real_to_int_trunc` / `real_to_int_floor` call `__twig_trap(4)`
+  (`movz x0, #4; bl __twig_trap; udf`) when the `scvtf` + `fcmp` round trip
+  fails, so a failed narrowing stops with `trap: Trap.ConvRange` after
+  flushing stdout ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). It used to execute a bare `udf #0xDEAD`.
+
 ## Unreleased — f64 negation flips the sign bit
 
 ### Fixed

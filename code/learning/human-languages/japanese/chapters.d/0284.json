@@ -1,0 +1,19 @@
+{
+  "chapter": 284,
+  "title": "Election Day",
+  "label": "ch:ja-election-day",
+  "canDo": "I can say who chose whom and how it went.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C284-warui",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 284: I can say who chose whom and how it went.",
+    "assesses": [
+      "JA-LEX-C284-SENKYO284-03",
+      "JA-LEX-C284-SENKYO284-04",
+      "JA-LEX-C284-SENKYO284-05"
+    ]
+  }
+}

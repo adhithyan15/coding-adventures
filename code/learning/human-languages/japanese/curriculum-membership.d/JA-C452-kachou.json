@@ -1,0 +1,11 @@
+{
+  "id": "JA-C452-kachou",
+  "pathSegment": "JA-PATH-452-BOSS452",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-452-BOSS452",
+      "order": 1
+    }
+  ]
+}

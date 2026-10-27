@@ -1,0 +1,11 @@
+{
+  "id": "JA-C531-muyamini",
+  "pathSegment": "JA-PATH-531-PURPOSE531",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-531-PURPOSE531",
+      "order": 2
+    }
+  ]
+}

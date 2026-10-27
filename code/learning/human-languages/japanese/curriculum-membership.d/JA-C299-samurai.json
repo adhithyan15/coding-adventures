@@ -1,0 +1,11 @@
+{
+  "id": "JA-C299-samurai",
+  "pathSegment": "JA-PATH-299-OUSAMA299",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-299-OUSAMA299",
+      "order": 2
+    }
+  ]
+}

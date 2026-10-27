@@ -6,7 +6,40 @@ All notable changes to this crate are documented here.
 
 - Doc comments name `__dyn_pair_new`, the runtime symbol that was `__dyn_cons` before LANG83 PR7f. No code change.
 
-## Unreleased — frame-pointer requirement documented as enforced
+## Unreleased — the precise walk builds its own anchor (every ABI)
+
+- **Every precise collect entry is now a naked frame-building trampoline.**
+  `__gc_collect_precise`, `__gc_collect_minor_precise`,
+  `__gc_collect_incremental_start`, `__gc_collect_compacting`,
+  `__gc_collect_minor_compacting` and `__gc_safepoint` (and their
+  `__twig_gc_*` aliases) no longer read `rbp`/`x29` inside a Rust function.
+  Each pushes a classic frame record itself and passes its address to the
+  Rust body (`*_from(anchor)`) as the first argument:
+  - x86-64 SysV: `push rbp; mov rbp, rsp; mov rdi, rbp; call body; pop rbp; ret`
+  - x86-64 Win64: `push rbp; mov rbp, rsp; sub rsp, 32; mov rcx, rbp; call body;
+    add rsp, 32; pop rbp; ret` (32 bytes of shadow space)
+  - AArch64: `stp x29, x30, [sp, #-16]!; mov x29, sp; mov x0, x29; bl body;
+    ldp x29, x30, [sp], #16; ret`
+- **Why.** The anchor (`[fp]` = caller fp, `[fp+8]` = return address) is
+  load-bearing for safety once stack maps are registered. Reading the register
+  depended on compiler flags, and on Win64 it was wrong even with
+  `-Cforce-frame-pointers=yes`: LLVM sets `rbp` with `lea rbp, [rsp+N]` there
+  (security review of twig-aot's frame-pointer PR). The trampoline's layout is
+  fixed by its instructions, so the anchor is now valid on every ABI. On x86-64
+  Linux the twig-aot precise-GC differentials pass even with the archive built
+  with `-Cforce-frame-pointers=no`.
+- The `__twig_gc_*` precise aliases are trampolines themselves rather than
+  wrappers that call the `__gc_*` entry, so the anchor's return address points
+  straight into the compiled code instead of into a wrapper frame.
+- **Hand-written unwind info.** Naked functions get none from the compiler, so
+  the trampolines carry `.cfi_*` directives (SysV x86-64, AArch64; Mach-O folds
+  them into compact unwind) and `.seh_*` directives on Win64 (verified:
+  `llvm-readobj --unwind` shows `PUSH_NONVOL rbp`, `SET_FPREG rbp+0`,
+  `ALLOC_SMALL 32`). Debuggers, profilers and SEH can walk through them.
+- `current_fp()` is gone; `stack_scan.rs` section 2b, `precise_walk.rs` and the
+  AOT00-T1 specs describe the trampoline instead.
+
+## Earlier in this release — frame-pointer requirement documented as enforced
 
 - The `current_fp()` comment in `stack_scan.rs` no longer claims that frame
   pointers "hold under Rust's current x86-64-host defaults". A `--release`

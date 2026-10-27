@@ -1,0 +1,21 @@
+{
+  "chapter": 371,
+  "title": "Seriously or Joking?",
+  "label": "ch:ja-seriously-or-joking",
+  "canDo": "I can tell a joke from a serious remark and say what would follow.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-R371-review-final-371",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can tell a joke from a serious remark and say what would follow.",
+    "assesses": [
+      "JA-LEX-C371-JOUDAN371-01",
+      "JA-LEX-C371-JOUDAN371-02",
+      "JA-LEX-C371-JOUDAN371-03",
+      "JA-LEX-C371-JOUDAN371-04",
+      "JA-LEX-C371-JOUDAN371-05"
+    ]
+  }
+}
