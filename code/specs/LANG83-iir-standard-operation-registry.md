@@ -1659,8 +1659,8 @@ the frontends.
 
   | Rule | Emitted as | Built from |
   | --- | --- | --- |
-  | truthiness (false iff nil or `#f`) | inline, 6 instructions: `(tag ≠ 3) × (tag ≠ 1)` | `dyn_tag`, `const`, `cmp_ne`, `mul` |
-  | `not` | inline, 9 more: `5 − 2 × truthy` (the words of `#t` / `#f`) | the above, `sub` |
+  | truthiness (false iff the word is nil or `#f`) | inline, 5 instructions: `(x ≠ 3) × (x ≠ 1)` over the whole word | `const`, `cmp_ne` (typed `i64`), `mul` |
+  | `not` | inline, 4 more: `5 − 2 × truthy` (the words of `#t` / `#f`) | the above, `sub` |
   | `equal?` | `__lisp_equal(a, b)`, a recursive module function | `dyn_tag`, `dyn_pair_first`, `dyn_pair_rest`, `cmp_eq` on the words, `call` |
   | exit code | `__lisp_exit_code(x)`, a module function | `dyn_tag`, `dyn_unbox_int`, `cmp_eq`, `mov` |
 
@@ -1719,6 +1719,32 @@ the frontends.
   the LLVM module defines the helpers and references no removed runtime
   rule. Every `lang_matrix` row and every McCarthy LLVM / native / JIT test
   prints what it printed before.
+- *Security review: truthiness reads the whole word.* The first draft
+  tested `dyn_tag x` (`(tag ≠ 3) × (tag ≠ 1)`). That is not the rule the
+  removed `__dyn_truthy` (or the generic JIT's `is_truthy`) applied: only
+  the *words* 1 and 3 are false, and a malformed word with their tag — a
+  raw 9, 11, 17, 19, which Twig produces by passing an unboxed parameter
+  into `dyn_pair_new` — is true. `(define (f n) (if (car (cons n (list)))
+  1 2)) (f 9)` exited 1 before PR7f-2 and 2 with the draft on LLVM and
+  native x86-64. Truthiness now compares the word itself (`cmp_ne x, 3`,
+  `cmp_ne x, 1`, typed `i64`); `lang_matrix`'s
+  `twig_truthiness_of_a_raw_word_matches_the_runtime_rule_it_replaced`
+  pins the old exit codes.
+- *Security review: compiler-reserved names.* The pass recognises its
+  markers and helpers by name, and Twig's identifiers can spell them:
+  `(define (__lisp_equal a b) 42)` stood in for `equal?`, and
+  `(define (__lisp_not x) 0) (__lisp_not 5)` was expanded as Lisp's `not`.
+  Two layers now refuse it. `lisp_semantics::check_reserved_names` (run
+  first by `lower_dyn_repr`, which now returns `Result`) refuses a module
+  that defines or calls a `__lisp_*` name, unless the function is exactly
+  the helper the pass emits (so a lowered module lowers again). The Twig
+  frontend reserves the `__lisp_` and `__dyn_` prefixes for every name it
+  reads, with a source position; McCarthy's atoms are upper-case and cannot
+  spell either. `__dyn_` has the same exposure — `length` binds to an
+  existing `__dyn_list_length`, closures to an existing
+  `__dyn_call_closure`, and `__dyn_pair_new` … are runtime symbols — and is
+  closed at the Twig frontend; a pass-level refusal for the list and
+  closure helpers is left for a follow-up.
 - *Not moved yet.* The managed backends (WASM, JVM, CLR, BEAM) still lower
   the source-level `pair?`, `not` and `equal?` builtins in their own code
   (their value model is structural, and `lower_dyn_repr_structural` leaves

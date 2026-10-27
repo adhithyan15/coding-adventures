@@ -3,6 +3,7 @@
 
 - `runtime/dynval_runtime.c` drops `__dyn_not`, `__dyn_truthy`, `__dyn_equal` and `__dyn_to_exit_code`. They were Lisp's value rules, not the representation; the Lisp-family lowering writes them as IIR in each module. The golden tests for them are removed (the rules are checked in `iir-builtin-lowering` and end to end in `lang-aot`'s `op_conformance`).
 - `macos_arm64_smoke`'s closure-capture test coerces its integer result with `dyn_unbox_int` (it called `dyn_to_exit_code`).
+- Security review: `prepare_module_for_aot` returns `Result`; a module that defines or calls a compiler-reserved `__lisp_*` name is refused by `lower_dyn_repr` and surfaces as `AotError::Compile` from every native compile entry point, instead of letting a program function stand in for a Lisp rule.
 
 ## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
 

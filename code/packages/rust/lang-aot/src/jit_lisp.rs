@@ -141,7 +141,7 @@ pub fn run_mccarthy_on_jit(source: &str) -> Result<Option<i64>, LangAotError> {
     let mut module = compile_source_to_iir(Language::McCarthyLisp, source, "jit")?;
     iir_builtin_lowering::lower_heap_builtins_runtime(&mut module);
     iir_builtin_lowering::intern_symbols(&mut module);
-    iir_builtin_lowering::lower_dyn_repr(&mut module);
+    iir_builtin_lowering::lower_dyn_repr(&mut module).map_err(|e| LangAotError::JitBackendError(e.to_string()))?;
 
     let mut vm = VMCore::new();
     let backend = GenericCirJit::new(); // default step-cap (fuel) bounds execution

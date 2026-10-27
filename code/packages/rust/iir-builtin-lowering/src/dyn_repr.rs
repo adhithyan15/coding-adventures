@@ -249,7 +249,16 @@ fn rename_lisp_not(func: &mut IIRFunction) {
 /// `lower_heap_builtins_runtime` (so cons/car/cdr are already `dyn_*`
 /// calls). Safe to run on any module: a program with no `dyn_*` calls (every
 /// Twig/Nib/Brainfuck program) has nothing to box and is left unchanged.
-pub fn lower_dyn_repr(module: &mut IIRModule) {
+///
+/// # Errors
+///
+/// [`lisp_semantics::ReservedNameError`], before anything is rewritten, when
+/// the module defines or calls a `__lisp_*` name the compiler did not write
+/// ([`lisp_semantics::check_reserved_names`]). The pass recognises its own
+/// rule markers and helpers by those names, so a program that could spell
+/// one could stand in for `equal?` or have its call expanded as `not`.
+pub fn lower_dyn_repr(module: &mut IIRModule) -> Result<(), lisp_semantics::ReservedNameError> {
+    lisp_semantics::check_reserved_names(module)?;
     lower_dyn_repr_marked(module);
     // LANG83 PR7f-2: the Lisp rules the pass marked with `call`s become
     // compiler-emitted IIR. Truthiness and `not` expand inline (straight-line,
@@ -260,7 +269,7 @@ pub fn lower_dyn_repr(module: &mut IIRModule) {
     for func in &mut module.functions {
         lisp_semantics::expand_inline_rules(func);
     }
-    lisp_semantics::add_used_helpers(module);
+    lisp_semantics::add_used_helpers(module)
 }
 
 /// [`lower_dyn_repr`] up to, not including, writing out the Lisp rules: a use
@@ -301,10 +310,14 @@ fn lower_dyn_repr_marked(module: &mut IIRModule) {
     // The Lisp helpers (LANG83 PR7f-2) are already in their final, tagged-word
     // form, so they are set aside while the module is classified and rewritten
     // (re-running the pass, or a module that arrives with them, must not box
-    // their constants or coerce their results), then put back.
+    // their constants or coerce their results), then put back. Only the
+    // compiler's own helper qualifies — the same body instruction for
+    // instruction, not merely the same name — so a program's function can
+    // never be waved through as one (and `lower_dyn_repr` has already refused
+    // any other `__lisp_*` definition).
     let (helpers, rest): (Vec<IIRFunction>, Vec<IIRFunction>) = std::mem::take(&mut module.functions)
         .into_iter()
-        .partition(|f| lisp_semantics::HELPERS.contains(&f.name.as_str()));
+        .partition(lisp_semantics::is_compiler_helper);
     module.functions = rest;
     let lisp_funcs = crate::dyn_repr_structural::tagged_boundary_functions(module);
     for func in &mut module.functions {
@@ -1334,10 +1347,14 @@ mod tests {
             call_builtin(Some("a"), "not", &["p"], "bool"),
             ret("a"),
         ]);
-        lower_dyn_repr(&mut atom);
+        lower_dyn_repr(&mut atom).expect("lower_dyn_repr");
         assert_eq!(atom.functions.len(), 1, "inline rules add no function");
         assert!(atom.functions[0].instructions.iter().all(|i| i.op != "call"), "main stays call-free");
-        assert_eq!(count_builtin(&atom, "dyn_tag"), 2, "one tag test for not, one for the exit truthiness");
+        // Truthiness compares the whole word (not `dyn_tag`): two `cmp_ne`s
+        // for `not`, two for the exit truthiness.
+        assert_eq!(count_builtin(&atom, "dyn_tag"), 0, "truthiness reads the whole word, not the tag");
+        let word_tests = atom.functions[0].instructions.iter().filter(|i| i.op == "cmp_ne").count();
+        assert_eq!(word_tests, 4, "x ≠ #f and x ≠ nil, for not and for the exit truthiness");
 
         let sym_bits = (1_i64 << 32) | 0b010;
         let mut eq = module(vec![
@@ -1345,13 +1362,13 @@ mod tests {
             call_builtin(Some("e"), "equal?", &["s", "s"], "any"),
             ret("e"),
         ]);
-        lower_dyn_repr(&mut eq);
+        lower_dyn_repr(&mut eq).expect("lower_dyn_repr");
         assert_eq!(count_builtin(&eq, EQUAL), 1);
         let names: Vec<&str> = eq.functions.iter().map(|f| f.name.as_str()).collect();
         assert_eq!(names, ["main", EQUAL]);
 
         let mut lambda = apply_identity_module("lambda_0", "mccarthy-lisp");
-        lower_dyn_repr(&mut lambda);
+        lower_dyn_repr(&mut lambda).expect("lower_dyn_repr");
         assert_eq!(count_builtin(&lambda, EXIT_CODE), 1);
         assert!(lambda.functions.iter().any(|f| f.name == EXIT_CODE));
 
@@ -1378,12 +1395,80 @@ mod tests {
     #[test]
     fn helpers_already_in_the_module_are_not_rewritten() {
         let mut m = apply_identity_module("lambda_0", "mccarthy-lisp");
-        lower_dyn_repr(&mut m);
+        lower_dyn_repr(&mut m).expect("lower_dyn_repr");
         let before = m.functions.iter().find(|f| f.name == EXIT_CODE).unwrap().clone();
-        lower_dyn_repr(&mut m);
+        lower_dyn_repr(&mut m).expect("lower_dyn_repr");
         let after = m.functions.iter().find(|f| f.name == EXIT_CODE).unwrap();
         assert_eq!(format!("{:?}", before.instructions), format!("{:?}", after.instructions));
         assert_eq!(m.functions.iter().filter(|f| f.name == EXIT_CODE).count(), 1);
+    }
+
+    /// A program function that carries a helper's name — `(define
+    /// (__lisp_equal a b) 42)` — is refused before anything is rewritten,
+    /// instead of standing in for `equal?` (security review of PR7f-2).
+    #[test]
+    fn a_program_function_named_like_a_lisp_helper_is_refused() {
+        let user_equal = IIRFunction::new(
+            EQUAL,
+            vec![("a".into(), "any".into()), ("b".into(), "any".into())],
+            "any",
+            vec![konst("k", 42, "i64"), ret("k")],
+        );
+        let main = vec![
+            konst("x", 1, "i64"),
+            konst("y", 2, "i64"),
+            call_builtin(Some("e"), "equal?", &["x", "y"], "any"),
+            ret("e"),
+        ];
+        let mut m = multi_fn_module(main, vec![user_equal], "twig");
+        let before = format!("{:?}", m.functions.iter().map(|f| &f.instructions).collect::<Vec<_>>());
+        let err = lower_dyn_repr(&mut m).expect_err("a user __lisp_equal must be refused");
+        assert_eq!(err.name, EQUAL);
+        assert_eq!(err.caller, None);
+        assert!(err.to_string().contains("reserved"), "{err}");
+        let after = format!("{:?}", m.functions.iter().map(|f| &f.instructions).collect::<Vec<_>>());
+        assert_eq!(before, after, "a refused module is not rewritten");
+
+        // The same for a definition of an inline rule's marker name, and
+        // for any other name with the prefix.
+        for name in [NOT, TRUTHY, "__lisp_anything"] {
+            let f = IIRFunction::new(name, vec![("x".into(), "any".into())], "any", vec![ret("x")]);
+            let mut m = multi_fn_module(vec![konst("z", 0, "i64"), ret("z")], vec![f], "twig");
+            let err = lower_dyn_repr(&mut m).expect_err(name);
+            assert_eq!((err.name.as_str(), err.caller), (name, None));
+        }
+    }
+
+    /// A program `call` of a reserved name the compiler did not write —
+    /// `(__lisp_not 5)` — is refused rather than expanded as Lisp's `not`.
+    #[test]
+    fn a_program_call_of_a_lisp_rule_name_is_refused() {
+        for name in [NOT, TRUTHY, EQUAL, EXIT_CODE] {
+            let main = vec![
+                konst("x", 5, "i64"),
+                IIRInstr::new("call", Some("r".into()), vec![Operand::Var(name.into()), Operand::Var("x".into())], "any"),
+                ret("r"),
+            ];
+            let mut m = module(main);
+            let err = lower_dyn_repr(&mut m).expect_err(name);
+            assert_eq!(err.name, name);
+            assert_eq!(err.caller.as_deref(), Some("main"));
+        }
+    }
+
+    /// The compiler's own helpers are recognised by their body, not their
+    /// name: a lowered module lowers again, but a doctored copy of a helper
+    /// (one instruction changed) is refused.
+    #[test]
+    fn only_the_compilers_own_helper_body_passes_the_reserved_name_check() {
+        let mut m = apply_identity_module("lambda_0", "mccarthy-lisp");
+        lower_dyn_repr(&mut m).expect("first lowering");
+        assert!(lisp_semantics::check_reserved_names(&m).is_ok());
+        let helper = m.functions.iter_mut().find(|f| f.name == EXIT_CODE).unwrap();
+        let k = helper.instructions.iter().position(|i| i.op == "const").unwrap();
+        helper.instructions[k].srcs[0] = Operand::Int(99);
+        let err = lower_dyn_repr(&mut m).expect_err("a doctored helper must be refused");
+        assert_eq!((err.name.as_str(), err.caller), (EXIT_CODE, None));
     }
 
     /// LANG83 PR7f: `dyn_tag`'s argument is a tagged value (an integer atom

@@ -14044,6 +14044,101 @@ fn non_algol_matrix_every_proven_cell_agrees() {
 }
 
 // ---------------------------------------------------------------------------
+// LANG83 PR7f-2 security review — truthiness of a malformed word
+// ---------------------------------------------------------------------------
+
+/// A raw machine integer that reaches a tagged position is tested by Lisp
+/// truthiness exactly as the runtime's `__dyn_truthy` tested it: false only
+/// for the whole words nil (1) and `#f` (3).
+///
+/// Twig passes an unboxed parameter straight into `dyn_pair_new` (a known
+/// boxing gap), so `(car (cons n (list)))` with `n = 9` hands the `if` the
+/// raw word `9` = `0b1001` — nil's *tag*, but not nil. Before LANG83 PR7f-2
+/// the C runtime answered "true" and the program exited 1; PR7f-2's first
+/// draft tested `dyn_tag` instead and exited 2 on LLVM and native x86-64.
+/// The expected exits are the pre-PR7f-2 ones, and the VM — whose
+/// truthiness never moved — agrees. `11` (`#f`'s tag) and `17` / `19` are
+/// the same shape; the literal `9` is boxed before `cons` (word 72), true as
+/// every integer. (A raw `0` is left out: the word 0 is the boxed integer 0,
+/// true on the tagged-word columns, while the VM reads its unboxed `0` as
+/// false — the boxing gap itself, not truthiness.)
+#[test]
+fn twig_truthiness_of_a_raw_word_matches_the_runtime_rule_it_replaced() {
+    const PROGRAMS: [(&str, i32); 5] = [
+        ("(define (f n) (if (car (cons n (list))) 1 2)) (f 9)", 1),
+        ("(define (f n) (if (car (cons n (list))) 1 2)) (f 11)", 1),
+        ("(define (f n) (if (car (cons n (list))) 1 2)) (f 17)", 1),
+        ("(define (f n) (if (car (cons n (list))) 1 2)) (f 19)", 1),
+        ("(if (car (cons 9 (list))) 1 2)", 1),
+    ];
+    let mut ran = Vec::new();
+    for (src, code) in PROGRAMS {
+        let p = Prog {
+            lang: Language::Twig,
+            ext: "twig",
+            src,
+            expect: Expect::Exit(code),
+            backends: &[Llvm, NativeAot, Vm],
+            release: None,
+            case: None,
+        };
+        for &backend in p.backends {
+            if let Some(result) = run(backend, &p) {
+                assert_cell(backend, &p, result);
+                ran.push(backend);
+            }
+        }
+    }
+    assert!(ran.contains(&Vm), "the VM always runs");
+    if clang_ok() {
+        assert!(ran.contains(&Llvm), "clang is present, so the LLVM column must run");
+    }
+    if cfg!(all(target_os = "linux", target_arch = "x86_64")) && native_linker_ok() {
+        assert!(ran.contains(&NativeAot), "the native column must run on an x86-64 Linux host");
+    }
+}
+
+/// LANG83 PR7f-2 security review: the Lisp lowering recognises its own
+/// helpers (`__lisp_equal`, …) and inline-rule markers (`__lisp_not`, …) by
+/// name, so no program may define or call one. Twig refuses the name at the
+/// source; IIR that spells one anyway (from any frontend) is refused by the
+/// LLVM and native pipelines before the pass rewrites anything.
+#[test]
+fn compiler_reserved_lisp_names_are_refused_at_the_source_and_in_the_pipeline() {
+    for src in [
+        "(define (__lisp_equal a b) 42) (equal? 1 2)",
+        "(define (__lisp_not x) 0) (__lisp_not 5)",
+        "(define (__dyn_list_length l) 99) (length (list 1 2))",
+    ] {
+        let err = lang_aot::compile_source_to_iir(Language::Twig, src, "m").expect_err(src);
+        assert!(format!("{err:?}").contains("is reserved"), "{src}: {err:?}");
+    }
+    // The same program with an innocent name, renamed in the IIR: what a
+    // frontend without the reservation would hand the pipeline.
+    let mut module =
+        lang_aot::compile_source_to_iir(Language::Twig, "(define (g a b) 42) (+ (g 1 2) (if (equal? 1 2) 0 1))", "m")
+            .expect("compiles");
+    for f in &mut module.functions {
+        if f.name == "g" {
+            f.name = "__lisp_equal".into();
+        }
+        for i in &mut f.instructions {
+            for src in &mut i.srcs {
+                if matches!(src, interpreter_ir::Operand::Var(v) if v == "g") {
+                    *src = interpreter_ir::Operand::Var("__lisp_equal".into());
+                }
+            }
+        }
+    }
+    let err = lang_aot::compile_iir_to_llvm(module.clone(), "m", "x86_64-unknown-linux-gnu")
+        .expect_err("LLVM must refuse a program __lisp_equal");
+    assert!(format!("{err:?}").contains("reserved for the compiler"), "{err:?}");
+    let err = twig_aot::compile_module_linux_x86_64_object(&module)
+        .expect_err("native x86-64 must refuse a program __lisp_equal");
+    assert!(format!("{err:?}").contains("reserved for the compiler"), "{err:?}");
+}
+
+// ---------------------------------------------------------------------------
 // LANG84 phases 5a and 5b — Ruby on every backend (= LANG83 PR2), per release class
 // ---------------------------------------------------------------------------
 

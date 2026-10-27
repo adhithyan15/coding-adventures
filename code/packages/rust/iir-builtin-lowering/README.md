@@ -177,11 +177,22 @@ On the native and LLVM pipelines, `lower_heap_builtins_runtime` and
 which those backends call in the tagged-word runtime.
 
 Lisp's *rules* are not runtime calls (`src/lisp_semantics.rs`): truthiness
-(only nil and `#f` are false) and `not` are written inline, and `equal?` and
+(only the words nil and `#f` are false — the whole word is compared, so a
+malformed raw `9` with nil's tag is still true) and `not` are written inline, and `equal?` and
 the run-time exit-code switch are module-local functions `__lisp_equal` /
 `__lisp_exit_code`, all over the primitives above. A JIT-compiled function
 that tests a value stays JIT-compiled, because the inline rules are
 straight-line `i64` code.
+
+The `__lisp_` prefix is reserved for those helpers and the inline-rule
+markers. `lower_dyn_repr` returns `Result<(), ReservedNameError>` and refuses,
+before rewriting anything, a module that defines or calls a `__lisp_*` name
+it did not write itself (`lisp_semantics::check_reserved_names`):
+
+```rust
+let mut module = /* IIR from a frontend */;
+iir_builtin_lowering::lower_dyn_repr(&mut module)?; // Err if the program spells `__lisp_equal`
+```
 
 ## Relationship to the LANG31 spec
 

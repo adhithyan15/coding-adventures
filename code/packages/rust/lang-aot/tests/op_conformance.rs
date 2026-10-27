@@ -266,7 +266,7 @@ fn lisp_rules_program() -> IIRModule {
     for f in &mut module.functions {
         lisp_semantics::expand_inline_rules(f);
     }
-    lisp_semantics::add_used_helpers(&mut module);
+    lisp_semantics::add_used_helpers(&mut module).expect("the case defines no helper of its own");
     module
 }
 

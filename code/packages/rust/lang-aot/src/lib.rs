@@ -1017,7 +1017,7 @@ fn concretize_scalar_any_for_llvm(module: &mut IIRModule) {
     // representation passes rename them to. Whichever form survives to this
     // point is unfakeable evidence that the function is on the tagged value
     // model — unlike a `ref<any>` type hint, which only says the value is
-    // dynamic. `(ATOM 7)` reaches here as `dyn_is_pair` + inline `dyn_tag` and has no
+    // dynamic. `(ATOM 7)` reaches here as `dyn_is_pair` (its `not` is inline word tests) and has no
     // other evidence, so omitting these names silently narrowed a tagged
     // program to machine ints.
     const LISP_BUILTINS: &[&str] = &[
@@ -1118,7 +1118,10 @@ pub fn compile_iir_to_llvm(
     iir_builtin_lowering::lower_heap_builtins_runtime(&mut module);
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols(&mut module);
-    iir_builtin_lowering::lower_dyn_repr(&mut module);
+    // Refuses a module that defines or calls a compiler-reserved `__lisp_*`
+    // name (LANG83 PR7f-2 security review): the pass marks its Lisp rules with
+    // those names, so a program function carrying one could stand in for them.
+    iir_builtin_lowering::lower_dyn_repr(&mut module).map_err(|e| LangAotError::LlvmBackendError(e.to_string()))?;
     // E6d-2b: rewrite the generic `box`/`unbox` ops that `lower_dynamic_arith`
     // emitted into `dyn_box_int`/`dyn_unbox_int` runtime calls — the tagged-i64
     // (LLVM) representation, which `iir-to-llvm`'s `DYN_BUILTINS` table lowers to
@@ -1301,7 +1304,7 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
     // representation passes rename them to. Whichever form survives to this
     // point is unfakeable evidence that the function is on the tagged value
     // model — unlike a `ref<any>` type hint, which only says the value is
-    // dynamic. `(ATOM 7)` reaches here as `dyn_is_pair` + inline `dyn_tag` and has no
+    // dynamic. `(ATOM 7)` reaches here as `dyn_is_pair` (its `not` is inline word tests) and has no
     // other evidence, so omitting these names silently narrowed a tagged
     // program to machine ints.
     const LISP_BUILTINS: &[&str] = &[
@@ -1593,7 +1596,7 @@ fn concretize_scalar_any_for_cil(module: &mut IIRModule, narrow_i64: bool) {
     // representation passes rename them to. Whichever form survives to this
     // point is unfakeable evidence that the function is on the tagged value
     // model — unlike a `ref<any>` type hint, which only says the value is
-    // dynamic. `(ATOM 7)` reaches here as `dyn_is_pair` + inline `dyn_tag` and has no
+    // dynamic. `(ATOM 7)` reaches here as `dyn_is_pair` (its `not` is inline word tests) and has no
     // other evidence, so omitting these names silently narrowed a tagged
     // program to machine ints.
     const LISP_BUILTINS: &[&str] = &[

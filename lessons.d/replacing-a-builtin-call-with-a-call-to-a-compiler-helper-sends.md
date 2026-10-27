@@ -19,7 +19,7 @@ eagerly compiled. Output tests cannot see this: the fallback tier gives the
 same answer.
 
 **Fix.** The two rules that are straight-line (truthiness is
-`(tag ≠ 3) × (tag ≠ 1)`, `not` is `5 − 2 × truthy`) are expanded inline,
+`(x ≠ 3) × (x ≠ 1)` over the whole word, `not` is `5 − 2 × truthy`) are expanded inline,
 every instruction typed `i64`, so a function using them stays `FullyTyped`
 and compiles as before. Only `equal?` (recursive) and the exit-code switch
 (which applies to a `call`'s result, so its caller already had a call) are

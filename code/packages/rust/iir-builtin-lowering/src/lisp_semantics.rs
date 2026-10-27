@@ -21,7 +21,7 @@
 //!
 //! | Rule | Lisp meaning | Emitted as |
 //! |------|--------------|------------|
-//! | truthiness | only nil and `#f` are false; `0` is true | inline: `(tag ≠ 3) × (tag ≠ 1)`, a raw 0/1 for `jmp_if_false` |
+//! | truthiness | only nil and `#f` are false; `0` is true | inline: `(x ≠ 3) × (x ≠ 1)` over the **whole word**, a raw 0/1 for `jmp_if_false` |
 //! | `not` | `#t` for nil and `#f`, else `#f` | inline: `5 − 2 × truthy` (the words of `#t` and `#f`) |
 //! | `equal?` | atoms equal as words, pairs by structure | `__lisp_equal a b`, a module-local recursive function |
 //! | exit code | an integer exits with its value, `#t` with 1, nil and `#f` with 0, a symbol or pair with its word | `__lisp_exit_code x`, a module-local function |
@@ -39,7 +39,7 @@
 //!
 //! ## Why two are inline and two are functions
 //!
-//! Truthiness and `not` are six and nine straight-line instructions, every
+//! Truthiness and `not` are five and nine straight-line instructions, every
 //! one typed `i64`. Written inline, a function that tests a value or returns
 //! `(ATOM 7)` stays straight-line and fully typed, so the generic JIT still
 //! compiles it — as it compiled the `call_builtin "dyn_truthy"` it replaces.
@@ -53,6 +53,32 @@
 //! [`expand_inline_rules`] replaces each marker with its instructions; no
 //! function of those names is ever emitted.
 //!
+//! ## Truthiness reads the whole word, not the tag
+//!
+//! Only two *words* are false: `#f` is exactly `3` and nil is exactly `1`.
+//! The tag alone (`dyn_tag x`, the low three bits) is not the same question.
+//! Every well-formed value with tag `011` or `001` is one of those two words,
+//! but a malformed word — a raw machine integer that reached a tagged
+//! position unboxed, such as `9` (`0b1001`) or `11` (`0b1011`) — has tag
+//! `001` or `011` without being nil or `#f`. Such words do occur: Twig passes
+//! an unboxed parameter straight into `dyn_pair_new`, so
+//! `(define (f n) (if (car (cons n (list))) 1 2)) (f 9)` tests the raw word 9.
+//!
+//! ```text
+//!   word   tag    whole-word rule     tag-only rule
+//!   1      001    false (nil)         false
+//!   3      011    false (#f)          false
+//!   9      001    TRUE                false   <- the tag-only rule disagrees
+//!   11     011    TRUE                false   <- …and here
+//!   5, 0   …      true                true
+//! ```
+//!
+//! The runtime's `__dyn_truthy` (and the generic JIT's `is_truthy`) always
+//! compared the whole word, so that is the rule this module emits: two
+//! word comparisons (`cmp_ne x, 3` and `cmp_ne x, 1`, both typed `i64`)
+//! and a `mul`. A first draft tested `dyn_tag x` instead and silently turned
+//! `(f 9)` from `1` into `2` on the native and LLVM columns.
+//!
 //! ## Module-local, compiler-owned, only when used
 //!
 //! [`add_used_helpers`] appends `__lisp_equal` / `__lisp_exit_code` only if
@@ -62,6 +88,29 @@
 //! name with a linked runtime symbol could be bound to the wrong definition
 //! at link time
 //! (`lessons.d/module-local-helpers-in-generated-code-must-not-share-a-name-with.md`).
+//!
+//! ## The `__lisp_` prefix is reserved
+//!
+//! The pass recognises its rules **by name**: a `call __lisp_not x` is a
+//! marker to expand, and a function named `__lisp_equal` is set aside as
+//! already lowered. A name is only a safe signal if no program can spell it.
+//! Twig's identifiers can (`[A-Za-z…_$][…]*` admits `__lisp_equal`), so before
+//! this was closed `(define (__lisp_equal a b) 42)` made every `equal?` call
+//! the user's function, and `(define (__lisp_not x) 0) (__lisp_not 5)` was
+//! silently replaced by Lisp's `not`.
+//!
+//! Two layers now close it:
+//!
+//! 1. **This pass refuses** ([`check_reserved_names`], run first by
+//!    `lower_dyn_repr`): a module that defines a `__lisp_*` function, or
+//!    `call`s a `__lisp_*` name, is a [`ReservedNameError`] — unless the
+//!    function is *exactly* the helper [`add_used_helpers`] would emit (the
+//!    pass ran before, or a test built the module with this module's own
+//!    builders). So every marker the pass later sees is its own.
+//! 2. **The frontends reserve the prefix** (Twig rejects any identifier that
+//!    begins with `__lisp_` or `__dyn_`; McCarthy's atoms are upper-case and
+//!    cannot spell one), so a user sees a source-level error with a position
+//!    instead of an IIR-level refusal.
 //!
 //! ## Typing
 //!
@@ -94,6 +143,11 @@ pub const EQUAL: &str = "__lisp_equal";
 /// module-local function.
 pub const EXIT_CODE: &str = "__lisp_exit_code";
 
+/// The prefix every name above shares, reserved for the compiler: a module
+/// that defines or calls a function with this prefix (other than the exact
+/// helpers this module builds) is refused by [`check_reserved_names`].
+pub const RESERVED_PREFIX: &str = "__lisp_";
+
 /// The rules emitted inline (their names are pass-internal markers).
 pub const INLINE_RULES: [&str; 2] = [TRUTHY, NOT];
 /// The rules emitted as module-local functions, in the order
@@ -106,7 +160,8 @@ const TAG_NIL: i64 = 1;
 const TAG_FALSE: i64 = 3;
 const TAG_TRUE: i64 = 5;
 const TAG_PAIR: i64 = 7;
-/// `#f` and `#t` are whole-word singletons: the word *is* the tag.
+/// nil, `#f` and `#t` are whole-word singletons: the word *is* the tag.
+const WORD_NIL: i64 = TAG_NIL;
 const WORD_FALSE: i64 = TAG_FALSE;
 const WORD_TRUE: i64 = TAG_TRUE;
 
@@ -123,6 +178,10 @@ pub fn call(dest: &str, rule: &str, args: &[&str], ty: &str) -> IIRInstr {
 }
 
 /// If `instr` is a `call` of one of the four rules, its name.
+///
+/// This recognises a call **by name**, so it is only meaningful on a module
+/// that has passed [`check_reserved_names`]: there, every such call is one
+/// the compiler wrote.
 pub fn rule_called(instr: &IIRInstr) -> Option<&'static str> {
     if instr.op != "call" {
         return None;
@@ -135,6 +194,10 @@ pub fn rule_called(instr: &IIRInstr) -> Option<&'static str> {
 
 /// Replace every `call` of [`TRUTHY`] or [`NOT`] in `func` with the rule's
 /// straight-line instructions, writing the same `dest`.
+///
+/// The calls are the compiler's own markers; a module from a frontend must
+/// pass [`check_reserved_names`] first (as `lower_dyn_repr` does), or a
+/// user's `call __lisp_not` would be expanded too.
 pub fn expand_inline_rules(func: &mut IIRFunction) {
     if !func.instructions.iter().any(|i| matches!(rule_called(i), Some(TRUTHY | NOT))) {
         return;
@@ -159,18 +222,22 @@ pub fn expand_inline_rules(func: &mut IIRFunction) {
 }
 
 /// ```text
-/// dest.tag = dyn_tag x
-/// dest.nf  = dest.tag ≠ 3          ; not #f
-/// dest.nn  = dest.tag ≠ 1          ; not nil
+/// dest.nf  = x ≠ 3                 ; not the word #f   (compared as i64)
+/// dest.nn  = x ≠ 1                 ; not the word nil  (compared as i64)
 /// dest     = dest.nf × dest.nn     ; 1 unless nil or #f — 0 is true
 /// ```
+///
+/// The **whole word** is compared, not `dyn_tag x`: a malformed word such as
+/// a raw `9` has nil's tag without being nil, and Lisp (like the runtime
+/// rule this replaces) calls it true — see the module docs. The comparisons
+/// carry the `i64` hint: a comparison's hint is its operand type, and these
+/// operands are compared as plain 64-bit words even though `x` itself is a
+/// `ref<any>` the collector still tracks.
 fn truthy_into(out: &mut Vec<IIRInstr>, dest: &str, x: &str) {
-    let tag = format!("{dest}.tag");
-    out.push(builtin("dyn_tag", &tag, &[x], WORD));
     let not_false = format!("{dest}.nf");
-    out.extend(tag_cmp("cmp_ne", &not_false, &tag, TAG_FALSE));
+    out.extend(cmp_const("cmp_ne", &not_false, x, WORD_FALSE));
     let not_nil = format!("{dest}.nn");
-    out.extend(tag_cmp("cmp_ne", &not_nil, &tag, TAG_NIL));
+    out.extend(cmp_const("cmp_ne", &not_nil, x, WORD_NIL));
     out.push(binop("mul", dest, &not_false, &not_nil));
 }
 
@@ -193,17 +260,135 @@ fn not_into(out: &mut Vec<IIRInstr>, dest: &str, x: &str) {
 /// Append, once each, the helper functions some instruction in `module`
 /// calls (`__lisp_equal` calls only itself). A module that calls none is
 /// left untouched.
-pub fn add_used_helpers(module: &mut IIRModule) {
+///
+/// A function that already carries a helper's name is accepted only when it
+/// *is* that helper, instruction for instruction (this function ran before);
+/// anything else is a [`ReservedNameError`], never silently kept in the
+/// helper's place.
+pub fn add_used_helpers(module: &mut IIRModule) -> Result<(), ReservedNameError> {
     for helper in HELPERS {
+        if let Some(f) = module.functions.iter().find(|f| f.name == helper) {
+            if !is_compiler_helper(f) {
+                return Err(ReservedNameError::defined(&f.name));
+            }
+            continue;
+        }
         let used = module
             .functions
             .iter()
             .flat_map(|f| f.instructions.iter())
             .any(|i| rule_called(i) == Some(helper));
-        if used && !module.functions.iter().any(|f| f.name == helper) {
-            module.functions.push(if helper == EQUAL { build_equal() } else { build_exit_code() });
+        if used {
+            module.functions.push(build_helper(helper));
         }
     }
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// Reserved names
+// ---------------------------------------------------------------------------
+
+/// A module used a name the Lisp lowering reserves ([`RESERVED_PREFIX`]).
+///
+/// | `call`er  | meaning                                                      |
+/// |-----------|--------------------------------------------------------------|
+/// | `None`    | the module **defines** a function named `name`               |
+/// | `Some(f)` | function `f` **calls** `name`, which the compiler did not write |
+///
+/// Either way the pass would otherwise have mistaken the program's function
+/// for its own: used it as `equal?`, or expanded a call of it inline.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ReservedNameError {
+    /// The reserved name the module used.
+    pub name: String,
+    /// The function containing the offending `call`, or `None` for a
+    /// definition.
+    pub caller: Option<String>,
+}
+
+impl ReservedNameError {
+    fn defined(name: &str) -> Self {
+        ReservedNameError { name: name.to_string(), caller: None }
+    }
+}
+
+impl std::fmt::Display for ReservedNameError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match &self.caller {
+            None => write!(f, "the program defines a function named {:?}", self.name)?,
+            Some(caller) => write!(f, "function {caller:?} calls {:?}", self.name)?,
+        }
+        write!(f, ": names beginning with {RESERVED_PREFIX:?} are reserved for the compiler's Lisp rules")
+    }
+}
+
+impl std::error::Error for ReservedNameError {}
+
+/// Refuse a module that defines or calls a [`RESERVED_PREFIX`] name the
+/// compiler did not write.
+///
+/// The one exception is a helper function identical to the one
+/// [`add_used_helpers`] emits, and `call`s of it: that is a module this
+/// pass (or a test using this module's builders) already lowered, and
+/// lowering it again must keep working.
+///
+/// ```text
+/// (define (__lisp_equal a b) 42)    → Err: defines "__lisp_equal"
+/// main: call __lisp_not, x          → Err: "main" calls "__lisp_not"
+/// main: call __lisp_equal, a, b     → Ok only if the module holds the
+///   + the compiler's __lisp_equal     compiler's own __lisp_equal
+/// ```
+pub fn check_reserved_names(module: &IIRModule) -> Result<(), ReservedNameError> {
+    let mut own: Vec<&str> = Vec::new();
+    for f in &module.functions {
+        if !f.name.starts_with(RESERVED_PREFIX) {
+            continue;
+        }
+        if !is_compiler_helper(f) {
+            return Err(ReservedNameError::defined(&f.name));
+        }
+        own.push(f.name.as_str());
+    }
+    for f in &module.functions {
+        for i in &f.instructions {
+            if i.op != "call" {
+                continue;
+            }
+            if let Some(Operand::Var(callee)) = i.srcs.first() {
+                if callee.starts_with(RESERVED_PREFIX) && !own.contains(&callee.as_str()) {
+                    return Err(ReservedNameError { name: callee.clone(), caller: Some(f.name.clone()) });
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+/// The helper function this module emits for `name` (one of [`HELPERS`]).
+fn build_helper(name: &str) -> IIRFunction {
+    if name == EQUAL {
+        build_equal()
+    } else {
+        build_exit_code()
+    }
+}
+
+/// Is `f` exactly the helper [`add_used_helpers`] emits under its name —
+/// same parameters, return type and instructions (opcode, destination,
+/// operands, type hint, allocation flag)? Profiling state is ignored.
+pub fn is_compiler_helper(f: &IIRFunction) -> bool {
+    if !HELPERS.contains(&f.name.as_str()) {
+        return false;
+    }
+    let want = build_helper(&f.name);
+    let same_instr = |a: &IIRInstr, b: &IIRInstr| {
+        a.op == b.op && a.dest == b.dest && a.srcs == b.srcs && a.type_hint == b.type_hint && a.may_alloc == b.may_alloc
+    };
+    f.params == want.params
+        && f.return_type == want.return_type
+        && f.instructions.len() == want.instructions.len()
+        && f.instructions.iter().zip(&want.instructions).all(|(a, b)| same_instr(a, b))
 }
 
 // ---------------------------------------------------------------------------
@@ -237,10 +422,11 @@ fn ret(v: &str, ty: &str) -> IIRInstr {
     IIRInstr::new("ret", None, vec![Operand::Var(v.into())], ty)
 }
 
-/// `dest = (tag <op> k)` as a 0/1 word — two instructions.
-fn tag_cmp(op: &str, dest: &str, tag: &str, k: i64) -> [IIRInstr; 2] {
+/// `dest = (a <op> k)` as a 0/1 word, `a` and the constant `k` compared as
+/// `i64` — two instructions.
+fn cmp_const(op: &str, dest: &str, a: &str, k: i64) -> [IIRInstr; 2] {
     let k_reg = format!("{dest}.k");
-    [konst(&k_reg, k), binop(op, dest, tag, &k_reg)]
+    [konst(&k_reg, k), binop(op, dest, a, &k_reg)]
 }
 
 // ---------------------------------------------------------------------------
@@ -274,8 +460,8 @@ fn build_equal() -> IIRFunction {
         builtin("dyn_tag", "ta", &["a"], WORD),
         builtin("dyn_tag", "tb", &["b"], WORD),
     ];
-    b.extend(tag_cmp("cmp_eq", "a_pair", "ta", TAG_PAIR));
-    b.extend(tag_cmp("cmp_eq", "b_pair", "tb", TAG_PAIR));
+    b.extend(cmp_const("cmp_eq", "a_pair", "ta", TAG_PAIR));
+    b.extend(cmp_const("cmp_eq", "b_pair", "tb", TAG_PAIR));
     b.push(jmp_if_false("a_pair", "a_atom"));
     b.push(jmp("pairs"));
     // a is an atom
@@ -297,7 +483,7 @@ fn build_equal() -> IIRFunction {
     b.push(builtin("dyn_pair_first", "fb", &["b"], DYN));
     b.push(call("firsts", EQUAL, &["fa", "fb"], DYN));
     b.push(builtin("dyn_tag", "tf", &["firsts"], WORD));
-    b.extend(tag_cmp("cmp_eq", "firsts_equal", "tf", TAG_TRUE));
+    b.extend(cmp_const("cmp_eq", "firsts_equal", "tf", TAG_TRUE));
     b.push(jmp_if_false("firsts_equal", "done"));
     b.push(builtin("dyn_pair_rest", "ra", &["a"], DYN));
     b.push(builtin("dyn_pair_rest", "rb", &["b"], DYN));
@@ -324,23 +510,23 @@ fn build_equal() -> IIRFunction {
 /// truthy at the call site instead; both agree with this.
 fn build_exit_code() -> IIRFunction {
     let mut b = vec![builtin("dyn_tag", "t", &["x"], WORD), mov("r", "x")];
-    b.extend(tag_cmp("cmp_eq", "is_int", "t", TAG_INT));
+    b.extend(cmp_const("cmp_eq", "is_int", "t", TAG_INT));
     b.push(jmp_if_false("is_int", "not_int"));
     b.push(builtin("dyn_unbox_int", "n", &["x"], WORD));
     b.push(mov("r", "n"));
     b.push(jmp("done"));
     b.push(label("not_int"));
-    b.extend(tag_cmp("cmp_eq", "is_true", "t", TAG_TRUE));
+    b.extend(cmp_const("cmp_eq", "is_true", "t", TAG_TRUE));
     b.push(jmp_if_false("is_true", "not_true"));
     b.push(konst("one", 1));
     b.push(mov("r", "one"));
     b.push(jmp("done"));
     b.push(label("not_true"));
-    b.extend(tag_cmp("cmp_eq", "is_false", "t", TAG_FALSE));
+    b.extend(cmp_const("cmp_eq", "is_false", "t", TAG_FALSE));
     b.push(jmp_if_false("is_false", "not_false"));
     b.push(jmp("zero"));
     b.push(label("not_false"));
-    b.extend(tag_cmp("cmp_eq", "is_nil", "t", TAG_NIL));
+    b.extend(cmp_const("cmp_eq", "is_nil", "t", TAG_NIL));
     b.push(jmp_if_false("is_nil", "done"));
     b.push(label("zero"));
     b.push(konst("z", 0));
@@ -466,6 +652,10 @@ mod tests {
     }
 
     // Lisp's rules, stated directly over the words (the runtime's former C).
+    //
+    // `__dyn_truthy` was `(v == LISPY_FALSE || v == LISPY_NIL) ? 0 : 1` — a
+    // test of the whole word, so a malformed word with nil's or #f's tag
+    // (a raw 9 or 11) is true. The oracle keeps that rule.
     fn oracle_truthy(x: u64) -> u64 {
         (x != FALSE && x != NIL) as u64
     }
@@ -507,7 +697,7 @@ mod tests {
         for f in &mut m.functions {
             expand_inline_rules(f);
         }
-        add_used_helpers(&mut m);
+        add_used_helpers(&mut m).expect("no program function carries a helper's name");
         m
     }
 
@@ -546,6 +736,98 @@ mod tests {
         // The integer 0 is true, as in every Lisp.
         assert_eq!(m.run("truthy", &[int(0)]), 1);
         assert_eq!(m.run("exit", &[int(-3)]) as i64, -3);
+    }
+
+    /// Malformed words — raw machine integers that reached a tagged position
+    /// unboxed. Their low three bits look like a tag (9 and 17 like nil's
+    /// `001`, 11 and 19 like `#f`'s `011`, 7 and 15 like a pair's `111`, 13
+    /// like `#t`'s `101`) but only the words 1 and 3 are nil and `#f`.
+    const MALFORMED: [u64; 9] = [9, 11, 17, 19, 13, 25, 27, 0x1_0000_0001, 0x1_0000_0003];
+
+    /// Security review of PR7f-2: truthiness and `not` answer exactly what the
+    /// runtime's `__dyn_truthy` / `__dyn_not` answered for a malformed word —
+    /// true, so `not` is `#f` — where a tag-only test would call 9 and 11
+    /// false. The exit code still switches on the tag, as `__dyn_to_exit_code`
+    /// did, and `equal?` of two such atoms still compares their words.
+    #[test]
+    fn rules_agree_with_the_runtime_on_malformed_words() {
+        let module = all_rules();
+        let mut m = Machine { module: &module, heap: Vec::new(), steps: 0 };
+        for &x in &MALFORMED {
+            assert_eq!(m.run("truthy", &[x]), 1, "truthy {x:#x}: only the words 1 and 3 are false");
+            assert_eq!(m.run("truthy", &[x]), oracle_truthy(x), "truthy {x:#x}");
+            assert_eq!(m.run("not", &[x]), FALSE, "not {x:#x}");
+            assert_eq!(m.run("exit", &[x]), oracle_exit(x), "exit code {x:#x}");
+            for &y in &MALFORMED {
+                let want = if x == y { TRUE } else { FALSE };
+                assert_eq!(m.run("equal", &[x, y]), want, "equal {x:#x} {y:#x}");
+            }
+        }
+        // A raw word with the pair tag (7 here addresses the toy heap's pair
+        // 0) is true, as any non-nil, non-#f word is.
+        let p = m.pair(int(1), int(2));
+        assert_eq!(p, 7);
+        assert_eq!(m.run("truthy", &[p]), 1);
+        assert_eq!(m.run("not", &[p]), FALSE);
+        // And the two false words stay false.
+        for x in [NIL, FALSE] {
+            assert_eq!(m.run("truthy", &[x]), 0, "{x}");
+            assert_eq!(m.run("not", &[x]), TRUE, "{x}");
+        }
+    }
+
+    /// Truthiness is two whole-word comparisons typed `i64` and a `mul` — no
+    /// `dyn_tag`, whose answer is the wrong question for a malformed word.
+    #[test]
+    fn truthiness_compares_the_whole_word_as_i64() {
+        let module = all_rules();
+        let f = module.functions.iter().find(|f| f.name == "truthy").unwrap();
+        let ops: Vec<&str> = f.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, ["const", "cmp_ne", "const", "cmp_ne", "mul", "ret"]);
+        for i in f.instructions.iter().filter(|i| i.op == "cmp_ne") {
+            assert_eq!(i.type_hint, WORD, "{i:?}");
+            assert_eq!(i.srcs[0], Operand::Var("x".into()), "the word itself is compared: {i:?}");
+        }
+    }
+
+    /// `add_used_helpers` never keeps a program's function in a helper's
+    /// place, and `check_reserved_names` refuses a definition or a call of
+    /// any `__lisp_*` name the compiler did not write.
+    #[test]
+    fn reserved_names_are_refused_unless_the_compiler_wrote_them() {
+        let impostor = IIRFunction::new(
+            EQUAL,
+            vec![("a".into(), DYN.into()), ("b".into(), DYN.into())],
+            DYN,
+            vec![konst("k", 42), ret("k", DYN)],
+        );
+        let mut m = IIRModule::new("m", "test");
+        m.add_or_replace(IIRFunction::new(
+            "main",
+            vec![("x".into(), DYN.into())],
+            DYN,
+            vec![call("r", EQUAL, &["x", "x"], DYN), ret("r", DYN)],
+        ));
+        m.add_or_replace(impostor);
+        let err = add_used_helpers(&mut m).expect_err("an impostor __lisp_equal");
+        assert_eq!(err, ReservedNameError { name: EQUAL.into(), caller: None });
+        assert_eq!(check_reserved_names(&m), Err(err));
+
+        // A call with no definition at all is refused too: the compiler would
+        // otherwise append its helper and bind the program's call to it.
+        let mut m = IIRModule::new("m", "test");
+        m.add_or_replace(IIRFunction::new("main", vec![], DYN, vec![call("r", NOT, &["x"], DYN), ret("r", DYN)]));
+        assert_eq!(
+            check_reserved_names(&m),
+            Err(ReservedNameError { name: NOT.into(), caller: Some("main".into()) })
+        );
+
+        // The fully lowered module — the compiler's own helpers, called — passes.
+        assert_eq!(check_reserved_names(&all_rules()), Ok(()));
+        for helper in HELPERS {
+            assert!(is_compiler_helper(&build_helper(helper)), "{helper}");
+        }
+        assert!(!is_compiler_helper(&IIRFunction::new("main", vec![], WORD, vec![])));
     }
 
     #[test]
@@ -594,7 +876,7 @@ mod tests {
     fn helpers_are_added_once_and_only_when_called() {
         let mut empty = IIRModule::new("m", "test");
         empty.add_or_replace(IIRFunction::new("main", vec![], WORD, vec![konst("z", 0), ret("z", WORD)]));
-        add_used_helpers(&mut empty);
+        add_used_helpers(&mut empty).expect("nothing to add");
         assert_eq!(empty.functions.len(), 1, "a module that calls no helper gets none");
 
         let mut m = IIRModule::new("m", "test");
@@ -604,8 +886,8 @@ mod tests {
             WORD,
             vec![call("a", EQUAL, &["x", "x"], DYN), call("b", EQUAL, &["a", "x"], DYN), ret("b", DYN)],
         ));
-        add_used_helpers(&mut m);
-        add_used_helpers(&mut m);
+        add_used_helpers(&mut m).expect("first");
+        add_used_helpers(&mut m).expect("again: the helper is the compiler's own");
         let names: Vec<&str> = m.functions.iter().map(|f| f.name.as_str()).collect();
         assert_eq!(names, ["main", EQUAL], "one copy, and no exit-code helper nobody calls");
     }

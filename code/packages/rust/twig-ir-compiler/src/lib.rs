@@ -21,7 +21,9 @@
 //!     ▼  compile_ast / compile_source     ← THIS CRATE
 //!     │    1. check_cst      — validate the tree's shape
 //!     │    2. TW05-B gate    — only for (typed lenient|strict) modules
-//!     │    3. lower          — walk the CST through borrowed views
+//!     │    3. lower          — walk the CST through borrowed views,
+//!     │                        after refusing reserved names
+//!     │                        (`__lisp_*`, `__dyn_*`; see RESERVED_PREFIXES)
 //! IIRModule  (functions: top-level fns + anonymous lambdas + main)
 //!     │
 //!     ▼  vm-core / jit-core
@@ -130,8 +132,10 @@ pub mod compiler;
 mod cst;
 pub mod errors;
 mod free_vars;
+mod reserved_names;
 
 pub use check_cst::check_cst;
+pub use reserved_names::{reserved_prefix, RESERVED_PREFIXES};
 pub use compiler::Compiler;
 pub use errors::TwigCompileError;
 
