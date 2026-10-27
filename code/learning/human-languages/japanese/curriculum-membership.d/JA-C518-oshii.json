@@ -1,0 +1,11 @@
+{
+  "id": "JA-C518-oshii",
+  "pathSegment": "JA-PATH-518-REGRET518",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-518-REGRET518",
+      "order": 2
+    }
+  ]
+}

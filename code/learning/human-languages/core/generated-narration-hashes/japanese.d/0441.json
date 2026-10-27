@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:7c2d087137b856f6",
+  "lessonIds": [
+    "JA-C441-jiman-suru",
+    "JA-C441-namaiki",
+    "JA-C441-erai",
+    "JA-C441-namakemono",
+    "JA-C441-fuzakeru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch441.txt",
+  "json": "japanese/narration/ch441.json",
+  "textHash": "fnv1a64:c7d52402c4abb890",
+  "jsonHash": "fnv1a64:18269701ac70601d",
+  "findings": []
+}

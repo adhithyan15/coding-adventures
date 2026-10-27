@@ -1781,12 +1781,13 @@ fn e6_global_runs_on_real_clr() {
 // LANG-FULL E8 — numeric conversions (int ⇄ real)
 //
 //   int_to_real        → conv.r8 / conv.r4   (widen int→float, exact, any width)
-//   real_to_int_trunc  → conv.ovf.i4 / conv.ovf.i8   (truncate toward zero + trap)
-//   real_to_int_floor  → call Math::Floor(float64) ; conv.ovf.i4/i8   (round to −∞ + trap)
+//   real_to_int_trunc  → range check ; conv.ovf.i4 / conv.ovf.i8   (truncate toward zero)
+//   real_to_int_floor  → call Math::Floor(float64) ; range check ; conv.ovf.i4/i8   (round to −∞)
 //
-// The CLR's overflow-checked `conv.ovf.*` truncates toward zero AND throws
-// OverflowException on NaN/±∞/out-of-range — giving the VM's fail-closed trap
-// contract for free (one opcode), unlike the JVM backend whose d2i/d2l saturate.
+// The range check raises LANG83's typed `Trap.ConvRange` (flush Console.Out,
+// throw Exception("Trap.ConvRange")) on NaN/±∞/out-of-range, so the
+// overflow-checked `conv.ovf.*` after it never throws its untyped
+// OverflowException.
 // ===========================================================================
 
 /// `int_to_real` over an integer source emits `conv.r8` (widen to float64);
@@ -2070,5 +2071,33 @@ fn encoded_input_refusal_preserves_textual_input() {
         }
         let il = emit_il(&module, &default_cfg()).expect("textual input remains supported");
         assert!(il.contains(text_call), "{builtin}: missing {text_call} in {il}");
+    }
+}
+
+/// A narrowing that cannot fit raises the typed `Trap.ConvRange`: the IL
+/// range-checks the (rounded) operand against the destination's bounds —
+/// `blt.un` −2⁶³ for `int64`, `ble.un` −2³¹−1 for `int32`, then `blt` the
+/// upper bound — and its failing path is the shared LANG83 trap sequence.
+#[test]
+fn e8_failed_narrowing_raises_trap_conv_range() {
+    for (op, ty, lo_branch) in [
+        ("real_to_int_trunc", "i64", "blt.un"),
+        ("real_to_int_floor", "i64", "blt.un"),
+        ("real_to_int_trunc", "i32", "ble.un"),
+    ] {
+        let mut m = IIRModule::new("Main", "Main");
+        m.entry_point = Some("compute".into());
+        m.add_or_replace(IIRFunction::new("compute", vec![], ty, vec![
+            IIRInstr::new("const", Some("x".into()), vec![Operand::Float(1e30)], "f64"),
+            IIRInstr::new(op, Some("o".into()), vec![Operand::Var("x".into())], ty),
+            IIRInstr::new("ret", None, vec![Operand::Var("o".into())], ty),
+        ]));
+        let il = emit_il(&m, &default_cfg()).unwrap_or_else(|e| panic!("emit_il {op} {ty}: {e:?}"));
+        assert!(il.contains(&format!("    {lo_branch} ")), "{op} {ty}: lower-bound {lo_branch}:\n{il}");
+        assert!(il.contains("    blt "), "{op} {ty}: ordered upper-bound blt:\n{il}");
+        assert!(il.contains("ldstr \"Trap.ConvRange\""), "{op} {ty}: the typed trap:\n{il}");
+        let trap = il.find("ldstr \"Trap.ConvRange\"").unwrap();
+        let conv = il.find("conv.ovf.").unwrap();
+        assert!(trap < conv, "{op} {ty}: the check precedes the conversion:\n{il}");
     }
 }

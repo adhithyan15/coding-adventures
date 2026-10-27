@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C513-minaosu",
+    "language": "japanese",
+    "chapter": 513,
+    "sequence": 29710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd6393e72974eb05"
+  },
+  "findings": []
+}

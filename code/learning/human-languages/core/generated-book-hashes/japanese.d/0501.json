@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:c31ecebc45bf27d4",
+  "lessonIds": [
+    "JA-C501-tsukimi",
+    "JA-C501-hanami",
+    "JA-C501-momiji",
+    "JA-C501-fuurin",
+    "JA-C501-chirasu"
+  ],
+  "tex": "japanese/book/chapters/ch501-moon-viewing-and-autumn-leaves.tex"
+}

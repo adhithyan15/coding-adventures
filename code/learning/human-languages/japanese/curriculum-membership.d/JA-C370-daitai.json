@@ -1,0 +1,11 @@
+{
+  "id": "JA-C370-daitai",
+  "pathSegment": "JA-PATH-370-MATOMARU370",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-370-MATOMARU370",
+      "order": 3
+    }
+  ]
+}

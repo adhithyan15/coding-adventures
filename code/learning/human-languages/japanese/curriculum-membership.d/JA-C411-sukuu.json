@@ -1,0 +1,11 @@
+{
+  "id": "JA-C411-sukuu",
+  "pathSegment": "JA-PATH-411-OGAWA411",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-411-OGAWA411",
+      "order": 4
+    }
+  ]
+}

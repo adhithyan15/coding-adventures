@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:7ef86a0dffddd020",
+  "lessonIds": [
+    "JA-C282-sekai",
+    "JA-C282-sensou",
+    "JA-C282-heiwa",
+    "JA-C282-tatakau",
+    "JA-C282-seifu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch282.txt",
+  "json": "japanese/narration/ch282.json",
+  "textHash": "fnv1a64:38522a9e84ddfaf5",
+  "jsonHash": "fnv1a64:6ebb1785d0946f0b",
+  "findings": []
+}

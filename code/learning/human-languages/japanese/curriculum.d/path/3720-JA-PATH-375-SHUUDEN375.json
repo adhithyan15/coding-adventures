@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-375-SHUUDEN375",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "JA-EXT-375-SHUUDEN375"
+  ],
+  "after": []
+}

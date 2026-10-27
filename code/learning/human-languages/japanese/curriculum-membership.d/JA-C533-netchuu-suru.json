@@ -1,0 +1,11 @@
+{
+  "id": "JA-C533-netchuu-suru",
+  "pathSegment": "JA-PATH-533-WORTH533",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-533-WORTH533",
+      "order": 2
+    }
+  ]
+}

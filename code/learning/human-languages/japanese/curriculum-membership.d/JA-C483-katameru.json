@@ -1,0 +1,11 @@
+{
+  "id": "JA-C483-katameru",
+  "pathSegment": "JA-PATH-483-CLAY483",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-483-CLAY483",
+      "order": 3
+    }
+  ]
+}

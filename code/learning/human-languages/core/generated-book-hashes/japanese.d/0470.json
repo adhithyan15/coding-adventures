@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:d1b686b4a1391fd4",
+  "lessonIds": [
+    "JA-C470-kyoku",
+    "JA-C470-gakufu",
+    "JA-C470-min-you",
+    "JA-C470-enka",
+    "JA-C470-kuchibue"
+  ],
+  "tex": "japanese/book/chapters/ch470-songs-and-tunes.tex"
+}

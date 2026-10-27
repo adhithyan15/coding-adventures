@@ -1644,42 +1644,79 @@ fn emit_method(
             }
             // ── LANG-FULL E8: real_to_int_trunc / real_to_int_floor ─────────
             //
-            // Narrow a real to an integer. The CLR's **overflow-checking**
-            // conversion `conv.ovf.i4` truncates toward zero AND throws
-            // `OverflowException` when the value is NaN, ±∞, or out of `int32`
-            // range. That gives us the VM's *fail-closed trap* contract for free
-            // (spec §7's recommendation) — one opcode, no exception-table
-            // plumbing — so unlike the JVM backend (whose `d2i`/`d2l` saturate)
-            // the CLR matches the VM bit-for-bit on the pathological inputs too.
+            // Narrow a real to an integer. `real_to_int_floor` (ALGOL
+            // `entier`) rounds toward −∞ first with `System.Math::Floor`;
+            // `real_to_int_trunc` needs no rounding call, because the
+            // conversion itself truncates toward zero.
             //
-            // CLR-int64: the narrowing target follows the destination local —
-            // `conv.ovf.i8` for an `int64` dest, `conv.ovf.i4` otherwise. Both
-            // are overflow-checked, so an `i64` destination genuinely widens the
-            // accepted range instead of trapping on values a 32-bit slot could
-            // never have held.
+            // A value that cannot fit — NaN, ±∞, or outside the destination's
+            // range — raises LANG83's typed `Trap.ConvRange` through the same
+            // [`emit_lang83_trap`] sequence `Trap.DivZero` uses:
             //
-            // `real_to_int_floor` (ALGOL `entier`) rounds toward −∞ first: there
-            // is no single floor-to-int opcode, so we `call System.Math::Floor`
-            // (round to −∞, still a `float64`) and then the overflow-checked
-            // narrowing (which now only drops a `.0`).
+            //     ld src; [call Math::Floor]; ldc.r8 LO; blt.un|ble.un TRAP
+            //     ld src; [call Math::Floor]; ldc.r8 HI; blt OK
+            //   TRAP:
+            //     <flush Console.Out; throw Exception("Trap.ConvRange")>
+            //   OK:
+            //     ld src; [call Math::Floor]; conv.ovf.i8 | conv.ovf.i4; st dest
+            //
+            // | dest    | LO (trap if v …)          | HI (ok if v <) |
+            // |---------|---------------------------|----------------|
+            // | `int64` | `blt.un` −2⁶³ (inclusive) | 2⁶³            |
+            // | `int32` | `ble.un` −2³¹−1           | 2³¹            |
+            //
+            // The `.un` branch is taken when the comparison is *unordered*,
+            // so NaN goes to TRAP at the first test; ±∞ fails one bound.
+            // Both bounds are exact doubles. The operand is reloaded (and
+            // re-floored) for each use instead of `dup`'d, so the evaluation
+            // stack is empty at every branch and label — the same shape as
+            // the `Trap.DivZero` check — and no scratch local is needed.
+            // The overflow-checked `conv.ovf.*` after the check can never
+            // throw its untyped `OverflowException`; it stays so that a
+            // wrong check would still fail closed. The destination's width
+            // follows the local's type (CLR-int64): an `int64` destination
+            // accepts the whole i64 range.
             "real_to_int_trunc" | "real_to_int_floor" => {
+                use interpreter_ir::exception_kind::TRAP_CONV_RANGE;
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
                     function: f.name.clone(),
                     detail: format!("{} must have a dest", instr.op),
                 })?;
                 let src = var_src(f, instr, 0, &instr.op)?;
-                load_var(il, &regs, src)?;
-                if instr.op == "real_to_int_floor" {
-                    let _ = writeln!(
-                        il,
-                        "    call float64 [System.Runtime]System.Math::Floor(float64)"
-                    );
-                }
-                let _ = writeln!(
-                    il,
-                    "    {}",
-                    if regs.home(dest)?.ty == "int64" { "conv.ovf.i8" } else { "conv.ovf.i4" }
-                );
+                // Push the operand, rounded toward −∞ for `real_to_int_floor`.
+                let push_rounded = |il: &mut String| -> Result<(), IIRClrError> {
+                    load_var(il, &regs, src)?;
+                    if instr.op == "real_to_int_floor" {
+                        let _ = writeln!(
+                            il,
+                            "    call float64 [System.Runtime]System.Math::Floor(float64)"
+                        );
+                    }
+                    Ok(())
+                };
+                let wide = regs.home(dest)?.ty == "int64";
+                let (lo, lo_branch, hi, conv) = if wide {
+                    (-9_223_372_036_854_775_808.0_f64, "blt.un", 9_223_372_036_854_775_808.0_f64, "conv.ovf.i8")
+                } else {
+                    (-2_147_483_649.0_f64, "ble.un", 2_147_483_648.0_f64, "conv.ovf.i4")
+                };
+                // `ldc.r8 (b0 … b7)`: the exact little-endian bytes, as for
+                // a `real` literal, so ilasm never re-parses the bound.
+                let r8 = |x: f64| {
+                    x.to_le_bytes().iter().map(|b| format!("{b:02X}")).collect::<Vec<_>>().join(" ")
+                };
+                let (trap, ok) = (lang83_label(), lang83_label());
+                push_rounded(il)?;
+                let _ = writeln!(il, "    ldc.r8 ({})", r8(lo));
+                let _ = writeln!(il, "    {lo_branch} {trap}");
+                push_rounded(il)?;
+                let _ = writeln!(il, "    ldc.r8 ({})", r8(hi));
+                let _ = writeln!(il, "    blt {ok}");
+                let _ = writeln!(il, "  {trap}:");
+                emit_lang83_trap(il, &f.name, TRAP_CONV_RANGE)?;
+                let _ = writeln!(il, "  {ok}:");
+                push_rounded(il)?;
+                let _ = writeln!(il, "    {conv}");
                 store_var(il, &regs, dest)?;
             }
             // ── AL8 sqrt + transcendentals: System.Math calls ────────────────

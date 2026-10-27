@@ -1,0 +1,11 @@
+{
+  "id": "JA-C421-teika",
+  "pathSegment": "JA-PATH-421-NEGIRU421",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-421-NEGIRU421",
+      "order": 1
+    }
+  ]
+}

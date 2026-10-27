@@ -1,0 +1,19 @@
+{
+  "chapter": 505,
+  "title": "Sumo and Archery",
+  "label": "ch:ja-sumo-and-archery",
+  "canDo": "I can talk about two traditional sports.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C505-yokeru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can talk about two traditional sports.",
+    "assesses": [
+      "JA-LEX-C505-SUMO505-03",
+      "JA-LEX-C505-SUMO505-04",
+      "JA-LEX-C505-SUMO505-05"
+    ]
+  }
+}

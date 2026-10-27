@@ -1,0 +1,11 @@
+{
+  "id": "JA-C404-miorosu",
+  "pathSegment": "JA-PATH-404-FUUKEI404",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-404-FUUKEI404",
+      "order": 4
+    }
+  ]
+}

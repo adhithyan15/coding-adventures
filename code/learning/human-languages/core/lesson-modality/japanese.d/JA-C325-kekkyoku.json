@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C325-kekkyoku",
+    "language": "japanese",
+    "chapter": 325,
+    "sequence": 19440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38f38f8e1a0ec47a"
+  },
+  "findings": []
+}

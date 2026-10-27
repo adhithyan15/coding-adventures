@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 474,
+  "title": "Getting the Food Ready",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f755a72808e94054",
+  "lessons": [
+    {
+      "id": "JA-C474-shiboru",
+      "sequence": 27480,
+      "title": "しぼる (shiboru) — to squeeze; to wring",
+      "headword": "しぼる",
+      "romanization": "shiboru",
+      "gloss": "to squeeze; to wring",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a5a66c01c253a789",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to swell, then the Japanese for to let cool."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しぼる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しぼる — shiboru — \"to squeeze; to wring\"."
+            },
+            {
+              "kind": "speech",
+              "text": "みかんを しぼって、のみました。 — mikan o shibotte, nomimashita — \"I squeezed a mandarin and drank the juice.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite しぼります, shiborimasu; a godan verb. Past (polite): ははが ふくを しぼりました。, haha ga fuku o shiborimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しぼる (shiboru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiboru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiboru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiboru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiboru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mikan o shibotte, nomimashita — I squeezed a mandarin and drank the juice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mikan o shibotte, nomimashita* — I squeezed a mandarin and drank the juice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to swell, then the Japanese for to let cool, then say shiboru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to swell, then the Japanese for to let cool, then say *shiboru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しぼる (shiboru) mean? (\"To squeeze; to wring\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C474-shiboru-type",
+              "prompt": "Say the Japanese for 'to squeeze'.",
+              "assesses": [
+                "JA-LEX-C474-PREP474-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しぼる",
+                "shiboru"
+              ],
+              "feedback": {
+                "correct": "Right: しぼる (shiboru) is 'to squeeze; to wring'.",
+                "incorrect": "'To squeeze' is しぼる (shiboru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C474-tsubusu",
+      "sequence": 27490,
+      "title": "つぶす (tsubusu) — to mash; to crush",
+      "headword": "つぶす",
+      "romanization": "tsubusu",
+      "gloss": "to mash; to crush",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d622a0ca581c468",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to let cool, then the Japanese for to squeeze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つぶす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つぶす — tsubusu — \"to mash; to crush\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いもを つぶして ください。 — imo o tsubushite kudasai — \"Please mash the potatoes.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite つぶします, tsubushimasu; a godan verb. Past (polite): こどもが いもを つぶしました。, kodomo ga imo o tsubushimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つぶす (tsubusu) is a native Japanese word (wago), inherited rather than borrowed from Chinese: the transitive partner of tsubureru, \"to be crushed\", and its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsubusu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsubusu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsubusu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsubusu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imo o tsubushite kudasai — Please mash the potatoes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imo o tsubushite kudasai* — Please mash the potatoes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to let cool, then the Japanese for to squeeze, then say tsubusu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to let cool, then the Japanese for to squeeze, then say *tsubusu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つぶす (tsubusu) mean? (\"To mash; to crush\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C474-tsubusu-type",
+              "prompt": "Say the Japanese for 'to mash'.",
+              "assesses": [
+                "JA-LEX-C474-PREP474-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つぶす",
+                "tsubusu"
+              ],
+              "feedback": {
+                "correct": "Right: つぶす (tsubusu) is 'to mash; to crush'.",
+                "incorrect": "'To mash' is つぶす (tsubusu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C474-kuwaeru",
+      "sequence": 27500,
+      "title": "くわえる (kuwaeru) — to add",
+      "headword": "くわえる",
+      "romanization": "kuwaeru",
+      "gloss": "to add",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81a9adce83dec40a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to squeeze, then the Japanese for to mash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: くわえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くわえる — kuwaeru — \"to add\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しおを すこし くわえました。 — shio o sukoshi kuwaemashita — \"I added a little salt.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite くわえます, kuwaemasu; an ichidan verb. Past (polite): ははが さとうを くわえました。, haha ga satō o kuwaemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くわえる (kuwaeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuwaeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuwaeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuwaeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuwaeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shio o sukoshi kuwaemashita — I added a little salt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shio o sukoshi kuwaemashita* — I added a little salt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to squeeze, then the Japanese for to mash, then say kuwaeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to squeeze, then the Japanese for to mash, then say *kuwaeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does くわえる (kuwaeru) mean? (\"To add\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C474-kuwaeru-type",
+              "prompt": "Say the Japanese for 'to add'.",
+              "assesses": [
+                "JA-LEX-C474-PREP474-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "くわえる",
+                "kuwaeru"
+              ],
+              "feedback": {
+                "correct": "Right: くわえる (kuwaeru) is 'to add'.",
+                "incorrect": "'To add' is くわえる (kuwaeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C474-chigiru",
+      "sequence": 27510,
+      "title": "ちぎる (chigiru) — to tear into pieces",
+      "headword": "ちぎる",
+      "romanization": "chigiru",
+      "gloss": "to tear into pieces",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff932c7805e15ec3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to mash, then the Japanese for to add."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちぎる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちぎる — chigiru — \"to tear into pieces\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やさいを てで ちぎりました。 — yasai o te de chigirimashita — \"I tore the vegetables by hand.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ちぎります, chigirimasu; a godan verb. Past (polite): こどもが のりを ちぎりました。, kodomo ga nori o chigirimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちぎる (chigiru) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict marks it as usually written in kana; its kanji spelling writes chi with the kanji for \"thousand\", whose native reading is chi, and the rest with the kanji of kiru, \"to cut\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chigiru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chigiru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chigiru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chigiru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yasai o te de chigirimashita — I tore the vegetables by hand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yasai o te de chigirimashita* — I tore the vegetables by hand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to mash, then the Japanese for to add, then say chigiru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to mash, then the Japanese for to add, then say *chigiru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちぎる (chigiru) mean? (\"To tear into pieces\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C474-chigiru-type",
+              "prompt": "Say the Japanese for 'to tear into pieces'.",
+              "assesses": [
+                "JA-LEX-C474-PREP474-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちぎる",
+                "chigiru"
+              ],
+              "feedback": {
+                "correct": "Right: ちぎる (chigiru) is 'to tear into pieces'.",
+                "incorrect": "'To tear into pieces' is ちぎる (chigiru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C474-usumeru",
+      "sequence": 27520,
+      "title": "うすめる (usumeru) — to dilute; to water down",
+      "headword": "うすめる",
+      "romanization": "usumeru",
+      "gloss": "to dilute; to water down",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a39b97e73e0af1a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to add, then the Japanese for to tear into pieces."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うすめる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うすめる — usumeru — \"to dilute; to water down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しょうゆを みずで うすめて ください。 — shōyu o mizu de usumete kudasai — \"Please dilute the soy sauce with water.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite うすめます, usumemasu; an ichidan verb. Past (polite): ちちが おさけを うすめました。, chichi ga osake o usumemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うすめる (usumeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "usumeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *usumeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "usumeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *usumeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōyu o mizu de usumete kudasai — Please dilute the soy sauce with water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōyu o mizu de usumete kudasai* — Please dilute the soy sauce with water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to add, then the Japanese for to tear into pieces, then say usumeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to add, then the Japanese for to tear into pieces, then say *usumeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うすめる (usumeru) mean? (\"To dilute; to water down\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C474-usumeru-type",
+              "prompt": "Say the Japanese for 'to dilute'.",
+              "assesses": [
+                "JA-LEX-C474-PREP474-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うすめる",
+                "usumeru"
+              ],
+              "feedback": {
+                "correct": "Right: うすめる (usumeru) is 'to dilute; to water down'.",
+                "incorrect": "'To dilute' is うすめる (usumeru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

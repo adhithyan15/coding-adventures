@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C466-ikebana",
+    "language": "japanese",
+    "chapter": 466,
+    "sequence": 27070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d667e89a7b8f8e4"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 341,
+  "title": "Persuading Someone",
+  "label": "ch:ja-persuading-someone",
+  "canDo": "I can try to persuade someone and give my reasons.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C341-tatoeba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can try to persuade someone and give my reasons.",
+    "assesses": [
+      "JA-LEX-C341-SETTOKU341-03",
+      "JA-LEX-C341-SETTOKU341-04",
+      "JA-LEX-C341-SETTOKU341-05"
+    ]
+  }
+}

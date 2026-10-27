@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:2859ef2405714ff2",
+  "lessonIds": [
+    "JA-C364-songai",
+    "JA-C364-benshou-suru",
+    "JA-C364-osameru",
+    "JA-C364-ukemotsu",
+    "JA-C364-sekinin"
+  ],
+  "tex": "japanese/book/chapters/ch364-damage-and-compensation.tex"
+}

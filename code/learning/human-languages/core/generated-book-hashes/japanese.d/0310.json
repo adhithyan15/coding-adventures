@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:f93ef0c6b8438f8b",
+  "lessonIds": [
+    "JA-C310-zutto",
+    "JA-C310-jitsu-wa",
+    "JA-C310-toutou",
+    "JA-C310-kanau",
+    "JA-C310-mamonaku"
+  ],
+  "tex": "japanese/book/chapters/ch310-waiting-for-an-answer.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:b0e91e495ba10314",
+  "lessonIds": [
+    "JA-C408-senkou",
+    "JA-C408-rousoku",
+    "JA-C408-butsudan",
+    "JA-C408-shuukyou",
+    "JA-C408-matsuru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch408.txt",
+  "json": "japanese/narration/ch408.json",
+  "textHash": "fnv1a64:5799537fbbc790ac",
+  "jsonHash": "fnv1a64:8d3b59fe07d6eb1e",
+  "findings": []
+}

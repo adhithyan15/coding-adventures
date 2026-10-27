@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C287-obaasan",
+    "language": "japanese",
+    "chapter": 287,
+    "sequence": 17310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2888e2246eef4c49"
+  },
+  "findings": []
+}

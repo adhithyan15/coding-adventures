@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C419-kokuseki",
+    "language": "japanese",
+    "chapter": 419,
+    "sequence": 24420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d65876acc7297f38"
+  },
+  "findings": []
+}

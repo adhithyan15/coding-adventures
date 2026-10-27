@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:cff245b97c59d711",
+  "lessonIds": [
+    "JA-C357-keiyaku-suru",
+    "JA-C357-hoshou",
+    "JA-C357-naiyou",
+    "JA-C357-yutori",
+    "JA-C357-kettei-suru"
+  ],
+  "tex": "japanese/book/chapters/ch357-contracts.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:e6efdf536d62c2ce",
+  "lessonIds": [
+    "JA-C296-sakan",
+    "JA-C296-omairi",
+    "JA-C296-maneku",
+    "JA-C296-shuukan",
+    "JA-C296-uketsugu",
+    "JA-R296-review-292-296"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch296.txt",
+  "json": "japanese/narration/ch296.json",
+  "textHash": "fnv1a64:cf6924e70221bed6",
+  "jsonHash": "fnv1a64:8e72edbbb5912b3c",
+  "findings": []
+}

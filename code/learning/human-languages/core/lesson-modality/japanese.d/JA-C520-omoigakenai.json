@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C520-omoigakenai",
+    "language": "japanese",
+    "chapter": 520,
+    "sequence": 30080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c24c5c9ed35a1f8"
+  },
+  "findings": []
+}

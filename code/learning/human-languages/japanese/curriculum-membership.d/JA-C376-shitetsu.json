@@ -1,0 +1,11 @@
+{
+  "id": "JA-C376-shitetsu",
+  "pathSegment": "JA-PATH-376-SHINKANSEN376",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-376-SHINKANSEN376",
+      "order": 2
+    }
+  ]
+}

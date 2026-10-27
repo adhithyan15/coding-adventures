@@ -1,0 +1,11 @@
+{
+  "id": "JA-C272-kakusu",
+  "pathSegment": "JA-PATH-272-SAGI272",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-272-SAGI272",
+      "order": 3
+    }
+  ]
+}

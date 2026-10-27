@@ -1,0 +1,19 @@
+{
+  "chapter": 450,
+  "title": "At the Clinic",
+  "label": "ch:ja-at-the-clinic",
+  "canDo": "I can talk about clinics, nutrition and nursing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C450-kanbyou-suru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 450: I can talk about clinics, nutrition and nursing.",
+    "assesses": [
+      "JA-LEX-C450-CLINIC450-03",
+      "JA-LEX-C450-CLINIC450-04",
+      "JA-LEX-C450-CLINIC450-05"
+    ]
+  }
+}

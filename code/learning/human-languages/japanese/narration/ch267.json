@@ -1,0 +1,941 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 267,
+  "title": "A Lost Child",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:acd7d6980ae6b814",
+  "lessons": [
+    {
+      "id": "JA-C267-maigo",
+      "sequence": 16250,
+      "title": "まいご (maigo) — a lost child",
+      "headword": "まいご",
+      "romanization": "maigo",
+      "gloss": "a lost child",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0de6bcc0fbbe2b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for at last, then the Japanese for unharmed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: まいご",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まいご — maigo — \"a lost child\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし まいごに なったら、こうばんに いきます。 — moshi maigo ni nattara, kōban ni ikimasu — \"If I get lost, I go to the police box.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まいご (maigo) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from mai, \"losing the way\" (from mayou), and go, \"child\" (from ko) (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maigo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maigo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maigo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maigo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi maigo ni nattara, kōban ni ikimasu — If I get lost, I go to the police box.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi maigo ni nattara, kōban ni ikimasu* — If I get lost, I go to the police box.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for at last, then the Japanese for unharmed, then say maigo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for at last, then the Japanese for unharmed, then say *maigo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does まいご (maigo) mean? (\"A lost child\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C267-maigo-type",
+              "prompt": "Say the Japanese for 'a lost child'.",
+              "assesses": [
+                "JA-LEX-C267-MAIGO267-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "まいご",
+                "maigo"
+              ],
+              "feedback": {
+                "correct": "Right: まいご (maigo) is 'a lost child'.",
+                "incorrect": "'A lost child' is まいご (maigo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C267-yobidasu",
+      "sequence": 16260,
+      "title": "よびだす (yobidasu) — to call (someone) out; to page",
+      "headword": "よびだす",
+      "romanization": "yobidasu",
+      "gloss": "to call (someone) out; to page",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:310236945cf872ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for unharmed, then the Japanese for a lost child."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: よびだす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よびだす — yobidasu — \"to call (someone) out; to page\"."
+            },
+            {
+              "kind": "speech",
+              "text": "えきいんが ははを よびだしました。 — ekiin ga haha o yobidashimashita — \"A station attendant paged my mother.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite よびだします, yobidashimasu; a godan verb. Past (polite): せんせいが ははを よびだしました。, sensei ga haha o yobidashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よびだす (yobidasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from yobi, \"calling\" (from yobu), and dasu, \"to put out\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yobidasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yobidasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yobidasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yobidasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekiin ga haha o yobidashimashita — A station attendant paged my mother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekiin ga haha o yobidashimashita* — A station attendant paged my mother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for unharmed, then the Japanese for a lost child, then say yobidasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for unharmed, then the Japanese for a lost child, then say *yobidasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does よびだす (yobidasu) mean? (\"To call (someone) out; to page\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C267-yobidasu-type",
+              "prompt": "Say the Japanese for 'to call (someone) out'.",
+              "assesses": [
+                "JA-LEX-C267-MAIGO267-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "よびだす",
+                "yobidasu"
+              ],
+              "feedback": {
+                "correct": "Right: よびだす (yobidasu) is 'to call (someone) out; to page'.",
+                "incorrect": "'To call (someone) out' is よびだす (yobidasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C267-housou",
+      "sequence": 16270,
+      "title": "ほうそう (hōsō) — an announcement; a broadcast",
+      "headword": "ほうそう",
+      "romanization": "hōsō",
+      "gloss": "an announcement; a broadcast",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:998fa2e781d2f679",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a lost child, then the Japanese for to call (someone) out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほうそう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほうそう — hōsō — \"an announcement; a broadcast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "えきで まいごの ほうそうが ありました。 — eki de maigo no hōsō ga arimashita — \"At the station they announced a lost child.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほうそう (hōsō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hō, \"release\" (Middle Chinese pjangH) and sō, \"send\" (suwngH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōsō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōsō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōsō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōsō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eki de maigo no hōsō ga arimashita — At the station they announced a lost child.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eki de maigo no hōsō ga arimashita* — At the station they announced a lost child.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a lost child, then the Japanese for to call (someone) out, then say hōsō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a lost child, then the Japanese for to call (someone) out, then say *hōsō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほうそう (hōsō) mean? (\"An announcement; a broadcast\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C267-housou-type",
+              "prompt": "Say the Japanese for 'an announcement'.",
+              "assesses": [
+                "JA-LEX-C267-MAIGO267-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほうそう",
+                "hōsō",
+                "housou",
+                "hoosoo",
+                "hoso"
+              ],
+              "feedback": {
+                "correct": "Right: ほうそう (hōsō) is 'an announcement; a broadcast'.",
+                "incorrect": "'An announcement' is ほうそう (hōsō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C267-nakigoe",
+      "sequence": 16280,
+      "title": "なきごえ (nakigoe) — a cry; the sound of crying",
+      "headword": "なきごえ",
+      "romanization": "nakigoe",
+      "gloss": "a cry; the sound of crying",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:92c31cb3194f649a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to call (someone) out, then the Japanese for an announcement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: なきごえ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なきごえ — nakigoe — \"a cry; the sound of crying\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こどもの なきごえが しました。 — kodomo no nakigoe ga shimashita — \"We heard a child crying.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なきごえ (nakigoe) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from naki, \"crying\" (from naku), and goe, \"voice\" (from koe) (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakigoe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakigoe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakigoe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakigoe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kodomo no nakigoe ga shimashita — We heard a child crying.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kodomo no nakigoe ga shimashita* — We heard a child crying.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to call (someone) out, then the Japanese for an announcement, then say nakigoe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to call (someone) out, then the Japanese for an announcement, then say *nakigoe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does なきごえ (nakigoe) mean? (\"A cry; the sound of crying\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C267-nakigoe-type",
+              "prompt": "Say the Japanese for 'a cry'.",
+              "assesses": [
+                "JA-LEX-C267-MAIGO267-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "なきごえ",
+                "nakigoe"
+              ],
+              "feedback": {
+                "correct": "Right: なきごえ (nakigoe) is 'a cry; the sound of crying'.",
+                "incorrect": "'A cry' is なきごえ (nakigoe)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C267-hotto",
+      "sequence": 16290,
+      "title": "ほっと (hotto) — with relief",
+      "headword": "ほっと",
+      "romanization": "hotto",
+      "gloss": "with relief",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8541c8b6220f7481",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an announcement, then the Japanese for a cry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほっと",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほっと — hotto — \"with relief\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こどもが みつかって、ほっと しました。 — kodomo ga mitsukatte, hotto shimashita — \"The child was found, and we breathed again.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほっと (hotto) is a native Japanese mimetic word, inherited rather than borrowed from Chinese, and its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hotto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hotto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hotto, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hotto*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kodomo ga mitsukatte, hotto shimashita — The child was found, and we breathed again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kodomo ga mitsukatte, hotto shimashita* — The child was found, and we breathed again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an announcement, then the Japanese for a cry, then say hotto again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an announcement, then the Japanese for a cry, then say *hotto* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほっと (hotto) mean? (\"With relief\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C267-hotto-type",
+              "prompt": "Say the Japanese for 'with relief'.",
+              "assesses": [
+                "JA-LEX-C267-MAIGO267-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほっと",
+                "hotto"
+              ],
+              "feedback": {
+                "correct": "Right: ほっと (hotto) is 'with relief'.",
+                "incorrect": "'With relief' is ほっと (hotto)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R267-review-262-267",
+      "sequence": 16300,
+      "title": "Looking back: from An Accident by the Station to A Lost Child",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from An Accident by the Station to A Lost Child",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eef5ec04cc553e84",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for an accident and to be saved."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an accident, to be saved, to run away, suddenly, damage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an accident, to be saved, to run away, suddenly, damage]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an ambulance, to call, to shout, to panic, at once",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an ambulance, to call, to shout, to panic, at once]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fall, to bump (something against), a bandage, very, for a while",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fall, to bump (something against), a bandage, very, for a while]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "smoke, to spread, a fire engine, an escape route, to rush to the scene",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: smoke, to spread, a fire engine, an escape route, to rush to the scene]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to drown, to jump in, to tug, at last, unharmed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to drown, to jump in, to tug, at last, unharmed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lost child, to call (someone) out, an announcement, a cry, with relief",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lost child, to call (someone) out, an announcement, a cry, with relief]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An accident? (じこ, jiko.) To be saved? (たすかる, tasukaru.) To run away? (にげる, nigeru.) Suddenly? (とつぜん, totsuzen.) Damage? (ひがい, higai.) An ambulance? (きゅうきゅうしゃ, kyūkyūsha.) To call? (よぶ, yobu.) To shout? (さけぶ, sakebu.) To panic? (あわてる, awateru.) At once? (すぐ, sugu.) To fall? (おちる, ochiru.) To bump (something against)? (ぶつける, butsukeru.) A bandage? (ほうたい, hōtai.) Very? (とても, totemo.) For a while? (しばらく, shibaraku.) Smoke? (けむり, kemuri.) To spread? (ひろがる, hirogaru.) A fire engine? (しょうぼうしゃ, shōbōsha.) An escape route? (にげみち, nigemichi.) To rush to the scene? (かけつける, kaketsukeru.) To drown? (おぼれる, oboreru.) To jump in? (とびこむ, tobikomu.) To tug? (ひっぱる, hipparu.) At last? (やっと, yatto.) Unharmed? (ぶじ, buji.) A lost child? (まいご, maigo.) To call (someone) out? (よびだす, yobidasu.) An announcement? (ほうそう, hōsō.) A cry? (なきごえ, nakigoe.) With relief? (ほっと, hotto.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R267-review-262-267-type",
+              "prompt": "Say the Japanese for 'an accident'.",
+              "assesses": [
+                "JA-LEX-C262-JIKO262-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じこ",
+                "jiko"
+              ],
+              "feedback": {
+                "correct": "Right: じこ (jiko) is 'an accident'.",
+                "incorrect": "'An accident' is じこ (jiko)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

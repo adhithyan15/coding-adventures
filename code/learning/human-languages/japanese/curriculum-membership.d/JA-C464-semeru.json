@@ -1,0 +1,11 @@
+{
+  "id": "JA-C464-semeru",
+  "pathSegment": "JA-PATH-464-CROWD464",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-464-CROWD464",
+      "order": 3
+    }
+  ]
+}

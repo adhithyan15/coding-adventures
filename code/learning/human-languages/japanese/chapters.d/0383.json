@@ -1,0 +1,21 @@
+{
+  "chapter": 383,
+  "title": "An Island Country",
+  "label": "ch:ja-an-island-country",
+  "canDo": "I can talk about bays, straits and swimming in the sea.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-R383-review-378-383",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can talk about bays, straits and swimming in the sea.",
+    "assesses": [
+      "JA-LEX-C383-SHIMAGUNI383-01",
+      "JA-LEX-C383-SHIMAGUNI383-02",
+      "JA-LEX-C383-SHIMAGUNI383-03",
+      "JA-LEX-C383-SHIMAGUNI383-04",
+      "JA-LEX-C383-SHIMAGUNI383-05"
+    ]
+  }
+}

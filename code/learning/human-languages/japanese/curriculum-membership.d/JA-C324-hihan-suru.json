@@ -1,0 +1,11 @@
+{
+  "id": "JA-C324-hihan-suru",
+  "pathSegment": "JA-PATH-324-MONKU324",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-324-MONKU324",
+      "order": 3
+    }
+  ]
+}

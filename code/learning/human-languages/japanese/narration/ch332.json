@@ -1,0 +1,803 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 332,
+  "title": "Rights and Duties",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1ba0638385b25fea",
+  "lessons": [
+    {
+      "id": "JA-C332-kenri",
+      "sequence": 19770,
+      "title": "けんり (kenri) — a right",
+      "headword": "けんり",
+      "romanization": "kenri",
+      "gloss": "a right",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:300a8dc6de10ed2f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for politics, then the Japanese for a law."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けんり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けんり — kenri — \"a right\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こどもにも けんりが あると おもいます。 — kodomo ni mo kenri ga aru to omoimasu — \"I think children have rights too.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けんり (kenri) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ken, \"rights\" (Middle Chinese gjwen) and ri, \"advantage\" (lijH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kenri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kenri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kenri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kenri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kodomo ni mo kenri ga aru to omoimasu — I think children have rights too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kodomo ni mo kenri ga aru to omoimasu* — I think children have rights too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for politics, then the Japanese for a law, then say kenri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for politics, then the Japanese for a law, then say *kenri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けんり (kenri) mean? (\"A right\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C332-kenri-type",
+              "prompt": "Say the Japanese for 'a right'.",
+              "assesses": [
+                "JA-LEX-C332-KENRI332-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けんり",
+                "kenri"
+              ],
+              "feedback": {
+                "correct": "Right: けんり (kenri) is 'a right'.",
+                "incorrect": "'A right' is けんり (kenri)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C332-gimu",
+      "sequence": 19780,
+      "title": "ぎむ (gimu) — a duty; an obligation",
+      "headword": "ぎむ",
+      "romanization": "gimu",
+      "gloss": "a duty; an obligation",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90faba7a911d11b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a law, then the Japanese for a right."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぎむ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぎむ — gimu — \"a duty; an obligation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しみんには ぎむも あると おもいます。 — shimin ni wa gimu mo aru to omoimasu — \"I think citizens have duties as well.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぎむ (gimu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gi, \"righteousness\" and mu, \"duties\" (Middle Chinese mjuH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gimu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gimu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gimu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gimu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shimin ni wa gimu mo aru to omoimasu — I think citizens have duties as well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shimin ni wa gimu mo aru to omoimasu* — I think citizens have duties as well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a law, then the Japanese for a right, then say gimu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a law, then the Japanese for a right, then say *gimu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぎむ (gimu) mean? (\"A duty; an obligation\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C332-gimu-type",
+              "prompt": "Say the Japanese for 'a duty'.",
+              "assesses": [
+                "JA-LEX-C332-KENRI332-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぎむ",
+                "gimu"
+              ],
+              "feedback": {
+                "correct": "Right: ぎむ (gimu) is 'a duty; an obligation'.",
+                "incorrect": "'A duty' is ぎむ (gimu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C332-byoudou",
+      "sequence": 19790,
+      "title": "びょうどう (byōdō) — equal; equality",
+      "headword": "びょうどう",
+      "romanization": "byōdō",
+      "gloss": "equal; equality",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79a2429a24b4a68b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a right, then the Japanese for a duty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: びょうどう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "びょうどう — byōdō — \"equal; equality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おとこと おんなは びょうどうです。 — otoko to onna wa byōdō desu — \"Men and women are equal.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "びょうどう (byōdō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are byō, \"even\" (Middle Chinese bjaeng) and dō, \"equal\" (tongX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "byōdō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *byōdō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "byōdō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *byōdō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otoko to onna wa byōdō desu — Men and women are equal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otoko to onna wa byōdō desu* — Men and women are equal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a right, then the Japanese for a duty, then say byōdō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a right, then the Japanese for a duty, then say *byōdō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does びょうどう (byōdō) mean? (\"Equal; equality\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C332-byoudou-type",
+              "prompt": "Say the Japanese for 'equal'.",
+              "assesses": [
+                "JA-LEX-C332-KENRI332-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "びょうどう",
+                "byōdō",
+                "byoudou",
+                "byoodoo",
+                "byodo"
+              ],
+              "feedback": {
+                "correct": "Right: びょうどう (byōdō) is 'equal; equality'.",
+                "incorrect": "'Equal' is びょうどう (byōdō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C332-sabetsu",
+      "sequence": 19800,
+      "title": "さべつ (sabetsu) — discrimination",
+      "headword": "さべつ",
+      "romanization": "sabetsu",
+      "gloss": "discrimination",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2076e60872df0c16",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a duty, then the Japanese for equal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さべつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さべつ — sabetsu — \"discrimination\"."
+            },
+            {
+              "kind": "speech",
+              "text": "さべつを しない ほうが いいと おもいます。 — sabetsu o shinai hō ga ii to omoimasu — \"I think it is better not to discriminate.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さべつ (sabetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sa, \"distinction\" (Middle Chinese tsrhae) and betsu, \"separate\" (bjet) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabetsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabetsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabetsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabetsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabetsu o shinai hō ga ii to omoimasu — I think it is better not to discriminate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabetsu o shinai hō ga ii to omoimasu* — I think it is better not to discriminate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a duty, then the Japanese for equal, then say sabetsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a duty, then the Japanese for equal, then say *sabetsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さべつ (sabetsu) mean? (\"Discrimination\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C332-sabetsu-type",
+              "prompt": "Say the Japanese for 'discrimination'.",
+              "assesses": [
+                "JA-LEX-C332-KENRI332-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さべつ",
+                "sabetsu"
+              ],
+              "feedback": {
+                "correct": "Right: さべつ (sabetsu) is 'discrimination'.",
+                "incorrect": "'Discrimination' is さべつ (sabetsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C332-zen-in",
+      "sequence": 19810,
+      "title": "ぜんいん (zen'in) — everyone (in a group); all members",
+      "headword": "ぜんいん",
+      "romanization": "zen'in",
+      "gloss": "everyone (in a group); all members",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b161d39bce3965a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for equal, then the Japanese for discrimination."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぜんいん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぜんいん — zen'in — \"everyone (in a group); all members\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ぜんいんが さんせいしたので、きまりました。 — zen'in ga sansei shita node, kimarimashita — \"Everyone agreed, so it was decided.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぜんいん (zen'in) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are zen, \"all\" (Middle Chinese dzjwen) and in, \"member\" (hjwen) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zen'in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zen'in*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zen'in, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zen'in*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zen'in ga sansei shita node, kimarimashita — Everyone agreed, so it was decided.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zen'in ga sansei shita node, kimarimashita* — Everyone agreed, so it was decided.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for equal, then the Japanese for discrimination, then say zen'in again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for equal, then the Japanese for discrimination, then say *zen'in* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぜんいん (zen'in) mean? (\"Everyone (in a group); all members\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C332-zen-in-type",
+              "prompt": "Say the Japanese for 'all members'.",
+              "assesses": [
+                "JA-LEX-C332-KENRI332-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぜんいん",
+                "zen'in"
+              ],
+              "feedback": {
+                "correct": "Right: ぜんいん (zen'in) is 'everyone (in a group); all members'.",
+                "incorrect": "'All members' is ぜんいん (zen'in)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

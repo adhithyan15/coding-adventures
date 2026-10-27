@@ -1,0 +1,11 @@
+{
+  "id": "JA-C408-rousoku",
+  "pathSegment": "JA-PATH-408-SENKOU408",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-408-SENKOU408",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C382-sunahama",
+  "pathSegment": "JA-PATH-382-KAIGAN382",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-382-KAIGAN382",
+      "order": 1
+    }
+  ]
+}

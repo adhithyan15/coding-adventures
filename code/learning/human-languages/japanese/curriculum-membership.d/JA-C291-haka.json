@@ -1,0 +1,11 @@
+{
+  "id": "JA-C291-haka",
+  "pathSegment": "JA-PATH-291-SOUSHIKI291",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-291-SOUSHIKI291",
+      "order": 3
+    }
+  ]
+}

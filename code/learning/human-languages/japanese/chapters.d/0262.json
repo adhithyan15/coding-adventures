@@ -1,0 +1,19 @@
+{
+  "chapter": 262,
+  "title": "An Accident by the Station",
+  "label": "ch:ja-an-accident-by-the-station",
+  "canDo": "I can say that there was an accident and who was saved.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C262-higai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 262: I can say that there was an accident and who was saved.",
+    "assesses": [
+      "JA-LEX-C262-JIKO262-03",
+      "JA-LEX-C262-JIKO262-04",
+      "JA-LEX-C262-JIKO262-05"
+    ]
+  }
+}

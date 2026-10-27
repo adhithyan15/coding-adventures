@@ -1,0 +1,11 @@
+{
+  "id": "JA-C281-hiromaru",
+  "pathSegment": "JA-PATH-281-UWASA281",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-281-UWASA281",
+      "order": 2
+    }
+  ]
+}

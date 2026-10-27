@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C305-haitatsu",
+    "language": "japanese",
+    "chapter": 305,
+    "sequence": 18250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:503b857be2fbe6a8"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:2e56f22006abeaaf",
+  "lessonIds": [
+    "JA-C462-shoubu",
+    "JA-C462-hikiwake",
+    "JA-C462-kyousou",
+    "JA-C462-jun-i",
+    "JA-C462-hansoku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch462.txt",
+  "json": "japanese/narration/ch462.json",
+  "textHash": "fnv1a64:d4b73c80952bae2c",
+  "jsonHash": "fnv1a64:84d297f96b385028",
+  "findings": []
+}

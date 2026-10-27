@@ -1,0 +1,11 @@
+{
+  "id": "JA-C474-tsubusu",
+  "pathSegment": "JA-PATH-474-PREP474",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-474-PREP474",
+      "order": 1
+    }
+  ]
+}

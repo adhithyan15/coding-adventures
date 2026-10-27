@@ -1,0 +1,11 @@
+{
+  "id": "JA-C500-kakekko",
+  "pathSegment": "JA-PATH-500-TOY500",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-500-TOY500",
+      "order": 2
+    }
+  ]
+}

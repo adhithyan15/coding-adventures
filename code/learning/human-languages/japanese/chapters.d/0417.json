@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "Carrying the Luggage",
+  "label": "ch:ja-carrying-the-luggage",
+  "canDo": "I can carry, roll and label my luggage.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C417-korogasu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can carry, roll and label my luggage.",
+    "assesses": [
+      "JA-LEX-C417-TENIMOTSU417-03",
+      "JA-LEX-C417-TENIMOTSU417-04",
+      "JA-LEX-C417-TENIMOTSU417-05"
+    ]
+  }
+}

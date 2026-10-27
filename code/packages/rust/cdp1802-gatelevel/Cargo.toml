@@ -1,0 +1,15 @@
+[package]
+name = "cdp1802-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "DFF-backed educational gate-level RCA CDP1802 simulator"
+license = "MIT"
+
+[dependencies]
+arithmetic = { path = "../arithmetic" }
+logic-gates = { path = "../logic-gates" }
+
+[dev-dependencies]
+cdp1802-simulator = { path = "../cdp1802-simulator" }
+syn = { version = "2.0.119", features = ["full", "visit"] }
+tempfile = "3.23.0"
