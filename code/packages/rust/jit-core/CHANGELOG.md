@@ -55,6 +55,17 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - eight wrong-class refusals.
   The declaration test confirms that the JIT compiles all three.
 
+## [0.10.1] — 2026-10-26 (frame register limit on the JIT path)
+
+- **Tests only** (`tests/register_limit.rs`): vm-core 0.32.0 refuses a
+  function with more than 65,536 frame registers with
+  `VMError::RegisterLimitExceeded` instead of silently dropping the
+  65,537th. `GenericCirJit` encodes registers in one byte, so such a
+  function is declined (stays interpreted) — and `execute_with_jit` must
+  then surface the interpreter's typed error, never `undefined variable`.
+  A function at exactly the limit still runs. No code change: the JIT's own
+  256-register limit already declines cleanly rather than dropping.
+
 ## [0.10.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
 
 - **Bytecodes `ADD_F64` / `SUB_F64` / `MUL_F64` / `DIV_F64` / `NEG_F64` /

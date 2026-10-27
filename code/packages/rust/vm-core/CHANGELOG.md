@@ -7,6 +7,136 @@
   accepts exactly the range the interpreter tier accepts and fails with the
   same `VMError::Custom` text. There is one copy of the rule, not two.
 
+## [0.33.0] — 2026-10-26 (VM-wide register-slot budget; private name map)
+
+- **Fix (pre-existing): a recursive `store_reg` could pin ~768 MiB.**
+  `store_reg idx, v` resized the frame's register file to `idx + 1` for any
+  `idx ≤ 65_535`, whatever the function statically used, so the
+  three-instruction recursion `store_reg 65535, 1; call r = f; ret r` grew
+  every one of 512 frames to 65,536 × 24-byte `Value`s (measured peak RSS
+  ≈ 792 MB) before `FrameOverflow`. The per-frame limit bounds one frame,
+  not a call stack.
+- **New `VMCore::max_register_slots`** (default
+  `VMCore::DEFAULT_MAX_REGISTER_SLOTS` = 2²² = 4,194,304): a budget of
+  register slots shared by every live frame, counted as `Vec` *capacity*.
+  The register files of one `execute` now occupy at most
+  `max_register_slots × size_of::<Value>()` bytes — 96 MiB by default, 8×
+  below the ~768 MiB it prevents. The reproducer stops after 64 frames
+  (peak RSS ≈ 100 MB in the test binary).
+- **Why 2²² and not 2²⁰ (review fix).** Capacity runs ahead of use:
+  growth doubles from the pre-allocation (the `register_count` hint, 8 for
+  almost every frontend), so a frame using `u` slots holds at most
+  `max(pre-allocation, 2u − 1)`. With a 2²⁰ default a 2,049- or
+  3,004-register recursive function stopped at depth 255 with
+  `RegisterBudgetExceeded` instead of reaching 512, so the "2,048 slots a
+  frame at full depth" claim held only with an exact hint. At 2²² the full
+  512-frame stack gets 8,192 slots a frame: any function whose frames use
+  ≤ 4,096 registers (pre-allocating ≤ 8,192) reaches `max_frames` exactly as
+  before, and full 65,536-register frames reach depth 64.
+- **New `VMError::RegisterBudgetExceeded { function, slots, budget }`**,
+  displayed as `function "f" would bring the call stack to 1114112 register
+  slots, more than the vm-core budget of 1048576 (raise
+  VMCore::max_register_slots)`.
+- **A failed `execute` / `execute_traced` clears its call stack** before
+  returning the error, so the frames' register files (up to the budget) are
+  released at once instead of living until the next `execute`. Nothing
+  reads the frames after an error (`frames` is private; only `Debug`'s
+  `frames_depth` showed it), and a successful run already ends with an
+  empty stack.
+- **How it is enforced (O(1), nothing on pop).** Each frame records, when
+  pushed, the slots the frames beneath it hold (`slots_below`); only the top
+  frame ever grows, so the sum stays exact. All growth goes through one
+  private `VMFrame::grow_to`, which checks `slots_below + len ≤ budget` and
+  clamps `Vec`'s capacity doubling to the frame's share. Growth points: new
+  names (`assign` / `register_index`, which now allocates the slot
+  immediately — the `call` handler's return slot is therefore allocated
+  before the callee is pushed), the new **`VMFrame::store_index(idx, v)`**
+  (used by `store_reg` and `ret`), and the callee frame's pre-allocation
+  (`for_call`, crate-private; `for_function` is now the standalone,
+  budget-free form). `DispatchCtx` gains `max_register_slots`.
+- **Unchanged:** the `load_reg`/`store_reg` index range (`0..=65_535`). No
+  frontend in the repository emits numeric-index `load_reg`/`store_reg`
+  for vm-core (`twig-to-beam`'s `load_reg` is a BEAM register copy; the
+  BEAM/CIL/JVM backends lower both to moves), so the budget bounds memory
+  without redefining the index range.
+- **`VMFrame::name_to_reg` is now private** (breaking for code that wrote
+  to it; no crate in the repository did), with a read-only
+  `VMFrame::name_to_reg()` accessor. Inserting a name directly skipped the
+  `next_reg` counter, so the next new register aliased its slot.
+- New `VMFrame::stack_slots()`: the slots held by a frame and every frame
+  beneath it (the running sum the budget checks).
+- Tests: the recursive `store_reg 65535` reproducer ends with
+  `RegisterBudgetExceeded` after exactly 64 full frames, with the live
+  frames' independently summed capacities equal to the budget; a lowered
+  budget is enforced exactly; `store_reg 1023` recursion still ends in
+  `FrameOverflow` at 512; a 3,004-register recursive function with the
+  default hint reaches `FrameOverflow` at 512 under `VMCore::new()` (it
+  fails at the old 2²⁰ default); a failed `execute`/`execute_traced` leaves
+  no frames and the VM reusable; 500-deep ordinary recursion and a
+  `store_reg`/`load_reg` round trip are unaffected; a budget too small for
+  the entry point's parameters is refused before any instruction; frame
+  tests for `store_index` within/past the budget and past the frame limit,
+  a refused name leaving the frame unchanged, capacity never overshooting
+  the frame's share, `for_call`'s budget checks, and the `name_to_reg()`
+  view.
+
+## [0.32.0] — 2026-10-26 (frame register limit is a typed, load-time error)
+
+- **Fix: a frame's 65,537th register is no longer silently dropped.**
+  `VMFrame::assign` used to ignore any new register past
+  `MAX_FRAME_REGISTERS` (65,536), so a long straight-line function (for
+  example a big Python `main` from `python-iir-compiler`'s release path,
+  which gives every temporary a fresh `pyN`) ran on and then failed with a
+  misleading `undefined variable "py65536"`. Integer programs and every
+  frontend were affected.
+- The limit stays — it is a resource bound shared with `load_reg`/`store_reg`
+  (indices `0..=65_535`, now derived from the constant) and twig-vm's
+  `MAX_REGISTERS_PER_FRAME` — but exceeding it is now an error:
+  - **New `VMError::RegisterLimitExceeded { function, registers, limit }`**,
+    displayed as `function "main" needs 65537 registers, more than the 65536
+    a vm-core frame can hold`.
+  - **Load-time check.** `VMCore::execute` and `execute_traced` run the new
+    `core::check_register_limits(module)` before pushing the root frame: each
+    function's registers are counted — **`params.len()` (parameters own
+    slots `0..params.len()` by position, even when names repeat) plus the
+    distinct instruction `dest`s that are not parameter names** — and the
+    whole module is refused before any instruction or output runs. A cheap upper bound (`params + dests`) skips the hash
+    set for every function that is obviously within the limit. Per-function
+    check: `VMFrame::check_register_limit(&IIRFunction)`.
+  - **Run-time backstop.** `VMFrame::assign` now returns
+    `Result<(), VMError>` (breaking: callers add `?`), and the new
+    `VMFrame::register_index` (also used for the `call` return slot, which
+    used to bypass the cap entirely) fails the same way for a register a
+    custom opcode handler invents at run time.
+- **`VMFrame::for_function(&IIRFunction, return_dest) -> Result`** (was
+  `(name, params, register_count, return_dest) -> Self`): refuses a function
+  with more parameters than a frame holds, so every positional argument
+  write is in bounds (a backstop for functions that bypassed the load-time
+  check). It pre-allocates the untrusted `register_count` hint bounded by
+  `params + instructions` (all the function can ever name) and the limit,
+  and never below `params.len()`. A hand-built module declaring
+  `usize::MAX` no longer aborts on allocation, and a tiny recursive
+  function claiming 65,536 registers no longer pre-allocates them in every
+  frame. `VMFrame::new` also clamps its count to the limit.
+- **Fix (pre-existing): a new register no longer overwrites a duplicate-named
+  parameter's argument.** New registers were numbered `name_to_reg.len()`,
+  which is less than `params.len()` when two parameters share a name, so in
+  `f(a, a)` the first local got slot 1 and clobbered the second argument.
+  Frames now keep a separate `next_reg` counter starting at `params.len()`.
+- Security review: the first draft of this change counted *distinct names*
+  only, so 65,537 parameters all named `a` passed the check and then
+  panicked writing the 65,537th argument into a clamped register file (via
+  `execute` or `call`). Fixed by the positional count and the
+  `for_function` backstop above; regression tests cover both paths.
+- Tests: a function with exactly 65,536 registers runs and returns its last
+  register; 65,537 is refused with the typed error and zero instructions
+  executed (via `execute`, `execute_traced`, and a module whose *callee* is
+  over the limit); 65,537 duplicate-named parameters refused with the typed
+  error and no panic (entry point and callee); `f(a, a)` keeps both
+  arguments next to a local; frame-level tests for the 65,537th `assign`,
+  positional parameter counting, a `dest` naming a parameter not counted
+  twice, distinct-name counting, and the `register_count` bounds.
+
 ## [0.31.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
 
 - **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /
