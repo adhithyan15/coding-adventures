@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W148-yue-month-filmstrip-CKb_JVBA.svg`,import.meta.url).href;export{e as default};

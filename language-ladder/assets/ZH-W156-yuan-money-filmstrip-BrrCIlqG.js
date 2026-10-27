@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W156-yuan-money-filmstrip-c-k99PIG.svg`,import.meta.url).href;export{e as default};
