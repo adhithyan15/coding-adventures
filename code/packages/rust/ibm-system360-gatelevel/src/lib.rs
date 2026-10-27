@@ -216,12 +216,18 @@ impl System360GateLevel {
     /// Execute one checked transition and clock its settled state into DFFs.
     pub fn step(&mut self) -> Result<StepTrace, System360Error> {
         let before = self.get_state();
+        let (authority, fetched) = decode_transition(&before)?;
         let mut transition = System360Simulator::new();
         transition.restore(before.clone())?;
         let trace = transition.step()?;
         let oracle_next = transition.get_state();
-        let gate_next = executor::execute(&before, &trace)?;
-        validate_gate_transition(&before, &gate_next, &trace)?;
+        if trace.raw != fetched || usize::from(trace.width) != fetched.len() {
+            return Err(System360Error::Specification {
+                reason: "functional trace changed the gate-authorized transport",
+            });
+        }
+        let gate_next = executor::execute(&before, &trace, &authority)?;
+        validate_gate_transition(&before, &gate_next, &trace, &authority)?;
         if gate_next != oracle_next {
             return Err(System360Error::Specification {
                 reason: "independent gate transition diverged from the functional oracle",
@@ -280,105 +286,237 @@ impl System360GateLevel {
     }
 }
 
+/// Perform lifecycle fetch checks and settle the single opcode decoder before
+/// either the behavioral oracle or an operation candidate may run.
+fn decode_transition(
+    before: &System360State,
+) -> Result<(executor::DecodeAuthority, Vec<u8>), System360Error> {
+    if before.halted {
+        return Err(System360Error::Halted);
+    }
+    if !before.pc.is_multiple_of(2) {
+        return Err(System360Error::InvalidState {
+            reason: "instruction address is not halfword aligned",
+        });
+    }
+    let start = before.pc as usize;
+    let lo = before.loaded_origin as usize;
+    let hi = lo + before.loaded_len;
+    if start < lo || start >= hi {
+        return Err(System360Error::FetchOutsideProgram { pc: before.pc });
+    }
+    let opcode = before.memory[start];
+    let authority = executor::DecodeAuthority::new(opcode)?;
+    let width = authority
+        .transport_width()
+        .ok_or(System360Error::UnknownOpcode {
+            opcode,
+            pc: before.pc,
+        })?;
+    if start + width > hi {
+        return Err(System360Error::TruncatedInstruction {
+            pc: before.pc,
+            needed: width,
+        });
+    }
+    if authority.operation().is_none() {
+        return Err(System360Error::UnknownOpcode {
+            opcode,
+            pc: before.pc,
+        });
+    }
+    Ok((authority, before.memory[start..start + width].to_vec()))
+}
+
 fn validate_gate_transition(
     before: &System360State,
     next: &System360State,
     trace: &StepTrace,
+    authority: &executor::DecodeAuthority,
 ) -> Result<(), System360Error> {
     let sequential_pc = gates::add_24(before.pc, u32::from(trace.width));
-    let opcode = trace.raw[0];
-    let decode = gates::decode_byte(opcode);
-    if decode[usize::from(opcode)] != 1 || decode.into_iter().map(u16::from).sum::<u16>() != 1 {
-        return gate_disagrees("gate opcode decoder is not one-hot");
+    let operation = authority.operation().ok_or(System360Error::Specification {
+        reason: "validator received no gate-authorized operation",
+    })?;
+    match operation {
+        executor::Operation::Lpr
+        | executor::Operation::Lnr
+        | executor::Operation::Ltr
+        | executor::Operation::Lcr
+        | executor::Operation::Nr
+        | executor::Operation::Clr
+        | executor::Operation::Or
+        | executor::Operation::Xr
+        | executor::Operation::Lr
+        | executor::Operation::Cr
+        | executor::Operation::Ar
+        | executor::Operation::Sr
+        | executor::Operation::Mr
+        | executor::Operation::Dr
+        | executor::Operation::Alr
+        | executor::Operation::Slr => {
+            validate_integer_rr_transition(before, next, trace, operation)?;
+        }
+        executor::Operation::FloatRr(float_operation) => {
+            validate_float_rr_transition(before, next, trace, float_operation)?;
+        }
+        executor::Operation::Sth
+        | executor::Operation::La
+        | executor::Operation::Stc
+        | executor::Operation::Ic
+        | executor::Operation::Bal
+        | executor::Operation::Bct
+        | executor::Operation::Bc
+        | executor::Operation::Lh
+        | executor::Operation::Ch
+        | executor::Operation::Ah
+        | executor::Operation::Sh
+        | executor::Operation::Mh
+        | executor::Operation::St
+        | executor::Operation::N
+        | executor::Operation::Cl
+        | executor::Operation::O
+        | executor::Operation::X
+        | executor::Operation::L
+        | executor::Operation::C
+        | executor::Operation::A
+        | executor::Operation::S
+        | executor::Operation::M
+        | executor::Operation::D
+        | executor::Operation::Al
+        | executor::Operation::Sl
+        | executor::Operation::FloatRx(_) => {
+            validate_rx_transition(before, next, trace, operation)?;
+        }
+        executor::Operation::Bxh
+        | executor::Operation::Bxle
+        | executor::Operation::Srl
+        | executor::Operation::Sll
+        | executor::Operation::Sra
+        | executor::Operation::Sla
+        | executor::Operation::Srdl
+        | executor::Operation::Sldl
+        | executor::Operation::Srda
+        | executor::Operation::Slda
+        | executor::Operation::Stm
+        | executor::Operation::Lm => {
+            validate_rs_transition(before, next, trace, operation)?;
+        }
+        executor::Operation::Tm
+        | executor::Operation::Mvi
+        | executor::Operation::Ni
+        | executor::Operation::Cli
+        | executor::Operation::Oi
+        | executor::Operation::Xi => {
+            validate_si_transition(before, next, trace, operation)?;
+        }
+        executor::Operation::Mvc
+        | executor::Operation::Nc
+        | executor::Operation::Clc
+        | executor::Operation::Oc
+        | executor::Operation::Xc => {
+            validate_ss_transition(before, next, trace, operation)?;
+        }
+        executor::Operation::Balr
+        | executor::Operation::Bctr
+        | executor::Operation::Bcr
+        | executor::Operation::Svc => {}
     }
-    if matches!(opcode, 0x10..=0x1f) {
-        let r1 = usize::from(trace.raw[1] >> 4);
-        let r2 = usize::from(trace.raw[1] & 15);
-        let a = before.gprs[r1];
-        let b = before.gprs[r2];
-        let expected = match opcode {
-            0x10 => Some(if b & 0x8000_0000 == 0 {
-                b
-            } else {
-                gates::negate_32(b).0
-            }),
-            0x11 => Some(if b & 0x8000_0000 == 0 && b != 0 {
-                gates::negate_32(b).0
-            } else {
-                b
-            }),
-            0x12 | 0x18 => Some(b),
-            0x13 => Some(gates::negate_32(b).0),
-            0x14 => Some(gates::bit_and_32(a, b)),
-            0x16 => Some(gates::bit_or_32(a, b)),
-            0x17 => Some(gates::bit_xor_32(a, b)),
-            0x1a | 0x1e => Some(gates::add_32(a, b, 0).0),
-            0x1b | 0x1f => Some(gates::add_32(a, gates::bit_not_32(b), 1).0),
-            _ => None,
-        };
-        if expected.is_some_and(|value| next.gprs[r1] != value) {
-            return Err(System360Error::Specification {
-                reason: "gate ALU and architectural transition disagree",
-            });
-        }
-        let expected_cc = match opcode {
-            0x10..=0x13 | 0x1a | 0x1b => expected.map(gates::signed_condition_code),
-            0x14 => expected.map(gates::logical_condition_code),
-            0x15 => Some(gates::unsigned_compare_condition_code(a, b)),
-            0x16 | 0x17 => expected.map(gates::logical_condition_code),
-            0x19 => Some(gates::signed_compare_condition_code(a, b)),
-            0x1e => expected.map(|value| {
-                let carry = gates::add_32(a, b, 0).1;
-                (carry << 1) | gates::logical_condition_code(value)
-            }),
-            0x1f => expected.map(|value| {
-                let carry = gates::add_32(a, gates::bit_not_32(b), 1).1;
-                (carry << 1) | gates::logical_condition_code(value)
-            }),
-            _ => None,
-        };
-        if expected_cc.is_some_and(|condition_code| next.condition_code != condition_code) {
-            return Err(System360Error::Specification {
-                reason: "gate condition-code network and transition disagree",
-            });
-        }
-        if opcode == 0x1c {
-            let product = gates::multiply_signed_32(before.gprs[r1 + 1], b);
-            if next.gprs[r1] != (product >> 32) as u32 || next.gprs[r1 + 1] != product as u32 {
-                return gate_disagrees("gate RR multiplier and transition disagree");
-            }
-        }
-        if opcode == 0x1d {
-            let dividend = (u64::from(before.gprs[r1]) << 32) | u64::from(before.gprs[r1 + 1]);
-            let (remainder, quotient) = gates::divide_signed_64_by_32(dividend, b).ok_or(
-                System360Error::Specification {
-                    reason: "gate divider rejected an oracle-valid transition",
-                },
-            )?;
-            if next.gprs[r1] != remainder || next.gprs[r1 + 1] != quotient {
-                return gate_disagrees("gate RR divider and transition disagree");
-            }
-        }
-    }
-    if matches!(opcode, 0x20..=0x3f) {
-        validate_float_rr_transition(before, next, trace)?;
-    }
-    if trace.raw.len() == 4 {
-        if matches!(opcode, 0x91..=0x97) {
-            validate_si_transition(before, next, trace)?;
-        } else if matches!(opcode, 0x86..=0x90 | 0x98) {
-            validate_rs_transition(before, next, trace)?;
-        } else {
-            validate_rx_transition(before, next, trace)?;
-        }
-    } else if trace.raw.len() == 6 {
-        validate_ss_transition(before, next, trace)?;
-    }
-    validate_control_transition(before, next, trace, sequential_pc)?;
-    if !matches!(opcode, 0x05..=0x07 | 0x45..=0x47 | 0x86 | 0x87) && next.pc != sequential_pc {
+    validate_control_transition(before, next, trace, sequential_pc, operation, authority)?;
+    if !matches!(
+        operation,
+        executor::Operation::Balr
+            | executor::Operation::Bctr
+            | executor::Operation::Bcr
+            | executor::Operation::Bal
+            | executor::Operation::Bct
+            | executor::Operation::Bc
+            | executor::Operation::Bxh
+            | executor::Operation::Bxle
+    ) && next.pc != sequential_pc
+    {
         return Err(System360Error::Specification {
             reason: "gate instruction-address adder and transition disagree",
         });
+    }
+    Ok(())
+}
+
+fn validate_integer_rr_transition(
+    before: &System360State,
+    next: &System360State,
+    trace: &StepTrace,
+    operation: executor::Operation,
+) -> Result<(), System360Error> {
+    let r1 = usize::from(trace.raw[1] >> 4);
+    let r2 = usize::from(trace.raw[1] & 15);
+    let a = before.gprs[r1];
+    let b = before.gprs[r2];
+    let expected = match operation {
+        executor::Operation::Lpr => Some(if b & 0x8000_0000 == 0 {
+            b
+        } else {
+            gates::negate_32(b).0
+        }),
+        executor::Operation::Lnr => Some(if b & 0x8000_0000 == 0 && b != 0 {
+            gates::negate_32(b).0
+        } else {
+            b
+        }),
+        executor::Operation::Ltr | executor::Operation::Lr => Some(b),
+        executor::Operation::Lcr => Some(gates::negate_32(b).0),
+        executor::Operation::Nr => Some(gates::bit_and_32(a, b)),
+        executor::Operation::Or => Some(gates::bit_or_32(a, b)),
+        executor::Operation::Xr => Some(gates::bit_xor_32(a, b)),
+        executor::Operation::Ar | executor::Operation::Alr => Some(gates::add_32(a, b, 0).0),
+        executor::Operation::Sr | executor::Operation::Slr => {
+            Some(gates::add_32(a, gates::bit_not_32(b), 1).0)
+        }
+        _ => None,
+    };
+    if expected.is_some_and(|value| next.gprs[r1] != value) {
+        return gate_disagrees("gate ALU and architectural transition disagree");
+    }
+    let expected_cc = match operation {
+        executor::Operation::Lpr
+        | executor::Operation::Lnr
+        | executor::Operation::Ltr
+        | executor::Operation::Lcr
+        | executor::Operation::Ar
+        | executor::Operation::Sr => expected.map(gates::signed_condition_code),
+        executor::Operation::Nr | executor::Operation::Or | executor::Operation::Xr => {
+            expected.map(gates::logical_condition_code)
+        }
+        executor::Operation::Clr => Some(gates::unsigned_compare_condition_code(a, b)),
+        executor::Operation::Cr => Some(gates::signed_compare_condition_code(a, b)),
+        executor::Operation::Alr => expected.map(|value| {
+            let carry = gates::add_32(a, b, 0).1;
+            (carry << 1) | gates::logical_condition_code(value)
+        }),
+        executor::Operation::Slr => expected.map(|value| {
+            let carry = gates::add_32(a, gates::bit_not_32(b), 1).1;
+            (carry << 1) | gates::logical_condition_code(value)
+        }),
+        _ => None,
+    };
+    if expected_cc.is_some_and(|condition_code| next.condition_code != condition_code) {
+        return gate_disagrees("gate condition-code network and transition disagree");
+    }
+    if operation == executor::Operation::Mr {
+        let product = gates::multiply_signed_32(before.gprs[r1 + 1], b);
+        if next.gprs[r1] != (product >> 32) as u32 || next.gprs[r1 + 1] != product as u32 {
+            return gate_disagrees("gate RR multiplier and transition disagree");
+        }
+    }
+    if operation == executor::Operation::Dr {
+        let dividend = (u64::from(before.gprs[r1]) << 32) | u64::from(before.gprs[r1 + 1]);
+        let (remainder, quotient) =
+            gates::divide_signed_64_by_32(dividend, b).ok_or(System360Error::Specification {
+                reason: "gate divider rejected an oracle-valid transition",
+            })?;
+        if next.gprs[r1] != remainder || next.gprs[r1 + 1] != quotient {
+            return gate_disagrees("gate RR divider and transition disagree");
+        }
     }
     Ok(())
 }
@@ -388,10 +526,11 @@ fn validate_control_transition(
     next: &System360State,
     trace: &StepTrace,
     sequential_pc: u32,
+    operation: executor::Operation,
+    authority: &executor::DecodeAuthority,
 ) -> Result<(), System360Error> {
-    let opcode = trace.raw[0];
-    let expected = match opcode {
-        0x05 => {
+    let expected = match operation {
+        executor::Operation::Balr => {
             let r1 = usize::from(trace.raw[1] >> 4);
             let r2 = usize::from(trace.raw[1] & 15);
             if next.gprs[r1] != sequential_pc {
@@ -403,7 +542,7 @@ fn validate_control_transition(
                 gates::register_field_nonzero(r2 as u8),
             ))
         }
-        0x06 => {
+        executor::Operation::Bctr => {
             let r1 = usize::from(trace.raw[1] >> 4);
             let r2 = usize::from(trace.raw[1] & 15);
             let decremented = gates::add_32(before.gprs[r1], u32::MAX, 0).0;
@@ -416,7 +555,7 @@ fn validate_control_transition(
                 gates::count_branch_selected(decremented, r2 as u8),
             ))
         }
-        0x07 => {
+        executor::Operation::Bcr => {
             let mask = trace.raw[1] >> 4;
             let r2 = usize::from(trace.raw[1] & 15);
             Some(gates::select_u32(
@@ -425,29 +564,29 @@ fn validate_control_transition(
                 gates::branch_selected(mask, before.condition_code),
             ))
         }
-        0x45..=0x47 => {
+        executor::Operation::Bal | executor::Operation::Bct | executor::Operation::Bc => {
             let r1 = usize::from(trace.raw[1] >> 4);
             let target = gate_ea_rx(&trace.raw, before);
-            let select = match opcode {
-                0x45 => {
+            let select = match operation {
+                executor::Operation::Bal => {
                     if next.gprs[r1] != sequential_pc {
                         return gate_disagrees("gate BAL link path and transition disagree");
                     }
                     1
                 }
-                0x46 => {
+                executor::Operation::Bct => {
                     let decremented = gates::add_32(before.gprs[r1], u32::MAX, 0).0;
                     if next.gprs[r1] != decremented {
                         return gate_disagrees("gate BCT decrement path and transition disagree");
                     }
                     gates::nonzero_32(decremented)
                 }
-                0x47 => gates::branch_selected(r1 as u8, before.condition_code),
+                executor::Operation::Bc => gates::branch_selected(r1 as u8, before.condition_code),
                 _ => unreachable!(),
             };
             Some(gates::select_u32(sequential_pc, target, select))
         }
-        0x86 | 0x87 => {
+        executor::Operation::Bxh | executor::Operation::Bxle => {
             let r1 = usize::from(trace.raw[1] >> 4);
             let r3 = usize::from(trace.raw[1] & 15);
             let compare = if r3.is_multiple_of(2) { r3 + 1 } else { r3 };
@@ -457,7 +596,11 @@ fn validate_control_transition(
             Some(gates::select_u32(
                 sequential_pc,
                 gate_ea_base(&trace.raw, 2, before),
-                gates::index_branch_selected(opcode, comparison),
+                gates::index_branch_selected(
+                    authority.line(0x86),
+                    authority.line(0x87),
+                    comparison,
+                ),
             ))
         }
         _ => None,
@@ -508,46 +651,64 @@ fn validate_rx_transition(
     before: &System360State,
     next: &System360State,
     trace: &StepTrace,
+    operation: executor::Operation,
 ) -> Result<(), System360Error> {
-    let opcode = trace.raw[0];
     let register = usize::from(trace.raw[1] >> 4);
     let address = gate_ea_rx(&trace.raw, before) as usize;
-    if matches!(opcode, 0x60..=0x7f) {
-        return validate_float_rx_transition(before, next, opcode, register, address);
+    if let executor::Operation::FloatRx(float_operation) = operation {
+        return validate_float_rx_transition(before, next, float_operation, register, address);
     }
     let a = before.gprs[register];
     let word = || read_be32(&before.memory, address);
     let half = || i32::from(read_be16(&before.memory, address) as i16) as u32;
-    let expected_register = match opcode {
-        0x41 => Some(address as u32),
-        0x43 => Some((a & 0xffff_ff00) | u32::from(before.memory[address])),
-        0x48 => Some(half()),
-        0x58 => Some(word()),
-        0x4a | 0x5a | 0x5e => {
-            Some(gates::add_32(a, if opcode == 0x4a { half() } else { word() }, 0).0)
-        }
-        0x4b | 0x5b | 0x5f => {
-            let b = if opcode == 0x4b { half() } else { word() };
+    let expected_register = match operation {
+        executor::Operation::La => Some(address as u32),
+        executor::Operation::Ic => Some((a & 0xffff_ff00) | u32::from(before.memory[address])),
+        executor::Operation::Lh => Some(half()),
+        executor::Operation::L => Some(word()),
+        executor::Operation::Ah | executor::Operation::A | executor::Operation::Al => Some(
+            gates::add_32(
+                a,
+                if operation == executor::Operation::Ah {
+                    half()
+                } else {
+                    word()
+                },
+                0,
+            )
+            .0,
+        ),
+        executor::Operation::Sh | executor::Operation::S | executor::Operation::Sl => {
+            let b = if operation == executor::Operation::Sh {
+                half()
+            } else {
+                word()
+            };
             Some(gates::add_32(a, gates::bit_not_32(b), 1).0)
         }
-        0x54 => Some(gates::bit_and_32(a, word())),
-        0x56 => Some(gates::bit_or_32(a, word())),
-        0x57 => Some(gates::bit_xor_32(a, word())),
+        executor::Operation::N => Some(gates::bit_and_32(a, word())),
+        executor::Operation::O => Some(gates::bit_or_32(a, word())),
+        executor::Operation::X => Some(gates::bit_xor_32(a, word())),
         _ => None,
     };
     if expected_register.is_some_and(|value| next.gprs[register] != value) {
         return gate_disagrees("gate RX datapath and register transition disagree");
     }
-    let expected_cc = match opcode {
-        0x4a | 0x4b | 0x5a | 0x5b => expected_register.map(gates::signed_condition_code),
-        0x49 => Some(gates::signed_compare_condition_code(a, half())),
-        0x59 => Some(gates::signed_compare_condition_code(a, word())),
-        0x55 => Some(gates::unsigned_compare_condition_code(a, word())),
-        0x54 | 0x56 | 0x57 => expected_register.map(gates::logical_condition_code),
-        0x5e => expected_register.map(|value| {
+    let expected_cc = match operation {
+        executor::Operation::Ah
+        | executor::Operation::Sh
+        | executor::Operation::A
+        | executor::Operation::S => expected_register.map(gates::signed_condition_code),
+        executor::Operation::Ch => Some(gates::signed_compare_condition_code(a, half())),
+        executor::Operation::C => Some(gates::signed_compare_condition_code(a, word())),
+        executor::Operation::Cl => Some(gates::unsigned_compare_condition_code(a, word())),
+        executor::Operation::N | executor::Operation::O | executor::Operation::X => {
+            expected_register.map(gates::logical_condition_code)
+        }
+        executor::Operation::Al => expected_register.map(|value| {
             (gates::add_32(a, word(), 0).1 << 1) | gates::logical_condition_code(value)
         }),
-        0x5f => expected_register.map(|value| {
+        executor::Operation::Sl => expected_register.map(|value| {
             (gates::add_32(a, gates::bit_not_32(word()), 1).1 << 1)
                 | gates::logical_condition_code(value)
         }),
@@ -556,16 +717,16 @@ fn validate_rx_transition(
     if expected_cc.is_some_and(|value| next.condition_code != value) {
         return gate_disagrees("gate RX condition-code network and transition disagree");
     }
-    let expected_store: Option<Vec<u8>> = match opcode {
-        0x40 => Some((a as u16).to_be_bytes().to_vec()),
-        0x42 => Some(vec![a as u8]),
-        0x50 => Some(a.to_be_bytes().to_vec()),
+    let expected_store: Option<Vec<u8>> = match operation {
+        executor::Operation::Sth => Some((a as u16).to_be_bytes().to_vec()),
+        executor::Operation::Stc => Some(vec![a as u8]),
+        executor::Operation::St => Some(a.to_be_bytes().to_vec()),
         _ => None,
     };
     if expected_store.is_some_and(|bytes| next.memory[address..address + bytes.len()] != bytes) {
         return gate_disagrees("gate RX storage path and transition disagree");
     }
-    if opcode == 0x5c {
+    if operation == executor::Operation::M {
         let product = gates::multiply_signed_32(before.gprs[register + 1], word());
         if next.gprs[register] != (product >> 32) as u32
             || next.gprs[register + 1] != product as u32
@@ -573,13 +734,13 @@ fn validate_rx_transition(
             return gate_disagrees("gate RX multiplier and transition disagree");
         }
     }
-    if opcode == 0x4c {
+    if operation == executor::Operation::Mh {
         let product = gates::multiply_signed_32(a, half());
         if next.gprs[register] != product as u32 {
             return gate_disagrees("gate halfword multiplier and transition disagree");
         }
     }
-    if opcode == 0x5d {
+    if operation == executor::Operation::D {
         let dividend =
             (u64::from(before.gprs[register]) << 32) | u64::from(before.gprs[register + 1]);
         let (remainder, quotient) = gates::divide_signed_64_by_32(dividend, word()).ok_or(
@@ -598,27 +759,32 @@ fn validate_float_rr_transition(
     before: &System360State,
     next: &System360State,
     trace: &StepTrace,
+    operation: executor::FloatRrOperation,
 ) -> Result<(), System360Error> {
-    let opcode = trace.raw[0];
     let r1 = usize::from(trace.raw[1] >> 4);
     let r2 = usize::from(trace.raw[1] & 15);
     let slot1 = r1 / 2;
     let slot2 = r2 / 2;
-    let long = opcode < 0x30;
+    let long = operation.is_long();
     let a = before.fprs[slot1];
     let b = before.fprs[slot2];
     let digits = if long { 14 } else { 6 };
     let gate_a = GateHfp::decode(a, long);
     let gate_b = GateHfp::decode(b, long);
-    let signed = match opcode {
-        0x28 | 0x38 | 0x22 | 0x32 => Some(gates::hfp_with_sign(b, long, b >> 63 != 0)),
-        0x23 | 0x33 => Some(gates::hfp_with_sign(b, long, b >> 63 == 0)),
-        0x20 | 0x30 => Some(gates::hfp_with_sign(b, long, false)),
-        0x21 | 0x31 => Some(gates::hfp_with_sign(
-            b,
-            long,
-            gates::hfp_fraction_nonzero(b, long) == 1,
-        )),
+    let signed = match operation {
+        executor::FloatRrOperation::Op28
+        | executor::FloatRrOperation::Op38
+        | executor::FloatRrOperation::Op22
+        | executor::FloatRrOperation::Op32 => Some(gates::hfp_with_sign(b, long, b >> 63 != 0)),
+        executor::FloatRrOperation::Op23 | executor::FloatRrOperation::Op33 => {
+            Some(gates::hfp_with_sign(b, long, b >> 63 == 0))
+        }
+        executor::FloatRrOperation::Op20 | executor::FloatRrOperation::Op30 => {
+            Some(gates::hfp_with_sign(b, long, false))
+        }
+        executor::FloatRrOperation::Op21 | executor::FloatRrOperation::Op31 => Some(
+            gates::hfp_with_sign(b, long, gates::hfp_fraction_nonzero(b, long) == 1),
+        ),
         _ => None,
     };
     if let Some(high) = signed {
@@ -631,19 +797,34 @@ fn validate_float_rr_transition(
             return gate_disagrees("gate floating sign/load network and transition disagree");
         }
         if matches!(
-            opcode,
-            0x22 | 0x32 | 0x23 | 0x33 | 0x20 | 0x30 | 0x21 | 0x31
+            operation,
+            executor::FloatRrOperation::Op22
+                | executor::FloatRrOperation::Op32
+                | executor::FloatRrOperation::Op23
+                | executor::FloatRrOperation::Op33
+                | executor::FloatRrOperation::Op20
+                | executor::FloatRrOperation::Op30
+                | executor::FloatRrOperation::Op21
+                | executor::FloatRrOperation::Op31
         ) && next.condition_code != gates::hfp_condition_code(value, long)
         {
             return gate_disagrees("gate floating condition-code network and transition disagree");
         }
     }
-    let arithmetic = match opcode {
-        0x2a | 0x3a => gate_a.add(gate_b, digits),
-        0x2b | 0x3b => gate_a.add(gate_b.with_complemented_sign(), digits),
-        0x24 | 0x34 => gate_a.halve(digits),
-        0x2c | 0x3c => gate_a.multiply(gate_b, digits),
-        0x2d | 0x3d => gate_a.divide(gate_b, digits),
+    let arithmetic = match operation {
+        executor::FloatRrOperation::Op2a | executor::FloatRrOperation::Op3a => {
+            gate_a.add(gate_b, digits)
+        }
+        executor::FloatRrOperation::Op2b | executor::FloatRrOperation::Op3b => {
+            gate_a.add(gate_b.with_complemented_sign(), digits)
+        }
+        executor::FloatRrOperation::Op24 | executor::FloatRrOperation::Op34 => gate_a.halve(digits),
+        executor::FloatRrOperation::Op2c | executor::FloatRrOperation::Op3c => {
+            gate_a.multiply(gate_b, digits)
+        }
+        executor::FloatRrOperation::Op2d | executor::FloatRrOperation::Op3d => {
+            gate_a.divide(gate_b, digits)
+        }
         _ => None,
     };
     if let Some(value) = arithmetic {
@@ -658,15 +839,24 @@ fn validate_float_rr_transition(
         if next.fprs[slot1] != expected {
             return gate_disagrees("gate floating arithmetic network and transition disagree");
         }
-        if matches!(opcode, 0x2a | 0x3a | 0x2b | 0x3b)
-            && next.condition_code != value.condition_code()
+        if matches!(
+            operation,
+            executor::FloatRrOperation::Op2a
+                | executor::FloatRrOperation::Op3a
+                | executor::FloatRrOperation::Op2b
+                | executor::FloatRrOperation::Op3b
+        ) && next.condition_code != value.condition_code()
         {
             return gate_disagrees(
                 "gate floating arithmetic condition code and transition disagree",
             );
         }
     }
-    if matches!(opcode, 0x29 | 0x39) && next.condition_code != gate_a.compare(gate_b) {
+    if matches!(
+        operation,
+        executor::FloatRrOperation::Op29 | executor::FloatRrOperation::Op39
+    ) && next.condition_code != gate_a.compare(gate_b)
+    {
         return gate_disagrees("gate floating comparator and transition disagree");
     }
     Ok(())
@@ -675,12 +865,12 @@ fn validate_float_rr_transition(
 fn validate_float_rx_transition(
     before: &System360State,
     next: &System360State,
-    opcode: u8,
+    operation: executor::FloatRxOperation,
     register: usize,
     address: usize,
 ) -> Result<(), System360Error> {
     let slot = register / 2;
-    let long = opcode < 0x70;
+    let long = operation.is_long();
     let digits = if long { 14 } else { 6 };
     let memory_raw = if long {
         read_be64(&before.memory, address)
@@ -689,8 +879,8 @@ fn validate_float_rx_transition(
     };
     let gate_a = GateHfp::decode(before.fprs[slot], long);
     let gate_b = GateHfp::decode(memory_raw, long);
-    match opcode {
-        0x68 | 0x78 => {
+    match operation {
+        executor::FloatRxOperation::Op68 | executor::FloatRxOperation::Op78 => {
             let canonical = gates::hfp_with_sign(memory_raw, long, memory_raw >> 63 != 0);
             let expected = if long {
                 canonical
@@ -701,21 +891,32 @@ fn validate_float_rx_transition(
                 return gate_disagrees("gate floating load network and transition disagree");
             }
         }
-        0x60 if next.memory[address..address + 8] != before.fprs[slot].to_be_bytes() => {
+        executor::FloatRxOperation::Op60
+            if next.memory[address..address + 8] != before.fprs[slot].to_be_bytes() =>
+        {
             return gate_disagrees("gate floating long-store network and transition disagree");
         }
-        0x70 if next.memory[address..address + 4]
-            != ((before.fprs[slot] >> 32) as u32).to_be_bytes() =>
+        executor::FloatRxOperation::Op70
+            if next.memory[address..address + 4]
+                != ((before.fprs[slot] >> 32) as u32).to_be_bytes() =>
         {
             return gate_disagrees("gate floating short-store network and transition disagree");
         }
         _ => {}
     }
-    let arithmetic = match opcode {
-        0x6a | 0x7a => gate_a.add(gate_b, digits),
-        0x6b | 0x7b => gate_a.add(gate_b.with_complemented_sign(), digits),
-        0x6c | 0x7c => gate_a.multiply(gate_b, digits),
-        0x6d | 0x7d => gate_a.divide(gate_b, digits),
+    let arithmetic = match operation {
+        executor::FloatRxOperation::Op6a | executor::FloatRxOperation::Op7a => {
+            gate_a.add(gate_b, digits)
+        }
+        executor::FloatRxOperation::Op6b | executor::FloatRxOperation::Op7b => {
+            gate_a.add(gate_b.with_complemented_sign(), digits)
+        }
+        executor::FloatRxOperation::Op6c | executor::FloatRxOperation::Op7c => {
+            gate_a.multiply(gate_b, digits)
+        }
+        executor::FloatRxOperation::Op6d | executor::FloatRxOperation::Op7d => {
+            gate_a.divide(gate_b, digits)
+        }
         _ => None,
     };
     if let Some(value) = arithmetic {
@@ -730,13 +931,22 @@ fn validate_float_rx_transition(
         if next.fprs[slot] != expected {
             return gate_disagrees("gate floating storage arithmetic and transition disagree");
         }
-        if matches!(opcode, 0x6a | 0x7a | 0x6b | 0x7b)
-            && next.condition_code != value.condition_code()
+        if matches!(
+            operation,
+            executor::FloatRxOperation::Op6a
+                | executor::FloatRxOperation::Op7a
+                | executor::FloatRxOperation::Op6b
+                | executor::FloatRxOperation::Op7b
+        ) && next.condition_code != value.condition_code()
         {
             return gate_disagrees("gate floating storage condition code and transition disagree");
         }
     }
-    if matches!(opcode, 0x69 | 0x79) && next.condition_code != gate_a.compare(gate_b) {
+    if matches!(
+        operation,
+        executor::FloatRxOperation::Op69 | executor::FloatRxOperation::Op79
+    ) && next.condition_code != gate_a.compare(gate_b)
+    {
         return gate_disagrees("gate floating storage comparator and transition disagree");
     }
     Ok(())
@@ -746,36 +956,48 @@ fn validate_rs_transition(
     before: &System360State,
     next: &System360State,
     trace: &StepTrace,
+    operation: executor::Operation,
 ) -> Result<(), System360Error> {
-    let opcode = trace.raw[0];
     let r1 = usize::from(trace.raw[1] >> 4);
     let r3 = usize::from(trace.raw[1] & 15);
     let address = gate_ea_base(&trace.raw, 2, before);
     let count = address & 63;
     let source = before.gprs[r1];
-    let expected = match opcode {
-        0x88 => Some(gates::shift_right_32(source, count)),
-        0x89 => Some(gates::shift_left_32(source, count)),
-        0x8a => Some(gates::arithmetic_right_32(source, count)),
-        0x8b => Some((source & 0x8000_0000) | (gates::shift_left_32(source, count) & 0x7fff_ffff)),
-        0x86 | 0x87 => Some(gates::add_32(source, before.gprs[r3], 0).0),
+    let expected = match operation {
+        executor::Operation::Srl => Some(gates::shift_right_32(source, count)),
+        executor::Operation::Sll => Some(gates::shift_left_32(source, count)),
+        executor::Operation::Sra => Some(gates::arithmetic_right_32(source, count)),
+        executor::Operation::Sla => {
+            Some((source & 0x8000_0000) | (gates::shift_left_32(source, count) & 0x7fff_ffff))
+        }
+        executor::Operation::Bxh | executor::Operation::Bxle => {
+            Some(gates::add_32(source, before.gprs[r3], 0).0)
+        }
         _ => None,
     };
     if expected.is_some_and(|value| next.gprs[r1] != value) {
         return gate_disagrees("gate RS shift/index network and transition disagree");
     }
-    if matches!(opcode, 0x8a | 0x8b)
-        && next.condition_code != gates::signed_condition_code(next.gprs[r1])
+    if matches!(
+        operation,
+        executor::Operation::Sra | executor::Operation::Sla
+    ) && next.condition_code != gates::signed_condition_code(next.gprs[r1])
     {
         return gate_disagrees("gate RS condition-code network and transition disagree");
     }
-    if matches!(opcode, 0x8c..=0x8f) {
+    if matches!(
+        operation,
+        executor::Operation::Srdl
+            | executor::Operation::Sldl
+            | executor::Operation::Srda
+            | executor::Operation::Slda
+    ) {
         let pair = (u64::from(before.gprs[r1]) << 32) | u64::from(before.gprs[r1 + 1]);
-        let value = match opcode {
-            0x8c => gates::shift_right_64(pair, count),
-            0x8d => gates::shift_left_64(pair, count),
-            0x8e => gates::arithmetic_right_64(pair, count),
-            0x8f => {
+        let value = match operation {
+            executor::Operation::Srdl => gates::shift_right_64(pair, count),
+            executor::Operation::Sldl => gates::shift_left_64(pair, count),
+            executor::Operation::Srda => gates::arithmetic_right_64(pair, count),
+            executor::Operation::Slda => {
                 (pair & 0x8000_0000_0000_0000)
                     | (gates::shift_left_64(pair, count) & 0x7fff_ffff_ffff_ffff)
             }
@@ -785,7 +1007,7 @@ fn validate_rs_transition(
             return gate_disagrees("gate doubleword shifter and transition disagree");
         }
     }
-    if opcode == 0x90 {
+    if operation == executor::Operation::Stm {
         let count = if r3 >= r1 { r3 - r1 + 1 } else { 17 - r1 + r3 };
         for offset in 0..count {
             let address = address as usize + offset * 4;
@@ -794,7 +1016,7 @@ fn validate_rs_transition(
             }
         }
     }
-    if opcode == 0x98 {
+    if operation == executor::Operation::Lm {
         let count = if r3 >= r1 { r3 - r1 + 1 } else { 17 - r1 + r3 };
         for offset in 0..count {
             let address = address as usize + offset * 4;
@@ -810,26 +1032,35 @@ fn validate_si_transition(
     before: &System360State,
     next: &System360State,
     trace: &StepTrace,
+    operation: executor::Operation,
 ) -> Result<(), System360Error> {
-    let opcode = trace.raw[0];
     let immediate = trace.raw[1];
     let address = gate_ea_base(&trace.raw, 2, before) as usize;
     let old = u32::from(before.memory[address]);
     let imm = u32::from(immediate);
-    let result = match opcode {
-        0x94 | 0x91 => gates::bit_and_32(old, imm) as u8,
-        0x96 => gates::bit_or_32(old, imm) as u8,
-        0x97 => gates::bit_xor_32(old, imm) as u8,
-        0x92 => immediate,
+    let result = match operation {
+        executor::Operation::Ni | executor::Operation::Tm => gates::bit_and_32(old, imm) as u8,
+        executor::Operation::Oi => gates::bit_or_32(old, imm) as u8,
+        executor::Operation::Xi => gates::bit_xor_32(old, imm) as u8,
+        executor::Operation::Mvi => immediate,
         _ => before.memory[address],
     };
-    if matches!(opcode, 0x92 | 0x94 | 0x96 | 0x97) && next.memory[address] != result {
+    if matches!(
+        operation,
+        executor::Operation::Mvi
+            | executor::Operation::Ni
+            | executor::Operation::Oi
+            | executor::Operation::Xi
+    ) && next.memory[address] != result
+    {
         return gate_disagrees("gate SI byte network and transition disagree");
     }
-    let expected_cc = match opcode {
-        0x94 | 0x96 | 0x97 => Some(u8::from(result != 0)),
-        0x95 => Some(gates::unsigned_compare_condition_code(old, imm)),
-        0x91 => Some(if result == 0 {
+    let expected_cc = match operation {
+        executor::Operation::Ni | executor::Operation::Oi | executor::Operation::Xi => {
+            Some(u8::from(result != 0))
+        }
+        executor::Operation::Cli => Some(gates::unsigned_compare_condition_code(old, imm)),
+        executor::Operation::Tm => Some(if result == 0 {
             0
         } else if result == immediate {
             3
@@ -848,8 +1079,8 @@ fn validate_ss_transition(
     before: &System360State,
     next: &System360State,
     trace: &StepTrace,
+    operation: executor::Operation,
 ) -> Result<(), System360Error> {
-    let opcode = trace.raw[0];
     let length = usize::from(trace.raw[1]) + 1;
     let destination = gate_ea_base(&trace.raw, 2, before) as usize;
     let source = gate_ea_base(&trace.raw, 4, before) as usize;
@@ -858,23 +1089,35 @@ fn validate_ss_transition(
     for offset in 0..length {
         let a = u32::from(settled[destination + offset]);
         let b = u32::from(settled[source + offset]);
-        let value = match opcode {
-            0xd2 => b as u8,
-            0xd4 => gates::bit_and_32(a, b) as u8,
-            0xd6 => gates::bit_or_32(a, b) as u8,
-            0xd7 => gates::bit_xor_32(a, b) as u8,
+        let value = match operation {
+            executor::Operation::Mvc => b as u8,
+            executor::Operation::Nc => gates::bit_and_32(a, b) as u8,
+            executor::Operation::Oc => gates::bit_or_32(a, b) as u8,
+            executor::Operation::Xc => gates::bit_xor_32(a, b) as u8,
             _ => before.memory[destination + offset],
         };
-        if matches!(opcode, 0xd2 | 0xd4 | 0xd6 | 0xd7) {
+        if matches!(
+            operation,
+            executor::Operation::Mvc
+                | executor::Operation::Nc
+                | executor::Operation::Oc
+                | executor::Operation::Xc
+        ) {
             settled[destination + offset] = value;
         }
         nonzero |= value != 0;
-        if matches!(opcode, 0xd2 | 0xd4 | 0xd6 | 0xd7) && next.memory[destination + offset] != value
+        if matches!(
+            operation,
+            executor::Operation::Mvc
+                | executor::Operation::Nc
+                | executor::Operation::Oc
+                | executor::Operation::Xc
+        ) && next.memory[destination + offset] != value
         {
             return gate_disagrees("gate SS byte network and transition disagree");
         }
     }
-    if opcode == 0xd5 {
+    if operation == executor::Operation::Clc {
         let mut condition_code = 0;
         for offset in 0..length {
             condition_code = gates::unsigned_compare_condition_code(
@@ -889,7 +1132,11 @@ fn validate_ss_transition(
             return gate_disagrees("gate CLC comparator and transition disagree");
         }
     }
-    if matches!(opcode, 0xd4 | 0xd6 | 0xd7) && next.condition_code != u8::from(nonzero) {
+    if matches!(
+        operation,
+        executor::Operation::Nc | executor::Operation::Oc | executor::Operation::Xc
+    ) && next.condition_code != u8::from(nonzero)
+    {
         return gate_disagrees("gate SS condition-code network and transition disagree");
     }
     Ok(())

@@ -120,6 +120,7 @@ fn javascript_lexer<'src>(source: &'src str, mut grammar: TokenGrammar) -> Gramm
                 is_regex: true,
                 line_number: 0,
                 alias: None,
+                guard: Default::default(),
             }],
         },
     );
