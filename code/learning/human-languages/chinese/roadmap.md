@@ -257,6 +257,21 @@ rows in all. Chinese attains A1: 641 headwords and 172 verbs at or below A1. Nex
 the A2 rung, whose two missing spine nodes are talking about the future and reading
 practical texts.
 
+## The A2 core (delivered, chapters 147-157)
+
+Eleven hand-authored chapters, 78 lessons. `SPINE-TALK-ABOUT-FUTURE` (chapters
+147-148: 会 'will' carrying VERB-FUTURE, 后天, *kěnéng*, *yídìng*, *tiānqì yùbào*; 要 and
+要 … 了, 下个月, 下星期, 上个月, *dǎsuàn*, *jiānglái*) and `SPINE-READ-PRACTICAL-TEXTS`
+(chapters 155-157: a timetable and opening hours with 从 … 到, a price list and an
+advert with 元, a notice and a message) are realized. Between them, six chapters
+teach the A2 grammar the vocabulary needs: 在 / 正在 before a verb, 过 for
+experience, result complements, 得 for how well, 比 and 没有 … 那么, 还 / 还没 /
+还是 / *bié*. Ten characters are written (后 月 正 过 到 得 比 还 从 元), 163 inventory rows
+in all. ZH-W157-reply proves connected composition, a reply of four to six lines to
+a named reader. A2 headwords 645 -> 690, verbs 173 -> 185; all five A2 nodes
+realized, no A2 writing stage missing. A2 is not attained: the A2 vocabulary
+(about 510 more headwords, with 48 more characters planned) comes next.
+
 ## Part II onward — cumulative pre-A1 to C2 build *(planned)*
 
 Continue the official vocabulary tranche with oral meaning, source-verified
