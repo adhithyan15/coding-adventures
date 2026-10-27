@@ -1,0 +1,10 @@
+[package]
+name = "xtensa-lx6-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked ESP32-class Xtensa LX6 integer functional simulator"
+license = "MIT"
+
+[lib]
+name = "xtensa_lx6_simulator"
+path = "src/lib.rs"
