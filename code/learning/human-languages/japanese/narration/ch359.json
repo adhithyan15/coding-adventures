@@ -1,0 +1,800 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 359,
+  "title": "Borrowing and Lending",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4f041c0ea58024fe",
+  "lessons": [
+    {
+      "id": "JA-C359-shakkin",
+      "sequence": 21170,
+      "title": "しゃっきん (shakkin) — a debt",
+      "headword": "しゃっきん",
+      "romanization": "shakkin",
+      "gloss": "a debt",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4cd8037ab4cf83f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to pay into an account, then the Japanese for a bank balance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゃっきん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゃっきん — shakkin — \"a debt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しゃっきんが あったら、はやく かえした ほうが いいです。 — shakkin ga attara, hayaku kaeshita hō ga ii desu — \"If you have a debt, you had better pay it back soon.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゃっきん (shakkin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shaku, \"borrow\" (Middle Chinese tsjek) and kin, \"gold\" (kim) (KANJIDIC2; Middle Chinese in Baxter's transcription). The two join as shak-kin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shakkin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shakkin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shakkin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shakkin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shakkin ga attara, hayaku kaeshita hō ga ii desu — If you have a debt, you had better pay it back soon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shakkin ga attara, hayaku kaeshita hō ga ii desu* — If you have a debt, you had better pay it back soon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to pay into an account, then the Japanese for a bank balance, then say shakkin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to pay into an account, then the Japanese for a bank balance, then say *shakkin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゃっきん (shakkin) mean? (\"A debt\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C359-shakkin-type",
+              "prompt": "Say the Japanese for 'a debt'.",
+              "assesses": [
+                "JA-LEX-C359-SHAKKIN359-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゃっきん",
+                "shakkin"
+              ],
+              "feedback": {
+                "correct": "Right: しゃっきん (shakkin) is 'a debt'.",
+                "incorrect": "'A debt' is しゃっきん (shakkin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C359-rishi",
+      "sequence": 21180,
+      "title": "りし (rishi) — interest on money; interest on a loan",
+      "headword": "りし",
+      "romanization": "rishi",
+      "gloss": "interest on money; interest on a loan",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f03406dedde9300",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a bank balance, then the Japanese for a debt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: りし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りし — rishi — \"interest on money; interest on a loan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おかねを かりたら、りしを はらいます。 — okane o karitara, rishi o haraimasu — \"If you borrow money, you pay interest.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りし (rishi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ri, \"advantage\" (Middle Chinese lijH) and shi, \"child\" (tsiX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rishi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rishi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rishi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rishi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okane o karitara, rishi o haraimasu — If you borrow money, you pay interest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okane o karitara, rishi o haraimasu* — If you borrow money, you pay interest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a bank balance, then the Japanese for a debt, then say rishi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a bank balance, then the Japanese for a debt, then say *rishi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does りし (rishi) mean? (\"Interest on money; interest on a loan\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C359-rishi-type",
+              "prompt": "Say the Japanese for 'interest on money'.",
+              "assesses": [
+                "JA-LEX-C359-SHAKKIN359-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "りし",
+                "rishi"
+              ],
+              "feedback": {
+                "correct": "Right: りし (rishi) is 'interest on money; interest on a loan'.",
+                "incorrect": "'Interest on money' is りし (rishi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C359-tatekaeru",
+      "sequence": 21190,
+      "title": "たてかえる (tatekaeru) — to pay for someone (to be paid back)",
+      "headword": "たてかえる",
+      "romanization": "tatekaeru",
+      "gloss": "to pay for someone (to be paid back)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:036530be543efe09",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a debt, then the Japanese for interest on money."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たてかえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たてかえる — tatekaeru — \"to pay for someone (to be paid back)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "さいふを わすれたら、ともだちが たてかえるでしょう。 — saifu o wasuretara, tomodachi ga tatekaeru deshō — \"If you forget your purse, a friend will probably pay for you.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite たてかえます, tatekaemasu; an ichidan verb. Past (polite): あねが りょうきんを たてかえました。, ane ga ryōkin o tatekaemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たてかえる (tatekaeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese: it is built from tate, \"setting up (tateru)\" and kaeru, \"to exchange\", and its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tatekaeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tatekaeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tatekaeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tatekaeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saifu o wasuretara, tomodachi ga tatekaeru deshō — If you forget your purse, a friend will probably pay for you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saifu o wasuretara, tomodachi ga tatekaeru deshō* — If you forget your purse, a friend will probably pay for you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a debt, then the Japanese for interest on money, then say tatekaeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a debt, then the Japanese for interest on money, then say *tatekaeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たてかえる (tatekaeru) mean? (\"To pay for someone (to be paid back)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C359-tatekaeru-type",
+              "prompt": "Say the Japanese for 'to pay for someone'.",
+              "assesses": [
+                "JA-LEX-C359-SHAKKIN359-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たてかえる",
+                "tatekaeru"
+              ],
+              "feedback": {
+                "correct": "Right: たてかえる (tatekaeru) is 'to pay for someone (to be paid back)'.",
+                "incorrect": "'To pay for someone' is たてかえる (tatekaeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C359-henkin",
+      "sequence": 21200,
+      "title": "へんきん (henkin) — a refund",
+      "headword": "へんきん",
+      "romanization": "henkin",
+      "gloss": "a refund",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c8f36fb51c196d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for interest on money, then the Japanese for to pay for someone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: へんきん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "へんきん — henkin — \"a refund\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しなものが こわれたら、へんきんが あるでしょう。 — shinamono ga kowaretara, henkin ga aru deshō — \"If the goods are broken, there will probably be a refund.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "へんきん (henkin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hen, \"return\" (Middle Chinese pjonX) and kin, \"gold\" (kim) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "henkin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *henkin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "henkin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *henkin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shinamono ga kowaretara, henkin ga aru deshō — If the goods are broken, there will probably be a refund.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shinamono ga kowaretara, henkin ga aru deshō* — If the goods are broken, there will probably be a refund.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for interest on money, then the Japanese for to pay for someone, then say henkin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for interest on money, then the Japanese for to pay for someone, then say *henkin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does へんきん (henkin) mean? (\"A refund\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C359-henkin-type",
+              "prompt": "Say the Japanese for 'a refund'.",
+              "assesses": [
+                "JA-LEX-C359-SHAKKIN359-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "へんきん",
+                "henkin"
+              ],
+              "feedback": {
+                "correct": "Right: へんきん (henkin) is 'a refund'.",
+                "incorrect": "'A refund' is へんきん (henkin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C359-kingaku",
+      "sequence": 21210,
+      "title": "きんがく (kingaku) — a sum of money; an amount",
+      "headword": "きんがく",
+      "romanization": "kingaku",
+      "gloss": "a sum of money; an amount",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1568e9d77a73da3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to pay for someone, then the Japanese for a refund."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きんがく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きんがく — kingaku — \"a sum of money; an amount\"."
+            },
+            {
+              "kind": "speech",
+              "text": "きんがくが かわったら、れんらくします。 — kingaku ga kawattara, renraku shimasu — \"If the amount changes, I will let you know.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きんがく (kingaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kin, \"gold\" (Middle Chinese kim) and gaku, \"sum\" (ngaek) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kingaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kingaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kingaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kingaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kingaku ga kawattara, renraku shimasu — If the amount changes, I will let you know.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kingaku ga kawattara, renraku shimasu* — If the amount changes, I will let you know.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to pay for someone, then the Japanese for a refund, then say kingaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to pay for someone, then the Japanese for a refund, then say *kingaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きんがく (kingaku) mean? (\"A sum of money; an amount\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C359-kingaku-type",
+              "prompt": "Say the Japanese for 'a sum of money'.",
+              "assesses": [
+                "JA-LEX-C359-SHAKKIN359-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きんがく",
+                "kingaku"
+              ],
+              "feedback": {
+                "correct": "Right: きんがく (kingaku) is 'a sum of money; an amount'.",
+                "incorrect": "'A sum of money' is きんがく (kingaku)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

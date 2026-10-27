@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "The First Train and the Last",
+  "label": "ch:ja-the-first-train-and-the-last",
+  "canDo": "I can say when the first and last trains run.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C375-norikomu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can say when the first and last trains run.",
+    "assesses": [
+      "JA-LEX-C375-SHUUDEN375-03",
+      "JA-LEX-C375-SHUUDEN375-04",
+      "JA-LEX-C375-SHUUDEN375-05"
+    ]
+  }
+}

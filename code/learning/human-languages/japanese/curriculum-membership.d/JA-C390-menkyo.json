@@ -1,0 +1,11 @@
+{
+  "id": "JA-C390-menkyo",
+  "pathSegment": "JA-PATH-390-KOUSOKU390",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-390-KOUSOKU390",
+      "order": 3
+    }
+  ]
+}

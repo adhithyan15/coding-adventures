@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C354-doshaburi",
+    "language": "japanese",
+    "chapter": 354,
+    "sequence": 20910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fac260be45ad5cd6"
+  },
+  "findings": []
+}

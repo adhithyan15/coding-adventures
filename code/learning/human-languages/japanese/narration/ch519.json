@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 519,
+  "title": "Giving Up and Thinking Again",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:641b0d86881b4968",
+  "lessons": [
+    {
+      "id": "JA-C519-omoinaosu",
+      "sequence": 30010,
+      "title": "おもいなおす (omoinaosu) — to think again; to change one's mind",
+      "headword": "おもいなおす",
+      "romanization": "omoinaosu",
+      "gloss": "to think again; to change one's mind",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bfaf47cc893bea3e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to slip up, then the Japanese for a fault."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おもいなおす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おもいなおす — omoinaosu — \"to think again; to change one's mind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし いま やめたら、かれは あとで おもいなおすでしょう。 — moshi ima yametara, kare wa ato de omoinaosu deshō — \"If he quits now, he will probably think again later.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite おもいなおします, omoinaoshimasu; a godan verb. Past (polite): ちちが ひっこしを おもいなおしました。, chichi ga hikkoshi o omoinaoshimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おもいなおす (omoinaosu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from omou, \"to think\", and naosu, \"to fix\"; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "omoinaosu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *omoinaosu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "omoinaosu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *omoinaosu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi ima yametara, kare wa ato de omoinaosu deshō — If he quits now, he will probably think again later.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi ima yametara, kare wa ato de omoinaosu deshō* — If he quits now, he will probably think again later.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to slip up, then the Japanese for a fault, then say omoinaosu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to slip up, then the Japanese for a fault, then say *omoinaosu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おもいなおす (omoinaosu) mean? (\"To think again; to change one's mind\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C519-omoinaosu-type",
+              "prompt": "Say the Japanese for 'to think again'.",
+              "assesses": [
+                "JA-LEX-C519-GIVEUP519-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おもいなおす",
+                "omoinaosu"
+              ],
+              "feedback": {
+                "correct": "Right: おもいなおす (omoinaosu) is 'to think again; to change one's mind'.",
+                "incorrect": "'To think again' is おもいなおす (omoinaosu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C519-omoitodomaru",
+      "sequence": 30020,
+      "title": "おもいとどまる (omoitodomaru) — to think better of (doing)",
+      "headword": "おもいとどまる",
+      "romanization": "omoitodomaru",
+      "gloss": "to think better of (doing)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7715d9cbbd94ddf3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a fault, then the Japanese for to think again."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おもいとどまる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おもいとどまる — omoitodomaru — \"to think better of (doing)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし ははの いけんを きいたら、かれも おもいとどまるでしょう。 — moshi haha no iken o kiitara, kare mo omoitodomaru deshō — \"If he listens to his mother's opinion, he too will probably think better of it.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite おもいとどまります, omoitodomarimasu; a godan verb. Past (polite): あにが ひっこしを おもいとどまりました。, ani ga hikkoshi o omoitodomarimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おもいとどまる (omoitodomaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from omou, \"to think\", and todomaru, \"to stay\"; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "omoitodomaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *omoitodomaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "omoitodomaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *omoitodomaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi haha no iken o kiitara, kare mo omoitodomaru deshō — If he listens to his mother's opinion, he too will probably think better of it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi haha no iken o kiitara, kare mo omoitodomaru deshō* — If he listens to his mother's opinion, he too will probably think better of it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a fault, then the Japanese for to think again, then say omoitodomaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a fault, then the Japanese for to think again, then say *omoitodomaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おもいとどまる (omoitodomaru) mean? (\"To think better of (doing)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C519-omoitodomaru-type",
+              "prompt": "Say the Japanese for 'to think better of (doing)'.",
+              "assesses": [
+                "JA-LEX-C519-GIVEUP519-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おもいとどまる",
+                "omoitodomaru"
+              ],
+              "feedback": {
+                "correct": "Right: おもいとどまる (omoitodomaru) is 'to think better of (doing)'.",
+                "incorrect": "'To think better of (doing)' is おもいとどまる (omoitodomaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C519-mikagiru",
+      "sequence": 30030,
+      "title": "みかぎる (mikagiru) — to give up on (someone)",
+      "headword": "みかぎる",
+      "romanization": "mikagiru",
+      "gloss": "to give up on (someone)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68220abbc5cb00d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to think again, then the Japanese for to think better of (doing)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: みかぎる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みかぎる — mikagiru — \"to give up on (someone)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし かれが いつも おくれたら、みんな かれを みかぎるでしょう。 — moshi kare ga itsumo okuretara, minna kare o mikagiru deshō — \"If he is always late, everyone will give up on him.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite みかぎります, mikagirimasu; a godan verb. Past (polite): きゃくが みせを みかぎりました。, kyaku ga mise o mikagirimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みかぎる (mikagiru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mikagiru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mikagiru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mikagiru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mikagiru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi kare ga itsumo okuretara, minna kare o mikagiru deshō — If he is always late, everyone will give up on him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi kare ga itsumo okuretara, minna kare o mikagiru deshō* — If he is always late, everyone will give up on him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to think again, then the Japanese for to think better of (doing), then say mikagiru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to think again, then the Japanese for to think better of (doing), then say *mikagiru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does みかぎる (mikagiru) mean? (\"To give up on (someone)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C519-mikagiru-type",
+              "prompt": "Say the Japanese for 'to give up on (someone)'.",
+              "assesses": [
+                "JA-LEX-C519-GIVEUP519-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "みかぎる",
+                "mikagiru"
+              ],
+              "feedback": {
+                "correct": "Right: みかぎる (mikagiru) is 'to give up on (someone)'.",
+                "incorrect": "'To give up on (someone)' is みかぎる (mikagiru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C519-uragiru",
+      "sequence": 30040,
+      "title": "うらぎる (uragiru) — to betray; to let down",
+      "headword": "うらぎる",
+      "romanization": "uragiru",
+      "gloss": "to betray; to let down",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4dc34a60bfc0e924",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to think better of (doing), then the Japanese for to give up on (someone)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うらぎる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うらぎる — uragiru — \"to betray; to let down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし かれが ともだちを うらぎったら、ともだちは おこるでしょう。 — moshi kare ga tomodachi o uragittara, tomodachi wa okoru deshō — \"If he betrays his friends, they will be angry.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite うらぎります, uragirimasu; a godan verb. Past (polite): かれが ともだちを うらぎりました。, kare ga tomodachi o uragirimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うらぎる (uragiru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uragiru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uragiru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uragiru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uragiru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi kare ga tomodachi o uragittara, tomodachi wa okoru deshō — If he betrays his friends, they will be angry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi kare ga tomodachi o uragittara, tomodachi wa okoru deshō* — If he betrays his friends, they will be angry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to think better of (doing), then the Japanese for to give up on (someone), then say uragiru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to think better of (doing), then the Japanese for to give up on (someone), then say *uragiru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うらぎる (uragiru) mean? (\"To betray; to let down\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C519-uragiru-type",
+              "prompt": "Say the Japanese for 'to betray'.",
+              "assesses": [
+                "JA-LEX-C519-GIVEUP519-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うらぎる",
+                "uragiru"
+              ],
+              "feedback": {
+                "correct": "Right: うらぎる (uragiru) is 'to betray; to let down'.",
+                "incorrect": "'To betray' is うらぎる (uragiru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C519-bunan",
+      "sequence": 30050,
+      "title": "ぶなん (bunan) — safe (as a choice); acceptable",
+      "headword": "ぶなん",
+      "romanization": "bunan",
+      "gloss": "safe (as a choice); acceptable",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:153f0dd28244df2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to give up on (someone), then the Japanese for to betray."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぶなん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぶなん — bunan — \"safe (as a choice); acceptable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし まよったら、この みちが ぶなんです。 — moshi mayottara, kono michi ga bunan desu — \"If you are unsure, this road is the safe choice.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぶなん (bunan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are bu, \"nothingness\" (Middle Chinese mju) and nan, \"difficult\" (nan) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bunan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bunan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bunan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bunan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi mayottara, kono michi ga bunan desu — If you are unsure, this road is the safe choice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi mayottara, kono michi ga bunan desu* — If you are unsure, this road is the safe choice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to give up on (someone), then the Japanese for to betray, then say bunan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to give up on (someone), then the Japanese for to betray, then say *bunan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぶなん (bunan) mean? (\"Safe (as a choice); acceptable\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C519-bunan-type",
+              "prompt": "Say the Japanese for 'safe (as a choice)'.",
+              "assesses": [
+                "JA-LEX-C519-GIVEUP519-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぶなん",
+                "bunan"
+              ],
+              "feedback": {
+                "correct": "Right: ぶなん (bunan) is 'safe (as a choice); acceptable'.",
+                "incorrect": "'Safe (as a choice)' is ぶなん (bunan)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

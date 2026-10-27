@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:ed3090761c30d44f",
+  "lessonIds": [
+    "JA-C495-nioi",
+    "JA-C495-kaori",
+    "JA-C495-fuumi",
+    "JA-C495-shinsen",
+    "JA-C495-assari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch495.txt",
+  "json": "japanese/narration/ch495.json",
+  "textHash": "fnv1a64:0f9c112154fdff1e",
+  "jsonHash": "fnv1a64:055a69419547d22f",
+  "findings": []
+}

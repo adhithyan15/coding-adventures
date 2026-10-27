@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C399-moufu",
+    "language": "japanese",
+    "chapter": 399,
+    "sequence": 23400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83e136c3901d565e"
+  },
+  "findings": []
+}

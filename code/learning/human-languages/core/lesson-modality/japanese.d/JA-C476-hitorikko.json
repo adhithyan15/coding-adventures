@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C476-hitorikko",
+    "language": "japanese",
+    "chapter": 476,
+    "sequence": 27600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:017dd8ec0e40d4d9"
+  },
+  "findings": []
+}

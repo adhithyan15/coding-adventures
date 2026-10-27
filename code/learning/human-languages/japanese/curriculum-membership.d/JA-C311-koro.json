@@ -1,0 +1,11 @@
+{
+  "id": "JA-C311-koro",
+  "pathSegment": "JA-PATH-311-OMOIDE311",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-311-OMOIDE311",
+      "order": 1
+    }
+  ]
+}

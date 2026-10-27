@@ -15,6 +15,15 @@
 - Tests: shapes, and the three ops over the PR6a table on real `java`
   (verifier on) against host `python3`.
 
+## Unreleased — a failed narrowing raises `Trap.ConvRange`
+
+- The `real_to_int_*` range check's failing path is the shared LANG83 trap
+  sequence (flush `System.out`, `throw new RuntimeException("Trap.ConvRange")`)
+  instead of `new ArithmeticException("real_to_int: …")` ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). The upper
+  bound's `iflt` now skips the 17-byte trap.
+- Test: `lang83_pr1b.rs` pins the trap sequence after the upper-bound check
+  for both ops.
+
 ## Unreleased — LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`
 
 - **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /

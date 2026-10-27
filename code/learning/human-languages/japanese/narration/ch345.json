@@ -1,0 +1,819 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 345,
+  "title": "When Plans Change",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8ad6443659f74534",
+  "lessons": [
+    {
+      "id": "JA-C345-henkou-suru",
+      "sequence": 20440,
+      "title": "へんこうする (henkō suru) — to change a plan; to alter (a date)",
+      "headword": "へんこうする",
+      "romanization": "henkō suru",
+      "gloss": "to change a plan; to alter (a date)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:284250d0e00ce123",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a schedule, then the Japanese for going smoothly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: へんこうする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "へんこうする — henkō suru — \"to change a plan; to alter (a date)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし あめが ふったら、よていを へんこうします。 — moshi ame ga futtara, yotei o henkō shimasu — \"If it rains, we will change the plan.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite へんこうします, henkōshimasu; a する verb. Past (polite): かいしゃが よていを へんこうしました。, kaisha ga yotei o henkō shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "へんこうする (henkō suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, henkō, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: hen, \"change\" (Middle Chinese pjenH) and kō, \"renew\" (kaeng) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "henkō suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *henkō suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "henkō suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *henkō suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi ame ga futtara, yotei o henkō shimasu — If it rains, we will change the plan.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi ame ga futtara, yotei o henkō shimasu* — If it rains, we will change the plan.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a schedule, then the Japanese for going smoothly, then say henkō suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a schedule, then the Japanese for going smoothly, then say *henkō suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does へんこうする (henkō suru) mean? (\"To change a plan; to alter (a date)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C345-henkou-suru-type",
+              "prompt": "Say the Japanese for 'to change a plan'.",
+              "assesses": [
+                "JA-LEX-C345-HENKOU345-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "へんこうする",
+                "henkō suru",
+                "henkou suru",
+                "henkoo suru",
+                "henko suru"
+              ],
+              "feedback": {
+                "correct": "Right: へんこうする (henkō suru) is 'to change a plan; to alter (a date)'.",
+                "incorrect": "'To change a plan' is へんこうする (henkō suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C345-enki-suru",
+      "sequence": 20450,
+      "title": "えんきする (enki suru) — to postpone",
+      "headword": "えんきする",
+      "romanization": "enki suru",
+      "gloss": "to postpone",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9abe5c9584ea0a9d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for going smoothly, then the Japanese for to change a plan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: えんきする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えんきする — enki suru — \"to postpone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "たいふうが きたら、しあいを えんきします。 — taifū ga kitara, shiai o enki shimasu — \"If the typhoon comes, we will postpone the match.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite えんきします, enkishimasu; a する verb. Past (polite): がっこうが しあいを えんきしました。, gakkō ga shiai o enki shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えんきする (enki suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, enki, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: en, \"prolong\" (Middle Chinese yen) and ki, \"period\" (gi) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enki suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enki suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enki suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enki suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taifū ga kitara, shiai o enki shimasu — If the typhoon comes, we will postpone the match.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taifū ga kitara, shiai o enki shimasu* — If the typhoon comes, we will postpone the match.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for going smoothly, then the Japanese for to change a plan, then say enki suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for going smoothly, then the Japanese for to change a plan, then say *enki suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does えんきする (enki suru) mean? (\"To postpone\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C345-enki-suru-type",
+              "prompt": "Say the Japanese for 'to postpone'.",
+              "assesses": [
+                "JA-LEX-C345-HENKOU345-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "えんきする",
+                "enki suru"
+              ],
+              "feedback": {
+                "correct": "Right: えんきする (enki suru) is 'to postpone'.",
+                "incorrect": "'To postpone' is えんきする (enki suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C345-torikesu",
+      "sequence": 20460,
+      "title": "とりけす (torikesu) — to cancel; to take back",
+      "headword": "とりけす",
+      "romanization": "torikesu",
+      "gloss": "to cancel; to take back",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c69f2e307e89bda",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to change a plan, then the Japanese for to postpone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とりけす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とりけす — torikesu — \"to cancel; to take back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "びょうきに なったら、よやくを とりけして ください。 — byōki ni nattara, yoyaku o torikeshite kudasai — \"If you fall ill, please cancel the booking.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite とりけします, torikeshimasu; a godan verb. Past (polite): ちちが よやくを とりけしました。, chichi ga yoyaku o torikeshimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とりけす (torikesu) is a native Japanese word (wago), inherited rather than borrowed from Chinese: it is built from tori, \"taking (toru)\" and kesu, \"to put out\", and its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "torikesu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *torikesu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "torikesu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *torikesu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "byōki ni nattara, yoyaku o torikeshite kudasai — If you fall ill, please cancel the booking.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *byōki ni nattara, yoyaku o torikeshite kudasai* — If you fall ill, please cancel the booking.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to change a plan, then the Japanese for to postpone, then say torikesu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to change a plan, then the Japanese for to postpone, then say *torikesu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とりけす (torikesu) mean? (\"To cancel; to take back\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C345-torikesu-type",
+              "prompt": "Say the Japanese for 'to cancel'.",
+              "assesses": [
+                "JA-LEX-C345-HENKOU345-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とりけす",
+                "torikesu"
+              ],
+              "feedback": {
+                "correct": "Right: とりけす (torikesu) is 'to cancel; to take back'.",
+                "incorrect": "'To cancel' is とりけす (torikesu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C345-zurasu",
+      "sequence": 20470,
+      "title": "ずらす (zurasu) — to shift; to move (a time) a little",
+      "headword": "ずらす",
+      "romanization": "zurasu",
+      "gloss": "to shift; to move (a time) a little",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:469eeb6144e5ec5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to postpone, then the Japanese for to cancel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ずらす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ずらす — zurasu — \"to shift; to move (a time) a little\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かいぎが ながく なったら、ひるごはんを ずらします。 — kaigi ga nagaku nattara, hirugohan o zurashimasu — \"If the meeting runs long, we will move lunch back a little.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ずらします, zurashimasu; a godan verb. Past (polite): せんせいが じかんを ずらしました。, sensei ga jikan o zurashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ずらす (zurasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled; JMdict gives it no kanji spelling (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zurasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zurasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zurasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zurasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaigi ga nagaku nattara, hirugohan o zurashimasu — If the meeting runs long, we will move lunch back a little.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaigi ga nagaku nattara, hirugohan o zurashimasu* — If the meeting runs long, we will move lunch back a little.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to postpone, then the Japanese for to cancel, then say zurasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to postpone, then the Japanese for to cancel, then say *zurasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ずらす (zurasu) mean? (\"To shift; to move (a time) a little\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C345-zurasu-type",
+              "prompt": "Say the Japanese for 'to shift a time'.",
+              "assesses": [
+                "JA-LEX-C345-HENKOU345-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ずらす",
+                "zurasu"
+              ],
+              "feedback": {
+                "correct": "Right: ずらす (zurasu) is 'to shift; to move (a time) a little'.",
+                "incorrect": "'To shift a time' is ずらす (zurasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C345-hayameru",
+      "sequence": 20480,
+      "title": "はやめる (hayameru) — to bring forward; to make earlier",
+      "headword": "はやめる",
+      "romanization": "hayameru",
+      "gloss": "to bring forward; to make earlier",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89495e4d16177f02",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to cancel, then the Japanese for to shift a time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はやめる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はやめる — hayameru — \"to bring forward; to make earlier\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ゆきが ふったら、しゅっぱつを はやめます。 — yuki ga futtara, shuppatsu o hayamemasu — \"If it snows, we will set off earlier.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite はやめます, hayamemasu; an ichidan verb. Past (polite): ちちが しゅっぱつを はやめました。, chichi ga shuppatsu o hayamemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はやめる (hayameru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hayameru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hayameru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hayameru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hayameru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuki ga futtara, shuppatsu o hayamemasu — If it snows, we will set off earlier.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuki ga futtara, shuppatsu o hayamemasu* — If it snows, we will set off earlier.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to cancel, then the Japanese for to shift a time, then say hayameru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to cancel, then the Japanese for to shift a time, then say *hayameru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はやめる (hayameru) mean? (\"To bring forward; to make earlier\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C345-hayameru-type",
+              "prompt": "Say the Japanese for 'to bring forward'.",
+              "assesses": [
+                "JA-LEX-C345-HENKOU345-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はやめる",
+                "hayameru"
+              ],
+              "feedback": {
+                "correct": "Right: はやめる (hayameru) is 'to bring forward; to make earlier'.",
+                "incorrect": "'To bring forward' is はやめる (hayameru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

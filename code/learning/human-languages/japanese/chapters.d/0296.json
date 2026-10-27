@@ -1,0 +1,21 @@
+{
+  "chapter": 296,
+  "title": "Customs Still Alive",
+  "label": "ch:ja-customs-still-alive",
+  "canDo": "I can say which old customs carry on today.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-R296-review-292-296",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can say which old customs carry on today.",
+    "assesses": [
+      "JA-LEX-C296-SAKAN296-01",
+      "JA-LEX-C296-SAKAN296-02",
+      "JA-LEX-C296-SAKAN296-03",
+      "JA-LEX-C296-SAKAN296-04",
+      "JA-LEX-C296-SAKAN296-05"
+    ]
+  }
+}

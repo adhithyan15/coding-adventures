@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:45b51e2e615e8585",
+  "lessonIds": [
+    "JA-C278-inazuma",
+    "JA-C278-ataru",
+    "JA-C278-hageshii",
+    "JA-C278-tatsumaki",
+    "JA-C278-katamuku"
+  ],
+  "tex": "japanese/book/chapters/ch278-lightning.tex"
+}

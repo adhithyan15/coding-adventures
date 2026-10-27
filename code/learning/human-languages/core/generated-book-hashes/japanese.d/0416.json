@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:acada4e5e46fb2b8",
+  "lessonIds": [
+    "JA-C416-yoake",
+    "JA-C416-hinode",
+    "JA-C416-yuuyake",
+    "JA-C416-hiekomu",
+    "JA-C416-terasu"
+  ],
+  "tex": "japanese/book/chapters/ch416-dawn-and-dusk.tex"
+}

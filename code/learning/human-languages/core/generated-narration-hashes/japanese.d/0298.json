@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:0b24f72ba731a06d",
+  "lessonIds": [
+    "JA-C298-mukashi",
+    "JA-C298-mukashibanashi",
+    "JA-C298-kataru",
+    "JA-C298-mura",
+    "JA-C298-hatarakimono"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch298.txt",
+  "json": "japanese/narration/ch298.json",
+  "textHash": "fnv1a64:7756f2a5b6279c42",
+  "jsonHash": "fnv1a64:d8e421c05aa15dbe",
+  "findings": []
+}

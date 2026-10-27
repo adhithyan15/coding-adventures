@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:4b23c7507231c166",
+  "lessonIds": [
+    "JA-C429-gakkari-suru",
+    "JA-C429-ochikomu",
+    "JA-C429-tameiki",
+    "JA-C429-tsurai",
+    "JA-C429-nagusameru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch429.txt",
+  "json": "japanese/narration/ch429.json",
+  "textHash": "fnv1a64:ac12c5cd02d39832",
+  "jsonHash": "fnv1a64:047765eb15923c52",
+  "findings": []
+}

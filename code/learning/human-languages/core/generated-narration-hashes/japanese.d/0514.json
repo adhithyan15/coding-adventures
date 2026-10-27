@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:084c866900965979",
+  "lessonIds": [
+    "JA-C514-suisoku-suru",
+    "JA-C514-yosoku-suru",
+    "JA-C514-mikomi",
+    "JA-C514-yohou",
+    "JA-C514-mitoushi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch514.txt",
+  "json": "japanese/narration/ch514.json",
+  "textHash": "fnv1a64:955e79f620f5c3b3",
+  "jsonHash": "fnv1a64:c8bcff4e67d486b5",
+  "findings": []
+}

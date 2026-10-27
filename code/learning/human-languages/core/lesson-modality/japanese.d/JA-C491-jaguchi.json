@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C491-jaguchi",
+    "language": "japanese",
+    "chapter": 491,
+    "sequence": 28570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a92b611e39b5b9a"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-485-CLOTH485",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "JA-EXT-485-CLOTH485"
+  ],
+  "after": []
+}

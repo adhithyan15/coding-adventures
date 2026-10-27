@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Checking Things Work",
+  "label": "ch:ja-checking-things-work",
+  "canDo": "I can say what to check and what to do if something stops working.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C353-ichiou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can say what to check and what to do if something stops working.",
+    "assesses": [
+      "JA-LEX-C353-TENKEN353-03",
+      "JA-LEX-C353-TENKEN353-04",
+      "JA-LEX-C353-TENKEN353-05"
+    ]
+  }
+}

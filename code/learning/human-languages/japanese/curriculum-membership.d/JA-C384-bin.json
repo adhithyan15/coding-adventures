@@ -1,0 +1,11 @@
+{
+  "id": "JA-C384-bin",
+  "pathSegment": "JA-PATH-384-HIKOUJOU384",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-384-HIKOUJOU384",
+      "order": 1
+    }
+  ]
+}

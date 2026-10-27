@@ -1,0 +1,11 @@
+{
+  "id": "JA-C264-shibaraku",
+  "pathSegment": "JA-PATH-264-KOROBU264",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-264-KOROBU264",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C331-houritsu",
+    "language": "japanese",
+    "chapter": 331,
+    "sequence": 19760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:031e6a1d1fe9f983"
+  },
+  "findings": []
+}

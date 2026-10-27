@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C444-ibiki",
+    "language": "japanese",
+    "chapter": 444,
+    "sequence": 25970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5370420f500b3fb8"
+  },
+  "findings": []
+}

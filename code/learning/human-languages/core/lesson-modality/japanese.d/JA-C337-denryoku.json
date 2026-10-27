@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C337-denryoku",
+    "language": "japanese",
+    "chapter": 337,
+    "sequence": 20040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:963fdf50ab13b3d4"
+  },
+  "findings": []
+}

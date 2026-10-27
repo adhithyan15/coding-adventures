@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "At Least, About, Almost",
+  "label": "ch:ja-at-least-about-almost",
+  "canDo": "I can say roughly how long and how much.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C530-mattaku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can say roughly how long and how much.",
+    "assesses": [
+      "JA-LEX-C530-ATLEAST530-03",
+      "JA-LEX-C530-ATLEAST530-04",
+      "JA-LEX-C530-ATLEAST530-05"
+    ]
+  }
+}

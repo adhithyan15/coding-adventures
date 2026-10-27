@@ -1,0 +1,11 @@
+{
+  "id": "JA-C310-jitsu-wa",
+  "pathSegment": "JA-PATH-310-HENJI310",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-310-HENJI310",
+      "order": 1
+    }
+  ]
+}

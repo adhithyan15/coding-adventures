@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:c0dd557faa68ac3a",
+  "lessonIds": [
+    "JA-C362-hiyou",
+    "JA-C362-keisan-suru",
+    "JA-C362-goukei",
+    "JA-C362-bukka",
+    "JA-C362-shikikin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch362.txt",
+  "json": "japanese/narration/ch362.json",
+  "textHash": "fnv1a64:ced6734f67205dfd",
+  "jsonHash": "fnv1a64:1abce3da581b9781",
+  "findings": []
+}

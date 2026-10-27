@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:6cbc18aa8125fe44",
+  "lessonIds": [
+    "JA-C329-joushiki",
+    "JA-C329-atarimae",
+    "JA-C329-touzen",
+    "JA-C329-junban",
+    "JA-C329-suigara"
+  ],
+  "tex": "japanese/book/chapters/ch329-common-sense.tex"
+}

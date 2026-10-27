@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "What Matters",
+  "label": "ch:ja-what-matters",
+  "canDo": "I can say what matters most and what we do about it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C369-houshin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can say what matters most and what we do about it.",
+    "assesses": [
+      "JA-LEX-C369-JUUYOU369-03",
+      "JA-LEX-C369-JUUYOU369-04",
+      "JA-LEX-C369-JUUYOU369-05"
+    ]
+  }
+}

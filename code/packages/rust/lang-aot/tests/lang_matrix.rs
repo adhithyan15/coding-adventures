@@ -3910,12 +3910,15 @@ fn main() { out(1, VALUE); }\n",
     // x86-64 `cvttsd2si` returned i64::MIN (a sign-flipped answer), JVM `d2l`
     // saturated to i64::MAX, and aarch64 `fcvtzs` saturated too. The first
     // row is finite (exp(exp(4)) ≈ 5.1e23 > 2^63); the second overflows to +∞.
+    // Both stop with LANG83's typed `Trap.ConvRange` on every column — the
+    // same kind, not a SIGILL on native, `ArithmeticException` on the JVM or
+    // `OverflowException` on the CLR.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
         src: "begin real procedure pick; pick := 4.0; integer result; \
                   result := entier(exp(exp(pick()))); output(result) end",
-        expect: Expect::Trap,
+        expect: Expect::StdoutThenTrap("", "Trap.ConvRange"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
         release: None,
         case: None,
@@ -3925,7 +3928,7 @@ fn main() { out(1, VALUE); }\n",
         ext: "alg",
         src: "begin real procedure pick; pick := 2.0; integer result; \
                   result := entier(exp(exp(exp(pick())))); output(result) end",
-        expect: Expect::Trap,
+        expect: Expect::StdoutThenTrap("", "Trap.ConvRange"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
         release: None,
         case: None,
@@ -6764,6 +6767,18 @@ fn main() { out(1, VALUE); }\n",
         ext: "alg",
         src: "begin real procedure leftvalue; leftvalue := 3.5; real procedure rightvalue; rightvalue := -2.25; real result; result := entier(((((6 * sign(leftvalue()) + 6) mod 3) / 7 + (((6 * sign(leftvalue()) + 6) mod 3) * sign(rightvalue()) / 11)) ^ 2)); output(result) end",
         expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ALGOL 60 - integer multiplication may exceed binary64's contiguous
+    // exact range while staying in i64 when later div/mod reductions bring the
+    // value back before widening; the three reduced terms are -2, -2, and -1.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real result; result := entier((9007199254740992 * sign(leftvalue()) * 2 mod 5) / 2 + (9007199254740992 * sign(leftvalue()) * 2 * sign(rightvalue()) mod 5) / 2 + ((9007199254740992 * sign(leftvalue()) * 2 div 3) mod 5)); output(result) end",
+        expect: Expect::Stdout("-5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
         release: None,
         case: None,
@@ -16969,6 +16984,31 @@ fn algol_divisor_aligned_modulo_zero_runs_on_every_available_standard_backend() 
 }
 
 #[test]
+fn algol_reduced_wide_integer_intermediates_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "9007199254740992 * sign(leftvalue()) * 2 * sign(rightvalue()) mod 5",
+                )
+        })
+        .expect("the reduced wide-integer ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but reduced wide-integer intermediates did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_unit_division_entier_sign_widening_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -19849,7 +19889,7 @@ fn algol_out_of_range_entier_traps_on_every_available_standard_backend() {
         .iter()
         .filter(|program| {
             program.lang == Language::Algol60
-                && matches!(program.expect, Expect::Trap)
+                && matches!(program.expect, Expect::StdoutThenTrap("", "Trap.ConvRange"))
                 && (program.src.contains("result := entier(exp(exp(pick())))")
                     || program.src.contains("result := entier(exp(exp(exp(pick()))))"))
         })

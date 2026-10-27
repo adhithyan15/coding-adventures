@@ -1,0 +1,11 @@
+{
+  "id": "JA-C381-kishi",
+  "pathSegment": "JA-PATH-381-FUNATABI381",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-381-FUNATABI381",
+      "order": 2
+    }
+  ]
+}

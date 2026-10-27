@@ -1,0 +1,954 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 437,
+  "title": "Strict, Sincere or Mean",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:b7ee17f0cf81d9e9",
+  "lessons": [
+    {
+      "id": "JA-C437-kibishii",
+      "sequence": 25560,
+      "title": "きびしい (kibishii) — strict; severe",
+      "headword": "きびしい",
+      "romanization": "kibishii",
+      "gloss": "strict; severe",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a6b029414290566",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for shy with strangers, then the Japanese for to behave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きびしい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きびしい — kibishii — \"strict; severe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じょうしは しごとに きびしいです。 — jōshi wa shigoto ni kibishii desu — \"My boss is strict about work.\""
+            },
+            {
+              "kind": "speech",
+              "text": "An i-adjective."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きびしい (kibishii) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kibishii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kibishii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kibishii, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kibishii*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōshi wa shigoto ni kibishii desu — My boss is strict about work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōshi wa shigoto ni kibishii desu* — My boss is strict about work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for shy with strangers, then the Japanese for to behave, then say kibishii again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for shy with strangers, then the Japanese for to behave, then say *kibishii* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きびしい (kibishii) mean? (\"Strict; severe\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C437-kibishii-type",
+              "prompt": "Say the Japanese for 'strict'.",
+              "assesses": [
+                "JA-LEX-C437-HONEST437-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きびしい",
+                "kibishii"
+              ],
+              "feedback": {
+                "correct": "Right: きびしい (kibishii) is 'strict; severe'.",
+                "incorrect": "'Strict' is きびしい (kibishii)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C437-reisei",
+      "sequence": 25570,
+      "title": "れいせい (reisei) — composed; cool-headed",
+      "headword": "れいせい",
+      "romanization": "reisei",
+      "gloss": "composed; cool-headed",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e61b084e3033f32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to behave, then the Japanese for strict."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: れいせい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "れいせい — reisei — \"composed; cool-headed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かれは いつも れいせいです。 — kare wa itsumo reisei desu — \"He keeps a cool head at all times.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "れいせい (reisei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rei, \"cool\" (Middle Chinese lengX) and sei, \"quiet\" (dzjengX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reisei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reisei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reisei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reisei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare wa itsumo reisei desu — He keeps a cool head at all times.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare wa itsumo reisei desu* — He keeps a cool head at all times.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to behave, then the Japanese for strict, then say reisei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to behave, then the Japanese for strict, then say *reisei* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does れいせい (reisei) mean? (\"Composed; cool-headed\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C437-reisei-type",
+              "prompt": "Say the Japanese for 'composed'.",
+              "assesses": [
+                "JA-LEX-C437-HONEST437-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "れいせい",
+                "reisei"
+              ],
+              "feedback": {
+                "correct": "Right: れいせい (reisei) is 'composed; cool-headed'.",
+                "incorrect": "'Composed' is れいせい (reisei)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C437-seijitsu",
+      "sequence": 25580,
+      "title": "せいじつ (seijitsu) — sincere; faithful",
+      "headword": "せいじつ",
+      "romanization": "seijitsu",
+      "gloss": "sincere; faithful",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f3e109ddd6ad934",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for strict, then the Japanese for composed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せいじつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せいじつ — seijitsu — \"sincere; faithful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じょうしは せいじつです。 — jōshi wa seijitsu desu — \"My boss is sincere.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せいじつ (seijitsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sei, \"sincerity\" (Middle Chinese dzyeng) and jitsu, \"reality\" (zyit) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seijitsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seijitsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seijitsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seijitsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōshi wa seijitsu desu — My boss is sincere.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōshi wa seijitsu desu* — My boss is sincere.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for strict, then the Japanese for composed, then say seijitsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for strict, then the Japanese for composed, then say *seijitsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does せいじつ (seijitsu) mean? (\"Sincere; faithful\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C437-seijitsu-type",
+              "prompt": "Say the Japanese for 'sincere'.",
+              "assesses": [
+                "JA-LEX-C437-HONEST437-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せいじつ",
+                "seijitsu"
+              ],
+              "feedback": {
+                "correct": "Right: せいじつ (seijitsu) is 'sincere; faithful'.",
+                "incorrect": "'Sincere' is せいじつ (seijitsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C437-kenkyo",
+      "sequence": 25590,
+      "title": "けんきょ (kenkyo) — modest; humble",
+      "headword": "けんきょ",
+      "romanization": "kenkyo",
+      "gloss": "modest; humble",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63528b170b6e7d1a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for composed, then the Japanese for sincere."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けんきょ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けんきょ — kenkyo — \"modest; humble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あの せんしゅは けんきょです。 — ano senshu wa kenkyo desu — \"That athlete is modest.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けんきょ (kenkyo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ken, \"be modest\" (Middle Chinese khem) and kyo, \"emptiness\" (xjo) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kenkyo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kenkyo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kenkyo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kenkyo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ano senshu wa kenkyo desu — That athlete is modest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ano senshu wa kenkyo desu* — That athlete is modest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for composed, then the Japanese for sincere, then say kenkyo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for composed, then the Japanese for sincere, then say *kenkyo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けんきょ (kenkyo) mean? (\"Modest; humble\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C437-kenkyo-type",
+              "prompt": "Say the Japanese for 'modest'.",
+              "assesses": [
+                "JA-LEX-C437-HONEST437-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けんきょ",
+                "kenkyo"
+              ],
+              "feedback": {
+                "correct": "Right: けんきょ (kenkyo) is 'modest; humble'.",
+                "incorrect": "'Modest' is けんきょ (kenkyo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C437-ijiwaru",
+      "sequence": 25600,
+      "title": "いじわる (ijiwaru) — spiteful; mean",
+      "headword": "いじわる",
+      "romanization": "ijiwaru",
+      "gloss": "spiteful; mean",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a642a0afb15c68f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for sincere, then the Japanese for modest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いじわる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いじわる — ijiwaru — \"spiteful; mean\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いもうとに いじわるを しないで ください。 — imōto ni ijiwaru o shinaide kudasai — \"Please do not be mean to your younger sister.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いじわる (ijiwaru) is a mixed word: Sino-Japanese iji, \"disposition\", from i, \"mind\" (Middle Chinese 'iH), and ji, \"ground\" (dijH), borrowed from Chinese, joined to native waru, \"bad\", the stem of warui (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ijiwaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ijiwaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ijiwaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ijiwaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imōto ni ijiwaru o shinaide kudasai — Please do not be mean to your younger sister.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imōto ni ijiwaru o shinaide kudasai* — Please do not be mean to your younger sister.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for sincere, then the Japanese for modest, then say ijiwaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for sincere, then the Japanese for modest, then say *ijiwaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いじわる (ijiwaru) mean? (\"Spiteful; mean\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C437-ijiwaru-type",
+              "prompt": "Say the Japanese for 'spiteful'.",
+              "assesses": [
+                "JA-LEX-C437-HONEST437-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いじわる",
+                "ijiwaru"
+              ],
+              "feedback": {
+                "correct": "Right: いじわる (ijiwaru) is 'spiteful; mean'.",
+                "incorrect": "'Spiteful' is いじわる (ijiwaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R437-review-432-437",
+      "sequence": 25610,
+      "title": "Looking back: from Worry and Regret to Strict, Sincere or Mean",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Worry and Regret to Strict, Sincere or Mean",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:332daf8445717013",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for to be troubled and to brood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be troubled, to brood, to regret, futile, to give up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be troubled, to brood, to regret, futile, to give up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to yearn after, missed dearly, envious, an interest, admiration",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to yearn after, missed dearly, envious, an interest, admiration]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be grateful, to feel sympathy, pitiable, miserable, to encourage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be grateful, to feel sympathy, pitiable, miserable, to encourage]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "satisfied, discontented, bored, to smile gently, to fall silent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: satisfied, discontented, bored, to smile gently, to fall silent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cheerful, bright, taciturn, shy with strangers, to behave",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cheerful, bright, taciturn, shy with strangers, to behave]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "strict, composed, sincere, modest, spiteful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: strict, composed, sincere, modest, spiteful]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To be troubled? (なやむ, nayamu.) To brood? (くよくよする, kuyokuyo suru.) To regret? (こうかいする, kōkai suru.) Futile? (むなしい, munashii.) To give up? (あきらめる, akirameru.) To yearn after? (あこがれる, akogareru.) Missed dearly? (こいしい, koishii.) Envious? (うらやましい, urayamashii.) An interest? (きょうみ, kyōmi.) Admiration? (かんしん, kanshin.) To be grateful? (かんしゃする, kansha suru.) To feel sympathy? (どうじょうする, dōjō suru.) Pitiable? (きのどく, kinodoku.) Miserable? (みじめ, mijime.) To encourage? (はげます, hagemasu.) Satisfied? (まんぞく, manzoku.) Discontented? (ふまん, fuman.) Bored? (たいくつ, taikutsu.) To smile gently? (ほほえむ, hohoemu.) To fall silent? (だまる, damaru.) Cheerful? (ほがらか, hogaraka.) Bright? (あかるい, akarui.) Taciturn? (むくち, mukuchi.) Shy with strangers? (ひとみしり, hitomishiri.) To behave? (ふるまう, furumau.) Strict? (きびしい, kibishii.) Composed? (れいせい, reisei.) Sincere? (せいじつ, seijitsu.) Modest? (けんきょ, kenkyo.) Spiteful? (いじわる, ijiwaru.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R437-review-432-437-type",
+              "prompt": "Say the Japanese for 'to be troubled'.",
+              "assesses": [
+                "JA-LEX-C432-WORRY432-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "なやむ",
+                "nayamu"
+              ],
+              "feedback": {
+                "correct": "Right: なやむ (nayamu) is 'to be troubled; to agonize'.",
+                "incorrect": "'To be troubled' is なやむ (nayamu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

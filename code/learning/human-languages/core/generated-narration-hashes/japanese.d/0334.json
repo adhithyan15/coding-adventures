@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:549ac343fd322ea8",
+  "lessonIds": [
+    "JA-C334-fukushi",
+    "JA-C334-kifu-suru",
+    "JA-C334-bokin",
+    "JA-C334-sewa",
+    "JA-C334-atsukau",
+    "JA-R334-review-329-334"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch334.txt",
+  "json": "japanese/narration/ch334.json",
+  "textHash": "fnv1a64:982f52766711c6cf",
+  "jsonHash": "fnv1a64:a32ea68a3d0d8ec2",
+  "findings": []
+}

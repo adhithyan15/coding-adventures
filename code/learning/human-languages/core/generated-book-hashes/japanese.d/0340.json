@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:4d598fdf8b8380cc",
+  "lessonIds": [
+    "JA-C340-jogen",
+    "JA-C340-chuukoku-suru",
+    "JA-C340-kokorogakeru",
+    "JA-C340-doryoku-suru",
+    "JA-C340-keikoku",
+    "JA-R340-review-335-340"
+  ],
+  "tex": "japanese/book/chapters/ch340-giving-advice.tex"
+}

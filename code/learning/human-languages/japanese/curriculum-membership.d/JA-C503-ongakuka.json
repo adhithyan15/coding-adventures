@@ -1,0 +1,11 @@
+{
+  "id": "JA-C503-ongakuka",
+  "pathSegment": "JA-PATH-503-SONG503",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-503-SONG503",
+      "order": 3
+    }
+  ]
+}

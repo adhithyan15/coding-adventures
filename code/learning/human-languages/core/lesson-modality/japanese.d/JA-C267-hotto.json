@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C267-hotto",
+    "language": "japanese",
+    "chapter": 267,
+    "sequence": 16290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8541c8b6220f7481"
+  },
+  "findings": []
+}
