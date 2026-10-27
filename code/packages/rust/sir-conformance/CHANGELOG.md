@@ -2,6 +2,24 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.28.0] - Python closures that name themselves or each other (#18468)
+
+Adds `tests/python_nested_closures.rs`: six Python programs whose nested
+`def`s name themselves (as a value, as a recursive call), call a sibling
+defined later (mutual recursion), call an "uncle" closure, or read a `main`
+local from a top-level `def`.  Each program is checked two ways:
+
+- `closures_thread_exactly_their_targets_captures`: after lowering, every
+  `MakeClosure` threads exactly as many captures as its target declares,
+  and no `DirectCall` targets a capturing function.  The validator does
+  not enforce the first rule yet.
+- `programs_print_cpythons_output_on_every_backend`: the program prints
+  CPython's output on Python, JavaScript, Go, Rust, C and Ruby.
+
+Before `python-to-semantic-ir` 0.12.0 and `semantic-ir-to-c` 0.42.2, every
+one of these programs failed on every backend.  (The JavaScript backend
+ran some of them, but printed `NaN` or `nil`.)
+
 ## [0.27.0] - SIR21 T3b-2 Slice 5a: source-level regression for Python/JS division
 
 Adds `tests/division.rs::python_division_always_true_divides_from_source_on_every_backend`

@@ -166,6 +166,7 @@ nesting into a clean error rather than a native stack overflow.
 | `lambda a: expr`                       | `MakeClosure { fn_name __lambda_N, captures }`        | `Closures`             |
 | nested `def` (returned / referenced)   | lifted `Function` + `MakeClosure` with captures       | `Closures`             |
 | `f(args)` — `f` a known function       | `DirectCall { fn_name f, args }`                      | —                      |
+| `f(args)` — `f` a function with captures | `IndirectCall { target MakeClosure(f, captures), args }` | `Closures`           |
 | `f(args)` — `f` a closure value        | `IndirectCall { target VarRef, args }`                | `Closures`             |
 | `print(x)`                             | SIR28 §2 `__sys_write__(stdout, "once", false, x)`    | `ConsoleIO`, `Strings` |
 | `len(x)`                               | `SeqLen { seq: x }`                                   | `Sequences`            |
@@ -178,7 +179,8 @@ has no parameter annotations).
 **Two-pass design.**  A first pass collects **every** function name
 (top-level and nested) into a flat table, so a call to a function defined
 *later* in the file — and **mutual recursion** — resolve to `DirectCall`.
-The second pass lowers each body.
+The first pass also records, for each `def`, its parent body, its free
+names and its parameter shape.  The second pass lowers each body.
 
 **`return` is tail-only.**  A SIR function body is a `Block` whose `value`
 IS the return value, so a tail `return expr` sets that value (and a bare
@@ -199,6 +201,29 @@ capture.  A bare reference to a function name yields a `MakeClosure`
 (re-threading its captures), so closures can be returned or passed.
 Capture order is deterministic (alphabetical).  Closure bodies reuse the
 `MAX_BLOCK_DEPTH` / `MAX_EXPR_DEPTH` guards, so recursion stays bounded.
+
+**Capture lists are decided before bodies are lowered.**  Every closure
+built for a function must thread exactly the captures that function
+declares.  So the list is fixed before the function's body is lowered,
+and a body that names its own function (`h = go`, or `go(x - 1)`) builds
+a complete closure (#18468).  A function that *names* a capturing
+function also captures that function's captures, because it has to build
+that closure.  For example, when `inner` calls its uncle `go`, which
+captures `n`, both `inner` and `mid` capture `n`.  The planner runs this
+rule to a fixpoint over a function plus every not-yet-lowered sibling
+`def` it names.  So mutually-recursive sibling nested `def`s work even
+when one is called before its `def` is reached.  A sibling planned early
+cannot read a name bound only after the sibling that used it; such a
+program gets a positioned error.
+
+**Calling a function that has captures.**  A `DirectCall` passes only the
+arguments, so a call by name to a function with captures goes through its
+closure instead: `go(x - 1)` lowers to
+`IndirectCall(MakeClosure(go, [n]), [x - 1])`.  Backends apply closures
+leniently (no defaults, no keyword matching, a missing argument reads as
+nil).  So such a call must pass exactly the callee's plain positional
+parameters.  Defaults, keyword-only params, keyword arguments and a wrong
+argument count are positioned errors.
 
 **Default parameters (P8).**  A positional default `def f(a, b=10)` lowers
 the `param_with_default` node's `= <expr>` into `Param.default = Some(expr)`
@@ -389,6 +414,13 @@ assignment; short-circuit nodes; `if` / `elif` / `else`, `while`,
 - **closures** — `lambda` → `MakeClosure` + synthesised function; capture
   of an enclosing local; non-capture of globals / functions; nested-`def`
   capture of an enclosing param with a returned closure;
+- **closures that name themselves or a sibling** (#18468) — a nested `def`
+  naming itself as a value and recursively, sibling mutual recursion, a
+  sibling passing on a capture it does not read, the uncle chain, a
+  top-level `def` reading a `main` local, and the rejection paths.  A
+  shared helper checks that every `MakeClosure` threads exactly its
+  target's capture count and that no `DirectCall` targets a capturing
+  function;
 - **mutual recursion** detected (and self-recursion correctly *not*
   flagged);
 - a `validate` round-trip across the M4 programs, and
