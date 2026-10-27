@@ -1789,10 +1789,13 @@ PRs rather than landed as one.
    To accept a module that uses them they need: `dyn_pair_*` / `dyn_is_*` /
    `dyn_nil` lowered onto their object model (feasible, it is what
    `lower_heap_builtins` does today, moved behind `op_support`); and
-   `dyn_tag`, which the PR7f-2 rules use, answering the six tag numbers —
-   which needs a symbol representation distinct from an integer (today both
-   are `i31ref`) and booleans that are dynamic values rather than machine
-   `i32`s. That is a change to the managed value model, with CLR and BEAM
+   `dyn_tag`, which `__lisp_equal` and `__lisp_exit_code` use, answering
+   the six tag numbers — which needs a symbol representation distinct from
+   an integer (today both are `i31ref`) and booleans that are dynamic values
+   rather than machine `i32`s. PR7f-2's truthiness and `not` do not use
+   `dyn_tag`: they compare the whole word against the `#f` and nil words
+   (3 and 1), so on a managed object model they need `#f` and nil to be
+   values an `i64`-typed `cmp_ne` can tell apart from every other value. That is a change to the managed value model, with CLR and BEAM
    executable only in CI.
 3. **Eight interpreters consume the names.** `twig-vm` and the seven
    `*-vm` crates execute the frontends' IIR directly. Each must accept the
@@ -1810,8 +1813,9 @@ PRs rather than landed as one.
 - **PR7f-3a** — the structural backends lower the ten primitives on their
   object model and declare them `Lowered` (moving `lower_heap_builtins`'s
   job behind `op_support`); the managed symbol becomes distinguishable from
-  an integer and booleans become dynamic values, so `dyn_tag` and the
-  PR7f-2 rules run there; `pair?` / `not` / `equal?` leave the four
+  an integer and booleans become dynamic values, so `dyn_tag`,
+  `__lisp_equal` and `__lisp_exit_code` run there, and `#f` and nil get
+  representations the whole-word truthiness comparison can recognise; `pair?` / `not` / `equal?` leave the four
   backends' own lowering.
 - **PR7f-3b** — `vm-core` lowers the primitives (the VM and JIT columns
   stop needing the harness's structural pass), and `twig-vm` and the seven
