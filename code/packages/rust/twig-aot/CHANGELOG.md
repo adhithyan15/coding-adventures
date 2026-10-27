@@ -1,4 +1,41 @@
 # Changelog — `twig-aot`
+
+## Unreleased — untyped Twig integers compare signed (#18483)
+
+- **Bug.** On the native x86-64 column `(if (< -8 100) 1 2)` exited 2; the
+  VM says 1. The frontend writes `(< a b)` as `cmp_lt a, b` with the hint
+  `"bool"` (the result type). `propagate_aot_types` only fills hints that are
+  still `"any"`, so `aot_specialise` named the op `cmp_lt_bool`, and the
+  x86-64 and AArch64 backends compared that suffix unsigned (-8 became
+  `0xFFFF_FFFF_FFFF_FFF8`). The issue's "`cmp_*_u64`" was the documented
+  intent of the untyped path; the op actually emitted was `cmp_*_bool`,
+  with the same unsigned effect.
+- **Fix.** New `sign_word_comparisons` (preparation step 5, after
+  `default_any_to_i64`) retypes a `cmp_*` whose hint is `"bool"` and whose
+  operands are all 64-bit integer words (`i64`, `bool`, `any`,
+  `polymorphic`, `ref<any>`, or an `Int` / `Bool` literal) to `"i64"`, the
+  operand type. The specialiser then emits `cmp_lt_i64` and every native
+  backend picks a signed condition code. It runs on both the untyped path
+  (`prepare_module_for_aot`, used by every native entry point and by
+  `lang-aot`) and `compile_typed_module_to_arm64_bytes`. A compare over a
+  float, narrow or unsigned operand, or one whose hint already names an
+  operand type (Nib's `u8`), is left alone.
+- Tagged words stay correct: a boxed integer is `n << 3`, which keeps the
+  sign and order of every 61-bit `n`, and equality compares whole words
+  either way. Non-integer tagged words (nil, `#f`, `#t`, pair pointers) are
+  small or below 2⁴⁷, so their (already undefined) ordering is unchanged.
+- Division, remainder and `modulo` were already `div_i64` / `mod_i64`
+  (signed); Twig has no shift or min/max builtins.
+- Doc comments no longer describe the untyped path as "u64": the crate
+  header, `compile_typed_module_to_arm64_bytes`, the preparation-pipeline
+  overview, `propagate_aot_types`, `infer_aot_type`, `prepare_module_for_aot`
+  and `compile_module_to_text`.
+- Tests: `untyped_twig_integer_comparisons_specialise_to_signed_i64` (every
+  comparison in eight negative-operand programs specialises to `_i64`),
+  `untyped_negative_comparisons_run_signed_on_linux_x86_64` (the same
+  programs run natively and exit with the VM's answer), and
+  `sign_word_comparisons_leaves_float_narrow_and_typed_compares_alone`.
+
 ## Unreleased — LANG83 PR7f-2 — Lisp's value rules are compiler-emitted IIR
 
 - `runtime/dynval_runtime.c` drops `__dyn_not`, `__dyn_truthy`, `__dyn_equal` and `__dyn_to_exit_code`. They were Lisp's value rules, not the representation; the Lisp-family lowering writes them as IIR in each module. The golden tests for them are removed (the rules are checked in `iir-builtin-lowering` and end to end in `lang-aot`'s `op_conformance`).

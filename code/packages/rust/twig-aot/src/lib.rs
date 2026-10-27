@@ -42,10 +42,10 @@
 //!
 //! ## Execution model
 //!
-//! Every Twig program's `main` function returns a `u64`.  The linker
-//! produces a binary that calls `_main` and routes the `x0` return
-//! through `exit()`, so the process exit code equals `main()`'s return
-//! value modulo 256.
+//! Every Twig program's `main` function returns a 64-bit word holding a
+//! signed Twig integer.  The linker produces a binary that calls `_main`
+//! and routes the `x0` return through `exit()`, so the process exit code
+//! equals `main()`'s return value modulo 256 (`-1` exits 255).
 
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
@@ -555,7 +555,7 @@ pub fn compile_module_to_arm64_bytes(
 }
 
 /// Like [`compile_module_to_arm64_bytes`] but uses the caller-supplied type
-/// annotations instead of forcing everything to `u64`.
+/// annotations instead of defaulting every untyped param to `i64`.
 ///
 /// The caller is responsible for having:
 /// 1. Run `pre_lower_aot_builtins_on_module` (or equivalent).
@@ -563,10 +563,11 @@ pub fn compile_module_to_arm64_bytes(
 /// 3. Set any remaining `"any"` params to a concrete type (e.g. `"i64"`).
 ///
 /// This function then runs `propagate_aot_types` (seeded from the caller's
-/// type annotations) and `default_any_to_u64` to fill in any gaps, without
-/// ever running `normalize_params_to_u64`.  Because params stay at whatever
-/// type the caller gave them (e.g. `i64`), arithmetic and comparisons are
-/// emitted with signed `i64` semantics — correct for negative numbers.
+/// type annotations), `default_any_to_i64` to fill in any gaps and
+/// `sign_word_comparisons` to compare integer words signed.  Params the caller
+/// typed keep that type; only params still `"any"` become `i64`.  Either way
+/// arithmetic and comparisons are emitted with signed `i64` semantics —
+/// correct for negative numbers.
 ///
 /// ## Why propagation is still needed
 ///
@@ -597,6 +598,8 @@ pub fn compile_typed_module_to_arm64_bytes(
         // Default any still-unresolvable arithmetic/mov hints to i64.
         // (Should be rare after propagation with typed params.)
         default_any_to_i64(func);
+        // A frontend `cmp_* [bool]` over i64 words compares signed (#18483).
+        sign_word_comparisons(func);
     }
     // Discard global and extern reloc metadata — typed callers that need a full
     // Mach-O object should use `compile_module_macos_arm64_object` instead.
@@ -2078,8 +2081,11 @@ fn find_windows_linker() -> Option<WinLinker> {
 // ---------------------------------------------------------------------------
 //
 // The Twig IR compiler emits `call_builtin "<op>" arg…` for every primitive
-// operation and leaves all `type_hint` fields as `"any"`.  The ARM64 backend
-// requires typed CIR instructions (`add_u64`, `cmp_lt_u64`, `mov_u64`, …).
+// operation and leaves all `type_hint` fields as `"any"`.  The native
+// backends require typed CIR instructions (`add_i64`, `cmp_lt_i64`,
+// `mov_i64`, …), and they read signedness from the suffix: `i*` is signed,
+// `u*` unsigned.  Twig integers are signed 64-bit values, so every integer
+// op this pipeline types is `i64`, never `u64` (#18483).
 //
 // This preparation pipeline bridges the gap in three steps:
 //
@@ -2103,7 +2109,9 @@ fn find_windows_linker() -> Option<WinLinker> {
 //    Any remaining `"any"` hints on arithmetic and `mov` instructions are
 //    then defaulted to `"i64"` so that `aot_specialise` never sees an
 //    untyped instruction and never emits `type_assert` guards (which the ARM64
-//    backend lowers to `udf` hard-traps).
+//    backend lowers to `udf` hard-traps).  Last, a comparison the frontend
+//    hinted `"bool"` (its result type) over integer words is retyped `"i64"`
+//    (its operand type) by `sign_word_comparisons`, so it compares signed.
 
 /// Builtin-name → IIR-op for AOT.
 const AOT_BUILTIN_MAP: &[(&str, &str)] = &[
@@ -2160,9 +2168,10 @@ fn normalize_params_to_i64(func: &mut IIRFunction) {
 /// codes.  `cmp_lt_bool` produces an unsigned comparison — correct when all
 /// values are non-negative, but wrong for negative numbers.
 ///
-/// Returning the operand type lets the specialiser emit `cmp_lt_u64` for the
-/// untyped path (u64 params) and `cmp_lt_i64` for the typed path (i64 params),
-/// selecting the right condition code in each case.  The boolean result value
+/// Returning the operand type lets the specialiser emit `cmp_lt_i64` for
+/// Twig's `i64` integers (both the untyped and the typed path seed params
+/// `i64`) and, say, `cmp_lt_u8` for an unsigned frontend type, selecting the
+/// right condition code in each case.  The boolean result value
 /// (0 or 1 stored to the dest register) is the same either way.
 ///
 /// Runs in a loop until stable.  Function params (already "i64" or a typed hint)
@@ -2215,11 +2224,12 @@ fn infer_aot_type(instr: &IIRInstr, env: &HashMap<String, String>) -> Option<Str
             Some(Operand::Bool(_)) => Some("bool".into()),
             _                       => None,
         },
-        // Comparisons: use the operand type so the ARM64 backend can choose
+        // Comparisons: use the operand type so the native backends can choose
         // signed vs unsigned condition codes.  `cmp_lt_u64` → unsigned CMP,
         // `cmp_lt_i64` → signed CMP.  Both store a bool 0/1 result.
-        // Fall back to "bool" only when operand types are still unresolved —
-        // that way the untyped path (which resolves to u64) still works.
+        // Fall back to "bool" only when operand types are still unresolved;
+        // `sign_word_comparisons` then retypes a "bool" compare over integer
+        // words to "i64" (#18483).
         "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge" => {
             resolve_src_aot_type(instr.srcs.first(), env)
                 .or_else(|| Some("bool".into()))
@@ -2246,6 +2256,123 @@ fn resolve_src_aot_type(src: Option<&Operand>, env: &HashMap<String, String>) ->
         Operand::Int(_)  => Some("i64".into()),
         Operand::Bool(_) => Some("bool".into()),
         _                => None,
+    }
+}
+
+/// Step 3c: compare 64-bit integer words as **signed** `i64` (#18483).
+///
+/// ## The bug this closes
+///
+/// Twig integers are signed.  `(if (< -8 100) 1 2)` is `1` on the VM, but the
+/// native x86-64 column returned `2`.  The frontend (and `lower_dynamic_arith`)
+/// writes every `(< a b)` as `cmp_lt a, b` with the type hint `"bool"` — the
+/// type of the *result*.  [`propagate_aot_types`] only fills in hints that are
+/// still `"any"`, so the `"bool"` hint survived to `aot_specialise`, which
+/// names the CIR op after the hint: `cmp_lt_bool`.  The native backends pick
+/// signed or unsigned condition codes from that suffix, and they read `bool`
+/// as unsigned.  So the comparison ran as
+///
+/// ```text
+///   cmp_lt_bool  -8, 100
+///   = 0xFFFF_FFFF_FFFF_FFF8 <ᵤ 100      (unsigned "below")
+///   = false                             → the else branch, exit 2
+/// ```
+///
+/// ## The rule
+///
+/// In IIR a comparison's `type_hint` is its **operand** type (`iir-to-llvm`'s
+/// `lower_cmp` says so, and so does [`infer_aot_type`]).  This pass makes
+/// the untyped native path say so too.  A `cmp_*` whose hint is `"bool"` and
+/// whose operands are all 64-bit integer words is retyped `"i64"`, and the
+/// specialiser then emits `cmp_lt_i64` → `setl` / `B.LT`.  The result stored
+/// to the destination register is the same 0 / 1 either way; only the
+/// condition code changes.
+///
+/// | operand kinds (every operand)                    | hint after |
+/// |--------------------------------------------------|------------|
+/// | `i64`, `bool`, `any`, `polymorphic`, `ref<any>`, | `"i64"`    |
+/// | an `Int` or `Bool` literal                       |            |
+/// | any operand `f32` / `f64` / a `Float` literal     | unchanged  |
+/// | any operand `u*`, `i8`…`i32`, `str`, unknown      | unchanged  |
+///
+/// Only the hint `"bool"` is rewritten.  A hint that already names an
+/// operand type (`u8` for Nib, `i64` for ALGOL, `f64` for BASIC) is the
+/// frontend's deliberate choice and is left alone, and so is a `"bool"`
+/// compare over narrow, unsigned or float operands — those are some other
+/// language's values, not Twig integers, and this pass would only be
+/// guessing.
+///
+/// ## Why tagged words are safe to compare signed
+///
+/// On the native and LLVM columns a boxed Twig integer `n` is the word
+/// `n << 3`.  A left shift by 3 multiplies by 8, which keeps the sign and the
+/// order of every 61-bit `n`:
+///
+/// ```text
+///   n       word (n << 3)          signed order    unsigned order
+///   -8      0xFFFF_FFFF_FFFF_FFC0  smallest        LARGEST   ← the bug
+///    0      0x0000_0000_0000_0000
+///  100      0x0000_0000_0000_0320  largest
+/// ```
+///
+/// So a signed compare of two tagged ints gives the same answer as comparing
+/// the untagged values.  Equality compares the whole word, which is the same
+/// signed or unsigned, so `cmp_eq` / `cmp_ne` are unaffected by the change.
+/// A non-integer tagged word (`nil` = 1, `#f` = 3, `#t` = 5, a pair pointer
+/// tagged 7) is a small positive number or a user-space pointer below 2⁴⁷,
+/// so its ordered comparison gives the same answer signed as it did
+/// unsigned.  Ordering such a value was already a type error the frontend
+/// rejects, or undefined; nothing this pass changes makes a backend accept
+/// an instruction it refused before.
+///
+/// Runs after [`propagate_aot_types`], so every operand register already has
+/// the most precise type the pipeline can give it.
+fn sign_word_comparisons(func: &mut IIRFunction) {
+    // Every type each register is ever written with, from the params and from
+    // every instruction's destination.  The scan is flow-insensitive: a join
+    // register (an `if`'s `_ifv*`) is written once per branch, and it is a
+    // signed word only if *every* writer says so.
+    let mut written: HashMap<&str, Vec<&str>> = HashMap::new();
+    for (name, ty) in &func.params {
+        written.entry(name.as_str()).or_default().push(ty.as_str());
+    }
+    for instr in &func.instructions {
+        if let Some(dest) = &instr.dest {
+            written.entry(dest.as_str()).or_default().push(instr.type_hint.as_str());
+        }
+    }
+
+    // A 64-bit word whose ordering is the signed ordering of a Twig integer:
+    // an `i64`, a tagged dynamic value, or a 0 / 1 boolean (whose order is
+    // the same signed or unsigned).
+    let is_signed_word = |ty: &str| {
+        matches!(ty, "i64" | "bool" | "any" | "polymorphic" | "ref<any>")
+    };
+    let operand_is_signed_word = |src: &Operand| match src {
+        Operand::Int(_) | Operand::Bool(_) => true,
+        Operand::Var(name) => written
+            .get(name.as_str())
+            .is_some_and(|tys| tys.iter().all(|ty| is_signed_word(ty))),
+        Operand::Float(_) | Operand::Str(_) => false,
+    };
+
+    // Decide first, rewrite second: `written` borrows the instruction list.
+    let retype: Vec<bool> = func
+        .instructions
+        .iter()
+        .map(|instr| {
+            matches!(
+                instr.op.as_str(),
+                "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge"
+            ) && instr.type_hint == "bool"
+                && !instr.srcs.is_empty()
+                && instr.srcs.iter().all(operand_is_signed_word)
+        })
+        .collect();
+    for (instr, retype) in func.instructions.iter_mut().zip(retype) {
+        if retype {
+            instr.type_hint = "i64".to_string();
+        }
     }
 }
 
@@ -3247,6 +3374,8 @@ fn default_any_to_i64(func: &mut IIRFunction) {
 ///  2. `normalize_params_to_i64` — promotes untyped params to `i64`.
 ///  3. `propagate_aot_types` — fixed-point type propagation.
 ///  4. `default_any_to_i64` — defaults unresolved arithmetic types to `i64`.
+///  5. `sign_word_comparisons` — retypes a `"bool"`-hinted comparison over
+///     integer words `"i64"`, so it compares signed (#18483).
 fn prepare_module_for_aot(module: &mut IIRModule) -> Result<(), AotError> {
     // Phase 0: lower global_set / global_get → global_store / global_load.
     lower_global_io(module);
@@ -3319,6 +3448,7 @@ fn prepare_module_for_aot(module: &mut IIRModule) -> Result<(), AotError> {
         normalize_params_to_i64(func);
         propagate_aot_types(func);
         default_any_to_i64(func);
+        sign_word_comparisons(func);
     }
     Ok(())
 }
@@ -3330,12 +3460,14 @@ fn prepare_module_for_aot(module: &mut IIRModule) -> Result<(), AotError> {
 /// Run the per-function AOT pipeline and link into a single text section.
 ///
 /// Clones `module`, runs the full AOT preparation pipeline (builtin
-/// pre-lowering + u64 type normalisation + type propagation + default-any),
-/// and then delegates to [`compile_module_to_text_raw`] for the actual
+/// pre-lowering, `i64` param normalisation, type propagation, default-any and
+/// signed word comparisons), and then delegates to [`compile_module_to_text_raw`] for the actual
 /// two-pass compile + link.
 ///
-/// This is the "untyped u64" path: all params and arithmetic are treated as
-/// `u64`.  For signed `i64` semantics use [`compile_typed_module_to_arm64_bytes`].
+/// This is the "untyped" path: params the frontend left `"any"` and the
+/// arithmetic and comparisons over them are treated as signed `i64`, which is
+/// what a Twig integer is (#18483).  [`compile_typed_module_to_arm64_bytes`]
+/// is the path that keeps a caller's own param annotations.
 #[allow(clippy::type_complexity)] // cohesive compiled-module tuple; see compile_module_x86_64_to_text
 fn compile_module_to_text(
     module: &IIRModule,
@@ -3347,6 +3479,7 @@ fn compile_module_to_text(
     //   2. param types "any" → "i64"           (see `normalize_params_to_i64`)
     //   3. propagate + default remaining "any" (see `propagate_aot_types` /
     //                                            `default_any_to_i64`)
+    //   4. integer-word compares → signed i64  (see `sign_word_comparisons`)
     let mut module = module.clone();
     prepare_module_for_aot(&mut module)?;
     compile_module_to_text_raw(&module)
@@ -3386,7 +3519,7 @@ fn collect_global_slots(module: &IIRModule) -> HashMap<String, usize> {
 /// Unlike [`compile_module_to_text`] this function **does not** clone or
 /// prepare the module — it trusts that the caller has already run the
 /// appropriate preparation (either [`prepare_module_for_aot`] for the untyped
-/// u64 path, or just [`pre_lower_aot_builtins`] for the typed i64 path).
+/// path, or just [`pre_lower_aot_builtins`] for the typed path).
 ///
 /// Two-pass strategy for cross-function calls:
 ///
@@ -3790,6 +3923,110 @@ mod tests {
         assert!(!out.status.success(), "a trap exits non-zero");
         let stderr = String::from_utf8_lossy(&out.stderr);
         assert!(stderr.contains("trap: Trap.DivZero"), "stderr names the kind: {stderr:?}");
+    }
+
+    // ── #18483: untyped Twig integers compare signed ──────────────────────────
+
+    /// The negative-operand programs from #18483, with the VM's answers.
+    /// Every one takes the other branch if `<` / `>` / `<=` compare unsigned.
+    const SIGNED_COMPARE_PROGRAMS: &[(&str, i32)] = &[
+        ("(if (< -8 100) 1 2)", 1),
+        ("(if (> -1 0) 1 2)", 2),
+        ("(if (<= -5 -5) 1 2)", 1),
+        ("(if (< (- 0 8) 0) 1 2)", 1),
+        ("(let ((v (- 0 8))) (if (< v 100) 1 2))", 1),
+        // A comparison of a function's negative result (a `call` register).
+        ("(define (neg7) (- 0 7)) (if (< (neg7) 0) 1 2)", 1),
+        // A negative parameter.
+        ("(define (f x) (if (< x 0) 42 7)) (f -5)", 42),
+        // A negative integer read back out of a pair (a tagged word, unboxed).
+        ("(if (< (car (cons -3 1)) 0) 1 2)", 1),
+    ];
+
+    /// Every comparison CIR op `src` specialises to, through the same
+    /// preparation every native column runs.
+    fn specialised_compare_ops(src: &str) -> Vec<String> {
+        let mut module = twig_ir_compiler::compile_source(src, "m").expect("compiles to IIR");
+        prepare_module_for_aot(&mut module).expect("prepares");
+        module
+            .functions
+            .iter()
+            .flat_map(|f| aot_specialise(f, Some(&infer_types(f))))
+            .map(|c| c.op)
+            .filter(|op| op.starts_with("cmp_"))
+            .collect()
+    }
+
+    /// The untyped path names every Twig integer comparison `cmp_*_i64`, so
+    /// each native backend picks a signed condition code from the suffix.
+    /// Before #18483 the frontend's result hint survived and the op was
+    /// `cmp_*_bool`, which x86-64 and AArch64 compared unsigned.
+    #[test]
+    fn untyped_twig_integer_comparisons_specialise_to_signed_i64() {
+        for (src, _) in SIGNED_COMPARE_PROGRAMS {
+            let ops = specialised_compare_ops(src);
+            assert!(!ops.is_empty(), "{src}: no comparison found");
+            for op in &ops {
+                assert!(op.ends_with("_i64"), "{src}: {op} is not a signed i64 compare ({ops:?})");
+            }
+        }
+    }
+
+    /// The pass retypes only a `bool`-hinted compare whose operands are all
+    /// 64-bit integer words. A float, narrow or unsigned operand keeps the
+    /// frontend's hint, and so does a compare that already names its operand
+    /// type (Nib's `u8`).
+    #[test]
+    fn sign_word_comparisons_leaves_float_narrow_and_typed_compares_alone() {
+        let v = |n: &str| Operand::Var(n.into());
+        let cmp = |d: &str, a: &str, b: &str, hint: &str| {
+            IIRInstr::new("cmp_lt", Some(d.into()), vec![v(a), v(b)], hint)
+        };
+        let mut func = IIRFunction::new(
+            "f",
+            vec![("w".into(), "i64".into()), ("t".into(), "any".into())],
+            "i64",
+            vec![
+                IIRInstr::new("const", Some("x".into()), vec![Operand::Float(1.5)], "f64"),
+                IIRInstr::new("const", Some("y".into()), vec![Operand::Float(2.5)], "f64"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Int(200)], "u8"),
+                IIRInstr::new("const", Some("c".into()), vec![Operand::Int(3)], "u8"),
+                cmp("float", "x", "y", "bool"),
+                cmp("narrow", "b", "c", "bool"),
+                cmp("mixed", "w", "b", "bool"),
+                cmp("typed_u8", "b", "c", "u8"),
+                cmp("words", "w", "t", "bool"),
+                IIRInstr::new("cmp_eq", Some("lit".into()), vec![v("w"), Operand::Int(-1)], "bool"),
+            ],
+        );
+        sign_word_comparisons(&mut func);
+        let hint = |d: &str| {
+            func.instructions
+                .iter()
+                .find(|i| i.dest.as_deref() == Some(d))
+                .map(|i| i.type_hint.clone())
+                .unwrap()
+        };
+        assert_eq!(hint("float"), "bool", "a float compare is not an integer compare");
+        assert_eq!(hint("narrow"), "bool", "u8 operands keep the frontend's hint");
+        assert_eq!(hint("mixed"), "bool", "one u8 operand is enough to leave it alone");
+        assert_eq!(hint("typed_u8"), "u8", "an operand-typed hint is never rewritten");
+        assert_eq!(hint("words"), "i64", "an i64 against a tagged word compares signed");
+        assert_eq!(hint("lit"), "i64", "an i64 against a negative literal compares signed");
+    }
+
+    /// End to end on the host: each program exits with the VM's answer.
+    #[cfg(target_os = "linux")]
+    #[test]
+    fn untyped_negative_comparisons_run_signed_on_linux_x86_64() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        for (i, (src, want)) in SIGNED_COMPARE_PROGRAMS.iter().enumerate() {
+            let module = twig_ir_compiler::compile_source(src, "m").expect("compiles to IIR");
+            let exe = dir.path().join(format!("signed_{i}"));
+            compile_module_to_linux_executable(&module, &exe).expect("compiles and links");
+            let out = std::process::Command::new(&exe).output().expect("runs");
+            assert_eq!(out.status.code(), Some(*want), "{src}");
+        }
     }
 
     // ── AOT00-T1 x86_64 PR-x2: GC entry wrapper + no-op init ──────────────────
