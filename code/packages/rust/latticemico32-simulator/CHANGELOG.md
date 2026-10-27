@@ -2,6 +2,9 @@
 
 ## 0.1.0 — 2026-10-26
 
+- Drop the `ruff` lint lines from BUILD: ruff is only installed for Python
+  packages, not on Rust build runners. The vector generator's `--check` run
+  remains in BUILD.
 - Add the configuration-pinned LatticeMico32 functional simulator from the
   accepted Layer 07bd specification.
 - Model complete mutable GPR, interrupt/debug CSR, memory, and image state;
