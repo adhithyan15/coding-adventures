@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:9c7fe62ba96dd09f",
+  "lessonIds": [
+    "JA-C500-omocha",
+    "JA-C500-nawatobi",
+    "JA-C500-kakekko",
+    "JA-C500-nazonazo",
+    "JA-C500-suberidai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch500.txt",
+  "json": "japanese/narration/ch500.json",
+  "textHash": "fnv1a64:4d7c11cd9c566f28",
+  "jsonHash": "fnv1a64:f0b9fb1f291ad0d8",
+  "findings": []
+}

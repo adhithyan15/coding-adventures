@@ -1,0 +1,947 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 389,
+  "title": "The Main Street and the Alleys",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:e8f69115ea0dac2f",
+  "lessons": [
+    {
+      "id": "JA-C389-oudouri",
+      "sequence": 22870,
+      "title": "おおどおり (ōdōri) — a main street; an avenue",
+      "headword": "おおどおり",
+      "romanization": "ōdōri",
+      "gloss": "a main street; an avenue",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a508abdcd6a0d99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for free of charge, then the Japanese for requiring a fee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おおどおり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おおどおり — ōdōri — \"a main street; an avenue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おおどおりに ひゃっかてんが あります。 — ōdōri ni hyakkaten ga arimasu — \"There is a department store on the main street.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おおどおり (ōdōri) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from ō, \"big\" and dōri, \"street\" (from tōru); its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōdōri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōdōri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōdōri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōdōri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōdōri ni hyakkaten ga arimasu — There is a department store on the main street.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōdōri ni hyakkaten ga arimasu* — There is a department store on the main street.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for free of charge, then the Japanese for requiring a fee, then say ōdōri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for free of charge, then the Japanese for requiring a fee, then say *ōdōri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おおどおり (ōdōri) mean? (\"A main street; an avenue\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C389-oudouri-type",
+              "prompt": "Say the Japanese for 'a main street'.",
+              "assesses": [
+                "JA-LEX-C389-OODOORI389-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おおどおり",
+                "ōdōri",
+                "oudouri",
+                "oodoori",
+                "odori"
+              ],
+              "feedback": {
+                "correct": "Right: おおどおり (ōdōri) is 'a main street; an avenue'.",
+                "incorrect": "'A main street' is おおどおり (ōdōri)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C389-roji",
+      "sequence": 22880,
+      "title": "ろじ (roji) — an alley; a lane",
+      "headword": "ろじ",
+      "romanization": "roji",
+      "gloss": "an alley; a lane",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30daccaec9c10592",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for requiring a fee, then the Japanese for a main street."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ろじ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ろじ — roji — \"an alley; a lane\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ろじに ちいさい みせが あります。 — roji ni chiisai mise ga arimasu — \"There is a small shop in the alley.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ろじ (roji) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ro, \"path\" (Middle Chinese luH) and ji, \"ground\" (dijH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "roji",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *roji*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "roji, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *roji*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "roji ni chiisai mise ga arimasu — There is a small shop in the alley.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *roji ni chiisai mise ga arimasu* — There is a small shop in the alley.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for requiring a fee, then the Japanese for a main street, then say roji again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for requiring a fee, then the Japanese for a main street, then say *roji* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ろじ (roji) mean? (\"An alley; a lane\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C389-roji-type",
+              "prompt": "Say the Japanese for 'an alley'.",
+              "assesses": [
+                "JA-LEX-C389-OODOORI389-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ろじ",
+                "roji"
+              ],
+              "feedback": {
+                "correct": "Right: ろじ (roji) is 'an alley; a lane'.",
+                "incorrect": "'An alley' is ろじ (roji)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C389-uramichi",
+      "sequence": 22890,
+      "title": "うらみち (uramichi) — a back street; a byway",
+      "headword": "うらみち",
+      "romanization": "uramichi",
+      "gloss": "a back street; a byway",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:26261bd9d986a2f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a main street, then the Japanese for an alley."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うらみち",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うらみち — uramichi — \"a back street; a byway\"."
+            },
+            {
+              "kind": "speech",
+              "text": "うらみちを とおって、えきに いきました。 — uramichi o tōtte, eki ni ikimashita — \"I went to the station by the back streets.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うらみち (uramichi) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from ura, \"back\" and michi, \"road\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uramichi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uramichi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uramichi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uramichi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uramichi o tōtte, eki ni ikimashita — I went to the station by the back streets.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uramichi o tōtte, eki ni ikimashita* — I went to the station by the back streets.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a main street, then the Japanese for an alley, then say uramichi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a main street, then the Japanese for an alley, then say *uramichi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うらみち (uramichi) mean? (\"A back street; a byway\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C389-uramichi-type",
+              "prompt": "Say the Japanese for 'a back street'.",
+              "assesses": [
+                "JA-LEX-C389-OODOORI389-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うらみち",
+                "uramichi"
+              ],
+              "feedback": {
+                "correct": "Right: うらみち (uramichi) is 'a back street; a byway'.",
+                "incorrect": "'A back street' is うらみち (uramichi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C389-hodoukyou",
+      "sequence": 22900,
+      "title": "ほどうきょう (hodōkyō) — a footbridge (over a road)",
+      "headword": "ほどうきょう",
+      "romanization": "hodōkyō",
+      "gloss": "a footbridge (over a road)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b4d4e823f63d339",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an alley, then the Japanese for a back street."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほどうきょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほどうきょう — hodōkyō — \"a footbridge (over a road)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ほどうきょうで どうろを わたりました。 — hodōkyō de dōro o watarimashita — \"I crossed the road by the footbridge.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほどうきょう (hodōkyō) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ho, \"walk\" (Middle Chinese buH), dō, \"street\" (dawX) and kyō, \"bridge\" (gjew) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hodōkyō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hodōkyō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hodōkyō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hodōkyō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hodōkyō de dōro o watarimashita — I crossed the road by the footbridge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hodōkyō de dōro o watarimashita* — I crossed the road by the footbridge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an alley, then the Japanese for a back street, then say hodōkyō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an alley, then the Japanese for a back street, then say *hodōkyō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほどうきょう (hodōkyō) mean? (\"A footbridge (over a road)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C389-hodoukyou-type",
+              "prompt": "Say the Japanese for 'a footbridge (over a road)'.",
+              "assesses": [
+                "JA-LEX-C389-OODOORI389-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほどうきょう",
+                "hodōkyō",
+                "hodoukyou",
+                "hodookyoo",
+                "hodokyo"
+              ],
+              "feedback": {
+                "correct": "Right: ほどうきょう (hodōkyō) is 'a footbridge (over a road)'.",
+                "incorrect": "'A footbridge (over a road)' is ほどうきょう (hodōkyō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C389-nukeru",
+      "sequence": 22910,
+      "title": "ぬける (nukeru) — to get through (to the other side); to come out",
+      "headword": "ぬける",
+      "romanization": "nukeru",
+      "gloss": "to get through (to the other side); to come out",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c59d305cc3add947",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a back street, then the Japanese for a footbridge (over a road)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぬける",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぬける — nukeru — \"to get through (to the other side); to come out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ろじを ぬけて、えきに つきました。 — roji o nukete, eki ni tsukimashita — \"I went through the alley and got to the station.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ぬけます, nukemasu; an ichidan verb. Past (polite): くるまが ろじを ぬけました。, kuruma ga roji o nukemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぬける (nukeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nukeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nukeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nukeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nukeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "roji o nukete, eki ni tsukimashita — I went through the alley and got to the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *roji o nukete, eki ni tsukimashita* — I went through the alley and got to the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a back street, then the Japanese for a footbridge (over a road), then say nukeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a back street, then the Japanese for a footbridge (over a road), then say *nukeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぬける (nukeru) mean? (\"To get through (to the other side); to come out\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C389-nukeru-type",
+              "prompt": "Say the Japanese for 'to get through'.",
+              "assesses": [
+                "JA-LEX-C389-OODOORI389-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぬける",
+                "nukeru"
+              ],
+              "feedback": {
+                "correct": "Right: ぬける (nukeru) is 'to get through (to the other side); to come out'.",
+                "incorrect": "'To get through' is ぬける (nukeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R389-review-384-389",
+      "sequence": 22920,
+      "title": "Looking back: from To the Airfield to The Main Street and the Alleys",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from To the Airfield to The Main Street and the Alleys",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1632b7173e0ff2d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for an airfield and a flight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an airfield, a flight, takeoff, landing (of a plane), to set off on a journey",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an airfield, a flight, takeoff, landing (of a plane), to set off on a journey]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "overseas, a foreign country, international, a time difference, to aim for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: overseas, a foreign country, international, a time difference, to aim for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a passport, customs, entry into a country, departure from a country, to take something out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a passport, customs, entry into a country, departure from a country, to take something out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to go out to meet, to happen to see, boarding (a plane or ship), a plane ticket, a business trip",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to go out to meet, to happen to see, boarding (a plane or ship), a plane ticket, a business trip]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "travel expenses, transport costs, a currency, free of charge, requiring a fee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: travel expenses, transport costs, a currency, free of charge, requiring a fee]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a main street, an alley, a back street, a footbridge (over a road), to get through",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a main street, an alley, a back street, a footbridge (over a road), to get through]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An airfield? (ひこうじょう, hikōjō.) A flight? (びん, bin.) Takeoff? (りりく, ririku.) Landing (of a plane)? (ちゃくりく, chakuriku.) To set off on a journey? (たびだつ, tabidatsu.) Overseas? (かいがい, kaigai.) A foreign country? (がいこく, gaikoku.) International? (こくさい, kokusai.) A time difference? (じさ, jisa.) To aim for? (めざす, mezasu.) A passport? (りょけん, ryoken.) Customs? (ぜいかん, zeikan.) Entry into a country? (にゅうこく, nyūkoku.) Departure from a country? (しゅっこく, shukkoku.) To take something out? (とりだす, toridasu.) To go out to meet? (でむかえる, demukaeru.) To happen to see? (みかける, mikakeru.) Boarding (a plane or ship)? (とうじょう, tōjō.) A plane ticket? (こうくうけん, kōkūken.) A business trip? (しゅっちょう, shutchō.) Travel expenses? (りょひ, ryohi.) Transport costs? (こうつうひ, kōtsūhi.) A currency? (つうか, tsūka.) Free of charge? (むりょう, muryō.) Requiring a fee? (ゆうりょう, yūryō.) A main street? (おおどおり, ōdōri.) An alley? (ろじ, roji.) A back street? (うらみち, uramichi.) A footbridge (over a road)? (ほどうきょう, hodōkyō.) To get through? (ぬける, nukeru.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R389-review-384-389-type",
+              "prompt": "Say the Japanese for 'an airfield'.",
+              "assesses": [
+                "JA-LEX-C384-HIKOUJOU384-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひこうじょう",
+                "hikōjō",
+                "hikoujou",
+                "hikoojoo",
+                "hikojo"
+              ],
+              "feedback": {
+                "correct": "Right: ひこうじょう (hikōjō) is 'an airfield'.",
+                "incorrect": "'An airfield' is ひこうじょう (hikōjō)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

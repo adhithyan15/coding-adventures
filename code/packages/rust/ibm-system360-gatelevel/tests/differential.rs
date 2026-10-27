@@ -288,51 +288,146 @@ fn every_hexadecimal_floating_order_uses_the_gate_network() {
     }
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum FrozenClass {
+    Unknown,
+    Reserved2,
+    Rr,
+    Reserved4,
+    Rx,
+    Rs,
+    Si,
+    Ss,
+}
+
+use FrozenClass::{
+    Reserved2 as Q2, Reserved4 as Q4, Rr as R, Rs as S, Rx as X, Si as I, Ss as E, Unknown as U,
+};
+
+// Independent frozen classification from GA22-7000's operation-code tables.
+// This deliberately does not use ranges, DecodeAuthority, or CANDIDATES.
+const FROZEN_OPCODE_CLASSES: [FrozenClass; 256] = [
+    // 0x00
+    U, U, U, U, U, R, R, R, U, U, R, U, U, U, U, U, // 0x10
+    R, R, R, R, R, R, R, R, R, R, R, R, R, R, R, R, // 0x20
+    R, R, R, R, R, Q2, Q2, Q2, R, R, R, R, R, R, Q2, Q2, // 0x30
+    R, R, R, R, R, Q2, Q2, Q2, R, R, R, R, R, R, Q2, Q2, // 0x40
+    X, X, X, X, Q4, X, X, X, X, X, X, X, X, Q4, Q4, Q4, // 0x50
+    X, Q4, Q4, Q4, X, X, X, X, X, X, X, X, X, X, X, X, // 0x60
+    X, Q4, Q4, Q4, Q4, Q4, Q4, Q4, X, X, X, X, X, X, Q4, Q4, // 0x70
+    X, Q4, Q4, Q4, Q4, Q4, Q4, Q4, X, X, X, X, X, X, Q4, Q4, // 0x80
+    U, U, U, U, U, U, S, S, S, S, S, S, S, S, S, S, // 0x90
+    S, I, I, Q4, I, I, I, I, S, U, U, U, U, U, U, U, // 0xa0
+    U, U, U, U, U, U, U, U, U, U, U, U, U, U, U, U, // 0xb0
+    U, U, U, U, U, U, U, U, U, U, U, U, U, U, U, U, // 0xc0
+    U, U, U, U, U, U, U, U, U, U, U, U, U, U, U, U, // 0xd0
+    U, U, E, U, E, E, E, E, U, U, U, U, U, U, U, U, // 0xe0
+    U, U, U, U, U, U, U, U, U, U, U, U, U, U, U, U, // 0xf0
+    U, U, U, U, U, U, U, U, U, U, U, U, U, U, U, U,
+];
+
+fn class_width(class: FrozenClass) -> Option<usize> {
+    match class {
+        FrozenClass::Unknown => None,
+        FrozenClass::Reserved2 | FrozenClass::Rr => Some(2),
+        FrozenClass::Reserved4 | FrozenClass::Rx | FrozenClass::Rs | FrozenClass::Si => Some(4),
+        FrozenClass::Ss => Some(6),
+    }
+}
+
+fn frozen_image(opcode: u8, class: FrozenClass) -> Vec<u8> {
+    match class {
+        FrozenClass::Unknown => vec![opcode],
+        FrozenClass::Reserved2 => rr(opcode, 0, 2),
+        FrozenClass::Rr => rr(opcode, 0, if opcode == 0x0a { 0 } else { 2 }),
+        FrozenClass::Reserved4 => rx(opcode, 0, 0, 3, 0),
+        FrozenClass::Rx => rx(opcode, 0, 0, 3, 0),
+        FrozenClass::Rs => rs(opcode, 0, 2, 3, 0),
+        FrozenClass::Si => si(opcode, 0x5a, 3, 0),
+        FrozenClass::Ss => ss(opcode, 4, 3, 0x80, 3, 0x100),
+    }
+}
+
 #[test]
-fn every_first_byte_classification_is_lockstep_and_faults_are_atomic() {
-    for opcode in 0_u8..=u8::MAX {
-        let image = match opcode {
-            0x05..=0x07 | 0x0a | 0x10..=0x3f => rr(opcode, 0, if opcode == 0x0a { 0 } else { 2 }),
-            0x86..=0x90 | 0x98 => rs(opcode, 0, 2, 3, 0),
-            0x91..=0x97 => si(opcode, 0x5a, 3, 0),
-            0x40..=0x7f => rx(opcode, 0, 0, 3, 0),
-            0xd2 | 0xd4..=0xd7 => ss(opcode, 4, 3, 0x80, 3, 0x100),
-            _ => vec![opcode],
-        };
-        let (mut functional, mut gate) = pair(&image, 0);
-        for (register, value) in [(2, 1), (3, 0x400)] {
-            functional.write_gpr(register, value).unwrap();
-            gate.write_gpr(register, value).unwrap();
+fn frozen_256_opcode_matrix_covers_every_transport_length_and_atomic_fault() {
+    for (opcode, class) in (0_u8..=u8::MAX).zip(FROZEN_OPCODE_CLASSES) {
+        for loaded_len in [2_usize, 4, 6] {
+            let mut image = frozen_image(opcode, class);
+            image.resize(loaded_len, 0);
+            image.truncate(loaded_len);
+            let (mut functional, mut gate) = pair(&image, 0);
+            for (register, value) in [(2, 1), (3, 0x400)] {
+                functional.write_gpr(register, value).unwrap();
+                gate.write_gpr(register, value).unwrap();
+            }
+            for register in [0, 2] {
+                functional
+                    .write_fpr(register, 0x4110_0000_0000_0000)
+                    .unwrap();
+                gate.write_fpr(register, 0x4110_0000_0000_0000).unwrap();
+            }
+            let word = 0x4110_0000_0000_0000_u64.to_be_bytes();
+            functional.write_memory(0x400, &word).unwrap();
+            gate.write_memory(0x400, &word).unwrap();
+            functional.write_memory(0x480, &[1, 2, 3, 4]).unwrap();
+            gate.write_memory(0x480, &[1, 2, 3, 4]).unwrap();
+            functional.write_memory(0x500, &[5, 6, 7, 8]).unwrap();
+            gate.write_memory(0x500, &[5, 6, 7, 8]).unwrap();
+            let before = gate.get_state();
+            let expected = functional.step();
+            let actual = gate.step();
+            let label = format!("opcode {opcode:#04x}, class {class:?}, length {loaded_len}");
+            assert_eq!(actual, expected, "typed result: {label}");
+            assert_eq!(gate.get_state(), functional.get_state(), "state: {label}");
+
+            match (class_width(class), class) {
+                (None, _) => assert_eq!(
+                    actual,
+                    Err(System360Error::UnknownOpcode { opcode, pc: 0 }),
+                    "{label}"
+                ),
+                (Some(width), _) if loaded_len < width => assert_eq!(
+                    actual,
+                    Err(System360Error::TruncatedInstruction {
+                        pc: 0,
+                        needed: width
+                    }),
+                    "{label}"
+                ),
+                (_, FrozenClass::Reserved2 | FrozenClass::Reserved4) => assert_eq!(
+                    actual,
+                    Err(System360Error::UnknownOpcode { opcode, pc: 0 }),
+                    "{label}"
+                ),
+                (Some(width), _) => {
+                    if let Ok(trace) = &actual {
+                        assert_eq!(usize::from(trace.width), width, "trace width: {label}");
+                        assert_eq!(trace.raw, image[..width], "raw transport: {label}");
+                    }
+                }
+            }
+            if actual.is_err() {
+                assert_eq!(gate.get_state(), before, "fault atomicity: {label}");
+            }
         }
-        for register in [0, 2] {
-            functional
-                .write_fpr(register, 0x4110_0000_0000_0000)
-                .unwrap();
-            gate.write_fpr(register, 0x4110_0000_0000_0000).unwrap();
-        }
-        let word = 0x4110_0000_0000_0000_u64.to_be_bytes();
-        functional.write_memory(0x400, &word).unwrap();
-        gate.write_memory(0x400, &word).unwrap();
-        functional.write_memory(0x480, &[1, 2, 3, 4]).unwrap();
-        gate.write_memory(0x480, &[1, 2, 3, 4]).unwrap();
-        functional.write_memory(0x500, &[5, 6, 7, 8]).unwrap();
-        gate.write_memory(0x500, &[5, 6, 7, 8]).unwrap();
+    }
+}
+
+#[test]
+fn known_width_reserved_holes_truncate_before_unknown_opcode() {
+    for (image, needed) in [
+        (&[0x25][..], 2),
+        (&[0x44, 0, 0][..], 4),
+        (&[0x93, 0, 0][..], 4),
+    ] {
+        let mut gate = System360GateLevel::new();
+        gate.load(image, 0).unwrap();
         let before = gate.get_state();
-        let expected = functional.step();
-        let actual = gate.step();
-        assert_eq!(actual, expected, "first-byte classification {opcode:#04x}");
         assert_eq!(
-            gate.get_state(),
-            functional.get_state(),
-            "complete state for first-byte classification {opcode:#04x}"
+            gate.step(),
+            Err(System360Error::TruncatedInstruction { pc: 0, needed })
         );
-        if actual.is_err() {
-            assert_eq!(
-                gate.get_state(),
-                before,
-                "fault atomicity for first-byte classification {opcode:#04x}"
-            );
-        }
+        assert_eq!(gate.get_state(), before);
     }
 }
 

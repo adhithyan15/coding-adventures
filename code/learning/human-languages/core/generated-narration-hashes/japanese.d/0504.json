@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:e2cff418ac6fb58c",
+  "lessonIds": [
+    "JA-C504-bungaku",
+    "JA-C504-shijin",
+    "JA-C504-garou",
+    "JA-C504-geijutsuka",
+    "JA-C504-ehon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch504.txt",
+  "json": "japanese/narration/ch504.json",
+  "textHash": "fnv1a64:ac7e7e6033c36066",
+  "jsonHash": "fnv1a64:700b93a345a4295f",
+  "findings": []
+}

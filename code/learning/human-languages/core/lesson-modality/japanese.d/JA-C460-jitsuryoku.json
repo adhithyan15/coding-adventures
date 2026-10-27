@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C460-jitsuryoku",
+    "language": "japanese",
+    "chapter": 460,
+    "sequence": 26770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd7a73f240d48a43"
+  },
+  "findings": []
+}

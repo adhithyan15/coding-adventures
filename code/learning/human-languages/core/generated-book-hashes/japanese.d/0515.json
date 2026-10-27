@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:21b59a78831b6c05",
+  "lessonIds": [
+    "JA-C515-juken-suru",
+    "JA-C515-ukaru",
+    "JA-C515-goukaku-suru",
+    "JA-C515-seiseki",
+    "JA-C515-yobikou",
+    "JA-R515-review-510-515"
+  ],
+  "tex": "japanese/book/chapters/ch515-if-i-pass.tex"
+}

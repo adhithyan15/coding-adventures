@@ -1,0 +1,800 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 321,
+  "title": "How Sure Are You?",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:30bd01ab8d0983ad",
+  "lessons": [
+    {
+      "id": "JA-C321-zettai",
+      "sequence": 19200,
+      "title": "ぜったい (zettai) — absolutely; definitely",
+      "headword": "ぜったい",
+      "romanization": "zettai",
+      "gloss": "absolutely; definitely",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c91f4b42e6ef30d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to comprehend, then the Japanese for especially."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぜったい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぜったい — zettai — \"absolutely; definitely\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あぶないから、ぜったい いかないで ください。 — abunai kara, zettai ikanaide kudasai — \"It's dangerous, so do not go there under any circumstances.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぜったい (zettai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are zetsu, \"cut off\" (Middle Chinese dzjwet) and tai, \"opposite\" (twojH) (KANJIDIC2; Middle Chinese in Baxter's transcription). The two join as zet-tai."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zettai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zettai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zettai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zettai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abunai kara, zettai ikanaide kudasai — It's dangerous, so do not go there under any circumstances.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abunai kara, zettai ikanaide kudasai* — It's dangerous, so do not go there under any circumstances.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to comprehend, then the Japanese for especially, then say zettai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to comprehend, then the Japanese for especially, then say *zettai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぜったい (zettai) mean? (\"Absolutely; definitely\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C321-zettai-type",
+              "prompt": "Say the Japanese for 'absolutely'.",
+              "assesses": [
+                "JA-LEX-C321-ZETTAI321-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぜったい",
+                "zettai"
+              ],
+              "feedback": {
+                "correct": "Right: ぜったい (zettai) is 'absolutely; definitely'.",
+                "incorrect": "'Absolutely' is ぜったい (zettai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C321-kanarazu",
+      "sequence": 19210,
+      "title": "かならず (kanarazu) — without fail; certainly",
+      "headword": "かならず",
+      "romanization": "kanarazu",
+      "gloss": "without fail; certainly",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3fa4622c9977ba96",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for especially, then the Japanese for absolutely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かならず",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かならず — kanarazu — \"without fail; certainly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やくそくを したから、かならず いきます。 — yakusoku o shita kara, kanarazu ikimasu — \"I promised, so I will go without fail.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かならず (kanarazu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanarazu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanarazu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanarazu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanarazu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yakusoku o shita kara, kanarazu ikimasu — I promised, so I will go without fail.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yakusoku o shita kara, kanarazu ikimasu* — I promised, so I will go without fail.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for especially, then the Japanese for absolutely, then say kanarazu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for especially, then the Japanese for absolutely, then say *kanarazu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かならず (kanarazu) mean? (\"Without fail; certainly\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C321-kanarazu-type",
+              "prompt": "Say the Japanese for 'without fail'.",
+              "assesses": [
+                "JA-LEX-C321-ZETTAI321-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かならず",
+                "kanarazu"
+              ],
+              "feedback": {
+                "correct": "Right: かならず (kanarazu) is 'without fail; certainly'.",
+                "incorrect": "'Without fail' is かならず (kanarazu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C321-yahari",
+      "sequence": 19220,
+      "title": "やはり (yahari) — as expected; after all",
+      "headword": "やはり",
+      "romanization": "yahari",
+      "gloss": "as expected; after all",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf909e0ed72e8609",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for absolutely, then the Japanese for without fail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: やはり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やはり — yahari — \"as expected; after all\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やはり ははの いけんが ただしいと おもいます。 — yahari haha no iken ga tadashii to omoimasu — \"After all, I think my mother's opinion is right.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やはり (yahari) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. JMdict notes that it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yahari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yahari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yahari, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yahari*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yahari haha no iken ga tadashii to omoimasu — After all, I think my mother's opinion is right.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yahari haha no iken ga tadashii to omoimasu* — After all, I think my mother's opinion is right.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for absolutely, then the Japanese for without fail, then say yahari again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for absolutely, then the Japanese for without fail, then say *yahari* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does やはり (yahari) mean? (\"As expected; after all\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C321-yahari-type",
+              "prompt": "Say the Japanese for 'as expected'.",
+              "assesses": [
+                "JA-LEX-C321-ZETTAI321-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "やはり",
+                "yahari"
+              ],
+              "feedback": {
+                "correct": "Right: やはり (yahari) is 'as expected; after all'.",
+                "incorrect": "'As expected' is やはり (yahari)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C321-mushiro",
+      "sequence": 19230,
+      "title": "むしろ (mushiro) — rather; if anything",
+      "headword": "むしろ",
+      "romanization": "mushiro",
+      "gloss": "rather; if anything",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7a6155657535c08",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for without fail, then the Japanese for as expected."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: むしろ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むしろ — mushiro — \"rather; if anything\"."
+            },
+            {
+              "kind": "speech",
+              "text": "でんしゃより むしろ じてんしゃが はやいと おもいます。 — densha yori mushiro jitensha ga hayai to omoimasu — \"I think a bicycle is, if anything, faster than the train.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むしろ (mushiro) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. JMdict notes that it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mushiro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mushiro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mushiro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mushiro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "densha yori mushiro jitensha ga hayai to omoimasu — I think a bicycle is, if anything, faster than the train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *densha yori mushiro jitensha ga hayai to omoimasu* — I think a bicycle is, if anything, faster than the train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for without fail, then the Japanese for as expected, then say mushiro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for without fail, then the Japanese for as expected, then say *mushiro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does むしろ (mushiro) mean? (\"Rather; if anything\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C321-mushiro-type",
+              "prompt": "Say the Japanese for 'rather'.",
+              "assesses": [
+                "JA-LEX-C321-ZETTAI321-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "むしろ",
+                "mushiro"
+              ],
+              "feedback": {
+                "correct": "Right: むしろ (mushiro) is 'rather; if anything'.",
+                "incorrect": "'Rather' is むしろ (mushiro)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C321-unazuku",
+      "sequence": 19240,
+      "title": "うなずく (unazuku) — to nod",
+      "headword": "うなずく",
+      "romanization": "unazuku",
+      "gloss": "to nod",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7887e6c7039202dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for as expected, then the Japanese for rather."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うなずく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うなずく — unazuku — \"to nod\"."
+            },
+            {
+              "kind": "speech",
+              "text": "わかったので、こどもは うなずきました。 — wakatta node, kodomo wa unazukimashita — \"The child understood, so he nodded.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite うなずきます, unazukimasu; a godan verb. Past (polite): こどもが うなずきました。, kodomo ga unazukimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うなずく (unazuku) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unazuku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unazuku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unazuku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unazuku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wakatta node, kodomo wa unazukimashita — The child understood, so he nodded.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wakatta node, kodomo wa unazukimashita* — The child understood, so he nodded.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for as expected, then the Japanese for rather, then say unazuku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for as expected, then the Japanese for rather, then say *unazuku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うなずく (unazuku) mean? (\"To nod\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C321-unazuku-type",
+              "prompt": "Say the Japanese for 'to nod'.",
+              "assesses": [
+                "JA-LEX-C321-ZETTAI321-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うなずく",
+                "unazuku"
+              ],
+              "feedback": {
+                "correct": "Right: うなずく (unazuku) is 'to nod'.",
+                "incorrect": "'To nod' is うなずく (unazuku)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

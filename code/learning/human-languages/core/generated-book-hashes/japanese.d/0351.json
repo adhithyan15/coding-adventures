@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:d8156f53d28b1196",
+  "lessonIds": [
+    "JA-C351-man-ichi",
+    "JA-C351-hoken",
+    "JA-C351-kakunin-suru",
+    "JA-C351-anpi",
+    "JA-C351-nen-no-tame",
+    "JA-R351-review-347-351"
+  ],
+  "tex": "japanese/book/chapters/ch351-in-case-something-happens.tex"
+}

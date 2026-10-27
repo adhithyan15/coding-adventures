@@ -1,5 +1,13 @@
 # Changelog — grammar-tools (Rust program)
 
+## Unreleased — LANG84 E1 and E8
+
+### Changed
+- Built against the grammar-tools crate's LANG84 E1 guards and E8 refusal
+  transitions: `generate-rust-compiled-grammars` and `compile-tokens` now emit
+  `guard:` on every `TokenDefinition` and `conditions:` on every
+  `ModeTransition` (defaults as `Default::default()` / `vec![]`).
+
 ## Unreleased
 
 ### Changed

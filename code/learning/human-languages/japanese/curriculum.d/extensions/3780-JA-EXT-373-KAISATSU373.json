@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-373-KAISATSU373",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get through the ticket barrier and pay the right fare.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C448-momu",
+  "pathSegment": "JA-PATH-448-STIFF448",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-448-STIFF448",
+      "order": 1
+    }
+  ]
+}

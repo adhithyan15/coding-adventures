@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-381-FUNATABI381",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "JA-EXT-381-FUNATABI381"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 303,
+  "title": "The Dragon in the Marsh",
+  "label": "ch:ja-the-dragon-in-the-marsh",
+  "canDo": "I can say where the dragon lived and what floated there.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C303-medetai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can say where the dragon lived and what floated there.",
+    "assesses": [
+      "JA-LEX-C303-RYUU303-03",
+      "JA-LEX-C303-RYUU303-04",
+      "JA-LEX-C303-RYUU303-05"
+    ]
+  }
+}

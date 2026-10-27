@@ -1,0 +1,945 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 461,
+  "title": "Japanese Sports",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:468d355f4ae9e508",
+  "lessons": [
+    {
+      "id": "JA-C461-takkyuu",
+      "sequence": 26800,
+      "title": "たっきゅう (takkyū) — table tennis",
+      "headword": "たっきゅう",
+      "romanization": "takkyū",
+      "gloss": "table tennis",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a727a5cf30458423",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to take on a challenge, then the Japanese for to change jobs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たっきゅう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たっきゅう — takkyū — \"table tennis\"."
+            },
+            {
+              "kind": "speech",
+              "text": "そふは たっきゅうが すきです。 — sofu wa takkyū ga suki desu — \"My grandfather loves table tennis.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たっきゅう (takkyū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ta, \"table\" (Middle Chinese traewk) and kyū, \"ball\" (gjuw) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takkyū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takkyū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takkyū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takkyū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sofu wa takkyū ga suki desu — My grandfather loves table tennis.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sofu wa takkyū ga suki desu* — My grandfather loves table tennis.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to take on a challenge, then the Japanese for to change jobs, then say takkyū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to take on a challenge, then the Japanese for to change jobs, then say *takkyū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たっきゅう (takkyū) mean? (\"Table tennis\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C461-takkyuu-type",
+              "prompt": "Say the Japanese for 'table tennis'.",
+              "assesses": [
+                "JA-LEX-C461-SUMO461-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たっきゅう",
+                "takkyū",
+                "takkyuu",
+                "takkyu"
+              ],
+              "feedback": {
+                "correct": "Right: たっきゅう (takkyū) is 'table tennis'.",
+                "incorrect": "'Table tennis' is たっきゅう (takkyū)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C461-kendou",
+      "sequence": 26810,
+      "title": "けんどう (kendō) — kendo",
+      "headword": "けんどう",
+      "romanization": "kendō",
+      "gloss": "kendo",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72a73c7e685cb6e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to change jobs, then the Japanese for table tennis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けんどう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けんどう — kendō — \"kendo\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おとうとは けんどうを ならっています。 — otōto wa kendō o naratte imasu — \"My younger brother is learning kendo.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けんどう (kendō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ken, \"sword\" (Middle Chinese kjaemH) and dō, \"way\" (dawX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kendō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kendō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kendō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kendō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otōto wa kendō o naratte imasu — My younger brother is learning kendo.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otōto wa kendō o naratte imasu* — My younger brother is learning kendo.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to change jobs, then the Japanese for table tennis, then say kendō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to change jobs, then the Japanese for table tennis, then say *kendō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けんどう (kendō) mean? (\"Kendo\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C461-kendou-type",
+              "prompt": "Say the Japanese for 'kendo'.",
+              "assesses": [
+                "JA-LEX-C461-SUMO461-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けんどう",
+                "kendō",
+                "kendou",
+                "kendoo",
+                "kendo"
+              ],
+              "feedback": {
+                "correct": "Right: けんどう (kendō) is 'kendo'.",
+                "incorrect": "'Kendo' is けんどう (kendō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C461-karate",
+      "sequence": 26820,
+      "title": "からて (karate) — karate",
+      "headword": "からて",
+      "romanization": "karate",
+      "gloss": "karate",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6b36c4a8dd98df0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for table tennis, then the Japanese for kendo."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: からて",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "からて — karate — \"karate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "からての しあいで かちました。 — karate no shiai de kachimashita — \"I won a karate match.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "からて (karate) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: kara and te, \"hand\". JMdict gives two spellings, one writing kara with the kanji for \"empty\" and one with the kanji for \"China\" (KANJIDIC2), so which kara it holds is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karate no shiai de kachimashita — I won a karate match.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karate no shiai de kachimashita* — I won a karate match.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for table tennis, then the Japanese for kendo, then say karate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for table tennis, then the Japanese for kendo, then say *karate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does からて (karate) mean? (\"Karate\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C461-karate-type",
+              "prompt": "Say the Japanese for 'karate'.",
+              "assesses": [
+                "JA-LEX-C461-SUMO461-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "からて",
+                "karate"
+              ],
+              "feedback": {
+                "correct": "Right: からて (karate) is 'karate'.",
+                "incorrect": "'Karate' is からて (karate)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C461-taisou",
+      "sequence": 26830,
+      "title": "たいそう (taisō) — gymnastics; physical exercises",
+      "headword": "たいそう",
+      "romanization": "taisō",
+      "gloss": "gymnastics; physical exercises",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5cb5266b0c819953",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for kendo, then the Japanese for karate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たいそう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいそう — taisō — \"gymnastics; physical exercises\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まいあさ たいそうを します。 — maiasa taisō o shimasu — \"I do exercises every morning.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいそう (taisō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, \"body\" (Middle Chinese thejX) and sō, \"maneuver\" (tshaw) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taisō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taisō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taisō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taisō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiasa taisō o shimasu — I do exercises every morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiasa taisō o shimasu* — I do exercises every morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for kendo, then the Japanese for karate, then say taisō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for kendo, then the Japanese for karate, then say *taisō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たいそう (taisō) mean? (\"Gymnastics; physical exercises\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C461-taisou-type",
+              "prompt": "Say the Japanese for 'gymnastics'.",
+              "assesses": [
+                "JA-LEX-C461-SUMO461-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たいそう",
+                "taisō",
+                "taisou",
+                "taisoo",
+                "taiso"
+              ],
+              "feedback": {
+                "correct": "Right: たいそう (taisō) is 'gymnastics; physical exercises'.",
+                "incorrect": "'Gymnastics' is たいそう (taisō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C461-kantoku",
+      "sequence": 26840,
+      "title": "かんとく (kantoku) — a team manager; a director",
+      "headword": "かんとく",
+      "romanization": "kantoku",
+      "gloss": "a team manager; a director",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f45e4ef1be76631",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for karate, then the Japanese for gymnastics."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かんとく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かんとく — kantoku — \"a team manager; a director\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かんとくは せんしゅに きびしいです。 — kantoku wa senshu ni kibishii desu — \"The team manager is strict with the players.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かんとく (kantoku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kan, \"oversee\" (Middle Chinese kaem) and toku, \"coach\" (towk) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kantoku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kantoku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kantoku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kantoku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kantoku wa senshu ni kibishii desu — The team manager is strict with the players.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kantoku wa senshu ni kibishii desu* — The team manager is strict with the players.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for karate, then the Japanese for gymnastics, then say kantoku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for karate, then the Japanese for gymnastics, then say *kantoku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かんとく (kantoku) mean? (\"A team manager; a director\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C461-kantoku-type",
+              "prompt": "Say the Japanese for 'a team manager'.",
+              "assesses": [
+                "JA-LEX-C461-SUMO461-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かんとく",
+                "kantoku"
+              ],
+              "feedback": {
+                "correct": "Right: かんとく (kantoku) is 'a team manager; a director'.",
+                "incorrect": "'A team manager' is かんとく (kantoku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R461-review-456-461",
+      "sequence": 26850,
+      "title": "Looking back: from Pay and Time Off to Japanese Sports",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Pay and Time Off to Japanese Sports",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7475e5d7d3fe9b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for a salary and to earn (money)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a salary, to earn (money), time off work, to hire, a workplace",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a salary, to earn (money), time off work, to hire, a workplace]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to find a job, a job interview, a curriculum vitae, to apply, recruitment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to find a job, a job interview, a curriculum vitae, to apply, recruitment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lawyer, a civil servant, an actor, a novelist, a craftsman",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lawyer, a civil servant, an actor, a novelist, a craftsman]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a university, to study abroad, to do research, one's field of study, a career path",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a university, to study abroad, to do research, one's field of study, a career path]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a goal, to succeed, real ability, to take on a challenge, to change jobs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a goal, to succeed, real ability, to take on a challenge, to change jobs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "table tennis, kendo, karate, gymnastics, a team manager",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: table tennis, kendo, karate, gymnastics, a team manager]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A salary? (きゅうりょう, kyūryō.) To earn (money)? (かせぐ, kasegu.) Time off work? (きゅうか, kyūka.) To hire? (やとう, yatou.) A workplace? (しょくば, shokuba.) To find a job? (しゅうしょくする, shūshoku suru.) A job interview? (めんせつ, mensetsu.) A curriculum vitae? (りれきしょ, rirekisho.) To apply? (おうぼする, ōbo suru.) Recruitment? (ぼしゅう, boshū.) A lawyer? (べんごし, bengoshi.) A civil servant? (こうむいん, kōmuin.) An actor? (はいゆう, haiyū.) A novelist? (さっか, sakka.) A craftsman? (しょくにん, shokunin.) A university? (だいがく, daigaku.) To study abroad? (りゅうがくする, ryūgaku suru.) To do research? (けんきゅうする, kenkyū suru.) One's field of study? (せんもん, senmon.) A career path? (しんろ, shinro.) A goal? (もくひょう, mokuhyō.) To succeed? (せいこうする, seikō suru.) Real ability? (じつりょく, jitsuryoku.) To take on a challenge? (ちょうせんする, chōsen suru.) To change jobs? (てんしょくする, tenshoku suru.) Table tennis? (たっきゅう, takkyū.) Kendo? (けんどう, kendō.) Karate? (からて, karate.) Gymnastics? (たいそう, taisō.) A team manager? (かんとく, kantoku.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R461-review-456-461-type",
+              "prompt": "Say the Japanese for 'a salary'.",
+              "assesses": [
+                "JA-LEX-C456-PAY456-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きゅうりょう",
+                "kyūryō",
+                "kyuuryou",
+                "kyuuryoo",
+                "kyuryo"
+              ],
+              "feedback": {
+                "correct": "Right: きゅうりょう (kyūryō) is 'a salary; pay'.",
+                "incorrect": "'A salary' is きゅうりょう (kyūryō)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

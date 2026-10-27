@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C518-ochido",
+    "language": "japanese",
+    "chapter": 518,
+    "sequence": 30000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5858ba19bb2fcb00"
+  },
+  "findings": []
+}

@@ -2,6 +2,27 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.2] - 2026-10-26
+
+### Fixed
+
+- Make the single 256-line gate decoder the sole authority for instruction
+  transport width, legality, format family, operation execution, independent
+  validation, and commit. The functional simulator remains a semantic oracle
+  but can no longer classify or dispatch the fetched opcode first.
+- Preserve truncation-before-unknown precedence for reserved opcode holes by
+  reducing transport membership separately from legal-operation selection.
+- Remove secondary raw-opcode dispatch, including the BXH/BXLE decode inside
+  the branch network, and carry the original settled select wires throughout
+  the transition.
+- Add an independent literal 256-opcode classification matrix exercised at
+  2/4/6-byte loaded lengths, explicit reserved-hole truncation witnesses,
+  inactive-storage poison witness, and parsed-token exact locks from decode
+  through commit. Anchored hostile raw dispatch, helper-indirection,
+  duplicate/dead/secondary decode, oracle routing, storage-access, shadowing,
+  and post-authorization/commit mutations now compile as disposable complete
+  crates before the verifier must reject them.
+
 ## [0.1.1] - 2026-10-26
 
 ### Fixed

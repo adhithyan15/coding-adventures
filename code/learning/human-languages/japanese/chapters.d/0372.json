@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "In Front of the Station",
+  "label": "ch:ja-in-front-of-the-station",
+  "canDo": "I can arrange to meet someone at the station.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C372-jidouhanbaiki",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can arrange to meet someone at the station.",
+    "assesses": [
+      "JA-LEX-C372-EKIMAE372-03",
+      "JA-LEX-C372-EKIMAE372-04",
+      "JA-LEX-C372-EKIMAE372-05"
+    ]
+  }
+}

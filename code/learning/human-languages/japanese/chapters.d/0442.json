@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "Inside the Body",
+  "label": "ch:ja-inside-the-body",
+  "canDo": "I can name the muscles, the blood and the joints.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C442-kansetsu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can name the muscles, the blood and the joints.",
+    "assesses": [
+      "JA-LEX-C442-INSIDE442-03",
+      "JA-LEX-C442-INSIDE442-04",
+      "JA-LEX-C442-INSIDE442-05"
+    ]
+  }
+}

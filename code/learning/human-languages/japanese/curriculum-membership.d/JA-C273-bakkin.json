@@ -1,0 +1,11 @@
+{
+  "id": "JA-C273-bakkin",
+  "pathSegment": "JA-PATH-273-SAIBAN273",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-273-SAIBAN273",
+      "order": 1
+    }
+  ]
+}

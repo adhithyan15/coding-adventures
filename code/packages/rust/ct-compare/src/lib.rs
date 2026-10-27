@@ -71,8 +71,7 @@
 //!
 //! * Comparing Poly1305 AEAD tags during decryption
 //!   (`coding_adventures_chacha20_poly1305`).
-//! * Future comparison of HMAC tags; `coding_adventures_hmac` has not yet
-//!   migrated to this primitive.
+//! * HMAC tag verification (`coding_adventures_hmac`).
 //! * Argon2id verify: `ct_eq(computed_tag, stored_tag)`.
 //! * Vault unlock: `ct_eq(derived_unlock_key, stored_kek)`.
 //! * Any MAC / auth-tag / session-key / password-hash comparison.

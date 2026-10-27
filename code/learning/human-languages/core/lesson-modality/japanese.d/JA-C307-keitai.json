@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C307-keitai",
+    "language": "japanese",
+    "chapter": 307,
+    "sequence": 18360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:388ce9a58c8584dc"
+  },
+  "findings": []
+}

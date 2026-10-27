@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:109dd30c9c5c60ce",
+  "lessonIds": [
+    "JA-C368-zentai",
+    "JA-C368-bubun",
+    "JA-C368-ryouhou",
+    "JA-C368-katahou",
+    "JA-C368-katayoru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch368.txt",
+  "json": "japanese/narration/ch368.json",
+  "textHash": "fnv1a64:66649da475461934",
+  "jsonHash": "fnv1a64:4b4ea6a45663ce01",
+  "findings": []
+}

@@ -612,6 +612,7 @@ The summary below lists the extensions in dependency order:
 | E5 | Deferred-body queue (heredocs, `<<~` dedent, FIFO) | needed (R5) | — | Perl heredocs | — |
 | E6 | Token-adjacency predicates and ASI in `.grammar` | `@space_before` (R6) | needed (ASI, `[no LineTerminator here]`) | Go-like languages | `javascript-parser/src/asi.rs` on the IIR path |
 | E7 | Goal-directed lexing (parser→lexer) and binding predicates | needed (R6) | needed (full regex/division) | Perl (later) | JS `tokenize_javascript_division_only`; `ruby-lexer` `ParserOracle` |
+| E8 | Refusal transitions and whitespace conditions | needed (R1a fail-closed until R3–R5; R6 command arguments) | — | any language that ports its lexer in slices | — |
 
 ### E1. Line-start and column guards
 
@@ -649,6 +650,34 @@ a line today.
 
 **Security and budget.** Each guard is a constant-time check. The validator
 rejects `@column` values above 4,096 and ranges with N > M.
+
+**Status (E1 slice 1, 2026-10-24).** The Rust `grammar-tools` and `lexer`
+crates implement `@line_start` and `@input_start`, and the `line_start`
+transition condition (see E8). `@column(…)` and the `line_terminators:`
+directive are deferred until a consumer needs them (COBOL fixed form); a
+grammar that uses either is rejected with "not implemented yet", not
+silently ignored.
+
+- **Where a guard may appear.** On any definition: top-level, `group NAME:`,
+  `skip:` and `errors:`. The suffix follows the pattern and any `-> ALIAS`:
+  `EMBDOC = /=begin…/ -> COMMENT @line_start`. One guard per definition. An
+  unknown `@…` suffix is a parse error.
+- **What "line start" means** with the default terminators `\r\n | \n`:
+  the cursor is at offset 0, or the character just before it is `\n`. That
+  is one array read, and it does not depend on which rule consumed the
+  preceding text (a token, a skip pattern, the built-in `NEWLINE`, or the
+  built-in whitespace rule). A lone `\r` is not a terminator, matching what
+  the lexer counts as a line. Leading spaces end the line start: `  =begin`
+  is not at line start, as Ruby requires.
+- **Data.** `TokenDefinition` gains `guard: TokenGuard` (`None`, `LineStart`,
+  `InputStart`; default `None`). The code generator writes
+  `guard: Default::default(),` for an unguarded definition, so no import is
+  needed, and the fully qualified `grammar_tools::token_grammar::TokenGuard::…`
+  path otherwise. Existing committed `_grammar*.rs` files were updated by
+  inserting exactly that line after each `alias:` field, not by regenerating
+  them, which would have pulled in unrelated source drift (#14202).
+- **Ports.** The Python, Ruby, TypeScript, Go and Elixir grammar-tools reject
+  a definition with an `@line_start`/`@input_start` suffix.
 
 ### E2. Bracket-kind stack, depth-guarded push/pop, nesting delimiters
 
@@ -1009,6 +1038,80 @@ validated (no undefined goals, no terminal in two `goal_of` entries).
 Before E7, the F10 table already shipped in `es2025.tokens` is enough for
 LANG78's numeric subset (see phase 6a). Also replaces the `ParserOracle`
 trait in `ruby-lexer`.
+
+### E8. Refusal transitions and whitespace conditions
+
+**Motivation.** A lexer ported in slices (Ruby R0–R7) must fail closed on the
+constructs a later slice owns. R1a's string tokens showed why: with
+`'…'` lexed but regexps, heredocs and `%q(…)` not yet supported,
+`x = /'/ ⏎ system("rm") ⏎ y = /'/` lexed as `SLASH STRING SLASH`, and the
+`system` call vanished into a string token. Before R1a, the quote was a lexer
+error, so the input was refused. A grammar needs a way to say "this token, in
+this lexical state, is not supported yet", and the lexical state for Ruby's
+`/`, `<<` and `%` depends on whitespace around the token (`puts /re/` is a
+regexp, `a / b` is a division).
+
+**Syntax** (in `transitions:`, an F10 amendment):
+
+```
+on (SLASH | SLASH_EQUALS | LEFT_SHIFT | PERCENT) in beg -> refuse
+on (SLASH | LEFT_SHIFT | PERCENT) in arg if space_before && !space_after -> refuse
+on NAME if line_start -> set-mode beg
+```
+
+- `-> refuse` is a new action. When the rule fires, the lexer stops with a
+  `LexerError` at the token: `token SLASH ("/") is not supported in mode
+  'beg' by this grammar (refused at line L, column C)`. `refuse` must be the
+  rule's only action; a rule that mixes it with others is a parse error.
+- `if COND [&& COND …]` is an optional condition list between the mode guard
+  and the arrow. Each `COND` is `space_before`, `space_after` or
+  `line_start`, optionally negated with `!`. All must hold for the rule to
+  fire; the rule is otherwise skipped and the next rule is tried, exactly like
+  a failed `in MODE` guard.
+
+**Semantics** (all constant-time, read at the moment the rule is tested):
+
+| Condition | Holds when |
+| --- | --- |
+| `space_before` | the token carries F11's `TOKEN_PRECEDED_BY_SPACE`: trivia or a line terminator was consumed since the previous token. For the built-in `NEWLINE`, which carries no gap flags (F11 hands its gap to the next token), the condition reads that pending gap instead, so `a ⏎` with a trailing space has `space_before`; the emitted token's flags are unchanged. |
+| `space_after` | the character right after the token is ASCII whitespace (space, tab, `\n`, `\r`, vertical tab, form feed) or the token ends the input. A one-character peek. |
+| `line_start` | the token's first character is at a line start in E1's sense. |
+
+`!c` holds exactly when `c` does not. A rule with no `if` behaves exactly as
+before this amendment.
+
+**Data.** `TransitionAction` gains `Refuse`. `ModeTransition` gains
+`conditions: Vec<TransitionCondition>`, where `TransitionCondition` is one of
+`SpaceBefore`, `NoSpaceBefore`, `SpaceAfter`, `NoSpaceAfter`, `LineStart`,
+`NotLineStart`. The generator writes `conditions: vec![],` for a rule without
+conditions, so existing generated files were updated by inserting that line
+after each `in_mode:` field, as for E1's `guard`.
+
+**Security and budget.** A refusal ends lexing, so it cannot loop. Conditions
+add a fixed number of reads per rule tested; the rule count stays capped at
+`MAX_TRANSITIONS`. Refusing is always safe: it turns a would-be mis-lex into
+an error.
+
+**Fail closed, never drop a rule silently** (security review follow-ups).
+A rule that cannot take effect is an error, not a no-op:
+
+- `if` is a whitespace-delimited word in the rule head, so `on X⇥if …` (tab)
+  splits like `on X if …`, and a bare trailing `on X if -> …` is a parse
+  error. A literal `" if "` split would have made the trigger `X if`, which
+  never matches.
+- An alias containing `@` is a parse error. `->Y@line_start` would otherwise
+  be the alias `Y@line_start` with no guard.
+- `validate_token_grammar` rejects `refuse` rules and `if` conditions in a
+  `mode: indentation` grammar: that tokenizer never applies transitions.
+- `validate_token_grammar` rejects a transition trigger that names no token
+  the grammar can emit: a definition or alias (top level or in a group), an
+  error definition, `KEYWORD` when the grammar has keywords, or the built-ins
+  `NEWLINE`, `INDENT`, `DEDENT` and `EOF`.
+
+**Ports.** The non-Rust grammar-tools reject `-> refuse` (as an unknown
+action) and an `if` condition list, with a clear error. They find `if` as a
+whitespace-delimited word and treat any `@` in an alias as a guard, for the
+same fail-closed reason.
 
 ## Compliance and migration
 

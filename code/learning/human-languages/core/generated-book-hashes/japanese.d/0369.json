@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:d30a6dcc2c1ffc2c",
+  "lessonIds": [
+    "JA-C369-juuyou",
+    "JA-C369-daiji",
+    "JA-C369-tokubetsu",
+    "JA-C369-youkyuu",
+    "JA-C369-houshin"
+  ],
+  "tex": "japanese/book/chapters/ch369-what-matters.tex"
+}

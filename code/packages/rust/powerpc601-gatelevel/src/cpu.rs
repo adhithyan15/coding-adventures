@@ -1,9 +1,8 @@
 //! Exact DFF-backed PowerPC 601 lifecycle scaffold.
 
-use crate::alu;
-use crate::branch;
 use crate::register_file::RegisterFile32;
 use crate::state::{clock_bit, DffMemory};
+use crate::{alu, branch, decoder, status};
 use powerpc601_simulator::{
     ExecutionResult, PowerPc601Simulator, PowerPcError, PowerPcState, StepTrace, HALT_WORD,
     MEMORY_SIZE,
@@ -261,9 +260,10 @@ fn execute_raw(state: &mut PowerPcState, raw: u32, cia: u32) -> Result<&'static 
         state.halted = true;
         return Ok("HALT");
     }
-    let opcode = raw >> 26;
-    let rd = ((raw >> 21) & 31) as usize;
-    let ra = ((raw >> 16) & 31) as usize;
+    let decoded = decoder::decode(raw);
+    let opcode = u32::from(decoded.opcode);
+    let rd = decoded.rd;
+    let ra = decoded.ra;
     let immediate = raw as u16;
     let simm = immediate as i16 as i32 as u32;
     let next = cia.wrapping_add(4);
@@ -271,21 +271,13 @@ fn execute_raw(state: &mut PowerPcState, raw: u32, cia: u32) -> Result<&'static 
         8 => {
             let outcome = alu::sub(simm, state.gpr[ra]);
             state.gpr[rd] = outcome.result;
-            set_ca(state, outcome.carry != 0);
+            set_ca(state, outcome.carry, decoded.status.subfic);
             state.cia = next;
             Ok("SUBFIC")
         }
-        10 | 11 => {
-            let field = ((raw >> 23) & 7) as usize;
-            let relation = if opcode == 11 {
-                alu::compare_signed(state.gpr[ra], simm)
-            } else {
-                alu::compare_unsigned(state.gpr[ra], u32::from(immediate))
-            };
-            set_cr_field(state, field, relation);
-            state.cia = next;
-            Ok(if opcode == 11 { "CMPI" } else { "CMPLI" })
-        }
+        10 | 11 => Ok(execute_compare_immediate(
+            state, &decoded, opcode, immediate, simm, next,
+        )),
         14 | 15 => {
             let base = if ra == 0 { 0 } else { state.gpr[ra] };
             let operand = if opcode == 15 {
@@ -315,7 +307,11 @@ fn execute_raw(state: &mut PowerPcState, raw: u32, cia: u32) -> Result<&'static 
             };
             state.gpr[ra] = value;
             if matches!(opcode, 28 | 29) {
-                update_cr0(state, value);
+                update_cr0(
+                    state,
+                    value,
+                    logic_gates::gates::or_gate(decoded.status.andi, decoded.status.andis),
+                );
             }
             state.cia = next;
             Ok(match opcode {
@@ -458,29 +454,17 @@ fn execute_bx(state: &mut PowerPcState, raw: u32, cia: u32) -> Result<&'static s
 }
 
 fn execute_x31(state: &mut PowerPcState, raw: u32, cia: u32) -> Result<&'static str, PowerPcError> {
-    let rs = ((raw >> 21) & 31) as usize;
-    let ra = ((raw >> 16) & 31) as usize;
-    let rb = ((raw >> 11) & 31) as usize;
-    let xo10 = (raw >> 1) & 0x3ff;
-    let xo9 = xo10 & 0x1ff;
+    let decoded = decoder::decode(raw);
+    let rs = decoded.rd;
+    let ra = decoded.ra;
+    let rb = decoded.rb;
+    let xo10 = u32::from(decoded.xo10);
+    let xo9 = u32::from(decoded.xo9);
     let next = alu::add(cia, 4, 0).result;
     let mut result = None;
     let mut destination = rs;
     let mnemonic = match xo10 {
-        0 | 32 => {
-            let field = ((raw >> 23) & 7) as usize;
-            let relation = if xo10 == 0 {
-                alu::compare_signed(state.gpr[ra], state.gpr[rb])
-            } else {
-                alu::compare_unsigned(state.gpr[ra], state.gpr[rb])
-            };
-            set_cr_field(state, field, relation);
-            if xo10 == 0 {
-                "CMP"
-            } else {
-                "CMPL"
-            }
-        }
+        0 | 32 => execute_compare_register(state, &decoded, xo10, ra, rb),
         19 => {
             result = Some(state.cr);
             "MFCR"
@@ -503,36 +487,29 @@ fn execute_x31(state: &mut PowerPcState, raw: u32, cia: u32) -> Result<&'static 
                     } else {
                         (state.gpr[rb] & 63).min(31)
                     };
-                    let shifted_out = n != 0
-                        && alu::and(source, alu::sub(alu::shift_left(1, n).result, 1).result)
-                            .result
-                            != 0;
-                    set_ca(state, (source as i32) < 0 && shifted_out);
+                    let count = if xo10 == 824 {
+                        status::count_wires(rb as u32)
+                    } else {
+                        status::count_wires(state.gpr[rb])
+                    };
+                    set_ca(
+                        state,
+                        status::arithmetic_right_shift_ca(source, count),
+                        logic_gates::gates::or_gate(decoded.status.sraw, decoded.status.srawi),
+                    );
                     alu::shift_right_arithmetic(source, n).result
                 }
                 _ => unreachable!(),
             };
             result = Some(value);
-            if raw & 1 != 0 {
-                update_cr0(state, value);
-            }
+            update_cr0(
+                state,
+                value,
+                logic_gates::gates::and_gate(decoded.rc_wire, decoded.status.recordable_x),
+            );
             "LOGIC"
         }
-        144 => {
-            let mask = ((raw >> 12) & 0xff) as u8;
-            for field in 0..8 {
-                if mask & (0x80 >> field) != 0 {
-                    let shift = 28 - field * 4;
-                    let field_mask = 0xf_u32 << shift;
-                    state.cr = alu::or(
-                        alu::and(state.cr, !field_mask).result,
-                        alu::and(state.gpr[rs], field_mask).result,
-                    )
-                    .result;
-                }
-            }
-            "MTCRF"
-        }
+        144 => execute_mtcrf(state, &decoded, rs),
         339 => {
             result = Some(match decode_spr(raw) {
                 1 => state.xer,
@@ -553,20 +530,23 @@ fn execute_x31(state: &mut PowerPcState, raw: u32, cia: u32) -> Result<&'static 
         }
         _ => match xo9 {
             10 | 40 | 104 | 138 | 235 | 266 | 459 | 491 => {
+                if logic_gates::gates::or_gate(decoded.oe_wire, decoded.rc_wire) != 0 {
+                    return Err(PowerPcError::UnknownInstruction { raw, cia });
+                }
                 let a = state.gpr[ra];
                 let b = state.gpr[rb];
                 let value = match xo9 {
                     10 => {
                         let outcome = alu::add(a, b, 0);
-                        set_ca(state, outcome.carry != 0);
+                        set_ca(state, outcome.carry, decoded.status.addc);
                         outcome.result
                     }
                     40 => alu::sub(b, a).result,
                     104 => alu::sub(0, a).result,
                     138 => {
-                        let carry_in = u8::from(state.xer & (1 << 29) != 0);
+                        let carry_in = status::ca(state.xer);
                         let outcome = alu::add(a, b, carry_in);
-                        set_ca(state, outcome.carry != 0);
+                        set_ca(state, outcome.carry, decoded.status.adde);
                         outcome.result
                     }
                     235 => alu::multiply_low(a, b),
@@ -596,31 +576,95 @@ fn eval_branch(state: &mut PowerPcState, bo: u32, bi: u32) -> bool {
     decision.taken
 }
 
-fn set_ca(state: &mut PowerPcState, value: bool) {
-    state.xer = alu::or(
-        alu::and(state.xer, !(1 << 29)).result,
-        if value { 1 << 29 } else { 0 },
-    )
-    .result;
+fn execute_compare_immediate(
+    state: &mut PowerPcState,
+    decoded: &decoder::DecodedInstruction,
+    opcode: u32,
+    immediate: u16,
+    simm: u32,
+    next: u32,
+) -> &'static str {
+    let relation = status::select_relation(
+        status::compare_signed(state.gpr[decoded.ra], simm),
+        status::compare_unsigned(state.gpr[decoded.ra], u32::from(immediate)),
+        decoded.status.compare_immediate_signed,
+        decoded.status.compare_immediate_unsigned,
+    );
+    set_cr_field(
+        state,
+        decoded.cr_field_wires,
+        relation,
+        decoded.status.compare_immediate,
+    );
+    state.cia = next;
+    match opcode {
+        10 => "CMPLI",
+        11 => "CMPI",
+        _ => unreachable!(),
+    }
 }
 
-fn set_cr_field(state: &mut PowerPcState, field: usize, relation: std::cmp::Ordering) {
-    let nibble = match relation {
-        std::cmp::Ordering::Less => 8,
-        std::cmp::Ordering::Greater => 4,
-        std::cmp::Ordering::Equal => 2,
-    } | u32::from(state.xer & (1 << 31) != 0);
-    let shift = 28 - field * 4;
-    let mask = 0xf_u32 << shift;
-    state.cr = alu::or(
-        alu::and(state.cr, !mask).result,
-        alu::shift_left(nibble, shift as u32).result,
-    )
-    .result;
+fn execute_compare_register(
+    state: &mut PowerPcState,
+    decoded: &decoder::DecodedInstruction,
+    xo10: u32,
+    ra: usize,
+    rb: usize,
+) -> &'static str {
+    let relation = status::select_relation(
+        status::compare_signed(state.gpr[ra], state.gpr[rb]),
+        status::compare_unsigned(state.gpr[ra], state.gpr[rb]),
+        decoded.status.compare_register_signed,
+        decoded.status.compare_register_unsigned,
+    );
+    set_cr_field(
+        state,
+        decoded.cr_field_wires,
+        relation,
+        decoded.status.compare_register,
+    );
+    match xo10 {
+        0 => "CMP",
+        32 => "CMPL",
+        _ => unreachable!(),
+    }
 }
 
-fn update_cr0(state: &mut PowerPcState, value: u32) {
-    set_cr_field(state, 0, alu::compare_signed(value, 0));
+fn execute_mtcrf(
+    state: &mut PowerPcState,
+    decoded: &decoder::DecodedInstruction,
+    source_register: usize,
+) -> &'static str {
+    state.cr = status::mtcrf(
+        state.cr,
+        state.gpr[source_register],
+        decoded.mtcrf_mask_wires,
+        decoded.status.mtcrf,
+    );
+    "MTCRF"
+}
+
+fn set_ca(state: &mut PowerPcState, value: u8, write_enable: u8) {
+    state.xer = status::write_ca(state.xer, value, write_enable);
+}
+
+fn set_cr_field(
+    state: &mut PowerPcState,
+    field: [u8; 3],
+    relation: status::RelationWires,
+    write_enable: u8,
+) {
+    state.cr = status::write_cr_field(
+        state.cr,
+        field,
+        relation,
+        status::so(state.xer),
+        write_enable,
+    );
+}
+
+fn update_cr0(state: &mut PowerPcState, value: u32, write_enable: u8) {
+    state.cr = status::write_cr0(state.cr, value, status::so(state.xer), write_enable);
 }
 
 fn decode_spr(raw: u32) -> u32 {

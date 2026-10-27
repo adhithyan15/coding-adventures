@@ -1,0 +1,11 @@
+{
+  "id": "JA-C282-heiwa",
+  "pathSegment": "JA-PATH-282-SEKAI282",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-282-SEKAI282",
+      "order": 2
+    }
+  ]
+}

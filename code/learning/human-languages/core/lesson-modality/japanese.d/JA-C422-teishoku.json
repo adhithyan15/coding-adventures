@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C422-teishoku",
+    "language": "japanese",
+    "chapter": 422,
+    "sequence": 24600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a964ead3d1c3d81"
+  },
+  "findings": []
+}

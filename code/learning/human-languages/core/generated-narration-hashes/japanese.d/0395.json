@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:5c31cbeb658f7599",
+  "lessonIds": [
+    "JA-C395-koshou",
+    "JA-C395-shako",
+    "JA-C395-fusagaru",
+    "JA-C395-yurumeru",
+    "JA-C395-ikisugiru",
+    "JA-R395-review-390-395"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch395.txt",
+  "json": "japanese/narration/ch395.json",
+  "textHash": "fnv1a64:6dfb602f23cd2860",
+  "jsonHash": "fnv1a64:48983849251e4d70",
+  "findings": []
+}

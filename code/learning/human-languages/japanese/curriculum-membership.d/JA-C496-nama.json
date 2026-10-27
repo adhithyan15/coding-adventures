@@ -1,0 +1,11 @@
+{
+  "id": "JA-C496-nama",
+  "pathSegment": "JA-PATH-496-SOFT496",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-496-SOFT496",
+      "order": 2
+    }
+  ]
+}

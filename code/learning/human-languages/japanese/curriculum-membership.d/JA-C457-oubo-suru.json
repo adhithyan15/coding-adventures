@@ -1,0 +1,11 @@
+{
+  "id": "JA-C457-oubo-suru",
+  "pathSegment": "JA-PATH-457-JOBHUNT457",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-457-JOBHUNT457",
+      "order": 3
+    }
+  ]
+}

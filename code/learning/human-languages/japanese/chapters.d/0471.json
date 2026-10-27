@@ -1,0 +1,19 @@
+{
+  "chapter": 471,
+  "title": "On Stage",
+  "label": "ch:ja-on-stage",
+  "canDo": "I can talk about a show on stage.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C471-sakkyoku-suru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 471: I can talk about a show on stage.",
+    "assesses": [
+      "JA-LEX-C471-STAGE471-03",
+      "JA-LEX-C471-STAGE471-04",
+      "JA-LEX-C471-STAGE471-05"
+    ]
+  }
+}

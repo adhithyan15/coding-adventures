@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "The Environment",
+  "label": "ch:ja-the-environment",
+  "canDo": "I can give my opinion about the environment and say why.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C336-osen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can give my opinion about the environment and say why.",
+    "assesses": [
+      "JA-LEX-C336-KANKYOU336-03",
+      "JA-LEX-C336-KANKYOU336-04",
+      "JA-LEX-C336-KANKYOU336-05"
+    ]
+  }
+}

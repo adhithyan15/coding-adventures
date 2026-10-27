@@ -1,0 +1,11 @@
+{
+  "id": "JA-C375-shihatsu",
+  "pathSegment": "JA-PATH-375-SHUUDEN375",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-375-SHUUDEN375",
+      "order": 0
+    }
+  ]
+}

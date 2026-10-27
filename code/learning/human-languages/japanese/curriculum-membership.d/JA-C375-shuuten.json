@@ -1,0 +1,11 @@
+{
+  "id": "JA-C375-shuuten",
+  "pathSegment": "JA-PATH-375-SHUUDEN375",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-375-SHUUDEN375",
+      "order": 2
+    }
+  ]
+}

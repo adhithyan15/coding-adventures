@@ -1,0 +1,19 @@
+{
+  "chapter": 462,
+  "title": "Win, Lose or Tie",
+  "label": "ch:ja-win-lose-or-tie",
+  "canDo": "I can talk about contests, rankings and fouls.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C462-hansoku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can talk about contests, rankings and fouls.",
+    "assesses": [
+      "JA-LEX-C462-CONTEST462-03",
+      "JA-LEX-C462-CONTEST462-04",
+      "JA-LEX-C462-CONTEST462-05"
+    ]
+  }
+}

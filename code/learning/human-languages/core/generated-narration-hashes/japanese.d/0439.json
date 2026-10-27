@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:b614eb6cd7950c0e",
+  "lessonIds": [
+    "JA-C439-okubyou",
+    "JA-C439-yowamushi",
+    "JA-C439-hikyou",
+    "JA-C439-ranbou",
+    "JA-C439-yuukan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch439.txt",
+  "json": "japanese/narration/ch439.json",
+  "textHash": "fnv1a64:e79e814325e101ab",
+  "jsonHash": "fnv1a64:3cc5c98cf033c1dd",
+  "findings": []
+}

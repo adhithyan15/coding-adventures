@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:1567ec9ae7c60d22",
+  "lessonIds": [
+    "JA-C527-genzai",
+    "JA-C527-mirai",
+    "JA-C527-saikin",
+    "JA-C527-korekara",
+    "JA-C527-gendai",
+    "JA-R527-review-522-527"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch527.txt",
+  "json": "japanese/narration/ch527.json",
+  "textHash": "fnv1a64:00a55d62b0d83667",
+  "jsonHash": "fnv1a64:81c19029e4d5eab0",
+  "findings": []
+}

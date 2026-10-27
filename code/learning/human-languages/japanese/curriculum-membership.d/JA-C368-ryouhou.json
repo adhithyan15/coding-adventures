@@ -1,0 +1,11 @@
+{
+  "id": "JA-C368-ryouhou",
+  "pathSegment": "JA-PATH-368-ZENTAI368",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-368-ZENTAI368",
+      "order": 2
+    }
+  ]
+}

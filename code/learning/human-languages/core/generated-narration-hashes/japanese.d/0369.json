@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:e50d018a418b793b",
+  "lessonIds": [
+    "JA-C369-juuyou",
+    "JA-C369-daiji",
+    "JA-C369-tokubetsu",
+    "JA-C369-youkyuu",
+    "JA-C369-houshin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch369.txt",
+  "json": "japanese/narration/ch369.json",
+  "textHash": "fnv1a64:e5d68405b2779642",
+  "jsonHash": "fnv1a64:12d4521bb34d5990",
+  "findings": []
+}

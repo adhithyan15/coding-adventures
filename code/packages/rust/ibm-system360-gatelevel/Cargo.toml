@@ -1,6 +1,6 @@
 [package]
 name = "ibm-system360-gatelevel"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "DFF-backed educational IBM System/360 gate-level simulator"
 license = "MIT"

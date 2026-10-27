@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:19a6de19d0ca571a",
+  "lessonIds": [
+    "JA-C402-kankou",
+    "JA-C402-kankoukyaku",
+    "JA-C402-meisho",
+    "JA-C402-meibutsu",
+    "JA-C402-meguru"
+  ],
+  "tex": "japanese/book/chapters/ch402-a-day-of-sightseeing.tex"
+}

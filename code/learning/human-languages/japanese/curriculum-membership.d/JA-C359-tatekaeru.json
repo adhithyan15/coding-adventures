@@ -1,0 +1,11 @@
+{
+  "id": "JA-C359-tatekaeru",
+  "pathSegment": "JA-PATH-359-SHAKKIN359",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-359-SHAKKIN359",
+      "order": 2
+    }
+  ]
+}

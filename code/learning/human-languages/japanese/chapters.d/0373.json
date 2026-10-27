@@ -1,0 +1,19 @@
+{
+  "chapter": 373,
+  "title": "Through the Ticket Barrier",
+  "label": "ch:ja-through-the-ticket-barrier",
+  "canDo": "I can get through the ticket barrier and pay the right fare.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C373-tourisugiru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can get through the ticket barrier and pay the right fare.",
+    "assesses": [
+      "JA-LEX-C373-KAISATSU373-03",
+      "JA-LEX-C373-KAISATSU373-04",
+      "JA-LEX-C373-KAISATSU373-05"
+    ]
+  }
+}
