@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C321-zettai",
+    "language": "japanese",
+    "chapter": 321,
+    "sequence": 19200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c91f4b42e6ef30d7"
+  },
+  "findings": []
+}

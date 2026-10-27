@@ -1,0 +1,11 @@
+{
+  "id": "JA-C304-wana",
+  "pathSegment": "JA-PATH-304-ONGAESHI304",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-304-ONGAESHI304",
+      "order": 2
+    }
+  ]
+}

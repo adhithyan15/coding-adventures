@@ -1,0 +1,11 @@
+{
+  "id": "JA-C443-mabuta",
+  "pathSegment": "JA-PATH-443-WRIST443",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-443-WRIST443",
+      "order": 4
+    }
+  ]
+}

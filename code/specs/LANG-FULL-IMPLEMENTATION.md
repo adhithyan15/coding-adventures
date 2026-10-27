@@ -74,7 +74,14 @@ a later `/` exact. Wider value sets keep the conservative fallback. When the
 complete magnitude is below a static divisor, `div` instead proves a zero
 quotient and `mod` preserves the operand and its common divisor; these
 range-dominated reductions likewise compose through multiplied roots and
-later exact `/`.
+later exact `/`. A static `mod` divisor that divides the operand's conservative
+common divisor proves every remainder is zero even for a wider value set; that
+zero proof also composes through multiplied roots and later exact `/`.
+Integer-only sign-rooted multiplication may temporarily cross the contiguous
+binary64 exact-integer ceiling while remaining within `i64::MAX` when a later
+static `div` or `mod` reduces the final result back below that ceiling before
+widening. Overflow and real `/` over an over-wide intermediate still fail
+closed.
 Checked exact-integer normalizers may provide the sign-rooted transform's
 nonnegative exponent when the right-associative chain stays within the power
 unroll cap. A zero result proves the complete power is exactly one; negative,

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C389-uramichi",
+  "pathSegment": "JA-PATH-389-OODOORI389",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-389-OODOORI389",
+      "order": 2
+    }
+  ]
+}

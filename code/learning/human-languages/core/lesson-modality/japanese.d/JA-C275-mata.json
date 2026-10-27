@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C275-mata",
+    "language": "japanese",
+    "chapter": 275,
+    "sequence": 16710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:103bf366def3a4a4"
+  },
+  "findings": []
+}

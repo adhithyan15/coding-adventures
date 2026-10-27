@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C490-gyosen",
+    "language": "japanese",
+    "chapter": 490,
+    "sequence": 28530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77cea954e31396cd"
+  },
+  "findings": []
+}

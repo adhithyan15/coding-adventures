@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C276-oumizu",
+    "language": "japanese",
+    "chapter": 276,
+    "sequence": 16730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f39a5d751ae882fe"
+  },
+  "findings": []
+}

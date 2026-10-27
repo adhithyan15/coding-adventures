@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:3ca84a2a067df8c3",
+  "lessonIds": [
+    "JA-C507-kibou",
+    "JA-C507-nozomu",
+    "JA-C507-shibou-suru",
+    "JA-C507-risou",
+    "JA-C507-hoshigaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch507.txt",
+  "json": "japanese/narration/ch507.json",
+  "textHash": "fnv1a64:65e7b0b7d868e423",
+  "jsonHash": "fnv1a64:fb28192345a13f7f",
+  "findings": []
+}

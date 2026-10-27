@@ -1,0 +1,21 @@
+{
+  "chapter": 351,
+  "title": "In Case Something Happens",
+  "label": "ch:ja-in-case-something-happens",
+  "canDo": "I can say what to keep ready in case something goes wrong.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-R351-review-347-351",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 351: I can say what to keep ready in case something goes wrong.",
+    "assesses": [
+      "JA-LEX-C351-MANICHI351-01",
+      "JA-LEX-C351-MANICHI351-02",
+      "JA-LEX-C351-MANICHI351-03",
+      "JA-LEX-C351-MANICHI351-04",
+      "JA-LEX-C351-MANICHI351-05"
+    ]
+  }
+}

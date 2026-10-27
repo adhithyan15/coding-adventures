@@ -1,0 +1,11 @@
+{
+  "id": "JA-C450-eiyou",
+  "pathSegment": "JA-PATH-450-CLINIC450",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-450-CLINIC450",
+      "order": 2
+    }
+  ]
+}

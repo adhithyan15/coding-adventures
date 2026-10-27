@@ -1,0 +1,11 @@
+{
+  "id": "JA-C403-tabisaki",
+  "pathSegment": "JA-PATH-403-BUNKA403",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-403-BUNKA403",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C267-hotto",
+  "pathSegment": "JA-PATH-267-MAIGO267",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-267-MAIGO267",
+      "order": 4
+    }
+  ]
+}

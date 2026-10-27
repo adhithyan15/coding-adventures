@@ -1,0 +1,11 @@
+{
+  "id": "JA-C339-barabara",
+  "pathSegment": "JA-PATH-339-BUNBETSU339",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-339-BUNBETSU339",
+      "order": 4
+    }
+  ]
+}

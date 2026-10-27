@@ -1,0 +1,19 @@
+{
+  "chapter": 345,
+  "title": "When Plans Change",
+  "label": "ch:ja-when-plans-change",
+  "canDo": "I can change, put off or bring forward a plan if something happens.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C345-hayameru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can change, put off or bring forward a plan if something happens.",
+    "assesses": [
+      "JA-LEX-C345-HENKOU345-03",
+      "JA-LEX-C345-HENKOU345-04",
+      "JA-LEX-C345-HENKOU345-05"
+    ]
+  }
+}

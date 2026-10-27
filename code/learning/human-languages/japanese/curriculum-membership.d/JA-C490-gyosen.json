@@ -1,0 +1,11 @@
+{
+  "id": "JA-C490-gyosen",
+  "pathSegment": "JA-PATH-490-SEA490",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-490-SEA490",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C435-damaru",
+    "language": "japanese",
+    "chapter": 435,
+    "sequence": 25500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1769e0dc87127e43"
+  },
+  "findings": []
+}

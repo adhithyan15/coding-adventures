@@ -96,9 +96,20 @@ assert_eq!(
 - `coding_adventures_sha1`
 - `coding_adventures_sha256`
 - `coding_adventures_sha512`
+- `coding_adventures_ct_compare`
 - `coding_adventures_zeroize`
 
 All are pure-Rust, zero-external-dependency implementations in this monorepo.
+
+## Tag verification
+
+`verify(expected, actual)` delegates to the repository-owned `ct-compare`
+primitive. Equal-length tags receive its compiler-preserved full scan;
+mismatched public lengths fail immediately. This removes the HMAC crate's
+external executable comparison dependency without changing its public API.
+
+This comparison boundary does not make generic HMAC fixed-memory, add
+HMAC-SHA-384, select hashes for TLS, or implement HKDF or a TLS key schedule.
 
 ## Memory hygiene
 

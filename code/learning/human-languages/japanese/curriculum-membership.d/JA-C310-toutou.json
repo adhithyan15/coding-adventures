@@ -1,0 +1,11 @@
+{
+  "id": "JA-C310-toutou",
+  "pathSegment": "JA-PATH-310-HENJI310",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-310-HENJI310",
+      "order": 2
+    }
+  ]
+}

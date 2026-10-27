@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C359-tatekaeru",
+    "language": "japanese",
+    "chapter": 359,
+    "sequence": 21190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:036530be543efe09"
+  },
+  "findings": []
+}

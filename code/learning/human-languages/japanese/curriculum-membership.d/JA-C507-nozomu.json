@@ -1,0 +1,11 @@
+{
+  "id": "JA-C507-nozomu",
+  "pathSegment": "JA-PATH-507-HOPE507",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-507-HOPE507",
+      "order": 1
+    }
+  ]
+}

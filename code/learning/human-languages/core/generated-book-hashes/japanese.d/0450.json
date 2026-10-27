@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:1342da32244bcd85",
+  "lessonIds": [
+    "JA-C450-naika",
+    "JA-C450-geka",
+    "JA-C450-eiyou",
+    "JA-C450-megusuri",
+    "JA-C450-kanbyou-suru"
+  ],
+  "tex": "japanese/book/chapters/ch450-at-the-clinic.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C492-waku",
+  "pathSegment": "JA-PATH-492-BOIL492",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-492-BOIL492",
+      "order": 1
+    }
+  ]
+}

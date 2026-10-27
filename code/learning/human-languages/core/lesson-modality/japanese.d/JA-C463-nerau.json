@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C463-nerau",
+    "language": "japanese",
+    "chapter": 463,
+    "sequence": 26930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cec3ab55c3062191"
+  },
+  "findings": []
+}

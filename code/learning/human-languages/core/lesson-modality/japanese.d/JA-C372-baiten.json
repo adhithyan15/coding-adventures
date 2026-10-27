@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C372-baiten",
+    "language": "japanese",
+    "chapter": 372,
+    "sequence": 22010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db330e40a92c4577"
+  },
+  "findings": []
+}

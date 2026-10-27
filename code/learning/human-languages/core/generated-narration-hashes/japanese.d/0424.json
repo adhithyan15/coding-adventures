@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:466982dd4c71933d",
+  "lessonIds": [
+    "JA-C424-otoshimono",
+    "JA-C424-hagureru",
+    "JA-C424-miushinau",
+    "JA-C424-sagashimawaru",
+    "JA-C424-saiwai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch424.txt",
+  "json": "japanese/narration/ch424.json",
+  "textHash": "fnv1a64:5875ebe7942b5f86",
+  "jsonHash": "fnv1a64:c5c546d4a9f98930",
+  "findings": []
+}

@@ -503,6 +503,15 @@ pub enum BuildError {
     /// A `pkg::P::C` reference in a component layout could not be resolved or
     /// inlined before backend emission.
     PackageReferenceError { component: String, error: String },
+    /// The package's own `[dependencies]` declare a version requirement that
+    /// the package found on the search path does not satisfy
+    /// (mosaic-package-publishing-v1 §7.4). The string is the rendered
+    /// resolver error, which names both packages, the requirement as a
+    /// range, the version found, and the manifest to fix.
+    ///
+    /// A requirement inside a dependency fails while that dependency is
+    /// inlined, so it arrives as [`BuildError::PackageReferenceError`].
+    DependencyVersion(String),
     /// A manifest-declared token palette could not be read, parsed, or safely
     /// layered with higher-precedence package/application values.
     TokenPalette { path: PathBuf, error: String },
@@ -551,6 +560,7 @@ impl std::fmt::Display for BuildError {
                     "package reference error for component '{component}': {error}"
                 )
             }
+            BuildError::DependencyVersion(error) => write!(f, "dependency error: {error}"),
             BuildError::TokenPalette { path, error } => {
                 write!(f, "token palette '{}': {error}", path.display())
             }
@@ -2611,6 +2621,7 @@ fn analyze_package_degradations_with_runtime_and_tokens(
     }
     let src_dir = opts.package_root.join("src");
     let package_search_paths = default_package_search_paths(&opts.package_root);
+    check_dependency_requirements(&manifest_path, &manifest, &package_search_paths)?;
     let mut degradations = Vec::new();
     let mut style_degradations = Vec::new();
     let mut behavior_degradations = Vec::new();
@@ -3482,6 +3493,14 @@ fn build_package_inner(
     if let Some(theme) = &opts.theme {
         validate_theme_name(theme)?;
     }
+
+    // ----- 2a'. Check the declared dependency versions (§7.4) --------------
+    check_dependency_requirements(
+        &manifest_path,
+        &manifest,
+        &default_package_search_paths(&opts.package_root),
+    )?;
+
     let package_tokens =
         load_package_tokens(&opts.package_root, &manifest, Some(opts.backend), tokens)?;
 
@@ -10080,8 +10099,13 @@ fn resolve_layout_package_references(
         });
     }
 
+    // Every error, not the first: an inlined tree can fail validation at
+    // several call sites at once. One error keeps its old, unwrapped form.
     let resolved_parts = moslayout_compiler::validate(&layout_out.def, Some(descriptor_json))
-        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+        .map_err(|errs| match errs.as_slice() {
+            [only] => pipeline_err(component, only),
+            all => pipeline_err(component, &all),
+        })?;
     layout_out.parts = resolved_parts;
     layout_out.part_map_json =
         moslayout_compiler::emit_part_map_json(&layout_out.def.component_name, &layout_out.parts);
@@ -10451,6 +10475,30 @@ fn resolve_style_path(
     }
     themed.sort();
     Ok(themed.into_iter().next())
+}
+
+/// Check the package's own `[dependencies]` requirements against the
+/// packages the search path holds (mosaic-package-publishing-v1 §7.4).
+///
+/// The layout inliner checks the requirements of every package it inlines
+/// *from*. The package being built is the one it never sees, so its
+/// requirements are checked here, once, before any component compiles:
+///
+/// ```text
+///   engram-app ──requires──▶ mosaic-pkg-card-browser ──requires──▶ mosaic-pkg-toolkit
+///   └─ checked here ───────┘ └─ checked by LayoutPackageResolver while inlining ──┘
+/// ```
+///
+/// Same locator as the inliner (by manifest name), so the version checked
+/// is the version that gets compiled.
+fn check_dependency_requirements(
+    manifest_path: &Path,
+    manifest: &MosaicPackage,
+    package_search_paths: &[PathBuf],
+) -> Result<(), BuildError> {
+    mosaic_package_resolver::LayoutPackageResolver::new(package_search_paths.to_vec())
+        .check_dependencies(manifest, manifest_path)
+        .map_err(|e| BuildError::DependencyVersion(e.to_string()))
 }
 
 fn default_package_search_paths(package_root: &Path) -> Vec<PathBuf> {
@@ -11771,6 +11819,68 @@ version = "1"
             .expect("dependency state should be merged");
         assert_eq!(dependency_state.state, "danger");
         assert_eq!(dependency_state.slot.as_deref(), Some("variant"));
+    }
+
+    /// The package being built has its own `[dependencies]` checked against
+    /// what the search path holds (mosaic-package-publishing-v1 §7.4); the
+    /// layout inliner only ever sees the packages it inlines from.
+    #[test]
+    fn a_package_build_checks_its_own_dependency_requirements() {
+        let build_shell_requiring = |requirement: &str| {
+            let workspace = TempDir::new().unwrap();
+            let child = workspace.path().join("mosaic-pkg-accent");
+            let parent = workspace.path().join("mosaic-pkg-shell");
+            // `write_package_manifest` writes `version = "0.1.0"`.
+            write_package_manifest(&child, "mosaic-pkg-accent", &["Accent"], &[]);
+            write_component_sources(
+                &child,
+                "Accent",
+                "component Accent { }",
+                "layout Accent { Box [ accent-root ] { } }",
+                "style Accent { }",
+            );
+            write_package_manifest(
+                &parent,
+                "mosaic-pkg-shell",
+                &["Shell"],
+                &[("mosaic-pkg-accent", requirement)],
+            );
+            write_component_sources(
+                &parent,
+                "Shell",
+                "component Shell { }",
+                "layout Shell { Column [ shell-root ] { pkg::mosaic-pkg-accent::Accent } }",
+                "style Shell { }",
+            );
+            let out = TempDir::new().unwrap();
+            build_package(&BuildOptions {
+                package_root: parent,
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Html,
+                emit_project: false,
+                theme: None,
+            })
+        };
+
+        for satisfied in ["0.1.0", "=0.1.0"] {
+            build_shell_requiring(satisfied)
+                .unwrap_or_else(|e| panic!("{satisfied:?} should accept 0.1.0: {e}"));
+        }
+        for (unsatisfied, range) in [("0.2.0", ">=0.2.0, <0.3.0"), ("=0.1.1", "=0.1.1")] {
+            match build_shell_requiring(unsatisfied) {
+                Err(BuildError::DependencyVersion(message)) => {
+                    assert!(
+                        message.contains(&format!(
+                            "mosaic-pkg-shell requires mosaic-pkg-accent \"{unsatisfied}\" ({range})"
+                        )) && message.contains("found mosaic-pkg-accent 0.1.0"),
+                        "{message}"
+                    );
+                }
+                other => {
+                    panic!("{unsatisfied:?} should fail with DependencyVersion, got {other:?}")
+                }
+            }
+        }
     }
 
     // -----------------------------------------------------------------------
@@ -18775,6 +18885,286 @@ style FocusField {
         assert!(
             html.contains("#abcdef"),
             "dependency text style should be present in emitted HTML:\n{html}"
+        );
+    }
+
+    /// A two-package workspace for the binding tests below: `mosaic-pkg-accent`
+    /// exporting `Accent` (`slot label : text ;`, required) and
+    /// `mosaic-pkg-shell` exporting `Shell` with the given layout.
+    fn accent_shell_workspace(shell_mil: &str, shell_mll: &str) -> (TempDir, PathBuf) {
+        let workspace = TempDir::new().unwrap();
+        let child = workspace.path().join("mosaic-pkg-accent");
+        let parent = workspace.path().join("mosaic-pkg-shell");
+        write_package_manifest(&child, "mosaic-pkg-accent", &["Accent"], &[]);
+        write_component_sources(
+            &child,
+            "Accent",
+            r#"component Accent { slot label : text ; }"#,
+            r#"layout Accent {
+  Box [ accent-panel ] {
+    Text [ accent-label ] ( content : slot: label )
+  }
+}"#,
+            "style Accent { }",
+        );
+        write_package_manifest(
+            &parent,
+            "mosaic-pkg-shell",
+            &["Shell"],
+            &[("mosaic-pkg-accent", "0.1.0")],
+        );
+        write_component_sources(&parent, "Shell", shell_mil, shell_mll, "style Shell { }");
+        (workspace, parent)
+    }
+
+    fn build_html(package_root: PathBuf) -> Result<BuildResult, BuildError> {
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root,
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Html,
+            emit_project: false,
+            theme: None,
+        })
+    }
+
+    /// E6 F1, probe P3 through a real build. `Shell` has a `label` of its
+    /// own and mounts `Accent` without binding `Accent`'s required `label`.
+    /// This used to build, with `Shell`'s label silently rendered inside
+    /// `Accent`. It now fails naming the dependency, not `Shell`.
+    #[test]
+    fn an_unbound_dependency_slot_fails_naming_the_dependency() {
+        let (_workspace, parent) = accent_shell_workspace(
+            r#"component Shell { slot label : text ; }"#,
+            r#"layout Shell {
+  Column [ shell-root ] {
+    Text [ shell-label ] ( content : slot: label )
+    pkg::mosaic-pkg-accent::Accent
+  }
+}"#,
+        );
+
+        let error = build_html(parent).expect_err("Accent's label is unbound");
+        let BuildError::PackageReferenceError { component, error } = &error else {
+            panic!("expected PackageReferenceError, got {error:?}");
+        };
+        assert_eq!(component, "Shell");
+        assert_eq!(
+            error,
+            "`Shell` mounts `pkg::mosaic-pkg-accent::Accent` at \
+             Column[shell-root] > pkg::mosaic-pkg-accent::Accent#2 without binding its \
+             required slot `label`; bind `label` at the call site, or give it a default \
+             in Accent.mil (`slot label : <type> = <value> ;`)"
+        );
+    }
+
+    /// Validation of the inlined tree reports every error, not `errs[0]`.
+    /// Here both of `Accent`'s parts clash with parts `Shell` already has.
+    #[test]
+    fn every_validation_error_after_inlining_is_reported() {
+        let (_workspace, parent) = accent_shell_workspace(
+            r#"component Shell { slot label : text ; }"#,
+            r#"layout Shell {
+  Column [ shell-root ] {
+    Box [ accent-panel ] { }
+    Text [ accent-label ] ( content : slot: label )
+    pkg::mosaic-pkg-accent::Accent ( label : slot: label )
+  }
+}"#,
+        );
+
+        let error = build_html(parent).expect_err("two duplicate parts");
+        let BuildError::PipelineError { error, .. } = &error else {
+            panic!("expected PipelineError, got {error:?}");
+        };
+        assert!(
+            error.starts_with('[') && error.matches("DuplicatePart").count() == 2,
+            "both clashes should be reported: {error}"
+        );
+        assert!(error.contains("accent-panel") && error.contains("accent-label"));
+    }
+
+    /// The layout each `KEYWORD_LITERAL_PROPS` entry is proven in: its enum
+    /// value, and a node using it at that position. A new table entry with
+    /// no fixture here fails the test below.
+    fn keyword_literal_fixture(tag: &str, prop: &str) -> Option<(&'static str, &'static str)> {
+        Some(match (tag, prop) {
+            ("Text", "a11y-role") => (
+                "heading",
+                r#"Text [ p ] ( content: "x" , a11y-role: heading )"#,
+            ),
+            ("Box", "table-cell-role") => (
+                "data",
+                r#"HostTable [ t ] { HostTableBody { Row [ r ] { Box [ p ] ( table-cell-role: data ) { Text ( content: "x" ) } } } }"#,
+            ),
+            ("Text", "table-cell-role") => (
+                "data",
+                r#"HostTable [ t ] { HostTableBody { Row [ r ] { Text [ p ] ( content: "x" , table-cell-role: data ) } } }"#,
+            ),
+            ("HostScroll", "axis") => (
+                "horizontal",
+                r#"HostScroll [ p ] ( axis: horizontal ) { Text ( content: "s" ) }"#,
+            ),
+            ("HostNavigationSplit", "collapse") => (
+                "auto",
+                r#"HostNavigationSplit [ p ] ( pane-title: "P" , collapse: auto ) { Column [ a ] { } Column [ b ] { } }"#,
+            ),
+            ("Path", "kind") => (
+                "line",
+                "Path [ p ] ( kind: line , x1: 0 , y1: 0 , x2: 1 , y2: 1 )",
+            ),
+            ("HostTable", "dir") => (
+                "rtl",
+                r#"HostTable [ p ] ( dir: rtl ) { HostTableBody { Row [ r ] { Box ( table-cell-role: data ) { Text ( content: "x" ) } } } }"#,
+            ),
+            ("HostLink", "target") => (
+                "new-tab",
+                r#"HostLink [ p ] ( label: "x" , target: new-tab )"#,
+            ),
+            _ => return None,
+        })
+    }
+
+    /// The lines of emitted `source` that use `name` (or its camelCase form)
+    /// as a variable. Not a use: the `For` header that binds it (React
+    /// `.map((name, …`, SwiftUI `{ name in`, HTML `as="name"`), a member or
+    /// enum case after `.`, an element name after `<` or `</`, and anything
+    /// inside a double-quoted string or on a comment line.
+    fn variable_uses(source: &str, name: &str) -> Vec<String> {
+        let camel = moslayout_style_camel(name);
+        let mut uses = Vec::new();
+        for line in source.lines() {
+            let trimmed = line.trim_start();
+            if trimmed.starts_with("//") || trimmed.starts_with("<!--") {
+                continue;
+            }
+            let words: &[&str] = if camel == name {
+                &[name]
+            } else {
+                &[name, camel.as_str()]
+            };
+            for &word in words {
+                let mut from = 0;
+                while let Some(found) = line[from..].find(word) {
+                    let at = from + found;
+                    from = at + word.len();
+                    let before = line[..at].chars().next_back();
+                    let after = line[from..].chars().next();
+                    let is_word = |c: Option<char>| {
+                        c.is_some_and(|c| c.is_alphanumeric() || c == '_' || c == '-')
+                    };
+                    if is_word(before) || is_word(after) {
+                        continue;
+                    }
+                    let quoted = line[..at].matches('"').count() % 2 == 1;
+                    let header = line[from..].starts_with(", _idx)")
+                        || line[from..].trim_start().starts_with("in")
+                            && line[..at].trim_end().ends_with('{');
+                    if quoted || header || matches!(before, Some('.' | '<' | '/')) {
+                        continue;
+                    }
+                    uses.push(line.trim().to_string());
+                }
+            }
+        }
+        uses
+    }
+
+    fn moslayout_style_camel(name: &str) -> String {
+        let mut out = String::new();
+        let mut upper = false;
+        for ch in name.chars() {
+            if ch == '-' {
+                upper = true;
+            } else if upper {
+                out.extend(ch.to_uppercase());
+                upper = false;
+            } else {
+                out.push(ch);
+            }
+        }
+        out
+    }
+
+    /// `moslayout_compiler::KEYWORD_LITERAL_PROPS` is the resolver's list of
+    /// positions where a bare NAME is an enum value and never a variable
+    /// (E6 F1, security review round 2). Prove it on React, SwiftUI and
+    /// HTML: each entry is built inside a `For` that binds a variable with
+    /// the entry's own value as its name, so a backend that read the value
+    /// as a variable would reference the loop variable. None may.
+    ///
+    /// The control is a position every one of the three reads as a
+    /// variable (`HostButton ( label: zqprobe )`), so the detector is shown
+    /// to work on each backend. A backend that does not support a primitive
+    /// at all (SwiftUI has no `Path`) cannot misread it, and is skipped.
+    #[test]
+    fn keyword_literal_props_are_literal_on_react_swiftui_and_html() {
+        let backends = [
+            (Backend::React, "react", "tsx"),
+            (Backend::SwiftUI, "swiftui", "swift"),
+            (Backend::Html, "html", "html"),
+        ];
+        let build = |value: &str, node: &str, backend: Backend, dir: &str, ext: &str| {
+            let workspace = TempDir::new().unwrap();
+            let root = workspace.path().join("kwlit");
+            write_package_manifest(&root, "kwlit", &["Probe"], &[]);
+            write_component_sources(
+                &root,
+                "Probe",
+                "component Probe { slot items : list<text> ; }",
+                &format!(
+                    "layout Probe {{ Column [ root ] {{\n  For ( each: slot: items , as: {value} ) {{\n    {node}\n  }}\n}} }}"
+                ),
+                "style Probe { }",
+            );
+            let out = TempDir::new().unwrap();
+            build_package(&BuildOptions {
+                package_root: root,
+                output_root: out.path().to_path_buf(),
+                backend,
+                emit_project: false,
+                theme: None,
+            })
+            .map(|_| fs::read_to_string(out.path().join(dir).join(format!("Probe.{ext}"))).unwrap())
+        };
+
+        for &(backend, dir, ext) in &backends {
+            let control = build(
+                "zqprobe",
+                "HostButton [ p ] ( label: zqprobe )",
+                backend,
+                dir,
+                ext,
+            )
+            .unwrap_or_else(|e| panic!("{dir} control build: {e}"));
+            assert!(
+                !variable_uses(&control, "zqprobe").is_empty(),
+                "{dir}: the detector must see `label: zqprobe` read as a variable:\n{control}"
+            );
+        }
+
+        let mut proven = 0;
+        for &(tag, prop) in moslayout_compiler::KEYWORD_LITERAL_PROPS {
+            let (value, node) = keyword_literal_fixture(tag, prop).unwrap_or_else(|| {
+                panic!("no fixture for KEYWORD_LITERAL_PROPS entry ({tag}, {prop})")
+            });
+            for &(backend, dir, ext) in &backends {
+                let source = match build(value, node, backend, dir, ext) {
+                    Ok(source) => source,
+                    Err(e) if e.to_string().contains("not yet supported") => continue,
+                    Err(e) => panic!("({tag}, {prop}) on {dir}: {e}"),
+                };
+                let uses = variable_uses(&source, value);
+                assert!(
+                    uses.is_empty(),
+                    "({tag}, {prop}): {dir} reads `{value}` as a variable: {uses:?}"
+                );
+                proven += 1;
+            }
+        }
+        assert!(
+            proven >= moslayout_compiler::KEYWORD_LITERAL_PROPS.len() * 2,
+            "too few entries were built to prove anything ({proven})"
         );
     }
 

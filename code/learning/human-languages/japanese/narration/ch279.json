@@ -1,0 +1,945 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 279,
+  "title": "The Mountain Erupts",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:a0048da68f0691f0",
+  "lessons": [
+    {
+      "id": "JA-C279-kazan",
+      "sequence": 16870,
+      "title": "かざん (kazan) — a volcano",
+      "headword": "かざん",
+      "romanization": "kazan",
+      "gloss": "a volcano",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83302b7846c166f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a tornado, then the Japanese for to lean."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かざん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かざん — kazan — \"a volcano\"."
+            },
+            {
+              "kind": "speech",
+              "text": "日本には かざんが おおいです。 — nihon ni wa kazan ga ōi desu — \"Japan has many volcanoes.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かざん (kazan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ka, \"fire\" (Middle Chinese xwaX) and zan, \"mountain\" (srean) (KANJIDIC2; Middle Chinese in Baxter's transcription). The second is voiced from san to zan."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kazan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kazan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kazan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kazan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nihon ni wa kazan ga ōi desu — Japan has many volcanoes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nihon ni wa kazan ga ōi desu* — Japan has many volcanoes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a tornado, then the Japanese for to lean, then say kazan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a tornado, then the Japanese for to lean, then say *kazan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かざん (kazan) mean? (\"A volcano\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C279-kazan-type",
+              "prompt": "Say the Japanese for 'a volcano'.",
+              "assesses": [
+                "JA-LEX-C279-KAZAN279-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かざん",
+                "kazan"
+              ],
+              "feedback": {
+                "correct": "Right: かざん (kazan) is 'a volcano'.",
+                "incorrect": "'A volcano' is かざん (kazan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C279-funka",
+      "sequence": 16880,
+      "title": "ふんか (funka) — an eruption",
+      "headword": "ふんか",
+      "romanization": "funka",
+      "gloss": "an eruption",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94ebd228af4af863",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to lean, then the Japanese for a volcano."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふんか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふんか — funka — \"an eruption\"."
+            },
+            {
+              "kind": "speech",
+              "text": "その かざんが ふんかしました。 — sono kazan ga funka shimashita — \"That volcano erupted.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふんか (funka) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are fun, \"erupt\" (Middle Chinese phwonH) and ka, \"fire\" (xwaX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "funka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *funka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "funka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *funka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sono kazan ga funka shimashita — That volcano erupted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sono kazan ga funka shimashita* — That volcano erupted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to lean, then the Japanese for a volcano, then say funka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to lean, then the Japanese for a volcano, then say *funka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふんか (funka) mean? (\"An eruption\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C279-funka-type",
+              "prompt": "Say the Japanese for 'an eruption'.",
+              "assesses": [
+                "JA-LEX-C279-KAZAN279-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふんか",
+                "funka"
+              ],
+              "feedback": {
+                "correct": "Right: ふんか (funka) is 'an eruption'.",
+                "incorrect": "'An eruption' is ふんか (funka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C279-saigai",
+      "sequence": 16890,
+      "title": "さいがい (saigai) — a disaster; a calamity",
+      "headword": "さいがい",
+      "romanization": "saigai",
+      "gloss": "a disaster; a calamity",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:773acaf2882bbb45",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a volcano, then the Japanese for an eruption."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さいがい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さいがい — saigai — \"a disaster; a calamity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "さいがいの ばあいは、がっこうに ひなんします。 — saigai no baai wa, gakkō ni hinan shimasu — \"In a disaster, we take shelter at the school.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さいがい (saigai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sai, \"disaster\" (Middle Chinese tsoj) and gai, \"harm\" (hajH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saigai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saigai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saigai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saigai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saigai no baai wa, gakkō ni hinan shimasu — In a disaster, we take shelter at the school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saigai no baai wa, gakkō ni hinan shimasu* — In a disaster, we take shelter at the school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a volcano, then the Japanese for an eruption, then say saigai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a volcano, then the Japanese for an eruption, then say *saigai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さいがい (saigai) mean? (\"A disaster; a calamity\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C279-saigai-type",
+              "prompt": "Say the Japanese for 'a disaster'.",
+              "assesses": [
+                "JA-LEX-C279-KAZAN279-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さいがい",
+                "saigai"
+              ],
+              "feedback": {
+                "correct": "Right: さいがい (saigai) is 'a disaster; a calamity'.",
+                "incorrect": "'A disaster' is さいがい (saigai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C279-fusegu",
+      "sequence": 16900,
+      "title": "ふせぐ (fusegu) — to prevent; to keep off",
+      "headword": "ふせぐ",
+      "romanization": "fusegu",
+      "gloss": "to prevent; to keep off",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44ef11a3bd160e64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an eruption, then the Japanese for a disaster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふせぐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふせぐ — fusegu — \"to prevent; to keep off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "みんなで じこを ふせいで ください。 — minna de jiko o fuseide kudasai — \"Please all help to prevent accidents.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ふせぎます, fusegimasu; a godan verb. Past (polite): かさが あめを ふせぎました。, kasa ga ame o fusegimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふせぐ (fusegu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fusegu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fusegu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fusegu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fusegu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "minna de jiko o fuseide kudasai — Please all help to prevent accidents.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *minna de jiko o fuseide kudasai* — Please all help to prevent accidents.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an eruption, then the Japanese for a disaster, then say fusegu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an eruption, then the Japanese for a disaster, then say *fusegu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふせぐ (fusegu) mean? (\"To prevent; to keep off\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C279-fusegu-type",
+              "prompt": "Say the Japanese for 'to prevent'.",
+              "assesses": [
+                "JA-LEX-C279-KAZAN279-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふせぐ",
+                "fusegu"
+              ],
+              "feedback": {
+                "correct": "Right: ふせぐ (fusegu) is 'to prevent; to keep off'.",
+                "incorrect": "'To prevent' is ふせぐ (fusegu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C279-oukii",
+      "sequence": 16910,
+      "title": "おおきい (ōkii) — big; large",
+      "headword": "おおきい",
+      "romanization": "ōkii",
+      "gloss": "big; large",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e248214438afe177",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a disaster, then the Japanese for to prevent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おおきい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おおきい — ōkii — \"big; large\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おおきい じしんが ありました。 — ōkii jishin ga arimashita — \"There was a big earthquake.\""
+            },
+            {
+              "kind": "speech",
+              "text": "An i-adjective."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おおきい (ōkii) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōkii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōkii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōkii, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōkii*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōkii jishin ga arimashita — There was a big earthquake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōkii jishin ga arimashita* — There was a big earthquake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a disaster, then the Japanese for to prevent, then say ōkii again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a disaster, then the Japanese for to prevent, then say *ōkii* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おおきい (ōkii) mean? (\"Big; large\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C279-oukii-type",
+              "prompt": "Say the Japanese for 'big'.",
+              "assesses": [
+                "JA-LEX-C279-KAZAN279-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おおきい",
+                "ōkii",
+                "oukii",
+                "ookii",
+                "okii"
+              ],
+              "feedback": {
+                "correct": "Right: おおきい (ōkii) is 'big; large'.",
+                "incorrect": "'Big' is おおきい (ōkii)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R279-review-274-279",
+      "sequence": 16920,
+      "title": "Looking back: from When the Earth Shook to The Mountain Erupts",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from When the Earth Shook to The Mountain Erupts",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94492e03914d7cf9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for an earthquake and to crumble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an earthquake, to crumble, to roll, frightening, evacuation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an earthquake, to crumble, to roll, frightening, evacuation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tsunami, to flow, to wash away, to float, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tsunami, to flow, to wash away, to float, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heavy rain, a flood, to overflow, a cliff, awful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: heavy rain, a flood, to overflow, a cliff, awful]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heavy snow, to accumulate, a snowstorm, a power cut, to go numb with cold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: heavy snow, to accumulate, a snowstorm, a power cut, to go numb with cold]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a flash of lightning, to strike, violent, a tornado, to lean",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a flash of lightning, to strike, violent, a tornado, to lean]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a volcano, an eruption, a disaster, to prevent, big",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a volcano, an eruption, a disaster, to prevent, big]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An earthquake? (じしん, jishin.) To crumble? (くずれる, kuzureru.) To roll? (ころがる, korogaru.) Frightening? (おそろしい, osoroshii.) Evacuation? (ひなん, hinan.) A tsunami? (つなみ, tsunami.) To flow? (ながれる, nagareru.) To wash away? (ながす, nagasu.) To float? (うく, uku.) Once more? (また, mata.) Heavy rain? (おおあめ, ōame.) A flood? (おおみず, ōmizu.) To overflow? (あふれる, afureru.) A cliff? (がけ, gake.) Awful? (たいへん, taihen.) Heavy snow? (おおゆき, ōyuki.) To accumulate? (つもる, tsumoru.) A snowstorm? (ふぶき, fubuki.) A power cut? (ていでん, teiden.) To go numb with cold? (こごえる, kogoeru.) A flash of lightning? (いなずま, inazuma.) To strike? (あたる, ataru.) Violent? (はげしい, hageshii.) A tornado? (たつまき, tatsumaki.) To lean? (かたむく, katamuku.) A volcano? (かざん, kazan.) An eruption? (ふんか, funka.) A disaster? (さいがい, saigai.) To prevent? (ふせぐ, fusegu.) Big? (おおきい, ōkii.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R279-review-274-279-type",
+              "prompt": "Say the Japanese for 'an earthquake'.",
+              "assesses": [
+                "JA-LEX-C274-JISHIN274-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じしん",
+                "jishin"
+              ],
+              "feedback": {
+                "correct": "Right: じしん (jishin) is 'an earthquake'.",
+                "incorrect": "'An earthquake' is じしん (jishin)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

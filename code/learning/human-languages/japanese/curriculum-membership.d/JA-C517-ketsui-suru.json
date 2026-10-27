@@ -1,0 +1,11 @@
+{
+  "id": "JA-C517-ketsui-suru",
+  "pathSegment": "JA-PATH-517-DECIDE517",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-517-DECIDE517",
+      "order": 1
+    }
+  ]
+}

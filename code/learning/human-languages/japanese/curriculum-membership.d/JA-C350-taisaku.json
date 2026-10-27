@@ -1,0 +1,11 @@
+{
+  "id": "JA-C350-taisaku",
+  "pathSegment": "JA-PATH-350-YOUJIN350",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-350-YOUJIN350",
+      "order": 3
+    }
+  ]
+}

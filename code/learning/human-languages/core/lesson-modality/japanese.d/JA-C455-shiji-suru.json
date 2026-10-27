@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C455-shiji-suru",
+    "language": "japanese",
+    "chapter": 455,
+    "sequence": 26500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86b5addb40eb5a60"
+  },
+  "findings": []
+}

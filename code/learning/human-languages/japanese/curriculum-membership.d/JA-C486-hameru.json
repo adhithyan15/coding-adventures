@@ -1,0 +1,11 @@
+{
+  "id": "JA-C486-hameru",
+  "pathSegment": "JA-PATH-486-PARTS486",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-486-PARTS486",
+      "order": 3
+    }
+  ]
+}

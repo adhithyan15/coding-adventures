@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C457-oubo-suru",
+    "language": "japanese",
+    "chapter": 457,
+    "sequence": 26630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27143b1ad0e6d7a2"
+  },
+  "findings": []
+}

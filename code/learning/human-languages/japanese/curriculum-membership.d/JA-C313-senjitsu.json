@@ -1,0 +1,11 @@
+{
+  "id": "JA-C313-senjitsu",
+  "pathSegment": "JA-PATH-313-KIROKU313",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-313-KIROKU313",
+      "order": 3
+    }
+  ]
+}

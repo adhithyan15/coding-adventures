@@ -1,0 +1,11 @@
+{
+  "id": "JA-C515-seiseki",
+  "pathSegment": "JA-PATH-515-EXAM515",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-515-EXAM515",
+      "order": 3
+    }
+  ]
+}

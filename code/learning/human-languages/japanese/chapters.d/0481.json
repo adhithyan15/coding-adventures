@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "A Skilled Hand",
+  "label": "ch:ja-a-skilled-hand",
+  "canDo": "I can talk about skill, know-how and good ideas.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C481-kufuu-suru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can talk about skill, know-how and good ideas.",
+    "assesses": [
+      "JA-LEX-C481-SKILL481-03",
+      "JA-LEX-C481-SKILL481-04",
+      "JA-LEX-C481-SKILL481-05"
+    ]
+  }
+}

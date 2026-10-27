@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C525-nisemono",
+    "language": "japanese",
+    "chapter": 525,
+    "sequence": 30330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5710927b665c4f04"
+  },
+  "findings": []
+}

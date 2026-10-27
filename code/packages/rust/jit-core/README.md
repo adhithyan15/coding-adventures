@@ -151,6 +151,15 @@ pre-binds the parameters to registers `0..n` in declaration order, and its
 future frontend reuses with zero per-language code. (Before v0.4.0 `run`
 ignored its `args`, so such a function read its parameter as `0`.)
 
+### Functions too big for a frame
+
+vm-core refuses a module containing a function with more than 65,536 frame
+registers (`VMError::RegisterLimitExceeded`, checked before anything runs).
+`GenericCirJit` encodes register numbers in one byte, so a function that still
+needs more than 256 registers after optimisation is declined and stays
+interpreted — and `execute_with_jit` then returns the interpreter's typed error.
+Neither tier drops a register silently (`tests/register_limit.rs`).
+
 ## CIRInstr mnemonic conventions
 
 | Category | Pattern | Examples |
@@ -207,3 +216,11 @@ LANG83 PR6c adds `ADD_F64` … `DIV_F64`, `NEG_F64`, `SIGNBIT_F64` and `RET_F64`
 the destinations of `f64_add`/`f64_sub`/`f64_mul`/`f64_div`/`f64_neg` are float
 registers too (holding the bits), the ops compute in Rust `f64` (never a trap),
 and `f64_signbit` writes an ordinary integer register.
+The LANG83 conversions follow: `int_to_real` (`I64_TO_F64`, Rust `as f64`)
+reads an integer register and writes a float register, and
+`real_to_int_trunc`/`real_to_int_floor` (`F64_TO_I64_TRUNC`/`F64_TO_I64_FLOOR`)
+read a float register and write an integer one. A source of the wrong class
+refuses the function. A failed narrowing (a non-finite value, or one outside
+i64) writes vm-core's own `real_to_i64_checked` text to the error slot, and
+`JITCore` returns it as the same `VMError::Custom`, so both tiers fail
+identically.

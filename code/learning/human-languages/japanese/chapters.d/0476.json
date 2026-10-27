@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "Only Children and Twins",
+  "label": "ch:ja-only-children-and-twins",
+  "canDo": "I can talk about brothers, sisters and cousins.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C476-choujo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can talk about brothers, sisters and cousins.",
+    "assesses": [
+      "JA-LEX-C476-KIN476-03",
+      "JA-LEX-C476-KIN476-04",
+      "JA-LEX-C476-KIN476-05"
+    ]
+  }
+}

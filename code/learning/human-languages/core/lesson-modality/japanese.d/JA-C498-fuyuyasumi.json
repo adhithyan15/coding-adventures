@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C498-fuyuyasumi",
+    "language": "japanese",
+    "chapter": 498,
+    "sequence": 28940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6094092ac288443a"
+  },
+  "findings": []
+}

@@ -8,6 +8,12 @@ on:
     paths:
       - .github/workflows/release-task-app.yml
       - code/scripts/taskapp_release.py
+      - code/scripts/tests/test_taskapp_release.py
+      # The generic half of the upgrade/corrupt-recovery gate lives here and
+      # taskapp_release.py delegates to it, so a change to it must run this
+      # lane's real-bundle upgrade checks (mosaic-release-state-gate-v1.md).
+      - code/scripts/mosaic_release_state_gate.py
+      - code/scripts/tests/test_mosaic_release_state_gate.py
       - code/scripts/taskapp-xaml-smoke.ps1
       - code/scripts/taskapp-xaml-startup-smoke.ps1
       - code/programs/mosaic/task-app/**
@@ -53,6 +59,24 @@ jobs:
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      # The helpers' own tests, before anything is built with them. Nothing else
+      # in CI runs test_taskapp_release.py, so without this step it guarded
+      # nothing. It is a pytest suite (the shared gate's is unittest); pytest is
+      # pinned to an exact release rather than taken at whatever is newest.
+      - name: Test the release helpers themselves
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pytest==9.0.3
+          python -m pytest code/scripts/tests/test_taskapp_release.py
+          python -m unittest discover -s code/scripts/tests \
+            -p 'test_mosaic_release_state_gate.py'
 
       - name: Validate version, tag, ref, and publication availability
         id: release
@@ -385,7 +409,8 @@ jobs:
           set -e
           cat release-work/qt-recovery.log
           test "$status" -eq 124
-          cmp "$probe" "$state_file.corrupt"
+          python code/scripts/mosaic_release_state_gate.py verify-quarantine \
+            --app task-app --state "$state_file" --probe "$probe"
 
       - name: Build, verify, and archive the Flutter Linux bundle
         if: matrix.backend == 'flutter'
@@ -454,7 +479,8 @@ jobs:
           set -e
           cat release-work/flutter-recovery.log
           test "$status" -eq 124
-          cmp "$probe" "$state_file.corrupt"
+          python code/scripts/mosaic_release_state_gate.py verify-quarantine \
+            --app task-app --state "$state_file" --probe "$probe"
 
       - name: Build, verify, and archive the Compose Linux bundle
         if: matrix.backend == 'compose'
@@ -517,7 +543,8 @@ jobs:
           set -e
           cat release-work/compose-recovery.log
           test "$status" -eq 124
-          cmp "$probe" "$state_file.corrupt"
+          python code/scripts/mosaic_release_state_gate.py verify-quarantine \
+            --app task-app --state "$state_file" --probe "$probe"
 
       - name: Build, verify, and archive the SwiftUI macOS application
         if: matrix.backend == 'swiftui'
@@ -719,7 +746,9 @@ jobs:
           printf 'invalid TaskApp state\n' > "$standard_state"
           cp "$standard_state" release-work/macos-corrupt-probe
           launch_standard_app "$app_replacement" "$PWD/release-work/macos-recovery.log"
-          cmp release-work/macos-corrupt-probe "$standard_state.corrupt"
+          python code/scripts/mosaic_release_state_gate.py verify-quarantine \
+            --app task-app --state "$standard_state" \
+            --probe release-work/macos-corrupt-probe
           rm -f "$standard_state" "$standard_state.corrupt" "$standard_state.tmp"
 
       - name: Build, verify, and archive the WinUI Windows application
@@ -871,10 +900,9 @@ jobs:
           finally {
             if (!$recoveryProcess.HasExited) { Stop-Process -Id $recoveryProcess.Id -Force }
           }
-          if (!(Test-Path "$state.corrupt")) { throw 'Windows app did not quarantine invalid state' }
-          if ((Get-FileHash $corruptProbe).Hash -ne (Get-FileHash "$state.corrupt").Hash) {
-            throw 'Windows corrupt-state quarantine changed the rejected bytes'
-          }
+          python code/scripts/mosaic_release_state_gate.py verify-quarantine `
+            --app task-app --state $state --probe $corruptProbe
+          if ($LASTEXITCODE -ne 0) { throw 'Windows app did not quarantine invalid state byte for byte' }
 
           $harness = Join-Path $PWD 'release-work/xaml-conformance'
           New-Item -ItemType Directory -Path $harness -Force | Out-Null
