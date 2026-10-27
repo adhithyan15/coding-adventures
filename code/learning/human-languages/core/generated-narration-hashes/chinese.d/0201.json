@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:3caffce1bbe0db70",
+  "lessonIds": [
+    "ZH-C201-youpiao",
+    "ZH-C201-kuaidi",
+    "ZH-C201-youjian",
+    "ZH-C201-fasong",
+    "ZH-C201-shoudao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch201.txt",
+  "json": "chinese/narration/ch201.json",
+  "textHash": "fnv1a64:a5efc18635472d6c",
+  "jsonHash": "fnv1a64:699a0139f0047e0e",
+  "findings": []
+}

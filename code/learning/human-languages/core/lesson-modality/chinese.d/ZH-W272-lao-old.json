@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W272-lao-old",
+    "language": "chinese",
+    "chapter": 272,
+    "sequence": 20255,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8f545b6ca1250512",
+    "detachableSegments": [
+      "Script — a cross and a long fall, over the right half of 比"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

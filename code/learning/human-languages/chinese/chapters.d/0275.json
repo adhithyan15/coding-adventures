@@ -1,0 +1,19 @@
+{
+  "chapter": 275,
+  "title": "Saying Sorry",
+  "label": "ch:zh-saying-sorry",
+  "canDo": "I can apologise, forgive, say yes to a request, accept an apology, and say it is up to you.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "ZH-C275-suibian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 275: I can apologise, forgive, say yes to a request, accept an apology, and say it is up to you.",
+    "assesses": [
+      "ZH-LEX-C275-SORRY275-03",
+      "ZH-LEX-C275-SORRY275-04",
+      "ZH-LEX-C275-SORRY275-05"
+    ]
+  }
+}

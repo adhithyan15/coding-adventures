@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C166-hongcha",
+    "language": "chinese",
+    "chapter": 166,
+    "sequence": 13430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1a218deb8965ce0"
+  },
+  "findings": []
+}

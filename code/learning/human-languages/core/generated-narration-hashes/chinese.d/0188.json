@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:780a4cade54a87a2",
+  "lessonIds": [
+    "ZH-C188-youqian",
+    "ZH-W188-qian-money",
+    "ZH-C188-huaqian",
+    "ZH-C188-lingqian",
+    "ZH-C188-shengqian",
+    "ZH-C188-gou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch188.txt",
+  "json": "chinese/narration/ch188.json",
+  "textHash": "fnv1a64:e1a1a9dbf45fb123",
+  "jsonHash": "fnv1a64:e643212048ea369a",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C170-chabei",
+    "language": "chinese",
+    "chapter": 170,
+    "sequence": 13630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d4db77325a8f6e1"
+  },
+  "findings": []
+}

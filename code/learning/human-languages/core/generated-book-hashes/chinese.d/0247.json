@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:ddae6838f3a07042",
+  "lessonIds": [
+    "ZH-C247-jingli",
+    "ZH-C247-yukuai",
+    "ZH-C247-techan",
+    "ZH-C247-jinianpin",
+    "ZH-C247-huiyi",
+    "ZH-R247-review-242-247",
+    "ZH-R247-review-final-247"
+  ],
+  "tex": "chinese/book/chapters/ch247-back-from-a-trip.tex"
+}

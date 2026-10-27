@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:25a7db3fd5c05ec8",
+  "lessonIds": [
+    "ZH-C224-kaihua",
+    "ZH-W224-hua-flower",
+    "ZH-C224-huadian",
+    "ZH-C224-huayuan",
+    "ZH-C224-hudie",
+    "ZH-C224-mifeng"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch224.txt",
+  "json": "chinese/narration/ch224.json",
+  "textHash": "fnv1a64:b30abf2d6c8d5a0f",
+  "jsonHash": "fnv1a64:3a74586cad5bebaf",
+  "findings": []
+}

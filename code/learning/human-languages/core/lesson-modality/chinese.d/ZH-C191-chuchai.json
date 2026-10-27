@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C191-chuchai",
+    "language": "chinese",
+    "chapter": 191,
+    "sequence": 15190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f2f4d5ec63e7b89"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C191-huilai",
+    "language": "chinese",
+    "chapter": 191,
+    "sequence": 15150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69aa216574fb3b4d"
+  },
+  "findings": []
+}

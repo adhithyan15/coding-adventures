@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:e7902ff8f6d18d96",
+  "lessonIds": [
+    "ZH-C184-dujia",
+    "ZH-C184-jueding",
+    "ZH-C184-canguan",
+    "ZH-C184-laojia",
+    "ZH-C184-fangsong"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch184.txt",
+  "json": "chinese/narration/ch184.json",
+  "textHash": "fnv1a64:e48aa635a11f66a1",
+  "jsonHash": "fnv1a64:1303b02891c5d5be",
+  "findings": []
+}

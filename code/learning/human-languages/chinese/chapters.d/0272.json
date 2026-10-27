@@ -1,0 +1,19 @@
+{
+  "chapter": 272,
+  "title": "Husband and Wife",
+  "label": "ch:zh-husband-and-wife",
+  "canDo": "I can talk about a husband and a wife, my grandfather on my mother's side, and an uncle and an auntie.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C272-ayi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 272: I can talk about a husband and a wife, my grandfather on my mother's side, and an uncle and an auntie.",
+    "assesses": [
+      "ZH-LEX-C272-KIN272-03",
+      "ZH-LEX-C272-KIN272-04",
+      "ZH-LEX-C272-KIN272-05"
+    ]
+  }
+}

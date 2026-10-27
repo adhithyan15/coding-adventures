@@ -1,0 +1,996 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 169,
+  "title": "Early and Late",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:7deabadbdb7acc17",
+  "lessons": [
+    {
+      "id": "ZH-C169-yidazao",
+      "sequence": 13560,
+      "title": "一大早 (yídàzǎo) — first thing in the morning; at the crack of dawn",
+      "headword": "一大早",
+      "romanization": "yídàzǎo",
+      "gloss": "first thing in the morning; at the crack of dawn",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7aeb0dc6daa32322",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to boil water, then the Mandarin for sugar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 一大早",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "一大早 — yídàzǎo — \"first thing in the morning; at the crack of dawn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "一大早妈妈去买大米了 yídàzǎo māma qù mǎi dàmǐ le — First thing this morning my mum went out to buy rice."
+            },
+            {
+              "kind": "speech",
+              "text": "The tone of 一 changes: yī is said yí before the fourth tone of dà."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "一大早 (yídàzǎo) is built from 一 'one', 大 'big' and 早 'early', all three inherited from Middle Chinese, 'jit, daH and tsawX (Guangyun, in Baxter's transcription), which glosses the last 'morning'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for times of day."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yídàzǎo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yídàzǎo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yídàzǎo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yídàzǎo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yídàzǎo māma qù mǎi dàmǐ le — First thing this morning my mum went out to buy rice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yídàzǎo māma qù mǎi dàmǐ le* — First thing this morning my mum went out to buy rice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to boil water, then the Mandarin for sugar, then say yídàzǎo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to boil water, then the Mandarin for sugar, then say *yídàzǎo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 一大早 (yídàzǎo) mean? (\"First thing in the morning; at the crack of dawn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C169-wujiao",
+      "sequence": 13570,
+      "title": "午觉 (wǔjiào) — afternoon nap",
+      "headword": "午觉",
+      "romanization": "wǔjiào",
+      "gloss": "afternoon nap",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99a0ee9d20a41be0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for sugar, then the Mandarin for first thing in the morning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 午觉",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "午觉 — wǔjiào — \"afternoon nap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "午觉以后我们喝茶 wǔjiào yǐhòu wǒmen hē chá — After the nap we'll have tea."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 觉 (jiào) — nine strokes: three short strokes on top, the cover piece of 学 under them, and 见 at the foot. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "午觉 (wǔjiào) is built from 午 'noon' and 觉 (jiào) 'sleep', both inherited from Middle Chinese, nguX and kaewH (Guangyun, in Baxter's transcription), which glosses the second with the word for sleeping. The same character read jué, as in 觉得, is its other reading, glossed 'to wake' and 'to know'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for times of day."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǔjiào",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǔjiào*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǔjiào, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǔjiào*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǔjiào yǐhòu wǒmen hē chá — After the nap we'll have tea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǔjiào yǐhòu wǒmen hē chá* — After the nap we'll have tea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for sugar, then the Mandarin for first thing in the morning, then say wǔjiào again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for sugar, then the Mandarin for first thing in the morning, then say *wǔjiào* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 午觉 (wǔjiào) mean? (\"Afternoon nap\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W169-jiao-sleep",
+      "sequence": 13575,
+      "title": "觉 (jiào) — three strokes, a cover, then 见",
+      "headword": "觉",
+      "romanization": "jiào",
+      "gloss": "觉 — three short strokes, the cover of 学, then 见",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e36fd55f3bc167b9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — three strokes, a cover, then 见",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — three strokes, a cover, then 见 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wǔjiào — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wǔjiào* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "见 学."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — jiàn, xué",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *jiàn*, *xué*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — three strokes, a cover, then 见",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "觉 (jiào)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces, top to bottom. Count the pieces, not the strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "Three short strokes on top: a dot on the left, a dot in the middle, and a short stroke on the right falling to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "Then the cover piece of 学, two strokes: a short stroke falling down on the left, then a horizontal that turns down and hooks."
+            },
+            {
+              "kind": "speech",
+              "text": "Then 见, four strokes, as you write it, under the cover."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 2 + 4 = nine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "觉 (jiào), all nine, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 觉, all nine, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 觉 (jiào)? (Nine.) What sits under the cover? (见.) Which word holds the cover too? (学.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 觉 (jiào), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C169-bangwan",
+      "sequence": 13580,
+      "title": "bàngwǎn — dusk; towards evening",
+      "headword": "bàngwǎn",
+      "romanization": "bàngwǎn",
+      "gloss": "dusk; towards evening",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f32dd4dfe04a951",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for first thing in the morning, then the Mandarin for an afternoon nap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: bàngwǎn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bàngwǎn — \"dusk; towards evening\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen bàngwǎn qù sànbù — We go for a walk around dusk."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bàngwǎn is built from bàng 'near' and 晚 'evening', both inherited from Middle Chinese, bangH and mjonX (Guangyun, in Baxter's transcription). The dictionary gives the sense 'near' under the level-tone reading of the first; today's falling tone goes with bangH, which it leaves without a gloss."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for times of day."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bàngwǎn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bàngwǎn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bàngwǎn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bàngwǎn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen bàngwǎn qù sànbù — We go for a walk around dusk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen bàngwǎn qù sànbù* — We go for a walk around dusk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for first thing in the morning, then the Mandarin for an afternoon nap, then say bàngwǎn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for first thing in the morning, then the Mandarin for an afternoon nap, then say *bàngwǎn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does bàngwǎn mean? (\"Dusk; towards evening\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C169-aoye",
+      "sequence": 13590,
+      "title": "áoyè — to stay up late; to stay up all night",
+      "headword": "áoyè",
+      "romanization": "áoyè",
+      "gloss": "to stay up late; to stay up all night",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:26fb9fb19f037ae7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for an afternoon nap, then the Mandarin for towards evening."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: áoyè",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "áoyè — \"to stay up late; to stay up all night\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ zuótiān áoyè le jīntiān hěn lèi — I stayed up late last night, and I'm tired today."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "áoyè is built from áo 'to simmer' and yè 'night', both inherited from Middle Chinese, ngaw and yaeH (Guangyun, in Baxter's transcription); the dictionary glosses the first 'to simmer'. How the pair came to mean staying up is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for times of day."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "áoyè",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *áoyè*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "áoyè, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *áoyè*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ zuótiān áoyè le jīntiān hěn lèi — I stayed up late last night, and I'm tired today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ zuótiān áoyè le jīntiān hěn lèi* — I stayed up late last night, and I'm tired today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for an afternoon nap, then the Mandarin for towards evening, then say áoyè again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for an afternoon nap, then the Mandarin for towards evening, then say *áoyè* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does áoyè mean? (\"To stay up late; to stay up all night\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C169-shenye",
+      "sequence": 13600,
+      "title": "shēnyè — late at night; the dead of night",
+      "headword": "shēnyè",
+      "romanization": "shēnyè",
+      "gloss": "late at night; the dead of night",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5bd6b005342b62f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for towards evening, then the Mandarin for to stay up late."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: shēnyè",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shēnyè — \"late at night; the dead of night\"."
+            },
+            {
+              "kind": "speech",
+              "text": "shēnyè wàibian hěn ānjìng — Late at night it's quiet outside."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shēnyè is built from shēn 'deep' and yè 'night', both inherited from Middle Chinese, syim and yaeH (Guangyun, in Baxter's transcription): deep in the night. The dictionary gives 'deep' under the falling-tone reading syimH; today's level tone goes with syim."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for times of day."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shēnyè",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shēnyè*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shēnyè, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shēnyè*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shēnyè wàibian hěn ānjìng — Late at night it's quiet outside.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shēnyè wàibian hěn ānjìng* — Late at night it's quiet outside.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for towards evening, then the Mandarin for to stay up late, then say shēnyè again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for towards evening, then the Mandarin for to stay up late, then say *shēnyè* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does shēnyè mean? (\"Late at night; the dead of night\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R169-review-164-169",
+      "sequence": 13610,
+      "title": "Looking back: from Getting Ready to Early and Late",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Getting Ready to Early and Late",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4bd2a7ff61007f97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for to dress up and to wash one's hair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to dress up, to wash one's hair, a hair dryer, to put on make-up, to have a shave",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to dress up, to wash one's hair, a hair dryer, to put on make-up, to have a shave]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an overcoat, a sweater, measure word for long things, a skirt, a scarf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an overcoat, a sweater, measure word for long things, a skirt, a scarf]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "boiled water, afternoon tea, black tea, tea leaves, to make tea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: boiled water, afternoon tea, black tea, tea leaves, to make tea]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the day before yesterday, to happen, it's nothing, to have a power cut, a sound",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the day before yesterday, to happen, it's nothing, to have a power cut, a sound]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to steam, to deep-fry, to stew, to boil water, sugar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to steam, to deep-fry, to stew, to boil water, sugar]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "first thing in the morning, an afternoon nap, towards evening, to stay up late, late at night",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: first thing in the morning, an afternoon nap, towards evening, to stay up late, late at night]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "衣 茶 事 觉 (jiào) — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 衣 茶 事 觉 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To dress up? (dǎban.) To wash one's hair? (xǐtóu.) A hair dryer? (chuīfēngjī.) To put on make-up? (huàzhuāng.) To have a shave? (guāliǎn.) An overcoat? (大衣, dàyī.) A sweater? (máoyī.) Measure word for long things? (tiáo.) A skirt? (qúnzi.) A scarf? (wéijīn.) Boiled water? (开水, kāishuǐ.) Afternoon tea? (下午茶, xiàwǔchá.) Black tea? (hóngchá.) Tea leaves? (cháyè.) To make tea? (pàochá.) The day before yesterday? (前天, qiántiān.) To happen? (fāshēng.) It's nothing? (没事, méishì.) To have a power cut? (tíngdiàn.) A sound? (shēngyīn.) To steam? (zhēng.) To deep-fry? (zhá.) To stew? (dùn.) To boil water? (shāoshuǐ.) Sugar? (táng.) First thing in the morning? (一大早, yídàzǎo.) An afternoon nap? (午觉, wǔjiào.) Towards evening? (bàngwǎn.) To stay up late? (áoyè.) Late at night? (shēnyè.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
