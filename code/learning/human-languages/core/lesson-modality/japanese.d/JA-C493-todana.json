@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C493-todana",
+    "language": "japanese",
+    "chapter": 493,
+    "sequence": 28680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f2ce73ae306ef91"
+  },
+  "findings": []
+}

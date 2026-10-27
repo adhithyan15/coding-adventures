@@ -1,0 +1,11 @@
+{
+  "id": "JA-C284-shushou",
+  "pathSegment": "JA-PATH-284-SENKYO284",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-284-SENKYO284",
+      "order": 2
+    }
+  ]
+}

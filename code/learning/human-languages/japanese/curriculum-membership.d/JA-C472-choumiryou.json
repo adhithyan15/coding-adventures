@@ -1,0 +1,11 @@
+{
+  "id": "JA-C472-choumiryou",
+  "pathSegment": "JA-PATH-472-INGR472",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-472-INGR472",
+      "order": 1
+    }
+  ]
+}

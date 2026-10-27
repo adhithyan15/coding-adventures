@@ -27,9 +27,7 @@
 //! this shim can be deleted.
 
 use crate::stack_scan::{
-    __gc_collect, __gc_collect_compacting, __gc_collect_incremental_finish,
-    __gc_collect_incremental_start, __gc_collect_incremental_step, __gc_collect_minor_compacting,
-    __gc_collect_minor_precise, __gc_collect_precise, __gc_safepoint,
+    __gc_collect, __gc_collect_incremental_finish, __gc_collect_incremental_step, anchor_trampoline,
 };
 use crate::{
     __gc_alloc, __gc_alloc_kind, __gc_collection_count, __gc_kind_of, __gc_live_bytes,
@@ -146,20 +144,24 @@ pub unsafe extern "C" fn __twig_gc_collect() {
     let _ = __gc_collect();
 }
 
-/// `__twig_gc_safepoint()` → [`__gc_safepoint`] (return value discarded to match
+/// `__twig_gc_safepoint()` → [`__gc_safepoint`](crate::stack_scan::__gc_safepoint) (return value discarded to match
 /// the original `void` prototype). A throttled collect: runs only past the
 /// adaptive threshold.
 ///
 /// # Safety
 ///
-/// Same contract as [`__gc_safepoint`]: the calling thread must own its stack.
+/// Same contract as [`__gc_safepoint`](crate::stack_scan::__gc_safepoint): the calling thread must own its stack.
+/// It is its own frame-building trampoline (see `stack_scan`, section 2b), not a
+/// call into the `__gc_*` entry: the walk then anchors at the record built for
+/// *this* call, so its return address points straight into the compiled code
+/// that called it, with no wrapper frame in between.
 #[no_mangle]
-#[inline(never)]
+#[unsafe(naked)]
 pub unsafe extern "C" fn __twig_gc_safepoint() {
-    let _ = __gc_safepoint();
+    anchor_trampoline!(__twig_gc_safepoint, crate::stack_scan::safepoint_from)
 }
 
-/// `__twig_gc_collect_precise()` → [`__gc_collect_precise`]. A full collection
+/// `__twig_gc_collect_precise()` → [`__gc_collect_precise`](crate::stack_scan::__gc_collect_precise). A full collection
 /// rooted **precisely** at the caller's stack via the frame-pointer walk (mapped
 /// frames contribute exact reference slots; the rest are conservative). Returns the
 /// freed-object count. This is the `__twig_gc_*` name the native code generators
@@ -168,16 +170,21 @@ pub unsafe extern "C" fn __twig_gc_safepoint() {
 ///
 /// # Safety
 ///
-/// Same contract as [`__gc_collect_precise`]: the calling thread must own its stack.
-/// `#[inline(never)]` keeps it a real frame below the mutator so the walk starts at
-/// the caller.
+/// Same contract as [`__gc_collect_precise`](crate::stack_scan::__gc_collect_precise): the calling thread must own its stack.
+/// It is its own frame-building trampoline (see `stack_scan`, section 2b), not a
+/// call into the `__gc_*` entry: the walk then anchors at the record built for
+/// *this* call, so its return address points straight into the compiled code
+/// that called it, with no wrapper frame in between.
 #[no_mangle]
-#[inline(never)]
+#[unsafe(naked)]
 pub unsafe extern "C" fn __twig_gc_collect_precise() -> i64 {
-    __gc_collect_precise()
+    anchor_trampoline!(
+        __twig_gc_collect_precise,
+        crate::stack_scan::collect_precise_from
+    )
 }
 
-/// `__twig_gc_collect_compacting()` → [`__gc_collect_compacting`]. A full **moving**
+/// `__twig_gc_collect_compacting()` → [`__gc_collect_compacting`](crate::stack_scan::__gc_collect_compacting). A full **moving**
 /// collection rooted precisely at the caller's stack (spec AOT00-T3 §5): the movable
 /// survivors are evacuated into an arena and every pointer that named them — including the
 /// caller's precise root slots — is rewritten to the new location. Returns the
@@ -185,23 +192,28 @@ pub unsafe extern "C" fn __twig_gc_collect_precise() -> i64 {
 /// `gc_collect_compacting` builtin, letting a compiled program trigger a compaction. With
 /// no stack maps registered (or only conservatively-reachable objects, as today's kind-0
 /// frontend allocations) nothing is movable and it degrades to exactly
-/// [`__gc_collect_precise`], so it is always safe to call.
+/// [`__gc_collect_precise`](crate::stack_scan::__gc_collect_precise), so it is always safe to call.
 ///
 /// # Safety
 ///
-/// Same contract as [`__gc_collect_compacting`]: the calling thread must own its stack.
-/// `#[inline(never)]` keeps it a real frame below the mutator so the walk starts at the
-/// caller.
+/// Same contract as [`__gc_collect_compacting`](crate::stack_scan::__gc_collect_compacting): the calling thread must own its stack.
+/// It is its own frame-building trampoline (see `stack_scan`, section 2b), not a
+/// call into the `__gc_*` entry: the walk then anchors at the record built for
+/// *this* call, so its return address points straight into the compiled code
+/// that called it, with no wrapper frame in between.
 #[no_mangle]
-#[inline(never)]
+#[unsafe(naked)]
 pub unsafe extern "C" fn __twig_gc_collect_compacting() -> i64 {
-    __gc_collect_compacting()
+    anchor_trampoline!(
+        __twig_gc_collect_compacting,
+        crate::stack_scan::collect_compacting_from
+    )
 }
 
 /// `__twig_gc_set_auto_minor(on)` → [`__gc_set_auto_minor`]. Attest that every
 /// reference store this embedder's compiled output performs is covered by
 /// `__gc_write_barrier` — see that function's own doc for the full soundness
-/// argument, and [`__gc_collect_minor_precise`]'s doc for why this attestation is
+/// argument, and [`__gc_collect_minor_precise`](crate::stack_scan::__gc_collect_minor_precise)'s doc for why this attestation is
 /// now enforced (not just advisory) at every minor-collection entry point, direct or
 /// automatic. Test-only seam for now, added alongside `__twig_gc_collect_minor_precise`
 /// so a hand-built end-to-end test can attest before driving a real minor collection.
@@ -215,14 +227,14 @@ pub extern "C" fn __twig_gc_set_auto_minor(on: i64) {
     __gc_set_auto_minor(on);
 }
 
-/// `__twig_gc_collect_minor_precise()` → [`__gc_collect_minor_precise`]. A **minor**
+/// `__twig_gc_collect_minor_precise()` → [`__gc_collect_minor_precise`](crate::stack_scan::__gc_collect_minor_precise). A **minor**
 /// (young-generation-only) collection rooted precisely at the caller's stack
 /// (AOT00-T8) — the generational analogue of [`__twig_gc_collect_precise`]. Returns
 /// the freed-object count.
 ///
 /// **Requires [`__gc_set_auto_minor`] attestation, same as the automatic
 /// `should_collect_minor`/`auto_minor` policy path (`__gc_safepoint`'s three-way
-/// dispatch)** — [`__gc_collect_minor_precise`]'s own doc explains why this is
+/// dispatch)** — [`__gc_collect_minor_precise`](crate::stack_scan::__gc_collect_minor_precise)'s own doc explains why this is
 /// enforced at that single shared entry point rather than left to each caller.
 /// Unattested, this alias is a safe no-op (collects nothing, returns `0`). Test-only
 /// seam for now (`iir-to-llvm`'s `gc_collect_minor_precise` builtin, AOT00-T8
@@ -232,22 +244,29 @@ pub extern "C" fn __twig_gc_set_auto_minor(on: i64) {
 ///
 /// # Safety
 ///
-/// Same contract as [`__gc_collect_minor_precise`]: the calling thread must own its
+/// Same contract as [`__gc_collect_minor_precise`](crate::stack_scan::__gc_collect_minor_precise): the calling thread must own its
 /// stack; it must not run while another thread mutates the same heap.
+/// It is its own frame-building trampoline (see `stack_scan`, section 2b), not a
+/// call into the `__gc_*` entry: the walk then anchors at the record built for
+/// *this* call, so its return address points straight into the compiled code
+/// that called it, with no wrapper frame in between.
 #[no_mangle]
-#[inline(never)]
+#[unsafe(naked)]
 pub unsafe extern "C" fn __twig_gc_collect_minor_precise() -> i64 {
-    unsafe { __gc_collect_minor_precise() }
+    anchor_trampoline!(
+        __twig_gc_collect_minor_precise,
+        crate::stack_scan::collect_minor_precise_from
+    )
 }
 
-/// `__twig_gc_collect_minor_compacting()` → [`__gc_collect_minor_compacting`]. A **minor**
+/// `__twig_gc_collect_minor_compacting()` → [`__gc_collect_minor_compacting`](crate::stack_scan::__gc_collect_minor_compacting). A **minor**
 /// (young-generation-only) collection rooted precisely at the caller's stack that also
 /// **compacts** — evacuates its young survivors into a compact arena instead of sweeping
 /// them in place (AOT00-T9 §5, PR-5). Returns the freed-object count.
 ///
 /// **Requires [`__gc_set_auto_minor`] attestation, same as
 /// [`__twig_gc_collect_minor_precise`] — and for a strictly stronger reason**, per
-/// [`__gc_collect_minor_compacting`]'s own doc (a moving minor cycle's barrier-fidelity
+/// [`__gc_collect_minor_compacting`](crate::stack_scan::__gc_collect_minor_compacting)'s own doc (a moving minor cycle's barrier-fidelity
 /// obligation is stricter than a non-moving one's). Unattested, this alias is a safe
 /// no-op (collects nothing, returns `0`). Test-only seam for now, added alongside its
 /// sibling to let an end-to-end test drive a real moving-minor collection (after
@@ -256,12 +275,19 @@ pub unsafe extern "C" fn __twig_gc_collect_minor_precise() -> i64 {
 ///
 /// # Safety
 ///
-/// Same contract as [`__gc_collect_minor_compacting`]: the calling thread must own its
+/// Same contract as [`__gc_collect_minor_compacting`](crate::stack_scan::__gc_collect_minor_compacting): the calling thread must own its
 /// stack; it must not run while another thread mutates the same heap.
+/// It is its own frame-building trampoline (see `stack_scan`, section 2b), not a
+/// call into the `__gc_*` entry: the walk then anchors at the record built for
+/// *this* call, so its return address points straight into the compiled code
+/// that called it, with no wrapper frame in between.
 #[no_mangle]
-#[inline(never)]
+#[unsafe(naked)]
 pub unsafe extern "C" fn __twig_gc_collect_minor_compacting() -> i64 {
-    unsafe { __gc_collect_minor_compacting() }
+    anchor_trampoline!(
+        __twig_gc_collect_minor_compacting,
+        crate::stack_scan::collect_minor_compacting_from
+    )
 }
 
 /// `__twig_gc_kind_of(ptr)` → [`__gc_kind_of`]. Returns the kind id of the live heap
@@ -282,18 +308,24 @@ pub unsafe extern "C" fn __twig_gc_kind_of(ptr: i64) -> i64 {
     unsafe { __gc_kind_of(ptr) }
 }
 
-/// `__twig_gc_collect_incremental_start()` → [`__gc_collect_incremental_start`]. Begins a
+/// `__twig_gc_collect_incremental_start()` → [`__gc_collect_incremental_start`](crate::stack_scan::__gc_collect_incremental_start). Begins a
 /// bounded-pause incremental collection rooted precisely at the caller's stack (spec
 /// AOT00-T4 §6). The `__twig_gc_*` name a native code generator emits for the
-/// `gc_collect_incremental_start` builtin. `#[inline(never)]` keeps it a real frame below the
-/// mutator so the root walk starts at the caller.
+/// `gc_collect_incremental_start` builtin.
 ///
 /// # Safety
-/// Same contract as [`__gc_collect_incremental_start`]: the calling thread owns its stack.
+/// Same contract as [`__gc_collect_incremental_start`](crate::stack_scan::__gc_collect_incremental_start): the calling thread owns its stack.
+/// It is its own frame-building trampoline (see `stack_scan`, section 2b), not a
+/// call into the `__gc_*` entry: the walk then anchors at the record built for
+/// *this* call, so its return address points straight into the compiled code
+/// that called it, with no wrapper frame in between.
 #[no_mangle]
-#[inline(never)]
+#[unsafe(naked)]
 pub unsafe extern "C" fn __twig_gc_collect_incremental_start() {
-    __gc_collect_incremental_start()
+    anchor_trampoline!(
+        __twig_gc_collect_incremental_start,
+        crate::stack_scan::collect_incremental_start_from
+    )
 }
 
 /// `__twig_gc_collect_incremental_step(budget)` → [`__gc_collect_incremental_step`]. Advances

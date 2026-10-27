@@ -1,0 +1,11 @@
+{
+  "id": "JA-C391-ippoutsuukou",
+  "pathSegment": "JA-PATH-391-OUDAN391",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-391-OUDAN391",
+      "order": 2
+    }
+  ]
+}

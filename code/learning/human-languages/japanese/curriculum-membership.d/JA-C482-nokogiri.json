@@ -1,0 +1,11 @@
+{
+  "id": "JA-C482-nokogiri",
+  "pathSegment": "JA-PATH-482-NAIL482",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-482-NAIL482",
+      "order": 1
+    }
+  ]
+}

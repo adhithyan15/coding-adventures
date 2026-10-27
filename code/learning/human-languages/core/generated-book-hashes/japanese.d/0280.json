@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:47dc2fca4f02821e",
+  "lessonIds": [
+    "JA-C280-kiji",
+    "JA-C280-noseru",
+    "JA-C280-dekigoto",
+    "JA-C280-kisha",
+    "JA-C280-kubaru"
+  ],
+  "tex": "japanese/book/chapters/ch280-what-the-news-said.tex"
+}

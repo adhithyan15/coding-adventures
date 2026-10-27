@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C426-fuan",
+    "language": "japanese",
+    "chapter": 426,
+    "sequence": 25010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1754295430d6def5"
+  },
+  "findings": []
+}

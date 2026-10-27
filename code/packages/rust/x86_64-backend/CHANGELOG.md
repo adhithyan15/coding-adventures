@@ -1,5 +1,14 @@
 # Changelog — `x86_64-backend`
 
+## Unreleased — a failed narrowing raises `Trap.ConvRange`
+
+### Fixed
+
+- `real_to_int_trunc` / `real_to_int_floor` call `__twig_trap(4)` when the
+  `cvtsi2sd` + `ucomisd` round trip fails, so a NaN, ±∞ or out-of-range value
+  stops with `trap: Trap.ConvRange` after flushing stdout ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). It used
+  to execute a bare `ud2` (SIGILL), with no LANG83 kind and unflushed output.
+
 ## Unreleased — f64 negation flips the sign bit
 
 ### Fixed

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C452-buchou",
+    "language": "japanese",
+    "chapter": 452,
+    "sequence": 26340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:338638e26557a916"
+  },
+  "findings": []
+}

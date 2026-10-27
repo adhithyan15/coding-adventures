@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:2816e4abe5a6201c",
+  "lessonIds": [
+    "JA-C446-kushami",
+    "JA-C446-hanamizu",
+    "JA-C446-samuke",
+    "JA-C446-ugai",
+    "JA-C446-taichou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch446.txt",
+  "json": "japanese/narration/ch446.json",
+  "textHash": "fnv1a64:6ade6bf9f6461ce5",
+  "jsonHash": "fnv1a64:91e711208e60c539",
+  "findings": []
+}

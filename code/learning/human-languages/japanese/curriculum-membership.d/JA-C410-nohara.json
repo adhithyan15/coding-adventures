@@ -1,0 +1,11 @@
+{
+  "id": "JA-C410-nohara",
+  "pathSegment": "JA-PATH-410-JIMOTO410",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-410-JIMOTO410",
+      "order": 3
+    }
+  ]
+}

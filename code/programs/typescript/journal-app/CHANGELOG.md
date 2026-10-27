@@ -2,6 +2,17 @@
 
 All notable changes to the Journal App will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- No longer released. `release-journal.yml` now releases the Mosaic Journal
+  (`code/programs/mosaic/journal-app`, J5e of #14416), so this app's Electron
+  build and its `journal-v*` tag-push trigger are gone. That release never
+  ran: no `journal-v*` tag was ever pushed. The app's code, its
+  `electron-builder.yml` and its local `electron:build` script are unchanged
+  and still work. Deleting the app is a separate decision.
+
 ## [0.1.0] - 2026-04-02
 
 ### Added

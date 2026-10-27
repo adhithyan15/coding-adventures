@@ -1,0 +1,19 @@
+{
+  "chapter": 428,
+  "title": "Excited and Moved",
+  "label": "ch:ja-excited-and-moved",
+  "canDo": "I can say what excited or moved me.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C428-harikiru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 428: I can say what excited or moved me.",
+    "assesses": [
+      "JA-LEX-C428-JOY428-03",
+      "JA-LEX-C428-JOY428-04",
+      "JA-LEX-C428-JOY428-05"
+    ]
+  }
+}

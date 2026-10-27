@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C268-ochitsuku",
+    "language": "japanese",
+    "chapter": 268,
+    "sequence": 16310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb78356ba9e2c235"
+  },
+  "findings": []
+}

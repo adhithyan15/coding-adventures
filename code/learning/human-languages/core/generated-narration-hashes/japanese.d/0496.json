@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:287d57ca77be85cb",
+  "lessonIds": [
+    "JA-C496-yawarakai",
+    "JA-C496-shiokarai",
+    "JA-C496-nama",
+    "JA-C496-enbun",
+    "JA-C496-shokuzai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch496.txt",
+  "json": "japanese/narration/ch496.json",
+  "textHash": "fnv1a64:3ba6fd8545564b14",
+  "jsonHash": "fnv1a64:d8200ac39c07cf9a",
+  "findings": []
+}

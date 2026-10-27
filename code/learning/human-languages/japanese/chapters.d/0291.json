@@ -1,0 +1,21 @@
+{
+  "chapter": 291,
+  "title": "Saying Goodbye",
+  "label": "ch:ja-saying-goodbye",
+  "canDo": "I can say who died and how the family mourned.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-R291-review-286-291",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: I can say who died and how the family mourned.",
+    "assesses": [
+      "JA-LEX-C291-SOUSHIKI291-01",
+      "JA-LEX-C291-SOUSHIKI291-02",
+      "JA-LEX-C291-SOUSHIKI291-03",
+      "JA-LEX-C291-SOUSHIKI291-04",
+      "JA-LEX-C291-SOUSHIKI291-05"
+    ]
+  }
+}

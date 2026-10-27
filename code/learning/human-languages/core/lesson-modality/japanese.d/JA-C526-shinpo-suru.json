@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C526-shinpo-suru",
+    "language": "japanese",
+    "chapter": 526,
+    "sequence": 30370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ba2efd84ab38f69"
+  },
+  "findings": []
+}

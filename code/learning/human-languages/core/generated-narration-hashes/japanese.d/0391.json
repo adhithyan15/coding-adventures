@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:c89e6aedf931edf6",
+  "lessonIds": [
+    "JA-C391-oudanhodou",
+    "JA-C391-hokousha",
+    "JA-C391-ippoutsuukou",
+    "JA-C391-tachidomaru",
+    "JA-C391-saegiru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch391.txt",
+  "json": "japanese/narration/ch391.json",
+  "textHash": "fnv1a64:6bccef6c9a657312",
+  "jsonHash": "fnv1a64:38f0413708422dbe",
+  "findings": []
+}

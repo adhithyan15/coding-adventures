@@ -1,0 +1,800 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 447,
+  "title": "Worn Out",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3a1651239f1023d1",
+  "lessons": [
+    {
+      "id": "JA-C447-memai",
+      "sequence": 26080,
+      "title": "めまい (memai) — dizziness",
+      "headword": "めまい",
+      "romanization": "memai",
+      "gloss": "dizziness",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:949a075f8906f3d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for gargling, then the Japanese for physical condition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: めまい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めまい — memai — \"dizziness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あさ おきた とき、めまいが しました。 — asa okita toki, memai ga shimashita — \"When I got up this morning, I felt dizzy.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めまい (memai) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict marks it as usually written in kana and lists five kanji spellings for it, so no single spelling shows where it comes from (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "memai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *memai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "memai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *memai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asa okita toki, memai ga shimashita — When I got up this morning, I felt dizzy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asa okita toki, memai ga shimashita* — When I got up this morning, I felt dizzy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for gargling, then the Japanese for physical condition, then say memai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for gargling, then the Japanese for physical condition, then say *memai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does めまい (memai) mean? (\"Dizziness\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C447-memai-type",
+              "prompt": "Say the Japanese for 'dizziness'.",
+              "assesses": [
+                "JA-LEX-C447-TIRED447-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "めまい",
+                "memai"
+              ],
+              "feedback": {
+                "correct": "Right: めまい (memai) is 'dizziness'.",
+                "incorrect": "'Dizziness' is めまい (memai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C447-furafura",
+      "sequence": 26090,
+      "title": "ふらふら (furafura) — unsteadily; dizzily",
+      "headword": "ふらふら",
+      "romanization": "furafura",
+      "gloss": "unsteadily; dizzily",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d22edaa1220d9e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for physical condition, then the Japanese for dizziness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふらふら",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふらふら — furafura — \"unsteadily; dizzily\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ねつで ふらふらします。 — netsu de furafura shimasu — \"The fever makes me unsteady on my feet.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふらふら (furafura) is a native Japanese mimetic word, inherited rather than borrowed from Chinese, and its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "furafura",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *furafura*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "furafura, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *furafura*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "netsu de furafura shimasu — The fever makes me unsteady on my feet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *netsu de furafura shimasu* — The fever makes me unsteady on my feet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for physical condition, then the Japanese for dizziness, then say furafura again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for physical condition, then the Japanese for dizziness, then say *furafura* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふらふら (furafura) mean? (\"Unsteadily; dizzily\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C447-furafura-type",
+              "prompt": "Say the Japanese for 'unsteadily'.",
+              "assesses": [
+                "JA-LEX-C447-TIRED447-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふらふら",
+                "furafura"
+              ],
+              "feedback": {
+                "correct": "Right: ふらふら (furafura) is 'unsteadily; dizzily'.",
+                "incorrect": "'Unsteadily' is ふらふら (furafura)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C447-darui",
+      "sequence": 26100,
+      "title": "だるい (darui) — sluggish; listless",
+      "headword": "だるい",
+      "romanization": "darui",
+      "gloss": "sluggish; listless",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:269892050430e234",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for dizziness, then the Japanese for unsteadily."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: だるい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だるい — darui — \"sluggish; listless\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かぜで からだが だるいです。 — kaze de karada ga darui desu — \"My cold makes my body feel sluggish.\""
+            },
+            {
+              "kind": "speech",
+              "text": "An i-adjective."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だるい (darui) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darui",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darui*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darui, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darui*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaze de karada ga darui desu — My cold makes my body feel sluggish.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaze de karada ga darui desu* — My cold makes my body feel sluggish.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for dizziness, then the Japanese for unsteadily, then say darui again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for dizziness, then the Japanese for unsteadily, then say *darui* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does だるい (darui) mean? (\"Sluggish; listless\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C447-darui-type",
+              "prompt": "Say the Japanese for 'sluggish'.",
+              "assesses": [
+                "JA-LEX-C447-TIRED447-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "だるい",
+                "darui"
+              ],
+              "feedback": {
+                "correct": "Right: だるい (darui) is 'sluggish; listless'.",
+                "incorrect": "'Sluggish' is だるい (darui)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C447-guttari",
+      "sequence": 26110,
+      "title": "ぐったり (guttari) — worn out; limp",
+      "headword": "ぐったり",
+      "romanization": "guttari",
+      "gloss": "worn out; limp",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b57a97dca6522fb5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for unsteadily, then the Japanese for sluggish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぐったり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぐったり — guttari — \"worn out; limp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "なつに ながく あるいて、ぐったりしました。 — natsu ni nagaku aruite, guttari shimashita — \"I walked a long way in summer and was worn out.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぐったり (guttari) is a native Japanese mimetic word, inherited rather than borrowed from Chinese, and its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guttari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guttari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guttari, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guttari*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natsu ni nagaku aruite, guttari shimashita — I walked a long way in summer and was worn out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natsu ni nagaku aruite, guttari shimashita* — I walked a long way in summer and was worn out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for unsteadily, then the Japanese for sluggish, then say guttari again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for unsteadily, then the Japanese for sluggish, then say *guttari* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぐったり (guttari) mean? (\"Worn out; limp\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C447-guttari-type",
+              "prompt": "Say the Japanese for 'worn out'.",
+              "assesses": [
+                "JA-LEX-C447-TIRED447-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぐったり",
+                "guttari"
+              ],
+              "feedback": {
+                "correct": "Right: ぐったり (guttari) is 'worn out; limp'.",
+                "incorrect": "'Worn out' is ぐったり (guttari)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C447-nebusoku",
+      "sequence": 26120,
+      "title": "ねぶそく (nebusoku) — lack of sleep",
+      "headword": "ねぶそく",
+      "romanization": "nebusoku",
+      "gloss": "lack of sleep",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d1a59ea69e4144d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for sluggish, then the Japanese for worn out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ねぶそく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねぶそく — nebusoku — \"lack of sleep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ねぶそくで あたまが いたいです。 — nebusoku de atama ga itai desu — \"My head aches from lack of sleep.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねぶそく (nebusoku) is a mixed word: native ne, \"sleeping\", from neru, joined to Sino-Japanese busoku, \"shortage\", from bu, \"negative\" (Middle Chinese pjuw), and soku, \"be sufficient\" (tsjowk), readings borrowed from Chinese (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nebusoku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nebusoku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nebusoku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nebusoku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nebusoku de atama ga itai desu — My head aches from lack of sleep.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nebusoku de atama ga itai desu* — My head aches from lack of sleep.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for sluggish, then the Japanese for worn out, then say nebusoku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for sluggish, then the Japanese for worn out, then say *nebusoku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ねぶそく (nebusoku) mean? (\"Lack of sleep\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C447-nebusoku-type",
+              "prompt": "Say the Japanese for 'lack of sleep'.",
+              "assesses": [
+                "JA-LEX-C447-TIRED447-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ねぶそく",
+                "nebusoku"
+              ],
+              "feedback": {
+                "correct": "Right: ねぶそく (nebusoku) is 'lack of sleep'.",
+                "incorrect": "'Lack of sleep' is ねぶそく (nebusoku)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

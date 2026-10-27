@@ -146,8 +146,11 @@ a link into a location the caller did not name.
 
 Fails, with a message naming `sourceApp`, unless all of these hold in order:
 
-1. Nothing exists at `S.corrupt` (a dangling symlink counts). A `.corrupt`
-   sibling means the new build rejected a compatible file. This is checked
+1. Nothing exists at any quarantine name: `S.corrupt`, `S.corrupt.1` …
+   `S.corrupt.9` (a dangling symlink counts). A host moves a rejected file to
+   the first free one of these ten and never replaces an earlier quarantine,
+   so a refusal on a machine that already holds `.corrupt` lands in
+   `.corrupt.1`. Any of them means the new build rejected a compatible file. This is checked
    first because it is the most specific diagnosis: a host that quarantined
    the fixture and then wrote an empty state, or nothing, would otherwise be
    reported as a missing value or a missing file.
@@ -164,7 +167,8 @@ Fails, with a message naming `sourceApp`, unless all of these hold in order:
 
 Used after writing invalid bytes to `S`, copying them to `P` and relaunching:
 
-1. `S.corrupt` exists, is a regular file and not a symlink.
+1. `S.corrupt` exists, is a regular file and not a symlink. A release runner
+   starts with no state, so the first free quarantine name is `.corrupt`.
 2. Its bytes equal `P`'s exactly.
 3. If `S` exists, its bytes differ from `P`'s. The host must *move* the rejected
    file aside; a copy left at the live path is quarantined again on every
@@ -179,7 +183,7 @@ error messages.
 | Symptom | Meaning |
 | --- | --- |
 | state does not exist | the host wrote elsewhere, or deleted the file |
-| `.corrupt` present on `verify` | the new build rejected a compatible file — the upgrade lost data |
+| `.corrupt` or `.corrupt.1`…`.9` present on `verify` | the new build rejected a compatible file — the upgrade lost data |
 | schema mismatch | the host or adapter renamed the payload |
 | version not accepted | an unbumped payload change, or an unexplained rewrite |
 | invalid bytes | the envelope is malformed (not a 0..255 integer list) |

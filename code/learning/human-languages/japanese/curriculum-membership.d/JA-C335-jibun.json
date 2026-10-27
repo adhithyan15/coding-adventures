@@ -1,0 +1,11 @@
+{
+  "id": "JA-C335-jibun",
+  "pathSegment": "JA-PATH-335-DANTAI335",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-335-DANTAI335",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:53b79d6c56a8f4ee",
+  "lessonIds": [
+    "JA-C291-nakunaru",
+    "JA-C291-soushiki",
+    "JA-C291-kanashimu",
+    "JA-C291-haka",
+    "JA-C291-inoru",
+    "JA-R291-review-286-291"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch291.txt",
+  "json": "japanese/narration/ch291.json",
+  "textHash": "fnv1a64:2a7a77a1d2e8f9dd",
+  "jsonHash": "fnv1a64:b9aaac25d2e686cc",
+  "findings": []
+}

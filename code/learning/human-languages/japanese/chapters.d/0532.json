@@ -1,0 +1,19 @@
+{
+  "chapter": 532,
+  "title": "Limits and Advantages",
+  "label": "ch:ja-limits-and-advantages",
+  "canDo": "I can talk about limits, extras and who has the advantage.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C532-igai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can talk about limits, extras and who has the advantage.",
+    "assesses": [
+      "JA-LEX-C532-LIMIT532-03",
+      "JA-LEX-C532-LIMIT532-04",
+      "JA-LEX-C532-LIMIT532-05"
+    ]
+  }
+}

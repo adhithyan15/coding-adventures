@@ -20,6 +20,12 @@ persistent bits are backed by D flip-flops.
 BRK follows the repository simulator convention: it updates the architectural
 stack state and halts instead of dispatching through the IRQ vector.
 
+The HALT latch's `StateRegister` Q output is the sole architectural halt
+authority. The private host Boolean is only a synchronized compatibility
+observer: changing it cannot affect snapshots, execution, interrupts, or
+transaction rollback. Reset, load, restore, and BRK clock HALT through the
+same reviewed DFF path.
+
 ## Quick start
 
 ```rust
@@ -55,12 +61,13 @@ The completion suite compares the complete gate and functional state for every
 possible opcode byte: all 151 official instructions must agree and all 105
 undefined bytes must return the same typed error without changing state. It
 also covers transactional lifecycle failures, exact topology, multi-instruction
-workloads, and memory-mapped I/O.
+workloads, memory-mapped I/O, deliberate two-way HALT-observer divergence, and
+compiler-checked hostile HALT-authority rewrites.
 
-- 81 unit tests
-- 5 integration tests
+- 83 unit tests
+- 7 integration tests
 - 7 documentation tests
-- 96.60% core line coverage (994/1,029)
+- 98.75% package-source line coverage (1,834/1,857)
 - formatting, Clippy with warnings denied, and rustdoc with warnings denied
 
 ## Source layout

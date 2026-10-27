@@ -1,0 +1,11 @@
+{
+  "id": "JA-C338-fuyasu",
+  "pathSegment": "JA-PATH-338-MUDA338",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-338-MUDA338",
+      "order": 2
+    }
+  ]
+}

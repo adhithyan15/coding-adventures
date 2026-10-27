@@ -1,0 +1,11 @@
+{
+  "id": "JA-C434-kinodoku",
+  "pathSegment": "JA-PATH-434-THANK434",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-434-THANK434",
+      "order": 2
+    }
+  ]
+}

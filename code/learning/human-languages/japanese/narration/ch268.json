@@ -1,0 +1,814 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 268,
+  "title": "Keeping Calm",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0450617047c403ce",
+  "lessons": [
+    {
+      "id": "JA-C268-ochitsuku",
+      "sequence": 16310,
+      "title": "おちつく (ochitsuku) — to calm down; to keep calm",
+      "headword": "おちつく",
+      "romanization": "ochitsuku",
+      "gloss": "to calm down; to keep calm",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb78356ba9e2c235",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a cry, then the Japanese for with relief."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おちつく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おちつく — ochitsuku — \"to calm down; to keep calm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じこが あったら、おちついて ください。 — jiko ga attara, ochitsuite kudasai — \"If there is an accident, please keep calm.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite おちつきます, ochitsukimasu; a godan verb. Past (polite): ははが おちつきました。, haha ga ochitsukimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おちつく (ochitsuku) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from ochi, \"falling\" (from ochiru), and tsuku, \"to settle\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ochitsuku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ochitsuku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ochitsuku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ochitsuku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiko ga attara, ochitsuite kudasai — If there is an accident, please keep calm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiko ga attara, ochitsuite kudasai* — If there is an accident, please keep calm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a cry, then the Japanese for with relief, then say ochitsuku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a cry, then the Japanese for with relief, then say *ochitsuku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おちつく (ochitsuku) mean? (\"To calm down; to keep calm\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C268-ochitsuku-type",
+              "prompt": "Say the Japanese for 'to calm down'.",
+              "assesses": [
+                "JA-LEX-C268-KYUUJO268-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おちつく",
+                "ochitsuku"
+              ],
+              "feedback": {
+                "correct": "Right: おちつく (ochitsuku) is 'to calm down; to keep calm'.",
+                "incorrect": "'To calm down' is おちつく (ochitsuku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C268-kyuujo",
+      "sequence": 16320,
+      "title": "きゅうじょ (kyūjo) — a rescue; relief",
+      "headword": "きゅうじょ",
+      "romanization": "kyūjo",
+      "gloss": "a rescue; relief",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22abda2766554a26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for with relief, then the Japanese for to calm down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きゅうじょ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きゅうじょ — kyūjo — \"a rescue; relief\"."
+            },
+            {
+              "kind": "speech",
+              "text": "みんなで きゅうじょを まっていました。 — minna de kyūjo o matte imashita — \"We all waited to be rescued.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きゅうじょ (kyūjo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kyū, \"rescue\" (Middle Chinese kjuwH) and jo, \"help\" (dzrjoH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyūjo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyūjo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyūjo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyūjo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "minna de kyūjo o matte imashita — We all waited to be rescued.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *minna de kyūjo o matte imashita* — We all waited to be rescued.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for with relief, then the Japanese for to calm down, then say kyūjo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for with relief, then the Japanese for to calm down, then say *kyūjo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きゅうじょ (kyūjo) mean? (\"A rescue; relief\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C268-kyuujo-type",
+              "prompt": "Say the Japanese for 'a rescue'.",
+              "assesses": [
+                "JA-LEX-C268-KYUUJO268-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きゅうじょ",
+                "kyūjo",
+                "kyuujo",
+                "kyujo"
+              ],
+              "feedback": {
+                "correct": "Right: きゅうじょ (kyūjo) is 'a rescue; relief'.",
+                "incorrect": "'A rescue' is きゅうじょ (kyūjo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C268-ikinokoru",
+      "sequence": 16330,
+      "title": "いきのこる (ikinokoru) — to survive; to come through",
+      "headword": "いきのこる",
+      "romanization": "ikinokoru",
+      "gloss": "to survive; to come through",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:026183473dd33f2e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to calm down, then the Japanese for a rescue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いきのこる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いきのこる — ikinokoru — \"to survive; to come through\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じこで ふたりが いきのこりました。 — jiko de futari ga ikinokorimashita — \"Two people came through the accident alive.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite いきのこります, ikinokorimasu; a godan verb. Past (polite): いぬが いきのこりました。, inu ga ikinokorimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いきのこる (ikinokoru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from iki, \"living\" (from ikiru), and nokoru, \"to remain\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikinokoru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikinokoru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikinokoru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikinokoru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiko de futari ga ikinokorimashita — Two people came through the accident alive.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiko de futari ga ikinokorimashita* — Two people came through the accident alive.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to calm down, then the Japanese for a rescue, then say ikinokoru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to calm down, then the Japanese for a rescue, then say *ikinokoru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いきのこる (ikinokoru) mean? (\"To survive; to come through\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C268-ikinokoru-type",
+              "prompt": "Say the Japanese for 'to survive'.",
+              "assesses": [
+                "JA-LEX-C268-KYUUJO268-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いきのこる",
+                "ikinokoru"
+              ],
+              "feedback": {
+                "correct": "Right: いきのこる (ikinokoru) is 'to survive; to come through'.",
+                "incorrect": "'To survive' is いきのこる (ikinokoru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C268-tasukeau",
+      "sequence": 16340,
+      "title": "たすけあう (tasukeau) — to help each other",
+      "headword": "たすけあう",
+      "romanization": "tasukeau",
+      "gloss": "to help each other",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f92cecad1a6ecc0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a rescue, then the Japanese for to survive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たすけあう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たすけあう — tasukeau — \"to help each other\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こまった とき、みんなで たすけあいます。 — komatta toki, minna de tasukeaimasu — \"In hard times we all help one another.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite たすけあいます, tasukeaimasu; a godan verb. Past (polite): みんなが たすけあいました。, minna ga tasukeaimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たすけあう (tasukeau) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from tasuke, \"helping\" (from tasukeru), and au, \"to do together\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasukeau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasukeau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasukeau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasukeau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "komatta toki, minna de tasukeaimasu — In hard times we all help one another.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *komatta toki, minna de tasukeaimasu* — In hard times we all help one another.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a rescue, then the Japanese for to survive, then say tasukeau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a rescue, then the Japanese for to survive, then say *tasukeau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たすけあう (tasukeau) mean? (\"To help each other\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C268-tasukeau-type",
+              "prompt": "Say the Japanese for 'to help each other'.",
+              "assesses": [
+                "JA-LEX-C268-KYUUJO268-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たすけあう",
+                "tasukeau"
+              ],
+              "feedback": {
+                "correct": "Right: たすけあう (tasukeau) is 'to help each other'.",
+                "incorrect": "'To help each other' is たすけあう (tasukeau)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C268-anzen",
+      "sequence": 16350,
+      "title": "あんぜん (anzen) — safe; safety",
+      "headword": "あんぜん",
+      "romanization": "anzen",
+      "gloss": "safe; safety",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d13df0f0497fe9fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to survive, then the Japanese for to help each other."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あんぜん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あんぜん — anzen — \"safe; safety\"."
+            },
+            {
+              "kind": "speech",
+              "text": "うちの なかは あんぜんでした。 — uchi no naka wa anzen deshita — \"It was safe inside the house.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あんぜん (anzen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are an, \"quiet\" (Middle Chinese 'an) and zen, \"whole\" (dzjwen) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anzen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anzen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anzen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anzen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uchi no naka wa anzen deshita — It was safe inside the house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uchi no naka wa anzen deshita* — It was safe inside the house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to survive, then the Japanese for to help each other, then say anzen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to survive, then the Japanese for to help each other, then say *anzen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あんぜん (anzen) mean? (\"Safe; safety\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C268-anzen-type",
+              "prompt": "Say the Japanese for 'safe'.",
+              "assesses": [
+                "JA-LEX-C268-KYUUJO268-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あんぜん",
+                "anzen"
+              ],
+              "feedback": {
+                "correct": "Right: あんぜん (anzen) is 'safe; safety'.",
+                "incorrect": "'Safe' is あんぜん (anzen)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

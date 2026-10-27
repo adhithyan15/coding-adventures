@@ -1,0 +1,11 @@
+{
+  "id": "JA-C264-houtai",
+  "pathSegment": "JA-PATH-264-KOROBU264",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-264-KOROBU264",
+      "order": 2
+    }
+  ]
+}

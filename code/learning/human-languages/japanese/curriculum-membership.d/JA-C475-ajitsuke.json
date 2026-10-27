@@ -1,0 +1,11 @@
+{
+  "id": "JA-C475-ajitsuke",
+  "pathSegment": "JA-PATH-475-TABLE475",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-475-TABLE475",
+      "order": 4
+    }
+  ]
+}

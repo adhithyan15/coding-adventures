@@ -1,0 +1,11 @@
+{
+  "id": "JA-C384-chakuriku",
+  "pathSegment": "JA-PATH-384-HIKOUJOU384",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-384-HIKOUJOU384",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C456-yatou",
+  "pathSegment": "JA-PATH-456-PAY456",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-456-PAY456",
+      "order": 3
+    }
+  ]
+}

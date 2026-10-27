@@ -1701,6 +1701,18 @@ trust, revocation, I/O, HTTP, OAuth transport, or any network effect. Reviewed
 fixed-output HMAC-SHA-256 and HMAC-SHA-384 remain prerequisites, and concrete
 HTTPS remains unavailable.
 
+The Rust `hmac` verifier now consumes that repository-owned comparison
+primitive instead of the external `subtle` crate. Equal-length tag checks pass
+through the audited compiler-preserved full scan, while public length
+mismatches fail directly. The public verifier API and tag-generation outputs
+are unchanged, and this slice performs no credential access, signing, audit,
+or external effect. It does not make generic HMAC fixed-memory, add
+HMAC-SHA-384, review hash selection for TLS, or implement HKDF, a TLS key
+schedule, record protection, handshake processing, certificate validation,
+trust, revocation, I/O, HTTP, OAuth transport, or any network effect. Reviewed
+fixed-output HMAC-SHA-256 and HMAC-SHA-384 remain prerequisites, and concrete
+HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,

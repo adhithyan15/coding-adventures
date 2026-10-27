@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "Getting Ahead",
+  "label": "ch:ja-getting-ahead",
+  "canDo": "I can talk about success, failure and getting through.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C516-idomu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can talk about success, failure and getting through.",
+    "assesses": [
+      "JA-LEX-C516-AHEAD516-03",
+      "JA-LEX-C516-AHEAD516-04",
+      "JA-LEX-C516-AHEAD516-05"
+    ]
+  }
+}

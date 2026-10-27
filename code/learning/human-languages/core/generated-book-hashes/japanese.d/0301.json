@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:278e634f42e2795f",
+  "lessonIds": [
+    "JA-C301-takara",
+    "JA-C301-horu",
+    "JA-C301-umeru",
+    "JA-C301-binbou",
+    "JA-C301-yokubari",
+    "JA-R301-review-297-301"
+  ],
+  "tex": "japanese/book/chapters/ch301-buried-treasure.tex"
+}

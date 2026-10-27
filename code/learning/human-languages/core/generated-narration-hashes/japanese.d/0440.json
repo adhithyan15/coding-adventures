@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:a643498f732c76bd",
+  "lessonIds": [
+    "JA-C440-shinchou",
+    "JA-C440-ukkari",
+    "JA-C440-darashinai",
+    "JA-C440-kichinto",
+    "JA-C440-tekitou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch440.txt",
+  "json": "japanese/narration/ch440.json",
+  "textHash": "fnv1a64:44f58bb8462e5a1c",
+  "jsonHash": "fnv1a64:4a0357f16d9ef029",
+  "findings": []
+}

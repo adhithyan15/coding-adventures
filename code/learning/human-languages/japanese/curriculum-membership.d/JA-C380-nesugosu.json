@@ -1,0 +1,11 @@
+{
+  "id": "JA-C380-nesugosu",
+  "pathSegment": "JA-PATH-380-EKIBEN380",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-380-EKIBEN380",
+      "order": 2
+    }
+  ]
+}

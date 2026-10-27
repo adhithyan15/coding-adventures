@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:87a9c674036eda77",
+  "lessonIds": [
+    "JA-C518-torimodosu",
+    "JA-C518-koriru",
+    "JA-C518-oshii",
+    "JA-C518-shikujiru",
+    "JA-C518-ochido"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch518.txt",
+  "json": "japanese/narration/ch518.json",
+  "textHash": "fnv1a64:6d99fe7b9d07fd2e",
+  "jsonHash": "fnv1a64:df99db778664e430",
+  "findings": []
+}

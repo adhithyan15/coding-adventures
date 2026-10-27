@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:e586dc2172d256ae",
+  "lessonIds": [
+    "JA-C293-hanabi",
+    "JA-C293-uchiageru",
+    "JA-C293-yatai",
+    "JA-C293-yozora",
+    "JA-C293-nigiwau"
+  ],
+  "tex": "japanese/book/chapters/ch293-fireworks-over-the-river.tex"
+}

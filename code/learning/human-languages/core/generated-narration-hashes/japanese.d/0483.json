@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:47b50d44bbf1e689",
+  "lessonIds": [
+    "JA-C483-nendo",
+    "JA-C483-setomono",
+    "JA-C483-utsuwa",
+    "JA-C483-katameru",
+    "JA-C483-katamaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch483.txt",
+  "json": "japanese/narration/ch483.json",
+  "textHash": "fnv1a64:011915e4d37d88c2",
+  "jsonHash": "fnv1a64:f1eb935f89b3d656",
+  "findings": []
+}

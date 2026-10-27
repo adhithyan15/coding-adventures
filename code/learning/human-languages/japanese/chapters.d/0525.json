@@ -1,0 +1,19 @@
+{
+  "chapter": 525,
+  "title": "Real or Fake",
+  "label": "ch:ja-real-or-fake",
+  "canDo": "I can compare and say what would happen.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C525-izure",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can compare and say what would happen.",
+    "assesses": [
+      "JA-LEX-C525-REAL525-03",
+      "JA-LEX-C525-REAL525-04",
+      "JA-LEX-C525-REAL525-05"
+    ]
+  }
+}
