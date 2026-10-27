@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C403-otozureru",
+    "language": "japanese",
+    "chapter": 403,
+    "sequence": 23640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb0ebba72e270d7b"
+  },
+  "findings": []
+}

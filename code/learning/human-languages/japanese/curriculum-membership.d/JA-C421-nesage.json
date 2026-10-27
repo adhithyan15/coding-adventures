@@ -1,0 +1,11 @@
+{
+  "id": "JA-C421-nesage",
+  "pathSegment": "JA-PATH-421-NEGIRU421",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-421-NEGIRU421",
+      "order": 3
+    }
+  ]
+}

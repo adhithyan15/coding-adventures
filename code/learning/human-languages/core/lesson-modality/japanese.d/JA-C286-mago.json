@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C286-mago",
+    "language": "japanese",
+    "chapter": 286,
+    "sequence": 17280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2201bf98ee2fe20"
+  },
+  "findings": []
+}

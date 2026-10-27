@@ -28,8 +28,9 @@
 //! (e.g. MSVC environment not activated, no MinGW), the test prints a
 //! skip message and exits cleanly for optional local runs. The dedicated CI
 //! step sets `LANG_REQUIRE_WINDOWS_AOT=1`: a missing linker then fails instead
-//! of claiming execution. The two known precise-GC early returns remain
-//! separately tracked; this flag only forbids missing-toolchain skips.
+//! of claiming execution. (The two precise-GC differentials no longer return
+//! early: the collector's walk anchor is now a frame record its entry
+//! trampoline builds, which Win64 codegen cannot perturb.)
 
 #![cfg(target_os = "windows")]
 
@@ -388,21 +389,15 @@ fn gc_stackmap_registration_ran_on_windows() {
 /// by a conservative one. Precise → `live_bytes == 0`, conservative → `== 64`. The headline
 /// proof that MsX64 precise roots are load-bearing (mirrors the Linux/SysV differential).
 #[test]
-#[allow(unreachable_code)]
 fn gc_stress_live_bytes_differential_on_windows() {
-    // Known pre-existing failure, root-caused (not fixed) in a follow-up: precise
-    // collection silently degrades to conservative every time it's invoked from a
-    // compiled Twig function, because LLVM/rustc's x86-64 "frame pointer" codegen
-    // (even with `-C force-frame-pointers=yes`) does not produce the classic linked
-    // chain (`[rbp] = caller's fp`) `gc-core-capi`'s stack walker assumes — confirmed
-    // via disassembly of the compiled `__gc_collect_precise` (its prologue computes
-    // `rbp` via `lea rbp, [rsp+N]`, not `mov rbp, rsp`, so `[rbp]`/`[rbp+8]` are
-    // ordinary locals, not a saved caller-fp/return-address pair). This is a GC-
-    // correctness-critical fix that needs careful redesign, not a quick patch — the
-    // current failure mode is safe (over-retains, never frees live memory), so it's
-    // deferred rather than rushed. Un-skip once fixed.
-    eprintln!("skipping: precise GC frame-pointer-chain walk doesn't cross the Rust/Twig boundary yet (tracked separately)");
-    return;
+    // These two differentials were skipped while the precise walk anchored at
+    // `rbp` inside the Rust collect entry: on Win64 LLVM sets that register with
+    // `lea rbp, [rsp+N]` (even under `-Cforce-frame-pointers=yes`), so `[rbp]` /
+    // `[rbp+8]` were ordinary locals and precise collection silently degraded to
+    // conservative. The entry is now a naked trampoline that pushes its own
+    // record (`push rbp; mov rbp, rsp; sub rsp, 32; mov rcx, rbp; call body`,
+    // gc-core-capi `stack_scan.rs` section 2b), so `[anchor+8]` is the return
+    // address into this Twig `main`, whose MsX64 stack map then resolves.
     if !linker_available() {
         eprintln!("skipping: no Windows linker on PATH");
         return;
@@ -466,14 +461,10 @@ fn gc_stress_live_bytes_differential_on_windows() {
 /// reclaims both (`0`). Exercises the MsX64 registration of the self-recursive-call
 /// safepoint (PR-x4) end to end.
 #[test]
-#[allow(unreachable_code)]
 fn gc_recursive_frame_live_bytes_differential_on_windows() {
-    // Same known pre-existing failure as `gc_stress_live_bytes_differential_on_windows`
-    // above (see its comment) — precise collection silently degrades to conservative
-    // whenever invoked from compiled Twig code, root-caused but not fixed in a
-    // follow-up. Un-skip once fixed.
-    eprintln!("skipping: precise GC frame-pointer-chain walk doesn't cross the Rust/Twig boundary yet (tracked separately)");
-    return;
+    // Un-skipped with `gc_stress_live_bytes_differential_on_windows` above (see its
+    // comment): the trampoline-built anchor makes the walk reach `rec(1)`, then
+    // `rec(0)` and `main` through their own `push rbp; mov rbp, rsp` records.
     if !linker_available() {
         eprintln!("skipping: no Windows linker on PATH");
         return;

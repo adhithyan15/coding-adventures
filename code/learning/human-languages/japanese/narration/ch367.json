@@ -1,0 +1,802 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 367,
+  "title": "Being Clear",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e42033c73c78de5a",
+  "lessons": [
+    {
+      "id": "JA-C367-hakkiri",
+      "sequence": 21590,
+      "title": "はっきり (hakkiri) — clearly; plainly",
+      "headword": "はっきり",
+      "romanization": "hakkiri",
+      "gloss": "clearly; plainly",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc9a4be19d538dd4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to put first, then the Japanese for to be impatient."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はっきり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はっきり — hakkiri — \"clearly; plainly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しつもんが あったら、はっきり 言って ください。 — shitsumon ga attara, hakkiri itte kudasai — \"If you have a question, please say it plainly.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はっきり (hakkiri) is a native mimetic word, one of the Japanese words that picture a manner or a feeling in sound; JMdict marks it as mimetic. It is inherited, not borrowed, and its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hakkiri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hakkiri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hakkiri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hakkiri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shitsumon ga attara, hakkiri itte kudasai — If you have a question, please say it plainly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shitsumon ga attara, hakkiri itte kudasai* — If you have a question, please say it plainly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to put first, then the Japanese for to be impatient, then say hakkiri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to put first, then the Japanese for to be impatient, then say *hakkiri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はっきり (hakkiri) mean? (\"Clearly; plainly\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C367-hakkiri-type",
+              "prompt": "Say the Japanese for 'clearly'.",
+              "assesses": [
+                "JA-LEX-C367-HAKKIRI367-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はっきり",
+                "hakkiri"
+              ],
+              "feedback": {
+                "correct": "Right: はっきり (hakkiri) is 'clearly; plainly'.",
+                "incorrect": "'Clearly' is はっきり (hakkiri)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C367-tsumari",
+      "sequence": 21600,
+      "title": "つまり (tsumari) — in other words; that is",
+      "headword": "つまり",
+      "romanization": "tsumari",
+      "gloss": "in other words; that is",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0c4845db04a006a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be impatient, then the Japanese for clearly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つまり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つまり — tsumari — \"in other words; that is\"."
+            },
+            {
+              "kind": "speech",
+              "text": "つまり、あめが ふったら、ちゅうしです。 — tsumari, ame ga futtara, chūshi desu — \"In other words, if it rains, it is called off.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つまり (tsumari) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. JMdict notes that it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsumari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsumari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsumari, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsumari*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsumari, ame ga futtara, chūshi desu — In other words, if it rains, it is called off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsumari, ame ga futtara, chūshi desu* — In other words, if it rains, it is called off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be impatient, then the Japanese for clearly, then say tsumari again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be impatient, then the Japanese for clearly, then say *tsumari* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つまり (tsumari) mean? (\"In other words; that is\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C367-tsumari-type",
+              "prompt": "Say the Japanese for 'in other words'.",
+              "assesses": [
+                "JA-LEX-C367-HAKKIRI367-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つまり",
+                "tsumari"
+              ],
+              "feedback": {
+                "correct": "Right: つまり (tsumari) is 'in other words; that is'.",
+                "incorrect": "'In other words' is つまり (tsumari)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C367-juubun",
+      "sequence": 21610,
+      "title": "じゅうぶん (jūbun) — enough; plenty",
+      "headword": "じゅうぶん",
+      "romanization": "jūbun",
+      "gloss": "enough; plenty",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa8b7050504b8d3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for clearly, then the Japanese for in other words."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じゅうぶん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅうぶん — jūbun — \"enough; plenty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じかんが じゅうぶん あったら、えきまで あるきます。 — jikan ga jūbun attara, eki made arukimasu — \"If there is plenty of time, I walk to the station.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅうぶん (jūbun) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jū, \"ten\" (Middle Chinese dzyip) and bun, \"part\" (pjun) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jūbun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jūbun*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jūbun, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jūbun*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jikan ga jūbun attara, eki made arukimasu — If there is plenty of time, I walk to the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jikan ga jūbun attara, eki made arukimasu* — If there is plenty of time, I walk to the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for clearly, then the Japanese for in other words, then say jūbun again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for clearly, then the Japanese for in other words, then say *jūbun* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じゅうぶん (jūbun) mean? (\"Enough; plenty\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C367-juubun-type",
+              "prompt": "Say the Japanese for 'enough'.",
+              "assesses": [
+                "JA-LEX-C367-HAKKIRI367-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じゅうぶん",
+                "jūbun",
+                "juubun",
+                "jubun"
+              ],
+              "feedback": {
+                "correct": "Right: じゅうぶん (jūbun) is 'enough; plenty'.",
+                "incorrect": "'Enough' is じゅうぶん (jūbun)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C367-teido",
+      "sequence": 21620,
+      "title": "ていど (teido) — a degree; an extent",
+      "headword": "ていど",
+      "romanization": "teido",
+      "gloss": "a degree; an extent",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f98dc5cd70b4db26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for in other words, then the Japanese for enough."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ていど",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ていど — teido — \"a degree; an extent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "くすりは ねつの ていどに よります。 — kusuri wa netsu no teido ni yorimasu — \"The medicine depends on how high the fever is.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ていど (teido) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tei, \"extent\" (Middle Chinese drjeng) and do, \"degrees\" (duH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teido",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teido*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teido, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teido*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kusuri wa netsu no teido ni yorimasu — The medicine depends on how high the fever is.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kusuri wa netsu no teido ni yorimasu* — The medicine depends on how high the fever is.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for in other words, then the Japanese for enough, then say teido again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for in other words, then the Japanese for enough, then say *teido* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ていど (teido) mean? (\"A degree; an extent\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C367-teido-type",
+              "prompt": "Say the Japanese for 'a degree'.",
+              "assesses": [
+                "JA-LEX-C367-HAKKIRI367-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ていど",
+                "teido"
+              ],
+              "feedback": {
+                "correct": "Right: ていど (teido) is 'a degree; an extent'.",
+                "incorrect": "'A degree' is ていど (teido)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C367-wariai",
+      "sequence": 21630,
+      "title": "わりあい (wariai) — a proportion; a rate",
+      "headword": "わりあい",
+      "romanization": "wariai",
+      "gloss": "a proportion; a rate",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be71f77261cee75d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for enough, then the Japanese for a degree."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: わりあい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わりあい — wariai — \"a proportion; a rate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こうれいしゃの わりあいが ふえたら、ねんきんが すくなく なるでしょう。 — kōreisha no wariai ga fuetara, nenkin ga sukunaku naru deshō — \"If the share of elderly people grows, pensions will probably shrink.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わりあい (wariai) is a native Japanese word (wago), inherited rather than borrowed from Chinese: it is built from wari, \"dividing (waru)\" and ai, \"meeting (au)\", and its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wariai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wariai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wariai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wariai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōreisha no wariai ga fuetara, nenkin ga sukunaku naru deshō — If the share of elderly people grows, pensions will probably shrink.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōreisha no wariai ga fuetara, nenkin ga sukunaku naru deshō* — If the share of elderly people grows, pensions will probably shrink.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for enough, then the Japanese for a degree, then say wariai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for enough, then the Japanese for a degree, then say *wariai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does わりあい (wariai) mean? (\"A proportion; a rate\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C367-wariai-type",
+              "prompt": "Say the Japanese for 'a proportion'.",
+              "assesses": [
+                "JA-LEX-C367-HAKKIRI367-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "わりあい",
+                "wariai"
+              ],
+              "feedback": {
+                "correct": "Right: わりあい (wariai) is 'a proportion; a rate'.",
+                "incorrect": "'A proportion' is わりあい (wariai)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

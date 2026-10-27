@@ -1,0 +1,11 @@
+{
+  "id": "JA-C499-doubutsuen",
+  "pathSegment": "JA-PATH-499-PARK499",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-499-PARK499",
+      "order": 1
+    }
+  ]
+}

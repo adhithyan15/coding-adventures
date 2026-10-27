@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:12c2861d40371e03",
+  "lessonIds": [
+    "JA-C485-oru",
+    "JA-C485-kinu",
+    "JA-C485-nunoji",
+    "JA-C485-jimi",
+    "JA-C485-hade",
+    "JA-R485-review-480-485"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch485.txt",
+  "json": "japanese/narration/ch485.json",
+  "textHash": "fnv1a64:e9f54b9090275108",
+  "jsonHash": "fnv1a64:a2e785b977b7c619",
+  "findings": []
+}

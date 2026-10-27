@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:5968bb656523b603",
+  "lessonIds": [
+    "JA-C264-ochiru",
+    "JA-C264-butsukeru",
+    "JA-C264-houtai",
+    "JA-C264-totemo",
+    "JA-C264-shibaraku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch264.txt",
+  "json": "japanese/narration/ch264.json",
+  "textHash": "fnv1a64:4e7c8b0c58802a37",
+  "jsonHash": "fnv1a64:f54c8b4e8090c09c",
+  "findings": []
+}

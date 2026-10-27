@@ -1,0 +1,11 @@
+{
+  "id": "JA-C436-mukuchi",
+  "pathSegment": "JA-PATH-436-BRIGHT436",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-436-BRIGHT436",
+      "order": 2
+    }
+  ]
+}

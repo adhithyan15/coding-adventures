@@ -1,0 +1,11 @@
+{
+  "id": "JA-C385-kaigai",
+  "pathSegment": "JA-PATH-385-KAIGAI385",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-385-KAIGAI385",
+      "order": 0
+    }
+  ]
+}

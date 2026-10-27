@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C442-ketsueki",
+    "language": "japanese",
+    "chapter": 442,
+    "sequence": 25840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d64483018ebf6df"
+  },
+  "findings": []
+}

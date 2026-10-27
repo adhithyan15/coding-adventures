@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Accept `APSR_nzcvq` while atomically rejecting `APSR_g` and `APSR_nzcvqg`
+  on the non-DSP Cortex-M3 boundary, reject reserved masks, and expose a typed
+  explicit-mask encoder while retaining the existing NZCVQ default.
+- Reach 92.22% line coverage (1,457 of 1,580 lines).
+
 ## 0.1.0 — 2026-10-24
 
 - Add the checked Armv7-M Cortex-M3 functional execution boundary, IT and

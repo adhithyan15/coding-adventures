@@ -1,0 +1,11 @@
+{
+  "id": "JA-C336-shizen",
+  "pathSegment": "JA-PATH-336-KANKYOU336",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-336-KANKYOU336",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:fe0cdaefa2471f3c",
+  "lessonIds": [
+    "JA-C526-shinpo-suru",
+    "JA-C526-hatten-suru",
+    "JA-C526-kaizen-suru",
+    "JA-C526-kouten-suru",
+    "JA-C526-dondon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch526.txt",
+  "json": "japanese/narration/ch526.json",
+  "textHash": "fnv1a64:7f3076db41d15f19",
+  "jsonHash": "fnv1a64:416ed3b84efd7134",
+  "findings": []
+}

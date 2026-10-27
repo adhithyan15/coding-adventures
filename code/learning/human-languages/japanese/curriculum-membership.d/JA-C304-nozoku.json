@@ -1,0 +1,11 @@
+{
+  "id": "JA-C304-nozoku",
+  "pathSegment": "JA-PATH-304-ONGAESHI304",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-304-ONGAESHI304",
+      "order": 3
+    }
+  ]
+}

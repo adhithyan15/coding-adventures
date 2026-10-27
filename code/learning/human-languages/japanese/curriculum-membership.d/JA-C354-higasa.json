@@ -1,0 +1,11 @@
+{
+  "id": "JA-C354-higasa",
+  "pathSegment": "JA-PATH-354-TENKI354",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-354-TENKI354",
+      "order": 3
+    }
+  ]
+}

@@ -895,6 +895,12 @@ pub fn lower_iir_to_llvm(
                         trap_kinds.extend(interpreter_ir::exception_kind::trap_kind_id(kind));
                     }
                 }
+                // LANG83: a failed narrowing raises the typed `Trap.ConvRange`.
+                "real_to_int_trunc" | "real_to_int_floor" => {
+                    trap_kinds.extend(interpreter_ir::exception_kind::trap_kind_id(
+                        interpreter_ir::exception_kind::TRAP_CONV_RANGE,
+                    ));
+                }
                 op if overflow_intrinsic(op).is_some() => {
                     trap_kinds.extend(interpreter_ir::exception_kind::trap_kind_id(
                         interpreter_ir::exception_kind::TRAP_OVERFLOW,
@@ -3276,7 +3282,9 @@ fn lower_f64_digit_query(instr: &IIRInstr, state: &mut FnState, out: &mut String
 }
 
 /// Emit the finiteness + `i64`-range check shared by the `real_to_int_*` ops:
-/// trap (`@llvm.trap` + `unreachable`) unless the already-rounded operand is in
+/// raise the LANG83 typed `Trap.ConvRange` (`@__iir_trap`, which flushes
+/// stdout and reports `trap: Trap.ConvRange`, then `unreachable`) unless the
+/// already-rounded operand is in
 /// `[-2⁶³, 2⁶³)`. The comparisons are **ordered** (`fcmp oge`/`olt`), which are
 /// `false` for NaN — so NaN and ±∞ fall through the same single check and trap.
 /// The bounds are the `double` hex literals for −2⁶³ and +2⁶³ (`i64::MAX` =
@@ -3297,8 +3305,11 @@ fn emit_real_range_check(operand: &str, state: &mut FnState, out: &mut String) {
     out.push_str(&format!("  {inr} = and i1 {ge}, {lt}\n"));
     out.push_str(&format!("  br i1 {inr}, label %{ok}, label %{trap}\n"));
     out.push_str(&format!("{trap}:\n"));
-    out.push_str("  call void @llvm.trap()\n");
-    out.push_str("  unreachable\n");
+    let conv_range = interpreter_ir::exception_kind::trap_kind_id(
+        interpreter_ir::exception_kind::TRAP_CONV_RANGE,
+    )
+    .expect("Trap.ConvRange is a built-in kind");
+    emit_trap_call(conv_range, out);
     out.push_str(&format!("{ok}:\n"));
 }
 

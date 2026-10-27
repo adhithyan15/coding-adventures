@@ -1,0 +1,19 @@
+{
+  "chapter": 325,
+  "title": "Going Along or Pushing Back",
+  "label": "ch:ja-going-along-or-pushing-back",
+  "canDo": "I can say whether I will go along with a decision, and why.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C325-jiyuu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can say whether I will go along with a decision, and why.",
+    "assesses": [
+      "JA-LEX-C325-SHITAGAU325-03",
+      "JA-LEX-C325-SHITAGAU325-04",
+      "JA-LEX-C325-SHITAGAU325-05"
+    ]
+  }
+}

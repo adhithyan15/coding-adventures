@@ -1,0 +1,11 @@
+{
+  "id": "JA-C323-kekkou",
+  "pathSegment": "JA-PATH-323-ENRYO323",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-323-ENRYO323",
+      "order": 3
+    }
+  ]
+}

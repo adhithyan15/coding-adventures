@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C529-nazeka",
+    "language": "japanese",
+    "chapter": 529,
+    "sequence": 30530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50d9d350ea5d9a85"
+  },
+  "findings": []
+}

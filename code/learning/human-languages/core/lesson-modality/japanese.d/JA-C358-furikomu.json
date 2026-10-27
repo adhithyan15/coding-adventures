@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C358-furikomu",
+    "language": "japanese",
+    "chapter": 358,
+    "sequence": 21150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:956ea9a0725284ee"
+  },
+  "findings": []
+}

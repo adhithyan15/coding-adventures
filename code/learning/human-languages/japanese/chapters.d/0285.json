@@ -1,0 +1,21 @@
+{
+  "chapter": 285,
+  "title": "A Big Day in Town",
+  "label": "ch:ja-a-big-day-in-town",
+  "canDo": "I can say what the town held and who joined in.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-R285-review-280-285",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 285: I can say what the town held and who joined in.",
+    "assesses": [
+      "JA-LEX-C285-MOYOOSHI285-01",
+      "JA-LEX-C285-MOYOOSHI285-02",
+      "JA-LEX-C285-MOYOOSHI285-03",
+      "JA-LEX-C285-MOYOOSHI285-04",
+      "JA-LEX-C285-MOYOOSHI285-05"
+    ]
+  }
+}

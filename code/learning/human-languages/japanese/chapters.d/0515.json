@@ -1,0 +1,21 @@
+{
+  "chapter": 515,
+  "title": "If I Pass",
+  "label": "ch:ja-if-i-pass",
+  "canDo": "I can say what will happen if I pass or fail an exam.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-R515-review-510-515",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can say what will happen if I pass or fail an exam.",
+    "assesses": [
+      "JA-LEX-C515-EXAM515-01",
+      "JA-LEX-C515-EXAM515-02",
+      "JA-LEX-C515-EXAM515-03",
+      "JA-LEX-C515-EXAM515-04",
+      "JA-LEX-C515-EXAM515-05"
+    ]
+  }
+}

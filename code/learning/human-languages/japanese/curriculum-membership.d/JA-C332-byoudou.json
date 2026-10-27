@@ -1,0 +1,11 @@
+{
+  "id": "JA-C332-byoudou",
+  "pathSegment": "JA-PATH-332-KENRI332",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-332-KENRI332",
+      "order": 2
+    }
+  ]
+}

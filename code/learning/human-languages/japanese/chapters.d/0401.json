@@ -1,0 +1,21 @@
+{
+  "chapter": 401,
+  "title": "Meals at the Inn",
+  "label": "ch:ja-meals-at-the-inn",
+  "canDo": "I can ask about meals at an inn.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-R401-review-396-401",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can ask about meals at an inn.",
+    "assesses": [
+      "JA-LEX-C401-CHOUSHOKU401-01",
+      "JA-LEX-C401-CHOUSHOKU401-02",
+      "JA-LEX-C401-CHOUSHOKU401-03",
+      "JA-LEX-C401-CHOUSHOKU401-04",
+      "JA-LEX-C401-CHOUSHOKU401-05"
+    ]
+  }
+}

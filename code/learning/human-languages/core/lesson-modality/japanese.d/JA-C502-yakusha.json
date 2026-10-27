@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C502-yakusha",
+    "language": "japanese",
+    "chapter": 502,
+    "sequence": 29150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7e51507375b2fc3"
+  },
+  "findings": []
+}

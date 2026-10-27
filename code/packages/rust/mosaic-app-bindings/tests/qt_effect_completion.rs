@@ -191,7 +191,8 @@ fn the_emitted_qt_host_answers_effects() {
             .env("MOSAIC_PROBE_STATE_G", project.join("state-g.json"))
             .env("MOSAIC_PROBE_STATE_H", project.join("state-h.json"))
             .env("MOSAIC_PROBE_STATE_I", project.join("state-i.json"))
-            .env("MOSAIC_PROBE_STATE_J", project.join("state-j.json")),
+            .env("MOSAIC_PROBE_STATE_J", project.join("state-j.json"))
+            .env("MOSAIC_PROBE_STATE_K", project.join("state-k.json")),
         "qt effect driver",
     );
 
@@ -275,6 +276,14 @@ fn the_emitted_qt_host_answers_effects() {
         "names that only start like a device name pass",
         "active content and non-ASCII extensions are executable",
         "ordinary documents are not executable",
+        "an earlier quarantine is never replaced",
+        "a rejected file moves to the first free name",
+        "a file moved aside leaves saving on",
+        "fresh state is saved once the rejected file is aside",
+        "with every name taken, the warning says nothing is saved",
+        "a file that could not move aside is not written over",
+        "the warning stays showing after an event",
+        "no quarantine was replaced",
     ] {
         assert!(
             stdout.contains(expected),

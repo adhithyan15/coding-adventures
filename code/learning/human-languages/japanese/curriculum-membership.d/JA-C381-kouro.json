@@ -1,0 +1,11 @@
+{
+  "id": "JA-C381-kouro",
+  "pathSegment": "JA-PATH-381-FUNATABI381",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-381-FUNATABI381",
+      "order": 1
+    }
+  ]
+}

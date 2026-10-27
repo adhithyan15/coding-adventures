@@ -1,0 +1,11 @@
+{
+  "id": "JA-C348-renkyuu",
+  "pathSegment": "JA-PATH-348-KESSEKI348",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-348-KESSEKI348",
+      "order": 4
+    }
+  ]
+}

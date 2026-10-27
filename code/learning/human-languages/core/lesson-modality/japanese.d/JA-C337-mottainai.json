@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C337-mottainai",
+    "language": "japanese",
+    "chapter": 337,
+    "sequence": 20070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9541447a2e53e69"
+  },
+  "findings": []
+}

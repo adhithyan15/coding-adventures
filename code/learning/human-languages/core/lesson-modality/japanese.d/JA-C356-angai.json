@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C356-angai",
+    "language": "japanese",
+    "chapter": 356,
+    "sequence": 21030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd1d6f363026bbee"
+  },
+  "findings": []
+}

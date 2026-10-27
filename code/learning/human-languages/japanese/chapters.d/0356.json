@@ -1,0 +1,21 @@
+{
+  "chapter": 356,
+  "title": "On One Condition",
+  "label": "ch:ja-on-one-condition",
+  "canDo": "I can set a condition and say what happens if it is met.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-R356-review-352-356",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can set a condition and say what happens if it is met.",
+    "assesses": [
+      "JA-LEX-C356-JOUKEN356-01",
+      "JA-LEX-C356-JOUKEN356-02",
+      "JA-LEX-C356-JOUKEN356-03",
+      "JA-LEX-C356-JOUKEN356-04",
+      "JA-LEX-C356-JOUKEN356-05"
+    ]
+  }
+}

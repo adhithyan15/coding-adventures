@@ -1,0 +1,21 @@
+{
+  "chapter": 419,
+  "title": "Name, Age and Nationality",
+  "label": "ch:ja-name-age-and-nationality",
+  "canDo": "I can give my details at a counter.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-R419-review-414-419",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can give my details at a counter.",
+    "assesses": [
+      "JA-LEX-C419-KOKUSEKI419-01",
+      "JA-LEX-C419-KOKUSEKI419-02",
+      "JA-LEX-C419-KOKUSEKI419-03",
+      "JA-LEX-C419-KOKUSEKI419-04",
+      "JA-LEX-C419-KOKUSEKI419-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C279-oukii",
+  "pathSegment": "JA-PATH-279-KAZAN279",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-279-KAZAN279",
+      "order": 4
+    }
+  ]
+}

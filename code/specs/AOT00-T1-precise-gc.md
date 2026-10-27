@@ -235,7 +235,7 @@ same technique LLVM's `stackmaps` and HotSpot's OopMaps use.
 At collection time, `gc_mark()` is replaced (for mapped frames) by:
 
 ```
-fp = current frame pointer
+fp = frame record built by the collect entry's trampoline  // see note below
 pc = return address of the collector's caller  // the safepoint that called us
 while frame is mapped:
     rec = lookup_stackmap(pc)          // binary search by pc_offset
@@ -245,6 +245,13 @@ while frame is mapped:
     pc = load(fp + return_addr_offset) // unwind one frame
     fp = load(fp + saved_fp_offset)
 ```
+
+The anchor `fp` is not read from the frame-pointer register: on some ABIs (x86-64
+Win64, or SysV without `-Cforce-frame-pointers`) the collector's own frame has no
+classic frame record there. Each precise collect entry is instead a tiny naked
+trampoline that pushes one (`push rbp; mov rbp, rsp` / `stp x29, x30, [sp, #-16]!;
+mov x29, sp`) and passes its address to the collector body, so `[fp + 8]` is always
+the return address into the caller (AOT00-T1-stackmap-emission §7).
 
 This replaces the conservative `gc_scan_region(sp … stack_base)` loop. Frames with
 **no** record (e.g. a C runtime frame, or an un-migrated backend) are scanned

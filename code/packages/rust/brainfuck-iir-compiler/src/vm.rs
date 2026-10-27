@@ -391,7 +391,7 @@ impl BrainfuckVM {
                         ctx.frames
                             .last_mut()
                             .ok_or_else(|| VMError::Custom("load_mem: no active frame".into()))?
-                            .assign(dest, result.clone());
+                            .assign(dest, result.clone())?;
                     }
                     Ok(Some(result))
                 },

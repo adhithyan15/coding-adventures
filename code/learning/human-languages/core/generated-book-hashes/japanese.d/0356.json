@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:67a362f1881a4b18",
+  "lessonIds": [
+    "JA-C356-jouken",
+    "JA-C356-tadashi",
+    "JA-C356-angai",
+    "JA-C356-taitei",
+    "JA-C356-itsumademo",
+    "JA-R356-review-352-356"
+  ],
+  "tex": "japanese/book/chapters/ch356-on-one-condition.tex"
+}

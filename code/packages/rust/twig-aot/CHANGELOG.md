@@ -43,7 +43,31 @@
   iir-to-llvm's module-local 3-argument `@__iir_f64_digits` in any LLVM
   program that links this runtime (found in security review).
 
-## Unreleased — precise GC: build the embedded collector with frame pointers
+## Unreleased — precise GC on every ABI; nested gc-core-capi build fixes
+
+- **The Windows precise-GC differentials run again.**
+  `gc_stress_live_bytes_differential_on_windows` and
+  `gc_recursive_frame_live_bytes_differential_on_windows` no longer return
+  early. `gc-core-capi`'s precise entries are now naked trampolines that build
+  the walk's frame record themselves, so Win64's `lea rbp, [rsp+N]` codegen no
+  longer matters (see that crate's changelog).
+- **`build.rs` re-runs when anything the embedded collector is built from
+  changes.** It watched only `../gc-core-capi/src`, so editing `gc-core` (the
+  collector itself) or either crate's `Cargo.toml` left a stale archive baked
+  into the binary. It now also watches `../gc-core-capi/Cargo.toml`,
+  `../gc-core/src` and `../gc-core/Cargo.toml`.
+- **The nested build targets `TARGET`.** `host_key` and the C runtime follow
+  the target being built, but the nested `cargo build` compiled the collector
+  for the build host (or for an inherited `CARGO_BUILD_TARGET`, in which case
+  the copy from `<gc_target>/release` failed). It now always passes
+  `--target $TARGET` and copies from `<gc_target>/$TARGET/release`; the native
+  case is unchanged apart from the path. A cross target without its standard
+  library fails with a message naming the target and the `rustup` command.
+- `-Cforce-frame-pointers=yes` is still passed: the anchor no longer depends on
+  it, but it keeps any frames between the collector's caller and the Twig code
+  walkable.
+
+## Earlier in this release — precise GC: build the embedded collector with frame pointers
 
 - **`build.rs` compiles the embedded `gc-core-capi` archive with
   `-Cforce-frame-pointers=yes`.** The flag is appended to the outer build's

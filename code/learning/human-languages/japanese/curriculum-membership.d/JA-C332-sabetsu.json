@@ -1,0 +1,11 @@
+{
+  "id": "JA-C332-sabetsu",
+  "pathSegment": "JA-PATH-332-KENRI332",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-332-KENRI332",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C482-sasaru",
+  "pathSegment": "JA-PATH-482-NAIL482",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-482-NAIL482",
+      "order": 4
+    }
+  ]
+}
