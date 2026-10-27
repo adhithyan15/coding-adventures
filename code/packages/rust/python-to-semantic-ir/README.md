@@ -236,8 +236,17 @@ refused rather than emitted short.  Three more rules are enforced:
   That means any binding in the function's own defining body, and only a
   capture anywhere else.  So a function that binds its own `n` cannot
   pass on an enclosing `n`, and such a program is refused.
-- A function may carry at most 256 captures.  At most 256 sibling
-  functions may name each other in one planning group.
+- A function may carry at most 256 captures (`MAX_CAPTURES`).  This is
+  a deliberate budget: it bounds both the emitted closure slots and the
+  planner's work.  It applies to every function, so a top-level `def`
+  that reads more than 256 module-level variables is refused even when
+  it is only used as a value.  (Top-level statements are `main`'s body,
+  so those variables are captures.)  There is no limit on how many
+  capture-free functions name each other.  A 300-function call chain, or
+  a dispatcher calling 300 helpers, compiles as before.
+- Known limitation: a function that binds `n` itself is refused if it
+  names a function that captures an enclosing `n`, even when the call
+  comes before the binding (`r = g(); n = 1`), which is valid Python.
 - The synthesised `__lambda_<N>` names cannot be named from source.
 
 **Default parameters (P8).**  A positional default `def f(a, b=10)` lowers

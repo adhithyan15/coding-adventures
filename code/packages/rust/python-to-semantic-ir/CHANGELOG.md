@@ -115,9 +115,18 @@ variable.  All four are now closed:
   - a name→index map;
   - a delta worklist, so each name crosses each edge once;
   - a hash set for the planned-list check;
-  - caps of `MAX_CAPTURES` (256) captures per function and
-    `MAX_PLAN_GROUP` (256) functions per group, each with a positioned
-    budget error.
+  - a deliberate budget of `MAX_CAPTURES` (256) captures per function,
+    with a positioned error.  It bounds the planner's work to
+    (edges × 256) and the emitted closure slots.  It applies to every
+    function: a top-level `def` that reads more than 256 module-level
+    variables is now refused even if it is only used as a value.  That
+    worked on `main`; it is the price of the bound.
+  - No cap on the size of a planning group.  An interim version capped
+    it at 256.  That refused ordinary capture-free programs that
+    compile on `main`, such as a 300-def call chain or a dispatcher
+    calling 300 helpers defined below it.  Such a group costs only its
+    edges, so the cap was dropped.  Tests now require both programs to
+    compile and run, the latter on every conformance backend.
 
   The review's V=2000/M=400 generator took over two minutes in a debug
   build.  It is now refused in about two seconds, most of which is
@@ -127,12 +136,19 @@ variable.  All four are now closed:
     is refused in pass 1, before its `DefFacts` can be overwritten.
   - `lower_closure_call` refuses a call when no parameter facts exist,
     rather than skipping the arity check.
+- **Known limitation.**  `def f(): r = g(); n = 1; return r + n`, where
+  `g` captures an enclosing `n`, is valid Python but refused: `f` binds
+  its own `n`.  Accepting it needs a rename, so `f`'s own local and the
+  inherited capture can both exist.  On `main` this was a broken
+  `DirectCall`, so it is not a regression.
 
 13 more unit tests cover each repro from the review.  All 13 fail on the
-first version of this change.
+first version of this change.  Three more tests must compile and run:
+the 300-def chain, the 300-helper dispatcher, and a 150-sibling chain
+that carries one capture back along every link.
 
 **Tests:** 16 new unit tests in `src/lib.rs`.  Before the fix 15 of them
-fail.  The 15th, `plain_recursion_still_lowers_to_a_direct_call`, guards
+fail.  The one that passes, `plain_recursion_still_lowers_to_a_direct_call`, guards
 against the fix over-reaching.  They cover:
 
 - self-reference as a value and as a recursive call, checking the

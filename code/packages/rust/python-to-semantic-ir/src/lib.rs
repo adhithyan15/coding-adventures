@@ -1580,16 +1580,70 @@ mod tests {
         );
     }
 
+    /// The review's generator: N top-level defs, each calling the next,
+    /// the root defined first.  None of them captures anything.
+    fn call_chain_source(n: usize) -> String {
+        let mut src = String::new();
+        for i in 0..n - 1 {
+            src.push_str(&format!("def f{i}(k):\n    return f{}(k)\n", i + 1));
+        }
+        src.push_str(&format!("def f{}(k):\n    return k\n", n - 1));
+        src.push_str("print(f0(1))\n");
+        src
+    }
+
+    /// A dispatcher defined first, calling N helpers defined below it.
+    /// `d(1)[i]` is `1 + i`, so the program prints N.
+    fn dispatcher_source(n: usize) -> String {
+        let calls: Vec<String> = (0..n).map(|i| format!("h{i}(k)")).collect();
+        let mut src = format!("def d(k):\n    return [{}]\n", calls.join(", "));
+        for i in 0..n {
+            src.push_str(&format!("def h{i}(k):\n    return k + {i}\n"));
+        }
+        src.push_str(&format!("print(d(1)[{}])\n", n - 1));
+        src
+    }
+
     #[test]
-    fn a_too_large_group_of_mutually_naming_siblings_is_refused() {
-        // 300 sibling defs in a chain, each calling the next, all planned
-        // as one group when the first is lowered: over MAX_PLAN_GROUP.
+    fn a_long_capture_free_call_chain_compiles_and_runs() {
+        // 300 defs naming each other in a chain form one planning group of
+        // 300.  A group cap refused this ordinary program; it compiles on
+        // `main`, so it must compile here.
+        let src = call_chain_source(300);
+        let m = lower(&src);
+        assert!(m.functions.iter().all(|f| f.captures.is_empty()));
+        assert_closures_consistent(&m);
+        if let Some(out) = run_roundtrip(&src) {
+            assert_eq!(out, "1");
+        }
+    }
+
+    #[test]
+    fn a_dispatcher_calling_300_helpers_compiles_and_runs() {
+        // One function naming 300 later siblings: a group of 301.
+        let src = dispatcher_source(300);
+        let m = lower(&src);
+        assert_closures_consistent(&m);
+        if let Some(out) = run_roundtrip(&src) {
+            assert_eq!(out, "300");
+        }
+    }
+
+    #[test]
+    fn a_long_capturing_sibling_chain_compiles_and_runs() {
+        // 150 nested siblings in a chain; only the last reads `n`, so rule
+        // 2 carries `n` back along all 150 (one worklist step per edge).
         let mut src = String::from("def outer(n):\n");
-        for i in 0..300 {
+        for i in 0..149 {
             src.push_str(&format!("    def f{i}():\n        return f{}()\n", i + 1));
         }
-        src.push_str("    def f300():\n        return n\n    return f0()\n");
-        refused(&src, "more than 256 sibling functions in one group");
+        src.push_str("    def f149():\n        return n\n    return f0()\n\nprint(outer(7))\n");
+        let m = lower(&src);
+        assert!((0..150).all(|i| capture_names(&m, &format!("f{i}")) == ["n"]));
+        assert_closures_consistent(&m);
+        if let Some(out) = run_roundtrip(&src) {
+            assert_eq!(out, "7");
+        }
     }
 
     #[test]
@@ -1597,7 +1651,8 @@ mod tests {
         // The review's generator: V = 2000 `main` locals and a chain of
         // M = 400 top-level defs, each calling the next, the last reading
         // every local.  Unbounded, rule 2 would give each def all 2000
-        // captures (M·V slots).  The group cap stops it at once.
+        // captures (M·V slots).  MAX_CAPTURES stops it when the last def
+        // is found to read 2000 names, before any propagation.
         let mut src = String::new();
         for i in 0..2000 {
             src.push_str(&format!("v{i} = {i}\n"));

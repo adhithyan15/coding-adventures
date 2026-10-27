@@ -16,6 +16,12 @@ local from a top-level `def`.  Each program is checked two ways:
 - `programs_print_cpythons_output_on_every_backend`: the program prints
   CPython's output on Python, JavaScript, Go, Rust, C and Ruby.
 
+A third test, `large_capture_free_groups_run_on_every_backend`, generates
+two programs and runs them on every backend: a 300-def call chain, and a
+dispatcher calling 300 helpers defined below it.  These pin down that the
+capture planner sets no limit on how many capture-free functions name
+each other.
+
 Before `python-to-semantic-ir` 0.12.0 and `semantic-ir-to-c` 0.42.2, every
 one of these programs failed on every backend.  (The JavaScript backend
 ran some of them, but printed `NaN` or `nil`.)

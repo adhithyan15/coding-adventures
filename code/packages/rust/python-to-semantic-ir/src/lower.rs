@@ -297,17 +297,25 @@ impl std::error::Error for PythonLowerError {}
 /// original path).
 const FILE: &str = "<python>";
 
-/// Most captures one function may carry.  Each capture is a slot in
-/// every closure built for the function and (on the C backend) a leading
-/// C parameter, and [`Lowerer::plan_captures`] spreads captures along
-/// chains of functions that name each other.  Without a cap, a chain of
-/// M functions naming each other, the last reading V outer names, emits
-/// M·V capture slots: quadratic output from linear input.
+/// Most captures one function may carry: a deliberate budget.
+///
+/// Each capture is a slot in every closure built for the function, and (on
+/// the C backend) a leading C parameter.  [`Lowerer::plan_captures`]
+/// spreads captures along chains of functions that name each other.
+/// Without a cap, a chain of M functions naming each other, the last
+/// reading V outer names, emits M·V capture slots: quadratic output from
+/// linear input.  The cap also bounds the planner's work to
+/// (edges × `MAX_CAPTURES`).
+///
+/// Note it applies to *every* function.  Top-level statements are `main`'s
+/// body, so a top-level `def` that reads more than 256 module-level
+/// variables is refused even if it is only ever used as a value.
+///
+/// There is deliberately no cap on how many functions one planning group
+/// holds.  A group of capture-free functions (a long call chain, a
+/// dispatcher calling hundreds of helpers) costs only its edges, and a
+/// group cap refused such ordinary programs.
 const MAX_CAPTURES: usize = 256;
-
-/// Most functions one [`Lowerer::plan_captures`] group may hold (a
-/// function plus the not-yet-lowered siblings it names, transitively).
-const MAX_PLAN_GROUP: usize = 256;
 
 /// The [`FunctionCtx::owner`] / [`DefFacts::parent`] key of the module
 /// body (`main`).  A top-level `def`'s parent is this key.  It cannot
@@ -2410,8 +2418,10 @@ impl Lowerer {
     /// group until no set grows: a *fixpoint*.  A worklist carries only
     /// the names a member has just gained, so each name crosses each
     /// "names" edge once.  The sets only grow, and are capped at
-    /// [`MAX_CAPTURES`] (the group at [`MAX_PLAN_GROUP`]), so this ends
-    /// quickly or fails with a positioned budget error.
+    /// [`MAX_CAPTURES`], so the work is bounded by
+    /// (edges × [`MAX_CAPTURES`]): it ends quickly, or fails with a
+    /// positioned budget error.  Gathering is cheap too: a `def` joins at
+    /// most one group, because once planned it is decided.
     ///
     /// Rule 2 must not hand a member a name it binds itself.  If `f` has
     /// its own `n` and calls `g`, which captures the enclosing `n`, then
@@ -2498,12 +2508,6 @@ impl Lowerer {
                 };
                 if facts.parent != enclosing.owner {
                     continue;
-                }
-                if members.len() >= MAX_PLAN_GROUP {
-                    return Err(err(format!(
-                        "too many functions name each other here: more than \
-                         {MAX_PLAN_GROUP} sibling functions in one group (limit)"
-                    )));
                 }
                 let member = Member {
                     name: Some(y.clone()),
@@ -2601,6 +2605,13 @@ impl Lowerer {
                 // calls `g`, which captures the *outer* `n`.  Inside `f` the
                 // name `n` means `f`'s local, so `f` could not hand `g` the
                 // outer one.
+                //
+                // Known limitation: this refuses even when `f` calls `g`
+                // *before* binding `n` (`r = g(); n = 1`), which is valid
+                // Python.  Accepting it needs `f` to hold the inherited
+                // capture and its own local under two SIR names (a rename),
+                // since a capture and a local of one name collide in several
+                // backends.
                 if m.bound.contains(c) {
                     return Err(err(format!(
                         "unsupported: `{}` binds its own `{c}`, but needs the \
@@ -4682,7 +4693,6 @@ fn empty_block(span: Span) -> Block {
     }
 }
 
-/// A `Block` with no statements whose value is `expr`.
 /// Check the **closure invariant** over a finished module:
 ///
 /// 1. every `MakeClosure { fn_name: f, captures }` threads exactly `f`'s
@@ -4803,6 +4813,7 @@ fn check_closure_invariant(functions: &[Function]) -> Result<(), PythonLowerErro
     }
 }
 
+/// A `Block` with no statements whose value is `expr`.
 fn value_block(expr: Expr) -> Block {
     let span = expr.span().clone();
     Block {

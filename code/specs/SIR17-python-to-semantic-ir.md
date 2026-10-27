@@ -278,11 +278,19 @@ rejected as deferred.
 rejects any `MakeClosure` whose capture names (in order) differ from its
 target's, and any `DirectCall` to a capturing function.  This catches
 closures built before their target's list was decided, such as from a
-method body or a default value.  The frontend also enforces these
-budgets:
+method body or a default value.
 
-- at most 256 captures per function;
-- at most 256 functions in one planning group.
+**Budget.**  A function may carry at most 256 captures.  This is
+deliberate: rule 2 spreads captures along chains of functions, and
+without a bound a chain of M functions, the last reading V outer names,
+emits M·V capture slots.  The bound applies to every function, including
+a top-level `def` reading module-level variables (which are `main`
+locals, hence captures).  There is no bound on how many capture-free
+functions name each other.
+
+**Known limitation.**  A function that binds `n` itself is refused if it
+names a function capturing an enclosing `n`, even when the call comes
+before the binding.  Supporting it requires renaming one of the two.
 
 Synthesised `__lambda_<N>` names are not resolvable from source, and
 every `def` name must be unique, since all `def`s share one namespace.

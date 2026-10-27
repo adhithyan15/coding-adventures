@@ -167,3 +167,42 @@ fn programs_print_cpythons_output_on_every_backend() {
     }
     eprintln!("python nested closures: {ran} program/backend runs");
 }
+
+/// Long groups of functions that name each other, but capture nothing,
+/// must compile and run everywhere: a 300-def call chain, and a dispatcher
+/// calling 300 helpers defined below it.  (An early version of the capture
+/// planner capped the group size and refused both.)
+#[test]
+fn large_capture_free_groups_run_on_every_backend() {
+    let n = 300;
+    let mut chain = String::new();
+    for i in 0..n - 1 {
+        chain.push_str(&format!("def f{i}(k):\n    return f{}(k)\n", i + 1));
+    }
+    chain.push_str(&format!("def f{}(k):\n    return k\n", n - 1));
+    chain.push_str("print(f0(1))\n");
+
+    let calls: Vec<String> = (0..n).map(|i| format!("h{i}(k)")).collect();
+    let mut dispatcher = format!("def d(k):\n    return [{}]\n", calls.join(", "));
+    for i in 0..n {
+        dispatcher.push_str(&format!("def h{i}(k):\n    return k + {i}\n"));
+    }
+    dispatcher.push_str(&format!("print(d(1)[{}])\n", n - 1));
+
+    for (name, source, expected) in [
+        ("py_chain_300", chain.as_str(), "1"),
+        ("py_dispatch_300", dispatcher.as_str(), "300"),
+    ] {
+        for &target in Target::all() {
+            match run_source_via(name, source, Frontend::Python, target) {
+                RunOutcome::Ran(stdout) => {
+                    assert_eq!(stdout, expected, "`{name}` on the {} backend", target.tag())
+                }
+                RunOutcome::Skipped(why) => eprintln!("skip {name}/{}: {why}", target.tag()),
+                RunOutcome::Failed(msg) => {
+                    panic!("`{name}` failed on the {} backend:\n{msg}", target.tag())
+                }
+            }
+        }
+    }
+}
