@@ -1,0 +1,796 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 500,
+  "title": "Toys and Games",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9c7fe62ba96dd09f",
+  "lessons": [
+    {
+      "id": "JA-C500-omocha",
+      "sequence": 29030,
+      "title": "おもちゃ (omocha) — a toy",
+      "headword": "おもちゃ",
+      "romanization": "omocha",
+      "gloss": "a toy",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a89a88479131b5b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a school outing, then the Japanese for a pleasure trip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おもちゃ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おもちゃ — omocha — \"a toy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こどもは おもちゃで あそびます。 — kodomo wa omocha de asobimasu — \"Children play with toys.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おもちゃ (omocha) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "omocha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *omocha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "omocha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *omocha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kodomo wa omocha de asobimasu — Children play with toys.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kodomo wa omocha de asobimasu* — Children play with toys.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a school outing, then the Japanese for a pleasure trip, then say omocha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a school outing, then the Japanese for a pleasure trip, then say *omocha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おもちゃ (omocha) mean? (\"A toy\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C500-omocha-type",
+              "prompt": "Say the Japanese for 'a toy'.",
+              "assesses": [
+                "JA-LEX-C500-TOY500-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おもちゃ",
+                "omocha"
+              ],
+              "feedback": {
+                "correct": "Right: おもちゃ (omocha) is 'a toy'.",
+                "incorrect": "'A toy' is おもちゃ (omocha)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C500-nawatobi",
+      "sequence": 29040,
+      "title": "なわとび (nawatobi) — skipping rope",
+      "headword": "なわとび",
+      "romanization": "nawatobi",
+      "gloss": "skipping rope",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce0e702137e7af84",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a pleasure trip, then the Japanese for a toy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: なわとび",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なわとび — nawatobi — \"skipping rope\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こうえんで なわとびを しました。 — kōen de nawatobi o shimashita — \"I skipped rope in the park.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なわとび (nawatobi) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: built from nawa, \"rope\" and tobi, \"jumping\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nawatobi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nawatobi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nawatobi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nawatobi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōen de nawatobi o shimashita — I skipped rope in the park.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōen de nawatobi o shimashita* — I skipped rope in the park.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a pleasure trip, then the Japanese for a toy, then say nawatobi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a pleasure trip, then the Japanese for a toy, then say *nawatobi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does なわとび (nawatobi) mean? (\"Skipping rope\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C500-nawatobi-type",
+              "prompt": "Say the Japanese for 'skipping rope'.",
+              "assesses": [
+                "JA-LEX-C500-TOY500-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "なわとび",
+                "nawatobi"
+              ],
+              "feedback": {
+                "correct": "Right: なわとび (nawatobi) is 'skipping rope'.",
+                "incorrect": "'Skipping rope' is なわとび (nawatobi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C500-kakekko",
+      "sequence": 29050,
+      "title": "かけっこ (kakekko) — a running race (between children)",
+      "headword": "かけっこ",
+      "romanization": "kakekko",
+      "gloss": "a running race (between children)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:707c66a9ba5b2ecb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a toy, then the Japanese for skipping rope."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かけっこ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かけっこ — kakekko — \"a running race (between children)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こどもが こうえんで かけっこを しています。 — kodomo ga kōen de kakekko o shiteimasu — \"Children are having a race in the park.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かけっこ (kakekko) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kakekko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kakekko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kakekko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kakekko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kodomo ga kōen de kakekko o shiteimasu — Children are having a race in the park.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kodomo ga kōen de kakekko o shiteimasu* — Children are having a race in the park.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a toy, then the Japanese for skipping rope, then say kakekko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a toy, then the Japanese for skipping rope, then say *kakekko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かけっこ (kakekko) mean? (\"A running race (between children)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C500-kakekko-type",
+              "prompt": "Say the Japanese for 'a running race (between children)'.",
+              "assesses": [
+                "JA-LEX-C500-TOY500-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かけっこ",
+                "kakekko"
+              ],
+              "feedback": {
+                "correct": "Right: かけっこ (kakekko) is 'a running race (between children)'.",
+                "incorrect": "'A running race (between children)' is かけっこ (kakekko)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C500-nazonazo",
+      "sequence": 29060,
+      "title": "なぞなぞ (nazonazo) — a riddle",
+      "headword": "なぞなぞ",
+      "romanization": "nazonazo",
+      "gloss": "a riddle",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0fb363b60cc8675",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for skipping rope, then the Japanese for a running race (between children)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: なぞなぞ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なぞなぞ — nazonazo — \"a riddle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "そふは なぞなぞが すきです。 — sofu wa nazonazo ga suki desu — \"My grandfather loves riddles.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なぞなぞ (nazonazo) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazonazo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazonazo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazonazo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazonazo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sofu wa nazonazo ga suki desu — My grandfather loves riddles.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sofu wa nazonazo ga suki desu* — My grandfather loves riddles.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for skipping rope, then the Japanese for a running race (between children), then say nazonazo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for skipping rope, then the Japanese for a running race (between children), then say *nazonazo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does なぞなぞ (nazonazo) mean? (\"A riddle\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C500-nazonazo-type",
+              "prompt": "Say the Japanese for 'a riddle'.",
+              "assesses": [
+                "JA-LEX-C500-TOY500-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "なぞなぞ",
+                "nazonazo"
+              ],
+              "feedback": {
+                "correct": "Right: なぞなぞ (nazonazo) is 'a riddle'.",
+                "incorrect": "'A riddle' is なぞなぞ (nazonazo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C500-suberidai",
+      "sequence": 29070,
+      "title": "すべりだい (suberidai) — a slide (in a playground)",
+      "headword": "すべりだい",
+      "romanization": "suberidai",
+      "gloss": "a slide (in a playground)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01d8f39c120b2d21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a running race (between children), then the Japanese for a riddle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すべりだい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すべりだい — suberidai — \"a slide (in a playground)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こうえんの すべりだいは たかいです。 — kōen no suberidai wa takai desu — \"The slide in the park is high.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すべりだい (suberidai) mixes the two layers, native and Sino-Japanese: native suberi, \"sliding\", from suberu, \"to slide\", and Sino-Japanese dai, \"a stand\", borrowed from Chinese (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suberidai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suberidai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suberidai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suberidai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōen no suberidai wa takai desu — The slide in the park is high.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōen no suberidai wa takai desu* — The slide in the park is high.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a running race (between children), then the Japanese for a riddle, then say suberidai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a running race (between children), then the Japanese for a riddle, then say *suberidai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すべりだい (suberidai) mean? (\"A slide (in a playground)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C500-suberidai-type",
+              "prompt": "Say the Japanese for 'a slide (in a playground)'.",
+              "assesses": [
+                "JA-LEX-C500-TOY500-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すべりだい",
+                "suberidai"
+              ],
+              "feedback": {
+                "correct": "Right: すべりだい (suberidai) is 'a slide (in a playground)'.",
+                "incorrect": "'A slide (in a playground)' is すべりだい (suberidai)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C519-mikagiru",
+    "language": "japanese",
+    "chapter": 519,
+    "sequence": 30030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:68220abbc5cb00d8"
+  },
+  "findings": []
+}

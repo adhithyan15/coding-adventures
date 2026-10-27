@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-461-SUMO461",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "JA-EXT-461-SUMO461"
+  ],
+  "after": []
+}

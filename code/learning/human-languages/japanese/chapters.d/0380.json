@@ -1,0 +1,19 @@
+{
+  "chapter": 380,
+  "title": "Lunch on the Train",
+  "label": "ch:ja-lunch-on-the-train",
+  "canDo": "I can talk about eating and dozing on a long train ride.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C380-hitokuchi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 380: I can talk about eating and dozing on a long train ride.",
+    "assesses": [
+      "JA-LEX-C380-EKIBEN380-03",
+      "JA-LEX-C380-EKIBEN380-04",
+      "JA-LEX-C380-EKIBEN380-05"
+    ]
+  }
+}

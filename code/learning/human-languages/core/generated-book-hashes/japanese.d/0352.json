@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:3a01e0c6491b544c",
+  "lessonIds": [
+    "JA-C352-koboreru",
+    "JA-C352-hodokeru",
+    "JA-C352-hikkurikaeru",
+    "JA-C352-zureru",
+    "JA-C352-dougu"
+  ],
+  "tex": "japanese/book/chapters/ch352-little-accidents.tex"
+}

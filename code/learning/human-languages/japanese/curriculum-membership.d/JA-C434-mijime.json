@@ -1,0 +1,11 @@
+{
+  "id": "JA-C434-mijime",
+  "pathSegment": "JA-PATH-434-THANK434",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-434-THANK434",
+      "order": 3
+    }
+  ]
+}

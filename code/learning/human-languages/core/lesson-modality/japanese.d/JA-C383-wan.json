@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C383-wan",
+    "language": "japanese",
+    "chapter": 383,
+    "sequence": 22570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76d66a2cdfa1c335"
+  },
+  "findings": []
+}

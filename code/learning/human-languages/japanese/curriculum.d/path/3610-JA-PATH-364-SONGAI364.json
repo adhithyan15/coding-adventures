@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-364-SONGAI364",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "JA-EXT-364-SONGAI364"
+  ],
+  "after": []
+}

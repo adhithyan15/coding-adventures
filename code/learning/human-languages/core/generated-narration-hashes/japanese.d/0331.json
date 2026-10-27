@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:d3785f17967989ec",
+  "lessonIds": [
+    "JA-C331-shakai",
+    "JA-C331-shimin",
+    "JA-C331-juumin",
+    "JA-C331-seiji",
+    "JA-C331-houritsu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch331.txt",
+  "json": "japanese/narration/ch331.json",
+  "textHash": "fnv1a64:a45c3dd893d28a15",
+  "jsonHash": "fnv1a64:66c2689036f7959c",
+  "findings": []
+}

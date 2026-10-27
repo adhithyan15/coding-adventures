@@ -1,0 +1,11 @@
+{
+  "id": "JA-C460-tenshoku-suru",
+  "pathSegment": "JA-PATH-460-GOAL460",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-460-GOAL460",
+      "order": 4
+    }
+  ]
+}

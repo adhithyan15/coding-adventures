@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C286-shussan",
+    "language": "japanese",
+    "chapter": 286,
+    "sequence": 17260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d156ad9d5a3bed0c"
+  },
+  "findings": []
+}

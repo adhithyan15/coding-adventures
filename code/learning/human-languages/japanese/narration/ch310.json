@@ -1,0 +1,803 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 310,
+  "title": "Waiting for an Answer",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6b2501706615cbfc",
+  "lessons": [
+    {
+      "id": "JA-C310-zutto",
+      "sequence": 18480,
+      "title": "ずっと (zutto) — all along; the whole time",
+      "headword": "ずっと",
+      "romanization": "zutto",
+      "gloss": "all along; the whole time",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40b15186357fd1a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a person, then the Japanese for to confide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ずっと",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ずっと — zutto — \"all along; the whole time\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ずっと へんじを まっています。 — zutto henji o matte imasu — \"I have been waiting for an answer all this time.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ずっと (zutto) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zutto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zutto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zutto, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zutto*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zutto henji o matte imasu — I have been waiting for an answer all this time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zutto henji o matte imasu* — I have been waiting for an answer all this time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a person, then the Japanese for to confide, then say zutto again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a person, then the Japanese for to confide, then say *zutto* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ずっと (zutto) mean? (\"All along; the whole time\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C310-zutto-type",
+              "prompt": "Say the Japanese for 'all along'.",
+              "assesses": [
+                "JA-LEX-C310-HENJI310-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ずっと",
+                "zutto"
+              ],
+              "feedback": {
+                "correct": "Right: ずっと (zutto) is 'all along; the whole time'.",
+                "incorrect": "'All along' is ずっと (zutto)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C310-jitsu-wa",
+      "sequence": 18490,
+      "title": "じつは (jitsu wa) — actually; to tell the truth",
+      "headword": "じつは",
+      "romanization": "jitsu wa",
+      "gloss": "actually; to tell the truth",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54cd11a03a97df5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to confide, then the Japanese for all along."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じつは",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じつは — jitsu wa — \"actually; to tell the truth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じつは、きのう びょういんに いきました。 — jitsu wa, kinō byōin ni ikimashita — \"To tell the truth, I went to the hospital yesterday.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じつは (jitsu wa) is a mixed word, native and Sino-Japanese: jitsu, \"truth\", is a Chinese character read with its on'yomi, a reading borrowed from Chinese (Middle Chinese zyit), and wa, \"the topic particle\", is native Japanese (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jitsu wa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jitsu wa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jitsu wa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jitsu wa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jitsu wa, kinō byōin ni ikimashita — To tell the truth, I went to the hospital yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jitsu wa, kinō byōin ni ikimashita* — To tell the truth, I went to the hospital yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to confide, then the Japanese for all along, then say jitsu wa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to confide, then the Japanese for all along, then say *jitsu wa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じつは (jitsu wa) mean? (\"Actually; to tell the truth\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C310-jitsu-wa-type",
+              "prompt": "Say the Japanese for 'actually'.",
+              "assesses": [
+                "JA-LEX-C310-HENJI310-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じつは",
+                "jitsu wa"
+              ],
+              "feedback": {
+                "correct": "Right: じつは (jitsu wa) is 'actually; to tell the truth'.",
+                "incorrect": "'Actually' is じつは (jitsu wa)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C310-toutou",
+      "sequence": 18500,
+      "title": "とうとう (tōtō) — in the end; at long last",
+      "headword": "とうとう",
+      "romanization": "tōtō",
+      "gloss": "in the end; at long last",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00e9e17760189d76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for all along, then the Japanese for actually."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とうとう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とうとう — tōtō — \"in the end; at long last\"."
+            },
+            {
+              "kind": "speech",
+              "text": "とうとう へんじは きませんでした。 — tōtō henji wa kimasen deshita — \"In the end no answer came.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とうとう (tōtō) is usually written in kana (JMdict). JMdict also gives a spelling it marks as rare: two Chinese characters read with their on'yomi, readings borrowed from Chinese, tō, \"arrival\" (Middle Chinese tawH) and tō, \"head\" (duw) (KANJIDIC2; Middle Chinese in Baxter's transcription). Whether the word is Sino-Japanese, built from them, or a native adverb later given that spelling is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōtō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōtō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōtō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōtō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōtō henji wa kimasen deshita — In the end no answer came.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōtō henji wa kimasen deshita* — In the end no answer came.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for all along, then the Japanese for actually, then say tōtō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for all along, then the Japanese for actually, then say *tōtō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とうとう (tōtō) mean? (\"In the end; at long last\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C310-toutou-type",
+              "prompt": "Say the Japanese for 'in the end'.",
+              "assesses": [
+                "JA-LEX-C310-HENJI310-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とうとう",
+                "tōtō",
+                "toutou",
+                "tootoo",
+                "toto"
+              ],
+              "feedback": {
+                "correct": "Right: とうとう (tōtō) is 'in the end; at long last'.",
+                "incorrect": "'In the end' is とうとう (tōtō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C310-kanau",
+      "sequence": 18510,
+      "title": "かなう (kanau) — to come true",
+      "headword": "かなう",
+      "romanization": "kanau",
+      "gloss": "to come true",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:076b024318309dfb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for actually, then the Japanese for in the end."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かなう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かなう — kanau — \"to come true\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いつか ゆめが かなうと おもいます。 — itsuka yume ga kanau to omoimasu — \"I think my dream will come true one day.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite かないます, kanaimasu; a godan verb. Past (polite): ゆめが かないました。, yume ga kanaimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かなう (kanau) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itsuka yume ga kanau to omoimasu — I think my dream will come true one day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itsuka yume ga kanau to omoimasu* — I think my dream will come true one day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for actually, then the Japanese for in the end, then say kanau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for actually, then the Japanese for in the end, then say *kanau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かなう (kanau) mean? (\"To come true\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C310-kanau-type",
+              "prompt": "Say the Japanese for 'to come true'.",
+              "assesses": [
+                "JA-LEX-C310-HENJI310-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かなう",
+                "kanau"
+              ],
+              "feedback": {
+                "correct": "Right: かなう (kanau) is 'to come true'.",
+                "incorrect": "'To come true' is かなう (kanau)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C310-mamonaku",
+      "sequence": 18520,
+      "title": "まもなく (mamonaku) — shortly; in a moment",
+      "headword": "まもなく",
+      "romanization": "mamonaku",
+      "gloss": "shortly; in a moment",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79594a41fc66f663",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for in the end, then the Japanese for to come true."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: まもなく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まもなく — mamonaku — \"shortly; in a moment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まもなく でんしゃが きます。 — mamonaku densha ga kimasu — \"The train will be here shortly.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まもなく (mamonaku) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from ma, \"an interval\", mo, \"even\", and naku, \"without\" (from nai) (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mamonaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mamonaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mamonaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mamonaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mamonaku densha ga kimasu — The train will be here shortly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mamonaku densha ga kimasu* — The train will be here shortly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for in the end, then the Japanese for to come true, then say mamonaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for in the end, then the Japanese for to come true, then say *mamonaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does まもなく (mamonaku) mean? (\"Shortly; in a moment\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C310-mamonaku-type",
+              "prompt": "Say the Japanese for 'shortly'.",
+              "assesses": [
+                "JA-LEX-C310-HENJI310-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "まもなく",
+                "mamonaku"
+              ],
+              "feedback": {
+                "correct": "Right: まもなく (mamonaku) is 'shortly; in a moment'.",
+                "incorrect": "'Shortly' is まもなく (mamonaku)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

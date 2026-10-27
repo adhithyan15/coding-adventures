@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "Stiff and Numb",
+  "label": "ch:ja-stiff-and-numb",
+  "canDo": "I can say a part of my body is stiff, twisted or numb.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C448-mageru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can say a part of my body is stiff, twisted or numb.",
+    "assesses": [
+      "JA-LEX-C448-STIFF448-03",
+      "JA-LEX-C448-STIFF448-04",
+      "JA-LEX-C448-STIFF448-05"
+    ]
+  }
+}

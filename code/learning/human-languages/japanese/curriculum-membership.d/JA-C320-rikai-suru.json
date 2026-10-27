@@ -1,0 +1,11 @@
+{
+  "id": "JA-C320-rikai-suru",
+  "pathSegment": "JA-PATH-320-TACHIBA320",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-320-TACHIBA320",
+      "order": 3
+    }
+  ]
+}

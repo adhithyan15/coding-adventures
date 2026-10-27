@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:527e864dd164b5fd",
+  "lessonIds": [
+    "JA-C363-kaikei",
+    "JA-C363-daikin",
+    "JA-C363-shouhizei",
+    "JA-C363-hangaku",
+    "JA-C363-zeitaku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch363.txt",
+  "json": "japanese/narration/ch363.json",
+  "textHash": "fnv1a64:59220b10b04c9102",
+  "jsonHash": "fnv1a64:4368cbcb992a779d",
+  "findings": []
+}

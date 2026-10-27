@@ -1,0 +1,11 @@
+{
+  "id": "JA-R306-review-302-306",
+  "pathSegment": "JA-PATH-306-AISATSU306",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-306-AISATSU306",
+      "order": 5
+    }
+  ]
+}

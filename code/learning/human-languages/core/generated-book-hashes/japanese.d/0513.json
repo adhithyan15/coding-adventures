@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:ef53f3f5c39e127a",
+  "lessonIds": [
+    "JA-C513-kikaku-suru",
+    "JA-C513-minaosu",
+    "JA-C513-kuriageru",
+    "JA-C513-chousei-suru",
+    "JA-C513-dandori"
+  ],
+  "tex": "japanese/book/chapters/ch513-plans-and-projects.tex"
+}

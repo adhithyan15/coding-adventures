@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:10a0e3e3b3527032",
+  "lessonIds": [
+    "JA-C404-fuukei",
+    "JA-C404-nagameru",
+    "JA-C404-miwatasu",
+    "JA-C404-subarashii",
+    "JA-C404-miorosu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch404.txt",
+  "json": "japanese/narration/ch404.json",
+  "textHash": "fnv1a64:034d0d5dc0822e60",
+  "jsonHash": "fnv1a64:60365506c144c89e",
+  "findings": []
+}

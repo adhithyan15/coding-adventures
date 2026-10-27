@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C441-fuzakeru",
+    "language": "japanese",
+    "chapter": 441,
+    "sequence": 25810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11071f4d50a76760"
+  },
+  "findings": []
+}

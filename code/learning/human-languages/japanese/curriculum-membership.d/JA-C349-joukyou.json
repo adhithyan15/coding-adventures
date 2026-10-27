@@ -1,0 +1,11 @@
+{
+  "id": "JA-C349-joukyou",
+  "pathSegment": "JA-PATH-349-YOSOU349",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-349-YOSOU349",
+      "order": 1
+    }
+  ]
+}

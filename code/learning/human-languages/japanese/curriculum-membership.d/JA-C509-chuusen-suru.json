@@ -1,0 +1,11 @@
+{
+  "id": "JA-C509-chuusen-suru",
+  "pathSegment": "JA-PATH-509-LOTTERY509",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-509-LOTTERY509",
+      "order": 2
+    }
+  ]
+}

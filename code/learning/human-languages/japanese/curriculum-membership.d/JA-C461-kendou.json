@@ -1,0 +1,11 @@
+{
+  "id": "JA-C461-kendou",
+  "pathSegment": "JA-PATH-461-SUMO461",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-461-SUMO461",
+      "order": 1
+    }
+  ]
+}

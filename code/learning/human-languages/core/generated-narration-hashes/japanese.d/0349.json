@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:59cdb56fd384c0a3",
+  "lessonIds": [
+    "JA-C349-yosou",
+    "JA-C349-joukyou",
+    "JA-C349-kikai",
+    "JA-C349-nogasu",
+    "JA-C349-sekkaku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch349.txt",
+  "json": "japanese/narration/ch349.json",
+  "textHash": "fnv1a64:dde0904e2fa1d18a",
+  "jsonHash": "fnv1a64:664af072fcf7d177",
+  "findings": []
+}

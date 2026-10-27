@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C312-kako",
+    "language": "japanese",
+    "chapter": 312,
+    "sequence": 18610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9df3cdcc7fe002bc"
+  },
+  "findings": []
+}

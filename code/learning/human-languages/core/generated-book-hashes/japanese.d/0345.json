@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:dd295a07a84622a0",
+  "lessonIds": [
+    "JA-C345-henkou-suru",
+    "JA-C345-enki-suru",
+    "JA-C345-torikesu",
+    "JA-C345-zurasu",
+    "JA-C345-hayameru"
+  ],
+  "tex": "japanese/book/chapters/ch345-when-plans-change.tex"
+}

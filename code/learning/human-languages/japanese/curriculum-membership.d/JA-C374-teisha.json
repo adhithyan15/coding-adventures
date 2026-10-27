@@ -1,0 +1,11 @@
+{
+  "id": "JA-C374-teisha",
+  "pathSegment": "JA-PATH-374-SENRO374",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-374-SENRO374",
+      "order": 2
+    }
+  ]
+}

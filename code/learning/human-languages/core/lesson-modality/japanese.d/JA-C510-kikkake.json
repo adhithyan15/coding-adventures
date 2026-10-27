@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C510-kikkake",
+    "language": "japanese",
+    "chapter": 510,
+    "sequence": 29560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11c42ac34a6e54a1"
+  },
+  "findings": []
+}

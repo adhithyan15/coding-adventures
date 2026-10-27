@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:fd8cc1bf07818c9e",
+  "lessonIds": [
+    "JA-C288-nyuugaku",
+    "JA-C288-shiki",
+    "JA-C288-shusseki-suru",
+    "JA-C288-nigiyaka",
+    "JA-C288-oiwai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch288.txt",
+  "json": "japanese/narration/ch288.json",
+  "textHash": "fnv1a64:15e9d98d3c9448d3",
+  "jsonHash": "fnv1a64:4c5ca64c8498b0d1",
+  "findings": []
+}

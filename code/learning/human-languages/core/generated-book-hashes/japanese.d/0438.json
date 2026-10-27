@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:2060ddd77507cff9",
+  "lessonIds": [
+    "JA-C438-ganko",
+    "JA-C438-sekkachi",
+    "JA-C438-tanki",
+    "JA-C438-nonbiri",
+    "JA-C438-ibaru"
+  ],
+  "tex": "japanese/book/chapters/ch438-stubborn-and-hasty.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C414-mabushii",
+  "pathSegment": "JA-PATH-414-SHITSUDO414",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-414-SHITSUDO414",
+      "order": 4
+    }
+  ]
+}

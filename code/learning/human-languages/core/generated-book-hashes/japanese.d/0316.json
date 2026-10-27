@@ -1,0 +1,15 @@
+{
+  "language": "japanese",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:da20dad45163b058",
+  "lessonIds": [
+    "JA-C316-monogatari",
+    "JA-C316-dentou",
+    "JA-C316-hotondo",
+    "JA-C316-kanjiru",
+    "JA-C316-motto",
+    "JA-R316-review-312-316",
+    "JA-R316-review-final-316"
+  ],
+  "tex": "japanese/book/chapters/ch316-a-story-to-pass-on.tex"
+}

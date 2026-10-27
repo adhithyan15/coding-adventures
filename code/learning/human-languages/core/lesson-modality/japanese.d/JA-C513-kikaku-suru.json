@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C513-kikaku-suru",
+    "language": "japanese",
+    "chapter": 513,
+    "sequence": 29700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efd0d0764ed5b7c7"
+  },
+  "findings": []
+}

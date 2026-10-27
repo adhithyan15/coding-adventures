@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:3b7d263aca1a3449",
+  "lessonIds": [
+    "JA-C376-shinkansen",
+    "JA-C376-kaisoku",
+    "JA-C376-shitetsu",
+    "JA-C376-rosen",
+    "JA-C376-tobasu"
+  ],
+  "tex": "japanese/book/chapters/ch376-fast-trains-and-local-lines.tex"
+}

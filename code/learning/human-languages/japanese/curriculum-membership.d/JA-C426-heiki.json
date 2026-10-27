@@ -1,0 +1,11 @@
+{
+  "id": "JA-C426-heiki",
+  "pathSegment": "JA-PATH-426-FEEL426",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-426-FEEL426",
+      "order": 2
+    }
+  ]
+}

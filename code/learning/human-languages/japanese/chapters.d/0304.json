@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "Repaying a Kindness",
+  "label": "ch:ja-repaying-a-kindness",
+  "canDo": "I can tell how a rescued bird repaid the old couple.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C304-mazushii",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can tell how a rescued bird repaid the old couple.",
+    "assesses": [
+      "JA-LEX-C304-ONGAESHI304-03",
+      "JA-LEX-C304-ONGAESHI304-04",
+      "JA-LEX-C304-ONGAESHI304-05"
+    ]
+  }
+}

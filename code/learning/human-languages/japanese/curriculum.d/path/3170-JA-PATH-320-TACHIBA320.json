@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-320-TACHIBA320",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "JA-EXT-320-TACHIBA320"
+  ],
+  "after": []
+}

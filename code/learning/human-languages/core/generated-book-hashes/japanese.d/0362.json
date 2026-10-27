@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:eb5f5099a0e8edba",
+  "lessonIds": [
+    "JA-C362-hiyou",
+    "JA-C362-keisan-suru",
+    "JA-C362-goukei",
+    "JA-C362-bukka",
+    "JA-C362-shikikin"
+  ],
+  "tex": "japanese/book/chapters/ch362-what-will-it-cost.tex"
+}

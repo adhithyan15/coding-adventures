@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C387-demukaeru",
+    "language": "japanese",
+    "chapter": 387,
+    "sequence": 22770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9bd4b1cdb34211c"
+  },
+  "findings": []
+}

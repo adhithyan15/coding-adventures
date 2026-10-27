@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 478,
+  "title": "Growing Up Together",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ac722574b9a0a7b6",
+  "lessons": [
+    {
+      "id": "JA-C478-nedaru",
+      "sequence": 27680,
+      "title": "ねだる (nedaru) — to pester for; to beg for",
+      "headword": "ねだる",
+      "romanization": "nedaru",
+      "gloss": "to pester for; to beg for",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9600d80b731279c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a bother, then the Japanese for upbringing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ねだる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねだる — nedaru — \"to pester for; to beg for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "すえっこが おかしを ねだっています。 — suekko ga okashi o nedatte imasu — \"The youngest child is pestering for sweets.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ねだります, nedarimasu; a godan verb. Past (polite): むすこが おかしを ねだりました。, musuko ga okashi o nedarimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねだる (nedaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict marks it as usually written in kana; its kanji spelling borrows characters meaning \"strong\" and \"ask\", chosen for the meaning and not the sound (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nedaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nedaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nedaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nedaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suekko ga okashi o nedatte imasu — The youngest child is pestering for sweets.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suekko ga okashi o nedatte imasu* — The youngest child is pestering for sweets.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a bother, then the Japanese for upbringing, then say nedaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a bother, then the Japanese for upbringing, then say *nedaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ねだる (nedaru) mean? (\"To pester for; to beg for\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C478-nedaru-type",
+              "prompt": "Say the Japanese for 'to pester for'.",
+              "assesses": [
+                "JA-LEX-C478-GROW478-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ねだる",
+                "nedaru"
+              ],
+              "feedback": {
+                "correct": "Right: ねだる (nedaru) is 'to pester for; to beg for'.",
+                "incorrect": "'To pester for' is ねだる (nedaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C478-amayakasu",
+      "sequence": 27690,
+      "title": "あまやかす (amayakasu) — to spoil a child",
+      "headword": "あまやかす",
+      "romanization": "amayakasu",
+      "gloss": "to spoil a child",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6790b003d7be630",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for upbringing, then the Japanese for to pester for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あまやかす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あまやかす — amayakasu — \"to spoil a child\"."
+            },
+            {
+              "kind": "speech",
+              "text": "そぼは いもうとを あまやかしています。 — sobo wa imōto o amayakashite imasu — \"My grandmother spoils my younger sister.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite あまやかします, amayakashimasu; a godan verb. Past (polite): ちちが むすめを あまやかしました。, chichi ga musume o amayakashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あまやかす (amayakasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amayakasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amayakasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amayakasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amayakasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sobo wa imōto o amayakashite imasu — My grandmother spoils my younger sister.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sobo wa imōto o amayakashite imasu* — My grandmother spoils my younger sister.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for upbringing, then the Japanese for to pester for, then say amayakasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for upbringing, then the Japanese for to pester for, then say *amayakasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あまやかす (amayakasu) mean? (\"To spoil a child\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C478-amayakasu-type",
+              "prompt": "Say the Japanese for 'to spoil a child'.",
+              "assesses": [
+                "JA-LEX-C478-GROW478-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あまやかす",
+                "amayakasu"
+              ],
+              "feedback": {
+                "correct": "Right: あまやかす (amayakasu) is 'to spoil a child'.",
+                "incorrect": "'To spoil a child' is あまやかす (amayakasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C478-ijimeru",
+      "sequence": 27700,
+      "title": "いじめる (ijimeru) — to bully",
+      "headword": "いじめる",
+      "romanization": "ijimeru",
+      "gloss": "to bully",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:923b461ff624421e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to pester for, then the Japanese for to spoil a child."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いじめる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いじめる — ijimeru — \"to bully\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ともだちを いじめないで ください。 — tomodachi o ijimenaide kudasai — \"Please do not bully your friends.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite いじめます, ijimemasu; an ichidan verb. Past (polite): あにが おとうとを いじめました。, ani ga otōto o ijimemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いじめる (ijimeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; JMdict writes it in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ijimeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ijimeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ijimeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ijimeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomodachi o ijimenaide kudasai — Please do not bully your friends.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomodachi o ijimenaide kudasai* — Please do not bully your friends.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to pester for, then the Japanese for to spoil a child, then say ijimeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to pester for, then the Japanese for to spoil a child, then say *ijimeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いじめる (ijimeru) mean? (\"To bully\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C478-ijimeru-type",
+              "prompt": "Say the Japanese for 'to bully'.",
+              "assesses": [
+                "JA-LEX-C478-GROW478-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いじめる",
+                "ijimeru"
+              ],
+              "feedback": {
+                "correct": "Right: いじめる (ijimeru) is 'to bully'.",
+                "incorrect": "'To bully' is いじめる (ijimeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C478-karakau",
+      "sequence": 27710,
+      "title": "からかう (karakau) — to tease",
+      "headword": "からかう",
+      "romanization": "karakau",
+      "gloss": "to tease",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:42bdaa2836dcb936",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to spoil a child, then the Japanese for to bully."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: からかう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "からかう — karakau — \"to tease\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あには いつも いもうとを からかいます。 — ani wa itsumo imōto o karakaimasu — \"My elder brother teases my younger sister all the time.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite からかいます, karakaimasu; a godan verb. Past (polite): ともだちが かれを からかいました。, tomodachi ga kare o karakaimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "からかう (karakau) is a native Japanese word (wago), inherited rather than borrowed from Chinese; JMdict writes it in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karakau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karakau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karakau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karakau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ani wa itsumo imōto o karakaimasu — My elder brother teases my younger sister all the time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ani wa itsumo imōto o karakaimasu* — My elder brother teases my younger sister all the time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to spoil a child, then the Japanese for to bully, then say karakau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to spoil a child, then the Japanese for to bully, then say *karakau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does からかう (karakau) mean? (\"To tease\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C478-karakau-type",
+              "prompt": "Say the Japanese for 'to tease'.",
+              "assesses": [
+                "JA-LEX-C478-GROW478-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "からかう",
+                "karakau"
+              ],
+              "feedback": {
+                "correct": "Right: からかう (karakau) is 'to tease'.",
+                "incorrect": "'To tease' is からかう (karakau)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C478-maneru",
+      "sequence": 27720,
+      "title": "まねる (maneru) — to imitate; to mimic",
+      "headword": "まねる",
+      "romanization": "maneru",
+      "gloss": "to imitate; to mimic",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31d2a0572e4cda49",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to bully, then the Japanese for to tease."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: まねる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まねる — maneru — \"to imitate; to mimic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こどもは ははを まねています。 — kodomo wa haha o manete imasu — \"The child is imitating her mother.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite まねます, manemasu; an ichidan verb. Past (polite): おとうとが あにを まねました。, otōto ga ani o manemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まねる (maneru) is a native Japanese word (wago), inherited rather than borrowed from Chinese. It shares its first part and its kanji spelling with the noun mane, \"imitating\"; that spelling pairs \"true\" and \"resemble\" for the meaning, not the sound (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maneru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maneru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maneru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maneru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kodomo wa haha o manete imasu — The child is imitating her mother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kodomo wa haha o manete imasu* — The child is imitating her mother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to bully, then the Japanese for to tease, then say maneru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to bully, then the Japanese for to tease, then say *maneru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does まねる (maneru) mean? (\"To imitate; to mimic\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C478-maneru-type",
+              "prompt": "Say the Japanese for 'to imitate'.",
+              "assesses": [
+                "JA-LEX-C478-GROW478-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "まねる",
+                "maneru"
+              ],
+              "feedback": {
+                "correct": "Right: まねる (maneru) is 'to imitate; to mimic'.",
+                "incorrect": "'To imitate' is まねる (maneru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

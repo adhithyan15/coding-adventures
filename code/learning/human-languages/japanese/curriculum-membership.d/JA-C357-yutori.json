@@ -1,0 +1,11 @@
+{
+  "id": "JA-C357-yutori",
+  "pathSegment": "JA-PATH-357-KEIYAKU357",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-357-KEIYAKU357",
+      "order": 3
+    }
+  ]
+}

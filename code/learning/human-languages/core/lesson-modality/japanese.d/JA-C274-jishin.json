@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C274-jishin",
+    "language": "japanese",
+    "chapter": 274,
+    "sequence": 16620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b27473eaace7782e"
+  },
+  "findings": []
+}

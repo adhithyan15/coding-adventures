@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "Taking Care",
+  "label": "ch:ja-taking-care",
+  "canDo": "I can say what to do to stay safe if something happens.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C350-bousai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can say what to do to stay safe if something happens.",
+    "assesses": [
+      "JA-LEX-C350-YOUJIN350-03",
+      "JA-LEX-C350-YOUJIN350-04",
+      "JA-LEX-C350-YOUJIN350-05"
+    ]
+  }
+}

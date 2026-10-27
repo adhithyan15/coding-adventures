@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C396-tadoritsuku",
+    "language": "japanese",
+    "chapter": 396,
+    "sequence": 23260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c40a5de0e660e12"
+  },
+  "findings": []
+}

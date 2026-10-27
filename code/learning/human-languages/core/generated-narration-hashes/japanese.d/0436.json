@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:c5e7f902d064bf31",
+  "lessonIds": [
+    "JA-C436-hogaraka",
+    "JA-C436-akarui",
+    "JA-C436-mukuchi",
+    "JA-C436-hitomishiri",
+    "JA-C436-furumau"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch436.txt",
+  "json": "japanese/narration/ch436.json",
+  "textHash": "fnv1a64:ebdffc47b2389818",
+  "jsonHash": "fnv1a64:36d76cfc2292931c",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-424-OTOSHIMONO424",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "JA-EXT-424-OTOSHIMONO424"
+  ],
+  "after": []
+}
