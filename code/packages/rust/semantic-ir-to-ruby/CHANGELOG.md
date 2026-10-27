@@ -14,14 +14,17 @@
   argument array.
 - `tests/twig_generated_names.rs` runs the cross-backend table.
 
-Security-review follow-up: **`raise` is emitted as `::Kernel.raise`.**
-Ruby reads a bare `raise` as a local variable whenever one of that name is
-in scope, so a bare re-raise inside a `rescue` in a function with a
-parameter `raise` read the parameter and the error vanished.
+Security-review follow-up: **`raise` is always a parenthesised call,
+`raise()` / `raise(args)`.**  Ruby reads a bare `raise` as a local variable
+whenever one of that name is in scope, so a bare re-raise inside a `rescue`
+in a function with a parameter `raise` read the parameter and the error
+vanished.  A parenthesised name is always a method call.
 `BuiltinCall("raise")` is always the raise operation in SIR (a frontend
-lowers a source local named `raise` to a `VarRef`), so the method is
-emitted unconditionally; `Kernel.raise` with no arguments re-raises `$!`
-exactly as the bare form does.
+lowers a source local named `raise` to a `VarRef`), so it is emitted that
+way unconditionally; `raise()` re-raises `$!` exactly as the bare form
+does.  (An intermediate fix emitted `::Kernel.raise`, which a user `module
+Kernel` — installed with `Object.const_set(:Kernel, …)` — broke: every
+raise became a `NoMethodError`.)
 
 ## Unreleased — Strict closures (issue #18461)
 

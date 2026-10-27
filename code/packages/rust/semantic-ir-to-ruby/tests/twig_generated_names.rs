@@ -474,3 +474,27 @@ fn non_finite_float_literals_name_nothing() {
         String::from_utf8_lossy(&out.stderr)
     );
 }
+
+/// Review of the #18466 follow-up (R1): a user `module Kernel` replaces the
+/// `Kernel` constant (this backend installs it with `Object.const_set`), so
+/// a re-raise spelled `::Kernel.raise` became a `NoMethodError`.  `raise()`
+/// is a method call no constant can redirect: the re-raised error must
+/// still reach the outer `rescue ArgumentError`.
+#[test]
+fn a_user_kernel_module_cannot_redirect_a_reraise() {
+    const SRC: &str = "module Kernel\nend\n\
+                       begin\n  begin\n    raise ArgumentError, \"inner\"\n  \
+                       rescue ArgumentError => e\n    raise\n  end\n\
+                       rescue ArgumentError => e\n  puts \"caught\"\nend\n";
+    let m = ruby_to_semantic_ir::compile_source(SRC, "t").expect("lower ruby");
+    let Some(out) = run_module(&m, SRC, "kernel_module") else {
+        return;
+    };
+    let got = String::from_utf8_lossy(&out.stdout);
+    assert!(
+        out.status.success() && got.trim_end() == "caught",
+        "want caught; exit {:?}, printed {got:?}, stderr:\n{}",
+        out.status.code(),
+        String::from_utf8_lossy(&out.stderr)
+    );
+}

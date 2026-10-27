@@ -2629,11 +2629,13 @@ fn user_functions_and_the_closure_wrapper_live_in_the_reserved_namespace() {
     assert_eq!(sanitize_ident("__sir_args"), "__sir_args");
 }
 
-/// `raise` is always the method, never a bare word Ruby could read as a
-/// local named `raise` (security review of #18466).
+/// `raise` is always a parenthesised call — a method call Ruby cannot read
+/// as a local named `raise`, and one no user `Kernel` constant can redirect
+/// (security review of #18466).
 #[test]
-fn raise_is_emitted_as_the_kernel_method() {
+fn raise_is_always_a_parenthesised_call() {
     let rb = ruby_to_ruby("begin\n  raise ArgumentError\nrescue ArgumentError => e\n  raise\nend\n");
-    assert!(rb.contains("::Kernel.raise(ArgumentError)"), "got:\n{rb}");
-    assert!(rb.contains("::Kernel.raise\n") || rb.contains("::Kernel.raise;") || rb.contains("::Kernel.raise "), "bare re-raise:\n{rb}");
+    assert!(rb.contains("raise(ArgumentError)"), "got:\n{rb}");
+    assert!(rb.contains("raise()"), "bare re-raise:\n{rb}");
+    assert!(!rb.contains("Kernel.raise"), "got:\n{rb}");
 }
