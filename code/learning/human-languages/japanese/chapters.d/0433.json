@@ -1,0 +1,19 @@
+{
+  "chapter": 433,
+  "title": "Longing and Envy",
+  "label": "ch:ja-longing-and-envy",
+  "canDo": "I can say what I long for and what interests me.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C433-kanshin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can say what I long for and what interests me.",
+    "assesses": [
+      "JA-LEX-C433-LONG433-03",
+      "JA-LEX-C433-LONG433-04",
+      "JA-LEX-C433-LONG433-05"
+    ]
+  }
+}

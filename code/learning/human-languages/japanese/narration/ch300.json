@@ -1,0 +1,804 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 300,
+  "title": "The Fox That Changed Shape",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:475a00372109366e",
+  "lessons": [
+    {
+      "id": "JA-C300-kitsune",
+      "sequence": 17960,
+      "title": "きつね (kitsune) — a fox",
+      "headword": "きつね",
+      "romanization": "kitsune",
+      "gloss": "a fox",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6078c8d6a5a89a75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to protect, then the Japanese for a feudal lord."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きつね",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きつね — kitsune — \"a fox\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やまに きつねが すんでいました。 — yama ni kitsune ga sunde imashita — \"A fox lived in the mountains.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きつね (kitsune) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kitsune",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kitsune*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kitsune, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kitsune*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yama ni kitsune ga sunde imashita — A fox lived in the mountains.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yama ni kitsune ga sunde imashita* — A fox lived in the mountains.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to protect, then the Japanese for a feudal lord, then say kitsune again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to protect, then the Japanese for a feudal lord, then say *kitsune* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きつね (kitsune) mean? (\"A fox\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C300-kitsune-type",
+              "prompt": "Say the Japanese for 'a fox'.",
+              "assesses": [
+                "JA-LEX-C300-KITSUNE300-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きつね",
+                "kitsune"
+              ],
+              "feedback": {
+                "correct": "Right: きつね (kitsune) is 'a fox'.",
+                "incorrect": "'A fox' is きつね (kitsune)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C300-tanuki",
+      "sequence": 17970,
+      "title": "たぬき (tanuki) — a raccoon dog",
+      "headword": "たぬき",
+      "romanization": "tanuki",
+      "gloss": "a raccoon dog",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:559bbeb448368896",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a feudal lord, then the Japanese for a fox."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たぬき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たぬき — tanuki — \"a raccoon dog\"."
+            },
+            {
+              "kind": "speech",
+              "text": "たぬきが おじいさんの うちに きました。 — tanuki ga ojiisan no uchi ni kimashita — \"A raccoon dog came to the old man's house.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たぬき (tanuki) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanuki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanuki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanuki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanuki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanuki ga ojiisan no uchi ni kimashita — A raccoon dog came to the old man's house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanuki ga ojiisan no uchi ni kimashita* — A raccoon dog came to the old man's house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a feudal lord, then the Japanese for a fox, then say tanuki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a feudal lord, then the Japanese for a fox, then say *tanuki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たぬき (tanuki) mean? (\"A raccoon dog\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C300-tanuki-type",
+              "prompt": "Say the Japanese for 'a raccoon dog'.",
+              "assesses": [
+                "JA-LEX-C300-KITSUNE300-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たぬき",
+                "tanuki"
+              ],
+              "feedback": {
+                "correct": "Right: たぬき (tanuki) is 'a raccoon dog'.",
+                "incorrect": "'A raccoon dog' is たぬき (tanuki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C300-bakeru",
+      "sequence": 17980,
+      "title": "ばける (bakeru) — to take the form of; to disguise oneself",
+      "headword": "ばける",
+      "romanization": "bakeru",
+      "gloss": "to take the form of; to disguise oneself",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80f30105a3773107",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a fox, then the Japanese for a raccoon dog."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ばける",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ばける — bakeru — \"to take the form of; to disguise oneself\"."
+            },
+            {
+              "kind": "speech",
+              "text": "むかしばなしで、たぬきが おじいさんに ばけました。 — mukashibanashi de, tanuki ga ojiisan ni bakemashita — \"In an old tale, a raccoon dog turned itself into an old man.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ばけます, bakemasu; an ichidan verb. Past (polite): きつねが おんなに ばけました。, kitsune ga onna ni bakemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ばける (bakeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bakeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bakeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bakeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bakeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukashibanashi de, tanuki ga ojiisan ni bakemashita — In an old tale, a raccoon dog turned itself into an old man.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukashibanashi de, tanuki ga ojiisan ni bakemashita* — In an old tale, a raccoon dog turned itself into an old man.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a fox, then the Japanese for a raccoon dog, then say bakeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a fox, then the Japanese for a raccoon dog, then say *bakeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ばける (bakeru) mean? (\"To take the form of; to disguise oneself\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C300-bakeru-type",
+              "prompt": "Say the Japanese for 'to take the form of'.",
+              "assesses": [
+                "JA-LEX-C300-KITSUNE300-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ばける",
+                "bakeru"
+              ],
+              "feedback": {
+                "correct": "Right: ばける (bakeru) is 'to take the form of; to disguise oneself'.",
+                "incorrect": "'To take the form of' is ばける (bakeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C300-noroi",
+      "sequence": 17990,
+      "title": "のろい (noroi) — a curse; a spell",
+      "headword": "のろい",
+      "romanization": "noroi",
+      "gloss": "a curse; a spell",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:237dbc67f910c14f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a raccoon dog, then the Japanese for to take the form of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: のろい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のろい — noroi — \"a curse; a spell\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おばあさんの のろいで、おうさまは ねこに なりました。 — obāsan no noroi de, ōsama wa neko ni narimashita — \"The old woman's curse turned the king into a cat.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のろい (noroi) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noroi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *noroi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noroi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *noroi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obāsan no noroi de, ōsama wa neko ni narimashita — The old woman's curse turned the king into a cat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obāsan no noroi de, ōsama wa neko ni narimashita* — The old woman's curse turned the king into a cat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a raccoon dog, then the Japanese for to take the form of, then say noroi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a raccoon dog, then the Japanese for to take the form of, then say *noroi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does のろい (noroi) mean? (\"A curse; a spell\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C300-noroi-type",
+              "prompt": "Say the Japanese for 'a curse'.",
+              "assesses": [
+                "JA-LEX-C300-KITSUNE300-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "のろい",
+                "noroi"
+              ],
+              "feedback": {
+                "correct": "Right: のろい (noroi) is 'a curse; a spell'.",
+                "incorrect": "'A curse' is のろい (noroi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C300-zurui",
+      "sequence": 18000,
+      "title": "ずるい (zurui) — sly; cunning",
+      "headword": "ずるい",
+      "romanization": "zurui",
+      "gloss": "sly; cunning",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a310abd116c743d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to take the form of, then the Japanese for a curse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ずるい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ずるい — zurui — \"sly; cunning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ずるい きつねは たぬきを だましました。 — zurui kitsune wa tanuki o damashimashita — \"The sly fox tricked the raccoon dog.\""
+            },
+            {
+              "kind": "speech",
+              "text": "An i-adjective."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ずるい (zurui) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zurui",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zurui*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zurui, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zurui*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zurui kitsune wa tanuki o damashimashita — The sly fox tricked the raccoon dog.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zurui kitsune wa tanuki o damashimashita* — The sly fox tricked the raccoon dog.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to take the form of, then the Japanese for a curse, then say zurui again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to take the form of, then the Japanese for a curse, then say *zurui* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ずるい (zurui) mean? (\"Sly; cunning\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C300-zurui-type",
+              "prompt": "Say the Japanese for 'sly'.",
+              "assesses": [
+                "JA-LEX-C300-KITSUNE300-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ずるい",
+                "zurui"
+              ],
+              "feedback": {
+                "correct": "Right: ずるい (zurui) is 'sly; cunning'.",
+                "incorrect": "'Sly' is ずるい (zurui)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

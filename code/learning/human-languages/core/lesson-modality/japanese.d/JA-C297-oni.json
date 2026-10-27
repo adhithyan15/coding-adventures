@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C297-oni",
+    "language": "japanese",
+    "chapter": 297,
+    "sequence": 17810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e8fda4cbecb1b90"
+  },
+  "findings": []
+}

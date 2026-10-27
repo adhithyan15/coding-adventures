@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C463-hazumu",
+    "language": "japanese",
+    "chapter": 463,
+    "sequence": 26940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fffd5e87d64b530c"
+  },
+  "findings": []
+}

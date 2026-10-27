@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C486-buhin",
+    "language": "japanese",
+    "chapter": 486,
+    "sequence": 28310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7709e79894b661b5"
+  },
+  "findings": []
+}

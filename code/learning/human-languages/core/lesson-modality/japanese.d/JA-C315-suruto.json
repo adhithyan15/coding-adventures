@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C315-suruto",
+    "language": "japanese",
+    "chapter": 315,
+    "sequence": 18740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:433ad69521504fd7"
+  },
+  "findings": []
+}

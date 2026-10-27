@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:9610ce1ac82d45e6",
+  "lessonIds": [
+    "JA-C432-nayamu",
+    "JA-C432-kuyokuyo-suru",
+    "JA-C432-koukai-suru",
+    "JA-C432-munashii",
+    "JA-C432-akirameru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch432.txt",
+  "json": "japanese/narration/ch432.json",
+  "textHash": "fnv1a64:f245217324a1d869",
+  "jsonHash": "fnv1a64:889c4716bf41fcde",
+  "findings": []
+}

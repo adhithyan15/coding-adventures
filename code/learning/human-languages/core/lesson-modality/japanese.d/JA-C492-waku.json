@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C492-waku",
+    "language": "japanese",
+    "chapter": 492,
+    "sequence": 28630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d401d4cb984cfcc2"
+  },
+  "findings": []
+}

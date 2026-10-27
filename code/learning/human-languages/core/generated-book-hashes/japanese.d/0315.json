@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:fdf43fda2d0f1da1",
+  "lessonIds": [
+    "JA-C315-suruto",
+    "JA-C315-tokoroga",
+    "JA-C315-shikashi",
+    "JA-C315-tokorodokoro",
+    "JA-C315-miharu"
+  ],
+  "tex": "japanese/book/chapters/ch315-and-then.tex"
+}

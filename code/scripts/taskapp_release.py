@@ -18,6 +18,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+import mosaic_release_state_gate as state_gate
+
 TAG_PREFIX = "task-app-v"
 SEMVER = re.compile(
     r"^(0|[1-9]\d*)\."
@@ -82,6 +84,33 @@ LINUX_BUNDLES: dict[str, dict[str, str]] = {
 }
 
 
+# --------------------------------------------------------------------------
+# Upgrade and corrupt-recovery gate
+# --------------------------------------------------------------------------
+#
+# The app-agnostic half of this gate -- the host envelope, the `.corrupt`
+# check, schema/version/byte validation -- lives in the shared
+# `mosaic_release_state_gate` module (spec: mosaic-release-state-gate-v1.md),
+# which Engram and the other Mosaic apps use with fixtures of the generic
+# `mosaic/release-upgrade-fixture` schema.
+#
+# TaskApp's v0.1.0 fixture predates that schema. It is read here through an
+# adapter rather than converted, because the file is a published contract: the
+# task-mosaic-app Rust test asserts its `fixtureSchema`, and five release-lane
+# steps name it. Its `expectedTask` check also stays here, because it is
+# stronger than any single JSON pointer -- it demands exactly one task with that
+# name anywhere in the workspace, whatever ids TaskApp gives tasks and projects.
+#
+#     legacy fixture file ──_load_upgrade_fixture──▶ dict (validated as before)
+#                                    │
+#                         _gate_fixture│ acceptedLiveVersions = [snapshotVersion]
+#                                    ▼
+#               GateFixture ──▶ mosaic_release_state_gate.materialize / verify
+#                                    │ decoded payload
+#                                    ▼
+#                         _verify_expected_task (TaskApp only)
+
+
 def _load_upgrade_fixture(path: Path) -> dict[str, Any]:
     fixture = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(fixture, dict):
@@ -105,55 +134,35 @@ def _load_upgrade_fixture(path: Path) -> dict[str, Any]:
     return fixture
 
 
+def _gate_fixture(fixture: dict[str, Any]) -> state_gate.GateFixture:
+    """Translate a validated legacy fixture into the shared gate's form.
+
+    `acceptedLiveVersions` is exactly the fixture's own version: TaskApp has
+    never bumped its payload, so any other live version is unexplained. There
+    are no pointer expectations; `_verify_expected_task` takes their place.
+    """
+
+    return state_gate.GateFixture(
+        source_app="TaskApp",
+        source_version=fixture["sourceVersion"],
+        snapshot_schema=fixture["snapshotSchema"],
+        snapshot_version=fixture["snapshotVersion"],
+        accepted_live_versions=(fixture["snapshotVersion"],),
+        expectations=(),
+        state=fixture["state"],
+    )
+
+
 def materialize_upgrade_fixture(fixture_path: Path, output: Path) -> Path:
     """Write an older semantic fixture in the exact host persistence envelope."""
 
     fixture = _load_upgrade_fixture(fixture_path)
-    state_bytes = json.dumps(
-        fixture["state"],
-        ensure_ascii=False,
-        separators=(",", ":"),
-        sort_keys=True,
-    ).encode("utf-8")
-    snapshot = {
-        "schema": fixture["snapshotSchema"],
-        "version": fixture["snapshotVersion"],
-        "bytes": list(state_bytes),
-    }
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(
-        json.dumps(snapshot, separators=(",", ":"), sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
-    return output
+    return state_gate.materialize_fixture(_gate_fixture(fixture), output)
 
 
-def verify_upgrade_state(fixture_path: Path, state_path: Path) -> None:
-    """Prove a host retained the compatible fixture at its selected live path."""
+def _verify_expected_task(expected: dict[str, Any], state: dict[str, Any]) -> None:
+    """TaskApp's own question: is the fixture's task still there, unchanged?"""
 
-    fixture = _load_upgrade_fixture(fixture_path)
-    if not state_path.is_file():
-        raise ValueError(f"TaskApp upgrade state does not exist: {state_path}")
-    corrupt_path = Path(f"{state_path}.corrupt")
-    if corrupt_path.exists():
-        raise ValueError(f"TaskApp quarantined a compatible upgrade fixture: {corrupt_path}")
-    snapshot = json.loads(state_path.read_text(encoding="utf-8"))
-    if not isinstance(snapshot, dict):
-        raise TypeError("TaskApp live state must be a JSON object")
-    if snapshot.get("schema") != fixture["snapshotSchema"]:
-        raise ValueError("TaskApp live state changed the snapshot schema")
-    if snapshot.get("version") != fixture["snapshotVersion"]:
-        raise ValueError("TaskApp live state changed the snapshot version")
-    encoded = snapshot.get("bytes")
-    if (
-        not isinstance(encoded, list)
-        or any(not isinstance(value, int) or not 0 <= value <= 255 for value in encoded)
-    ):
-        raise ValueError("TaskApp live state has invalid snapshot bytes")
-    state = json.loads(bytes(encoded).decode("utf-8"))
-    if not isinstance(state, dict):
-        raise TypeError("TaskApp snapshot bytes must decode to a JSON object")
-    expected = fixture["expectedTask"]
     projects = state.get("workspace", {}).get("projects", {})
     if not isinstance(projects, dict):
         raise TypeError("TaskApp snapshot projects must be a JSON object")
@@ -174,6 +183,14 @@ def verify_upgrade_state(fixture_path: Path, state_path: Path) -> None:
     complexity = projects.get(active, {}).get("settings", {}).get("complexity")
     if complexity != expected.get("projectComplexity"):
         raise ValueError("TaskApp upgrade-fixture project complexity changed")
+
+
+def verify_upgrade_state(fixture_path: Path, state_path: Path) -> None:
+    """Prove a host retained the compatible fixture at its selected live path."""
+
+    fixture = _load_upgrade_fixture(fixture_path)
+    state = state_gate.verify_state(_gate_fixture(fixture), state_path)
+    _verify_expected_task(fixture["expectedTask"], state)
 
 
 def validate_identifiers(version: str, tag: str, commit: str | None = None) -> None:

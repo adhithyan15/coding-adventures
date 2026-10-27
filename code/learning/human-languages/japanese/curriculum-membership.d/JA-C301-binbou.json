@@ -1,0 +1,11 @@
+{
+  "id": "JA-C301-binbou",
+  "pathSegment": "JA-PATH-301-TAKARA301",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-301-TAKARA301",
+      "order": 3
+    }
+  ]
+}

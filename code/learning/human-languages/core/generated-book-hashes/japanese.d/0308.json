@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:9b0ab3785723b1d7",
+  "lessonIds": [
+    "JA-C308-machigai",
+    "JA-C308-kikoeru",
+    "JA-C308-juwaki",
+    "JA-C308-hanashikakeru",
+    "JA-C308-isogashii"
+  ],
+  "tex": "japanese/book/chapters/ch308-a-wrong-number.tex"
+}

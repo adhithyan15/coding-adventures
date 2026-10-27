@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "Parts and Fittings",
+  "label": "ch:ja-parts-and-fittings",
+  "canDo": "I can say what is broken and what needs replacing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C486-hagasu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can say what is broken and what needs replacing.",
+    "assesses": [
+      "JA-LEX-C486-PARTS486-03",
+      "JA-LEX-C486-PARTS486-04",
+      "JA-LEX-C486-PARTS486-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "Doing Things Properly",
+  "label": "ch:ja-doing-things-properly",
+  "canDo": "I can tell someone to do a thing properly and say why.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C330-aratameru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can tell someone to do a thing properly and say why.",
+    "assesses": [
+      "JA-LEX-C330-CHANTO330-03",
+      "JA-LEX-C330-CHANTO330-04",
+      "JA-LEX-C330-CHANTO330-05"
+    ]
+  }
+}

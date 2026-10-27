@@ -370,9 +370,12 @@ impl System370Simulator {
         let source_len = self.state.gprs[r2 + 1] & ADDRESS_MASK;
         let pad = (self.state.gprs[r2 + 1] >> 24) as u8;
         let copied = destination_len.min(source_len);
-        // Recognition of destructive overlap suppresses the operation: no
-        // storage byte is referenced and neither operand pair progresses.
+        // Recognition of destructive overlap suppresses storage movement and
+        // pair progress, but architectural completion still clears the
+        // ignored high byte of both address registers.
         if copied != 0 && destination > source && destination.wrapping_sub(source) < copied {
+            self.state.gprs[r1] = destination;
+            self.state.gprs[r2] = source;
             self.state.condition_code = 3;
             return Ok(("MVCL", format!("MVCL R{r1},R{r2} (destructive overlap)")));
         }

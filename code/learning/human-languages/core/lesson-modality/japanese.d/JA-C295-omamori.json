@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C295-omamori",
+    "language": "japanese",
+    "chapter": 295,
+    "sequence": 17720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9fecd33c4f93c3c7"
+  },
+  "findings": []
+}

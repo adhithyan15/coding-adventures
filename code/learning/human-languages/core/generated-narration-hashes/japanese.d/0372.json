@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:0017787b14b9a8e9",
+  "lessonIds": [
+    "JA-C372-ekimae",
+    "JA-C372-baiten",
+    "JA-C372-machiawaseru",
+    "JA-C372-machiaishitsu",
+    "JA-C372-jidouhanbaiki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch372.txt",
+  "json": "japanese/narration/ch372.json",
+  "textHash": "fnv1a64:9175dbc6f7c93069",
+  "jsonHash": "fnv1a64:e663182821d38b7f",
+  "findings": []
+}

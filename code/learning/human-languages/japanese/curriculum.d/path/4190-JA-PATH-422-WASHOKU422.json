@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-422-WASHOKU422",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "JA-EXT-422-WASHOKU422"
+  ],
+  "after": []
+}

@@ -249,6 +249,11 @@ path receives its own budget.
 Exact whole-number multiplication may scale the sign-rooted integer transform
 through magnitude `2^53`, including composition with exact additive terms, as
 long as every intermediate magnitude stays in that exact binary64 range.
+An integer-only multiplication chain may temporarily exceed `2^53` up to
+`i64::MAX` when a later static `div` or `mod` reduces the final magnitude back
+into binary64's contiguous exact-integer range before widening. Checked
+overflow still fails closed, and real `/` may not consume an over-wide
+intermediate because its integer operand would widen before division.
 Independently bounded dynamic sign-rooted transforms may multiply under the
 same checked magnitude limit because every factor remains an exact integer.
 They may also add or subtract under a checked complete-sum magnitude limit,

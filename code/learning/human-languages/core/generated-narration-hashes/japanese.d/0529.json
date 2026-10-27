@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:280e3a7773d35d40",
+  "lessonIds": [
+    "JA-C529-nazeka",
+    "JA-C529-tokorode",
+    "JA-C529-douse",
+    "JA-C529-isso",
+    "JA-C529-sasuga"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch529.txt",
+  "json": "japanese/narration/ch529.json",
+  "textHash": "fnv1a64:faa0b1e4ca39539b",
+  "jsonHash": "fnv1a64:86bd27be15cd7a32",
+  "findings": []
+}

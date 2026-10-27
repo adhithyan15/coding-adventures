@@ -1,0 +1,21 @@
+{
+  "chapter": 273,
+  "title": "The Trial",
+  "label": "ch:ja-the-trial",
+  "canDo": "I can say what happened in court and what was paid.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-R273-review-268-273",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 273: I can say what happened in court and what was paid.",
+    "assesses": [
+      "JA-LEX-C273-SAIBAN273-01",
+      "JA-LEX-C273-SAIBAN273-02",
+      "JA-LEX-C273-SAIBAN273-03",
+      "JA-LEX-C273-SAIBAN273-04",
+      "JA-LEX-C273-SAIBAN273-05"
+    ]
+  }
+}

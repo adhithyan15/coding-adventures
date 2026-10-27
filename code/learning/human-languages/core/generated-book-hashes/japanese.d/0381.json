@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:c85ea66443f28d7a",
+  "lessonIds": [
+    "JA-C381-funatabi",
+    "JA-C381-kouro",
+    "JA-C381-kishi",
+    "JA-C381-kogu",
+    "JA-C381-tadayou"
+  ],
+  "tex": "japanese/book/chapters/ch381-the-ferry-crossing.tex"
+}

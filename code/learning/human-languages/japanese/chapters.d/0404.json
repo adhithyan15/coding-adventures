@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "The View from the Top",
+  "label": "ch:ja-the-view-from-the-top",
+  "canDo": "I can describe a view.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C404-miorosu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can describe a view.",
+    "assesses": [
+      "JA-LEX-C404-FUUKEI404-03",
+      "JA-LEX-C404-FUUKEI404-04",
+      "JA-LEX-C404-FUUKEI404-05"
+    ]
+  }
+}

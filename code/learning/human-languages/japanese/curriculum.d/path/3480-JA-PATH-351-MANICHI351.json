@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-351-MANICHI351",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "JA-EXT-351-MANICHI351"
+  ],
+  "after": []
+}

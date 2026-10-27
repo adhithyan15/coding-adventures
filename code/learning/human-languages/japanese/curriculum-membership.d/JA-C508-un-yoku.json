@@ -1,0 +1,11 @@
+{
+  "id": "JA-C508-un-yoku",
+  "pathSegment": "JA-PATH-508-LUCK508",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-508-LUCK508",
+      "order": 3
+    }
+  ]
+}

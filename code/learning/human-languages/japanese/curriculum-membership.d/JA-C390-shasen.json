@@ -1,0 +1,11 @@
+{
+  "id": "JA-C390-shasen",
+  "pathSegment": "JA-PATH-390-KOUSOKU390",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-390-KOUSOKU390",
+      "order": 1
+    }
+  ]
+}

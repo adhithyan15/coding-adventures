@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C461-karate",
+    "language": "japanese",
+    "chapter": 461,
+    "sequence": 26820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6b36c4a8dd98df0"
+  },
+  "findings": []
+}

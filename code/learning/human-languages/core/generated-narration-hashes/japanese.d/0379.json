@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:74eff0a1da78e2de",
+  "lessonIds": [
+    "JA-C379-suwaru",
+    "JA-C379-sharyou",
+    "JA-C379-tsuuro",
+    "JA-C379-shanai",
+    "JA-C379-unchin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch379.txt",
+  "json": "japanese/narration/ch379.json",
+  "textHash": "fnv1a64:44cbe14c70655446",
+  "jsonHash": "fnv1a64:a2ae37775919e54a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:d4daed30e5feb9eb",
+  "lessonIds": [
+    "JA-C360-shuunyuu",
+    "JA-C360-shishutsu",
+    "JA-C360-seikatsuhi",
+    "JA-C360-tamaru",
+    "JA-C360-osaeru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch360.txt",
+  "json": "japanese/narration/ch360.json",
+  "textHash": "fnv1a64:74e0322b5a013be6",
+  "jsonHash": "fnv1a64:cbd43efd1cb707e9",
+  "findings": []
+}

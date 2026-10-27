@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C424-sagashimawaru",
+    "language": "japanese",
+    "chapter": 424,
+    "sequence": 24710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b8cf0d814a4e0ef"
+  },
+  "findings": []
+}

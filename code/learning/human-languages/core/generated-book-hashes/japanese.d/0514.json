@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:20e5407d39c74bf2",
+  "lessonIds": [
+    "JA-C514-suisoku-suru",
+    "JA-C514-yosoku-suru",
+    "JA-C514-mikomi",
+    "JA-C514-yohou",
+    "JA-C514-mitoushi"
+  ],
+  "tex": "japanese/book/chapters/ch514-guesses-and-forecasts.tex"
+}

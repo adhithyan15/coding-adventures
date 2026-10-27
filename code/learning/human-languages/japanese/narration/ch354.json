@@ -1,0 +1,796 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 354,
+  "title": "Weather Plans",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c85d18f16efd8f04",
+  "lessons": [
+    {
+      "id": "JA-C354-doshaburi",
+      "sequence": 20910,
+      "title": "どしゃぶり (doshaburi) — a downpour",
+      "headword": "どしゃぶり",
+      "romanization": "doshaburi",
+      "gloss": "a downpour",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fac260be45ad5cd6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a water outage, then the Japanese for tentatively."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: どしゃぶり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どしゃぶり — doshaburi — \"a downpour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "どしゃぶりに なったら、しあいは ちゅうしでしょう。 — doshaburi ni nattara, shiai wa chūshi deshō — \"If it pours, the match will probably be called off.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どしゃぶり (doshaburi) is built from the Sino-Japanese dosha, written with two Chinese characters read with their on'yomi, readings borrowed from Chinese, do, \"soil\" (Middle Chinese thuX) and sha, \"sand\" (srae), and the native buri, from furu, \"to fall\", voiced from furi. JMdict marks that spelling as ateji, characters chosen for their sound, so where dosha came from is not settled (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doshaburi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doshaburi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doshaburi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doshaburi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doshaburi ni nattara, shiai wa chūshi deshō — If it pours, the match will probably be called off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doshaburi ni nattara, shiai wa chūshi deshō* — If it pours, the match will probably be called off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a water outage, then the Japanese for tentatively, then say doshaburi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a water outage, then the Japanese for tentatively, then say *doshaburi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does どしゃぶり (doshaburi) mean? (\"A downpour\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C354-doshaburi-type",
+              "prompt": "Say the Japanese for 'a downpour'.",
+              "assesses": [
+                "JA-LEX-C354-TENKI354-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "どしゃぶり",
+                "doshaburi"
+              ],
+              "feedback": {
+                "correct": "Right: どしゃぶり (doshaburi) is 'a downpour'.",
+                "incorrect": "'A downpour' is どしゃぶり (doshaburi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C354-kanpa",
+      "sequence": 20920,
+      "title": "かんぱ (kanpa) — a cold wave; a cold snap",
+      "headword": "かんぱ",
+      "romanization": "kanpa",
+      "gloss": "a cold wave; a cold snap",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e601bb1d54f79e85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for tentatively, then the Japanese for a downpour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かんぱ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かんぱ — kanpa — \"a cold wave; a cold snap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かんぱが きたら、すいどうが こおるでしょう。 — kanpa ga kitara, suidō ga kōru deshō — \"If a cold snap comes, the water pipes will probably freeze.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かんぱ (kanpa) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kan, \"cold\" (Middle Chinese han) and pa, \"waves\" (pa) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanpa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanpa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanpa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanpa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanpa ga kitara, suidō ga kōru deshō — If a cold snap comes, the water pipes will probably freeze.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanpa ga kitara, suidō ga kōru deshō* — If a cold snap comes, the water pipes will probably freeze.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for tentatively, then the Japanese for a downpour, then say kanpa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for tentatively, then the Japanese for a downpour, then say *kanpa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かんぱ (kanpa) mean? (\"A cold wave; a cold snap\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C354-kanpa-type",
+              "prompt": "Say the Japanese for 'a cold snap'.",
+              "assesses": [
+                "JA-LEX-C354-TENKI354-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かんぱ",
+                "kanpa"
+              ],
+              "feedback": {
+                "correct": "Right: かんぱ (kanpa) is 'a cold wave; a cold snap'.",
+                "incorrect": "'A cold snap' is かんぱ (kanpa)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C354-shikke",
+      "sequence": 20930,
+      "title": "しっけ (shikke) — dampness; humidity",
+      "headword": "しっけ",
+      "romanization": "shikke",
+      "gloss": "dampness; humidity",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df1ebd6b5783dfb0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a downpour, then the Japanese for a cold snap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しっけ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しっけ — shikke — \"dampness; humidity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "つゆに なったら、しっけが おおく なるでしょう。 — tsuyu ni nattara, shikke ga ōku naru deshō — \"When the rainy season comes, it will probably get damp.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しっけ (shikke) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shitsu, \"damp\" (Middle Chinese syip) and ke, \"spirit\" (khj+jH) (KANJIDIC2; Middle Chinese in Baxter's transcription). The two join as shik-ke."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shikke",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shikke*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shikke, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shikke*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsuyu ni nattara, shikke ga ōku naru deshō — When the rainy season comes, it will probably get damp.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsuyu ni nattara, shikke ga ōku naru deshō* — When the rainy season comes, it will probably get damp.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a downpour, then the Japanese for a cold snap, then say shikke again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a downpour, then the Japanese for a cold snap, then say *shikke* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しっけ (shikke) mean? (\"Dampness; humidity\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C354-shikke-type",
+              "prompt": "Say the Japanese for 'dampness'.",
+              "assesses": [
+                "JA-LEX-C354-TENKI354-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しっけ",
+                "shikke"
+              ],
+              "feedback": {
+                "correct": "Right: しっけ (shikke) is 'dampness; humidity'.",
+                "incorrect": "'Dampness' is しっけ (shikke)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C354-higasa",
+      "sequence": 20940,
+      "title": "ひがさ (higasa) — a parasol",
+      "headword": "ひがさ",
+      "romanization": "higasa",
+      "gloss": "a parasol",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76607b62965824c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a cold snap, then the Japanese for dampness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひがさ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひがさ — higasa — \"a parasol\"."
+            },
+            {
+              "kind": "speech",
+              "text": "はれたら、ひがさを もって ください。 — haretara, higasa o motte kudasai — \"If it is sunny, please take a parasol.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひがさ (higasa) is a native Japanese word (wago), inherited rather than borrowed from Chinese: it is built from hi, \"sun\" and gasa, \"umbrella (kasa)\", and its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "higasa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *higasa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "higasa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *higasa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haretara, higasa o motte kudasai — If it is sunny, please take a parasol.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haretara, higasa o motte kudasai* — If it is sunny, please take a parasol.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a cold snap, then the Japanese for dampness, then say higasa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a cold snap, then the Japanese for dampness, then say *higasa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひがさ (higasa) mean? (\"A parasol\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C354-higasa-type",
+              "prompt": "Say the Japanese for 'a parasol'.",
+              "assesses": [
+                "JA-LEX-C354-TENKI354-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひがさ",
+                "higasa"
+              ],
+              "feedback": {
+                "correct": "Right: ひがさ (higasa) is 'a parasol'.",
+                "incorrect": "'A parasol' is ひがさ (higasa)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C354-arakajime",
+      "sequence": 20950,
+      "title": "あらかじめ (arakajime) — in advance; beforehand",
+      "headword": "あらかじめ",
+      "romanization": "arakajime",
+      "gloss": "in advance; beforehand",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0823bf5500c31589",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for dampness, then the Japanese for a parasol."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あらかじめ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あらかじめ — arakajime — \"in advance; beforehand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "よていが かわったら、あらかじめ おしえて ください。 — yotei ga kawattara, arakajime oshiete kudasai — \"If the plans change, please let me know in advance.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あらかじめ (arakajime) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. JMdict notes that it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arakajime",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arakajime*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arakajime, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arakajime*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yotei ga kawattara, arakajime oshiete kudasai — If the plans change, please let me know in advance.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yotei ga kawattara, arakajime oshiete kudasai* — If the plans change, please let me know in advance.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for dampness, then the Japanese for a parasol, then say arakajime again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for dampness, then the Japanese for a parasol, then say *arakajime* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あらかじめ (arakajime) mean? (\"In advance; beforehand\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C354-arakajime-type",
+              "prompt": "Say the Japanese for 'in advance'.",
+              "assesses": [
+                "JA-LEX-C354-TENKI354-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あらかじめ",
+                "arakajime"
+              ],
+              "feedback": {
+                "correct": "Right: あらかじめ (arakajime) is 'in advance; beforehand'.",
+                "incorrect": "'In advance' is あらかじめ (arakajime)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

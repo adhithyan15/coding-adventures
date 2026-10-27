@@ -1,0 +1,11 @@
+{
+  "id": "JA-C341-tatoeba",
+  "pathSegment": "JA-PATH-341-SETTOKU341",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-341-SETTOKU341",
+      "order": 4
+    }
+  ]
+}

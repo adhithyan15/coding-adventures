@@ -1,0 +1,807 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 480,
+  "title": "Making Things",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7f7f1e5d40c10e3f",
+  "lessons": [
+    {
+      "id": "JA-C480-tsukuru",
+      "sequence": 28000,
+      "title": "つくる (tsukuru) — to make; to build",
+      "headword": "つくる",
+      "romanization": "tsukuru",
+      "gloss": "to make; to build",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e025e839ad769454",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for serious, then the Japanese for selfish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つくる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つくる — tsukuru — \"to make; to build\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは いすを つくります。 — chichi wa isu o tsukurimasu — \"My father makes chairs.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite つくります, tsukurimasu; a godan verb. Past (polite): ちちが たなを つくりました。, chichi ga tana o tsukurimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つくる (tsukuru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukuru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukuru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukuru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukuru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi wa isu o tsukurimasu — My father makes chairs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi wa isu o tsukurimasu* — My father makes chairs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for serious, then the Japanese for selfish, then say tsukuru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for serious, then the Japanese for selfish, then say *tsukuru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つくる (tsukuru) mean? (\"To make; to build\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C480-tsukuru-type",
+              "prompt": "Say the Japanese for 'to make'.",
+              "assesses": [
+                "JA-LEX-C480-MAKE480-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つくる",
+                "tsukuru"
+              ],
+              "feedback": {
+                "correct": "Right: つくる (tsukuru) is 'to make; to build'.",
+                "incorrect": "'To make' is つくる (tsukuru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C480-deshi",
+      "sequence": 28010,
+      "title": "でし (deshi) — an apprentice; a pupil",
+      "headword": "でし",
+      "romanization": "deshi",
+      "gloss": "an apprentice; a pupil",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:258726099ba73eec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for selfish, then the Japanese for to make."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: でし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "でし — deshi — \"an apprentice; a pupil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "だいくの でしは まいにち はたらきます。 — daiku no deshi wa mainichi hatarakimasu — \"The carpenter's apprentice works every day.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "でし (deshi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are de, \"younger brother\" (Middle Chinese dejX) and shi, \"child\" (tsiX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "deshi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *deshi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "deshi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *deshi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daiku no deshi wa mainichi hatarakimasu — The carpenter's apprentice works every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daiku no deshi wa mainichi hatarakimasu* — The carpenter's apprentice works every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for selfish, then the Japanese for to make, then say deshi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for selfish, then the Japanese for to make, then say *deshi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does でし (deshi) mean? (\"An apprentice; a pupil\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C480-deshi-type",
+              "prompt": "Say the Japanese for 'an apprentice'.",
+              "assesses": [
+                "JA-LEX-C480-MAKE480-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "でし",
+                "deshi"
+              ],
+              "feedback": {
+                "correct": "Right: でし (deshi) is 'an apprentice; a pupil'.",
+                "incorrect": "'An apprentice' is でし (deshi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C480-shishou",
+      "sequence": 28020,
+      "title": "ししょう (shishō) — a master (of a craft); a teacher",
+      "headword": "ししょう",
+      "romanization": "shishō",
+      "gloss": "a master (of a craft); a teacher",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3aae2e1bd421a112",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to make, then the Japanese for an apprentice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ししょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ししょう — shishō — \"a master (of a craft); a teacher\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ししょうは でしに しごとを おしえます。 — shishō wa deshi ni shigoto o oshiemasu — \"The master teaches the apprentice the work.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ししょう (shishō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shi, \"expert\" (Middle Chinese srij) and shō, \"artisan\" (dzjangH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shishō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shishō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shishō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shishō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shishō wa deshi ni shigoto o oshiemasu — The master teaches the apprentice the work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shishō wa deshi ni shigoto o oshiemasu* — The master teaches the apprentice the work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to make, then the Japanese for an apprentice, then say shishō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to make, then the Japanese for an apprentice, then say *shishō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ししょう (shishō) mean? (\"A master (of a craft); a teacher\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C480-shishou-type",
+              "prompt": "Say the Japanese for 'a master (of a craft)'.",
+              "assesses": [
+                "JA-LEX-C480-MAKE480-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ししょう",
+                "shishō",
+                "shishou",
+                "shishoo",
+                "shisho"
+              ],
+              "feedback": {
+                "correct": "Right: ししょう (shishō) is 'a master (of a craft); a teacher'.",
+                "incorrect": "'A master (of a craft)' is ししょう (shishō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C480-tema",
+      "sequence": 28030,
+      "title": "てま (tema) — time and effort; trouble",
+      "headword": "てま",
+      "romanization": "tema",
+      "gloss": "time and effort; trouble",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:110c8479f83afde2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an apprentice, then the Japanese for a master (of a craft)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: てま",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てま — tema — \"time and effort; trouble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この しごとは てまが かかります。 — kono shigoto wa tema ga kakarimasu — \"This work takes a lot of time and effort.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てま (tema) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: built from te, \"hand\" and ma, \"interval\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tema",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tema*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tema, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tema*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono shigoto wa tema ga kakarimasu — This work takes a lot of time and effort.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono shigoto wa tema ga kakarimasu* — This work takes a lot of time and effort.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an apprentice, then the Japanese for a master (of a craft), then say tema again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an apprentice, then the Japanese for a master (of a craft), then say *tema* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does てま (tema) mean? (\"Time and effort; trouble\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C480-tema-type",
+              "prompt": "Say the Japanese for 'time and effort'.",
+              "assesses": [
+                "JA-LEX-C480-MAKE480-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "てま",
+                "tema"
+              ],
+              "feedback": {
+                "correct": "Right: てま (tema) is 'time and effort; trouble'.",
+                "incorrect": "'Time and effort' is てま (tema)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C480-shiageru",
+      "sequence": 28040,
+      "title": "しあげる (shiageru) — to finish off; to complete (a piece of work)",
+      "headword": "しあげる",
+      "romanization": "shiageru",
+      "gloss": "to finish off; to complete (a piece of work)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24c86aff937280d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a master (of a craft), then the Japanese for time and effort."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しあげる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しあげる — shiageru — \"to finish off; to complete (a piece of work)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あしたまでに いすを しあげます。 — ashita made ni isu o shiagemasu — \"I will finish the chair by tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite しあげます, shiagemasu; an ichidan verb. Past (polite): だいくが いすを しあげました。, daiku ga isu o shiagemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しあげる (shiageru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiageru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiageru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiageru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiageru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ashita made ni isu o shiagemasu — I will finish the chair by tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ashita made ni isu o shiagemasu* — I will finish the chair by tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a master (of a craft), then the Japanese for time and effort, then say shiageru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a master (of a craft), then the Japanese for time and effort, then say *shiageru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しあげる (shiageru) mean? (\"To finish off; to complete (a piece of work)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C480-shiageru-type",
+              "prompt": "Say the Japanese for 'to finish off'.",
+              "assesses": [
+                "JA-LEX-C480-MAKE480-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しあげる",
+                "shiageru"
+              ],
+              "feedback": {
+                "correct": "Right: しあげる (shiageru) is 'to finish off; to complete (a piece of work)'.",
+                "incorrect": "'To finish off' is しあげる (shiageru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

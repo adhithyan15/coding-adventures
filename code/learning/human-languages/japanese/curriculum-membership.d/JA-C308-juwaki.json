@@ -1,0 +1,11 @@
+{
+  "id": "JA-C308-juwaki",
+  "pathSegment": "JA-PATH-308-MACHIGAI308",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-308-MACHIGAI308",
+      "order": 2
+    }
+  ]
+}

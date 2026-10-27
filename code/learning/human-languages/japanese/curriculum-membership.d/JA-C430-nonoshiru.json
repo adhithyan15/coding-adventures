@@ -1,0 +1,11 @@
+{
+  "id": "JA-C430-nonoshiru",
+  "pathSegment": "JA-PATH-430-ANGER430",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-430-ANGER430",
+      "order": 1
+    }
+  ]
+}

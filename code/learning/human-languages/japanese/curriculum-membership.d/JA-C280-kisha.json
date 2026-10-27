@@ -1,0 +1,11 @@
+{
+  "id": "JA-C280-kisha",
+  "pathSegment": "JA-PATH-280-KIJI280",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-280-KIJI280",
+      "order": 3
+    }
+  ]
+}

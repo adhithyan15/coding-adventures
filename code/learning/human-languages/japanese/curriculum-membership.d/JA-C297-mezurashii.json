@@ -1,0 +1,11 @@
+{
+  "id": "JA-C297-mezurashii",
+  "pathSegment": "JA-PATH-297-ONI297",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-297-ONI297",
+      "order": 4
+    }
+  ]
+}

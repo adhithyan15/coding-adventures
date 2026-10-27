@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:82044303a624e39d",
+  "lessonIds": [
+    "JA-C510-guuzen",
+    "JA-C510-kikkake",
+    "JA-C510-futo",
+    "JA-C510-ikasu",
+    "JA-C510-megumareru"
+  ],
+  "tex": "japanese/book/chapters/ch510-by-chance.tex"
+}
