@@ -1,0 +1,11 @@
+{
+  "id": "JA-C409-sakai",
+  "pathSegment": "JA-PATH-409-CHIIKI409",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-409-CHIIKI409",
+      "order": 3
+    }
+  ]
+}

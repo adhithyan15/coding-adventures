@@ -313,7 +313,8 @@ describe("corpus level summary", () => {
       // questions, the past, the future and practical texts, the five A2 spine
       // nodes), and its A2 vocabulary, chapters 146-249, took attained to A2.
       // Its B1 core, chapters 250-261, now takes `reach` past A2, so it has
-      // left this list; attained stays A2 until the B1 vocabulary lands.
+      // left this list, and its B1 vocabulary, chapters 262-533, took attained
+      // to B1.
       "marwadi",
       "punjabi",
     ]);

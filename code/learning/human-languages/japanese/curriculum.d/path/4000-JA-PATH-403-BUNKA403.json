@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-403-BUNKA403",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "JA-EXT-403-BUNKA403"
+  ],
+  "after": []
+}

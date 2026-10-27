@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:a6b7dda367379b48",
+  "lessonIds": [
+    "JA-C387-demukaeru",
+    "JA-C387-mikakeru",
+    "JA-C387-toujou",
+    "JA-C387-koukuuken",
+    "JA-C387-shutchou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch387.txt",
+  "json": "japanese/narration/ch387.json",
+  "textHash": "fnv1a64:4244561f3f01805b",
+  "jsonHash": "fnv1a64:ae237fec1c8f7c97",
+  "findings": []
+}

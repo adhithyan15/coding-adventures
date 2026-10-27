@@ -1,0 +1,19 @@
+{
+  "chapter": 321,
+  "title": "How Sure Are You?",
+  "label": "ch:ja-how-sure-are-you",
+  "canDo": "I can say how sure I am, and why.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C321-unazuku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can say how sure I am, and why.",
+    "assesses": [
+      "JA-LEX-C321-ZETTAI321-03",
+      "JA-LEX-C321-ZETTAI321-04",
+      "JA-LEX-C321-ZETTAI321-05"
+    ]
+  }
+}

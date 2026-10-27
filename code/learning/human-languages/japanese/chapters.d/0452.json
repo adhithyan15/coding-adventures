@@ -1,0 +1,19 @@
+{
+  "chapter": 452,
+  "title": "People at Work",
+  "label": "ch:ja-people-at-work",
+  "canDo": "I can name the people I work with.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C452-meishi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can name the people I work with.",
+    "assesses": [
+      "JA-LEX-C452-BOSS452-03",
+      "JA-LEX-C452-BOSS452-04",
+      "JA-LEX-C452-BOSS452-05"
+    ]
+  }
+}

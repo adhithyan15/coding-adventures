@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:08e7b0d795691476",
+  "lessonIds": [
+    "JA-C530-kanari",
+    "JA-C530-sukunakutomo",
+    "JA-C530-hobo",
+    "JA-C530-oyoso",
+    "JA-C530-mattaku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch530.txt",
+  "json": "japanese/narration/ch530.json",
+  "textHash": "fnv1a64:6bad7204710ab95b",
+  "jsonHash": "fnv1a64:748e9109398ca010",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:03daca229037287d",
+  "lessonIds": [
+    "JA-C444-kokyuu-suru",
+    "JA-C444-myaku",
+    "JA-C444-ketsuatsu",
+    "JA-C444-taijuu",
+    "JA-C444-ibiki"
+  ],
+  "tex": "japanese/book/chapters/ch444-breathing-and-pulse.tex"
+}

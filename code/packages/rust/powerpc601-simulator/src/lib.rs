@@ -588,13 +588,19 @@ impl PowerPc601Simulator {
                         }
                     }
                     792 | 824 => {
-                        let n = if xo10 == 824 {
+                        let architectural_count = if xo10 == 824 {
                             rb as u32
                         } else {
-                            (self.state.gpr[rb] & 63).min(31)
+                            self.state.gpr[rb] & 63
                         };
-                        let shifted_out = n != 0 && source & ((1_u32 << n) - 1) != 0;
+                        let shifted_out = match architectural_count {
+                            0 => false,
+                            1..=31 => source & ((1_u32 << architectural_count) - 1) != 0,
+                            32..=63 => source != 0,
+                            _ => unreachable!(),
+                        };
                         self.set_ca((source as i32) < 0 && shifted_out);
+                        let n = architectural_count.min(31);
                         ((source as i32) >> n) as u32
                     }
                     _ => unreachable!(),
@@ -637,6 +643,11 @@ impl PowerPc601Simulator {
             }
             _ => match xo9 {
                 10 | 40 | 104 | 138 | 235 | 266 | 459 | 491 => {
+                    let oe = xo10 & 0x200 != 0;
+                    let rc = raw & 1 != 0;
+                    if oe || rc {
+                        return Err(PowerPcError::UnknownInstruction { raw, cia });
+                    }
                     let a = self.state.gpr[ra];
                     let b = self.state.gpr[rb];
                     let value = match xo9 {

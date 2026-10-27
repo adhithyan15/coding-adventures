@@ -1,0 +1,11 @@
+{
+  "id": "JA-C528-moshikuwa",
+  "pathSegment": "JA-PATH-528-OR528",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-528-OR528",
+      "order": 3
+    }
+  ]
+}

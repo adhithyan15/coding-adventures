@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 341,
+  "title": "Persuading Someone",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:297f74b6adf6629a",
+  "lessons": [
+    {
+      "id": "JA-C341-settoku-suru",
+      "sequence": 20240,
+      "title": "せっとくする (settoku suru) — to persuade",
+      "headword": "せっとくする",
+      "romanization": "settoku suru",
+      "gloss": "to persuade",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e3c6f05ae0b306c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to make an effort, then the Japanese for a warning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せっとくする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せっとくする — settoku suru — \"to persuade\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ははが せっとくしたので、ちちは やめました。 — haha ga settoku shita node, chichi wa yamemashita — \"My mother talked him round, so my father gave it up.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite せっとくします, settokushimasu; a する verb. Past (polite): ははが ちちを せっとくしました。, haha ga chichi o settoku shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せっとくする (settoku suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, settoku, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: setsu, \"explanation\" (Middle Chinese sywet) and toku, \"gain\" (tok) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription). The two join as set-toku."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "settoku suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *settoku suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "settoku suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *settoku suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haha ga settoku shita node, chichi wa yamemashita — My mother talked him round, so my father gave it up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haha ga settoku shita node, chichi wa yamemashita* — My mother talked him round, so my father gave it up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to make an effort, then the Japanese for a warning, then say settoku suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to make an effort, then the Japanese for a warning, then say *settoku suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does せっとくする (settoku suru) mean? (\"To persuade\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C341-settoku-suru-type",
+              "prompt": "Say the Japanese for 'to persuade'.",
+              "assesses": [
+                "JA-LEX-C341-SETTOKU341-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せっとくする",
+                "settoku suru"
+              ],
+              "feedback": {
+                "correct": "Right: せっとくする (settoku suru) is 'to persuade'.",
+                "incorrect": "'To persuade' is せっとくする (settoku suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C341-unagasu",
+      "sequence": 20250,
+      "title": "うながす (unagasu) — to urge; to prompt",
+      "headword": "うながす",
+      "romanization": "unagasu",
+      "gloss": "to urge; to prompt",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e831a81627d06ca9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a warning, then the Japanese for to persuade."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うながす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うながす — unagasu — \"to urge; to prompt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じかんが ないので、せんせいが がくせいを うながしました。 — jikan ga nai node, sensei ga gakusei o unagashimashita — \"There was no time, so the teacher hurried the students along.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite うながします, unagashimasu; a godan verb. Past (polite): せんせいが うながしました。, sensei ga unagashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うながす (unagasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unagasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unagasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unagasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unagasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jikan ga nai node, sensei ga gakusei o unagashimashita — There was no time, so the teacher hurried the students along.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jikan ga nai node, sensei ga gakusei o unagashimashita* — There was no time, so the teacher hurried the students along.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a warning, then the Japanese for to persuade, then say unagasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a warning, then the Japanese for to persuade, then say *unagasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うながす (unagasu) mean? (\"To urge; to prompt\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C341-unagasu-type",
+              "prompt": "Say the Japanese for 'to urge'.",
+              "assesses": [
+                "JA-LEX-C341-SETTOKU341-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うながす",
+                "unagasu"
+              ],
+              "feedback": {
+                "correct": "Right: うながす (unagasu) is 'to urge; to prompt'.",
+                "incorrect": "'To urge' is うながす (unagasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C341-hikitomeru",
+      "sequence": 20260,
+      "title": "ひきとめる (hikitomeru) — to ask someone to stay",
+      "headword": "ひきとめる",
+      "romanization": "hikitomeru",
+      "gloss": "to ask someone to stay",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f435f2224562da6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to persuade, then the Japanese for to urge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひきとめる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひきとめる — hikitomeru — \"to ask someone to stay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あめが ふったので、ともだちを ひきとめました。 — ame ga futta node, tomodachi o hikitomemashita — \"It rained, so I asked my friend to stay.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ひきとめます, hikitomemasu; an ichidan verb. Past (polite): ははが ともだちを ひきとめました。, haha ga tomodachi o hikitomemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひきとめる (hikitomeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese: it is built from hiki, \"pulling (hiku)\" and tomeru, \"to stop\", and its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikitomeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikitomeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikitomeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikitomeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ame ga futta node, tomodachi o hikitomemashita — It rained, so I asked my friend to stay.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ame ga futta node, tomodachi o hikitomemashita* — It rained, so I asked my friend to stay.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to persuade, then the Japanese for to urge, then say hikitomeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to persuade, then the Japanese for to urge, then say *hikitomeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひきとめる (hikitomeru) mean? (\"To ask someone to stay\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C341-hikitomeru-type",
+              "prompt": "Say the Japanese for 'to ask someone to stay'.",
+              "assesses": [
+                "JA-LEX-C341-SETTOKU341-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひきとめる",
+                "hikitomeru"
+              ],
+              "feedback": {
+                "correct": "Right: ひきとめる (hikitomeru) is 'to ask someone to stay'.",
+                "incorrect": "'To ask someone to stay' is ひきとめる (hikitomeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C341-narubeku",
+      "sequence": 20270,
+      "title": "なるべく (narubeku) — as much as possible",
+      "headword": "なるべく",
+      "romanization": "narubeku",
+      "gloss": "as much as possible",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63f635445569598f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to urge, then the Japanese for to ask someone to stay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: なるべく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なるべく — narubeku — \"as much as possible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あぶないから、なるべく はやく かえった ほうが いいです。 — abunai kara, narubeku hayaku kaetta hō ga ii desu — \"It's dangerous, so you had better go home as early as you can.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なるべく (narubeku) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. JMdict notes that it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "narubeku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *narubeku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "narubeku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *narubeku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abunai kara, narubeku hayaku kaetta hō ga ii desu — It's dangerous, so you had better go home as early as you can.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abunai kara, narubeku hayaku kaetta hō ga ii desu* — It's dangerous, so you had better go home as early as you can.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to urge, then the Japanese for to ask someone to stay, then say narubeku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to urge, then the Japanese for to ask someone to stay, then say *narubeku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does なるべく (narubeku) mean? (\"As much as possible\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C341-narubeku-type",
+              "prompt": "Say the Japanese for 'as much as possible'.",
+              "assesses": [
+                "JA-LEX-C341-SETTOKU341-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "なるべく",
+                "narubeku"
+              ],
+              "feedback": {
+                "correct": "Right: なるべく (narubeku) is 'as much as possible'.",
+                "incorrect": "'As much as possible' is なるべく (narubeku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C341-tatoeba",
+      "sequence": 20280,
+      "title": "たとえば (tatoeba) — for example",
+      "headword": "たとえば",
+      "romanization": "tatoeba",
+      "gloss": "for example",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa6f7bdb4da25ed9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to ask someone to stay, then the Japanese for as much as possible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たとえば",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たとえば — tatoeba — \"for example\"."
+            },
+            {
+              "kind": "speech",
+              "text": "たとえば、だいこんは からだに いいと おもいます。 — tatoeba, daikon wa karada ni ii to omoimasu — \"For example, I think daikon is good for you.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たとえば (tatoeba) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tatoeba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tatoeba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tatoeba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tatoeba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tatoeba, daikon wa karada ni ii to omoimasu — For example, I think daikon is good for you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tatoeba, daikon wa karada ni ii to omoimasu* — For example, I think daikon is good for you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to ask someone to stay, then the Japanese for as much as possible, then say tatoeba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to ask someone to stay, then the Japanese for as much as possible, then say *tatoeba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たとえば (tatoeba) mean? (\"For example\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C341-tatoeba-type",
+              "prompt": "Say the Japanese for 'for example'.",
+              "assesses": [
+                "JA-LEX-C341-SETTOKU341-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たとえば",
+                "tatoeba"
+              ],
+              "feedback": {
+                "correct": "Right: たとえば (tatoeba) is 'for example'.",
+                "incorrect": "'For example' is たとえば (tatoeba)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

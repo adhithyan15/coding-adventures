@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C339-bunbetsu-suru",
+    "language": "japanese",
+    "chapter": 339,
+    "sequence": 20130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:054f3356f93613d0"
+  },
+  "findings": []
+}

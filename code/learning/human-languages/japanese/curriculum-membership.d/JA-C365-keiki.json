@@ -1,0 +1,11 @@
+{
+  "id": "JA-C365-keiki",
+  "pathSegment": "JA-PATH-365-KEIZAI365",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-365-KEIZAI365",
+      "order": 1
+    }
+  ]
+}

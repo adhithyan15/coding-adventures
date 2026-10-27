@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:e4e9c04d2db8fb96",
+  "lessonIds": [
+    "JA-C403-bunka",
+    "JA-C403-midokoro",
+    "JA-C403-kengaku",
+    "JA-C403-tabisaki",
+    "JA-C403-otozureru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch403.txt",
+  "json": "japanese/narration/ch403.json",
+  "textHash": "fnv1a64:ea3139ebb75b8061",
+  "jsonHash": "fnv1a64:368084392e21a573",
+  "findings": []
+}

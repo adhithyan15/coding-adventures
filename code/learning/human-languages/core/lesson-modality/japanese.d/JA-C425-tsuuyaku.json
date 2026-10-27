@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C425-tsuuyaku",
+    "language": "japanese",
+    "chapter": 425,
+    "sequence": 24730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:221c51b9e80b057e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C389-roji",
+    "language": "japanese",
+    "chapter": 389,
+    "sequence": 22880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30daccaec9c10592"
+  },
+  "findings": []
+}

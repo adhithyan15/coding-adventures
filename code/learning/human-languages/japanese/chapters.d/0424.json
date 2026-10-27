@@ -1,0 +1,19 @@
+{
+  "chapter": 424,
+  "title": "Lost and Found",
+  "label": "ch:ja-lost-and-found",
+  "canDo": "I can talk about losing people and things on a trip.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C424-saiwai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can talk about losing people and things on a trip.",
+    "assesses": [
+      "JA-LEX-C424-OTOSHIMONO424-03",
+      "JA-LEX-C424-OTOSHIMONO424-04",
+      "JA-LEX-C424-OTOSHIMONO424-05"
+    ]
+  }
+}

@@ -27,11 +27,29 @@ cut.
 
 ### Fixed
 
+- Never replace an earlier quarantined state file. Every native Trestle (Qt,
+  Flutter, Compose, SwiftUI, WinUI) used to delete `mosaic-state.v1.json.corrupt`
+  before moving a newly rejected file there, so a second rejection destroyed
+  the first, which may hold real tasks. A rejected file now moves to the first
+  free name of `.corrupt` and `.corrupt.1` to `.corrupt.9`; if it cannot move,
+  or all ten are taken, it stays in place and Trestle saves nothing that
+  session and says so. `LOCAL-DATA.txt` and the release gate's upgrade check
+  follow the new names.
 - Preserve Qt timeline labels' authored 150-pixel non-shrinking width (#18305),
   without changing shared styles or claiming general flex support.
 
 ### Changed
 
+- Run the release upgrade and corrupt-recovery gate's generic checks through
+  the shared `code/scripts/mosaic_release_state_gate.py`
+  (`mosaic-release-state-gate-v1`), which Engram and the other Mosaic apps can
+  adopt. `taskapp_release.py` keeps its `materialize-upgrade-fixture` and
+  `verify-upgrade-state` subcommands, reads the v0.1.0 fixture through an
+  adapter rather than converting it, and keeps the TaskApp-only expected-task
+  check. The materialized state is byte-identical on Linux and macOS; on
+  Windows its trailing newline is now LF rather than CRLF.
+- Run `test_taskapp_release.py` and the shared gate's tests in the release
+  lane's validate job; no workflow ran them before.
 - The `mosaic-pkg-toolkit` dependency pin moves from 0.15.0 to 0.16.0, the
   toolkit's current version (Journal already pins it). 0.16.0 only adds
   `RecordList`; nothing TaskApp uses changed, so no source or output changes.

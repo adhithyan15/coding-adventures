@@ -1,0 +1,19 @@
+{
+  "chapter": 405,
+  "title": "A Famous Garden",
+  "label": "ch:ja-a-famous-garden",
+  "canDo": "I can describe a famous garden.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C405-suzumu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can describe a famous garden.",
+    "assesses": [
+      "JA-LEX-C405-TEIEN405-03",
+      "JA-LEX-C405-TEIEN405-04",
+      "JA-LEX-C405-TEIEN405-05"
+    ]
+  }
+}

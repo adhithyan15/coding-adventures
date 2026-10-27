@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:fd44c1788de10970",
+  "lessonIds": [
+    "JA-C340-jogen",
+    "JA-C340-chuukoku-suru",
+    "JA-C340-kokorogakeru",
+    "JA-C340-doryoku-suru",
+    "JA-C340-keikoku",
+    "JA-R340-review-335-340"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch340.txt",
+  "json": "japanese/narration/ch340.json",
+  "textHash": "fnv1a64:df37e4db7c17abda",
+  "jsonHash": "fnv1a64:f68d08a058f8aea4",
+  "findings": []
+}

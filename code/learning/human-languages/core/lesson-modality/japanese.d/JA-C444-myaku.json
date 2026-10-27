@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C444-myaku",
+    "language": "japanese",
+    "chapter": 444,
+    "sequence": 25940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20113d48689592e0"
+  },
+  "findings": []
+}

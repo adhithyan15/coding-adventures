@@ -1,0 +1,11 @@
+{
+  "id": "JA-C362-keisan-suru",
+  "pathSegment": "JA-PATH-362-HIYOU362",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-362-HIYOU362",
+      "order": 1
+    }
+  ]
+}

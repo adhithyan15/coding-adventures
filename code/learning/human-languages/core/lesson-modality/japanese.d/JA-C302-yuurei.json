@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C302-yuurei",
+    "language": "japanese",
+    "chapter": 302,
+    "sequence": 18070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:03f6cfd8bcb28852"
+  },
+  "findings": []
+}

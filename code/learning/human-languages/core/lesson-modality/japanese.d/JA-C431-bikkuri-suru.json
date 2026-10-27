@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C431-bikkuri-suru",
+    "language": "japanese",
+    "chapter": 431,
+    "sequence": 25260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1fac00cb1a8537e"
+  },
+  "findings": []
+}

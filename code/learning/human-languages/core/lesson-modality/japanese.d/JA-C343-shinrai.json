@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C343-shinrai",
+    "language": "japanese",
+    "chapter": 343,
+    "sequence": 20350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:977db399c8621a36"
+  },
+  "findings": []
+}

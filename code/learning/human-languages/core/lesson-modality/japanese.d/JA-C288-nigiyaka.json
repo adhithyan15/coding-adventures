@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C288-nigiyaka",
+    "language": "japanese",
+    "chapter": 288,
+    "sequence": 17370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:194cfe3632076bdc"
+  },
+  "findings": []
+}

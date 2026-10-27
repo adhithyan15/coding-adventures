@@ -1,0 +1,11 @@
+{
+  "id": "JA-C455-meirei",
+  "pathSegment": "JA-PATH-455-TEAM455",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-455-TEAM455",
+      "order": 2
+    }
+  ]
+}

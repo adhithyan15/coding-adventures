@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C273-bakkin",
+    "language": "japanese",
+    "chapter": 273,
+    "sequence": 16570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1cb8f8ae9113ff6b"
+  },
+  "findings": []
+}

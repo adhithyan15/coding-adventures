@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:7e2a638ff107d67a",
+  "lessonIds": [
+    "JA-C311-omoide",
+    "JA-C311-koro",
+    "JA-C311-shounen",
+    "JA-C311-ushinau",
+    "JA-C311-furikaeru",
+    "JA-R311-review-307-311"
+  ],
+  "tex": "japanese/book/chapters/ch311-memories-of-childhood.tex"
+}

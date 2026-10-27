@@ -1,0 +1,11 @@
+{
+  "id": "JA-C432-kuyokuyo-suru",
+  "pathSegment": "JA-PATH-432-WORRY432",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-432-WORRY432",
+      "order": 1
+    }
+  ]
+}

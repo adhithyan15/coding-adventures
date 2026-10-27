@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:352eba9f549f6520",
+  "lessonIds": [
+    "JA-C373-kaisatsu",
+    "JA-C373-teikiken",
+    "JA-C373-kaisuuken",
+    "JA-C373-seisan",
+    "JA-C373-tourisugiru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch373.txt",
+  "json": "japanese/narration/ch373.json",
+  "textHash": "fnv1a64:eae309c5b83bf579",
+  "jsonHash": "fnv1a64:2a34b4712c6c7bf7",
+  "findings": []
+}

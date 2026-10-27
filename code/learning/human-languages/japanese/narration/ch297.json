@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 297,
+  "title": "The Ogre at the Door",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9d12c82f3b67534d",
+  "lessons": [
+    {
+      "id": "JA-C297-oni",
+      "sequence": 17810,
+      "title": "おに (oni) — an ogre; a demon",
+      "headword": "おに",
+      "romanization": "oni",
+      "gloss": "an ogre; a demon",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e8fda4cbecb1b90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a custom, then the Japanese for to inherit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おに",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おに — oni — \"an ogre; a demon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おには こわい かおを しています。 — oni wa kowai kao o shite imasu — \"The ogre has a frightening face.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おに (oni) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oni",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oni*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oni, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oni*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oni wa kowai kao o shite imasu — The ogre has a frightening face.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oni wa kowai kao o shite imasu* — The ogre has a frightening face.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a custom, then the Japanese for to inherit, then say oni again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a custom, then the Japanese for to inherit, then say *oni* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おに (oni) mean? (\"An ogre; a demon\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C297-oni-type",
+              "prompt": "Say the Japanese for 'an ogre'.",
+              "assesses": [
+                "JA-LEX-C297-ONI297-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おに",
+                "oni"
+              ],
+              "feedback": {
+                "correct": "Right: おに (oni) is 'an ogre; a demon'.",
+                "incorrect": "'An ogre' is おに (oni)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C297-omen",
+      "sequence": 17820,
+      "title": "おめん (omen) — a mask",
+      "headword": "おめん",
+      "romanization": "omen",
+      "gloss": "a mask",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aabcc8133c4ceab4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to inherit, then the Japanese for an ogre."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おめん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おめん — omen — \"a mask\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あには おにの おめんを かぶりました。 — ani wa oni no omen o kaburimashita — \"My brother put on an ogre mask.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おめん (omen) is a mixed word, native and Sino-Japanese: o-, \"the polite prefix\", is native Japanese, and men, \"mask\", is a Chinese character read with its on'yomi, a reading borrowed from Chinese (Middle Chinese mjienH) (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "omen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *omen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "omen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *omen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ani wa oni no omen o kaburimashita — My brother put on an ogre mask.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ani wa oni no omen o kaburimashita* — My brother put on an ogre mask.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to inherit, then the Japanese for an ogre, then say omen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to inherit, then the Japanese for an ogre, then say *omen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おめん (omen) mean? (\"A mask\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C297-omen-type",
+              "prompt": "Say the Japanese for 'a mask'.",
+              "assesses": [
+                "JA-LEX-C297-ONI297-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おめん",
+                "omen"
+              ],
+              "feedback": {
+                "correct": "Right: おめん (omen) is 'a mask'.",
+                "incorrect": "'A mask' is おめん (omen)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C297-kowagaru",
+      "sequence": 17830,
+      "title": "こわがる (kowagaru) — to be afraid; to be scared of",
+      "headword": "こわがる",
+      "romanization": "kowagaru",
+      "gloss": "to be afraid; to be scared of",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ecb8ab308f23a417",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an ogre, then the Japanese for a mask."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こわがる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こわがる — kowagaru — \"to be afraid; to be scared of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いもうとは おにを こわがっています。 — imōto wa oni o kowagatte imasu — \"My little sister is scared of the ogre.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite こわがります, kowagarimasu; a godan verb. Past (polite): こどもが こわがりました。, kodomo ga kowagarimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こわがる (kowagaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from kowa, \"fear\" (from kowai), and -garu, \"to show signs of\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kowagaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kowagaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kowagaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kowagaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imōto wa oni o kowagatte imasu — My little sister is scared of the ogre.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imōto wa oni o kowagatte imasu* — My little sister is scared of the ogre.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an ogre, then the Japanese for a mask, then say kowagaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an ogre, then the Japanese for a mask, then say *kowagaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こわがる (kowagaru) mean? (\"To be afraid; to be scared of\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C297-kowagaru-type",
+              "prompt": "Say the Japanese for 'to be afraid'.",
+              "assesses": [
+                "JA-LEX-C297-ONI297-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こわがる",
+                "kowagaru"
+              ],
+              "feedback": {
+                "correct": "Right: こわがる (kowagaru) is 'to be afraid; to be scared of'.",
+                "incorrect": "'To be afraid' is こわがる (kowagaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C297-oidasu",
+      "sequence": 17840,
+      "title": "おいだす (oidasu) — to drive out; to chase away",
+      "headword": "おいだす",
+      "romanization": "oidasu",
+      "gloss": "to drive out; to chase away",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2a747819d9c4d48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a mask, then the Japanese for to be afraid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おいだす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おいだす — oidasu — \"to drive out; to chase away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "みんなで おにを おいだします。 — minna de oni o oidashimasu — \"We all drive the ogre out.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite おいだします, oidashimasu; a godan verb. Past (polite): こどもが おにを おいだしました。, kodomo ga oni o oidashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おいだす (oidasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from oi, \"chasing\" (from ou), and dasu, \"to put out\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oidasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oidasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oidasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oidasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "minna de oni o oidashimasu — We all drive the ogre out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *minna de oni o oidashimasu* — We all drive the ogre out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a mask, then the Japanese for to be afraid, then say oidasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a mask, then the Japanese for to be afraid, then say *oidasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おいだす (oidasu) mean? (\"To drive out; to chase away\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C297-oidasu-type",
+              "prompt": "Say the Japanese for 'to drive out'.",
+              "assesses": [
+                "JA-LEX-C297-ONI297-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おいだす",
+                "oidasu"
+              ],
+              "feedback": {
+                "correct": "Right: おいだす (oidasu) is 'to drive out; to chase away'.",
+                "incorrect": "'To drive out' is おいだす (oidasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C297-mezurashii",
+      "sequence": 17850,
+      "title": "めずらしい (mezurashii) — rare; unusual",
+      "headword": "めずらしい",
+      "romanization": "mezurashii",
+      "gloss": "rare; unusual",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:871768d488920b12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be afraid, then the Japanese for to drive out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: めずらしい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めずらしい — mezurashii — \"rare; unusual\"."
+            },
+            {
+              "kind": "speech",
+              "text": "これは めずらしい まつりです。 — kore wa mezurashii matsuri desu — \"This is an unusual festival.\""
+            },
+            {
+              "kind": "speech",
+              "text": "An i-adjective."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めずらしい (mezurashii) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mezurashii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mezurashii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mezurashii, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mezurashii*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kore wa mezurashii matsuri desu — This is an unusual festival.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kore wa mezurashii matsuri desu* — This is an unusual festival.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be afraid, then the Japanese for to drive out, then say mezurashii again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be afraid, then the Japanese for to drive out, then say *mezurashii* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does めずらしい (mezurashii) mean? (\"Rare; unusual\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C297-mezurashii-type",
+              "prompt": "Say the Japanese for 'rare'.",
+              "assesses": [
+                "JA-LEX-C297-ONI297-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "めずらしい",
+                "mezurashii"
+              ],
+              "feedback": {
+                "correct": "Right: めずらしい (mezurashii) is 'rare; unusual'.",
+                "incorrect": "'Rare' is めずらしい (mezurashii)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

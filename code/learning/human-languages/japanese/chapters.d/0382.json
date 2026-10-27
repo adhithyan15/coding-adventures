@@ -1,0 +1,19 @@
+{
+  "chapter": 382,
+  "title": "Down to the Coast",
+  "label": "ch:ja-down-to-the-coast",
+  "canDo": "I can describe a walk along the coast.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C382-kagayaku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 382: I can describe a walk along the coast.",
+    "assesses": [
+      "JA-LEX-C382-KAIGAN382-03",
+      "JA-LEX-C382-KAIGAN382-04",
+      "JA-LEX-C382-KAIGAN382-05"
+    ]
+  }
+}

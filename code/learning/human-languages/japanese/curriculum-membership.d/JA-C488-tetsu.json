@@ -1,0 +1,11 @@
+{
+  "id": "JA-C488-tetsu",
+  "pathSegment": "JA-PATH-488-BUILD488",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-488-BUILD488",
+      "order": 3
+    }
+  ]
+}

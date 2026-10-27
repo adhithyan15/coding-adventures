@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "Goals and Success",
+  "label": "ch:ja-goals-and-success",
+  "canDo": "I can talk about goals, success and challenges.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C460-tenshoku-suru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can talk about goals, success and challenges.",
+    "assesses": [
+      "JA-LEX-C460-GOAL460-03",
+      "JA-LEX-C460-GOAL460-04",
+      "JA-LEX-C460-GOAL460-05"
+    ]
+  }
+}

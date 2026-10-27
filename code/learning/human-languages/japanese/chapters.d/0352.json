@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "Little Accidents",
+  "label": "ch:ja-little-accidents",
+  "canDo": "I can say what to do if something spills, tears or falls over.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C352-dougu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can say what to do if something spills, tears or falls over.",
+    "assesses": [
+      "JA-LEX-C352-KOBORERU352-03",
+      "JA-LEX-C352-KOBORERU352-04",
+      "JA-LEX-C352-KOBORERU352-05"
+    ]
+  }
+}

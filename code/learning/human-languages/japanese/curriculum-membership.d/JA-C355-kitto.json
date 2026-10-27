@@ -1,0 +1,11 @@
+{
+  "id": "JA-C355-kitto",
+  "pathSegment": "JA-PATH-355-TABUN355",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-355-TABUN355",
+      "order": 1
+    }
+  ]
+}

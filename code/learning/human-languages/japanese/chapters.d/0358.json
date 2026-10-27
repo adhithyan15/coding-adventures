@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "Renting a Room",
+  "label": "ch:ja-renting-a-room",
+  "canDo": "I can talk about rent and paying it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C358-zandaka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can talk about rent and paying it.",
+    "assesses": [
+      "JA-LEX-C358-YACHIN358-03",
+      "JA-LEX-C358-YACHIN358-04",
+      "JA-LEX-C358-YACHIN358-05"
+    ]
+  }
+}

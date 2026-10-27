@@ -6768,6 +6768,18 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // ALGOL 60 - integer multiplication may exceed binary64's contiguous
+    // exact range while staying in i64 when later div/mod reductions bring the
+    // value back before widening; the three reduced terms are -2, -2, and -1.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real result; result := entier((9007199254740992 * sign(leftvalue()) * 2 mod 5) / 2 + (9007199254740992 * sign(leftvalue()) * 2 * sign(rightvalue()) mod 5) / 2 + ((9007199254740992 * sign(leftvalue()) * 2 div 3) mod 5)); output(result) end",
+        expect: Expect::Stdout("-5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -16957,6 +16969,31 @@ fn algol_divisor_aligned_modulo_zero_runs_on_every_available_standard_backend() 
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but divisor-aligned modulo zero did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_reduced_wide_integer_intermediates_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "9007199254740992 * sign(leftvalue()) * 2 * sign(rightvalue()) mod 5",
+                )
+        })
+        .expect("the reduced wide-integer ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but reduced wide-integer intermediates did not complete"
             );
             continue;
         };
@@ -29126,8 +29163,9 @@ fn python_rows_agree_with_the_host_python_oracle() {
 /// ungated `const`/`ret`. No wrapping `add`/`sub`/`mul`/`neg` survives.
 /// Since phase 7c slice 3 a `py-float-print` row may also hold the PR6c
 /// `f64_*` ops, `int_to_real`, `write_f64_py` and `trap`; BEAM refuses
-/// exactly the rows with `f64_*` arithmetic (which do not list it), and the
-/// generic JIT leaves `int_to_real` to its interpreter tier.
+/// exactly the rows with `f64_*` arithmetic (which do not list it). The
+/// generic JIT lowers every op here, `int_to_real` included, since jit-core
+/// gained the LANG83 conversions.
 #[test]
 fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
     let mut checked_ops = 0;
@@ -29192,18 +29230,6 @@ fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
                         panic!("{:?}: lists BEAM = {lists_beam} but BEAM's op check gave {checked:?}", program.case)
                     }
                 },
-                // The generic JIT compiles no `int_to_real`: a function using
-                // it runs on the vm-core interpreter tier, as every printing
-                // function's JIT cell does today (`execute_with_jit`).
-                lang_aot::op_check::Backend::Jit => {
-                    if let Err(refusal) = checked {
-                        assert!(
-                            refusal.refusals.iter().all(|r| r.op == "int_to_real"),
-                            "{:?}: the JIT refused more than int_to_real: {refusal}",
-                            program.case
-                        );
-                    }
-                }
                 _ => {
                     checked.unwrap_or_else(|e| panic!("{:?} refused on {}: {e}", program.src, backend.name()));
                 }

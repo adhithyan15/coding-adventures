@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C401-chuushoku",
+    "language": "japanese",
+    "chapter": 401,
+    "sequence": 23510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4c93187c5ab46e9"
+  },
+  "findings": []
+}
