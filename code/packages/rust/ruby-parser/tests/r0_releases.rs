@@ -143,15 +143,19 @@ fn documented_modern_divergences() {
         assert_eq!(stream(r, "x != y"), "NAME:x NOT_EQUALS:!= NAME:y");
         // Operator and variable symbols are not SYMBEG + operand.
         assert_eq!(stream(r, "x = :@iv"), "NAME:x EQUALS:= COLON:: IVAR:@iv");
-        // Transitions do not fire on NEWLINE, so the mode carries over.
-        assert_eq!(stream(r, "x = 1\n?a"), "NAME:x EQUALS:= NUMBER:1 NEWLINE:\\n QUESTION:? NAME:a");
+        // R1b: NEWLINE resets the mode to `beg`, as Ruby's lexer does, so a
+        // line starting with `?a` after a value is a character literal.
+        assert_eq!(stream(r, "x = 1\n?a"), "NAME:x EQUALS:= NUMBER:1 NEWLINE:\\n CHAR:?a");
         // `foo +1` would fold in Ruby (space before, none after).
         assert_eq!(stream(r, "foo +1"), "NAME:foo PLUS:+ NUMBER:1");
         // `1if` is valid Ruby but a lexer error here.
         assert!(lex(r, "x = 1if true").is_err());
-        // Out-of-slice constructs: strings are refused, regexps lex as
-        // division, heredocs as `<<`.
+        // Out-of-slice constructs: strings are refused, and since R1b so is
+        // every regexp, `%`-literal or heredoc opener Ruby might read
+        // (tests/r1b_line_start.rs); a spaced `/` after a value is division.
         assert!(lex(r, "puts 'x'").is_err());
+        assert!(lex(r, "puts /x/").is_err());
+        assert!(lex(r, "puts <<A").is_err());
         assert_eq!(stream(r, "a / b"), "NAME:a SLASH:/ NAME:b");
     }
     // The same NEWLINE carry-over in the 1994 lexer: yylex would fold `-2`.
