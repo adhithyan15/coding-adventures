@@ -1,5 +1,68 @@
 # Changelog — twig-ir-compiler
 
+## Unreleased — #18435: lexical scope wins in call position
+
+### Fixed
+
+- **A local now shadows a global, extern or builtin of the same name in
+  call position.** `compile_apply` used to check `fn_globals` (top-level
+  functions and externs) and then `BUILTINS` *before* looking at the lexical
+  scope. So in
+
+  ```scheme
+  (define (helper x) (* x 100))
+  (define (f helper) (helper 1))
+  (f (lambda (x) (+ x 1)))
+  ```
+
+  `f`'s body compiled to `call helper`, the global function, and the program
+  returned 100 instead of 2. Value position (`compile_var_ref`) was already
+  correct. Call position now checks `FnCtx::locals` first. A parameter,
+  `let`/`let*` binding, lambda parameter or `match` binding is called with
+  `call_closure`. The shadowed global's return type and parameter types are
+  no longer stamped on the call.
+- **Lambda captures.** `compile_anonymous_lambda` passed `free_vars` every
+  global and builtin name as "never free". A lambda that used an enclosing
+  local named like a global, as in
+  `(define (mk helper) (lambda (y) (helper y)))`, therefore did not capture
+  the local and called the global. Names bound in the enclosing scope are
+  now removed from that set, so they are captured.
+- **E4 string fast paths.** `can_compile_e4_string_expr`,
+  `can_compile_e4_index_expr` and the `(string-length (string-append …))`
+  fold recognised builtins by name only. A local named `string-append`
+  (or `substring`, `string-length`, `+`) could be lowered to `str_concat` and
+  the other typed string ops. They now use a new `unshadowed_apply` helper,
+  which ignores a call whose head is lexically bound.
+- **`main` direct-call string evidence.** The pre-pass that seeds
+  unannotated parameters as `str` (`collect_main_direct_string_call_evidence`
+  and `is_syntax_static_e4_{string,index}_expr`) now tracks the names bound by
+  enclosing `let`/`let*` forms. A call to a shadowing `let` binding is no
+  longer counted as evidence about the global function of the same name.
+- **Value-global type facts.** `is_known_main_value_type` ignored a `let`
+  binding that shadowed a typed value-global. So
+  `(define s "HELLO") (let ((s 5)) (string-length s))` lowered to `str_len`
+  on the integer. It now defers to the local.
+
+### Docs
+
+- The README's apply-site table now lists the lexical row first. Its stale
+  last row, `call_builtin "apply_closure"`, now reads `call_closure`, which
+  the compiler has emitted since LANG34. TW00 gains a
+  "Name resolution: lexical scope wins" section.
+
+### Tests
+
+- 15 new IIR-shape tests in `src/lib.rs`. They cover a parameter, a `let`,
+  a `let*`, a lambda parameter and a `match` binding shadowing a global. They
+  also cover a captured shadowing parameter in call and value position, the
+  global call coming back after the `let` ends, the return type not being
+  inherited, an extern, a builtin, the E4 string builtins, both evidence
+  pre-pass cases and a shadowed typed value-global. All except the
+  scope-exit control failed before the fix.
+- End-to-end runs of the same programs are in `twig-vm`'s dispatch tests
+  (the example from the issue now returns 2). The imported-function case is
+  in `twig-module-driver`.
+
 ## Unreleased — LANG84 phase 4b — `IIRModule::release`
 
 - Every `IIRModule { .. }` struct literal (code, tests and doc examples)

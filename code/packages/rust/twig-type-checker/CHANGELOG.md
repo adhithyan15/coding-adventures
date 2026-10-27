@@ -1,5 +1,17 @@
 # Changelog — twig-type-checker
 
+## Unreleased — #18435: shadowed callees are not refinement-checked
+
+### Fixed
+
+- `infer_apply` looked up `env.fn_param_refinements` by the callee's name
+  alone. So in `(define (g ascii-info) (ascii-info 200))`, the *parameter*
+  `ascii-info` was checked against the global `ascii-info`'s `(Int 0 128)`
+  contract, which is a false refinement error in strict mode. The lookup now
+  runs only when the callee name is not bound in the local `ScopeStack`. The
+  arity check already resolved scope-first. A new test,
+  `arity_check_uses_the_shadowing_local`, guards that.
+
 ## 0.10.0 - Unreleased - LANG84: type-check a parse tree
 
 ### Added

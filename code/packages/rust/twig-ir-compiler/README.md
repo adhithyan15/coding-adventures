@@ -92,17 +92,52 @@ later.
 
 ## Apply-site dispatch
 
-The compiler decides at compile time:
+The compiler decides at compile time. The rows are tried top to bottom, so
+the first one that matches wins:
 
 | Function position           | Emitted IIR                                 |
 |-----------------------------|---------------------------------------------|
-| Top-level user fn           | `call <name>, ...args`, using the known return type when the function was already lowered in source order |
+| A name bound in the current lexical scope (parameter, `let`/`let*` binding, lambda parameter, `match` binding) | `call_closure <local>, ...args`, even if a top-level function, extern or builtin has the same name |
+| Top-level user fn or extern | `call <name>, ...args`, using the known return type when the function was already lowered in source order |
 | Typed arithmetic (`+`,`-`,`*`,`/`) on `i64` args | a chain of typed `add`/`sub`/`mul`/`div` |
 | Direct literal, immutable top-level, lexical-local, annotated top-level-parameter, or direct-call-inferred top-level-parameter string metadata (`string-length`, `string-ref`, `substring`, `string=?`, `string<?`, `string>?`, `string-append`) | `str_const` + `str_len`/`str_index`/`str_slice`/`str_eq`/`str_cmp`/`str_concat`, with typed index arithmetic for `string-ref` and `substring` bounds |
 | Builtin (`cons`, `<`, …)    | `call_builtin <name>, ...args`              |
-| Anything else (locals etc.) | `call_builtin "apply_closure", h, ...args`  |
+| Anything else (e.g. `((f 1) 2)`) | `call_closure h, ...args`              |
 
 Top-level recursion stays on the fast `call` path; only locals holding closures pay the indirect cost.
+
+### Lexical scope wins
+
+Twig is lexically scoped, like Scheme: a use of a name refers to the
+innermost binding of that name. This holds in call position as well as in
+value position:
+
+```scheme
+(define (helper x) (* x 100))
+(define (f helper) (helper 1))   ; this `helper` is f's parameter
+(f (lambda (x) (+ x 1)))         ; => 2
+```
+
+Before issue #18435 was fixed, the compiler checked "is this a top-level
+function?" before "is this a local?" in call position. The body of `f`
+compiled to `call helper`, a direct call to the global function, and the
+program returned 100. Every lookup now checks the lexical scope first:
+
+- **Calls.** A shadowing local is called with `call_closure`. The global's
+  direct `call`, its known return type and its known parameter types are not
+  used, because the callee is a different function.
+- **Lambda captures.** If a lambda uses a local that shares a global's name,
+  the lambda captures the local. Free-variable analysis does not skip the
+  name as a global.
+- **E4 string fast paths.** If a local is named `string-append`, `substring`
+  or `string-length`, calls to it are not lowered to `str_concat`, `str_slice`
+  or `str_len`.
+- **Call-site string inference in `main`.** A call to a shadowing `let`
+  binding tells the compiler nothing about the parameters of the top-level
+  function with the same name.
+
+`and` and `or` are special forms, not bindings, so a local cannot shadow
+them.
 
 ### Typed arithmetic fold
 

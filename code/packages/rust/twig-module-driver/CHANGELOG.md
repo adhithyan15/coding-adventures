@@ -1,5 +1,15 @@
 # Changelog — twig-module-driver
 
+## Unreleased — #18435: a local shadows an imported function
+
+### Tests
+
+- `local_shadowing_imported_function_is_called` imports `double` from
+  `lib.tw`. It then calls a parameter named `double`, a `let` binding named
+  `double`, and the real imported `double`, and checks for 6 + 105 + 10 = 121.
+  Before the `twig-ir-compiler` fix all three calls went to the import, which
+  gave 30.
+
 ## 0.15.0 - Unreleased - LANG84: hand the IIR compiler the parse tree
 
 ### Changed

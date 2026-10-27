@@ -3976,6 +3976,101 @@ mod tests {
         assert_eq!(run_source(src).unwrap().as_int(), Some(15));
     }
 
+    // ── Lexical shadowing in call position (#18435) ─────────────────
+    //
+    // The innermost binding wins.  Each program below defines a global
+    // `helper` that multiplies by 100 and then calls a LOCAL `helper`
+    // that adds 1.  The right answer is 2; the bug (global resolved
+    // before the local) answered 100.
+
+    const SHADOWED_HELPER: &str = "(define (helper x) (* x 100))";
+
+    fn run_shadowed(body: &str) -> Option<i64> {
+        run_source(&format!("{SHADOWED_HELPER} {body}"))
+            .unwrap_or_else(|e| panic!("run failed for {body}: {e:?}"))
+            .as_int()
+    }
+
+    #[test]
+    fn parameter_shadowing_global_fn_is_called() {
+        // The exact program from issue #18435.
+        assert_eq!(
+            run_shadowed("(define (f helper) (helper 1)) (f (lambda (x) (+ x 1)))"),
+            Some(2),
+        );
+    }
+
+    #[test]
+    fn let_binding_shadowing_global_fn_is_called() {
+        assert_eq!(run_shadowed("(let ((helper (lambda (x) (+ x 1)))) (helper 1))"), Some(2));
+        assert_eq!(run_shadowed("(let* ((helper (lambda (x) (+ x 1)))) (helper 1))"), Some(2));
+    }
+
+    #[test]
+    fn lambda_parameter_shadowing_global_fn_is_called() {
+        assert_eq!(
+            run_shadowed("((lambda (helper) (helper 1)) (lambda (x) (+ x 1)))"),
+            Some(2),
+        );
+    }
+
+    #[test]
+    fn captured_parameter_shadowing_global_fn_is_called() {
+        // The shadowing parameter reaches the call through a closure
+        // capture, so free-variable analysis must treat it as local.
+        assert_eq!(
+            run_shadowed(
+                "(define (mk helper) (lambda (y) (helper y))) ((mk (lambda (x) (+ x 1))) 1)"
+            ),
+            Some(2),
+        );
+    }
+
+    #[test]
+    fn match_binding_shadowing_global_fn_is_called() {
+        assert_eq!(
+            run_shadowed("(match (lambda (x) (+ x 1)) (helper (helper 1)))"),
+            Some(2),
+        );
+    }
+
+    #[test]
+    fn global_fn_is_called_again_after_shadowing_let_ends() {
+        assert_eq!(run_shadowed("(begin (let ((helper 5)) helper) (helper 1))"), Some(100));
+    }
+
+    #[test]
+    fn parameter_shadowing_builtin_is_called() {
+        assert_eq!(
+            run_source("(define (f car) (car 1)) (f (lambda (x) (+ x 41)))")
+                .unwrap()
+                .as_int(),
+            Some(42),
+        );
+    }
+
+    #[test]
+    fn let_shadowing_string_builtins_is_called() {
+        // A local `string-length` is not the E4 `str_len` builtin…
+        assert_eq!(
+            run_source("(let ((string-length (lambda (s) 99))) (string-length \"abc\"))")
+                .unwrap()
+                .as_int(),
+            Some(99),
+        );
+        // …and a local `string-append` is not folded into `str_concat`:
+        // the real `string-length` measures the closure's "zzzz", not "ab".
+        assert_eq!(
+            run_source(
+                "(let ((string-append (lambda (a b) \"zzzz\"))) \
+                 (string-length (string-append \"a\" \"b\")))"
+            )
+            .unwrap()
+            .as_int(),
+            Some(4),
+        );
+    }
+
     // ── Error paths ─────────────────────────────────────────────────
 
     #[test]

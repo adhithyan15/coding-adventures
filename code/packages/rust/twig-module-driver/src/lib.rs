@@ -1100,6 +1100,30 @@ mod tests {
         assert_eq!(m.entry_point.as_deref(), Some("main"),
             "linked module should have entry_point = main");
     }
+
+    #[test]
+    fn local_shadowing_imported_function_is_called() {
+        // #18435: `double` is an imported (extern) function, but inside
+        // `apply-to-five` — and inside the `let` — it names a LOCAL
+        // closure, which must be the one called.  The bug compiled both
+        // calls to a direct `call double` and answered 10 instead of 6.
+        let dir = make_tempdir("shadow_imported_fn");
+        write_temp(&dir, "lib.tw", "
+            (module lib (export double))
+            (define (double x) (* x 2))
+        ");
+        let root = write_temp(&dir, "main.tw", "
+            (module main (import lib))
+            (define (apply-to-five double) (double 5))
+            (+ (apply-to-five (lambda (x) (+ x 1)))
+               (let ((double (lambda (x) (+ x 100)))) (double 5))
+               (double 5))
+        ");
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .unwrap_or_else(|e| panic!("run failed: {e}"));
+        // 6 (param) + 105 (let) + 10 (the real imported `double`).
+        assert_eq!(v.as_int(), Some(121));
+    }
 }
 
 // ---------------------------------------------------------------------------

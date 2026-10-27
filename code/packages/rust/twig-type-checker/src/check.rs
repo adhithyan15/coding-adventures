@@ -359,7 +359,15 @@ fn infer_apply(
 
     // TW05-C / LANG54: call-site refinement checking via the generic protocol.
     // Only runs when the callee is a VarRef with registered param refinements.
-    if let Some(callee_name) = fn_name {
+    //
+    // Lexical scope wins (#18435): `env.fn_param_refinements` is keyed by
+    // *top-level* function name, so it only describes the callee when that
+    // name is not rebound by an enclosing parameter / `let` / lambda.  In
+    // `(define (g ascii-info) (ascii-info 200))` the callee is g's
+    // parameter, and the global `ascii-info`'s `(Int 0 128)` contract says
+    // nothing about it.  (`fn_kind` above already resolved scope-first, so
+    // the arity check needs no such guard.)
+    if let Some(callee_name) = fn_name.filter(|name| scope.lookup(name).is_none()) {
         if let Some(param_refinements) = env.fn_param_refinements.get(callee_name) {
             // Map TypedMode → RefinementMode for the protocol.
             let ref_mode = match mode {

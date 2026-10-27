@@ -1,5 +1,16 @@
 # Changelog — twig-vm
 
+## Unreleased — #18435: end-to-end tests for lexical shadowing
+
+### Tests
+
+- 8 new dispatch tests run programs in which a parameter, a `let`/`let*`
+  binding, a lambda parameter, a captured parameter or a `match` binding
+  shadows a global function. Others shadow a builtin or the E4 string
+  builtins. The tests check the values. The example from the issue,
+  `(define (f helper) (helper 1))`, returns 2, not 100. The fix itself is in
+  `twig-ir-compiler`.
+
 ## Unreleased — host stdin seam: stdin tests no longer abort Miri
 
 ### Fixed — `miri-twig-vm.sh` aborted at `host_read_byte_returns_value_in_dest`
