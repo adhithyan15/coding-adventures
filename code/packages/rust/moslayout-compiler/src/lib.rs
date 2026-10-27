@@ -328,6 +328,68 @@ pub struct LayoutNode {
 /// still making accidental emitter leakage easy to detect.
 pub const CHILD_SLOT_MOUNT_TAG: &str = "$mosaic-child-slot";
 
+/// The `(tag, prop)` positions where a bare NAME value is an **enum
+/// literal**, which no backend ever lowers to an identifier.
+///
+/// A bare NAME prop value (`content: title`, `axis: horizontal`) parses as
+/// [`LayoutPropValue::Keyword`], and the IR does not say which of two things
+/// it is:
+///
+/// ```text
+/// Text ( a11y-role: heading )    literal: an enum value, the same in every scope
+/// HostScroll ( axis: both )      literal
+/// Text ( content: row )          identifier: the emitters write `{row}`, the
+///                                `For` binding or prop named `row` in scope
+/// ```
+///
+/// The emitters decide case by case, and they do not all agree: SwiftUI
+/// renders `Text ( content: row )` as the literal text `"row"`, where React
+/// and HTML read a variable. So this table lists the positions that are
+/// literal on every backend, and everything else is treated as possibly an
+/// identifier. `true` and `false` are literals in any position, and a `For`'s
+/// `as:` and `index:` are binders, not uses; neither is listed.
+///
+/// Listing the literal positions rather than the identifier ones is
+/// deliberate. The package resolver checks that an identifier names
+/// something the component declares (`mosaic-package-resolver`,
+/// `check_callee_scope`). With this table, a position missing from the list
+/// gets that check, and the cost of an omission is a compile error naming
+/// the prop. With a table of identifier positions, the cost of an omission
+/// would be a silent read of the consumer's scope.
+///
+/// `mosaic-package-artifact-builder`'s
+/// `keyword_literal_props_are_literal_on_react_swiftui_and_html` builds every
+/// entry on those three backends, inside a `For` that binds the same name,
+/// and checks that none of them reads it as a variable.
+pub const KEYWORD_LITERAL_PROPS: &[(&str, &str)] = &[
+    ("Text", "a11y-role"),
+    ("Box", "table-cell-role"),
+    ("Text", "table-cell-role"),
+    ("HostScroll", "axis"),
+    ("HostNavigationSplit", "collapse"),
+    ("Path", "kind"),
+    ("HostTable", "dir"),
+    ("HostLink", "target"),
+];
+
+/// Whether a bare NAME `value` of prop `prop` on a `tag` node is a literal
+/// rather than a possible identifier: `true`/`false` anywhere, or any value
+/// in a [`KEYWORD_LITERAL_PROPS`] position.
+///
+/// ```
+/// use moslayout_compiler::is_keyword_literal;
+/// assert!(is_keyword_literal("HostScroll", "axis", "horizontal"));
+/// assert!(is_keyword_literal("HostButton", "disabled", "true"));
+/// assert!(!is_keyword_literal("Text", "content", "title"));
+/// ```
+pub fn is_keyword_literal(tag: &str, prop: &str, value: &str) -> bool {
+    value == "true"
+        || value == "false"
+        || KEYWORD_LITERAL_PROPS
+            .iter()
+            .any(|&(t, p)| t == tag && p == prop)
+}
+
 impl LayoutNode {
     /// Whether this node is a UI29-2 authored-children mount.
     pub fn is_child_slot_mount(&self) -> bool {

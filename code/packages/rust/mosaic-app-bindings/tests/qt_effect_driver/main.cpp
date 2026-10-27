@@ -585,6 +585,72 @@ int main(int argc, char **argv) {
         check(documents, "ordinary documents are not executable");
     }
 
+    {
+        // A state file the runtime rejects moves to the first FREE quarantine
+        // name, never over an earlier quarantine, which may be someone's real
+        // data. With all ten names taken it stays where it is, and nothing is
+        // saved over it.
+        //
+        //   launch | before                        | afterwards
+        //   -------+-------------------------------+------------------------------
+        //   first  | `{}`, `.corrupt` held         | `{}` in `.corrupt.1`, saving
+        //   second | `{}`, `.corrupt` to `.9` held | `{}` still live, not saving
+        const auto path = QString::fromLocal8Bit(qgetenv("MOSAIC_PROBE_STATE_K"));
+        const auto write = [](const QString &file, const QByteArray &bytes) {
+            QFile out(file);
+            if (out.open(QIODevice::WriteOnly | QIODevice::Truncate)) out.write(bytes);
+        };
+        const auto read = [](const QString &file) {
+            QFile in(file);
+            return in.open(QIODevice::ReadOnly) ? in.readAll() : QByteArray("<missing>");
+        };
+        const auto warning = [](const QVariantMap &update) {
+            return update.value(QStringLiteral("persistenceWarning")).toString();
+        };
+        const auto corrupt = [&path](int index) {
+            QString name = path + QStringLiteral(".corrupt");
+            if (index > 0) name += QStringLiteral(".%1").arg(index);
+            return name;
+        };
+        // `{}` parses, so it reaches the runtime, which refuses it: no schema.
+        const QByteArray rejected("{}");
+        const QVariantMap increment{
+            {QStringLiteral("name"), QStringLiteral("increment")},
+            {QStringLiteral("payload"), QVariantMap{{QStringLiteral("amount"), 1}}},
+        };
+        qputenv("MOSAIC_APP_STATE_PATH", qgetenv("MOSAIC_PROBE_STATE_K"));
+        write(corrupt(0), QByteArray("earlier"));
+        write(path, rejected);
+        {
+            MosaicHost first;
+            const auto moved = warning(first.props());
+            check(read(corrupt(0)) == QByteArray("earlier"), "an earlier quarantine is never replaced");
+            check(read(corrupt(1)) == rejected, "a rejected file moves to the first free name");
+            check(!moved.isEmpty() && !moved.contains(QStringLiteral("will not be saved")),
+                  "a file moved aside leaves saving on");
+            first.handleEvent(increment);
+            check(QFile::exists(path) && read(path) != rejected,
+                  "fresh state is saved once the rejected file is aside");
+        }
+        for (int index = 2; index < 10; ++index) {
+            write(corrupt(index), QByteArray("taken ") + QByteArray::number(index));
+        }
+        write(path, rejected);
+        {
+            MosaicHost second;
+            const auto blocked = warning(second.props());
+            check(blocked.contains(QStringLiteral("This session will not be saved.")),
+                  "with every name taken, the warning says nothing is saved");
+            const auto answer = second.handleEvent(increment);
+            check(read(path) == rejected, "a file that could not move aside is not written over");
+            check(!blocked.isEmpty() && warning(answer) == blocked,
+                  "the warning stays showing after an event");
+            check(read(corrupt(0)) == QByteArray("earlier") && read(corrupt(1)) == rejected
+                      && read(corrupt(9)) == QByteArray("taken 9"),
+                  "no quarantine was replaced");
+        }
+    }
+
     if (failures) {
         std::printf("\n%d check(s) failed\n", failures);
         return 1;

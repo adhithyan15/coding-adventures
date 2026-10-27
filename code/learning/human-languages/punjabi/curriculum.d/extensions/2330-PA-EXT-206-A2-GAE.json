@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-206-A2-GAE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can recognise and use one bounded masculine plural form for went.",
+  "prerequisites": [
+    "PA-EXT-205-A2-SABH"
+  ]
+}

@@ -1,6 +1,6 @@
 // Package resolver reads package metadata files (pyproject.toml, .gemspec,
-// go.mod, package.json, .rockspec, pubspec.yaml) and extracts internal dependencies,
-// building a directed graph.
+// go.mod, package.json, .rockspec, pubspec.yaml, mosaic-package.toml) and
+// extracts internal dependencies, building a directed graph.
 //
 // # Why dependency resolution matters
 //
@@ -27,6 +27,9 @@
 //
 //   - Dart: pubspec.yaml uses snake_case package names.
 //     "coding_adventures_logic_gates" maps to "dart/logic-gates".
+//
+//   - Mosaic: mosaic-package.toml lists `[dependencies]` by package name.
+//     "mosaic-pkg-toolkit" maps to "mosaic/mosaic-pkg-toolkit" (mosaic.go).
 //
 // External dependencies (those not matching the monorepo prefix) are
 // silently skipped — we only care about internal build ordering.
@@ -2195,6 +2198,18 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			dirBase := strings.ToLower(filepath.Base(pkg.Path))
 			setKnown(dirBase, pkg.Name, pkg.Path, pkg.Language)
 
+		case "mosaic":
+			// Mosaic manifests name their dependencies by package name, which
+			// is the directory basename by convention ("mosaic-pkg-toolkit")
+			// and is always the manifest's own [package].name. Register both
+			// so an app whose directory and manifest name differ still
+			// resolves. See mosaic.go.
+			dirBase := strings.ToLower(filepath.Base(pkg.Path))
+			setKnown(dirBase, pkg.Name, pkg.Path, pkg.Language)
+			if manifestName := readMosaicPackageName(pkg.Path); manifestName != "" {
+				setKnown(manifestName, pkg.Name, pkg.Path, pkg.Language)
+			}
+
 		case "dotnet", "csharp", "fsharp":
 			// .NET (C#/F#) packages use MSBuild ProjectReference elements, which
 			// reference sibling directories by name. The directory name maps
@@ -2277,6 +2292,12 @@ func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, er
 		graph.AddNode(pkg.Name)
 	}
 
+	// A Mosaic name claimed twice would silently redirect edges; refuse it
+	// before any table is built (see checkMosaicNameCollisions).
+	if err := checkMosaicNameCollisions(packages); err != nil {
+		return nil, err
+	}
+
 	// Build the ecosystem-specific name mapping table.
 	knownNamesByLanguage := make(map[string]map[string]string)
 	knownGradlePathsByLanguage := make(map[string]map[string]string)
@@ -2331,6 +2352,12 @@ func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, er
 			deps = parseGradleDeps(pkg, knownGradlePathsByLanguage[pkg.Language])
 		case "dotnet", "csharp", "fsharp":
 			deps = parseDotnetDeps(pkg, knownDotnetProjectPaths)
+		case "mosaic":
+			var err error
+			deps, err = parseMosaicDeps(pkg, knownNames)
+			if err != nil {
+				return nil, err
+			}
 		}
 		deps = append(deps, parseBuildToolDeps(pkg, knownPackageNames)...)
 

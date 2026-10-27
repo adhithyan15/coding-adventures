@@ -321,6 +321,67 @@ private fun caseDeferred() {
 
 private fun suffix(ok: Boolean, why: String) = if (ok) "" else " [$why]"
 
+/**
+ * A state file the runtime rejects moves to the first FREE quarantine name,
+ * never over an earlier quarantine, which may be someone's real data. With all
+ * ten names taken it stays where it is, and nothing is saved over it.
+ *
+ * ```
+ * launch | before                        | afterwards
+ * -------+-------------------------------+------------------------------
+ * first  | `{}`, `.corrupt` held         | `{}` in `.corrupt.1`, saving
+ * second | `{}`, `.corrupt` to `.9` held | `{}` still live, not saving
+ * ```
+ */
+private fun caseQuarantine() {
+    val path = System.getenv("MOSAIC_APP_STATE_PATH")
+    if (path.isNullOrEmpty()) {
+        check(false, "MOSAIC_APP_STATE_PATH names the quarantine state file")
+        return
+    }
+    // `{}` parses, so it reaches the runtime, which refuses it: no schema.
+    val rejected = "{}"
+    val increment = mapOf("event" to "increment", "amount" to 1)
+    fun file(suffix: String) = java.io.File(path + suffix)
+    fun warning(update: Map<String, Any?>?) = update?.get("persistenceWarning") as? String
+    file(".corrupt").writeText("earlier")
+    file("").writeText(rejected)
+
+    host().use { first ->
+        val moved = warning(first.props())
+        check(file(".corrupt").readText() == "earlier", "an earlier quarantine is never replaced")
+        check(
+            file(".corrupt.1").isFile && file(".corrupt.1").readText() == rejected,
+            "a rejected file moves to the first free name",
+        )
+        check(moved != null && "will not be saved" !in moved, "a file moved aside leaves saving on")
+        first.handleEvent(increment)
+        check(
+            file("").isFile && file("").readText() != rejected,
+            "fresh state is saved once the rejected file is aside",
+        )
+    }
+
+    for (index in 2 until 10) file(".corrupt.$index").writeText("taken $index")
+    file("").writeText(rejected)
+    host().use { second ->
+        val blocked = warning(second.props())
+        check(
+            blocked?.contains("This session will not be saved.") == true,
+            "with every name taken, the warning says nothing is saved",
+        )
+        val answer = second.handleEvent(increment)
+        check(file("").readText() == rejected, "a file that could not move aside is not written over")
+        check(blocked != null && warning(answer) == blocked, "the warning stays showing after an event")
+        check(
+            file(".corrupt").readText() == "earlier" &&
+                file(".corrupt.1").readText() == rejected &&
+                file(".corrupt.9").readText() == "taken 9",
+            "no quarantine was replaced",
+        )
+    }
+}
+
 fun main() {
     when (val case = System.getenv("MOSAIC_PROBE_CASE") ?: "") {
         "unhandled" -> caseUnhandled()
@@ -331,6 +392,7 @@ fun main() {
         "unconvertible" -> caseUnconvertibleResult()
         "runaway" -> caseRunawayChaining()
         "deferred" -> caseDeferred()
+        "quarantine" -> caseQuarantine()
         else -> {
             println("unknown MOSAIC_PROBE_CASE `$case`")
             kotlin.system.exitProcess(2)

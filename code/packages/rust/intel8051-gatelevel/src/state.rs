@@ -33,7 +33,6 @@ impl StateRegister {
         register(&bits, 1, &mut self.state);
     }
 
-    #[cfg(test)]
     pub(crate) fn read(&self) -> u16 {
         self.state
             .iter()
@@ -41,6 +40,39 @@ impl StateRegister {
             .fold(0, |value, (bit, state)| {
                 value | (u16::from(state.slave_q) << bit)
             })
+    }
+
+    pub(crate) fn dff_count(&self) -> usize {
+        self.state.len()
+    }
+}
+
+/// One persistent D flip-flop observed at stable instruction boundaries.
+///
+/// Keeping Q inside this type prevents the adjacent public compatibility
+/// boolean from becoming an accidental second architectural state owner.
+#[derive(Debug, Clone)]
+pub(crate) struct DffBit {
+    state: StateRegister,
+}
+
+impl DffBit {
+    pub(crate) fn new() -> Self {
+        Self {
+            state: StateRegister::new(1),
+        }
+    }
+
+    pub(crate) fn q(&self) -> bool {
+        self.state.read() != 0
+    }
+
+    pub(crate) fn clock(&mut self, value: bool) {
+        self.state.write(u16::from(value));
+    }
+
+    pub(crate) fn dff_count(&self) -> usize {
+        self.state.dff_count()
     }
 }
 
@@ -94,6 +126,10 @@ impl DffMemory {
 
     pub(crate) fn snapshot(&self) -> Vec<u8> {
         self.q.clone()
+    }
+
+    pub(crate) fn dff_count(&self) -> usize {
+        self.q.len() * 8
     }
 }
 

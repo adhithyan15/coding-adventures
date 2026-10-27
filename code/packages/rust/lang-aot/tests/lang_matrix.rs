@@ -3910,12 +3910,15 @@ fn main() { out(1, VALUE); }\n",
     // x86-64 `cvttsd2si` returned i64::MIN (a sign-flipped answer), JVM `d2l`
     // saturated to i64::MAX, and aarch64 `fcvtzs` saturated too. The first
     // row is finite (exp(exp(4)) ≈ 5.1e23 > 2^63); the second overflows to +∞.
+    // Both stop with LANG83's typed `Trap.ConvRange` on every column — the
+    // same kind, not a SIGILL on native, `ArithmeticException` on the JVM or
+    // `OverflowException` on the CLR.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
         src: "begin real procedure pick; pick := 4.0; integer result; \
                   result := entier(exp(exp(pick()))); output(result) end",
-        expect: Expect::Trap,
+        expect: Expect::StdoutThenTrap("", "Trap.ConvRange"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
         release: None,
         case: None,
@@ -3925,7 +3928,7 @@ fn main() { out(1, VALUE); }\n",
         ext: "alg",
         src: "begin real procedure pick; pick := 2.0; integer result; \
                   result := entier(exp(exp(exp(pick())))); output(result) end",
-        expect: Expect::Trap,
+        expect: Expect::StdoutThenTrap("", "Trap.ConvRange"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
         release: None,
         case: None,
@@ -6764,6 +6767,18 @@ fn main() { out(1, VALUE); }\n",
         ext: "alg",
         src: "begin real procedure leftvalue; leftvalue := 3.5; real procedure rightvalue; rightvalue := -2.25; real result; result := entier(((((6 * sign(leftvalue()) + 6) mod 3) / 7 + (((6 * sign(leftvalue()) + 6) mod 3) * sign(rightvalue()) / 11)) ^ 2)); output(result) end",
         expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ALGOL 60 - integer multiplication may exceed binary64's contiguous
+    // exact range while staying in i64 when later div/mod reductions bring the
+    // value back before widening; the three reduced terms are -2, -2, and -1.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real result; result := entier((9007199254740992 * sign(leftvalue()) * 2 mod 5) / 2 + (9007199254740992 * sign(leftvalue()) * 2 * sign(rightvalue()) mod 5) / 2 + ((9007199254740992 * sign(leftvalue()) * 2 div 3) mod 5)); output(result) end",
+        expect: Expect::Stdout("-5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
         release: None,
         case: None,
@@ -9609,6 +9624,9 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Ruby, ext: "rb", src: "puts(4)\nputs((7 - 7) * 3, 10 / (5 - 5))\n", expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: Some("3.3.6"), case: Some("rb-int-puts/div_zero_nested") },
     // An empty program (one blank line) prints nothing and exits 0.
     Prog { lang: Language::Ruby, ext: "rb", src: "\n", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: Some("3.3.6"), case: Some("rb-int-puts/empty_program") },
+    // LANG84 R1b: an `=begin`/`=end` document and everything after a
+    // `__END__` line are skipped, so `puts 2` and `puts 4` never run.
+    Prog { lang: Language::Ruby, ext: "rb", src: "puts 1\n=begin\nputs 2\n=end\nputs 3\n__END__\nputs 4\n", expect: Expect::Stdout("1\n3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: Some("3.3.6"), case: Some("rb-int-puts/embedded_document_and_end") },
     // 3.3.5 — representative of the one IIR-identity class `ruby-iir-compiler`'s
     // release sweep finds (3.3.5, 3.3.6, 3.3.7: `code/grammars/ruby/release_classes.csv`).
     // It is the class's first release in `releases.csv` order, so it, not the
@@ -9629,6 +9647,7 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("div_zero_in_second_argument"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/div_zero_in_second_argument") },
     Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("div_zero_nested"), expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/div_zero_nested") },
     Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("empty_program"), expect: Expect::Stdout(""), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/empty_program") },
+    Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("embedded_document_and_end"), expect: Expect::Stdout("1\n3"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/embedded_document_and_end") },
     // FLOW-MATIC — unified-matrix baseline (VM-020). A file-qualified field is
     // initialised to zero, moved through the frontend's scalar-field path, and
     // rendered by WRITE-ITEM through the shared recursive integer printer plus
@@ -14749,8 +14768,9 @@ fn feature_coverage_doc_counts_match_programs_source() {
         // Ruby: LANG84 phase 5a's thirteen rb-int-puts rows (four of them
         // StdoutThenTrap) plus 4c's empty_program row on the default 3.3.6,
         // and 5b slice 2's same fourteen cases on the IIR-identity class
-        // representative 3.3.5, all eight columns.
-        (Language::Ruby, 28, 224),
+        // representative 3.3.5, all eight columns. R1b adds the
+        // embedded_document_and_end case on both releases.
+        (Language::Ruby, 30, 240),
         (Language::Cobol60, 59, 472),
         // Perl: the `pl-int-print` corpus on the three IIR-identity class
         // representatives (LANG84 4c): 12 cases on 5.38.0, 11 on 1.000 and 10
@@ -16957,6 +16977,31 @@ fn algol_divisor_aligned_modulo_zero_runs_on_every_available_standard_backend() 
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but divisor-aligned modulo zero did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_reduced_wide_integer_intermediates_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "9007199254740992 * sign(leftvalue()) * 2 * sign(rightvalue()) mod 5",
+                )
+        })
+        .expect("the reduced wide-integer ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but reduced wide-integer intermediates did not complete"
             );
             continue;
         };
@@ -19845,7 +19890,7 @@ fn algol_out_of_range_entier_traps_on_every_available_standard_backend() {
         .iter()
         .filter(|program| {
             program.lang == Language::Algol60
-                && matches!(program.expect, Expect::Trap)
+                && matches!(program.expect, Expect::StdoutThenTrap("", "Trap.ConvRange"))
                 && (program.src.contains("result := entier(exp(exp(pick())))")
                     || program.src.contains("result := entier(exp(exp(exp(pick()))))"))
         })

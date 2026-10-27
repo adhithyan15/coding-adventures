@@ -72,7 +72,12 @@ the fixed-width gate helpers before the candidate state can commit.
 Load and restore validate the complete input before clocking a DFF. `step`
 executes against a fallibly allocated candidate snapshot, produces exact raw
 bytes, width, conventional mnemonic (or `it-skip`), and complete before/after
-states, then clocks the settled candidate. Every error is atomic.
+states, then clocks the settled candidate. The cross-crate integration
+candidate remains mutable for compatible gate companions, so the final commit
+operation must revalidate the complete candidate immediately before the first
+DFF clock. A mutation after the earlier settle check therefore returns a typed
+error and leaves every authoritative Q output unchanged. Every error is
+atomic.
 
 `run` and `execute` preflight the functional cell's 64-trace retention limit,
 reserve all outer and nested snapshot storage before the first architectural
@@ -91,9 +96,9 @@ The cell is complete only when it:
    exclusive subfamily through gate witnesses;
 4. compares exact result/error, raw bytes, width, mnemonic, and complete
    before/after state with the checked functional oracle;
-5. proves invalid restore/load/fetch/data/control/decode operations and
-   post-halt/sleep transitions are typed and atomic, and proves bounded
-   allocation/rollback behavior; and
+5. proves invalid restore/load/fetch/data/control/decode operations,
+   post-halt/sleep transitions, and post-settle external candidate mutations
+   are typed and atomic, and proves bounded allocation/rollback behavior; and
 6. passes release tests, package-scoped formatting, strict Clippy, rustdoc,
    package BUILD, lessons validation, affected-package checks, independent
    security review, and more than 80% line coverage with a target above 95%.
