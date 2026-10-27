@@ -101,8 +101,10 @@ Cortex-M7 and Cortex-M23 are merged, and Cortex-M33 merged in PR #18326.
 | 12 | ARM7TDMI | published ARMv4T manuals | Functional merged. Educational gate partner repaired after independent review: exact 525,522-DFF stable-Q inventory; independent ARM/Thumb engine; gate-derived one-hot selectors through the complete Thumb ALU/high/BX/transfer/stack/conditional/write-enable/mnemonic surface; syntax-normalized whole-file token locks plus named parsed-body source-to-sink locks; compiler-valid hostile full-crate mutations across ARM and Thumb control; two-way candidate divergence; real public differential execution and complete-state rollback for every reachable typed functional fault; and explicit source/public-invariant narrowing for compatibility-only unreachable variants. All 59 release tests, strict checks, and 91.67% line coverage (2,168/2,365) are green; a different independent exact-head review is next, and SoC composition remains queued. |
 | 13 | AVR classic (PR #18344) | published instruction-set manual | Complete: ATmega328P/`avr5` Harvard core, mapped register/I/O/data state, checked stack/control flow, all 26 typed undefined-overlap refusals, transactional traces/lifecycle, terminal-state restore round trips, whole-span two-byte call preflight, all-family terminal skip-target validation, 34 release tests with exhaustive add/subtract flag oracles and bug-sensitive fractional multiply flag regressions, and 97.43% line coverage (949/974). Squash auto-merge is armed; the gate partner remains queued. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
-| 15 | RCA CDP1802 (functional merged in PR #18354) | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: functional merged; gate Spec 07bc2 independently reviewed; independent gate decoder/executor with gate-authoritative legality/family/control predicates, repository-gate ALU/control, exact 524,667-DFF state, exact full-trace/full-state 255-transition and focused lifecycle/bus differentials, explicit I/O/DMA/interrupt seams, eleven compiler-valid hostile structural fixtures, typed atomic lifecycle including post-first-step allocation rollback, 40 release tests plus one doctest, and 95.62% line coverage (1,442/1,508). Exact-head review remains before publication. |
+| 15 | RCA CDP1802 (`RCPU-081` / `RCPU-082`; functional merged in PR #18354) | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: functional merged; gate Spec 07bc2 independently reviewed; independent gate decoder/executor with gate-authoritative legality/family/control predicates, repository-gate ALU/control, exact 524,667-DFF state, exact full-trace/full-state 255-transition and focused lifecycle/bus differentials, explicit I/O/DMA/interrupt seams, eleven compiler-valid hostile structural fixtures, typed atomic lifecycle including post-first-step allocation rollback, 40 release tests plus one doctest, and 95.62% line coverage (1,442/1,508). Exact-head review remains before publication. |
 | 16 | MSP430 classic (MSP430F2274 profile) | TI SLAU144K family guide and SLAS504G device data sheet | Functional cell repaired locally: source-pinned classic 16-bit von-Neumann CPU with the full documented 27-instruction core, source-only constant-generator enforcement, exact Format II trace roles, and injected allocation rollback; independent re-review/publication is next. MSP430X, peripherals, clocks, power, and timing stay outside this cell. |
+| 17 | LatticeMico32 (`RCPU-083` / `RCPU-084`) | official LatticeMico32 Processor Reference Manual 3.8 plus vendor-origin open RTL at `84b3e3ca0ad9535acaef201c1482342871358b08` | Functional implementation is in progress from an independently reviewed configuration-pinned spec; the dependent gate cell remains blocked on functional merge. |
+| 18 | ZipCPU (`RCPU-085` / `RCPU-086`) | official ZipCPU Specification revision 3.0 plus open RTL at `42606d2d6ef55df313772232977621b2d72f0159` | `RCPU-085` is complete locally from its independently reviewed spec-only predecessor: fixed-width big-endian execution, two complete register banks, CC/PC/interrupt/image state, exact transactions, typed atomic lifecycle, 31 completion tests, two corpus consumers over 3,970 checked-in upstream rows, one doctest, and 92.70% release line coverage (1,270/1,370). Exact-clean-head review is next; `RCPU-086` remains blocked until the functional oracle merges. |
 
 CDP1802 merged in PR #18354 after independent specification and implementation
 review. The functional cell covers the complete register matrix, instruction
@@ -139,6 +141,15 @@ unit tests and one doctest, strict Clippy/rustdoc, the package BUILD, lessons
 validation, and all-target release package-source line coverage of 98.56%
 (1,777/1,803; `cargo llvm-cov -p msp430-simulator --all-targets --release
 --summary-only`) are green.
+
+LatticeMico32 remains immediately ahead of ZipCPU because its independently
+reviewed implementation work was already active when the ZipCPU duplicate
+audit completed. ZipCPU `RCPU-085` is now complete locally and awaits a
+different reviewer's exact-head PASS. Its official revision-3 ISA,
+independently written upstream C++ simulator, and immutable open RTL provide
+the bounded functional evidence and the later educational-gate boundary.
+Both cells are configuration-pinned CPU cores; neither may claim a complete
+SoC, physical FPGA realization, transistor topology, or timing accuracy.
 
 ## Discovered follow-up work
 
