@@ -1,0 +1,11 @@
+{
+  "id": "JA-C386-shukkoku",
+  "pathSegment": "JA-PATH-386-ZEIKAN386",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-386-ZEIKAN386",
+      "order": 3
+    }
+  ]
+}

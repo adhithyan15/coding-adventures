@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C390-sokudo",
+    "language": "japanese",
+    "chapter": 390,
+    "sequence": 22950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ccd8f81ac5c77295"
+  },
+  "findings": []
+}

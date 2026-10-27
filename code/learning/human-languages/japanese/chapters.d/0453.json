@@ -1,0 +1,19 @@
+{
+  "chapter": 453,
+  "title": "Handouts and Deadlines",
+  "label": "ch:ja-handouts-and-deadlines",
+  "canDo": "I can talk about handouts, meetings and deadlines.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C453-tetsuya-suru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can talk about handouts, meetings and deadlines.",
+    "assesses": [
+      "JA-LEX-C453-PAPERS453-03",
+      "JA-LEX-C453-PAPERS453-04",
+      "JA-LEX-C453-PAPERS453-05"
+    ]
+  }
+}

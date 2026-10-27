@@ -1,0 +1,11 @@
+{
+  "id": "JA-C302-kamisama",
+  "pathSegment": "JA-PATH-302-YUUREI302",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-302-YUUREI302",
+      "order": 4
+    }
+  ]
+}

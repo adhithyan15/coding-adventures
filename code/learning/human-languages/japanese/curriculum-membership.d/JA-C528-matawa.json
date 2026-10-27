@@ -1,0 +1,11 @@
+{
+  "id": "JA-C528-matawa",
+  "pathSegment": "JA-PATH-528-OR528",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-528-OR528",
+      "order": 1
+    }
+  ]
+}

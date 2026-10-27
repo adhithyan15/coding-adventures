@@ -680,9 +680,18 @@ code/programs/typescript/journal-app/
 
 ## Release Workflow
 
-### Electron Release (`release-journal.yml`)
+> **Retired (J5e of #14416).** Nothing releases this app any more.
+> `release-journal.yml` now releases the Mosaic Journal
+> (`code/programs/mosaic/journal-app`). It is a `workflow_dispatch` lane with
+> no tag-push trigger; see `journal-mosaic-app.md` § Release (J5e). The Electron
+> release below never ran: no `journal-v*` tag was ever pushed. It is kept here
+> as a record of what this program's `electron-builder.yml` was for. The
+> program itself stays in the tree, still buildable, until deleting it is
+> decided separately.
 
-Triggered by pushing a tag matching `journal-v*`:
+### Electron Release (former `release-journal.yml`)
+
+This workflow was triggered by pushing a tag matching `journal-v*`:
 
 ```bash
 git tag journal-v0.1.0

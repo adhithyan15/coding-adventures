@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C443-ashikubi",
+    "language": "japanese",
+    "chapter": 443,
+    "sequence": 25880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f271fe576552f651"
+  },
+  "findings": []
+}

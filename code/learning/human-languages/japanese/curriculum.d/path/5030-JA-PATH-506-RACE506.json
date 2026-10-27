@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-506-RACE506",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "JA-EXT-506-RACE506"
+  ],
+  "after": []
+}

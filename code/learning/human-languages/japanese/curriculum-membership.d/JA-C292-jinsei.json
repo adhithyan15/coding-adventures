@@ -1,0 +1,11 @@
+{
+  "id": "JA-C292-jinsei",
+  "pathSegment": "JA-PATH-292-JINSEI292",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-292-JINSEI292",
+      "order": 2
+    }
+  ]
+}

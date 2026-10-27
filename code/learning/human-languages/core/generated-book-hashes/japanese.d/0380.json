@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:d71de47877467688",
+  "lessonIds": [
+    "JA-C380-ekiben",
+    "JA-C380-shashou",
+    "JA-C380-nesugosu",
+    "JA-C380-utouto",
+    "JA-C380-hitokuchi"
+  ],
+  "tex": "japanese/book/chapters/ch380-lunch-on-the-train.tex"
+}

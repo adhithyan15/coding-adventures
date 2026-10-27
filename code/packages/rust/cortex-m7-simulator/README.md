@@ -15,6 +15,9 @@ power/event state, installed-image metadata, owned 64 KiB memory, and GE.
 typed allocation errors. Checked execution uses that path internally and
 rolls back if a post-transition snapshot cannot be retained. MRS/MSR transport
 GE in architectural APSR bits 19:16, including the composite APSR aliases.
+MSR mask `01` writes GE alone, mask `10` writes NZCVQ alone, and mask `11`
+writes both groups from one source while preserving the unselected group.
+Reserved masks fault atomically, including on false IT paths.
 
 ```rust
 use cortex_m7_simulator::{encoding, CortexM7Simulator};
@@ -47,9 +50,9 @@ The completion suite covers inherited decode and execution, every added DSP
 family, saturation and sticky-Q edges, every parallel lane and GE rule,
 IT-block behavior, exact traces, complete-state restore, typed atomic failures,
 false-IT reserved-operand rejection, MRS/MSR GE transport, deterministic
-allocation-failure rollback, bounded rollback, and the documented SoC boundary. Release tests, strict
-Clippy, rustdoc warnings, BUILD integration, and line coverage above 80% are
-required before publication.
+allocation-failure rollback, bounded rollback, and the documented SoC
+boundary. Release tests, strict Clippy, rustdoc warnings, BUILD integration,
+and line coverage above 80% are required before publication.
 
-The completion baseline is **97.29% line coverage (323/332 lines)** under the
-LLVM coverage engine.
+The current completion baseline is **96.25% line coverage (565/587 lines)**
+under the LLVM coverage engine.

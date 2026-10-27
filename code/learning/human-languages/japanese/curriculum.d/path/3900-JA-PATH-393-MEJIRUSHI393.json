@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-393-MEJIRUSHI393",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "JA-EXT-393-MEJIRUSHI393"
+  ],
+  "after": []
+}

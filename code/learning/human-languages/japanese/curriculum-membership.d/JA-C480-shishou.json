@@ -1,0 +1,11 @@
+{
+  "id": "JA-C480-shishou",
+  "pathSegment": "JA-PATH-480-MAKE480",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-480-MAKE480",
+      "order": 2
+    }
+  ]
+}

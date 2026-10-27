@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C533-ikigai",
+    "language": "japanese",
+    "chapter": 533,
+    "sequence": 30740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0be0e08c7072f3c"
+  },
+  "findings": []
+}

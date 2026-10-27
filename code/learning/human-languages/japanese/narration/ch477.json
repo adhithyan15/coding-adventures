@@ -1,0 +1,799 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 477,
+  "title": "Parents and Children",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7755df900892257e",
+  "lessons": [
+    {
+      "id": "JA-C477-oya",
+      "sequence": 27630,
+      "title": "おや (oya) — a parent",
+      "headword": "おや",
+      "romanization": "oya",
+      "gloss": "a parent",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c186a8b5ad80e08b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the eldest son, then the Japanese for the eldest daughter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おや",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おや — oya — \"a parent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おやは こどもを しんぱいします。 — oya wa kodomo o shinpai shimasu — \"Parents worry about their children.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おや (oya) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oya wa kodomo o shinpai shimasu — Parents worry about their children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oya wa kodomo o shinpai shimasu* — Parents worry about their children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the eldest son, then the Japanese for the eldest daughter, then say oya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the eldest son, then the Japanese for the eldest daughter, then say *oya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おや (oya) mean? (\"A parent\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C477-oya-type",
+              "prompt": "Say the Japanese for 'a parent'.",
+              "assesses": [
+                "JA-LEX-C477-PARENT477-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おや",
+                "oya"
+              ],
+              "feedback": {
+                "correct": "Right: おや (oya) is 'a parent'.",
+                "incorrect": "'A parent' is おや (oya)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C477-oyako",
+      "sequence": 27640,
+      "title": "おやこ (oyako) — parent and child",
+      "headword": "おやこ",
+      "romanization": "oyako",
+      "gloss": "parent and child",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2015069fa052246",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the eldest daughter, then the Japanese for a parent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おやこ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おやこ — oyako — \"parent and child\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こうえんで おやこが あそんでいます。 — kōen de oyako ga asonde imasu — \"A parent and child are playing in the park.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おやこ (oyako) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: oya, \"parent\" and ko, \"child\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oyako",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oyako*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oyako, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oyako*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōen de oyako ga asonde imasu — A parent and child are playing in the park.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōen de oyako ga asonde imasu* — A parent and child are playing in the park.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the eldest daughter, then the Japanese for a parent, then say oyako again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the eldest daughter, then the Japanese for a parent, then say *oyako* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おやこ (oyako) mean? (\"Parent and child\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C477-oyako-type",
+              "prompt": "Say the Japanese for 'parent and child'.",
+              "assesses": [
+                "JA-LEX-C477-PARENT477-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おやこ",
+                "oyako"
+              ],
+              "feedback": {
+                "correct": "Right: おやこ (oyako) is 'parent and child'.",
+                "incorrect": "'Parent and child' is おやこ (oyako)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C477-suekko",
+      "sequence": 27650,
+      "title": "すえっこ (suekko) — the youngest child",
+      "headword": "すえっこ",
+      "romanization": "suekko",
+      "gloss": "the youngest child",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16a838ce417d2c27",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a parent, then the Japanese for parent and child."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すえっこ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すえっこ — suekko — \"the youngest child\"."
+            },
+            {
+              "kind": "speech",
+              "text": "すえっこは まだ ちいさいです。 — suekko wa mada chiisai desu — \"The youngest child is still small.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すえっこ (suekko) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: sue, \"end\" and ko, \"child\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suekko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suekko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suekko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suekko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suekko wa mada chiisai desu — The youngest child is still small.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suekko wa mada chiisai desu* — The youngest child is still small.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a parent, then the Japanese for parent and child, then say suekko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a parent, then the Japanese for parent and child, then say *suekko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すえっこ (suekko) mean? (\"The youngest child\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C477-suekko-type",
+              "prompt": "Say the Japanese for 'the youngest child'.",
+              "assesses": [
+                "JA-LEX-C477-PARENT477-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すえっこ",
+                "suekko"
+              ],
+              "feedback": {
+                "correct": "Right: すえっこ (suekko) is 'the youngest child'.",
+                "incorrect": "'The youngest child' is すえっこ (suekko)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C477-mendou",
+      "sequence": 27660,
+      "title": "めんどう (mendō) — a bother; looking after someone",
+      "headword": "めんどう",
+      "romanization": "mendō",
+      "gloss": "a bother; looking after someone",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e5863eafe1195a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for parent and child, then the Japanese for the youngest child."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: めんどう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めんどう — mendō — \"a bother; looking after someone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おとうとの めんどうを みました。 — otōto no mendō o mimashita — \"I looked after my younger brother.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めんどう (mendō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are men, \"face\" (Middle Chinese mjienH) and dō, \"collapse\" (tawX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mendō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mendō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mendō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mendō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otōto no mendō o mimashita — I looked after my younger brother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otōto no mendō o mimashita* — I looked after my younger brother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for parent and child, then the Japanese for the youngest child, then say mendō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for parent and child, then the Japanese for the youngest child, then say *mendō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does めんどう (mendō) mean? (\"A bother; looking after someone\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C477-mendou-type",
+              "prompt": "Say the Japanese for 'a bother'.",
+              "assesses": [
+                "JA-LEX-C477-PARENT477-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "めんどう",
+                "mendō",
+                "mendou",
+                "mendoo",
+                "mendo"
+              ],
+              "feedback": {
+                "correct": "Right: めんどう (mendō) is 'a bother; looking after someone'.",
+                "incorrect": "'A bother' is めんどう (mendō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C477-shitsuke",
+      "sequence": 27670,
+      "title": "しつけ (shitsuke) — upbringing; discipline",
+      "headword": "しつけ",
+      "romanization": "shitsuke",
+      "gloss": "upbringing; discipline",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7eedad066041aed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the youngest child, then the Japanese for a bother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しつけ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しつけ — shitsuke — \"upbringing; discipline\"."
+            },
+            {
+              "kind": "speech",
+              "text": "そふは しつけに きびしいです。 — sofu wa shitsuke ni kibishii desu — \"My grandfather is strict about upbringing.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しつけ (shitsuke) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shitsuke",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shitsuke*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shitsuke, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shitsuke*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sofu wa shitsuke ni kibishii desu — My grandfather is strict about upbringing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sofu wa shitsuke ni kibishii desu* — My grandfather is strict about upbringing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the youngest child, then the Japanese for a bother, then say shitsuke again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the youngest child, then the Japanese for a bother, then say *shitsuke* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しつけ (shitsuke) mean? (\"Upbringing; discipline\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C477-shitsuke-type",
+              "prompt": "Say the Japanese for 'upbringing'.",
+              "assesses": [
+                "JA-LEX-C477-PARENT477-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しつけ",
+                "shitsuke"
+              ],
+              "feedback": {
+                "correct": "Right: しつけ (shitsuke) is 'upbringing; discipline'.",
+                "incorrect": "'Upbringing' is しつけ (shitsuke)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C334-sewa",
+    "language": "japanese",
+    "chapter": 334,
+    "sequence": 19900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78cb93d3cb71265a"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C352-hikkurikaeru",
+    "language": "japanese",
+    "chapter": 352,
+    "sequence": 20830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d16a8f3ac9ef1c2"
+  },
+  "findings": []
+}

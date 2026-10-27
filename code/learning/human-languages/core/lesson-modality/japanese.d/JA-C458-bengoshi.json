@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C458-bengoshi",
+    "language": "japanese",
+    "chapter": 458,
+    "sequence": 26650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21723b417e2d6525"
+  },
+  "findings": []
+}

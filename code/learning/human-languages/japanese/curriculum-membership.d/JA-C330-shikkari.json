@@ -1,0 +1,11 @@
+{
+  "id": "JA-C330-shikkari",
+  "pathSegment": "JA-PATH-330-CHANTO330",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-330-CHANTO330",
+      "order": 1
+    }
+  ]
+}

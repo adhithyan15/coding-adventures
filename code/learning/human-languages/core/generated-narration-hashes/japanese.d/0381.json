@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:88ef97f9d9d9b236",
+  "lessonIds": [
+    "JA-C381-funatabi",
+    "JA-C381-kouro",
+    "JA-C381-kishi",
+    "JA-C381-kogu",
+    "JA-C381-tadayou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch381.txt",
+  "json": "japanese/narration/ch381.json",
+  "textHash": "fnv1a64:017bae3d7de7794a",
+  "jsonHash": "fnv1a64:829dc79600254ed9",
+  "findings": []
+}

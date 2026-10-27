@@ -1,0 +1,11 @@
+{
+  "id": "JA-C465-egaku",
+  "pathSegment": "JA-PATH-465-PAINT465",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-465-PAINT465",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,801 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 458,
+  "title": "Jobs People Do",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5db914142db0542a",
+  "lessons": [
+    {
+      "id": "JA-C458-bengoshi",
+      "sequence": 26650,
+      "title": "べんごし (bengoshi) — a lawyer",
+      "headword": "べんごし",
+      "romanization": "bengoshi",
+      "gloss": "a lawyer",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21723b417e2d6525",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to apply, then the Japanese for recruitment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: べんごし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "べんごし — bengoshi — \"a lawyer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あには べんごしに なりたいです。 — ani wa bengoshi ni naritai desu — \"My elder brother wants to become a lawyer.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "べんごし (bengoshi) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ben, \"speech\" (Middle Chinese bjenX), go, \"protect\" (huH), and shi, \"gentleman\" (dzriX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bengoshi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bengoshi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bengoshi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bengoshi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ani wa bengoshi ni naritai desu — My elder brother wants to become a lawyer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ani wa bengoshi ni naritai desu* — My elder brother wants to become a lawyer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to apply, then the Japanese for recruitment, then say bengoshi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to apply, then the Japanese for recruitment, then say *bengoshi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does べんごし (bengoshi) mean? (\"A lawyer\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C458-bengoshi-type",
+              "prompt": "Say the Japanese for 'a lawyer'.",
+              "assesses": [
+                "JA-LEX-C458-CAREER458-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "べんごし",
+                "bengoshi"
+              ],
+              "feedback": {
+                "correct": "Right: べんごし (bengoshi) is 'a lawyer'.",
+                "incorrect": "'A lawyer' is べんごし (bengoshi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C458-koumuin",
+      "sequence": 26660,
+      "title": "こうむいん (kōmuin) — a civil servant",
+      "headword": "こうむいん",
+      "romanization": "kōmuin",
+      "gloss": "a civil servant",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e42f79cca1518f78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for recruitment, then the Japanese for a lawyer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こうむいん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こうむいん — kōmuin — \"a civil servant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは しやくしょの こうむいんです。 — chichi wa shiyakusho no kōmuin desu — \"My father is a civil servant at the city hall.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こうむいん (kōmuin) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kō, \"public\" (Middle Chinese kuwng), mu, \"duties\" (mjuH), and in, \"member\" (hjwen) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōmuin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōmuin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōmuin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōmuin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi wa shiyakusho no kōmuin desu — My father is a civil servant at the city hall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi wa shiyakusho no kōmuin desu* — My father is a civil servant at the city hall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for recruitment, then the Japanese for a lawyer, then say kōmuin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for recruitment, then the Japanese for a lawyer, then say *kōmuin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こうむいん (kōmuin) mean? (\"A civil servant\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C458-koumuin-type",
+              "prompt": "Say the Japanese for 'a civil servant'.",
+              "assesses": [
+                "JA-LEX-C458-CAREER458-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こうむいん",
+                "kōmuin",
+                "koumuin",
+                "koomuin",
+                "komuin"
+              ],
+              "feedback": {
+                "correct": "Right: こうむいん (kōmuin) is 'a civil servant'.",
+                "incorrect": "'A civil servant' is こうむいん (kōmuin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C458-haiyuu",
+      "sequence": 26670,
+      "title": "はいゆう (haiyū) — an actor",
+      "headword": "はいゆう",
+      "romanization": "haiyū",
+      "gloss": "an actor",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ece86e752fd61d2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a lawyer, then the Japanese for a civil servant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はいゆう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はいゆう — haiyū — \"an actor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あの はいゆうの えいがを みました。 — ano haiyū no eiga o mimashita — \"I saw a film with that actor.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はいゆう (haiyū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hai, \"actor\" (Middle Chinese beaj) and yū, \"actor\" ('juw) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haiyū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haiyū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haiyū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haiyū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ano haiyū no eiga o mimashita — I saw a film with that actor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ano haiyū no eiga o mimashita* — I saw a film with that actor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a lawyer, then the Japanese for a civil servant, then say haiyū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a lawyer, then the Japanese for a civil servant, then say *haiyū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はいゆう (haiyū) mean? (\"An actor\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C458-haiyuu-type",
+              "prompt": "Say the Japanese for 'an actor'.",
+              "assesses": [
+                "JA-LEX-C458-CAREER458-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はいゆう",
+                "haiyū",
+                "haiyuu",
+                "haiyu"
+              ],
+              "feedback": {
+                "correct": "Right: はいゆう (haiyū) is 'an actor'.",
+                "incorrect": "'An actor' is はいゆう (haiyū)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C458-sakka",
+      "sequence": 26680,
+      "title": "さっか (sakka) — a novelist; an author",
+      "headword": "さっか",
+      "romanization": "sakka",
+      "gloss": "a novelist; an author",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b5e17fbbf4a6a0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a civil servant, then the Japanese for an actor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さっか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さっか — sakka — \"a novelist; an author\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ははは あの さっかが すきです。 — haha wa ano sakka ga suki desu — \"My mother likes that author.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さっか (sakka) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sa, \"make\" (Middle Chinese tsak) and ka, \"expert\" (kae) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haha wa ano sakka ga suki desu — My mother likes that author.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haha wa ano sakka ga suki desu* — My mother likes that author.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a civil servant, then the Japanese for an actor, then say sakka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a civil servant, then the Japanese for an actor, then say *sakka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さっか (sakka) mean? (\"A novelist; an author\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C458-sakka-type",
+              "prompt": "Say the Japanese for 'a novelist'.",
+              "assesses": [
+                "JA-LEX-C458-CAREER458-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さっか",
+                "sakka"
+              ],
+              "feedback": {
+                "correct": "Right: さっか (sakka) is 'a novelist; an author'.",
+                "incorrect": "'A novelist' is さっか (sakka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C458-shokunin",
+      "sequence": 26690,
+      "title": "しょくにん (shokunin) — a craftsman; an artisan",
+      "headword": "しょくにん",
+      "romanization": "shokunin",
+      "gloss": "a craftsman; an artisan",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a879e8186f28f304",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an actor, then the Japanese for a novelist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しょくにん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょくにん — shokunin — \"a craftsman; an artisan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "そふは たたみの しょくにんでした。 — sofu wa tatami no shokunin deshita — \"My grandfather was a tatami craftsman.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょくにん (shokunin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shoku, \"employment\" (Middle Chinese tsyik) and nin, \"person\" (nyin) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shokunin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shokunin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shokunin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shokunin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sofu wa tatami no shokunin deshita — My grandfather was a tatami craftsman.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sofu wa tatami no shokunin deshita* — My grandfather was a tatami craftsman.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an actor, then the Japanese for a novelist, then say shokunin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an actor, then the Japanese for a novelist, then say *shokunin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しょくにん (shokunin) mean? (\"A craftsman; an artisan\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C458-shokunin-type",
+              "prompt": "Say the Japanese for 'a craftsman'.",
+              "assesses": [
+                "JA-LEX-C458-CAREER458-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しょくにん",
+                "shokunin"
+              ],
+              "feedback": {
+                "correct": "Right: しょくにん (shokunin) is 'a craftsman; an artisan'.",
+                "incorrect": "'A craftsman' is しょくにん (shokunin)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

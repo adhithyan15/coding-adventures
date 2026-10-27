@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:9c5e84f0a9b1474f",
+  "lessonIds": [
+    "JA-C416-yoake",
+    "JA-C416-hinode",
+    "JA-C416-yuuyake",
+    "JA-C416-hiekomu",
+    "JA-C416-terasu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch416.txt",
+  "json": "japanese/narration/ch416.json",
+  "textHash": "fnv1a64:3d88562dd26eba3f",
+  "jsonHash": "fnv1a64:bf6638cd5054b613",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:31dfaf7495b20510",
+  "lessonIds": [
+    "JA-C335-dantai",
+    "JA-C335-kaiin",
+    "JA-C335-kaihi",
+    "JA-C335-jibun",
+    "JA-C335-tanin"
+  ],
+  "tex": "japanese/book/chapters/ch335-groups-and-members.tex"
+}

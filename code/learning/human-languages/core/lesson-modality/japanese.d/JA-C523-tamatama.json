@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C523-tamatama",
+    "language": "japanese",
+    "chapter": 523,
+    "sequence": 30250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:247196e93e8fabae"
+  },
+  "findings": []
+}

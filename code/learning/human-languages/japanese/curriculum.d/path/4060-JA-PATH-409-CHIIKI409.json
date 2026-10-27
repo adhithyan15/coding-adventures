@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-409-CHIIKI409",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "JA-EXT-409-CHIIKI409"
+  ],
+  "after": []
+}

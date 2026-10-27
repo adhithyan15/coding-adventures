@@ -1,0 +1,11 @@
+{
+  "id": "JA-C302-obake",
+  "pathSegment": "JA-PATH-302-YUUREI302",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-302-YUUREI302",
+      "order": 1
+    }
+  ]
+}

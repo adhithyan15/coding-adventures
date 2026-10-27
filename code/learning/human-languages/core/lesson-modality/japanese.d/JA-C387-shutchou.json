@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C387-shutchou",
+    "language": "japanese",
+    "chapter": 387,
+    "sequence": 22810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9de3eb057f7d84f9"
+  },
+  "findings": []
+}

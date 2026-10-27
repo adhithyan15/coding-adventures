@@ -1,0 +1,11 @@
+{
+  "id": "JA-C489-komugi",
+  "pathSegment": "JA-PATH-489-FARM489",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-489-FARM489",
+      "order": 4
+    }
+  ]
+}

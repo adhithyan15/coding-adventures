@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-283-HAPPYOU283",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-283-HAPPYOU283"
+  ],
+  "after": []
+}

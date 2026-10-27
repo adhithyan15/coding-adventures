@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:0e1c973bacc40c9b",
+  "lessonIds": [
+    "JA-C427-kinchou-suru",
+    "JA-C427-dokidoki-suru",
+    "JA-C427-sowasowa-suru",
+    "JA-C427-iraira-suru",
+    "JA-C427-tamerau"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch427.txt",
+  "json": "japanese/narration/ch427.json",
+  "textHash": "fnv1a64:bf1ef26d917f4219",
+  "jsonHash": "fnv1a64:8c2c25aafe5f89af",
+  "findings": []
+}

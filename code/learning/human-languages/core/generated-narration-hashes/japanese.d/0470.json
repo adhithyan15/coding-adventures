@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:de73d8eea4074221",
+  "lessonIds": [
+    "JA-C470-kyoku",
+    "JA-C470-gakufu",
+    "JA-C470-min-you",
+    "JA-C470-enka",
+    "JA-C470-kuchibue"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch470.txt",
+  "json": "japanese/narration/ch470.json",
+  "textHash": "fnv1a64:3422dba19f91450c",
+  "jsonHash": "fnv1a64:c84ce2bd9c2d18b7",
+  "findings": []
+}

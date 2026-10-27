@@ -1,0 +1,21 @@
+{
+  "chapter": 425,
+  "title": "Asking for Help in Another Language",
+  "label": "ch:ja-asking-for-help-in-another-language",
+  "canDo": "I can get help when language is a problem.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-R425-review-final-425",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can get help when language is a problem.",
+    "assesses": [
+      "JA-LEX-C425-TSUUYAKU425-01",
+      "JA-LEX-C425-TSUUYAKU425-02",
+      "JA-LEX-C425-TSUUYAKU425-03",
+      "JA-LEX-C425-TSUUYAKU425-04",
+      "JA-LEX-C425-TSUUYAKU425-05"
+    ]
+  }
+}

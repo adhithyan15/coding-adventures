@@ -1,0 +1,15 @@
+{
+  "language": "japanese",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:a974a2e774383857",
+  "lessonIds": [
+    "JA-C371-joudan",
+    "JA-C371-sankou",
+    "JA-C371-waruguchi",
+    "JA-C371-tereru",
+    "JA-C371-shaberu",
+    "JA-R371-review-367-371",
+    "JA-R371-review-final-371"
+  ],
+  "tex": "japanese/book/chapters/ch371-seriously-or-joking.tex"
+}

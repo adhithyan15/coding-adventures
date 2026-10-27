@@ -1,0 +1,11 @@
+{
+  "id": "JA-C489-minoru",
+  "pathSegment": "JA-PATH-489-FARM489",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-489-FARM489",
+      "order": 3
+    }
+  ]
+}

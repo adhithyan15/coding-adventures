@@ -1,0 +1,11 @@
+{
+  "id": "JA-C452-shain",
+  "pathSegment": "JA-PATH-452-BOSS452",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-452-BOSS452",
+      "order": 3
+    }
+  ]
+}

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Derive APSR MSR mask validation and NZCVQ write enable through gate paths,
+  rejecting G-group and reserved aliases on non-DSP Cortex-M3 in exact
+  functional differential lockstep.
+- Reach 93.19% combined Rust line coverage (2,229 of 2,392 lines).
 - Add a narrow gate-to-gate integration boundary with preallocated fallible
   snapshots, non-committing delegated traces, validated candidates, explicit
   commit, deterministic allocation failure, and production-derived DFF

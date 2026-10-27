@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:94fa9c6db7d841b7",
+  "lessonIds": [
+    "JA-C528-aruiwa",
+    "JA-C528-matawa",
+    "JA-C528-soretomo",
+    "JA-C528-moshikuwa",
+    "JA-C528-izureka"
+  ],
+  "tex": "japanese/book/chapters/ch528-this-or-that.tex"
+}

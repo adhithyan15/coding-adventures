@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:3fa550e1de53413b",
+  "lessonIds": [
+    "JA-C403-bunka",
+    "JA-C403-midokoro",
+    "JA-C403-kengaku",
+    "JA-C403-tabisaki",
+    "JA-C403-otozureru"
+  ],
+  "tex": "japanese/book/chapters/ch403-culture-and-places-to-visit.tex"
+}

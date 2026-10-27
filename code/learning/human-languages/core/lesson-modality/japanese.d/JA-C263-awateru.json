@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C263-awateru",
+    "language": "japanese",
+    "chapter": 263,
+    "sequence": 16080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6cfd185161265a23"
+  },
+  "findings": []
+}

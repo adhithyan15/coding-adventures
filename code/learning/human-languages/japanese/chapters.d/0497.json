@@ -1,0 +1,21 @@
+{
+  "chapter": 497,
+  "title": "Feeding the Family",
+  "label": "ch:ja-feeding-the-family",
+  "canDo": "I can talk about food at home and what it costs.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-R497-review-492-497",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can talk about food at home and what it costs.",
+    "assesses": [
+      "JA-LEX-C497-MEAL497-01",
+      "JA-LEX-C497-MEAL497-02",
+      "JA-LEX-C497-MEAL497-03",
+      "JA-LEX-C497-MEAL497-04",
+      "JA-LEX-C497-MEAL497-05"
+    ]
+  }
+}

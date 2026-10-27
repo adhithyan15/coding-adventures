@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C348-renkyuu",
+    "language": "japanese",
+    "chapter": 348,
+    "sequence": 20640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43ef71d5c61432aa"
+  },
+  "findings": []
+}

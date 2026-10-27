@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C309-okaeshi",
+    "language": "japanese",
+    "chapter": 309,
+    "sequence": 18450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ceed18f08f085535"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 392,
+  "title": "Stopping on the Way",
+  "label": "ch:ja-stopping-on-the-way",
+  "canDo": "I can talk about detours, dead ends and stops along the way.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C392-tachiyoru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can talk about detours, dead ends and stops along the way.",
+    "assesses": [
+      "JA-LEX-C392-YORIMICHI392-03",
+      "JA-LEX-C392-YORIMICHI392-04",
+      "JA-LEX-C392-YORIMICHI392-05"
+    ]
+  }
+}

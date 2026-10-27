@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C516-zenryoku",
+    "language": "japanese",
+    "chapter": 516,
+    "sequence": 29880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9fcee5aace93424"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C495-shinsen",
+    "language": "japanese",
+    "chapter": 495,
+    "sequence": 28800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:daa3fe554e588826"
+  },
+  "findings": []
+}

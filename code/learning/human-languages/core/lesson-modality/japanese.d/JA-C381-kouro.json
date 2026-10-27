@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C381-kouro",
+    "language": "japanese",
+    "chapter": 381,
+    "sequence": 22470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9702a2d84fdc1181"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C412-choujou",
+  "pathSegment": "JA-PATH-412-TOUGE412",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-412-TOUGE412",
+      "order": 1
+    }
+  ]
+}
