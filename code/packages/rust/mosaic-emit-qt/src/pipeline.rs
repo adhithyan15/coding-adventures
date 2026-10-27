@@ -22648,6 +22648,41 @@ mod content_sizing_tests {
         );
     }
 
+    /// The fixture CI measures, emitted exactly as CI emits it: the region
+    /// and the live `Else` body both publish an implicit size, and the
+    /// fixture drops nothing, which CI's `jq` gate also requires.
+    #[test]
+    fn the_content_sized_regions_fixture_measures_its_region_and_branch() {
+        let model = mosmodel_compiler::compile(include_str!(
+            "../fixtures/content-sized-regions/src/Shell.mil"
+        ))
+        .expect("mil");
+        let layout = moslayout_compiler::compile(
+            include_str!("../fixtures/content-sized-regions/src/Shell.mll"),
+            Some(&model.descriptor_json),
+        )
+        .expect("mll");
+        let style = mosstyle_compiler::compile(
+            include_str!("../fixtures/content-sized-regions/src/Shell.msl"),
+            Some(&layout.part_map_json),
+        )
+        .expect("msl")
+        .def;
+        let out = from_pipeline(&model.component, &layout.def, &style)
+            .expect("emit")
+            .output;
+        let region = own_lines(block(&out, "                    Rectangle {"));
+        assert!(
+            region.contains(&"implicitHeight: mosaicBoxChild0.implicitHeight + 16 + 16"),
+            "{out}"
+        );
+        assert!(
+            out.contains("active: !compact\n                        sourceComponent: Component {\n                            ColumnLayout {\n                                spacing: 8\n"),
+            "{out}"
+        );
+        assert!(dropped_style_properties(&model.component, &layout.def, &style).is_empty());
+    }
+
     /// A layout child never anchors: a styled cell's text fill stops at a
     /// multi-child body, while its colour still arrives.
     #[test]

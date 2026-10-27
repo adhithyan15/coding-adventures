@@ -2477,6 +2477,20 @@ jobs:
             QT_QPA_PLATFORM=offscreen qml qt-column-shell-scroll-render-check.qml
           )
 
+          # UI21 §2.2 rules 6 and 7: the scroll above is bounded, but its
+          # content only has a height if a padded styled Box with no size of
+          # its own and a multi-child If/Else body publish one. Both used to
+          # measure 0 x 0, which kept Engram and TaskApp from scrolling. The
+          # same check, on a fixture whose content is nothing else.
+          content_regions_output="$RUNNER_TEMP/mosaic-qt-content-sized-regions"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-qt/fixtures/content-sized-regions --backend qt --output "$content_regions_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0) and (.styleDegradations | length == 0)' "$content_regions_output/qt/mosaic-degradations.json"
+          cp code/scripts/qt-column-shell-scroll-render-check.qml "$content_regions_output/qt/"
+          (
+            cd "$content_regions_output/qt"
+            QT_QPA_PLATFORM=offscreen qml qt-column-shell-scroll-render-check.qml
+          )
+
           # qt_main_with_startup_states (this PR) made every native-complete Qt
           # shell keep a missing/failed runtime visible in the window and
           # retryable instead of exiting, so RatingControls no longer exits
