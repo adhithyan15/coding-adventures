@@ -88,9 +88,10 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         "xaml": 29,
         "swiftui": 57,
         "compose": 40,
+        # Notes 0.3.0 (E3): two Qt text-align drops gone (78 -> 76).
         # UI21 §2.2: -1 flex-grow (task-name), +1 gap and +1 width
         # (calendar-cell-drop, reached once its flex-grow was consumed).
-        "qt": 79,
+        "qt": 77,
         "flutter": 69,
     }
 

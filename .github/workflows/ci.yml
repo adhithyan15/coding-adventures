@@ -97,6 +97,7 @@ jobs:
       needs_c_bounded_json_windows: ${{ steps.build-matrix.outputs.needs_c_bounded_json_windows }}
       needs_c_neural_framework_windows: ${{ steps.build-matrix.outputs.needs_c_neural_framework_windows }}
       needs_cpp_bounded_json_windows: ${{ steps.build-matrix.outputs.needs_cpp_bounded_json_windows }}
+      needs_cpp_neural_framework_windows: ${{ steps.build-matrix.outputs.needs_cpp_neural_framework_windows }}
       needs_lang_windows: ${{ steps.lang-windows.outputs.required }}
       needs_venture_windows: ${{ steps.venture-windows.outputs.required }}
       needs_mosaic_xaml_windows: ${{ steps.mosaic-xaml-windows.outputs.required }}
@@ -480,6 +481,7 @@ jobs:
               bounded_json_windows
               or neural_framework_windows
               or cpp_bounded_json_windows
+              or cpp_neural_framework_windows
               or flag("RUN_WINDOWS_OS_SUITES")
               or flag("NEEDS_SWIFT")
               or flag("NEEDS_ELIXIR")
@@ -527,6 +529,13 @@ jobs:
             or "cpp/bounded-json" in windows_affected
           )
           print("needs_cpp_bounded_json_windows=" + str(cpp_bounded_json_windows).lower())
+          # NN51 owns actual training execution, not merely a parser's Windows
+          # step. Retain its lane even in a plan selecting the trainer alone.
+          cpp_neural_framework_windows = (
+            not isinstance(windows_affected, list)
+            or "cpp/neural-framework" in windows_affected
+          )
+          print("needs_cpp_neural_framework_windows=" + str(cpp_neural_framework_windows).lower())
 
           if os.environ["FULL_BUILD"] == "true":
             shards = json.loads(os.environ.get("BUILD_SHARDS") or "[]")
@@ -673,6 +682,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_c_bounded_json_windows_ci.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_c_neural_framework_windows_ci.py'
             python3 -m unittest discover -s code/scripts/tests -p 'test_cpp_bounded_json_windows_ci.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_cpp_neural_framework_windows_ci.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_neural_framework_c.py'
           # LANG84 release inventories (`code/grammars/*/releases.csv`): the
           # common header (every inventory, Perl's included since phase 2b),
@@ -3577,7 +3587,7 @@ jobs:
         run: python -m unittest discover -s code/scripts/tests -p 'test_setup_msvc_dev_cmd.py'
 
       - name: Set up MSVC (Lua + C/C++ + Venture + LANG)
-        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_lang_windows == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true' || needs.detect.outputs.needs_c_bounded_json_windows == 'true' || needs.detect.outputs.needs_c_neural_framework_windows == 'true' || needs.detect.outputs.needs_cpp_bounded_json_windows == 'true') && runner.os == 'Windows'
+        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_lang_windows == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true' || needs.detect.outputs.needs_c_bounded_json_windows == 'true' || needs.detect.outputs.needs_c_neural_framework_windows == 'true' || needs.detect.outputs.needs_cpp_bounded_json_windows == 'true' || needs.detect.outputs.needs_cpp_neural_framework_windows == 'true') && runner.os == 'Windows'
         shell: pwsh
         run: python code/scripts/setup_msvc_dev_cmd.py --arch x64
 
@@ -3628,6 +3638,23 @@ jobs:
           try { & $windowsPowerShell -NoProfile -ExecutionPolicy Bypass -File tools/selftest.ps1; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
           finally { Pop-Location }
           Push-Location code/packages/cpp/bounded-json
+          try { & $windowsPowerShell -NoProfile -ExecutionPolicy Bypass -File tools/run.ps1; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
+          finally { Pop-Location }
+
+      - name: Validate native C++ dense training with MSVC
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_cpp_neural_framework_windows == 'true'
+        shell: pwsh
+        timeout-minutes: 10
+        env:
+          ISO_REQUIRE: cl clang-cl
+        run: |
+          # Shared scheduler, strict C++17 flags, real numerical/schema tests
+          # and actual command validation for BOTH produced native binaries.
+          $windowsPowerShell = Join-Path $env:SystemRoot 'System32/WindowsPowerShell/v1.0/powershell.exe'
+          Push-Location code/packages/c/iso-harness
+          try { & $windowsPowerShell -NoProfile -ExecutionPolicy Bypass -File tools/selftest.ps1; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
+          finally { Pop-Location }
+          Push-Location code/packages/cpp/neural-framework
           try { & $windowsPowerShell -NoProfile -ExecutionPolicy Bypass -File tools/run.ps1; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
           finally { Pop-Location }
 
