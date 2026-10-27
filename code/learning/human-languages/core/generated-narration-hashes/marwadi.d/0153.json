@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:f9ba69ec1bf90f22",
+  "lessonIds": [
+    "MW-C153-hu-hai",
+    "MW-C153-aap-ho",
+    "MW-C153-unt",
+    "MW-W45-uu",
+    "MW-R153-am-is-are"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "marwadi/narration/ch153.txt",
+  "json": "marwadi/narration/ch153.json",
+  "textHash": "fnv1a64:3e6cf28e352b1384",
+  "jsonHash": "fnv1a64:f37d1a1519b21a30",
+  "findings": []
+}

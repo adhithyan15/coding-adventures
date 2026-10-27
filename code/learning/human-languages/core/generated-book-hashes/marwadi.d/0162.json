@@ -1,0 +1,12 @@
+{
+  "language": "marwadi",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:1c85607f5e694230",
+  "lessonIds": [
+    "MW-C162-jasu",
+    "MW-C162-koni-jasu",
+    "MW-C162-kal",
+    "MW-R162-tomorrow"
+  ],
+  "tex": "marwadi/book/chapters/ch162-tomorrow.tex"
+}

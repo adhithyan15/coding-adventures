@@ -1,0 +1,18 @@
+{
+  "language": "marwadi",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:5d022435a1704b31",
+  "lessonIds": [
+    "MW-C154-bolu-hu",
+    "MW-C154-bolai-hai",
+    "MW-C154-bolo-ho",
+    "MW-R154-every-day"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marwadi/narration/ch154.txt",
+  "json": "marwadi/narration/ch154.json",
+  "textHash": "fnv1a64:678c4d4ab74658d4",
+  "jsonHash": "fnv1a64:ce6f4ff3f416876b",
+  "findings": []
+}

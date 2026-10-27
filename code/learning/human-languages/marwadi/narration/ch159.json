@@ -1,0 +1,429 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 159,
+  "title": "Went Home",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:ed5961508b841710",
+  "lessons": [
+    {
+      "id": "MW-C159-gharai",
+      "sequence": 9820,
+      "title": "घरै (gharai) — at home",
+      "headword": "घरै",
+      "romanization": "gharai",
+      "gloss": "at home; home, as the place you go to",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b373e870343edbee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say here, there and on top: अठै, बठै, माथै. Then a house: घर."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: घर with -ै",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घर with the -ै of अठै, बठै and माथै is घरै (gharai): at home, or home as the place you go to."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं घरै हूं। hū̃ gharai hū̃. — I am at home."
+            },
+            {
+              "kind": "speech",
+              "text": "वो रोज आथण घरै आवै है। vo roj āthaṇ gharai āvai hai. — He comes home every evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Old Marwari had the same ending in āgai, \"before\" (CDIAL 68)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "मां घरै है। — mā̃ gharai hai. — Mother is at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **मां घरै है।** — *mā̃ gharai hai.* — Mother is at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "आप रोज घरै जावो हो? — āp roj gharai jāvo ho? — Do you go home every day?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **आप रोज घरै जावो हो?** — *āp roj gharai jāvo ho?* — Do you go home every day?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "हां सा, हूं रोज घरै जाऊं हूं। — hā̃ sā, hū̃ roj gharai jāū̃ hū̃. — Yes, I go home every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **हां सा, हूं रोज घरै जाऊं हूं।** — *hā̃ sā, hū̃ roj gharai jāū̃ hū̃.* — Yes, I go home every day.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "At home? (घरै (gharai).) Here? (अठै.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C159-gharai-home",
+              "prompt": "Say that you are at home.",
+              "assesses": [
+                "MW-GRAMMAR-C159-GHARAI-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "हूं घरै हूं।",
+                "hū̃ gharai hū̃",
+                "hu gharai hu"
+              ],
+              "feedback": {
+                "correct": "Right: घरै, at home.",
+                "incorrect": "घर takes -ै: हूं घरै हूं."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C159-gayo",
+      "sequence": 9830,
+      "title": "गयो, गई, गया — went",
+      "headword": "गयो · गई · गया",
+      "romanization": "gayo · gaī · gayā",
+      "gloss": "went: the past of जाणो, agreeing with whoever went",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e5eece8e5910c26d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I go to the market every day. Then yesterday, काल, and a boy, a girl."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one word for the past",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गयो is the past of जाणो, all on its own: no हूं and no है after it."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं काल बाजार गयो। hū̃ kāl bājār gayo. — I went to the market yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "It ends like छोरो, and changes like it, to agree with whoever went: गयो for a man, गई for a woman, गया for more than one."
+            },
+            {
+              "kind": "speech",
+              "text": "मां घरै गई। mā̃ gharai gaī. — Mother went home."
+            },
+            {
+              "kind": "speech",
+              "text": "सगळा घरै गया। sagḷā gharai gayā. — Everyone went home."
+            },
+            {
+              "kind": "speech",
+              "text": "With a past, काल is yesterday. CDIAL lists Old Marwari gayaü, \"gone\" (CDIAL 4008)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A woman says हूं काल बाजार गई। (hū̃ kāl bājār gaī.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "राम काल बाजार गयो। — rām kāl bājār gayo. — Ram went to the market yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **राम काल बाजार गयो।** — *rām kāl bājār gayo.* — Ram went to the market yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "मां घरै गई। — mā̃ gharai gaī. — Mother went home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **मां घरै गई।** — *mā̃ gharai gaī.* — Mother went home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "वो कोनी गयो। — vo konī gayo. — He didn't go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **वो कोनी गयो।** — *vo konī gayo.* — He didn't go.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "He went? (गयो.) She went, of mother? (गई.) Everyone went? (गया.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C159-gayo-mother",
+              "prompt": "Say that mother went home.",
+              "assesses": [
+                "MW-GRAMMAR-C159-GAYO-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "मां घरै गई।",
+                "mā̃ gharai gaī",
+                "ma gharai gai"
+              ],
+              "feedback": {
+                "correct": "Right: गई, for a woman.",
+                "incorrect": "Mother is a woman, so गई: मां घरै गई."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R159-went-home",
+      "sequence": 9840,
+      "title": "Went home — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "review of at home and went",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5246fe9c55c3fe2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I am at home."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "who went",
+                "went"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "who went: राम, a man. went: गयो.",
+                "who went: मां, a woman. went: गई.",
+                "who went: सगळा, more than one. went: गया."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I went to the market yesterday, as a man and then as a woman",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *I went to the market yesterday*, as a man and then as a woman]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mother went home; everyone went home",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mother went home*; *everyone went home*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "he didn't go",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *he didn't go*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "do you go home every day?; yes, I go home every day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *do you go home every day?*; *yes, I go home every day*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "At home? (घरै (gharai).) Went, for a man, a woman, and more than one? (गयो, गई, गया.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-R159-went-home-all",
+              "prompt": "Say that everyone went home.",
+              "assesses": [
+                "MW-GRAMMAR-C159-GAYO-01",
+                "MW-GRAMMAR-C159-GHARAI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "सगळा घरै गया।",
+                "sagḷā gharai gayā",
+                "sagla gharai gaya"
+              ],
+              "feedback": {
+                "correct": "Right: गया, for more than one.",
+                "incorrect": "More than one went, so गया: सगळा घरै गया."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

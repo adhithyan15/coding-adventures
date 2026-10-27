@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "MW-W50-pha",
+    "language": "marwadi",
+    "chapter": 163,
+    "sequence": 10000,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c1b7a63808d3fcd3",
+    "detachableSegments": [
+      "Script you'll notice: फ",
+      "Writing: फ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,17 @@
+{
+  "language": "marwadi",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:a951bcffbd290e44",
+  "lessonIds": [
+    "MW-C152-vo",
+    "MW-C152-yo-vo",
+    "MW-R152-he-and-that"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "marwadi/narration/ch152.txt",
+  "json": "marwadi/narration/ch152.json",
+  "textHash": "fnv1a64:92aa26b2005831cb",
+  "jsonHash": "fnv1a64:f67cb92c7b973899",
+  "findings": []
+}

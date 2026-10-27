@@ -1,0 +1,553 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 154,
+  "title": "What I Do Every Day",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:5d022435a1704b31",
+  "lessons": [
+    {
+      "id": "MW-C154-bolu-hu",
+      "sequence": 9580,
+      "title": "हूं बोलूं हूं (bolū̃ hū̃) — what I do",
+      "headword": "बोलूं हूं",
+      "romanization": "bolū̃ hū̃",
+      "gloss": "I speak: the present of what you do, said of yourself",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50bfe798e76add5d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say to speak and to hear. (बोलणो, सुणणो.) Then every day, रोज, and I am here."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the stem, -ूं and हूं",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take -णो off बोलणो and बोल is left: the stem. Give it -ूं, then end on हूं:"
+            },
+            {
+              "kind": "speech",
+              "text": "हूं थोड़ु बोलूं हूं। hū̃ thoṛu bolū̃ hū̃. — I speak a little."
+            },
+            {
+              "kind": "speech",
+              "text": "The -ूं sounds like हूं, I, so the sentence says I at both ends. The same two pieces fit any stem that ends in a consonant: सुणूं हूं, देखूं हूं."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "हूं गीत सुणूं हूं। — hū̃ gīt suṇū̃ hū̃. — I listen to songs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **हूं गीत सुणूं हूं।** — *hū̃ gīt suṇū̃ hū̃.* — I listen to songs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "हूं रोज गीत सुणूं हूं। — hū̃ roj gīt suṇū̃ hū̃. — I listen to songs every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **हूं रोज गीत सुणूं हूं।** — *hū̃ roj gīt suṇū̃ hū̃.* — I listen to songs every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "हूं थोड़ु बोलूं हूं। — hū̃ thoṛu bolū̃ hū̃. — I speak a little.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **हूं थोड़ु बोलूं हूं।** — *hū̃ thoṛu bolū̃ hū̃.* — I speak a little.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What comes off सुणणो? (-णो.) What goes on, and what ends the sentence? (-ूं, then हूं.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C154-bolu-hu-songs",
+              "prompt": "Say that you listen to songs every day.",
+              "assesses": [
+                "MW-GRAMMAR-C154-PRES-1SG-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "हूं रोज गीत सुणूं हूं।",
+                "hū̃ roj gīt suṇū̃ hū̃",
+                "hu roj git sunu hu"
+              ],
+              "feedback": {
+                "correct": "Right: the stem सुण, then -ूं, then हूं.",
+                "incorrect": "Take -णो off सुणणो, add -ूं, and end on हूं."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C154-bolai-hai",
+      "sequence": 9590,
+      "title": "वो बोलै है (bolai hai) — what he does",
+      "headword": "बोलै है",
+      "romanization": "bolai hai",
+      "gloss": "he speaks: the present for anyone you talk about",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09c2fcd28c33ed00",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I listen to songs. Then to read and to write: बांचणो, लिखणो."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: -ै and है",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For वो, for राम, for anyone you talk about, the stem takes -ै and the sentence ends on है:"
+            },
+            {
+              "kind": "speech",
+              "text": "वो थोड़ु बोलै है। vo thoṛu bolai hai. — He speaks a little."
+            },
+            {
+              "kind": "speech",
+              "text": "राम रोज अखबार बांचै है। rām roj akhbār bā̃chai hai. — Ram reads the newspaper every day."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing changes for a woman: मां गीत सुणै है। (mā̃ gīt suṇai hai.), mother listens to songs. Old Marwari wrote the same ending -aï: karaï, \"does\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "हूं रोज अखबार बांचूं हूं। — hū̃ roj akhbār bā̃chū̃ hū̃. — I read the newspaper every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **हूं रोज अखबार बांचूं हूं।** — *hū̃ roj akhbār bā̃chū̃ hū̃.* — I read the newspaper every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "राम रोज अखबार बांचै है। — rām roj akhbār bā̃chai hai. — Ram reads it every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **राम रोज अखबार बांचै है।** — *rām roj akhbār bā̃chai hai.* — Ram reads it every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "मां चिट्ठी लिखै है। — mā̃ chiṭṭhī likhai hai. — Mother writes a letter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **मां चिट्ठी लिखै है।** — *mā̃ chiṭṭhī likhai hai.* — Mother writes a letter.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "I read? (हूं बांचूं हूं.) He reads? (वो बांचै है.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C154-bolai-hai-reads",
+              "prompt": "Say that Ram reads the newspaper every day.",
+              "assesses": [
+                "MW-GRAMMAR-C154-PRES-3SG-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "राम रोज अखबार बांचै है।",
+                "rām roj akhbār bā̃chai hai",
+                "ram roj akhbar bachai hai"
+              ],
+              "feedback": {
+                "correct": "Right: बांच, then -ै, then है.",
+                "incorrect": "For Ram the stem takes -ै and the sentence ends on है."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C154-bolo-ho",
+      "sequence": 9600,
+      "title": "आप बोलो हो (bolo ho) — what you do",
+      "headword": "बोलो हो",
+      "romanization": "bolo ho",
+      "gloss": "you speak: the present after the polite आप",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bdd90a0209b8ef5e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say mother listens to songs. Then you are here, and the request do it, करो."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: -ो and हो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "After आप, the stem takes -ो, the ending of the requests करो and लावो, and the sentence ends on हो:"
+            },
+            {
+              "kind": "speech",
+              "text": "आप थोड़ु बोलो हो। āp thoṛu bolo ho. — You speak a little."
+            },
+            {
+              "kind": "speech",
+              "text": "आप कांई करो हो? āp kāĩ karo ho? — What do you do?"
+            },
+            {
+              "kind": "speech",
+              "text": "करो alone asks someone to do something. करो हो after आप says what they do."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "आप गीत सुणो हो। — āp gīt suṇo ho. — You listen to songs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **आप गीत सुणो हो।** — *āp gīt suṇo ho.* — You listen to songs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "आप कांई करो हो? — āp kāĩ karo ho? — What do you do?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **आप कांई करो हो?** — *āp kāĩ karo ho?* — What do you do?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "हूं चिट्ठी लिखूं हूं। — hū̃ chiṭṭhī likhū̃ hū̃. — I write letters.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **हूं चिट्ठी लिखूं हूं।** — *hū̃ chiṭṭhī likhū̃ hū̃.* — I write letters.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "I do? (करूं हूं: the stem कर, -ूं, हूं.) He does? (करै है.) You do, to आप? (करो हो.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C154-bolo-ho-what",
+              "prompt": "Ask politely: what do you do?",
+              "assesses": [
+                "MW-GRAMMAR-C154-PRES-POLITE-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "आप कांई करो हो?",
+                "āp kāĩ karo ho?",
+                "aap kai karo ho"
+              ],
+              "feedback": {
+                "correct": "Right: करो, and हो after it.",
+                "incorrect": "आप, then कांई, then करो हो."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R154-every-day",
+      "sequence": 9610,
+      "title": "Every day — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "review of the present: I, he and you, every day",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eeffe426df88c556",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I speak a little."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every cell of the present so far, now that each one is taught:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "who",
+                "to speak",
+                "to read"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "who: हूं. to speak: बोलूं हूं (bolū̃ hū̃). to read: बांचूं हूं.",
+                "who: वो. to speak: बोलै है (bolai hai). to read: बांचै है.",
+                "who: आप. to speak: बोलो हो (bolo ho). to read: बांचो हो."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I listen to songs every day; mother listens to songs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *I listen to songs every day*; *mother listens to songs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ram reads the newspaper every day; you read the newspaper",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ram reads the newspaper every day*; *you read the newspaper*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what do you do?, to someone you call आप",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *what do you do?*, to someone you call **आप**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I write letters; he writes letters",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *I write letters*; *he writes letters*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "I speak? (बोलूं हूं (bolū̃ hū̃).) He speaks? (बोलै है (bolai hai).) You speak? (बोलो हो (bolo ho).)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "MW-R154-every-day-three",
+              "prompt": "Say: I write letters, but he reads the newspaper.",
+              "assesses": [
+                "MW-GRAMMAR-C154-PRES-1SG-01",
+                "MW-GRAMMAR-C154-PRES-3SG-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "हूं चिट्ठी लिखूं हूं पण वो अखबार बांचै है।",
+                "hū̃ chiṭṭhī likhū̃ hū̃ paṇ vo akhbār bā̃chai hai",
+                "hu chitthi likhu hu pan vo akhbar bachai hai"
+              ],
+              "feedback": {
+                "correct": "Right: -ूं हूं for you, -ै है for him.",
+                "incorrect": "Your half ends लिखूं हूं; his ends बांचै है."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C164-dairy-notice",
+    "language": "marwadi",
+    "chapter": 164,
+    "sequence": 10050,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:13d11824015d096c"
+  },
+  "findings": []
+}

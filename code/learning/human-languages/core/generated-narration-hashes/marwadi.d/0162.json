@@ -1,0 +1,18 @@
+{
+  "language": "marwadi",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:c276809e062d34be",
+  "lessonIds": [
+    "MW-C162-jasu",
+    "MW-C162-koni-jasu",
+    "MW-C162-kal",
+    "MW-R162-tomorrow"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marwadi/narration/ch162.txt",
+  "json": "marwadi/narration/ch162.json",
+  "textHash": "fnv1a64:039494ecd448da61",
+  "jsonHash": "fnv1a64:a6814e02ead921ae",
+  "findings": []
+}
