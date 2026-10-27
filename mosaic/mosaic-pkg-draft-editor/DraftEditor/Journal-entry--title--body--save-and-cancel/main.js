@@ -3,6 +3,7 @@
 const componentName = "DraftEditor";
 const fallbackProps = {
   "bodyLabel": "Entry",
+  "bodyPlaceholder": "",
   "bodyValue": "Walked to the lighthouse before breakfast.\n\nThe fog had not lifted yet.",
   "cancelLabel": "Cancel",
   "deleteLabel": "",
