@@ -105,7 +105,8 @@ Cortex-M7 and Cortex-M23 are merged, and Cortex-M33 merged in PR #18326.
 | 16 | MSP430 classic (MSP430F2274 profile) | TI SLAU144K family guide and SLAS504G device data sheet | Functional cell repaired locally: source-pinned classic 16-bit von-Neumann CPU with the full documented 27-instruction core, source-only constant-generator enforcement, exact Format II trace roles, and injected allocation rollback; independent re-review/publication is next. MSP430X, peripherals, clocks, power, and timing stay outside this cell. |
 | 17 | LatticeMico32 (`RCPU-083` / `RCPU-084`) | official LatticeMico32 Processor Reference Manual 3.8 plus vendor-origin open RTL at `84b3e3ca0ad9535acaef201c1482342871358b08` | Functional implementation is in progress from an independently reviewed configuration-pinned spec; the dependent gate cell remains blocked on functional merge. |
 | 18 | ZipCPU (`RCPU-085` / `RCPU-086`) | official ZipCPU Specification revision 3.0 plus open RTL at `42606d2d6ef55df313772232977621b2d72f0159` | `RCPU-085` is complete locally from its independently reviewed spec-only predecessor: fixed-width big-endian execution, two complete register banks, CC/PC/interrupt/image state, exact transactions, typed atomic lifecycle, 31 completion tests, two corpus consumers over 3,970 checked-in upstream rows, one doctest, and 92.70% release line coverage (1,270/1,370). Exact-clean-head review is next; `RCPU-086` remains blocked until the functional oracle merges. |
-| 19 | Zylin ZPU4 Small (`RCPU-087` / `RCPU-088`) | stable Zylin architecture document plus vendor VHDL at `e29aef5f7aa741557d0eb16ecf13e974d55789ff` | `RCPU-087` / Spec 07bf passed pre-implementation review and is complete locally pending exact-head publication review: exact 32-bit/15-bit-address small-core profile, all 256 byte classifications, stack/IDIM/interrupt/break state, big-endian transport, explicit external-word-bus adapter, typed atomic lifecycle, and 260 checksum-pinned GHDL scenarios with independent Rust/Python consumers. `RCPU-088` gate work must wait for the functional merge. Orders 16–17 and `RCPU-083`–`RCPU-086` remain owned by the active LatticeMico32 and ZipCPU cells and are not duplicated here. |
+| 19 | PIC16 classic mid-range (PIC16F84A profile) | Microchip DS35007C device data sheet and DS33023A family reference manual | Complete locally: source-pinned 14-bit Harvard CPU with all 35 documented instructions, exact banked file-register/PCL/stack behavior, typed peripheral boundaries, 14 release tests, one doctest, strict checks, and 98.67% package-source line coverage (670/679). |
+| 20 | Zylin ZPU4 Small (`RCPU-087` / `RCPU-088`) | stable Zylin architecture document plus vendor VHDL at `e29aef5f7aa741557d0eb16ecf13e974d55789ff` | `RCPU-087` / Spec 07bf passed pre-implementation review and is complete locally pending exact-head publication review: exact 32-bit/15-bit-address small-core profile, all 256 byte classifications, stack/IDIM/interrupt/break state, big-endian transport, explicit external-word-bus adapter, typed atomic lifecycle, and 260 checksum-pinned GHDL scenarios with independent Rust/Python consumers. `RCPU-088` gate work must wait for the functional merge. Orders 16–17 and `RCPU-083`–`RCPU-086` remain owned by the active LatticeMico32 and ZipCPU cells and are not duplicated here. |
 
 CDP1802 merged in PR #18354 after independent specification and implementation
 review. The functional cell covers the complete register matrix, instruction
@@ -125,7 +126,7 @@ focused alias/control/bus/lifecycle/fault/allocation matrices, exhaustive
 256x256x2 ALU relations, eleven compiler-valid hostile fixtures, strict
 Clippy/rustdoc, affected BUILD, and 95.62% line coverage (1,442/1,508).
 
-MSP430 follows Xtensa rather than displacing an active item. TI's public
+MSP430 follows Xtensa and CDP1802 rather than displacing an active item. TI's public
 SLAU144K chapter 3 gives a complete classic encoding, addressing, flag, and
 stack contract, while SLAS504G pins a real non-MSP430X implementation with 16
 registers and a 16-bit address space. That unusually complete primary-source
@@ -151,6 +152,16 @@ independently written upstream C++ simulator, and immutable open RTL provide
 the bounded functional evidence and the later educational-gate boundary.
 Both cells are configuration-pinned CPU cores; neither may claim a complete
 SoC, physical FPGA realization, transistor topology, or timing accuracy.
+
+PIC16F84A follows MSP430, LatticeMico32 and ZipCPU in the independent queue. Microchip's public
+DS35007C pins the exact 1K-by-14 program memory, 68-byte GPR file, core SFR
+map, eight-entry 13-bit stack, and 35-instruction profile; DS33023A supplies
+the detailed mid-range PC, stack, and instruction rules. The first cell keeps
+Timer0, ports, watchdog, EEPROM, interrupts, clocks, and electrical behavior
+behind typed boundaries instead of inventing peripheral semantics. A later
+educational gate cell and a source-backed PIC16F84A SoC composition remain
+separate queued follow-up cells after independent implementation review and
+publication of the functional core.
 
 ## Discovered follow-up work
 
