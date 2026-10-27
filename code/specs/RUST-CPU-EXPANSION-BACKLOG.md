@@ -68,20 +68,20 @@ already public.
 This queue is re-costed after every merge or discovery. Dates indicate the
 architecture/core introduction era, not a claim about a particular chip.
 
-Cortex-M4 is complete locally and awaiting publication. Its checked Armv7E-M
+Cortex-M4 is merged. Its checked Armv7E-M
 boundary explicitly classifies all 20 inherited Cortex-M3 instruction
 families, differentially witnesses inherited integer, privilege, IT, memory,
 exclusive, branch, power, and lifecycle state, and covers the bounded DSP and
 optional FPv4-SP extension. All 30 release tests, strict Clippy/rustdoc, and
-92.81% line coverage (994/1071) are green. Cortex-M7 and Cortex-M23 are
+92.81% line coverage (994/1071) are green. Cortex-M7 and Cortex-M23 are also
 merged, while Cortex-M33 is already in review.
 
 | Order | Target | Public basis | Planned boundary |
 |---:|---|---|---|
-| 1 | Arm Cortex-M4 (in publication) | Armv7E-M manuals | Cortex-M3 integer base plus documented DSP/FPU boundary. |
+| 1 | Arm Cortex-M4 (merged) | Armv7E-M manuals | Cortex-M3 integer base plus documented DSP/FPU boundary. |
 | 2 | Arm Cortex-M7 (merged) | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
 | 3 | Arm Cortex-M23 (merged) | Armv8-M manuals | Bounded baseline/security-state cell complete; exclusive encodings and exceptions remain follow-up work. |
-| 4 | Arm Cortex-M33 (in review) | Armv8-M manuals | Mainline profile, TrustZone, DSP/FPU options made explicit. |
+| 4 | Arm Cortex-M33 (in review) | Armv8-M manuals | Functional cell complete locally: bounded Mainline integer core, optional Security Extension, banked control/stack-limit state, eight-region SAU with disabled-only ALLNS and most-secure overlap reduction, distinct fetch/data policy, checked transition hooks, all-bank stack-limit closure, and exact inherited-family differential witnesses. Publish after independent review; encoded security instructions, DSP/FPU, exceptions, MPU/NVIC/SoC, and evidence-backed gate topology remain separate cells. |
 | 5 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
 | 6 | Data General Nova | published architecture manuals | Checked 16-bit accumulator/minicomputer boundary. |
 | 7 | IBM System/370 | published Principles of Operation | Functional merged in PR #18336. P0 source-correctness repair complete locally: destructive-overlap `MVCL` suppresses storage movement, preserves both lengths and low 24-bit addresses, and clears the ignored high byte of both address registers for condition-code-3 completion. The gate partner remains blocked until this repair merges. |
@@ -134,6 +134,11 @@ relations, strict Clippy/rustdoc, lessons validation, affected BUILD, and
   bitfield, saturation, dual-register, byte/halfword exclusive, and remaining
   wide Thumb-2 encodings. This is non-blocking for the core lifecycle and SoC
   composition boundary, but it precedes declaring full Armv7-M ISA coverage.
+- Extend Cortex-M33 only through separate witnessed cells: encoded
+  SG/BXNS/BLXNS/TT transitions, Armv8-M-exclusive integer and DSP operations,
+  optional FPU, exception entry/return and interrupt targeting, MPU/IDAU/NVIC,
+  and a source-backed or explicitly educational gate-level topology. The
+  bounded functional cell does not imply proprietary Cortex-M33 RTL.
 - Extend PA-RISC 1.1 problem-state coverage in bounded cells: extract/deposit
   and variable shifts, unit operations, indexed/short/modifying memory forms,
   decimal correction, multiply/divide, MOVB/MOVIB, and remaining arithmetic
