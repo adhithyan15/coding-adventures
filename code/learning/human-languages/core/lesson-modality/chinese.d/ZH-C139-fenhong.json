@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C139-fenhong",
+    "language": "chinese",
+    "chapter": 139,
+    "sequence": 10860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b941f1ed0b669dc"
+  },
+  "findings": []
+}

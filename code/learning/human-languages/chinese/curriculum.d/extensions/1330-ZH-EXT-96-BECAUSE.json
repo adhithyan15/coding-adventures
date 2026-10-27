@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-96-BECAUSE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "function",
+  "canDo": "I can give one reason with 因为.",
+  "prerequisites": []
+}

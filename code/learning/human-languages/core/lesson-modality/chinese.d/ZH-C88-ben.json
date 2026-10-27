@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C88-ben",
+    "language": "chinese",
+    "chapter": 88,
+    "sequence": 7240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11d5d9ce7a703ea4"
+  },
+  "findings": []
+}

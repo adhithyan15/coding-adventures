@@ -1,0 +1,23 @@
+{
+  "chapter": 94,
+  "title": "All the Same",
+  "label": "ch:zh-all-the-same",
+  "canDo": "I can describe people and things, and say 'all of them'.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C94-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Describing people, young, fat, thin, the same or not, and saying all of them with 都, built on one new written character: 都.",
+    "assesses": [
+      "ZH-LEX-C94-DOU-01",
+      "ZH-SCRIPT-DOU-01",
+      "ZH-LEX-C94-YIYANG-01",
+      "ZH-LEX-C94-NIANQING-01",
+      "ZH-LEX-C94-PANG-01",
+      "ZH-LEX-C94-SHOU-01",
+      "ZH-PERFORMANCE-DESCRIBE-01"
+    ]
+  }
+}

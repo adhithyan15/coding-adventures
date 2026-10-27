@@ -1,0 +1,21 @@
+{
+  "chapter": 84,
+  "title": "Doing Things Together",
+  "label": "ch:zh-doing-things-together",
+  "canDo": "I can arrange to meet, chat, take part and get ready together.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-R84-review-final-84",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 84: I can arrange to meet, chat, take part and get ready together.",
+    "assesses": [
+      "ZH-LEX-C84-TOGETHER84-01",
+      "ZH-LEX-C84-TOGETHER84-02",
+      "ZH-LEX-C84-TOGETHER84-03",
+      "ZH-LEX-C84-TOGETHER84-04",
+      "ZH-LEX-C84-TOGETHER84-05"
+    ]
+  }
+}

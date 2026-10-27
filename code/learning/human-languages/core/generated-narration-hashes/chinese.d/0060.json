@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:cee17b33f4bb137a",
+  "lessonIds": [
+    "ZH-C60-bai",
+    "ZH-W60-bai-white",
+    "ZH-C60-yanse",
+    "ZH-C60-hong",
+    "ZH-C60-hei",
+    "ZH-C60-lan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch60.txt",
+  "json": "chinese/narration/ch60.json",
+  "textHash": "fnv1a64:0e1abc9134f712be",
+  "jsonHash": "fnv1a64:602fa8fb5332efc3",
+  "findings": []
+}

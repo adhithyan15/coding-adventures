@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C132-wan",
+    "language": "chinese",
+    "chapter": 132,
+    "sequence": 10470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9560f4ed36fd2c3"
+  },
+  "findings": []
+}

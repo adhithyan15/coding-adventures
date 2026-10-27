@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C130-teng",
+  "pathSegment": "ZH-PATH-130-ILL130",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-130-ILL130",
+      "order": 4
+    }
+  ]
+}

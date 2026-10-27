@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:92f6743df9234b2a",
+  "lessonIds": [
+    "ZH-C129-anjing",
+    "ZH-C129-chao",
+    "ZH-W129-chao-noisy",
+    "ZH-C129-renao",
+    "ZH-C129-fangbian",
+    "ZH-C129-youyisi"
+  ],
+  "tex": "chinese/book/chapters/ch129-quiet-and-noisy.tex"
+}

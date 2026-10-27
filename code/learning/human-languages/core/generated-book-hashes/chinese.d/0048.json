@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:5f9f5f42825bbf6f",
+  "lessonIds": [
+    "ZH-C48-dian",
+    "ZH-W48-dian",
+    "ZH-C48-fen",
+    "ZH-C48-ban",
+    "ZH-C48-ji",
+    "ZH-C48-deng"
+  ],
+  "tex": "chinese/book/chapters/ch48-telling-the-time.tex"
+}

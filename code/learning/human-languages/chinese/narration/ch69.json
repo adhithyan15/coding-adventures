@@ -1,0 +1,980 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 69,
+  "title": "Meals",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:bb25b1a3b82de89a",
+  "lessons": [
+    {
+      "id": "ZH-C69-zuofan",
+      "sequence": 5560,
+      "title": "做饭 (zuòfàn) — to cook",
+      "headword": "做饭",
+      "romanization": "zuòfàn",
+      "gloss": "to cook",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2fb73773b535f79e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for flower, then the Mandarin for the sun."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 做饭",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "做饭 — zuòfàn — \"to cook\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我妈妈喜欢做饭 wǒ māma xǐhuan zuòfàn — My mum loves cooking."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 做 (zuò) — 亻 on the left, 十 over 口 in the middle, and on the right a four-stroke piece like a hand striking. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "做饭 (zuòfàn) is built from 做 (zuò) 'to do, to make' and 饭 'meal'. 饭 is inherited from Middle Chinese bjonH (Guangyun, in Baxter's transcription); 做 (zuò) has no reading in any dictionary we use, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday answers."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuòfàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuòfàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuòfàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuòfàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ māma xǐhuan zuòfàn — My mum loves cooking.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ māma xǐhuan zuòfàn* — My mum loves cooking.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for flower, then the Mandarin for the sun, then say zuòfàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for flower, then the Mandarin for the sun, then say *zuòfàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 做饭 (zuòfàn) mean? (\"To cook\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W69-zuo-make",
+      "sequence": 5565,
+      "title": "做 (zuò) — the person, gǔ, and a striking hand",
+      "headword": "做",
+      "romanization": "zuò",
+      "gloss": "做 — the person, gǔ, and a striking hand",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c2fa8f7100fa885d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the person, gǔ, and a striking hand",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the person, gǔ, and a striking hand and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zuòfàn — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zuòfàn* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "他 十 口."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — tā, shí, kǒu",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *tā*, *shí*, *kǒu*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the person, gǔ, and a striking hand",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "做 (zuò)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces, left to right. Count three, not eleven."
+            },
+            {
+              "kind": "speech",
+              "text": "亻, two strokes, as in 你 and 他."
+            },
+            {
+              "kind": "speech",
+              "text": "The middle piece, five strokes, read gǔ: 十, a horizontal and a vertical, standing on a small 口."
+            },
+            {
+              "kind": "speech",
+              "text": "The right piece, four strokes: a short left-falling stroke, a short horizontal, a long left-falling stroke, and a long stroke falling to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "2 + 5 + 4 = eleven."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "做 (zuò), all eleven, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 做, all eleven, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many pieces in 做 (zuò)? (Three.) What sits in the middle? (十 on 口.) How does it end? (With a stroke falling to the right.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 做 (zuò), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C69-zaofan",
+      "sequence": 5570,
+      "title": "早饭 (zǎofàn) — breakfast",
+      "headword": "早饭",
+      "romanization": "zǎofàn",
+      "gloss": "breakfast",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:927d0767a348288d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the sun, then the Mandarin for to cook."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 早饭",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "早饭 — zǎofàn — \"breakfast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我七点吃早饭 wǒ qī diǎn chī zǎofàn — I have breakfast at seven."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "早饭 (zǎofàn) is built from zǎo 'morning' and 饭 'meal', both inherited from Middle Chinese, tsawX and bjonH (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday answers."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zǎofàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zǎofàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zǎofàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zǎofàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ qī diǎn chī zǎofàn — I have breakfast at seven.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ qī diǎn chī zǎofàn* — I have breakfast at seven.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the sun, then the Mandarin for to cook, then say zǎofàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the sun, then the Mandarin for to cook, then say *zǎofàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 早饭 (zǎofàn) mean? (\"Breakfast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C69-wufan",
+      "sequence": 5580,
+      "title": "午饭 (wǔfàn) — lunch",
+      "headword": "午饭",
+      "romanization": "wǔfàn",
+      "gloss": "lunch",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d65e94a696c2df2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to cook, then the Mandarin for breakfast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 午饭",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "午饭 — wǔfàn — \"lunch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "你吃午饭了吗 nǐ chī wǔfàn le ma — Have you had lunch?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "午饭 (wǔfàn) is built from 午 'noon' and 饭 'meal', both inherited from Middle Chinese, nguX and bjonH (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday answers."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǔfàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǔfàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǔfàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǔfàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ chī wǔfàn le ma — Have you had lunch?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ chī wǔfàn le ma* — Have you had lunch?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to cook, then the Mandarin for breakfast, then say wǔfàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to cook, then the Mandarin for breakfast, then say *wǔfàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 午饭 (wǔfàn) mean? (\"Lunch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C69-wanfan",
+      "sequence": 5590,
+      "title": "晚饭 (wǎnfàn) — dinner; supper",
+      "headword": "晚饭",
+      "romanization": "wǎnfàn",
+      "gloss": "dinner; supper",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ac00d223e1f23ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for breakfast, then the Mandarin for lunch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 晚饭",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "晚饭 — wǎnfàn — \"dinner; supper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "今天晚饭吃什么 jīntiān wǎnfàn chī shénme — What's for dinner tonight?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "晚饭 (wǎnfàn) is built from wǎn 'evening' and 饭 'meal', both inherited from Middle Chinese, mjonX and bjonH (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday answers."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǎnfàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǎnfàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǎnfàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǎnfàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīntiān wǎnfàn chī shénme — What's for dinner tonight?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīntiān wǎnfàn chī shénme* — What's for dinner tonight?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for breakfast, then the Mandarin for lunch, then say wǎnfàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for breakfast, then the Mandarin for lunch, then say *wǎnfàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 晚饭 (wǎnfàn) mean? (\"Dinner; supper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C69-haochi",
+      "sequence": 5600,
+      "title": "好吃 (hǎochī) — tasty; good to eat",
+      "headword": "好吃",
+      "romanization": "hǎochī",
+      "gloss": "tasty; good to eat",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e311c8fe9815cde4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for lunch, then the Mandarin for dinner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 好吃",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "好吃 — hǎochī — \"tasty; good to eat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我妈妈做饭很好吃 wǒ māma zuòfàn hěn hǎochī — My mum's cooking is delicious."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "好吃 (hǎochī) is built from 好 'good' and 吃 'to eat': good to eat. 好 is inherited from Middle Chinese xawX (Guangyun, in Baxter's transcription); 吃 is probably the khek the dictionary writes with another character and glosses 'to eat', though chī is not the sound khek would regularly give."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday answers."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hǎochī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hǎochī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hǎochī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hǎochī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ māma zuòfàn hěn hǎochī — My mum's cooking is delicious.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ māma zuòfàn hěn hǎochī* — My mum's cooking is delicious.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for lunch, then the Mandarin for dinner, then say hǎochī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for lunch, then the Mandarin for dinner, then say *hǎochī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 好吃 (hǎochī) mean? (\"Tasty; good to eat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R69-review-64-69",
+      "sequence": 5610,
+      "title": "Looking back: from Asking for Help to Meals",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Asking for Help to Meals",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6da213d8be107cd2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for sorry and to help."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sorry, to help, to do a favour, to borrow, to give back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sorry, to help, to do a favour, to borrow, to give back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "door, may I ask, excuse me, to open, to shut",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: door, may I ask, excuse me, to open, to shut]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "weather, rain, to rain, snow, wind",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: weather, rain, to rain, snow, wind]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "horse, dog, cat, bird, fish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: horse, dog, cat, bird, fish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mountain, star, grass, flower, the sun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: mountain, star, grass, flower, the sun]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cook, breakfast, lunch, dinner, tasty",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cook, breakfast, lunch, dinner, tasty]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "起 门 问 气 雨 马 山 做 (zuò) — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 起 门 问 气 雨 马 山 做 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Sorry? (对不起, duìbuqǐ.) To help? (bāng.) To do a favour? (bāngmáng.) To borrow? (jiè.) To give back? (huán.) Door? (门, mén.) May I ask? (请问, qǐngwèn.) Excuse me? (bù hǎoyìsi.) To open? (kāi.) To shut? (guān.) Weather? (天气, tiānqì.) Rain? (雨, yǔ.) To rain? (xiàyǔ.) Snow? (xuě.) Wind? (fēng.) Horse? (马, mǎ.) Dog? (gǒu.) Cat? (māo.) Bird? (niǎo.) Fish? (yú.) Mountain? (山, shān.) Star? (星星, xīngxing.) Grass? (cǎo.) Flower? (huā.) The sun? (tàiyang.) To cook? (做饭, zuòfàn.) Breakfast? (早饭, zǎofàn.) Lunch? (午饭, wǔfàn.) Dinner? (晚饭, wǎnfàn.) Tasty? (好吃, hǎochī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

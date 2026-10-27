@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:bbed9420a672daef",
+  "lessonIds": [
+    "ZH-C32-mama",
+    "ZH-W32-ma-mum",
+    "ZH-C32-baba",
+    "ZH-C32-gege",
+    "ZH-C32-jiejie",
+    "ZH-C32-didi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch32.txt",
+  "json": "chinese/narration/ch32.json",
+  "textHash": "fnv1a64:c8405d20033e8abb",
+  "jsonHash": "fnv1a64:0c55d4c36685a023",
+  "findings": []
+}

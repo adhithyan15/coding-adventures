@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Tall and Handsome",
+  "label": "ch:zh-tall-and-handsome",
+  "canDo": "I can talk about height, hair, good and bad looks, and family likeness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C124-xiang-resemble",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: I can talk about height, hair, good and bad looks, and family likeness.",
+    "assesses": [
+      "ZH-LEX-C124-BUILD124-03",
+      "ZH-LEX-C124-BUILD124-04",
+      "ZH-LEX-C124-BUILD124-05"
+    ]
+  }
+}

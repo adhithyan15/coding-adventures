@@ -1,0 +1,19 @@
+{
+  "chapter": 70,
+  "title": "More to Eat",
+  "label": "ch:zh-more-to-eat",
+  "canDo": "I can name meat, buns, noodles, dumplings and soup.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-C70-tang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 70: I can name meat, buns, noodles, dumplings and soup.",
+    "assesses": [
+      "ZH-LEX-C70-FOOD70-03",
+      "ZH-LEX-C70-FOOD70-04",
+      "ZH-LEX-C70-FOOD70-05"
+    ]
+  }
+}

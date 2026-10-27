@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:622df1c555d5b4cc",
+  "lessonIds": [
+    "ZH-C115-xiaoxin",
+    "ZH-W115-xin-heart",
+    "ZH-C115-xiyan",
+    "ZH-C115-jinzhi",
+    "ZH-C115-zhuyi",
+    "ZH-C115-weixian"
+  ],
+  "tex": "chinese/book/chapters/ch115-careful.tex"
+}

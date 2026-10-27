@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C67-mao",
+  "pathSegment": "ZH-PATH-67-ANIMALS67",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-67-ANIMALS67",
+      "order": 3
+    }
+  ]
+}

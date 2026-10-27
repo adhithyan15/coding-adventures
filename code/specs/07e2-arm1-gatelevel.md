@@ -89,6 +89,25 @@ Installed-program origin/length and the diagnostic gate-operation counter are
 simulator metadata, not architectural storage, and are not included in the DFF
 count.
 
+### HALT DFF authority
+
+The packed stable-Q bit owned by the HALT latch is the sole architectural halt
+authority. `halted()`, snapshots, checked and legacy step/run guards, HALT
+execution, reset/load/restore, and transactional rollback must all read or
+clock that Q bit. A host Boolean may exist only as a source-compatible
+observation mirror; corrupting that mirror must not change any architectural
+decision or returned state, and the next simulator-owned HALT mutation must
+repair it from Q. No execution path may write the packed HALT bit directly
+after construction: it is changed only by the shared two-phase DFF clocking
+helper.
+
+Structural conformance tests exact-lock the HALT transition chain from public
+lifecycle entry points through snapshot/restore and instruction execution to
+the clock helper. The tests must reject compile-valid hostile rewrites that use
+the observation mirror as authority, assign Q directly, hide either shortcut
+behind a helper, retain a dead gate anchor, or overwrite the clocked result
+after dispatch.
+
 ## Normative Rust API
 
 ```rust
@@ -156,6 +175,13 @@ Separate lifecycle tests cover exact topology, the architectural constructor,
 stable-Q clocked writes, invalid state/load/register/memory boundaries,
 deterministic clearing, truncated fetches, inert halt, late-fault rollback,
 complete results, force-user transfers, and IRQ/FIQ banking/masks.
+
+The HALT-storage suite additionally derives the one-bit inventory from the
+owned physical containers, deliberately diverges any observation mirror from
+Q, and proves Q-authoritative behavior for observation, snapshot, reset, load,
+restore, HALT execution, checked/legacy step and run, and typed-fault rollback.
+Source-structure and compile-valid hostile fixtures make this evidence
+non-tautological.
 
 Completion requires:
 

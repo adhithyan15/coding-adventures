@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:b469758643169f1c",
+  "lessonIds": [
+    "ZH-C117-dongbian",
+    "ZH-C117-nanbian",
+    "ZH-C117-xibian",
+    "ZH-C117-beibian",
+    "ZH-C117-fangxiang"
+  ],
+  "tex": "chinese/book/chapters/ch117-which-way.tex"
+}

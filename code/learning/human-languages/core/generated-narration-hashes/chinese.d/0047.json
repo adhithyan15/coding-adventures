@@ -1,0 +1,22 @@
+{
+  "language": "chinese",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:bac3f22e9f7f1775",
+  "lessonIds": [
+    "ZH-C47-nian",
+    "ZH-W47-nian",
+    "ZH-C47-yue",
+    "ZH-C47-mingnian",
+    "ZH-W47-ming-bright",
+    "ZH-C47-jinnian",
+    "ZH-C47-riqi",
+    "ZH-R47-review-43-47"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch47.txt",
+  "json": "chinese/narration/ch47.json",
+  "textHash": "fnv1a64:25de49447aa2a0b2",
+  "jsonHash": "fnv1a64:6bd647e55f418c6b",
+  "findings": []
+}

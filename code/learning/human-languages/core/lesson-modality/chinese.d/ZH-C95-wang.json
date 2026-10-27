@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C95-wang",
+    "language": "chinese",
+    "chapter": 95,
+    "sequence": 7700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f67558a440f58dc"
+  },
+  "findings": []
+}

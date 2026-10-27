@@ -1,0 +1,22 @@
+{
+  "language": "chinese",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:6bf1f53652cda3e9",
+  "lessonIds": [
+    "ZH-C87-meiyou",
+    "ZH-W87-mei",
+    "ZH-C87-bu-mei",
+    "ZH-C87-chuang",
+    "ZH-C87-deng",
+    "ZH-C87-yaoshi",
+    "ZH-C87-bingxiang",
+    "ZH-C87-practice"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch87.txt",
+  "json": "chinese/narration/ch87.json",
+  "textHash": "fnv1a64:8d69f01a5352645f",
+  "jsonHash": "fnv1a64:c7f531838f632d25",
+  "findings": []
+}

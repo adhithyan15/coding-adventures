@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C111-fujin",
+  "pathSegment": "ZH-PATH-111-FRONT111",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-111-FRONT111",
+      "order": 3
+    }
+  ]
+}

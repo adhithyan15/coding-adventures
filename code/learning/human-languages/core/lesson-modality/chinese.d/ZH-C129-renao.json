@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C129-renao",
+    "language": "chinese",
+    "chapter": 129,
+    "sequence": 10330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6c6bb0216b68c10"
+  },
+  "findings": []
+}

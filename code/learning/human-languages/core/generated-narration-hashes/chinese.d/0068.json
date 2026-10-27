@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:b11953fdf1ed66c1",
+  "lessonIds": [
+    "ZH-C68-shan",
+    "ZH-W68-shan",
+    "ZH-C68-xingxing",
+    "ZH-C68-cao",
+    "ZH-C68-hua",
+    "ZH-C68-taiyang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch68.txt",
+  "json": "chinese/narration/ch68.json",
+  "textHash": "fnv1a64:9d4bec14c748bd73",
+  "jsonHash": "fnv1a64:7085ce06b6e105d9",
+  "findings": []
+}

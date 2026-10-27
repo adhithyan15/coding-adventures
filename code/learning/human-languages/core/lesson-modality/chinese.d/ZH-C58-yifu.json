@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C58-yifu",
+    "language": "chinese",
+    "chapter": 58,
+    "sequence": 5040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0cc9587c409b7de"
+  },
+  "findings": []
+}

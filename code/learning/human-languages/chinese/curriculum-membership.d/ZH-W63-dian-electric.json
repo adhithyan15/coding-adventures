@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W63-dian-electric",
+  "pathSegment": "ZH-PATH-63-PHONE63",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-63-PHONE63",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 97,
+  "title": "My Day in Characters",
+  "label": "ch:zh-my-day-in-characters",
+  "canDo": "I can read a short day in characters and write one line of my own.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ZH-W97-my-own-line",
+    "kind": "production",
+    "summary": "Complete ZH-W97-my-own-line: one line of your own Chinese about where you are, what you want and for how long, chosen rather than copied, with every word you have not written in pinyin.",
+    "assesses": [
+      "ZH-LEX-C97-XIAOSHI-01",
+      "ZH-SCRIPT-SHI-TIME-01",
+      "ZH-LEX-C97-MEITIAN-01",
+      "ZH-LEX-C97-YIHOU-01"
+    ],
+    "note": "The first Chinese the reader writes with nothing to copy (controlled composition). Pinyin inside the line is licensed for words whose characters the book has not taught, as assessment-spec.md requires a task to say; a character the reader only recognises is not one they produce."
+  }
+}

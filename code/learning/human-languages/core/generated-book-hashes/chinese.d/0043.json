@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:cfbb8688313ec153",
+  "lessonIds": [
+    "ZH-C43-qu",
+    "ZH-W43-qu",
+    "ZH-C43-hui",
+    "ZH-C43-zou",
+    "ZH-C43-chumen",
+    "ZH-C43-xuexiao"
+  ],
+  "tex": "chinese/book/chapters/ch43-coming-and-going.tex"
+}
