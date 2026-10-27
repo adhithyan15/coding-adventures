@@ -122,7 +122,11 @@ impl CortexM3GateLevel {
         self.state_with_memory(self.memory.snapshot())
     }
 
-    fn try_get_state(&self) -> Result<CortexM3State, CortexM3Error> {
+    /// Fallibly snapshot every architectural bit into owned value storage.
+    ///
+    /// Composed gate machines use this entry point so allocation failure stays
+    /// a typed, atomic lifecycle event rather than an infallible host clone.
+    pub fn try_get_state(&self) -> Result<CortexM3State, CortexM3Error> {
         let memory = self
             .memory
             .try_snapshot()
