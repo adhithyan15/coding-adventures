@@ -1,0 +1,11 @@
+{
+  "id": "JA-C363-shouhizei",
+  "pathSegment": "JA-PATH-363-KAIKEI363",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-363-KAIKEI363",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+[package]
+name = "pa-risc11-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "DFF-backed educational PA-RISC 1.1 gate-level simulator"
+license = "MIT"
+
+[lib]
+name = "pa_risc11_gatelevel"
+path = "src/lib.rs"
+
+[dependencies]
+arithmetic = { path = "../arithmetic" }
+logic-gates = { path = "../logic-gates" }
+pa-risc11-simulator = { path = "../pa-risc11-simulator" }
+
+[dev-dependencies]
+syn = { version = "2", features = ["extra-traits", "full"] }
+tempfile = "3"

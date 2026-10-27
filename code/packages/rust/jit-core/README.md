@@ -151,6 +151,15 @@ pre-binds the parameters to registers `0..n` in declaration order, and its
 future frontend reuses with zero per-language code. (Before v0.4.0 `run`
 ignored its `args`, so such a function read its parameter as `0`.)
 
+### Functions too big for a frame
+
+vm-core refuses a module containing a function with more than 65,536 frame
+registers (`VMError::RegisterLimitExceeded`, checked before anything runs).
+`GenericCirJit` encodes register numbers in one byte, so a function that still
+needs more than 256 registers after optimisation is declined and stays
+interpreted — and `execute_with_jit` then returns the interpreter's typed error.
+Neither tier drops a register silently (`tests/register_limit.rs`).
+
 ## CIRInstr mnemonic conventions
 
 | Category | Pattern | Examples |

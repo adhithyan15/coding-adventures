@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:fe62eea719d0dd69",
+  "lessonIds": [
+    "JA-C373-kaisatsu",
+    "JA-C373-teikiken",
+    "JA-C373-kaisuuken",
+    "JA-C373-seisan",
+    "JA-C373-tourisugiru"
+  ],
+  "tex": "japanese/book/chapters/ch373-through-the-ticket-barrier.tex"
+}

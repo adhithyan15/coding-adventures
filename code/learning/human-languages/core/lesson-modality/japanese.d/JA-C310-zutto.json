@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C310-zutto",
+    "language": "japanese",
+    "chapter": 310,
+    "sequence": 18480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40b15186357fd1a0"
+  },
+  "findings": []
+}

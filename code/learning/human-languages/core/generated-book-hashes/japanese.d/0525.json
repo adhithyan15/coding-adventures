@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:2a81891cbae9f20b",
+  "lessonIds": [
+    "JA-C525-honmono",
+    "JA-C525-nisemono",
+    "JA-C525-marude",
+    "JA-C525-tatoeru",
+    "JA-C525-izure"
+  ],
+  "tex": "japanese/book/chapters/ch525-real-or-fake.tex"
+}

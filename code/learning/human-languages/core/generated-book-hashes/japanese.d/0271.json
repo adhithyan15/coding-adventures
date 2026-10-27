@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:e173155d9daddc80",
+  "lessonIds": [
+    "JA-C271-tsukamaru",
+    "JA-C271-oikakeru",
+    "JA-C271-tsuini",
+    "JA-C271-kakureru",
+    "JA-C271-tsukamaeru"
+  ],
+  "tex": "japanese/book/chapters/ch271-caught-at-last.tex"
+}

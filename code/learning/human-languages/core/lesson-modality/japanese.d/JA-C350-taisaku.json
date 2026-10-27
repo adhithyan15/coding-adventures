@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C350-taisaku",
+    "language": "japanese",
+    "chapter": 350,
+    "sequence": 20730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57830f2268e96ad9"
+  },
+  "findings": []
+}

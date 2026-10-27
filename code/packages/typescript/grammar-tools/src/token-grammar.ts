@@ -420,6 +420,29 @@ function findClosingSlash(s: string): number {
   return last > 0 ? last : -1;
 }
 
+/**
+ * Refuse `-> ALIAS @line_start` (LANG84 E1), which this port does not
+ * implement. Without this check the guard would silently become part of the
+ * alias name and the definition would match everywhere.
+ */
+function rejectDefinitionGuard(
+  alias: string,
+  name: string,
+  lineNumber: number,
+): void {
+  // Any `@` counts, not only a word that starts with one: `->Y@line_start`
+  // (no space) would otherwise make the alias `Y@line_start`. An alias names
+  // a token type and never contains `@`.
+  const guard = alias.split(/\s+/).find((word) => word.includes("@"));
+  if (guard !== undefined) {
+    throw new TokenGrammarError(
+      `Definition guards ('${guard}', LANG84 E1) are not implemented by the ` +
+        `TypeScript grammar-tools for token '${name}'; use the Rust grammar-tools`,
+      lineNumber,
+    );
+  }
+}
+
 function parseDefinition(
   namePart: string,
   patternPart: string,
@@ -468,6 +491,7 @@ function parseDefinition(
           lineNumber,
         );
       }
+      rejectDefinitionGuard(alias, namePart, lineNumber);
     } else if (remainder) {
       throw new TokenGrammarError(
         `Unexpected text after regex pattern for token '${namePart}': '${remainder}'`,
@@ -504,6 +528,7 @@ function parseDefinition(
           lineNumber,
         );
       }
+      rejectDefinitionGuard(alias, namePart, lineNumber);
     } else if (litRemainder) {
       throw new TokenGrammarError(
         `Unexpected text after literal pattern for token '${namePart}': '${litRemainder}'`,
@@ -546,6 +571,38 @@ function splitInGuard(head: string): [string, string | undefined] {
 }
 
 /**
+ * Whether a transition head has the word `if` outside any parenthesised token
+ * set and outside a `KEYWORD="..."` value (LANG84 E8).
+ *
+ * `if` is a whitespace-delimited word: whitespace (space or tab) before it,
+ * and whitespace or the end of the head after it. So `X\tif c` and a bare
+ * trailing `X if` are found too, rather than read as the never-matching
+ * token name `X if`.
+ */
+function hasTopLevelIf(head: string): boolean {
+  let depth = 0;
+  let inQuotes = false;
+  for (let i = 0; i < head.length; i++) {
+    const ch = head[i];
+    if (ch === '"') {
+      inQuotes = !inQuotes;
+    } else if (inQuotes) {
+      continue;
+    } else if (ch === "(") {
+      depth += 1;
+    } else if (ch === ")") {
+      depth -= 1;
+    } else if (/\s/.test(ch) && depth === 0 && head.startsWith("if", i + 1)) {
+      const after = head.charAt(i + 3);
+      if (after === "" || /\s/.test(after)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+/**
  * Parse one `transitions:` line into a {@link ModeTransition} (F10).
  *
  * Grammar: `on TOKENS [in MODE] -> ACTION [, ACTION ...]` where TOKENS is
@@ -575,6 +632,17 @@ function parseTransition(line: string, lineNumber: number): ModeTransition {
     );
   }
   const headTail = head.slice(3).trim();
+
+  // LANG84 E8 adds an `if COND && ...` condition list to a rule head. This
+  // port does not implement it, so it refuses the rule rather than read
+  // `X if space_before` as one (never-matching) token name.
+  if (hasTopLevelIf(headTail)) {
+    throw new TokenGrammarError(
+      `Transition conditions ('if ...', LANG84 E8) are not implemented by ` +
+        `the TypeScript grammar-tools; use the Rust grammar-tools: '${line}'`,
+      lineNumber,
+    );
+  }
 
   const [tokensPartRaw, inModeRaw] = splitInGuard(headTail);
   const tokensPart = tokensPartRaw.trim();

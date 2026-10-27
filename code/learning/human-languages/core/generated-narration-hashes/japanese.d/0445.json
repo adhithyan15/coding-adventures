@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:21949dbcf4dcccb9",
+  "lessonIds": [
+    "JA-C445-zutsuu",
+    "JA-C445-fukutsuu",
+    "JA-C445-zukizuki",
+    "JA-C445-hakike",
+    "JA-C445-aza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch445.txt",
+  "json": "japanese/narration/ch445.json",
+  "textHash": "fnv1a64:159e6255acff53f7",
+  "jsonHash": "fnv1a64:0582397289dbbbd4",
+  "findings": []
+}

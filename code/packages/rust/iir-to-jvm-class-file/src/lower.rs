@@ -188,8 +188,9 @@ const LXOR: u8 = 0x83;  // long bitwise XOR
 // backends: `d2i`/`d2l` alone would *saturate* (NaN→0, +∞→MAX, −∞→MIN)
 // and hand the program a wrong integer. ALGOL proofs do admit runtime reals
 // that overflow (`entier(exp(exp(x)))`), so each narrowing is preceded by
-// [`emit_real_to_int_range_check`], which throws `ArithmeticException` for
-// NaN, ±∞ and values outside the destination's integer range.
+// [`emit_real_to_int_range_check`], which raises LANG83's typed
+// `Trap.ConvRange` (the shared [`lang83_trap_bytes`] sequence, as for
+// `Trap.DivZero`) for NaN, ±∞ and values outside the destination's range.
 const I2D: u8 = 0x87;  // int → double (widen, exact)
 const L2D: u8 = 0x8A;  // long → double (widen)
 const D2I: u8 = 0x8E;  // double → int (truncate toward zero, saturating)
@@ -586,9 +587,8 @@ fn decode_stack_effect(
         LASTORE | DASTORE => simple(1, 4, 0),
         DUP => simple(1, 1, 2),
         DUP2 => simple(1, 2, 4),
-        // `new`/`invokespecial`/`athrow` appear in two shapes: the
-        // fail-closed narrowing (`new ArithmeticException; dup;
-        // invokespecial <init>(); athrow`) and LANG83 PR1b `trap`
+        // `new`/`invokespecial`/`athrow` appear in one shape: every LANG83
+        // trap, the fail-closed narrowing's `Trap.ConvRange` included
         // (`new RuntimeException; dup; ldc_w kind; invokespecial
         // <init>(String); athrow`).
         NEW => simple(3, 0, 1),
@@ -1223,10 +1223,15 @@ fn emit_aload(code: &mut Vec<u8>, idx: u16) {
 ///
 ///         dup2; ldc2_w lo; dcmpl; if<lo> T        ; 8 bytes
 ///         dup2; ldc2_w hi; dcmpg; iflt OK         ; 8 bytes
-///   T:    new ArithmeticException; dup; ldc_w msg
-///         invokespecial <init>(String); athrow   ; 11 bytes
+///   T:    getstatic System.out; invokevirtual flush
+///         new RuntimeException; dup; ldc_w "Trap.ConvRange"
+///         invokespecial <init>(String); athrow   ; 17 bytes
 ///   OK:   (caller emits d2l / d2i)
 /// ```
+///
+/// `T` is [`lang83_trap_bytes`] for `Trap.ConvRange`, the sequence every
+/// LANG83 trap on this backend uses: earlier output is flushed, and the
+/// program dies with `RuntimeException: Trap.ConvRange`.
 ///
 /// i64's lower bound is inclusive because `-2^63 - 1` is not a `double`
 /// (it rounds to `-2^63`). For a truncating `v` in `(-2^63 - 1, -2^63)`,
@@ -1238,9 +1243,7 @@ fn emit_real_to_int_range_check(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder
     };
     let lo_idx = cp.add_double(lo);
     let hi_idx = cp.add_double(hi);
-    let exception = cp.add_class("java/lang/ArithmeticException");
-    let init = cp.add_methodref("java/lang/ArithmeticException", "<init>", "(Ljava/lang/String;)V");
-    let message = cp.add_string("real_to_int: operand is not finite or is outside the integer range");
+    let trap = lang83_trap_bytes(cp, interpreter_ir::exception_kind::TRAP_CONV_RANGE);
 
     code.push(DUP2);
     code.push(LDC2_W);
@@ -1252,16 +1255,8 @@ fn emit_real_to_int_range_check(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder
     code.push(LDC2_W);
     code.extend_from_slice(&hi_idx.to_be_bytes());
     code.push(DCMPG);
-    code.push(IFLT);
-    code.extend_from_slice(&14i16.to_be_bytes()); // over the 11-byte throw → OK
-    code.push(NEW);
-    code.extend_from_slice(&exception.to_be_bytes());
-    code.push(DUP);
-    code.push(LDC_W);
-    code.extend_from_slice(&message.to_be_bytes());
-    code.push(INVOKESPECIAL);
-    code.extend_from_slice(&init.to_be_bytes());
-    code.push(ATHROW);
+    emit_skip_if(code, IFLT, trap.len()); // over the trap → OK
+    code.extend_from_slice(&trap);
 }
 
 fn emit_typed_load(code: &mut Vec<u8>, idx: u16, jvm_type: JvmType) {

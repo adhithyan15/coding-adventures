@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C310-toutou",
+    "language": "japanese",
+    "chapter": 310,
+    "sequence": 18500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00e9e17760189d76"
+  },
+  "findings": []
+}

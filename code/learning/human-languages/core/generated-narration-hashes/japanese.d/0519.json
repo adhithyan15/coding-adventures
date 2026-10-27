@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:641b0d86881b4968",
+  "lessonIds": [
+    "JA-C519-omoinaosu",
+    "JA-C519-omoitodomaru",
+    "JA-C519-mikagiru",
+    "JA-C519-uragiru",
+    "JA-C519-bunan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch519.txt",
+  "json": "japanese/narration/ch519.json",
+  "textHash": "fnv1a64:e66d12794870a6ff",
+  "jsonHash": "fnv1a64:f79ffedf044144fb",
+  "findings": []
+}

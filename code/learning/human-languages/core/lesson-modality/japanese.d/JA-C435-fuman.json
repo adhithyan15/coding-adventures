@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C435-fuman",
+    "language": "japanese",
+    "chapter": 435,
+    "sequence": 25470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71018cd239d4a192"
+  },
+  "findings": []
+}

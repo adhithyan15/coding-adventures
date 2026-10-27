@@ -45,6 +45,7 @@
 //!                 is_regex: true,
 //!                 line_number: 1,
 //!                 alias: None,
+//!                 guard: Default::default(),
 //!             },
 //!         ],
 //!         keywords: vec![],
@@ -55,7 +56,8 @@
 
 use crate::parser_grammar::{GrammarElement, GrammarRule, ParserGrammar};
 use crate::token_grammar::{
-    ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction,
+    ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TokenGuard, TransitionAction,
+    TransitionCondition,
 };
 
 // ===========================================================================
@@ -255,6 +257,7 @@ fn token_def_src(defn: &TokenDefinition, indent: &str) -> String {
          {indent}    is_regex: {is_regex},\n\
          {indent}    line_number: {line_number},\n\
          {indent}    alias: {alias},\n\
+         {indent}    guard: {guard},\n\
          {indent}}}",
         indent = indent,
         name = rust_string_lit(&defn.name),
@@ -262,7 +265,32 @@ fn token_def_src(defn: &TokenDefinition, indent: &str) -> String {
         is_regex = defn.is_regex,
         line_number = defn.line_number,
         alias = alias_src,
+        guard = guard_src(defn.guard),
     )
+}
+
+/// Render a [`TokenGuard`] (LANG84 E1).
+///
+/// The unguarded case is `Default::default()`, which needs no import, so
+/// generated files that predate E1 only gain this one line per definition.
+/// A real guard is written with its full path for the same reason: the
+/// generated `use` line stays what it was.
+fn guard_src(guard: TokenGuard) -> &'static str {
+    match guard {
+        TokenGuard::None => "Default::default()",
+        TokenGuard::LineStart => "grammar_tools::token_grammar::TokenGuard::LineStart",
+        TokenGuard::InputStart => "grammar_tools::token_grammar::TokenGuard::InputStart",
+    }
+}
+
+/// Render a transition rule's `if` list (LANG84 E8), fully qualified for the
+/// same reason as [`guard_src`].
+fn conditions_src(conditions: &[TransitionCondition]) -> String {
+    let items: Vec<String> = conditions
+        .iter()
+        .map(|c| format!("grammar_tools::token_grammar::TransitionCondition::{:?}", c))
+        .collect();
+    format!("vec![{}]", items.join(", "))
 }
 
 /// Render a `Vec<TokenDefinition>` as a Rust `vec![...]` expression.
@@ -348,6 +376,7 @@ fn transition_src(t: &ModeTransition, indent: &str) -> String {
          {indent}    on_tokens: {on_tokens},\n\
          {indent}    on_value: {on_value},\n\
          {indent}    in_mode: {in_mode},\n\
+         {indent}    conditions: {conditions},\n\
          {indent}    actions: {actions},\n\
          {indent}    line_number: {line_number},\n\
          {indent}}}",
@@ -355,6 +384,7 @@ fn transition_src(t: &ModeTransition, indent: &str) -> String {
         on_tokens = on_tokens,
         on_value = on_value,
         in_mode = in_mode,
+        conditions = conditions_src(&t.conditions),
         actions = actions,
         line_number = t.line_number,
     )
@@ -372,6 +402,7 @@ fn action_src(a: &TransitionAction) -> String {
         TransitionAction::Pop => "TransitionAction::Pop".to_string(),
         TransitionAction::EnableSkip => "TransitionAction::EnableSkip".to_string(),
         TransitionAction::DisableSkip => "TransitionAction::DisableSkip".to_string(),
+        TransitionAction::Refuse => "TransitionAction::Refuse".to_string(),
     }
 }
 
@@ -669,6 +700,34 @@ mod tests {
         let g = parse_token_grammar("").unwrap();
         let code = compile_token_grammar(&g, "");
         assert!(!code.contains("// Source:"));
+    }
+
+    #[test]
+    fn e1_guards_and_e8_rules_are_emitted() {
+        let g = parse_token_grammar(
+            "EMBDOC = /=begin/ @line_start\nSHEBANG = /#!/ @input_start\nNAME = /[a-z]+/\n\
+             transitions:\n  on NAME if space_before && !line_start -> refuse\n",
+        )
+        .unwrap();
+        let code = compile_token_grammar(&g, "t.tokens");
+        assert!(code.contains("guard: grammar_tools::token_grammar::TokenGuard::LineStart,"));
+        assert!(code.contains("guard: grammar_tools::token_grammar::TokenGuard::InputStart,"));
+        assert!(code.contains("guard: Default::default(),"));
+        assert!(code.contains(
+            "conditions: vec![grammar_tools::token_grammar::TransitionCondition::SpaceBefore, \
+             grammar_tools::token_grammar::TransitionCondition::NotLineStart],"
+        ));
+        assert!(code.contains("actions: vec![TransitionAction::Refuse],"));
+    }
+
+    #[test]
+    fn an_unguarded_definition_gains_exactly_one_line() {
+        // Committed generated files that predate E1 were updated by inserting
+        // this line after each `alias:` field; the emitter must agree.
+        let g = parse_token_grammar("NAME = /[a-z]+/\ntransitions:\n  on NAME -> pop\n").unwrap();
+        let code = compile_token_grammar(&g, "t.tokens");
+        assert!(code.contains("alias: None,\n                guard: Default::default(),\n            }"));
+        assert!(code.contains("in_mode: None,\n                conditions: vec![],\n                actions:"));
     }
 
     #[test]

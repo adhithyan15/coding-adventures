@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C377-hanareru",
+    "language": "japanese",
+    "chapter": 377,
+    "sequence": 22290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3cd7c29bb74c465"
+  },
+  "findings": []
+}

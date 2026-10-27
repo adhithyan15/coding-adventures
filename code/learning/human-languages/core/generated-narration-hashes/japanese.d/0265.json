@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:787d9a579a4af6fd",
+  "lessonIds": [
+    "JA-C265-kemuri",
+    "JA-C265-hirogaru",
+    "JA-C265-shoubousha",
+    "JA-C265-nigemichi",
+    "JA-C265-kaketsukeru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch265.txt",
+  "json": "japanese/narration/ch265.json",
+  "textHash": "fnv1a64:f78f0574e74b9b03",
+  "jsonHash": "fnv1a64:56e1fafd203636fc",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C262-totsuzen",
+  "pathSegment": "JA-PATH-262-JIKO262",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-262-JIKO262",
+      "order": 3
+    }
+  ]
+}

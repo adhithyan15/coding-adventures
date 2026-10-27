@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C318-nattoku-suru",
+    "language": "japanese",
+    "chapter": 318,
+    "sequence": 19060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9de35b0eba6c2f92"
+  },
+  "findings": []
+}

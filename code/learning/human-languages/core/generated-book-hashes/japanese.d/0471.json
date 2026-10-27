@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:f697d330060e5d9e",
+  "lessonIds": [
+    "JA-C471-butai",
+    "JA-C471-engi",
+    "JA-C471-hakushu-suru",
+    "JA-C471-gasshou-suru",
+    "JA-C471-sakkyoku-suru"
+  ],
+  "tex": "japanese/book/chapters/ch471-on-stage.tex"
+}

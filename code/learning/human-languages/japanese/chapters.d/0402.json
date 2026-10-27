@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "A Day of Sightseeing",
+  "label": "ch:ja-a-day-of-sightseeing",
+  "canDo": "I can plan a day of sightseeing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C402-meguru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can plan a day of sightseeing.",
+    "assesses": [
+      "JA-LEX-C402-KANKOU402-03",
+      "JA-LEX-C402-KANKOU402-04",
+      "JA-LEX-C402-KANKOU402-05"
+    ]
+  }
+}

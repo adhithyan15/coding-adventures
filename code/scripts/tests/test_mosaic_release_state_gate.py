@@ -18,6 +18,7 @@ import copy
 import io
 import json
 import os
+import re
 import sys
 import tempfile
 import unittest
@@ -197,6 +198,26 @@ class MaterializeAndVerifyTests(GateTestCase):
         gate.corrupt_sibling(self.state).write_text("damaged", encoding="utf-8")
         with self.assertRaisesRegex(gate.GateError, "quarantined a compatible"):
             gate.verify_state(fixture, self.state)
+
+    def test_a_numbered_quarantine_fails_too(self) -> None:
+        # Hosts quarantine to the first FREE name, so a refusal on a machine
+        # that already holds `.corrupt` lands in `.corrupt.1`. Every one of the
+        # ten names must fail the check; one past the last is not a host's.
+        fixture = self.fixture()
+        gate.materialize_fixture(fixture, self.state)
+        siblings = gate.corrupt_siblings(self.state)
+        self.assertEqual(len(siblings), gate.QUARANTINE_SLOTS)
+        self.assertEqual(siblings[0], gate.corrupt_sibling(self.state))
+        self.assertEqual(siblings[-1].name, f"{self.state.name}.corrupt.9")
+        for sibling in siblings[1:]:
+            sibling.write_text("damaged", encoding="utf-8")
+            with self.assertRaisesRegex(
+                gate.GateError, f"quarantined a compatible.*{re.escape(sibling.name)}"
+            ):
+                gate.verify_state(fixture, self.state)
+            sibling.unlink()
+        Path(f"{self.state}.corrupt.10").write_text("not a host name", encoding="utf-8")
+        gate.verify_state(fixture, self.state)
 
     def test_a_corrupt_sibling_is_reported_before_a_missing_state(self) -> None:
         self.state.parent.mkdir(parents=True)

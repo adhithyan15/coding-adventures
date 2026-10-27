@@ -1,0 +1,11 @@
+{
+  "id": "JA-C445-fukutsuu",
+  "pathSegment": "JA-PATH-445-ACHE445",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-445-ACHE445",
+      "order": 1
+    }
+  ]
+}

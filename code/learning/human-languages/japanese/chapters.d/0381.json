@@ -1,0 +1,19 @@
+{
+  "chapter": 381,
+  "title": "The Ferry Crossing",
+  "label": "ch:ja-the-ferry-crossing",
+  "canDo": "I can talk about crossing the water by boat.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C381-tadayou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 381: I can talk about crossing the water by boat.",
+    "assesses": [
+      "JA-LEX-C381-FUNATABI381-03",
+      "JA-LEX-C381-FUNATABI381-04",
+      "JA-LEX-C381-FUNATABI381-05"
+    ]
+  }
+}

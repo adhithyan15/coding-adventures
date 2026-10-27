@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:3965663272289100",
+  "lessonIds": [
+    "JA-C399-makura",
+    "JA-C399-moufu",
+    "JA-C399-zabuton",
+    "JA-C399-mezameru",
+    "JA-C399-nekorobu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch399.txt",
+  "json": "japanese/narration/ch399.json",
+  "textHash": "fnv1a64:5b3cc6a47394d659",
+  "jsonHash": "fnv1a64:13a67524a16ea703",
+  "findings": []
+}

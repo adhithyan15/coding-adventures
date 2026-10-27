@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C441-jiman-suru",
+    "language": "japanese",
+    "chapter": 441,
+    "sequence": 25770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1e57e0a7435d47a"
+  },
+  "findings": []
+}

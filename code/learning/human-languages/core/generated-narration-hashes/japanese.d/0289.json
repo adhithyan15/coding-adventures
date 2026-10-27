@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:48add798bb2f7e44",
+  "lessonIds": [
+    "JA-C289-hanayome",
+    "JA-C289-hanamuko",
+    "JA-C289-chikau",
+    "JA-C289-shoutai-suru",
+    "JA-C289-fuufu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch289.txt",
+  "json": "japanese/narration/ch289.json",
+  "textHash": "fnv1a64:b8d3505ed8acc65a",
+  "jsonHash": "fnv1a64:234783f9d6ddb733",
+  "findings": []
+}

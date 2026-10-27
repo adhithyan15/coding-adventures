@@ -1,0 +1,11 @@
+{
+  "id": "JA-C530-sukunakutomo",
+  "pathSegment": "JA-PATH-530-ATLEAST530",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-530-ATLEAST530",
+      "order": 1
+    }
+  ]
+}

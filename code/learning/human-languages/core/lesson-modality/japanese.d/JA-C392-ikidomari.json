@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C392-ikidomari",
+    "language": "japanese",
+    "chapter": 392,
+    "sequence": 23050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c2a7ce79adacc02"
+  },
+  "findings": []
+}

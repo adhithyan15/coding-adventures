@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:0f552fef14da14b6",
+  "lessonIds": [
+    "JA-C472-zairyou",
+    "JA-C472-choumiryou",
+    "JA-C472-negi",
+    "JA-C472-komugiko",
+    "JA-C472-daizu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch472.txt",
+  "json": "japanese/narration/ch472.json",
+  "textHash": "fnv1a64:6d855ec293ee16b2",
+  "jsonHash": "fnv1a64:11bebc478dbd6ef5",
+  "findings": []
+}

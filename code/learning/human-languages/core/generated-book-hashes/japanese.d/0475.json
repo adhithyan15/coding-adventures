@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:587d9457cc2314e1",
+  "lessonIds": [
+    "JA-C475-reizouko",
+    "JA-C475-shokki",
+    "JA-C475-ousaji",
+    "JA-C475-kozara",
+    "JA-C475-ajitsuke"
+  ],
+  "tex": "japanese/book/chapters/ch475-kitchen-and-table.tex"
+}

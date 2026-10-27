@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "The Fox That Changed Shape",
+  "label": "ch:ja-the-fox-that-changed-shape",
+  "canDo": "I can say what the fox and the badger did.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C300-zurui",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can say what the fox and the badger did.",
+    "assesses": [
+      "JA-LEX-C300-KITSUNE300-03",
+      "JA-LEX-C300-KITSUNE300-04",
+      "JA-LEX-C300-KITSUNE300-05"
+    ]
+  }
+}

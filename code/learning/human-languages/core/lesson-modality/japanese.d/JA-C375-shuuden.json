@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C375-shuuden",
+    "language": "japanese",
+    "chapter": 375,
+    "sequence": 22160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:785dd10b1c3c31fc"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C515-juken-suru",
+    "language": "japanese",
+    "chapter": 515,
+    "sequence": 29800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86b4c7d99bc85dcb"
+  },
+  "findings": []
+}

@@ -1,0 +1,806 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 416,
+  "title": "Dawn and Dusk",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9c5e84f0a9b1474f",
+  "lessons": [
+    {
+      "id": "JA-C416-yoake",
+      "sequence": 24270,
+      "title": "よあけ (yoake) — dawn; daybreak",
+      "headword": "よあけ",
+      "romanization": "yoake",
+      "gloss": "dawn; daybreak",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6145b08bdea53b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to get something wet, then the Japanese for sheltering from the rain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: よあけ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よあけ — yoake — \"dawn; daybreak\"."
+            },
+            {
+              "kind": "speech",
+              "text": "よあけに やどを でました。 — yoake ni yado o demashita — \"We left the inn at dawn.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よあけ (yoake) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from yo, \"night\" and ake, \"opening\" (from akeru); its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yoake",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yoake*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yoake, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yoake*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yoake ni yado o demashita — We left the inn at dawn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yoake ni yado o demashita* — We left the inn at dawn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to get something wet, then the Japanese for sheltering from the rain, then say yoake again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to get something wet, then the Japanese for sheltering from the rain, then say *yoake* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does よあけ (yoake) mean? (\"Dawn; daybreak\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C416-yoake-type",
+              "prompt": "Say the Japanese for 'dawn'.",
+              "assesses": [
+                "JA-LEX-C416-YOAKE416-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "よあけ",
+                "yoake"
+              ],
+              "feedback": {
+                "correct": "Right: よあけ (yoake) is 'dawn; daybreak'.",
+                "incorrect": "'Dawn' is よあけ (yoake)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C416-hinode",
+      "sequence": 24280,
+      "title": "ひので (hinode) — sunrise",
+      "headword": "ひので",
+      "romanization": "hinode",
+      "gloss": "sunrise",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a1feb8ce04bd5f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for sheltering from the rain, then the Japanese for dawn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひので",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひので — hinode — \"sunrise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やまの うえで ひのでを まちました。 — yama no ue de hinode o machimashita — \"We waited for the sunrise on the mountain.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひので (hinode) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from hi, \"sun\", the particle no and de, \"coming out\" (from deru); its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hinode",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hinode*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hinode, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hinode*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yama no ue de hinode o machimashita — We waited for the sunrise on the mountain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yama no ue de hinode o machimashita* — We waited for the sunrise on the mountain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for sheltering from the rain, then the Japanese for dawn, then say hinode again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for sheltering from the rain, then the Japanese for dawn, then say *hinode* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひので (hinode) mean? (\"Sunrise\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C416-hinode-type",
+              "prompt": "Say the Japanese for 'sunrise'.",
+              "assesses": [
+                "JA-LEX-C416-YOAKE416-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひので",
+                "hinode"
+              ],
+              "feedback": {
+                "correct": "Right: ひので (hinode) is 'sunrise'.",
+                "incorrect": "'Sunrise' is ひので (hinode)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C416-yuuyake",
+      "sequence": 24290,
+      "title": "ゆうやけ (yūyake) — a sunset glow; a red evening sky",
+      "headword": "ゆうやけ",
+      "romanization": "yūyake",
+      "gloss": "a sunset glow; a red evening sky",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e05ab354a7d61297",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for dawn, then the Japanese for sunrise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ゆうやけ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆうやけ — yūyake — \"a sunset glow; a red evening sky\"."
+            },
+            {
+              "kind": "speech",
+              "text": "うみの ゆうやけは きれいでした。 — umi no yūyake wa kirei deshita — \"The sunset over the sea was beautiful.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆうやけ (yūyake) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from yū, \"evening\" and yake, \"burning\" (from yaku); its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yūyake",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yūyake*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yūyake, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yūyake*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "umi no yūyake wa kirei deshita — The sunset over the sea was beautiful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *umi no yūyake wa kirei deshita* — The sunset over the sea was beautiful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for dawn, then the Japanese for sunrise, then say yūyake again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for dawn, then the Japanese for sunrise, then say *yūyake* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ゆうやけ (yūyake) mean? (\"A sunset glow; a red evening sky\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C416-yuuyake-type",
+              "prompt": "Say the Japanese for 'a sunset glow'.",
+              "assesses": [
+                "JA-LEX-C416-YOAKE416-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆうやけ",
+                "yūyake",
+                "yuuyake",
+                "yuyake"
+              ],
+              "feedback": {
+                "correct": "Right: ゆうやけ (yūyake) is 'a sunset glow; a red evening sky'.",
+                "incorrect": "'A sunset glow' is ゆうやけ (yūyake)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C416-hiekomu",
+      "sequence": 24300,
+      "title": "ひえこむ (hiekomu) — to turn very cold",
+      "headword": "ひえこむ",
+      "romanization": "hiekomu",
+      "gloss": "to turn very cold",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8a4ca79acff959c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for sunrise, then the Japanese for a sunset glow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひえこむ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひえこむ — hiekomu — \"to turn very cold\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ふゆの あさは ひえこみます。 — fuyu no asa wa hiekomimasu — \"Winter mornings turn very cold.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ひえこみます, hiekomimasu; a godan verb. Past (polite): けさは ひえこみました。, kesa wa hiekomimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひえこむ (hiekomu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from hie, \"growing cold\" (from hieru) and komu, \"going deep\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiekomu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiekomu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiekomu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiekomu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuyu no asa wa hiekomimasu — Winter mornings turn very cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fuyu no asa wa hiekomimasu* — Winter mornings turn very cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for sunrise, then the Japanese for a sunset glow, then say hiekomu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for sunrise, then the Japanese for a sunset glow, then say *hiekomu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひえこむ (hiekomu) mean? (\"To turn very cold\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C416-hiekomu-type",
+              "prompt": "Say the Japanese for 'to turn very cold'.",
+              "assesses": [
+                "JA-LEX-C416-YOAKE416-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひえこむ",
+                "hiekomu"
+              ],
+              "feedback": {
+                "correct": "Right: ひえこむ (hiekomu) is 'to turn very cold'.",
+                "incorrect": "'To turn very cold' is ひえこむ (hiekomu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C416-terasu",
+      "sequence": 24310,
+      "title": "てらす (terasu) — to shine on; to light up",
+      "headword": "てらす",
+      "romanization": "terasu",
+      "gloss": "to shine on; to light up",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6eebe9f73aa81db6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a sunset glow, then the Japanese for to turn very cold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: てらす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てらす — terasu — \"to shine on; to light up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "つきが みちを てらしています。 — tsuki ga michi o terashite imasu — \"The moon is lighting up the road.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite てらします, terashimasu; a godan verb. Past (polite): あさひが やまを てらしました。, asahi ga yama o terashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てらす (terasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "terasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *terasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "terasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *terasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsuki ga michi o terashite imasu — The moon is lighting up the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsuki ga michi o terashite imasu* — The moon is lighting up the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a sunset glow, then the Japanese for to turn very cold, then say terasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a sunset glow, then the Japanese for to turn very cold, then say *terasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does てらす (terasu) mean? (\"To shine on; to light up\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C416-terasu-type",
+              "prompt": "Say the Japanese for 'to shine on'.",
+              "assesses": [
+                "JA-LEX-C416-YOAKE416-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "てらす",
+                "terasu"
+              ],
+              "feedback": {
+                "correct": "Right: てらす (terasu) is 'to shine on; to light up'.",
+                "incorrect": "'To shine on' is てらす (terasu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

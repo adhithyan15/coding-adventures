@@ -34,6 +34,17 @@
   alone and with a value live across both calls, over every finite PR6a
   value in four `float_to_list` layouts. Structural here: there is no `erl`.
 
+## Unreleased — a failed narrowing raises `Trap.ConvRange`
+
+- `real_to_int_trunc` / `real_to_int_floor` range-check the exact integer
+  `erlang:trunc/1` / `erlang:floor/1` return against the i64 bounds and raise
+  `erlang:error('Trap.ConvRange')` outside them ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). Before, a real
+  beyond ±2⁶³ narrowed to a bignum that no other backend could produce.
+  NaN and ±∞ cannot reach BEAM: Erlang floats are finite.
+- Tests: the shape pin `narrowing_is_exact_bif_then_two_conv_range_checks`,
+  a real-`erl` run (skipped without `erl`), and `test_91` now expects the
+  two raises' `call_ext`s.
+
 ## Unreleased — non-finite float constants are refused (LANG84 6e review)
 
 - `validate_for_beam` rejects an `f64` `const` whose value is `±Infinity` or

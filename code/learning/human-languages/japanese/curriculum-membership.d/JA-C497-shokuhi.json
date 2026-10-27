@@ -1,0 +1,11 @@
+{
+  "id": "JA-C497-shokuhi",
+  "pathSegment": "JA-PATH-497-MEAL497",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-497-MEAL497",
+      "order": 1
+    }
+  ]
+}

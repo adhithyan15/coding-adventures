@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C496-shokuzai",
+    "language": "japanese",
+    "chapter": 496,
+    "sequence": 28860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64a2c8692eadefdd"
+  },
+  "findings": []
+}

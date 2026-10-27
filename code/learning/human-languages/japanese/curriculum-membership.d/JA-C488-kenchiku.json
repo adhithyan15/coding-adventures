@@ -1,0 +1,11 @@
+{
+  "id": "JA-C488-kenchiku",
+  "pathSegment": "JA-PATH-488-BUILD488",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-488-BUILD488",
+      "order": 0
+    }
+  ]
+}

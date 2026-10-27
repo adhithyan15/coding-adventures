@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C293-hanabi",
+    "language": "japanese",
+    "chapter": 293,
+    "sequence": 17600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c65bca8ede8e9a4"
+  },
+  "findings": []
+}

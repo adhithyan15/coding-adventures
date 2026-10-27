@@ -1,0 +1,19 @@
+{
+  "chapter": 271,
+  "title": "Caught at Last",
+  "label": "ch:ja-caught-at-last",
+  "canDo": "I can say how the police chased and caught someone.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C271-tsukamaeru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 271: I can say how the police chased and caught someone.",
+    "assesses": [
+      "JA-LEX-C271-TSUKAMARU271-03",
+      "JA-LEX-C271-TSUKAMARU271-04",
+      "JA-LEX-C271-TSUKAMARU271-05"
+    ]
+  }
+}

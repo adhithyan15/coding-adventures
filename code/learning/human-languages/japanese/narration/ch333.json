@@ -1,0 +1,806 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 333,
+  "title": "Young and Old",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:977f6e51e0f21f09",
+  "lessons": [
+    {
+      "id": "JA-C333-wakamono",
+      "sequence": 19820,
+      "title": "わかもの (wakamono) — young people; a young person",
+      "headword": "わかもの",
+      "romanization": "wakamono",
+      "gloss": "young people; a young person",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d67197b028e1d53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for discrimination, then the Japanese for all members."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: わかもの",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わかもの — wakamono — \"young people; a young person\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いなかには わかものが すくないと おもいます。 — inaka ni wa wakamono ga sukunai to omoimasu — \"I think there are few young people in the countryside.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わかもの (wakamono) is a native Japanese word (wago), inherited rather than borrowed from Chinese: it is built from waka, \"young (wakai)\" and mono, \"person\", and its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wakamono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wakamono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wakamono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wakamono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inaka ni wa wakamono ga sukunai to omoimasu — I think there are few young people in the countryside.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inaka ni wa wakamono ga sukunai to omoimasu* — I think there are few young people in the countryside.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for discrimination, then the Japanese for all members, then say wakamono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for discrimination, then the Japanese for all members, then say *wakamono* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does わかもの (wakamono) mean? (\"Young people; a young person\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C333-wakamono-type",
+              "prompt": "Say the Japanese for 'young people'.",
+              "assesses": [
+                "JA-LEX-C333-WAKAMONO333-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "わかもの",
+                "wakamono"
+              ],
+              "feedback": {
+                "correct": "Right: わかもの (wakamono) is 'young people; a young person'.",
+                "incorrect": "'Young people' is わかもの (wakamono)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C333-koureisha",
+      "sequence": 19830,
+      "title": "こうれいしゃ (kōreisha) — an elderly person",
+      "headword": "こうれいしゃ",
+      "romanization": "kōreisha",
+      "gloss": "an elderly person",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c7c74fbd3430e75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for all members, then the Japanese for young people."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こうれいしゃ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こうれいしゃ — kōreisha — \"an elderly person\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こうれいしゃが ふえたと おもいます。 — kōreisha ga fueta to omoimasu — \"I think the number of elderly people has grown.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こうれいしゃ (kōreisha) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kō, \"high\" (Middle Chinese kaw), rei, \"age\" (leng) and sha, \"someone\" (tsyaeX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōreisha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōreisha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōreisha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōreisha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōreisha ga fueta to omoimasu — I think the number of elderly people has grown.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōreisha ga fueta to omoimasu* — I think the number of elderly people has grown.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for all members, then the Japanese for young people, then say kōreisha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for all members, then the Japanese for young people, then say *kōreisha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こうれいしゃ (kōreisha) mean? (\"An elderly person\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C333-koureisha-type",
+              "prompt": "Say the Japanese for 'an elderly person'.",
+              "assesses": [
+                "JA-LEX-C333-WAKAMONO333-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こうれいしゃ",
+                "kōreisha",
+                "koureisha",
+                "kooreisha",
+                "koreisha"
+              ],
+              "feedback": {
+                "correct": "Right: こうれいしゃ (kōreisha) is 'an elderly person'.",
+                "incorrect": "'An elderly person' is こうれいしゃ (kōreisha)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C333-jinkou",
+      "sequence": 19840,
+      "title": "じんこう (jinkō) — population",
+      "headword": "じんこう",
+      "romanization": "jinkō",
+      "gloss": "population",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee30fe6205bb0b83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for young people, then the Japanese for an elderly person."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じんこう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じんこう — jinkō — \"population\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まちの じんこうが すくなく なったので、みせが しまりました。 — machi no jinkō ga sukunaku natta node, mise ga shimarimashita — \"The town's population fell, so the shops closed.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じんこう (jinkō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jin, \"person\" (Middle Chinese nyin) and kō, \"mouth\" (khuwX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jinkō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jinkō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jinkō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jinkō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "machi no jinkō ga sukunaku natta node, mise ga shimarimashita — The town's population fell, so the shops closed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *machi no jinkō ga sukunaku natta node, mise ga shimarimashita* — The town's population fell, so the shops closed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for young people, then the Japanese for an elderly person, then say jinkō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for young people, then the Japanese for an elderly person, then say *jinkō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じんこう (jinkō) mean? (\"Population\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C333-jinkou-type",
+              "prompt": "Say the Japanese for 'population'.",
+              "assesses": [
+                "JA-LEX-C333-WAKAMONO333-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じんこう",
+                "jinkō",
+                "jinkou",
+                "jinkoo",
+                "jinko"
+              ],
+              "feedback": {
+                "correct": "Right: じんこう (jinkō) is 'population'.",
+                "incorrect": "'Population' is じんこう (jinkō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C333-kaigo-suru",
+      "sequence": 19850,
+      "title": "かいごする (kaigo suru) — to give care; to look after the old or sick",
+      "headword": "かいごする",
+      "romanization": "kaigo suru",
+      "gloss": "to give care; to look after the old or sick",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64581c9fe6644ba6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an elderly person, then the Japanese for population."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かいごする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かいごする — kaigo suru — \"to give care; to look after the old or sick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "そぼが びょうきに なったので、ははが かいごしています。 — sobo ga byōki ni natta node, haha ga kaigo shite imasu — \"My grandmother fell ill, so my mother is looking after her.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite かいごします, kaigoshimasu; a する verb. Past (polite): ははが そぼを かいごしました。, haha ga sobo o kaigo shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かいごする (kaigo suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, kaigo, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: kai, \"mediate\" (Middle Chinese keajH) and go, \"protect\" (huH) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaigo suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaigo suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaigo suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaigo suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sobo ga byōki ni natta node, haha ga kaigo shite imasu — My grandmother fell ill, so my mother is looking after her.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sobo ga byōki ni natta node, haha ga kaigo shite imasu* — My grandmother fell ill, so my mother is looking after her.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an elderly person, then the Japanese for population, then say kaigo suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an elderly person, then the Japanese for population, then say *kaigo suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かいごする (kaigo suru) mean? (\"To give care; to look after the old or sick\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C333-kaigo-suru-type",
+              "prompt": "Say the Japanese for 'to give care'.",
+              "assesses": [
+                "JA-LEX-C333-WAKAMONO333-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かいごする",
+                "kaigo suru"
+              ],
+              "feedback": {
+                "correct": "Right: かいごする (kaigo suru) is 'to give care; to look after the old or sick'.",
+                "incorrect": "'To give care' is かいごする (kaigo suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C333-kosodate",
+      "sequence": 19860,
+      "title": "こそだて (kosodate) — bringing up children",
+      "headword": "こそだて",
+      "romanization": "kosodate",
+      "gloss": "bringing up children",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:055c95a2779bcc4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for population, then the Japanese for to give care."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こそだて",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こそだて — kosodate — \"bringing up children\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こそだては じかんが かかると おもいます。 — kosodate wa jikan ga kakaru to omoimasu — \"I think bringing up children takes time.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こそだて (kosodate) is a native Japanese word (wago), inherited rather than borrowed from Chinese: it is built from ko, \"child\" and sodate, \"raising (sodateru)\", and its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kosodate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kosodate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kosodate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kosodate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kosodate wa jikan ga kakaru to omoimasu — I think bringing up children takes time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kosodate wa jikan ga kakaru to omoimasu* — I think bringing up children takes time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for population, then the Japanese for to give care, then say kosodate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for population, then the Japanese for to give care, then say *kosodate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こそだて (kosodate) mean? (\"Bringing up children\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C333-kosodate-type",
+              "prompt": "Say the Japanese for 'bringing up children'.",
+              "assesses": [
+                "JA-LEX-C333-WAKAMONO333-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こそだて",
+                "kosodate"
+              ],
+              "feedback": {
+                "correct": "Right: こそだて (kosodate) is 'bringing up children'.",
+                "incorrect": "'Bringing up children' is こそだて (kosodate)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

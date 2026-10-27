@@ -1,0 +1,11 @@
+{
+  "id": "JA-C497-marumeru",
+  "pathSegment": "JA-PATH-497-MEAL497",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-497-MEAL497",
+      "order": 3
+    }
+  ]
+}

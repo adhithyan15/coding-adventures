@@ -69,6 +69,25 @@ The parser reads the flags through `.grammar` predicates such as
 `@space_before` and `@no_newline_before`
 (`code/specs/F11-grammar-token-adjacency-predicates.md`).
 
+### Line-start guards and refusals (LANG84 E1, E8)
+
+`GrammarLexer` tries a definition marked `@line_start` only at offset 0 or
+right after a `\n`, and one marked `@input_start` only at offset 0; a guard
+never reorders definitions. In the F10 transition table, a rule's `if`
+conditions (`space_before`, `space_after`, `line_start`) must all hold for it
+to fire, and `-> refuse` turns the token into a `LexerError`:
+
+```rust
+let g = parse_token_grammar(
+    "NAME = /[a-z]+/\nSLASH = \"/\"\nskip:\n  WS = /[ \\t]+/\n\
+     transitions:\n  on SLASH if space_before && !space_after -> refuse\n",
+)?;
+assert!(GrammarLexer::new("a / b", &g).tokenize().is_ok()); // division
+assert!(GrammarLexer::new("a /b", &g).tokenize().is_err()); // refused
+```
+
+A lexer ported in slices uses this to fail closed on what a later slice owns.
+
 ## Token types
 
 The lexer recognizes these token types:
