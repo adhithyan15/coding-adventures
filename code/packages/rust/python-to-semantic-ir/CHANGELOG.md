@@ -80,6 +80,57 @@ line.
   default values).  `plan_captures` plans only siblings whose
   `DefFacts::parent` matches.
 
+**Security review follow-up.**  The review of the first version found
+four more ways to build a closure that is short, or threads the wrong
+variable.  All four are now closed:
+
+- **Short closures the planner cannot see (HIGH).**  Some contexts plan
+  nothing: a method body, a method's default values, or `main` naming a
+  `def` before it.  A bare reference there to a function whose capture
+  list is not decided yet built `MakeClosure(g, [])`.  If `g` then
+  captured something, the C backend read a NULL `caps[0]`.
+  - The old safety net only checked `DirectCall`s.  It is replaced by
+    `check_closure_invariant`, which walks the finished module with the
+    SIR `Visitor` (parameter defaults included).  Every `MakeClosure`
+    must thread exactly its target's captures, by name and order, and no
+    `DirectCall` may target a capturing function.  A violation is a
+    positioned error at the offending node.
+  - The gensym'd `__lambda_<N>` names are no longer in `function_names`.
+    Source could name a lambda and get a zero-capture closure for it.
+    The gensym also skips names a `def` or class already uses.
+- **A capture threading the wrong variable (MEDIUM).**  Rule 2 could give
+  `f` a capture `n` that `f` also binds itself (a param or a local).
+  `f` would then pass its own `n` where `g` expects the outer one:
+  Python, Ruby and Rust printed the wrong value, and C, Go and JS failed
+  on a duplicate binding.
+  - `plan_captures` now refuses a member that binds a name it would
+    inherit.  `DefFacts` records each `def`'s bound names for this.
+  - `named_closure` accepts a capture value only from the function's own
+    defining body, or as a `Scope::Capture` anywhere else.  So a
+    method's param `x` is never passed as a `main` local `x`.
+- **Unbounded planning cost (MEDIUM/LOW, DoS).**  The fixpoint used
+  repeated full passes with linear lookups.  A chain of M functions
+  naming each other, the last reading V outer names, produced M·V
+  capture slots.  Now:
+  - a name→index map;
+  - a delta worklist, so each name crosses each edge once;
+  - a hash set for the planned-list check;
+  - caps of `MAX_CAPTURES` (256) captures per function and
+    `MAX_PLAN_GROUP` (256) functions per group, each with a positioned
+    budget error.
+
+  The review's V=2000/M=400 generator took over two minutes in a debug
+  build.  It is now refused in about two seconds, most of which is
+  parsing.
+- **Gaps in the refusals (LOW).**
+  - A duplicate `def` name, including a nested `def f` inside `def f`,
+    is refused in pass 1, before its `DefFacts` can be overwritten.
+  - `lower_closure_call` refuses a call when no parameter facts exist,
+    rather than skipping the arity check.
+
+13 more unit tests cover each repro from the review.  All 13 fail on the
+first version of this change.
+
 **Tests:** 16 new unit tests in `src/lib.rs`.  Before the fix 15 of them
 fail.  The 15th, `plain_recursion_still_lowers_to_a_direct_call`, guards
 against the fix over-reaching.  They cover:

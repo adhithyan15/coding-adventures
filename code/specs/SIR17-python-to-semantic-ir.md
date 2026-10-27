@@ -267,6 +267,26 @@ argument reads as nil.  So the frontend accepts such a call only when `f`
 has plain positional parameters and the call passes exactly that many
 positional arguments.  Anything else is a positioned error.
 
+**Same variable.**  A capture value threaded at a closure-building site
+must denote the variable the function captured.  In the function's
+defining body, any binding of that name qualifies.  Anywhere else, only
+a `Capture` qualifies.  A function that binds a name itself (a param or
+a local) cannot inherit that name through rule 2.  Such programs are
+rejected as deferred.
+
+**Checked, and budgeted.**  The frontend walks the finished module and
+rejects any `MakeClosure` whose capture names (in order) differ from its
+target's, and any `DirectCall` to a capturing function.  This catches
+closures built before their target's list was decided, such as from a
+method body or a default value.  The frontend also enforces these
+budgets:
+
+- at most 256 captures per function;
+- at most 256 functions in one planning group.
+
+Synthesised `__lambda_<N>` names are not resolvable from source, and
+every `def` name must be unique, since all `def`s share one namespace.
+
 *Divergence note:* the M4 text above described only the bare-reference
 `MakeClosure`; calls to capturing functions were `DirectCall`s that no
 backend could run.  This section was added with the #18468 fix.

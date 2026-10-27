@@ -225,6 +225,21 @@ nil).  So such a call must pass exactly the callee's plain positional
 parameters.  Defaults, keyword-only params, keyword arguments and a wrong
 argument count are positioned errors.
 
+**The closure invariant is checked.**  The finished module is walked
+once, parameter defaults included.  Every `MakeClosure` must thread
+exactly its target's captures, and no `DirectCall` may target a function
+with captures.  A closure built before its target's list was known (from
+a method body, a default value, or `main` naming a later `def`) is
+refused rather than emitted short.  Three more rules are enforced:
+
+- A capture value must be the *same variable* the function captured.
+  That means any binding in the function's own defining body, and only a
+  capture anywhere else.  So a function that binds its own `n` cannot
+  pass on an enclosing `n`, and such a program is refused.
+- A function may carry at most 256 captures.  At most 256 sibling
+  functions may name each other in one planning group.
+- The synthesised `__lambda_<N>` names cannot be named from source.
+
 **Default parameters (P8).**  A positional default `def f(a, b=10)` lowers
 the `param_with_default` node's `= <expr>` into `Param.default = Some(expr)`
 (plain params keep `None`); the default is lowered with the same

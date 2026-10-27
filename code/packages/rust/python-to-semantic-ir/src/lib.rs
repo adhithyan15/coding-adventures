@@ -1458,6 +1458,185 @@ mod tests {
         );
     }
 
+    // ── security review of #18468: closures the planner cannot see ─────
+    //
+    // Each of these programs used to compile to a closure that threads
+    // fewer captures than its target declares (a NULL `caps[0]` read on
+    // the C backend), or to a closure that threads the wrong variable.
+    // Each is now refused with a positioned error.
+
+    /// Compile `src`, expecting an error whose message contains `needle`.
+    fn refused(src: &str, needle: &str) -> PythonLowerError {
+        let err = compile_source(src, "test").expect_err("program must be refused");
+        assert!(
+            err.message.contains(needle),
+            "expected `{needle}` in: {err}"
+        );
+        err
+    }
+
+    #[test]
+    fn method_naming_a_later_capturing_def_is_refused() {
+        // CPython prints 5.  A method body plans nothing, so `return g`
+        // builds `MakeClosure(g, [])` before `g` is lowered; `g` then
+        // captures the `main` local `x`.  The module-level closure check
+        // refuses the short closure, pointing at it.
+        let err = refused(
+            "class A:\n    def m(self):\n        return g\n\nx = 5\ndef g():\n    return x\n\nh = A().m()\nprint(h())\n",
+            "a closure for `g` is built before `g`'s captured variables are known",
+        );
+        assert_eq!(err.line, 3, "points at the bare `g` in the method");
+    }
+
+    #[test]
+    fn lambda_default_naming_a_later_capturing_def_is_refused() {
+        // The same short closure, built in a method's default value
+        // (`cb=lambda: g`), which the old call-graph safety net never
+        // walked.
+        refused(
+            "class A:\n    def m(self, cb=lambda: g):\n        return cb()\n\nx = 5\ndef g():\n    return x\n\nprint(A().m()())\n",
+            "a closure for `g` is built before `g`'s captured variables are known",
+        );
+    }
+
+    #[test]
+    fn main_level_reference_before_a_capturing_def_is_refused() {
+        // `h = g` before `def g` (a NameError in CPython) built a
+        // zero-capture closure for a function that captures `x`.
+        refused(
+            "x = 5\nh = g\ndef g():\n    return x\n\nprint(h())\n",
+            "a closure for `g` is built before `g`'s captured variables are known",
+        );
+    }
+
+    #[test]
+    fn a_synthesised_lambda_name_does_not_resolve() {
+        // `__lambda_0` is the frontend's own name for the lambda; source
+        // could name it and get a zero-capture closure for a lambda that
+        // captures `n`.  It is now an ordinary unresolved name.
+        refused(
+            "def outer(n):\n    f = lambda: n\n    return __lambda_0\n",
+            "unresolved name `__lambda_0`",
+        );
+    }
+
+    #[test]
+    fn a_user_def_named_like_a_lambda_does_not_collide() {
+        // The gensym skips names a `def` already uses, so the lambda's
+        // synthesised function gets a fresh name.
+        let m = lower("def __lambda_0():\n    return 1\n\nf = lambda: 2\nprint(f())\n");
+        assert!(m.functions.iter().any(|f| f.name == "__lambda_0"));
+        assert!(m.functions.iter().any(|f| f.name == "__lambda_1"));
+        assert_closures_consistent(&m);
+    }
+
+    #[test]
+    fn method_param_shadowing_a_capture_is_refused() {
+        // `g` captures the `main` local `x`.  Inside the method, `x` is the
+        // method's own param: a different variable.  Threading it would
+        // silently hand `g` the wrong value, so it is refused.
+        refused(
+            "x = 5\ndef g():\n    return x\n\nclass A:\n    def m(self, x):\n        return g()\n\nprint(A().m(1))\n",
+            "`g` captures `x`, which is not in scope here",
+        );
+    }
+
+    #[test]
+    fn local_shadowing_an_inherited_capture_is_refused() {
+        // CPython prints 5.  `f` would inherit `g`'s capture `n`, but `f`
+        // binds its own `n` (100), so it cannot pass `g` the outer `n`.
+        // Python, Ruby and Rust printed 100; C, Go and JS failed on a
+        // duplicate binding.
+        refused(
+            "def outer(n):\n    def g():\n        return n\n    def f():\n        n = 100\n        return g()\n    return f()\n\nprint(outer(5))\n",
+            "`f` binds its own `n`",
+        );
+    }
+
+    #[test]
+    fn param_shadowing_an_inherited_capture_is_refused() {
+        // The param version of the case above.
+        refused(
+            "def outer(n):\n    def g():\n        return n\n    def f(n):\n        return g()\n    return f(100)\n\nprint(outer(5))\n",
+            "`f` binds its own `n`",
+        );
+    }
+
+    #[test]
+    fn a_function_capturing_too_many_variables_is_refused() {
+        // 300 `main` locals read by one function: over MAX_CAPTURES (256).
+        let mut src = String::new();
+        for i in 0..300 {
+            src.push_str(&format!("v{i} = {i}\n"));
+        }
+        let names: Vec<String> = (0..300).map(|i| format!("v{i}")).collect();
+        src.push_str(&format!(
+            "def f():\n    return [{}]\n\nprint(f())\n",
+            names.join(", ")
+        ));
+        refused(
+            &src,
+            "would capture 300 variables, more than the limit of 256",
+        );
+    }
+
+    #[test]
+    fn a_too_large_group_of_mutually_naming_siblings_is_refused() {
+        // 300 sibling defs in a chain, each calling the next, all planned
+        // as one group when the first is lowered: over MAX_PLAN_GROUP.
+        let mut src = String::from("def outer(n):\n");
+        for i in 0..300 {
+            src.push_str(&format!("    def f{i}():\n        return f{}()\n", i + 1));
+        }
+        src.push_str("    def f300():\n        return n\n    return f0()\n");
+        refused(&src, "more than 256 sibling functions in one group");
+    }
+
+    #[test]
+    fn the_quadratic_capture_chain_finishes_quickly() {
+        // The review's generator: V = 2000 `main` locals and a chain of
+        // M = 400 top-level defs, each calling the next, the last reading
+        // every local.  Unbounded, rule 2 would give each def all 2000
+        // captures (M·V slots).  The group cap stops it at once.
+        let mut src = String::new();
+        for i in 0..2000 {
+            src.push_str(&format!("v{i} = {i}\n"));
+        }
+        for i in 0..399 {
+            src.push_str(&format!("def f{i}():\n    return f{}()\n", i + 1));
+        }
+        let names: Vec<String> = (0..2000).map(|i| format!("v{i}")).collect();
+        src.push_str(&format!("def f399():\n    return [{}]\n", names.join(", ")));
+        let started = std::time::Instant::now();
+        refused(&src, "limit");
+        assert!(
+            started.elapsed() < std::time::Duration::from_secs(60),
+            "took {:?}",
+            started.elapsed()
+        );
+    }
+
+    #[test]
+    fn a_nested_def_reusing_its_enclosing_def_name_is_refused() {
+        // `def f` inside `def f`: both lift to a module-level `f`.
+        let err = refused(
+            "def f(n):\n    def f(x):\n        return x + n\n    return f(1)\n",
+            "a second function named `f`",
+        );
+        assert_eq!(err.line, 2);
+    }
+
+    #[test]
+    fn a_direct_call_in_a_param_default_is_checked() {
+        // `a=g()` in a method default: a `DirectCall` to `g`, lowered
+        // before `g` captures the `main` local `x`.  The closure check
+        // walks parameter defaults too.
+        refused(
+            "class A:\n    def m(self, a=g()):\n        return a\n\nx = 5\ndef g():\n    return x\n\nprint(A().m())\n",
+            "`g` is called before `g`'s captured variables are known",
+        );
+    }
+
     // ── mutual recursion ──────────────────────────────────────────────
 
     #[test]
