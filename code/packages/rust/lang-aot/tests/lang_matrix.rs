@@ -684,6 +684,847 @@ const PROGRAMS: &[Prog] = &[
         release: None,
         case: None,
     },
+    // Twig — **call-boundary boxing** (iir-builtin-lowering 0.43.0). These rows
+    // pin how a value crosses a user-function call on the tagged-word columns
+    // (NativeAot, LLVM), checked against the VM. Before 0.43.0:
+    //   • a *raw-only* parameter — one read by nothing but arithmetic — got its
+    //     integer-literal argument boxed by the caller (the callee is on the
+    //     tagged boundary because `lower_dynamic_arith` retypes its re-boxed sum
+    //     `-> ref<any>`), while the body read it raw: `(h 1)` exited `8+1 = 9`.
+    //   (A caller that adds a boxed call result — `(+ (h 1) (h 2))`, 208 — is
+    //   still wrong: relabelling call results early in `lower_dynamic_arith`
+    //   broke joins of a boxed and a raw value, so that waits for #18425.)
+    // Now the caller leaves a literal raw for a raw-only parameter, unboxes an
+    // argument it can PROVE is a tagged integer (a `box`, a boxed constant, or a
+    // call whose result traces back to one, through identity-like callees), and leaves
+    // every other `any` alone — a bare `any` may be a pointer, and converting a
+    // pointer either way corrupts it. Columns are omitted where that column fails
+    // the program on main too (WASM/JVM: pre-existing closure/`any`-pointer
+    // gaps); CLR and BEAM were not available to verify.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (h y) (+ y 1)) (h 1)",
+        expect: Expect::Exit(2),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Two raw-only parameters (was `8 + 16 = 24`).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (h y z) (+ y z)) (h 1 2)",
+        expect: Expect::Exit(3),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // A parameter forwarded to a raw-only parameter is raw-only too (was 9).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (h y) (+ y 1)) (define (k y) (h y)) (k 1)",
+        expect: Expect::Exit(2),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // A provably boxed result passed back in is unboxed for the callee (was 73).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (h y) (+ y 1)) (h (h 1))",
+        expect: Expect::Exit(3),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // A call result stored in a cons cell (was 80).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (h y) (* y 2)) (car (cons (h 21) 0))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // A typed result into a parameter that feeds `cons` (was 33).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (+ x 1)) (define (g y) (cons y nil)) (car (g (f 4)))",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Recursion through a raw-only parameter of an off-boundary function: the
+    // recursive call passes `box(n - 1)`, which is now unboxed (was a stack
+    // overflow on NativeAot/LLVM).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (loop n) (if (= n 0) 7 (loop (- n 1)))) (loop 3)",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Guards: a parameter that feeds `cons` must still arrive TAGGED.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (cons x 0)) (+ 1 (car (f 5)))",
+        expect: Expect::Exit(6),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (cons x 0)) (car (f 5))",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Guards: a POINTER through an identity function must never be converted.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (id x) x) (define (first p) (car p)) (first (id (cons 7 nil)))",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (pick c a b) (if c a b)) (car (pick 1 (cons 7 nil) (cons 8 nil)))",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // …nor a pointer or an int captured by a closure.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (mk x) (lambda () x)) (car ((mk (cons 7 nil))))",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (mk x) (lambda () x)) ((mk 5))",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // A tagged value through identity-like callees into a raw-only parameter is
+    // traced and unboxed (was 73).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (h y) (+ y 1)) (define (id x) x) (h (id (h 1)))",
+        expect: Expect::Exit(3),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (pick c a b) (if c a b)) (define (h y) (+ y 1)) (h (pick 1 (h 1) (h 5)))",
+        expect: Expect::Exit(3),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (pick c a b) (if c a b)) (define (h y) (+ y 1)) (h (pick 1 3 4))",
+        expect: Expect::Exit(4),
+        backends: &[NativeAot, Llvm, Wasm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (pick c a b) (if c a b)) (pick 0 5 6)",
+        expect: Expect::Exit(6),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Copies of a raw-only parameter (`let`, an identity call) stay raw-only,
+    // with a literal (was 25) and a computed argument.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (h y) (let ((z y)) (+ z 1))) (h 3)",
+        expect: Expect::Exit(4),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (h y) (let ((z y)) (+ z 1))) (h (+ 1 2))",
+        expect: Expect::Exit(4),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (id x) x) (define (h y) (+ (id y) 1)) (h 3)",
+        expect: Expect::Exit(4),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (id x) x) (define (h y) (+ (id y) 1)) (h (+ 1 2))",
+        expect: Expect::Exit(4),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (id x) x) (define (h y) (+ (id y) 1)) (h (h 1))",
+        expect: Expect::Exit(3),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // An `if` join of a raw-only parameter (was 25). The VM/JIT refuse this
+    // program (`if` with a mixed-type join), so the two tagged-word columns
+    // cross-check each other and the known result.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (h y) (+ (if (< y 0) 0 y) 1)) (h 3)",
+        expect: Expect::Exit(4),
+        backends: &[NativeAot, Llvm],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (h y) (+ (if (< y 0) 0 y) 1)) (h (+ 1 2))",
+        expect: Expect::Exit(4),
+        backends: &[NativeAot, Llvm],
+        release: None,
+        case: None,
+    },
+    // Raw values whose representation cannot be proven are passed as-is (they
+    // are raw): a global read, a raw lambda result.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (h y) (+ y 1)) (define (k) (h x)) (define x 5) (k)",
+        expect: Expect::Exit(6),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (h y) (+ y 1)) (h ((lambda () 5)))",
+        expect: Expect::Exit(6),
+        backends: &[NativeAot, Llvm, Wasm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // A string and a symbol through an identity function, unconverted.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (id x) x) (define (f (s : str)) (string-length s)) (f (id \"HELLO\"))",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (id x) x) (define (f (s : str) n) (+ (string-length s) n)) (f (id \"HELLO\") 1)",
+        expect: Expect::Exit(6),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (id x) x) (equal? (id 'a) 'a)",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (id x) x) (define (f s) (cons s nil)) (equal? (car (f (id 'a))) 'a)",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Cells keep main's representation (computed integers stored raw, read
+    // raw): these must agree on every column. Boxing computed values into cells
+    // (#18427) was backed out — cells need one representation first (#18451, #18480).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (h y) (+ y 1)) (h (car (cons (+ 2 3) nil)))",
+        expect: Expect::Exit(6),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (wrap x) (cons x nil)) (define (h y) (+ y 1)) (h (car (wrap (+ 2 3))))",
+        expect: Expect::Exit(6),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (sq x) (* x x)) (car (cons (sq 6) nil))",
+        expect: Expect::Exit(36),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Record fields are raw words on the tagged columns, read raw by an
+    // accessor's caller; `lower_dynamic_arith` must not label `point-x`'s result
+    // boxed (that unboxed it to 5). WASM/JVM fail these programs exactly as on
+    // main (their structural record result is not labelled `ref<any>` either).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(record Point (x : int) (y : int)) (+ (point-x (Point 42 7)) 0)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(record Point (x : int) (y : int)) (+ (point-y (Point 7 41)) 1)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (h y) (+ y 1)) (record Point (x : int) (y : int)) (h (point-x (Point 42 7)))",
+        expect: Expect::Exit(43),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // A tagged-boundary function returning a parameter every call site passes
+    // tagged returns it unchanged rather than boxing it again (was 65).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (first p) (car p)) (define (g x) (first (cons 1 nil)) x) (define (h y) (+ y 1)) (h (g 5))",
+        expect: Expect::Exit(6),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Security-review probes (round 3). A `let` that reuses a parameter's name
+    // overwrites the parameter register, so nothing proven about the argument
+    // may be carried past it: this `g` returned the raw 15 unboxed, `pair?`
+    // read `0b1111` as a cell and the program crashed. The VM/JIT refuse the
+    // `pair?`-on-`any` shape, so the tagged columns pin the known result.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (k y) (+ y 1)) (define (g x) (k 0) (let ((x 15)) x)) (let ((w (g 3))) (if (pair? w) (car w) 0))",
+        expect: Expect::Exit(0),
+        backends: &[NativeAot, Llvm],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (k y) (+ y 1)) (define (g x) (k 0) (let ((x 5)) x)) (g 3)",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // A provably raw value that a `mov` join also put in `boxed_regs` is still
+    // boxed at a tagged call position, so "tagged at every site" is true of
+    // what is really passed (it was not, and the callee's unboxed return of a
+    // raw 15 crashed in `pair?`).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (k y) (+ y 1)) (define (g x) (k 0) x) (let ((a 7) (b 8)) (let ((v (+ a b))) (let ((r (if (= a 7) v (car (cons 1 nil))))) (let ((w (g v))) (if (pair? w) (car w) 0)))))",
+        expect: Expect::Exit(0),
+        backends: &[NativeAot, Llvm, Wasm, Jvm],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (k y) (+ y 1)) (define (g x) (k 0) x) (let ((a 2) (b 3)) (let ((v (+ a b))) (let ((r (if (= a 7) v (car (cons 1 nil))))) (g v))))",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // A constant step 3 boxes is tagged, not raw: `f` must not count as
+    // raw-returning (was a double box, 40).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f) (let ((v 5)) (let ((w (if (= 1 1) v (car (cons 1 nil))))) v))) (car (cons (f) nil))",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // A shadowed parameter is not a passthrough (was 2).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (let ((x 9)) x)) (define (h y) (+ y 1)) (h (f (car (cons 4 nil))))",
+        expect: Expect::Exit(10),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Records keep raw fields however they are built — directly, through the
+    // closure dispatcher, or from a forward-referenced global. (WASM/JVM: as above.)
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(record Point (x : int) (y : int)) (define (ap f) (f 42 7)) (+ (point-x (ap Point)) 0)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(record Point (x : int) (y : int)) (define (k) (+ (point-x (Point x 7)) 0)) (define x 42) (k)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // A pointer returned through a copy of a parameter every caller passes
+    // tagged is returned unchanged. On main these boxed the cell pointer and
+    // crashed (SIGSEGV) in `car`.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (k y) (+ y 1)) (define (g x) (k 0) (let ((y x)) y)) (car (g (cons 7 nil)))",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (k y) (+ y 1)) (define (g x c) (k 0) (if c x x)) (car (g (cons 7 nil) (= 1 1)))",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (k y) (+ y 1)) (define (g x) (k 0) x) (car (g (cons 7 nil)))",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Values the lowering cannot classify (a lambda's dispatcher-unboxed
+    // argument, a forward-referenced global, a record field) stored into a cell
+    // and read back: as on main. An earlier draft read every cell as tagged and
+    // got these wrong — and any wrong answer can be guarded into a dead-branch
+    // dereference, so they are pinned on every column that runs them.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (h y) (+ y 1)) (h (car ((lambda (x) (cons x nil)) 5)))",
+        expect: Expect::Exit(6),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (h y) (+ y 1)) (define (k) (h (car (cons x nil)))) (define x 4) (k)",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Security-review probes (round 4): pointers through the closure dispatcher.
+    // `lower_closures_to_heap` boxes every closure-call argument and capture,
+    // and the dispatcher's unbox undoes it. A draft that skipped that unbox for
+    // a lambda parameter only fed to `cons` kept the box and stored `p << 3`
+    // for a cell `p`: every program here crashed (SIGSEGV) on NativeAot/LLVM.
+    // WASM/JVM fail them as on main.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(car (car ((lambda (x) (cons x nil)) (cons 7 nil))))",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (map1 f l) (if (null? l) nil (cons (f (car l)) (map1 f (cdr l))))) (car (map1 (lambda (p) (car p)) (cons (cons 7 nil) nil)))",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (ap f v) (f v)) (car (car (ap (lambda (x) (cons x nil)) (cons 7 nil))))",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (mk x) (lambda () (cons x nil))) (car (car ((mk (cons 7 nil)))))",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (ident x) x) (define (ap f v) (f v)) (car (ap ident (cons 7 nil)))",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (twice x) (cons x x)) (define (ap f v) (f v)) (car (car (ap twice (cons 7 nil))))",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(car (car ((lambda (x) (cons x x)) (cons 7 nil))))",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (mk x) (lambda (y) (cons y x))) (car (car ((mk nil) (cons 7 nil))))",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (map1 f l) (if (null? l) nil (cons (f (car l)) (map1 f (cdr l))))) (car (car (map1 (lambda (p) (cons (car p) nil)) (cons (cons 7 nil) nil))))",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // …and the integer form, which the same draft read back as `7 << 3 = 56`.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (ap f v) (f v)) (car (ap (lambda (x) (cons x nil)) 7))",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Security-review probes (round 4): a provably raw argument for a MIXED-use
+    // parameter. `lower_dynamic_arith` reads a bare-`any` parameter raw in a
+    // machine op, so a boxed 15 compared unequal to 15, took the dead branch
+    // and dereferenced an integer (SIGSEGV; with 1000000000 a wild read at an
+    // address the program chose). Step 3c now boxes a call argument only for a
+    // tagged-only parameter (`tagged_only_params`). WASM fails some of these
+    // exactly as on main.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (sq y) (* y y)) (define (f x l) (sq 2) (if (= x 15) x (car l))) (f (+ 7 8) 15)",
+        expect: Expect::Exit(15),
+        backends: &[NativeAot, Llvm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (sq y) (* y y)) (define (f x l) (sq 2) (if (= x 15) x (car l))) (f (string-length \"abcdefghijklmno\") 15)",
+        expect: Expect::Exit(15),
+        backends: &[NativeAot, Llvm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (sq y) (* y y)) (define (f x l) (sq 2) (if (= x 15) x (car l))) (f (+ 7 8) 1000000000)",
+        expect: Expect::Exit(15),
+        backends: &[NativeAot, Llvm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (sq y) (* y y)) (define (f x l) (sq 2) (if (= x 15) x (car l))) (f (+ 7 8) (cons 3 nil))",
+        expect: Expect::Exit(15),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (sq y) (* y y)) (define (f x l) (sq 2) (if (= x 15) x (car (car l)))) (f (+ 7 8) (cons 15 nil))",
+        expect: Expect::Exit(15),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (sq y) (* y y)) (define (f x) (sq 2) (if (= x 15) x (car x))) (f (+ 7 8))",
+        expect: Expect::Exit(15),
+        backends: &[NativeAot, Llvm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // …and the wrong answers the same over-boxing gave.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (k y) (+ y 1)) (define (g x c) (k 0) (if c x 3)) (g (+ 7 8) (= 1 1))",
+        expect: Expect::Exit(15),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (sq y) (* y y)) (define (f x) (sq 2) (if (= x 15) 1 x)) (f (+ 7 8))",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (k y) (+ y 1)) (define (g x) (k 0) (cons x (+ x 1))) (cdr (g (+ 7 8)))",
+        expect: Expect::Exit(16),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (cons (+ x 1) x)) (car (f (string-length \"abc\")))",
+        expect: Expect::Exit(4),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Found by differential fuzzing (VM vs native-main vs native-HEAD). A `let`
+    // that rebinds a parameter to a copy of itself made the register a `mov`
+    // cycle whose only real source is the argument; `lower_dynamic_arith` read
+    // the cycle as "returns a box" and the caller unboxed a raw 2 (was 15).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f1 x2 x3) (let ((x2 (if (= 15 x2) x2 x2))) x2)) (+ (f1 (string-length \"bb\") nil) 15)",
+        expect: Expect::Exit(17),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Fuzz: a function returning a cell read is read raw by its caller, and the
+    // cell holds the raw computed word — consistent, as on main (a draft that
+    // boxed computed values into cells gave 63 here).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f) (car (cons (string-length \"aaaaaaa\") (cons 15 nil)))) (+ (f) 7)",
+        expect: Expect::Exit(14),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // A record field stored into a cell and read back through a function: as on
+    // main (an earlier draft labelled the cell read boxed and gave 112).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(record Point (x : int) (y : int)) (define (f4 x5) (car (cons (point-x (Point 100 2)) (cons 15 nil)))) (+ (f4 0) 100)",
+        expect: Expect::Exit(200),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Security-review probes (round 5): reading a cell whose writer stored a raw
+    // word. A draft labelled a function's cell result boxed (F1) and boxed
+    // computed values into cells (F2); each made the guarded comparison fail
+    // and the dead `(car 15)` branch dereference an integer (SIGSEGV).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (first l) (car l)) (define (rec x n) (if (= n 0) (cons x nil) (rec x (- n 1)))) (if (= (first (rec 15 1)) 15) 100 (car 15))",
+        expect: Expect::Exit(100),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x l) (if (= x 15) x (car l))) (f (car (cons (+ 7 8) nil)) 15)",
+        expect: Expect::Exit(15),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Seventh review (rev8): early `ref<any>` labelling of call results in
+    // `lower_dynamic_arith` spread through a caller's `mov` join and boxed the
+    // raw literal on the other arm (41 for 6; a boxed `#f` read as true; the
+    // guarded forms crashed). That labelling was backed out; these pin it. The
+    // `<`-on-a-parameter rows run only where the VM's answer is not needed (it
+    // refuses `<` on a parameter); their values come from a reference interpreter.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f a c) (if c (+ a 1) (+ a 2))) (+ (if (= 1 2) (f 1 #t) 5) 1)",
+        expect: Expect::Exit(6),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f a) (let ((r (+ a 1))) r)) (+ (if (= 1 2) (f 1) 5) 1)",
+        expect: Expect::Exit(6),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f a c) (if (= c 0) (+ a 1) (+ a 2))) (if (= (if (= 1 2) (f 1 0) 5) 5) 1 (car 5))",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f a c) (if c (+ a 1) (- a 1))) (define (m x) (if (< x 3) (f x #t) 100)) (+ (m 5) 0)",
+        expect: Expect::Exit(100),
+        backends: &[NativeAot, Llvm],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f a c) (if c (= a 1) (= a 2))) (if (f 5 #t) 1 2)",
+        expect: Expect::Exit(2),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f a) (let ((r (< a 1))) r)) (if (f 5) (car 5) 2)",
+        expect: Expect::Exit(2),
+        backends: &[NativeAot, Llvm],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (first l) (car l)) (define (mkm x) (cons x nil)) (define (fwdm x) (+ 0 (first (mkm x)))) (if (= (fwdm 5) (first ((lambda (z) (cons z nil)) (fwdm 5)))) 7 0)",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // Twig — **E6d-7: closures (TW5) on all 5 code-gen backends** (the last E6
     // backend gap). `((lambda (x) (+ x 1)) 41)` allocates a closure and applies
     // it → 42. JVM/CLR run it via `long[]`/`object[]` dispatch arrays; NativeAot/
@@ -14804,7 +15645,10 @@ fn feature_coverage_doc_counts_match_programs_source() {
     // (language, expected rows, expected total declared cells — all backends
     // including Beam). Order matches the doc table.
     let expected = [
-        (Language::Twig, 49, 392),
+        // Twig: the 49 rows through VM-041, plus 0.43.0's 82 call-boundary rows
+        // (389 cells: 32 rows x 6 columns, 7 x 5, 38 x 4, 5 x 2 — NativeAot and
+        // LLVM on every row, WASM/JVM/VM/JIT where they run it).
+        (Language::Twig, 131, 781),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 48),
         (Language::DartmouthBasic, 52, 416),
@@ -29807,3 +30651,11 @@ fn javascript_reference_errors_trap_after_output_on_every_available_backend() {
 fn javascript_rows_run_their_corpus_case() {
     lang84_rows_run_their_corpus_case(&javascript_rows(), "ecmascript", "es-number-log", "js", "es2020");
 }
+
+
+
+
+
+
+
+

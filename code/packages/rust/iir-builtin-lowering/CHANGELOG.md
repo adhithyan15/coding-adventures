@@ -25,6 +25,125 @@
   names the new `release: None` field from interpreter-ir (LANG84 phase 4b). No
   behaviour change: backends do not read the field.
 
+## 0.43.0 - 2026-10-27 - fix: values cross tagged-word call boundaries in the representation the callee reads
+
+Twig programs gave wrong answers, and some crashed, on the tagged-word columns
+(native AOT and LLVM) while the VM, WASM and JVM agreed:
+
+| program | VM | native/LLVM before |
+|---|---|---|
+| `(define (h y) (+ y 1)) (h 1)` | 2 | 9 |
+| `(define (h y z) (+ y z)) (h 1 2)` | 3 | 24 |
+| `(define (h y) (+ y 1)) (h (h 1))` | 3 | 73 |
+| `(define (loop n) (if (= n 0) 7 (loop (- n 1)))) (loop 3)` | 7 | stack overflow |
+| `(define (k y) (+ y 1)) (define (g x) (k 0) x) (car (g (cons 7 nil)))` | 7 | SIGSEGV |
+
+All changes are in `lower_dyn_repr`; `lower_dynamic_arith` is unchanged. A bare
+`any` may be a heap pointer (the same word raw or tagged) or an integer (`n`
+vs `n << 3`), so nothing is converted on the hint. All facts are computed once
+by `CallBoundary::analyse`, from the same functions the rewrite uses and
+against the *predicted* step-2 classification (`tagged_registers` on a copy):
+
+- `raw_only_params`: a never-reassigned bare-`any` parameter read only by
+  arithmetic (through `mov` copies, identity callees, forwarding). The caller
+  leaves an integer literal raw for it (step 1), and step 3b unboxes an
+  argument `trace_sources` proves is a tagged integer (a `box`, a boxed
+  constant, or a call whose summary says so — never a cell read). Such a
+  parameter is never dereferenced, so the unbox cannot forge a pointer. Applies
+  off the boundary too (fixes the recursive `loop`).
+- `tagged_at_every_site`: a boundary function's never-reassigned bare-`any`
+  parameter that every direct call site provably passes tagged (a boxed
+  constant, a `box`, a fresh pair or predicate result, or a parameter flagged
+  the same way). `box_raw_scalar_return` returns such a parameter, or a `mov`
+  copy of it (`is_tagged_copy`), unchanged instead of boxing it into `p << 3`.
+- `is_reassigned`: a parameter register the body writes (`(let ((x 15)) x)`
+  reuses the name) is never treated as holding the argument.
+- Nothing else changes representation. Cons cells and record fields hold
+  exactly what they held before, and no computed value is boxed on its way to
+  `cons`, `equal?`, `pair?`/`null?` or a parameter only those read.
+
+**Prerequisite: #18483.** The native backend compares untyped integers with
+unsigned condition codes (`(if (< -8 100) 1 2)` exits 2 on main; the VM gives
+1). Main's wrong values often stayed positive and so compared "right" by
+accident; a value this release now computes correctly can be negative and hit
+it. One fuzzed program, `(define (f2 a) (- a 2)) (let ((v (if (= 1 2) 0 (f2
+1)))) (if (< v 100) v (car 7)))`, gives 6 on main (wrong; VM 255) and SIGSEGV
+here, because the correct -1 fails the unsigned `<` and the dead `(car 7)`
+runs. This release ships stacked on the #18483 fix.
+
+**Not fixed here: #18427** (`(car (cons (string-length "HELLO") nil))` exits
+0, VM 5). Cons cells have no single representation on the tagged-word
+pipeline: an integer *literal* stored into a cell is boxed, a computed value is
+stored raw, and readers are split the same way (`lower_dynamic_arith` unboxes
+an inline `car`; a caller reads a function's `car` result raw). Fixing one side
+broke the other, and any wrong answer can be guarded into a dead-branch
+dereference (`(if (= W(e) e) A (car 15))`). Cells need one representation
+first — the uniform-representation work tracked in #18451 and #18480. Also not
+fixed: a caller adding a boxed call result (`(define (h y) (+ y 1)) (+ (h 1)
+(h 2))`, 208; `(+ 50 (g (lambda (y) (+ y 1))))`, 98) — that needs joins of
+boxed and raw values to agree first (#18425, #18480).
+
+Seven earlier drafts of this release (never pushed) failed security review:
+
+1. boxing/unboxing on the bare `any` hint (wild reads through identity
+   functions and closure captures);
+2. facts computed under assumptions the rewrite broke (a reassigned parameter
+   returned raw as tagged, SIGSEGV);
+3. skipping the closure dispatcher's `unbox` while the call site's `box` stayed
+   (`p << 3` cells);
+4. boxing call arguments for mixed-use parameters (a dead `car` branch taken);
+5. boxing computed values into cons cells and reading cell results as tagged
+   (#18427; guarded wrong answers became crashes);
+6. relabelling call results `ref<any>` early in `lower_dynamic_arith`, which
+   put them in `boxed_regs` and spread through `mov` joins, so step 3 boxed the
+   raw literal on the other arm after the consumer had been lowered as a raw
+   read (`(+ (if (= 1 2) (f 1 #t) 5) 1)` gave 41, a guarded variant crashed,
+   and a boxed `#f` read as true);
+7. boxing a provably raw value for `pair?`/`null?` (step 3c): `(pair? 7)`
+   became correctly false, which exposed a raw cell read main had been
+   reading right by accident.
+
+Every program from those reviews is a `lang-aot` matrix row or a fuzz probe.
+
+**Differential fuzzing.** 37,614 random typed Twig programs from four
+generators (`gen.py`, `gen2.py`, `gen3.py`, `gen4.py`) plus every review
+probe ran on the VM, on native built from main, and on native built from this
+release. `ref.py`, an independent interpreter, judged the programs the VM
+refuses (`pair?` on an integer, `<` on a parameter). Results: 0 wrong answers
+that happen only here, 1 crash that happens only here (the #18483 program
+above), 827 wrong answers of main fixed, and 1,078 crashes of main avoided.
+An earlier run of the first generator wrote `(define gN lit)` *after* the main
+expression, so those programs exited with the trailing define's value and
+masked wrong answers in 5,789 of 17,904 programs; they were re-run with the
+globals first.
+
+Still open, unchanged from main: a forward-global argument returned by a
+boundary function (`(g xg)` exits 40, VM 5), `box_raw_scalar_return` still
+boxing an unproven returned value, and record arithmetic on WASM/JVM
+(`(+ (point-x (Point 42 7)) 0)`) — all #18451; joins of a boxed and a raw
+result, boxed booleans in conditions, `pair?`/`null?` on a raw integer that
+collides with a tag, and a raw integer a lambda stores into a cell that a
+caller then tests with `pair?` — #18425 and #18480.
+
+New unit tests (dyn_repr): `a_literal_for_a_raw_only_parameter_stays_raw`,
+`a_literal_for_a_heap_parameter_is_still_boxed`,
+`a_mixed_use_parameter_keeps_the_tagged_contract`,
+`copies_and_forwarding_keep_a_parameter_raw_only`,
+`an_escaping_parameter_is_not_raw_only`,
+`a_provably_tagged_argument_is_unboxed_for_a_raw_only_parameter`,
+`an_unprovable_argument_is_passed_as_is`,
+`a_boxed_recursive_argument_is_unboxed_off_the_boundary`,
+`a_ref_any_parameter_is_never_raw_only`,
+`a_computed_raw_integer_is_never_boxed_for_a_tagged_position`,
+`an_unbox_result_or_an_any_parameter_is_never_boxed`,
+`a_record_constructor_keeps_raw_fields`,
+`a_reassigned_parameter_is_never_trusted`,
+`a_raw_value_for_a_type_predicate_parameter_is_passed_as_on_main`,
+`a_raw_value_for_a_mixed_use_parameter_is_not_boxed`,
+`a_copy_of_a_tagged_parameter_is_returned_unchanged`,
+`a_parameter_tagged_at_every_site_is_returned_unchanged`,
+`a_parameter_with_an_unprovable_site_is_still_boxed_on_return`.
+
 ## 0.42.0 - 2026-08-27 - propagate boxed dynamic returns through call signatures
 
 `lower_dynamic_arith` now widens a function return and every matching call

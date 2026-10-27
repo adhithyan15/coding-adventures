@@ -84,6 +84,9 @@ const REF_ANY: &str = "ref<any>";
 /// (shifting it would corrupt the id/tag).
 const SYMBOL_HINT: &str = "symbol";
 
+/// The frontend's still-unresolved dynamic hint (see [`raw_only_params`]).
+const ANY_HINT: &str = "any";
+
 /// The nil singleton's whole-word value (`lispy-runtime` `TAG_NIL = 0b001`).
 const TAG_NIL: i64 = 1;
 
@@ -320,18 +323,18 @@ fn lower_dyn_repr_marked(module: &mut IIRModule) {
         .partition(lisp_semantics::is_compiler_helper);
     module.functions = rest;
     let lisp_funcs = crate::dyn_repr_structural::tagged_boundary_functions(module);
+    // Every fact about call boundaries is computed on the module as
+    // `lower_dynamic_arith` left it, before any function is rewritten below.
+    let boundary = CallBoundary::analyse(module, lisp_funcs);
     for func in &mut module.functions {
         let is_entry = entry.as_deref() == Some(func.name.as_str());
-        lower_dyn_repr_function(func, is_entry, &lisp_funcs);
+        lower_dyn_repr_function(func, is_entry, &boundary);
     }
     module.functions.extend(helpers);
 }
 
-fn lower_dyn_repr_function(
-    func: &mut IIRFunction,
-    is_entry: bool,
-    lisp_funcs: &HashSet<String>,
-) {
+fn lower_dyn_repr_function(func: &mut IIRFunction, is_entry: bool, boundary: &CallBoundary) {
+    let lisp_funcs = &boundary.lisp_funcs;
     // ── 0. `equal?` → `__lisp_equal`, and type-directed `not` → `__lisp_not`. ──
     //
     // `not` is ambiguous: a *numeric* builtin (Twig's machine boolean-not) and
@@ -344,6 +347,83 @@ fn lower_dyn_repr_function(
     rename_lisp_equal(func);
     rename_lisp_not(func);
 
+    // ── 1–2. Which registers hold a tagged word (see `tagged_registers`). ──
+    let boxed_regs = tagged_registers(func, boundary);
+
+    // ── 3. Box the integer/nil constant of every tagged register. ──
+    for instr in &mut func.instructions {
+        if instr.op != "const" {
+            continue;
+        }
+        let dest = match &instr.dest {
+            Some(d) => d.clone(),
+            None => continue,
+        };
+        if !boxed_regs.contains(&dest) {
+            continue;
+        }
+        let n = match instr.srcs.first() {
+            Some(Operand::Int(n)) => *n,
+            _ => continue,
+        };
+        if instr.type_hint == SYMBOL_HINT {
+            // Already a finished tagged symbol immediate from `intern_symbols`
+            // — leave it; boxing (`<< 3`) would corrupt the id and tag.
+        } else if instr.type_hint == REF_PAIR && n == 0 {
+            // The nil sentinel: 0 → TAG_NIL (0b001).
+            instr.srcs[0] = Operand::Int(TAG_NIL);
+        } else if (INT_MIN_BOXABLE..=INT_MAX_BOXABLE).contains(&n) {
+            // A lisp-typed integer atom: box it (n << 3, tag 0b000).
+            instr.srcs[0] = Operand::Int(n << 3);
+        }
+        // Out-of-range: left raw (the documented ±2⁶⁰ limitation).
+    }
+
+    // ── 3b. Unbox a provably tagged argument bound for a raw-only parameter. ──
+    unbox_tagged_args_for_raw_only_params(func, boundary);
+
+    // ── 4. Normalise tagged conditions for `jmp_if_false` (all functions). ──
+    //
+    // A `COND` predicate evaluates to a tagged LispyValue (e.g. `#f` = 3 from
+    // `ATOM`). The backend's `jmp_if_false` tests a *raw* word against zero, so
+    // a bare `#f` (3 ≠ 0) would read as true. We wrap such a condition in
+    // Lisp truthiness (`__lisp_truthy`, expanded inline → raw 0/1). Type-directed: only conditions that hold a
+    // tagged value are wrapped, so a Twig `if` (whose condition is a raw `cmp`
+    // result, not in `boxed_regs`) is left untouched. (A bare integer-literal
+    // predicate that is not `mov`-connected to a tagged value stays raw and
+    // unwrapped — correct for any non-zero literal; a literal `0` predicate is
+    // a known minor corner, since raw 0 reads as false though lisp `0` is
+    // truthy.)
+    wrap_tagged_conditions(func, &boxed_regs);
+
+    // ── 5. Unbox at the program-exit boundary (entry function only). ──
+    if is_entry {
+        insert_unbox_before_lisp_rets(func, &boxed_regs, lisp_funcs);
+    } else if lisp_funcs.contains(&func.name) {
+        // ── 5b. Box a tagged function's RAW scalar result. ──
+        //
+        // A function on the tagged boundary promises its callers a tagged word.
+        // `((LAMBDA () 5))` returns the raw `5`, and the caller's exit coercion
+        // then reads it as a tagged value: `5` is `0b101`, the whole-word `#t`
+        // tag, so the program exited 1 instead of 5.
+        //
+        // The managed pass has had this since the start (`dyn_repr_structural`'s
+        // non-entry box branch); the tagged pass never grew the counterpart. It
+        // stayed hidden because the entry's coercion was `unbox_int` — `5 >> 3 =
+        // 0`, also wrong, just wrong differently — until the nullary lambda
+        // reached the correct runtime tag switch and exposed it.
+        let tagged_params = arriving_tagged_params(func, boundary);
+        box_raw_scalar_return(func, &boxed_regs, &tagged_params);
+    }
+}
+
+/// Steps 1–2 of [`lower_dyn_repr_function`], without mutation: the registers
+/// that hold (or, after step 3 boxes their constant, will hold) a tagged word.
+/// A pure function of the function body and the module's call-boundary facts,
+/// so the module-level analyses predict *exactly* what the rewrite does
+/// (`CallBoundary::predicted`) instead of approximating it.
+fn tagged_registers(func: &IIRFunction, boundary: &CallBoundary) -> HashSet<String> {
+    let lisp_funcs = &boundary.lisp_funcs;
     // ── 1. Registers that feed a lisp call (their integer atoms box). ──
     //
     // Two callers put a value into a lisp context, so an integer *atom* passed
@@ -354,16 +434,24 @@ fn lower_dyn_repr_function(
     //     argument arrives raw — e.g. `5` has tag bits `0b101` (= `#t`) and `7`
     //     has `0b111` (= a heap pair), so the body misreads it.
     // In both, `srcs[0]` is the callee/name and `srcs[1..]` are the arguments.
+    //
+    // Except a **raw-only** parameter of a user function (see
+    // [`raw_only_params`]): one whose value is only ever read by machine
+    // arithmetic. Its body reads it raw — `lower_dynamic_arith` treats a bare
+    // `any` as a machine integer — so boxing the literal there is what made
+    // `(define (h y) (+ y 1)) (h 1)` compute `8 + 1 = 9`.
     let mut lisp_arg_regs: HashSet<String> = HashSet::new();
     for instr in &func.instructions {
-        let is_lisp_call = lisp_builtin_name(instr).is_some()
-            || is_lisp_arg_only_builtin(instr)
-            || is_lisp_function_call(instr, lisp_funcs);
-        if is_lisp_call {
-            for src in instr.srcs.iter().skip(1) {
-                if let Operand::Var(v) = src {
-                    lisp_arg_regs.insert(v.clone());
-                }
+        let is_builtin = lisp_builtin_name(instr).is_some() || is_lisp_arg_only_builtin(instr);
+        if !is_builtin && !is_lisp_function_call(instr, lisp_funcs) {
+            continue;
+        }
+        for (k, src) in instr.srcs.iter().enumerate().skip(1) {
+            if !is_builtin && boundary.is_raw_only_arg(instr, k) {
+                continue;
+            }
+            if let Operand::Var(v) = src {
+                lisp_arg_regs.insert(v.clone());
             }
         }
     }
@@ -449,89 +537,39 @@ fn lower_dyn_repr_function(
         }
     }
 
-    // ── 3. Box the integer/nil constant of every tagged register. ──
-    for instr in &mut func.instructions {
-        if instr.op != "const" {
-            continue;
-        }
-        let dest = match &instr.dest {
-            Some(d) => d.clone(),
-            None => continue,
-        };
-        if !boxed_regs.contains(&dest) {
-            continue;
-        }
-        let n = match instr.srcs.first() {
-            Some(Operand::Int(n)) => *n,
-            _ => continue,
-        };
-        if instr.type_hint == SYMBOL_HINT {
-            // Already a finished tagged symbol immediate from `intern_symbols`
-            // — leave it; boxing (`<< 3`) would corrupt the id and tag.
-        } else if instr.type_hint == REF_PAIR && n == 0 {
-            // The nil sentinel: 0 → TAG_NIL (0b001).
-            instr.srcs[0] = Operand::Int(TAG_NIL);
-        } else if (INT_MIN_BOXABLE..=INT_MAX_BOXABLE).contains(&n) {
-            // A lisp-typed integer atom: box it (n << 3, tag 0b000).
-            instr.srcs[0] = Operand::Int(n << 3);
-        }
-        // Out-of-range: left raw (the documented ±2⁶⁰ limitation).
-    }
-
-    // ── 4. Normalise tagged conditions for `jmp_if_false` (all functions). ──
-    //
-    // A `COND` predicate evaluates to a tagged LispyValue (e.g. `#f` = 3 from
-    // `ATOM`). The backend's `jmp_if_false` tests a *raw* word against zero, so
-    // a bare `#f` (3 ≠ 0) would read as true. We wrap such a condition in
-    // Lisp truthiness (`__lisp_truthy`, expanded inline → raw 0/1). Type-directed: only conditions that hold a
-    // tagged value are wrapped, so a Twig `if` (whose condition is a raw `cmp`
-    // result, not in `boxed_regs`) is left untouched. (A bare integer-literal
-    // predicate that is not `mov`-connected to a tagged value stays raw and
-    // unwrapped — correct for any non-zero literal; a literal `0` predicate is
-    // a known minor corner, since raw 0 reads as false though lisp `0` is
-    // truthy.)
-    wrap_tagged_conditions(func, &boxed_regs);
-
-    // ── 5. Unbox at the program-exit boundary (entry function only). ──
-    if is_entry {
-        insert_unbox_before_lisp_rets(func, &boxed_regs, lisp_funcs);
-    } else if lisp_funcs.contains(&func.name) {
-        // ── 5b. Box a tagged function's RAW scalar result. ──
-        //
-        // A function on the tagged boundary promises its callers a tagged word.
-        // `((LAMBDA () 5))` returns the raw `5`, and the caller's exit coercion
-        // then reads it as a tagged value: `5` is `0b101`, the whole-word `#t`
-        // tag, so the program exited 1 instead of 5.
-        //
-        // The managed pass has had this since the start (`dyn_repr_structural`'s
-        // non-entry box branch); the tagged pass never grew the counterpart. It
-        // stayed hidden because the entry's coercion was `unbox_int` — `5 >> 3 =
-        // 0`, also wrong, just wrong differently — until the nullary lambda
-        // reached the correct runtime tag switch and exposed it.
-        box_raw_scalar_return(func, &boxed_regs);
-    }
+    boxed_regs
 }
 
 /// Box the returned register of a tagged-boundary function when it still holds a
 /// raw machine scalar, so the value crossing the boundary is a `LispyValue`.
-fn box_raw_scalar_return(func: &mut IIRFunction, boxed_regs: &HashSet<String>) {
+fn box_raw_scalar_return(
+    func: &mut IIRFunction,
+    boxed_regs: &HashSet<String>,
+    tagged_params: &HashSet<String>,
+) {
     let Some(ret_pos) = func.instructions.iter().position(|i| i.op == "ret") else {
         return;
     };
     let Some(Operand::Var(ret_reg)) = func.instructions[ret_pos].srcs.first().cloned() else {
         return;
     };
-    if boxed_regs.contains(&ret_reg) {
-        return; // already tagged — nothing to do.
+    // Already tagged — a `boxed_regs` value, or a copy (`let`, an `if` join)
+    // of one or of a parameter that arrives tagged — is returned unchanged.
+    // `(define (g x c) (k 0) (if c x x))` with every caller passing a cell
+    // used to box the copy of `x` and forge `p << 3`.
+    if is_tagged_copy(func, &ret_reg, tagged_params, boxed_regs, &mut HashSet::new()) {
+        return;
     }
     // A tagged PARAMETER is already a `LispyValue`; `boxed_regs` is built from
     // instructions and so never contains one. `((LAMBDA (X) X) 5)` returns its
     // parameter untouched, and boxing it a second time made the entry's single
     // unbox leave `5 << 3 = 40`.
-    let param_is_tagged = func
-        .params
-        .iter()
-        .any(|(name, ty)| *name == ret_reg && (ty == REF_ANY || ty == SYMBOL_HINT));
+    //
+    // A bare-`any` parameter every call site provably passes tagged
+    // ([`tagged_at_every_site`]) is the same: `(define (g x) (first …) x)
+    // (g 5)` receives the boxed `40` and returned `40 << 3`. (Both are in
+    // `tagged_params` only while nothing reassigns them.)
+    let param_is_tagged = tagged_params.contains(&ret_reg) && !is_reassigned(func, &ret_reg);
     if param_is_tagged {
         return;
     }
@@ -772,6 +810,743 @@ fn insert_unbox_before_lisp_rets(
     }
 
     func.instructions = new_instrs;
+}
+
+// ---------------------------------------------------------------------------
+// Call boundaries: which representation does each value cross in?
+// ---------------------------------------------------------------------------
+//
+// A Twig parameter the frontend could not type is stamped bare `any`. That one
+// hint covers two physically different words: a heap pointer (`p | 0b111`),
+// which is the *same* word in the raw and the tagged model, and an integer,
+// which is `n` raw but `n << 3` tagged. Nothing in the IR says which one a
+// given `any` holds, so converting one blindly is unsound in both directions —
+// boxing a pointer (`p << 3`) or unboxing one (`p >> 3`) makes the runtime's
+// `*(v & ~7)` read wild memory, and leaving a raw integer where a tagged word
+// is expected is no better (a raw `15` has the pair tag `0b111`).
+//
+// So this pass converts only on a **proof**, and every proof is computed by
+// the SAME functions the rewrite later uses, against the SAME predicted
+// register classification (`CallBoundary::predicted`, from
+// [`tagged_registers`]). Two rules keep the proofs honest:
+//
+// * a parameter register is only "the argument" while nothing in the body
+//   writes it — Twig's `let` reuses the source name as the register, so
+//   `(let ((x 15)) x)` inside `(define (g x) …)` overwrites `x`
+//   ([`is_reassigned`]);
+// * an integer constant the rewrite boxes (step 3) is tagged, not raw — so
+//   "will be boxed" never disagrees with what is boxed.
+//
+// What it proves:
+// * **raw-only** parameters ([`raw_only_params`]) are read by nothing but
+//   machine arithmetic. They can never be dereferenced, so the caller leaves
+//   an integer literal raw for them (step 1) and unboxes an argument it can
+//   prove is a tagged integer (step 3b).
+// * a boundary function returns a parameter unchanged instead of boxing it
+//   again only when every call site provably passes it tagged
+//   ([`tagged_at_every_site`]).
+//
+// Everything else keeps its previous lowering, which is the honest statement
+// of what remains: a value known only as `any` (a forward global, an `any`
+// call result) still crosses as-is, and `box_raw_scalar_return` still boxes an
+// unproven returned value as before (unsound for a pointer, as it was).
+//
+// What this pass deliberately does NOT do: box a computed raw value on its way
+// to a tagged position (a `cons` operand, an `equal?` operand, the argument of
+// `pair?`/`null?`, a parameter only those read). Every such value can end up
+// in, or be compared with, a cons cell, and cells have no single
+// representation on this pipeline yet — main boxes an integer *literal* stored
+// into a cell but stores a computed value raw, and the readers are split the
+// same way. Converting one side made a correct-by-coincidence program wrong:
+// `(pair? 7)` became correctly false, which exposed a raw cell read that main
+// had been reading "right" by accident — and any wrong answer can be guarded
+// into a dead-branch dereference (`(if (= W(e) e) A (car 15))`). That work
+// waits for one cell representation (#18451, #18480).
+
+/// Ops that consume a raw machine word in every operand position and never
+/// dereference it.
+const MACHINE_OPS: &[&str] = &[
+    "add", "sub", "mul", "div", "mod", "neg", "and", "or", "xor", "shl", "shr",
+];
+
+fn is_machine_op(op: &str) -> bool {
+    MACHINE_OPS.contains(&op) || op.starts_with("cmp_")
+}
+
+/// A concrete machine-scalar type hint: an integer or a boolean.
+fn is_machine_scalar_hint(hint: &str) -> bool {
+    matches!(hint, "bool" | "i8" | "i16" | "i32" | "i64" | "u8" | "u16" | "u32" | "u64")
+}
+
+/// Is a parameter declared `ty` tagged by its declaration alone?
+fn is_tagged_param_type(ty: &str) -> bool {
+    ty == SYMBOL_HINT || ty.starts_with("ref<")
+}
+
+/// Does any instruction in `func` write register `reg`? A parameter that is
+/// written — `(let ((x 15)) x)` reuses the parameter's name — no longer holds
+/// the caller's argument at every read, so no fact about the argument may be
+/// carried to it.
+fn is_reassigned(func: &IIRFunction, reg: &str) -> bool {
+    func.instructions.iter().any(|i| i.dest.as_deref() == Some(reg))
+}
+
+/// The index of parameter `reg` when it is a parameter nothing reassigns.
+fn unwritten_param(func: &IIRFunction, reg: &str) -> Option<usize> {
+    let i = func.params.iter().position(|(name, _)| name == reg)?;
+    (!is_reassigned(func, reg)).then_some(i)
+}
+
+/// Where a value provably comes from.
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+enum Source {
+    /// A tagged word: a `box` result, a boxed constant, or a heap read.
+    Tagged,
+    /// The function's own (never reassigned) parameter at this index.
+    Param(usize),
+}
+
+/// Everything `lower_dyn_repr_function` needs to know about the module's call
+/// boundaries. Built in [`CallBoundary::analyse`].
+struct CallBoundary {
+    lisp_funcs: HashSet<String>,
+    /// Per function, per parameter: raw-only? (See [`raw_only_params`].)
+    raw_only: HashMap<String, Vec<bool>>,
+    /// Per function: the `boxed_regs` step 2 will compute for it.
+    predicted: HashMap<String, HashSet<String>>,
+    /// Per function: the integer constants step 3 will box (tagged words).
+    predicted_consts: HashMap<String, HashSet<String>>,
+    /// Per function whose every return is provable: where the result comes from.
+    summaries: HashMap<String, HashSet<Source>>,
+    /// Off-boundary functions whose every return is a provably raw integer.
+    raw_fns: HashSet<String>,
+    /// Per boundary function, per parameter: does every call site provably
+    /// pass a tagged word? (See [`tagged_at_every_site`].)
+    tagged_at_every_site: HashMap<String, Vec<bool>>,
+}
+
+impl CallBoundary {
+    fn analyse(module: &IIRModule, lisp_funcs: HashSet<String>) -> Self {
+        let raw_only = raw_only_params(module, &lisp_funcs);
+        let mut b = CallBoundary {
+            raw_only,
+            predicted: HashMap::new(),
+            predicted_consts: HashMap::new(),
+            summaries: HashMap::new(),
+            raw_fns: HashSet::new(),
+            tagged_at_every_site: HashMap::new(),
+            lisp_funcs,
+        };
+        // Predict step 2 exactly: run it on a copy after step 0's rename.
+        let predicted = module
+            .functions
+            .iter()
+            .map(|f| {
+                let mut copy = f.clone();
+                rename_lisp_not(&mut copy);
+                (f.name.clone(), tagged_registers(&copy, &b))
+            })
+            .collect();
+        b.predicted = predicted;
+        b.predicted_consts = module
+            .functions
+            .iter()
+            .map(|f| (f.name.clone(), b.compute_boxed_consts(f)))
+            .collect();
+        // Summaries, raw-returning functions and tagged-at-every-site flags
+        // feed each other; each only ever grows as facts are proven, so iterate
+        // to the joint fixpoint (bounded, as a guard).
+        for _ in 0..64 {
+            let raw_fns = raw_returning_functions(module, &b);
+            let flags = tagged_at_every_site(module, &b);
+            let summaries = tagged_return_summaries(module, &b);
+            let stable =
+                raw_fns == b.raw_fns && flags == b.tagged_at_every_site && summaries == b.summaries;
+            b.raw_fns = raw_fns;
+            b.tagged_at_every_site = flags;
+            b.summaries = summaries;
+            if stable {
+                break;
+            }
+        }
+        b
+    }
+
+    /// The integer constants step 3 boxes in `func` (they hold tagged words),
+    /// as predicted before any rewrite.
+    fn boxed_consts(&self, func: &IIRFunction) -> HashSet<String> {
+        self.predicted_consts.get(&func.name).cloned().unwrap_or_default()
+    }
+
+    fn compute_boxed_consts(&self, func: &IIRFunction) -> HashSet<String> {
+        let Some(regs) = self.predicted.get(&func.name) else { return HashSet::new() };
+        func.instructions
+            .iter()
+            .filter(|i| {
+                i.op == "const"
+                    && i.type_hint != SYMBOL_HINT
+                    && !i.type_hint.starts_with("ref<")
+                    && matches!(i.srcs.first(), Some(Operand::Int(n))
+                        if (INT_MIN_BOXABLE..=INT_MAX_BOXABLE).contains(n))
+            })
+            .filter_map(|i| i.dest.clone())
+            .filter(|d| regs.contains(d))
+            .collect()
+    }
+
+    fn flag(map: &HashMap<String, Vec<bool>>, instr: &IIRInstr, k: usize) -> bool {
+        if instr.op != "call" || k == 0 {
+            return false;
+        }
+        let Some(Operand::Var(callee)) = instr.srcs.first() else { return false };
+        map.get(callee).and_then(|f| f.get(k - 1)).copied().unwrap_or(false)
+    }
+
+    /// Is argument `k` (an index into `instr.srcs`) of this `call` bound for a
+    /// raw-only parameter?
+    fn is_raw_only_arg(&self, instr: &IIRInstr, k: usize) -> bool {
+        Self::flag(&self.raw_only, instr, k)
+    }
+
+}
+
+/// Is argument `k` (an index into `instr.srcs`) of this `call` handed straight
+/// back as the call's result by a callee that does nothing else with it?
+fn is_passthrough_arg(
+    instr: &IIRInstr,
+    k: usize,
+    passthrough: &HashMap<String, Vec<bool>>,
+) -> bool {
+    CallBoundary::flag(passthrough, instr, k)
+}
+
+/// The registers that are copies of `root`, transitively, plus `root`: `mov`
+/// destinations, and the result of a call that passes it straight back
+/// (`(id y)` — see [`passthrough_params`]).
+fn value_aliases(
+    func: &IIRFunction,
+    root: &str,
+    passthrough: &HashMap<String, Vec<bool>>,
+) -> HashSet<String> {
+    let mut aliases: HashSet<String> = HashSet::from([root.to_string()]);
+    loop {
+        let before = aliases.len();
+        for instr in &func.instructions {
+            let Some(dest) = &instr.dest else { continue };
+            let copies = instr.srcs.iter().enumerate().any(|(k, src)| {
+                matches!(src, Operand::Var(v) if aliases.contains(v))
+                    && ((instr.op == "mov" && k == 0) || is_passthrough_arg(instr, k, passthrough))
+            });
+            if copies {
+                aliases.insert(dest.clone());
+            }
+        }
+        if aliases.len() == before {
+            return aliases;
+        }
+    }
+}
+
+/// The parameters each **off-boundary** function only returns: the parameter
+/// is never reassigned, and every read of it, or of a `mov` copy of it, is a
+/// `mov` or a `ret`. Such a callee (`(define (id x) x)`, the `a`/`b` of
+/// `(define (pick c a b) (if c a b))`) neither converts nor dereferences the
+/// value. Boundary functions are excluded: `box_raw_scalar_return` may box
+/// what they return.
+fn passthrough_params(
+    module: &IIRModule,
+    lisp_funcs: &HashSet<String>,
+) -> HashMap<String, Vec<bool>> {
+    let none = HashMap::new();
+    module
+        .functions
+        .iter()
+        .filter(|f| !lisp_funcs.contains(&f.name))
+        .map(|func| {
+            let flags = func
+                .params
+                .iter()
+                .map(|(name, _)| {
+                    if is_reassigned(func, name) {
+                        return false;
+                    }
+                    let names = value_aliases(func, name, &none);
+                    func.instructions.iter().all(|instr| {
+                        instr.op == "mov"
+                            || instr.op == "ret"
+                            || !instr
+                                .srcs
+                                .iter()
+                                .any(|s| matches!(s, Operand::Var(v) if names.contains(v)))
+                    })
+                })
+                .collect();
+            (func.name.clone(), flags)
+        })
+        .collect()
+}
+
+/// Candidate flags for a parameter-use analysis: bare-`any` parameters that
+/// nothing in the body reassigns.
+fn any_param_candidates(func: &IIRFunction) -> Vec<bool> {
+    func.params
+        .iter()
+        .map(|(name, ty)| ty == ANY_HINT && !is_reassigned(func, name))
+        .collect()
+}
+
+/// The **raw-only** parameters of every function.
+///
+/// A bare-`any`, never reassigned parameter is raw-only when every read of
+/// it, or of a copy of it, is (a) an operand of a [machine op](MACHINE_OPS),
+/// (b) an argument to a call whose callee parameter at that position is itself
+/// raw-only, or (c) an argument a [passthrough](passthrough_params) callee only
+/// hands back — whose result then counts as a copy. A greatest fixpoint:
+/// anything else (a heap builtin, a `ret`, a branch condition, a `box`, a
+/// store, another call) strikes it out.
+///
+/// Off-boundary functions are candidates too: their callers never box a
+/// literal for them (step 1 only boxes for boundary callees), but a boxed
+/// computed value still reaches them — the recursive `(loop (- n 1))` passes
+/// `box(n - 1)`, which compared with `0` forever until the stack overflowed —
+/// so step 3b unboxes for them as well.
+fn raw_only_params(
+    module: &IIRModule,
+    lisp_funcs: &HashSet<String>,
+) -> HashMap<String, Vec<bool>> {
+    let passthrough = passthrough_params(module, lisp_funcs);
+    let mut raw_only: HashMap<String, Vec<bool>> = HashMap::new();
+    let mut aliases: HashMap<(String, usize), HashSet<String>> = HashMap::new();
+    for func in &module.functions {
+        let flags = any_param_candidates(func);
+        for (i, (name, _)) in func.params.iter().enumerate() {
+            if flags[i] {
+                aliases.insert((func.name.clone(), i), value_aliases(func, name, &passthrough));
+            }
+        }
+        raw_only.insert(func.name.clone(), flags);
+    }
+
+    loop {
+        let mut struck: Vec<(String, usize)> = Vec::new();
+        for func in &module.functions {
+            let flags = &raw_only[&func.name];
+            for (i, &candidate) in flags.iter().enumerate() {
+                if !candidate {
+                    continue;
+                }
+                let names = &aliases[&(func.name.clone(), i)];
+                let ok = func.instructions.iter().all(|instr| {
+                    instr.srcs.iter().enumerate().all(|(k, src)| {
+                        let Operand::Var(v) = src else { return true };
+                        if !names.contains(v) || (k == 0 && instr.op == "call") {
+                            return true;
+                        }
+                        instr.op == "mov"
+                            || is_machine_op(&instr.op)
+                            || is_passthrough_arg(instr, k, &passthrough)
+                            || CallBoundary::flag(&raw_only, instr, k)
+                    })
+                });
+                if !ok {
+                    struck.push((func.name.clone(), i));
+                }
+            }
+        }
+        if struck.is_empty() {
+            return raw_only;
+        }
+        for (name, i) in struck {
+            raw_only.get_mut(&name).expect("candidate's function")[i] = false;
+        }
+    }
+}
+
+/// Does `reg` of `func` provably hold a **raw machine integer** (or boolean)
+/// at every point, *after* this pass's rewrite?
+///
+/// True only when every producer is one of: an integer constant step 3 does
+/// not box; an op typed with a machine-scalar hint (a typed `add`/`cmp_*`,
+/// `str_len`) or a non-`dyn_*` builtin with such a hint; a call to a
+/// raw-returning function, or to a passthrough callee whose handed-back
+/// argument is itself provably raw and not converted on the way in; a `mov` of
+/// one of these; or a never-reassigned parameter *declared* with a
+/// machine-scalar type. Never an `unbox` result, never anything known only as
+/// bare `any` — that may be a pointer.
+fn holds_provably_raw(
+    func: &IIRFunction,
+    reg: &str,
+    b: &CallBoundary,
+    boxed_consts: &HashSet<String>,
+    visited: &mut HashSet<String>,
+) -> bool {
+    if !visited.insert(reg.to_string()) {
+        return true; // a `mov` cycle: decided by its other producers.
+    }
+    if let Some((_, ty)) = func.params.iter().find(|(name, _)| name == reg) {
+        return !is_reassigned(func, reg) && is_machine_scalar_hint(ty);
+    }
+    let mut producers = func
+        .instructions
+        .iter()
+        .filter(|i| i.dest.as_deref() == Some(reg))
+        .peekable();
+    if producers.peek().is_none() {
+        return false;
+    }
+    producers.all(|instr| match instr.op.as_str() {
+        "const" => {
+            matches!(instr.srcs.first(), Some(Operand::Int(n))
+                if (INT_MIN_BOXABLE..=INT_MAX_BOXABLE).contains(n))
+                && !instr.type_hint.starts_with("ref<")
+                && instr.type_hint != SYMBOL_HINT
+                && !boxed_consts.contains(reg)
+        }
+        "mov" => match instr.srcs.first() {
+            Some(Operand::Var(src)) => holds_provably_raw(func, src, b, boxed_consts, visited),
+            _ => false,
+        },
+        "call" => {
+            let Some(Operand::Var(callee)) = instr.srcs.first() else { return false };
+            if b.raw_fns.contains(callee) {
+                return true;
+            }
+            if b.lisp_funcs.contains(callee) {
+                return false;
+            }
+            let Some(sources) = b.summaries.get(callee) else { return false };
+            !sources.is_empty()
+                && sources.iter().all(|s| match s {
+                    Source::Tagged => false,
+                    Source::Param(j) => matches!(instr.srcs.get(j + 1), Some(Operand::Var(a))
+                        if holds_provably_raw(func, a, b, boxed_consts, visited)),
+                })
+        }
+        "call_builtin" => {
+            is_machine_scalar_hint(&instr.type_hint)
+                && !matches!(instr.srcs.first(), Some(Operand::Var(n)) if n.starts_with("dyn_"))
+        }
+        // Any other producer typed as a machine scalar — a typed `add`, `cmp_*`,
+        // `str_len`, `load_byte` — except `unbox`, whose raw result is meant for
+        // a raw consumer and must not be re-boxed behind its back.
+        op => op != "unbox" && is_machine_scalar_hint(&instr.type_hint),
+    })
+}
+
+/// The off-boundary, non-entry-relevant functions whose every `ret` is
+/// [provably raw](holds_provably_raw). Boundary functions are excluded:
+/// `box_raw_scalar_return` boxes their raw results.
+fn raw_returning_functions(module: &IIRModule, b: &CallBoundary) -> HashSet<String> {
+    module
+        .functions
+        .iter()
+        .filter(|f| !b.lisp_funcs.contains(&f.name))
+        .filter(|func| {
+            let consts = b.boxed_consts(func);
+            let mut rets = func.instructions.iter().filter(|i| i.op == "ret").peekable();
+            rets.peek().is_some()
+                && rets.all(|r| match r.srcs.first() {
+                    Some(Operand::Var(v)) => {
+                        holds_provably_raw(func, v, b, &consts, &mut HashSet::new())
+                    }
+                    _ => false,
+                })
+        })
+        .map(|f| f.name.clone())
+        .collect()
+}
+
+/// Trace `reg` in `func` to the [`Source`]s it provably comes from, or `None`
+/// when any producer is not provable.
+///
+/// A cell read (`dyn_pair_first`/`dyn_pair_rest`/`field_load`) is never a
+/// source: a cell may hold a boxed literal or a raw computed word.
+/// An earlier draft counted cons-cell reads as tagged and unboxed them for a
+/// raw-only parameter, which misread every raw-stored value — and any such
+/// wrong answer can be guarded into a dead-branch dereference.
+fn trace_sources(
+    func: &IIRFunction,
+    reg: &str,
+    b: &CallBoundary,
+    boxed_consts: &HashSet<String>,
+    visited: &mut HashSet<String>,
+) -> Option<HashSet<Source>> {
+    if !visited.insert(reg.to_string()) {
+        return Some(HashSet::new()); // a `mov` cycle: decided by its other producers.
+    }
+    if func.params.iter().any(|(name, _)| name == reg) {
+        return unwritten_param(func, reg).map(|i| HashSet::from([Source::Param(i)]));
+    }
+    let mut out: HashSet<Source> = HashSet::new();
+    let mut any_producer = false;
+    for instr in func.instructions.iter().filter(|i| i.dest.as_deref() == Some(reg)) {
+        any_producer = true;
+        match instr.op.as_str() {
+            "box" => {
+                out.insert(Source::Tagged);
+            }
+            "const" if boxed_consts.contains(reg) => {
+                out.insert(Source::Tagged);
+            }
+            "mov" => {
+                let Some(Operand::Var(src)) = instr.srcs.first() else { return None };
+                out.extend(trace_sources(func, src, b, boxed_consts, visited)?);
+            }
+            "call" => {
+                let Some(Operand::Var(callee)) = instr.srcs.first() else { return None };
+                for source in b.summaries.get(callee)? {
+                    match source {
+                        Source::Tagged => {
+                            out.insert(Source::Tagged);
+                        }
+                        // The callee hands back its own argument. A raw-only
+                        // position may have been unboxed on the way in (3b):
+                        // unprovable.
+                        Source::Param(j) => {
+                            let k = j + 1;
+                            if b.is_raw_only_arg(instr, k) {
+                                return None;
+                            }
+                            let Some(Operand::Var(arg)) = instr.srcs.get(k) else { return None };
+                            out.extend(trace_sources(func, arg, b, boxed_consts, visited)?);
+                        }
+                    }
+                }
+            }
+            _ => return None,
+        }
+    }
+    any_producer.then_some(out)
+}
+
+/// Is `reg` of a tagged-boundary function only ever a copy (`mov`) of
+/// parameters in `tagged_params`, of registers in `boxed_regs`, or both?
+/// `box_raw_scalar_return` returns such a value unchanged.
+fn is_tagged_copy(
+    func: &IIRFunction,
+    reg: &str,
+    tagged_params: &HashSet<String>,
+    boxed_regs: &HashSet<String>,
+    visited: &mut HashSet<String>,
+) -> bool {
+    if !visited.insert(reg.to_string()) {
+        return true;
+    }
+    if boxed_regs.contains(reg) {
+        return true;
+    }
+    if func.params.iter().any(|(name, _)| name == reg) {
+        return tagged_params.contains(reg) && !is_reassigned(func, reg);
+    }
+    let mut producers = func
+        .instructions
+        .iter()
+        .filter(|i| i.dest.as_deref() == Some(reg))
+        .peekable();
+    producers.peek().is_some()
+        && producers.all(|i| {
+            i.op == "mov"
+                && matches!(i.srcs.first(), Some(Operand::Var(src))
+                    if is_tagged_copy(func, src, tagged_params, boxed_regs, visited))
+        })
+}
+
+/// The parameters of `func` that are tagged when they arrive: declared
+/// `ref<…>`/`symbol`, or flagged by [`tagged_at_every_site`] (never
+/// reassigned).
+fn arriving_tagged_params(func: &IIRFunction, b: &CallBoundary) -> HashSet<String> {
+    let flags = b.tagged_at_every_site.get(&func.name);
+    func.params
+        .iter()
+        .enumerate()
+        .filter(|(i, (name, ty))| {
+            !is_reassigned(func, name)
+                && (is_tagged_param_type(ty)
+                    || flags.and_then(|f| f.get(*i)).copied().unwrap_or(false))
+        })
+        .map(|(_, (name, _))| name.clone())
+        .collect()
+}
+
+/// For every function whose every `ret` is provable, where its result comes
+/// from. A tagged-boundary function is summarised as it is AFTER
+/// `box_raw_scalar_return` (which touches only its first `ret`): a value that
+/// pass returns unchanged is traced; a provably raw one it boxes is
+/// [`Source::Tagged`]; anything it would box without proof is unprovable.
+fn tagged_return_summaries(
+    module: &IIRModule,
+    b: &CallBoundary,
+) -> HashMap<String, HashSet<Source>> {
+    let mut summaries: HashMap<String, HashSet<Source>> = HashMap::new();
+    for func in &module.functions {
+        let consts = b.boxed_consts(func);
+        let rets: Vec<&IIRInstr> = func.instructions.iter().filter(|i| i.op == "ret").collect();
+        let on_boundary = b.lisp_funcs.contains(&func.name);
+        if rets.is_empty() || (on_boundary && rets.len() != 1) {
+            continue;
+        }
+        let mut sources: HashSet<Source> = HashSet::new();
+        let provable = rets.iter().all(|r| {
+            let Some(Operand::Var(v)) = r.srcs.first() else { return false };
+            let traced = if on_boundary {
+                let boxed_regs = b.predicted.get(&func.name).cloned().unwrap_or_default();
+                let tagged = arriving_tagged_params(func, b);
+                if is_tagged_copy(func, v, &tagged, &boxed_regs, &mut HashSet::new()) {
+                    trace_sources(func, v, b, &consts, &mut HashSet::new())
+                } else if holds_provably_raw(func, v, b, &consts, &mut HashSet::new()) {
+                    Some(HashSet::from([Source::Tagged]))
+                } else {
+                    None
+                }
+            } else {
+                trace_sources(func, v, b, &consts, &mut HashSet::new())
+            };
+            match traced {
+                Some(s) if !s.is_empty() => {
+                    sources.extend(s);
+                    true
+                }
+                _ => false,
+            }
+        });
+        if provable {
+            summaries.insert(func.name.clone(), sources);
+        }
+    }
+    summaries
+}
+
+/// The bare-`any` parameters of tagged-boundary functions that **every** call
+/// site provably passes as a tagged word, so the callee may return them
+/// unchanged instead of boxing them a second time.
+///
+/// "Tagged after lowering" is decided with the functions the rewrite itself
+/// uses: a constant step 3 boxes, a `box`/lisp-builtin result, or the caller's own parameter
+/// flagged the same way. Nothing reached through a `mov` join and nothing
+/// reassigned qualifies. A function with no direct call site (a closure body)
+/// gets no flags. A greatest fixpoint, for forwarding cycles.
+fn tagged_at_every_site(module: &IIRModule, b: &CallBoundary) -> HashMap<String, Vec<bool>> {
+    let mut flags: HashMap<String, Vec<bool>> = HashMap::new();
+    for func in &module.functions {
+        if !b.lisp_funcs.contains(&func.name) {
+            continue;
+        }
+        let has_site = module.functions.iter().any(|g| {
+            g.instructions.iter().any(|i| {
+                i.op == "call" && matches!(i.srcs.first(), Some(Operand::Var(c)) if *c == func.name)
+            })
+        });
+        let raw_only = b.raw_only.get(&func.name);
+        let f: Vec<bool> = any_param_candidates(func)
+            .into_iter()
+            .enumerate()
+            .map(|(i, c)| c && has_site && !raw_only.and_then(|r| r.get(i)).copied().unwrap_or(false))
+            .collect();
+        flags.insert(func.name.clone(), f);
+    }
+    loop {
+        let mut struck: Vec<(String, usize)> = Vec::new();
+        for caller in &module.functions {
+            let consts = b.boxed_consts(caller);
+            for instr in &caller.instructions {
+                if instr.op != "call" {
+                    continue;
+                }
+                let Some(Operand::Var(callee)) = instr.srcs.first() else { continue };
+                let Some(callee_flags) = flags.get(callee) else { continue };
+                for (i, &tagged) in callee_flags.iter().enumerate() {
+                    if !tagged {
+                        continue;
+                    }
+                    let k = i + 1;
+                    let ok = match instr.srcs.get(k) {
+                        Some(Operand::Var(v)) => {
+                            consts.contains(v) || directly_tagged(caller, v, &flags)
+                        }
+                        _ => false,
+                    };
+                    if !ok {
+                        struck.push((callee.clone(), i));
+                    }
+                }
+            }
+        }
+        if struck.is_empty() {
+            return flags;
+        }
+        for (name, i) in struck {
+            flags.get_mut(&name).expect("flagged function")[i] = false;
+        }
+    }
+}
+
+/// Is `reg` a tagged word by its own producer — every producer a `box` or a
+/// lisp builtin that makes a fresh tagged word — or the caller's never-reassigned parameter that is
+/// tagged on arrival? (No `mov` joins: a join may mix in an unproven value.)
+fn directly_tagged(func: &IIRFunction, reg: &str, flags: &HashMap<String, Vec<bool>>) -> bool {
+    if let Some(i) = func.params.iter().position(|(name, _)| name == reg) {
+        return !is_reassigned(func, reg)
+            && (is_tagged_param_type(&func.params[i].1)
+                || flags.get(&func.name).and_then(|f| f.get(i)).copied().unwrap_or(false));
+    }
+    let mut producers = func
+        .instructions
+        .iter()
+        .filter(|i| i.dest.as_deref() == Some(reg))
+        .peekable();
+    // Fresh tagged words only: `box`, a new cell, a predicate's `#t`/`#f`. Not
+    // a heap READ (`dyn_pair_first`/`dyn_pair_rest`): a cell may hold a value
+    // stored raw.
+    producers.peek().is_some()
+        && producers.all(|i| {
+            i.op == "box"
+                || matches!(lisp_builtin_name(i), Some(n) if n != "dyn_pair_first" && n != "dyn_pair_rest")
+        })
+}
+
+/// Step 3b: before a call, unbox each argument bound for a raw-only parameter
+/// that is provably a tagged integer — `(h (h 1))` passes `h`'s boxed result
+/// straight back into `h`'s raw-only `y`, which read it as `2 << 3`.
+///
+/// "Provably" means [`trace_sources`] finds only [`Source::Tagged`]: a
+/// caller-side parameter or anything unproven is left alone. Unboxing is safe
+/// even if the tagged word were not an integer, because a raw-only parameter
+/// is only ever fed to arithmetic, never dereferenced.
+fn unbox_tagged_args_for_raw_only_params(func: &mut IIRFunction, b: &CallBoundary) {
+    let snapshot = func.clone();
+    let consts = b.boxed_consts(&snapshot);
+    let is_tagged = |v: &str| {
+        trace_sources(&snapshot, v, b, &consts, &mut HashSet::new())
+            .is_some_and(|s| !s.is_empty() && s.iter().all(|x| *x == Source::Tagged))
+    };
+    let targets: Vec<(usize, usize)> = snapshot
+        .instructions
+        .iter()
+        .enumerate()
+        .filter(|(_, instr)| instr.op == "call")
+        .flat_map(|(at, instr)| {
+            (1..instr.srcs.len())
+                .filter(|&k| b.is_raw_only_arg(instr, k))
+                .filter(|&k| matches!(&instr.srcs[k], Operand::Var(v) if is_tagged(v)))
+                .map(move |k| (at, k))
+                .collect::<Vec<_>>()
+        })
+        .collect();
+    if targets.is_empty() {
+        return;
+    }
+    let old = std::mem::take(&mut func.instructions);
+    let mut out: Vec<IIRInstr> = Vec::with_capacity(old.len() + targets.len());
+    for (at, mut instr) in old.into_iter().enumerate() {
+        for &(_, k) in targets.iter().filter(|(t, _)| *t == at) {
+            let Operand::Var(v) = instr.srcs[k].clone() else { continue };
+            let raw = format!("{v}.argraw{at}_{k}");
+            out.push(IIRInstr::new("unbox", Some(raw.clone()), vec![Operand::Var(v)], "i64"));
+            instr.srcs[k] = Operand::Var(raw);
+        }
+        out.push(instr);
+    }
+    func.instructions = out;
 }
 
 #[cfg(test)]
@@ -1332,6 +2107,611 @@ mod tests {
         ]);
         lower_dyn_repr_marked(&mut m);
         assert_eq!(find_const(&m, "v0"), huge, "out-of-range int must be left raw");
+    }
+
+    // ── Call boundaries: raw-only parameters (iir-builtin-lowering 0.43.0) ──
+
+    fn var(v: &str) -> Operand {
+        Operand::Var(v.into())
+    }
+
+    fn op(op: &str, dest: &str, srcs: &[&str], ty: &str) -> IIRInstr {
+        IIRInstr::new(op, Some(dest.into()), srcs.iter().map(|s| var(s)).collect(), ty)
+    }
+
+    fn call(dest: &str, callee: &str, args: &[&str], ty: &str) -> IIRInstr {
+        let mut srcs = vec![var(callee)];
+        srcs.extend(args.iter().map(|a| var(a)));
+        IIRInstr::new("call", Some(dest.into()), srcs, ty)
+    }
+
+    fn func_of<'a>(m: &'a IIRModule, name: &str) -> &'a IIRFunction {
+        m.functions.iter().find(|f| f.name == name).expect("function present")
+    }
+
+    fn const_of(f: &IIRFunction, dest: &str) -> i64 {
+        match f.instructions.iter().find(|i| i.dest.as_deref() == Some(dest)) {
+            Some(IIRInstr { srcs, .. }) => match srcs.first() {
+                Some(Operand::Int(n)) => *n,
+                other => panic!("{dest} is not an int const: {other:?}"),
+            },
+            None => panic!("no {dest}"),
+        }
+    }
+
+    fn twig(functions: Vec<IIRFunction>) -> IIRModule {
+        IIRModule {
+            name: "test".into(),
+            functions,
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+            release: None,
+        }
+    }
+
+    /// `(define (h y) (+ y 1))` as `lower_dynamic_arith` leaves it: `y` read raw
+    /// by `add`, the sum re-boxed, so `h` returns `ref<any>` (tagged boundary).
+    fn inc() -> IIRFunction {
+        IIRFunction::new(
+            "h",
+            vec![("y".into(), "any".into())],
+            "ref<any>",
+            vec![
+                konst("one", 1, "i64"),
+                op("add", "s.raw", &["y", "one"], "i64"),
+                op("box", "s", &["s.raw"], "ref<any>"),
+                IIRInstr::new("ret", None, vec![var("s")], "any"),
+            ],
+        )
+    }
+
+    fn main_fn(instrs: Vec<IIRInstr>) -> IIRFunction {
+        IIRFunction::new("main", vec![], "any", instrs)
+    }
+
+    /// Regression: `(h 1)` exited 9 on native/LLVM — the literal was boxed for
+    /// a parameter the body only reads as a machine integer.
+    #[test]
+    fn a_literal_for_a_raw_only_parameter_stays_raw() {
+        let mut m = twig(vec![
+            inc(),
+            main_fn(vec![konst("a", 1, "i64"), call("r", "h", &["a"], "ref<any>"), ret("r")]),
+        ]);
+        lower_dyn_repr_marked(&mut m);
+        assert_eq!(const_of(func_of(&m, "main"), "a"), 1);
+        assert!(!func_of(&m, "h").instructions.iter().any(|i| i.op == "unbox"));
+    }
+
+    /// The guard: a parameter that feeds `cons` must still receive a tagged word.
+    #[test]
+    fn a_literal_for_a_heap_parameter_is_still_boxed() {
+        let f = IIRFunction::new(
+            "f",
+            vec![("x".into(), "any".into())],
+            "ref<any>",
+            vec![
+                konst("nil", 0, REF_PAIR),
+                call_builtin(Some("c"), "dyn_pair_new", &["x", "nil"], "ref<any>"),
+                ret("c"),
+            ],
+        );
+        let mut m = twig(vec![
+            f,
+            main_fn(vec![konst("a", 5, "i64"), call("r", "f", &["a"], "ref<any>"), ret("r")]),
+        ]);
+        lower_dyn_repr_marked(&mut m);
+        assert_eq!(const_of(func_of(&m, "main"), "a"), 40);
+    }
+
+    /// A parameter used both arithmetically and as a heap value is NOT raw-only:
+    /// its contract is left exactly as before (the literal is boxed).
+    #[test]
+    fn a_mixed_use_parameter_keeps_the_tagged_contract() {
+        let f = IIRFunction::new(
+            "f",
+            vec![("x".into(), "any".into())],
+            "ref<any>",
+            vec![
+                konst("one", 1, "i64"),
+                op("add", "unused", &["x", "one"], "i64"),
+                konst("nil", 0, REF_PAIR),
+                call_builtin(Some("c"), "dyn_pair_new", &["x", "nil"], "ref<any>"),
+                ret("c"),
+            ],
+        );
+        let mut m = twig(vec![
+            f,
+            main_fn(vec![konst("a", 5, "i64"), call("r", "f", &["a"], "ref<any>"), ret("r")]),
+        ]);
+        lower_dyn_repr_marked(&mut m);
+        assert_eq!(const_of(func_of(&m, "main"), "a"), 40);
+    }
+
+    /// `mov` copies (`let`), forwarding to another raw-only parameter (`k`), and
+    /// an identity call (`(id y)`) all keep a parameter raw-only.
+    #[test]
+    fn copies_and_forwarding_keep_a_parameter_raw_only() {
+        let k = IIRFunction::new(
+            "k",
+            vec![("y".into(), "any".into())],
+            "ref<any>",
+            vec![op("mov", "z", &["y"], "any"), call("r", "h", &["z"], "ref<any>"), ret("r")],
+        );
+        let id = IIRFunction::new("id", vec![("x".into(), "any".into())], "any", vec![ret("x")]);
+        let j = IIRFunction::new(
+            "j",
+            vec![("y".into(), "any".into())],
+            "ref<any>",
+            vec![
+                call("c", "id", &["y"], "any"),
+                konst("one", 1, "i64"),
+                op("add", "s.raw", &["c", "one"], "i64"),
+                op("box", "s", &["s.raw"], "ref<any>"),
+                ret("s"),
+            ],
+        );
+        let module = twig(vec![inc(), k, id, j]);
+        let lisp = crate::dyn_repr_structural::tagged_boundary_functions(&module);
+        let raw_only = raw_only_params(&module, &lisp);
+        assert_eq!(raw_only["h"], vec![true]);
+        assert_eq!(raw_only["k"], vec![true], "forwarded to a raw-only parameter");
+        assert_eq!(raw_only["j"], vec![true], "an identity call's result is a copy");
+        assert_eq!(raw_only["id"], vec![false], "returning a value is not arithmetic");
+    }
+
+    /// Escapes disqualify: a closure capture (`box`), a branch condition, or an
+    /// argument to an off-boundary function that might dereference it.
+    #[test]
+    fn an_escaping_parameter_is_not_raw_only() {
+        let capture = IIRFunction::new(
+            "cap",
+            vec![("x".into(), "any".into())],
+            "ref<any>",
+            vec![op("box", "b", &["x"], "ref<any>"), ret("b")],
+        );
+        let deref = IIRFunction::new(
+            "n",
+            vec![("p".into(), "any".into())],
+            "i64",
+            vec![call_builtin(Some("t"), "dyn_is_nil", &["p"], "ref<any>"), ret("t")],
+        );
+        let passes = IIRFunction::new(
+            "q",
+            vec![("y".into(), "any".into())],
+            "ref<any>",
+            vec![call("t", "n", &["y"], "i64"), ret("t")],
+        );
+        let module = twig(vec![capture, deref, passes]);
+        let lisp = crate::dyn_repr_structural::tagged_boundary_functions(&module);
+        let raw_only = raw_only_params(&module, &lisp);
+        assert_eq!(raw_only["cap"], vec![false]);
+        assert_eq!(raw_only["n"], vec![false]);
+        assert_eq!(raw_only["q"], vec![false]);
+    }
+
+    /// `(h (h 1))` and `(h (id (h 1)))`: an argument PROVABLY tagged (a boxing
+    /// callee's result, directly or through an identity call) is unboxed for a
+    /// raw-only parameter (was 73 on native/LLVM).
+    #[test]
+    fn a_provably_tagged_argument_is_unboxed_for_a_raw_only_parameter() {
+        let id = IIRFunction::new("id", vec![("x".into(), "any".into())], "any", vec![ret("x")]);
+        let mut m = twig(vec![
+            inc(),
+            id,
+            main_fn(vec![
+                konst("a", 1, "i64"),
+                call("inner", "h", &["a"], "ref<any>"),
+                call("same", "id", &["inner"], "any"),
+                call("r", "h", &["same"], "ref<any>"),
+                ret("r"),
+            ]),
+        ]);
+        lower_dyn_repr_marked(&mut m);
+        let main = func_of(&m, "main");
+        // The last call of `h` (the exit coercion after it is a `call` too).
+        let outer = main.instructions.iter().rev().find(|i| i.srcs.first() == Some(&var("h"))).unwrap();
+        let Operand::Var(arg) = &outer.srcs[1] else { panic!("var arg") };
+        let producer = main
+            .instructions
+            .iter()
+            .find(|i| i.dest.as_deref() == Some(arg.as_str()))
+            .unwrap();
+        assert_eq!(producer.op, "unbox");
+        assert_eq!(producer.srcs, vec![var("same")]);
+    }
+
+    /// Unprovable values are never converted: a raw computed value, a global
+    /// read, a caller parameter, and — the memory-safety case — a pointer
+    /// through an identity function bound for a non-raw-only parameter.
+    #[test]
+    fn an_unprovable_argument_is_passed_as_is() {
+        let id = IIRFunction::new("id", vec![("x".into(), "any".into())], "any", vec![ret("x")]);
+        let first = IIRFunction::new(
+            "first",
+            vec![("p".into(), "any".into())],
+            "ref<any>",
+            vec![call_builtin(Some("v"), "dyn_pair_first", &["p"], "ref<any>"), ret("v")],
+        );
+        let mut m = twig(vec![
+            inc(),
+            id,
+            first,
+            main_fn(vec![
+                konst("a", 1, "i64"),
+                konst("b", 2, "i64"),
+                op("add", "sum", &["a", "b"], "i64"),
+                call("r1", "h", &["sum"], "ref<any>"),
+                IIRInstr::new("global_load", Some("g".into()), vec![Operand::Str("g".into())], "any"),
+                call("r2", "h", &["g"], "ref<any>"),
+                konst("nil", 0, REF_PAIR),
+                call_builtin(Some("cell"), "dyn_pair_new", &["a", "nil"], "ref<any>"),
+                call("p", "id", &["cell"], "any"),
+                call("r3", "first", &["p"], "ref<any>"),
+                ret("r3"),
+            ]),
+        ]);
+        lower_dyn_repr_marked(&mut m);
+        let main = func_of(&m, "main");
+        assert!(
+            !main.instructions.iter().any(|i| i.op == "unbox" || i.op == "box"),
+            "nothing is converted: {:?}",
+            main.instructions
+        );
+    }
+
+    /// An off-boundary function's raw-only parameter receives `box(n - 1)` from
+    /// its own recursive call; it is unboxed (was a stack overflow).
+    #[test]
+    fn a_boxed_recursive_argument_is_unboxed_off_the_boundary() {
+        let lp = IIRFunction::new(
+            "loop",
+            vec![("n".into(), "any".into())],
+            "any",
+            vec![
+                konst("one", 1, "i64"),
+                op("sub", "d.raw", &["n", "one"], "i64"),
+                op("box", "d", &["d.raw"], "ref<any>"),
+                call("r", "loop", &["d"], "any"),
+                ret("r"),
+            ],
+        );
+        let mut m = twig(vec![lp, main_fn(vec![ret("unused")])]);
+        lower_dyn_repr_marked(&mut m);
+        let lp = func_of(&m, "loop");
+        let c = lp.instructions.iter().find(|i| i.op == "call").unwrap();
+        let Operand::Var(arg) = &c.srcs[1] else { panic!("var arg") };
+        assert!(arg.contains(".argraw"), "the recursive argument is unboxed: {arg}");
+    }
+
+    /// A McCarthy-style `ref<any>` parameter is tagged by declaration: never a
+    /// raw-only candidate, so its literal is boxed exactly as before.
+    #[test]
+    fn a_ref_any_parameter_is_never_raw_only() {
+        let lam = IIRFunction::new(
+            "lam",
+            vec![("x".into(), "ref<any>".into())],
+            "ref<any>",
+            vec![op("unbox", "u", &["x"], "i64"), op("add", "s", &["u", "u"], "i64"), ret("s")],
+        );
+        let mut m = twig(vec![
+            lam,
+            main_fn(vec![konst("a", 5, "i64"), call("r", "lam", &["a"], "ref<any>"), ret("r")]),
+        ]);
+        lower_dyn_repr_marked(&mut m);
+        assert_eq!(const_of(func_of(&m, "main"), "a"), 40);
+    }
+
+    // ── Cells and tagged positions keep main's representation; tagged-at-every-site ──
+
+    /// Nothing computed is boxed on its way to a tagged position: a raw
+    /// integer stored into `cons` stays raw (#18427 needs a uniform cell
+    /// representation, #18451, #18480), and so does the same value passed to `pair?`.
+    /// Boxing it for `pair?` alone made `(pair? 7)` correctly false — and so
+    /// exposed a raw cell read that main had been reading right by accident.
+    #[test]
+    fn a_computed_raw_integer_is_never_boxed_for_a_tagged_position() {
+        let mut m = twig(vec![main_fn(vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("HELLO".into())], "str"),
+            op("str_len", "n", &["s"], "i64"),
+            konst("nil", 0, REF_PAIR),
+            call_builtin(Some("c"), "dyn_pair_new", &["n", "nil"], "ref<any>"),
+            call_builtin(Some("p"), "dyn_is_pair", &["n"], "ref<any>"),
+            ret("p"),
+        ])]);
+        lower_dyn_repr_marked(&mut m);
+        let main = func_of(&m, "main");
+        assert!(!main.instructions.iter().any(|i| i.op == "box"), "{:?}", main.instructions);
+        for name in ["dyn_pair_new", "dyn_is_pair"] {
+            let call = main.instructions.iter().find(|i| i.srcs.first() == Some(&var(name))).unwrap();
+            assert_eq!(call.srcs[1], var("n"), "{name} gets the raw word, as on main");
+        }
+    }
+
+    /// Never boxed for a tagged position: an `unbox` result (deliberately raw)
+    /// and a bare-`any` parameter (it may be a pointer).
+    #[test]
+    fn an_unbox_result_or_an_any_parameter_is_never_boxed() {
+        let f = IIRFunction::new(
+            "f",
+            vec![("x".into(), "any".into()), ("t".into(), "ref<any>".into())],
+            "ref<any>",
+            vec![
+                op("unbox", "u", &["t"], "i64"),
+                konst("nil", 0, REF_PAIR),
+                call_builtin(Some("c1"), "dyn_pair_new", &["u", "nil"], "ref<any>"),
+                call_builtin(Some("c2"), "dyn_pair_new", &["x", "c1"], "ref<any>"),
+                ret("c2"),
+            ],
+        );
+        let mut m = twig(vec![f, main_fn(vec![ret("unused")])]);
+        lower_dyn_repr_marked(&mut m);
+        assert!(!func_of(&m, "f").instructions.iter().any(|i| i.op == "box"));
+    }
+
+    /// A record constructor is off the tagged boundary and its fields are raw
+    /// words: a literal argument stays raw, and a provably raw value stored by
+    /// `field_store` is not boxed (its accessor's callers read it raw).
+    #[test]
+    fn a_record_constructor_keeps_raw_fields() {
+        let point = IIRFunction::new(
+            "Point",
+            vec![("x".into(), "any".into())],
+            "any",
+            vec![
+                IIRInstr::new("alloc", Some("cell".into()), vec![], REF_PAIR),
+                IIRInstr::new(
+                    "field_store",
+                    None,
+                    vec![var("cell"), Operand::Int(0), var("x")],
+                    "void",
+                ),
+                konst("seven", 7, "i64"),
+                IIRInstr::new(
+                    "field_store",
+                    None,
+                    vec![var("cell"), Operand::Int(1), var("seven")],
+                    "void",
+                ),
+                ret("cell"),
+            ],
+        );
+        let mut m = twig(vec![
+            point,
+            main_fn(vec![konst("a", 42, "i64"), call("p", "Point", &["a"], "any"), ret("p")]),
+        ]);
+        lower_dyn_repr_marked(&mut m);
+        assert_eq!(const_of(func_of(&m, "main"), "a"), 42);
+        assert!(!func_of(&m, "Point").instructions.iter().any(|i| i.op == "box"));
+    }
+
+    /// A parameter written by a `let` that reuses its name no longer holds the
+    /// argument: `(define (g x) (k 0) (let ((x 15)) x))` must still box the
+    /// raw 15 on return (it was returned raw and `pair?` dereferenced it).
+    #[test]
+    fn a_reassigned_parameter_is_never_trusted() {
+        let k = IIRFunction::new(
+            "k",
+            vec![("y".into(), "ref<any>".into())],
+            "ref<any>",
+            vec![ret("y")],
+        );
+        let g = IIRFunction::new(
+            "g",
+            vec![("x".into(), "any".into())],
+            "any",
+            vec![
+                konst("nil", 0, REF_PAIR),
+                call("ignored", "k", &["nil"], "ref<any>"),
+                konst("x", 15, "i64"),
+                ret("x"),
+            ],
+        );
+        let mut m = twig(vec![
+            k,
+            g,
+            main_fn(vec![konst("a", 3, "i64"), call("r", "g", &["a"], "any"), ret("r")]),
+        ]);
+        let module = m.clone();
+        let lisp = crate::dyn_repr_structural::tagged_boundary_functions(&module);
+        let b = CallBoundary::analyse(&module, lisp);
+        assert_eq!(b.tagged_at_every_site["g"], vec![false], "x is written by the body");
+        assert!(!b.summaries.get("g").is_some_and(|s| s.contains(&Source::Param(0))));
+        lower_dyn_repr_marked(&mut m);
+        let g = func_of(&m, "g");
+        let r = g.instructions.iter().find(|i| i.op == "ret").unwrap();
+        let Operand::Var(v) = &r.srcs[0] else { panic!("var") };
+        assert!(v.ends_with(".retbox"), "the reassigned value is boxed on return: {v}");
+    }
+
+    /// A provably raw value passed to a parameter the callee only tests with
+    /// `pair?` is passed as on main — raw — even when a `mov` join also put it
+    /// in `boxed_regs`; and the parameter is then not "tagged at every site",
+    /// so the callee keeps main's return handling.
+    #[test]
+    fn a_raw_value_for_a_type_predicate_parameter_is_passed_as_on_main() {
+        let k = IIRFunction::new(
+            "k",
+            vec![("y".into(), "ref<any>".into())],
+            "ref<any>",
+            vec![ret("y")],
+        );
+        let g = IIRFunction::new(
+            "g",
+            vec![("x".into(), "any".into())],
+            "ref<any>",
+            vec![
+                konst("nil", 0, REF_PAIR),
+                call("ignored", "k", &["nil"], "ref<any>"),
+                call_builtin(Some("c"), "dyn_is_pair", &["x"], "ref<any>"),
+                ret("c"),
+            ],
+        );
+        let mut m = twig(vec![
+            k,
+            g,
+            main_fn(vec![
+                konst("a", 7, "i64"),
+                konst("b", 8, "i64"),
+                op("add", "v", &["a", "b"], "i64"),
+                konst("nil", 0, REF_PAIR),
+                konst("one", 1, "i64"),
+                call_builtin(Some("c"), "dyn_pair_new", &["one", "nil"], "ref<any>"),
+                call_builtin(Some("hd"), "dyn_pair_first", &["c"], "ref<any>"),
+                op("mov", "r", &["v"], "any"),
+                op("mov", "r", &["hd"], "any"),
+                call("w", "g", &["v"], "any"),
+                ret("w"),
+            ]),
+        ]);
+        lower_dyn_repr_marked(&mut m);
+        let main = func_of(&m, "main");
+        assert!(!main.instructions.iter().any(|i| i.op == "box"), "{:?}", main.instructions);
+        let c = main.instructions.iter().find(|i| i.srcs.first() == Some(&var("g"))).unwrap();
+        assert_eq!(c.srcs[1], var("v"), "v reaches g raw, as on main");
+    }
+
+    /// Round-4 finding: a provably raw argument for a MIXED-use parameter (read
+    /// by `cmp_eq` and returned) is not boxed — the body compares it raw, and a
+    /// boxed 15 took the dead `(car l)` branch and dereferenced an integer.
+    #[test]
+    fn a_raw_value_for_a_mixed_use_parameter_is_not_boxed() {
+        let k = IIRFunction::new("k", vec![("y".into(), "ref<any>".into())], "ref<any>", vec![ret("y")]);
+        let f = IIRFunction::new(
+            "f",
+            vec![("x".into(), "any".into()), ("l".into(), "any".into())],
+            "any",
+            vec![
+                konst("nil", 0, REF_PAIR),
+                call("ignored", "k", &["nil"], "ref<any>"),
+                konst("fifteen", 15, "i64"),
+                op("cmp_eq", "t", &["x", "fifteen"], "bool"),
+                call_builtin(Some("hd"), "dyn_pair_first", &["l"], "ref<any>"),
+                ret("x"),
+            ],
+        );
+        let mut m = twig(vec![
+            k,
+            f,
+            main_fn(vec![
+                konst("a", 7, "i64"),
+                konst("b", 8, "i64"),
+                op("add", "v", &["a", "b"], "i64"),
+                konst("l", 15, "i64"),
+                call("r", "f", &["v", "l"], "any"),
+                ret("r"),
+            ]),
+        ]);
+        let module = m.clone();
+        let lisp = crate::dyn_repr_structural::tagged_boundary_functions(&module);
+        assert!(lisp.contains("f"));
+        lower_dyn_repr_marked(&mut m);
+        let main = func_of(&m, "main");
+        let c = main.instructions.iter().find(|i| i.srcs.first() == Some(&var("f"))).unwrap();
+        assert_eq!(c.srcs[1], var("v"), "x is compared raw, so its argument is not boxed");
+    }
+
+    /// Finding-4 shape: a copy (`let`, `if` join) of a parameter every site
+    /// passes tagged is returned unchanged, not boxed into a forged pointer.
+    #[test]
+    fn a_copy_of_a_tagged_parameter_is_returned_unchanged() {
+        let k = IIRFunction::new(
+            "k",
+            vec![("y".into(), "ref<any>".into())],
+            "ref<any>",
+            vec![ret("y")],
+        );
+        let g = IIRFunction::new(
+            "g",
+            vec![("x".into(), "any".into())],
+            "any",
+            vec![
+                konst("nil", 0, REF_PAIR),
+                call("ignored", "k", &["nil"], "ref<any>"),
+                op("mov", "y", &["x"], "any"),
+                ret("y"),
+            ],
+        );
+        let mut m = twig(vec![
+            k,
+            g,
+            main_fn(vec![
+                konst("seven", 7, "i64"),
+                konst("nil", 0, REF_PAIR),
+                call_builtin(Some("c"), "dyn_pair_new", &["seven", "nil"], "ref<any>"),
+                call("r", "g", &["c"], "any"),
+                ret("r"),
+            ]),
+        ]);
+        lower_dyn_repr_marked(&mut m);
+        assert!(!func_of(&m, "g").instructions.iter().any(|i| i.op == "box"));
+    }
+
+    /// `(define (g x) (first (cons 1 nil)) x) (g 5)`: every site passes `x`
+    /// tagged (the literal is boxed), so `g` returns it unchanged — and only
+    /// then is `g` summarised as handing back its argument.
+    #[test]
+    fn a_parameter_tagged_at_every_site_is_returned_unchanged() {
+        let first = IIRFunction::new(
+            "first",
+            vec![("p".into(), "ref<any>".into())],
+            "ref<any>",
+            vec![call_builtin(Some("v"), "dyn_pair_first", &["p"], "ref<any>"), ret("v")],
+        );
+        let g = IIRFunction::new(
+            "g",
+            vec![("x".into(), "any".into())],
+            "any",
+            vec![
+                konst("nil", 0, REF_PAIR),
+                call("ignored", "first", &["nil"], "ref<any>"),
+                ret("x"),
+            ],
+        );
+        let mut m = twig(vec![
+            first,
+            g,
+            main_fn(vec![konst("a", 5, "i64"), call("r", "g", &["a"], "any"), ret("r")]),
+        ]);
+        lower_dyn_repr_marked(&mut m);
+        let g = func_of(&m, "g");
+        assert!(!g.instructions.iter().any(|i| i.op == "box"), "no second box: {:?}", g.instructions);
+        assert_eq!(const_of(func_of(&m, "main"), "a"), 40);
+    }
+
+    /// The counterpart: a site passing an unprovable value (a global read)
+    /// keeps the old return-boxing, and no `Param` summary is given.
+    #[test]
+    fn a_parameter_with_an_unprovable_site_is_still_boxed_on_return() {
+        let first = IIRFunction::new(
+            "first",
+            vec![("p".into(), "ref<any>".into())],
+            "ref<any>",
+            vec![call_builtin(Some("v"), "dyn_pair_first", &["p"], "ref<any>"), ret("v")],
+        );
+        let g = IIRFunction::new(
+            "g",
+            vec![("x".into(), "any".into())],
+            "any",
+            vec![
+                konst("nil", 0, REF_PAIR),
+                call("ignored", "first", &["nil"], "ref<any>"),
+                ret("x"),
+            ],
+        );
+        let module = twig(vec![
+            first,
+            g,
+            main_fn(vec![
+                IIRInstr::new("global_load", Some("gv".into()), vec![Operand::Str("gv".into())], "any"),
+                call("r", "g", &["gv"], "any"),
+                ret("r"),
+            ]),
+        ]);
+        let mut m = module.clone();
+        lower_dyn_repr_marked(&mut m);
+        assert!(func_of(&m, "g").instructions.iter().any(|i| i.op == "box"));
     }
 
     /// LANG83 PR7f-2: the full pass writes the Lisp rules out. `(ATOM 7)` as a
