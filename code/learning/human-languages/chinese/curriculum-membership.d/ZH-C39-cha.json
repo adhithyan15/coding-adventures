@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C39-cha",
+  "pathSegment": "ZH-PATH-39-DRINK39",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ZH-EXT-39-DRINK39",
+      "order": 6
+    }
+  ]
+}

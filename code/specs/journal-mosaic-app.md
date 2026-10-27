@@ -118,10 +118,68 @@ exactly the slots and events above. Its layout is a `HostNavigationSplit`:
 - the **detail** holds `DraftEditor`, with the draft slots and `delete-label`
   bound and its change, save, delete and cancel events forwarded.
 
+The pane's content sits inside a `HostScroll`; see *The pane scrolls* below.
+
 The package's tests enforce the contract from both sides:
 
 - the app's start props are exactly the slots;
 - every declared emit is routed, and an undeclared one is rejected.
+
+## The pane scrolls (JO-5)
+
+A native window scrolls nothing unless the layout says so. The web never
+showed the gap, because a browser page scrolls by default. Before this, the
+pane had no scroll container on any native backend. In the declared
+1100×760 window its controls end about 500px down (measured on a Compose
+render), which leaves room for about two timeline rows. Every entry past
+those was unreachable except through search: there was no scrollbar, no
+keyboard scroll and no gesture. TaskApp had the same bug and fixed it the
+same way (#14734).
+
+**Layout.** The pane's `Column [ timeline ]` is wrapped, from outside, in a
+vertical `HostScroll [ timeline-scroll ]`. Its padding therefore stays
+inside the scroll, and the last row keeps its spacing at the end. The pane's
+fixed 300px width, and everything inside the column, are unchanged. The
+detail (the editor) is not wrapped: its content is bounded.
+
+| Backend | The pane's scroll container |
+| --- | --- |
+| React, HTML, WebComponent | `<div style="overflow-y: auto; overflow-x: hidden">` (the page still scrolls as before) |
+| SwiftUI | `ScrollView` inside the `NavigationSplitView` sidebar |
+| Compose | `Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()))` |
+| Flutter | `SingleChildScrollView`, in both the drawer and the side panel |
+| Qt | `ScrollView`, horizontal bar off |
+| XAML | `ScrollViewer`, vertical bar `Auto`, horizontal `Disabled` |
+
+**Tests.**
+
+- `package_compiles` requires that the split's pane is
+  `HostScroll [ timeline-scroll ]`, with no axis (vertical), wrapping exactly
+  `Column [ timeline ]`.
+- `native_complete_gate` builds each native backend and requires the
+  container above in the emitted source. A change that drops the scroll on
+  one backend then fails here, not in a window.
+- **Reachability on Compose desktop** (`conformance/compose/JournalScrollUiTest.kt`,
+  run by CI's Compose lane with its own state file):
+  - it writes enough entries to overflow the 1100×760 window;
+  - it requires that the bottom-most row is **not** displayed, so the test
+    really crosses the fold;
+  - it scrolls the pane with the `ScrollBy` semantics action until that row
+    is displayed;
+  - it opens the row, and requires that the editor holds it.
+
+  `performScrollTo()` is not used, because it hangs against the emitted
+  scroll container (EM-11). The Android test already reaches rows through
+  semantics. The iPadOS test's taps scroll on their own. Neither needs a
+  change.
+- **Reachability on Flutter** (`conformance/flutter/journal_scroll_test.dart`):
+  - it writes the entries through the runtime;
+  - it requires that the bottom row starts below the window;
+  - it drags the pane's `Scrollable` until the row is inside the window;
+  - it taps the row, and requires that the editor holds it.
+
+  Journal has no Flutter desktop lane in CI yet (Mosaic backlog item 13), so
+  the file says how to run it, and that lane should adopt it.
 
 ## Timeline rows on Card (proposed, blocked)
 

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C75-kuaile",
+    "language": "chinese",
+    "chapter": 75,
+    "sequence": 5880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b327ee7c3d6d81d0"
+  },
+  "findings": []
+}

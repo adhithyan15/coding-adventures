@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W97-my-own-line",
+  "pathSegment": "ZH-PATH-97-MY-DAY",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-97-MY-DAY",
+      "order": 5
+    }
+  ]
+}

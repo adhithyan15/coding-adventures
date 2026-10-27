@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C105-yashua",
+  "pathSegment": "ZH-PATH-105-BATH105",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-105-BATH105",
+      "order": 1
+    }
+  ]
+}

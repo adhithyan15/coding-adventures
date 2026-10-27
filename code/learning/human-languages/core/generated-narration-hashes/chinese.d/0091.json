@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:494db3d533cfb8ea",
+  "lessonIds": [
+    "ZH-C91-xiangyao",
+    "ZH-W91-yao",
+    "ZH-C91-buyao",
+    "ZH-C91-xuyao",
+    "ZH-C91-yidianr",
+    "ZH-C91-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch91.txt",
+  "json": "chinese/narration/ch91.json",
+  "textHash": "fnv1a64:de926bde8e70949b",
+  "jsonHash": "fnv1a64:ec7ee292893b1029",
+  "findings": []
+}

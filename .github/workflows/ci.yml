@@ -2948,6 +2948,20 @@ jobs:
             bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace --rerun-tasks -p "$journal_output/compose" \
               test --tests JournalUiTest
 
+          # The pane scrolls (JO-5): JournalScrollUiTest writes more entries than
+          # the 1100x760 window shows, requires the bottom row to be off screen,
+          # scrolls the pane (ScrollBy, since performScrollTo hangs, EM-11) until
+          # it is displayed, and opens it. Its own state file: it leaves eight
+          # entries behind, which JournalUiTest's restored launch must not see.
+          cp code/packages/rust/journal-mosaic-app/conformance/compose/JournalScrollUiTest.kt \
+            "$journal_output/compose/src/test/kotlin/JournalScrollUiTest.kt"
+          journal_scroll_state="$RUNNER_TEMP/mosaic-compose-journal-scroll-state.json"
+          rm -f "$journal_scroll_state" "$journal_scroll_state.corrupt" "$journal_scroll_state.tmp"
+          MOSAIC_APP_STATE_PATH="$journal_scroll_state" \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_journal_runtime")" \
+            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace -p "$journal_output/compose" \
+              test --tests JournalScrollUiTest
+
           # The platform library's own behaviour (UI87 §7): every Compose app
           # gets MosaicFileEffects.kt and MosaicPlatformEffects.kt, and this
           # drives their open/save logic, limits, routing and the asynchronous

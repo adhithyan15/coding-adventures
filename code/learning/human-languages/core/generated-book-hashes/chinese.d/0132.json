@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:6d2b9beb5bae223a",
+  "lessonIds": [
+    "ZH-C132-qian",
+    "ZH-W132-qian-thousand",
+    "ZH-C132-wan",
+    "ZH-C132-ling",
+    "ZH-C132-yigong",
+    "ZH-C132-shu"
+  ],
+  "tex": "chinese/book/chapters/ch132-thousands.tex"
+}

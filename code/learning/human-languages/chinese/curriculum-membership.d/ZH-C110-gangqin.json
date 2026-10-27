@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C110-gangqin",
+  "pathSegment": "ZH-PATH-110-SKILL110",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-110-SKILL110",
+      "order": 2
+    }
+  ]
+}

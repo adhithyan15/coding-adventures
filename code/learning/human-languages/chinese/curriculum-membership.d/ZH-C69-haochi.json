@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C69-haochi",
+  "pathSegment": "ZH-PATH-69-MEALS69",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-69-MEALS69",
+      "order": 5
+    }
+  ]
+}

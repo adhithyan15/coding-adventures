@@ -1,0 +1,19 @@
+{
+  "chapter": 107,
+  "title": "On the Move",
+  "label": "ch:zh-on-the-move",
+  "canDo": "I can say jump, climb, carry, stop and leave.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C107-likai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 107: I can say jump, climb, carry, stop and leave.",
+    "assesses": [
+      "ZH-LEX-C107-MOVE107-03",
+      "ZH-LEX-C107-MOVE107-04",
+      "ZH-LEX-C107-MOVE107-05"
+    ]
+  }
+}

@@ -1,6 +1,4 @@
 {
-  "omits": [
-    "VERB-CAN"
-  ],
+  "omits": [],
   "relocates": {}
 }

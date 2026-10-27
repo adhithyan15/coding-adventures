@@ -1,0 +1,19 @@
+{
+  "chapter": 67,
+  "title": "Animals",
+  "label": "ch:zh-animals",
+  "canDo": "I can name horses, dogs, cats, birds and fish.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-C67-yu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 67: I can name horses, dogs, cats, birds and fish.",
+    "assesses": [
+      "ZH-LEX-C67-ANIMALS67-03",
+      "ZH-LEX-C67-ANIMALS67-04",
+      "ZH-LEX-C67-ANIMALS67-05"
+    ]
+  }
+}

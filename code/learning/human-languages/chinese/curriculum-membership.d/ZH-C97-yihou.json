@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C97-yihou",
+  "pathSegment": "ZH-PATH-97-MY-DAY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-97-MY-DAY",
+      "order": 3
+    }
+  ]
+}

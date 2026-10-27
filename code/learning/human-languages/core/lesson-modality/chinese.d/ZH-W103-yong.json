@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W103-yong",
+    "language": "chinese",
+    "chapter": 103,
+    "sequence": 8205,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b04119a841a6a0cd",
+    "detachableSegments": [
+      "Script — the moon frame, two bars, a vertical"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

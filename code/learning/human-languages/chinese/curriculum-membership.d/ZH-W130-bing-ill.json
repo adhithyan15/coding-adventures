@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W130-bing-ill",
+  "pathSegment": "ZH-PATH-130-ILL130",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-130-ILL130",
+      "order": 1
+    }
+  ]
+}

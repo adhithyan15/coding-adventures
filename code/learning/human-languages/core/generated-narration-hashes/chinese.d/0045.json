@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:ac1d5ab518a872fa",
+  "lessonIds": [
+    "ZH-C45-tian",
+    "ZH-W45-tian",
+    "ZH-C45-jintian",
+    "ZH-W45-jin",
+    "ZH-C45-zuotian",
+    "ZH-C45-xianzai",
+    "ZH-C45-mingtian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch45.txt",
+  "json": "chinese/narration/ch45.json",
+  "textHash": "fnv1a64:a000f82c64a60e07",
+  "jsonHash": "fnv1a64:32f4c18db0e36b9b",
+  "findings": []
+}

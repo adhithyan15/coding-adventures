@@ -75,7 +75,7 @@ transcription).
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-ARABIC-DIGITS, ZH-CULTURE-DIGIT-REGISTER, ZH-LEX-ERSHI, ZH-LEX-NUM-SHI] -->
 
 - [YOU READ: **5**, **10**, **20**, **99** aloud as *wǔ*, *shí*, *èrshí*,
-  *jiúshíjiǔ*]
+  *jiǔshíjiǔ*]
 - [YOU WRITE: each of those four in characters as well]
 - [YOU SAY: which of the two a price tag uses, and which a cheque uses]
 

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C42-shangdian",
+  "pathSegment": "ZH-PATH-42-SHOP42",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-42-SHOP42",
+      "order": 2
+    }
+  ]
+}

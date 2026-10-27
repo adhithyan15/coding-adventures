@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "Trying It On",
+  "label": "ch:zh-trying-it-on",
+  "canDo": "I can ask to try something on, change it, and talk about pairs, sizes and fit.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ZH-C108-heshi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: I can ask to try something on, change it, and talk about pairs, sizes and fit.",
+    "assesses": [
+      "ZH-LEX-C108-SHOP108-03",
+      "ZH-LEX-C108-SHOP108-04",
+      "ZH-LEX-C108-SHOP108-05"
+    ]
+  }
+}

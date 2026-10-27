@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W63-dian-electric",
+    "language": "chinese",
+    "chapter": 63,
+    "sequence": 5255,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:764b7376d32ad4ba",
+    "detachableSegments": [
+      "Script — 日 with a long tail"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

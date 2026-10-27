@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W65-men-door",
+  "pathSegment": "ZH-PATH-65-SORRY65",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-65-SORRY65",
+      "order": 1
+    }
+  ]
+}
