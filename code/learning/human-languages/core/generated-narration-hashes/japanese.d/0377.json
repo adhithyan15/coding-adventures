@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:df5f616ae8e9cd69",
+  "lessonIds": [
+    "JA-C377-chien",
+    "JA-C377-unkyuu",
+    "JA-C377-jikokuhyou",
+    "JA-C377-houmen",
+    "JA-C377-hanareru",
+    "JA-R377-review-372-377"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch377.txt",
+  "json": "japanese/narration/ch377.json",
+  "textHash": "fnv1a64:be68d554c177b032",
+  "jsonHash": "fnv1a64:313100a1a7972180",
+  "findings": []
+}

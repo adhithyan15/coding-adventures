@@ -1,0 +1,11 @@
+{
+  "id": "JA-C311-furikaeru",
+  "pathSegment": "JA-PATH-311-OMOIDE311",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-311-OMOIDE311",
+      "order": 4
+    }
+  ]
+}

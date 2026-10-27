@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-324-MONKU324",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "JA-EXT-324-MONKU324"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:edfbd918509d8c7e",
+  "lessonIds": [
+    "JA-C525-honmono",
+    "JA-C525-nisemono",
+    "JA-C525-marude",
+    "JA-C525-tatoeru",
+    "JA-C525-izure"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch525.txt",
+  "json": "japanese/narration/ch525.json",
+  "textHash": "fnv1a64:02d0e01be76c3492",
+  "jsonHash": "fnv1a64:c0cf34f41478fd7a",
+  "findings": []
+}

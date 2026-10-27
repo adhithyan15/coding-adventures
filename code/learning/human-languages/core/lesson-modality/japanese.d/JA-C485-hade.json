@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C485-hade",
+    "language": "japanese",
+    "chapter": 485,
+    "sequence": 28290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad175fbf9dcad445"
+  },
+  "findings": []
+}

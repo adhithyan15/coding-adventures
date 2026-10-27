@@ -1,0 +1,11 @@
+{
+  "id": "JA-C521-youyaku",
+  "pathSegment": "JA-PATH-521-GRADUAL521",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-521-GRADUAL521",
+      "order": 3
+    }
+  ]
+}

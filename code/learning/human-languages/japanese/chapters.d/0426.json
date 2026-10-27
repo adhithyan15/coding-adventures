@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "How I Feel Today",
+  "label": "ch:ja-how-i-feel-today",
+  "canDo": "I can say how I feel and what I put up with.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C426-taeru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can say how I feel and what I put up with.",
+    "assesses": [
+      "JA-LEX-C426-FEEL426-03",
+      "JA-LEX-C426-FEEL426-04",
+      "JA-LEX-C426-FEEL426-05"
+    ]
+  }
+}

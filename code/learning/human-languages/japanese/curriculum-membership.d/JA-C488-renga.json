@@ -1,0 +1,11 @@
+{
+  "id": "JA-C488-renga",
+  "pathSegment": "JA-PATH-488-BUILD488",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-488-BUILD488",
+      "order": 2
+    }
+  ]
+}

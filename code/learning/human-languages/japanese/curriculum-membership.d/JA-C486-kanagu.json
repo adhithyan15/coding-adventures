@@ -1,0 +1,11 @@
+{
+  "id": "JA-C486-kanagu",
+  "pathSegment": "JA-PATH-486-PARTS486",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-486-PARTS486",
+      "order": 1
+    }
+  ]
+}

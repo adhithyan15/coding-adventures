@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-354-TENKI354",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "JA-EXT-354-TENKI354"
+  ],
+  "after": []
+}

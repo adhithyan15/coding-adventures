@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:10c89d962265dbe5",
+  "lessonIds": [
+    "JA-C336-kankyou",
+    "JA-C336-shizen",
+    "JA-C336-chikyuu",
+    "JA-C336-kuuki",
+    "JA-C336-osen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch336.txt",
+  "json": "japanese/narration/ch336.json",
+  "textHash": "fnv1a64:be32cc1695a1bc26",
+  "jsonHash": "fnv1a64:f50001774445c70c",
+  "findings": []
+}

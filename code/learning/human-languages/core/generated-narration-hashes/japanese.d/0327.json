@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:ca774f0dce1752c3",
+  "lessonIds": [
+    "JA-C327-reigi",
+    "JA-C327-gyougi",
+    "JA-C327-shitsurei",
+    "JA-C327-meiwaku",
+    "JA-C327-ojigi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch327.txt",
+  "json": "japanese/narration/ch327.json",
+  "textHash": "fnv1a64:312198688ad5665f",
+  "jsonHash": "fnv1a64:5820934ef742090b",
+  "findings": []
+}

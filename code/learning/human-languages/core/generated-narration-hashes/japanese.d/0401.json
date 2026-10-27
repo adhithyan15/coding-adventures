@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:b4592df8ea11be22",
+  "lessonIds": [
+    "JA-C401-choushoku",
+    "JA-C401-yuushoku",
+    "JA-C401-chuushoku",
+    "JA-C401-kigaeru",
+    "JA-C401-motenasu",
+    "JA-R401-review-396-401"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch401.txt",
+  "json": "japanese/narration/ch401.json",
+  "textHash": "fnv1a64:40175b7e6bb36835",
+  "jsonHash": "fnv1a64:8985f59000175801",
+  "findings": []
+}

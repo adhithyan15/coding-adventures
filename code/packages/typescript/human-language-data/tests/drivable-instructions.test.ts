@@ -1381,6 +1381,14 @@ const SPOKEN_HAND_VERB_ALLOWLIST: ReadonlyMap<string, readonly string[]> = new M
   ["JA-C27-kaku", ["Say the Japanese for 'to write'."]],
   ["JA-C87-sasu", ["Say the Japanese for 'to point'."]],
   ["JA-C88-utsusu", ["Say the Japanese for 'to copy'."]],
+  // The same shape for nouns and set phrases: the hand word is inside the quoted
+  // gloss of the answer ("a record", "a tap"), and the answer is said.
+  ["JA-C313-kiroku", ["Say the Japanese for 'a record'."]],
+  ["JA-C320-tachiba", ["Say the Japanese for 'a point of view'."]],
+  ["JA-C340-kokorogakeru", ["Say the Japanese for 'to make a point of'."]],
+  ["JA-C403-midokoro", ["Say the Japanese for 'a highlight'."]],
+  ["JA-C491-jaguchi", ["Say the Japanese for 'a tap'."]],
+  ["JA-C509-chuusen-suru", ["Say the Japanese for 'to hold a draw'."]],
   ["MW-C57-likhno", ["Say the Marwadi for 'to write'."]],
   ["UR-C07-likhna", ["Say the Urdu verb meaning 'to write'."]],
   ["PA-C08-likhna", ["What did the Sanskrit root behind likhna mean before it meant to write?"]],

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C387-shutchou",
+  "pathSegment": "JA-PATH-387-DEMUKAERU387",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-387-DEMUKAERU387",
+      "order": 4
+    }
+  ]
+}

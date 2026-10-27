@@ -1,0 +1,11 @@
+{
+  "id": "JA-C479-nakanaori-suru",
+  "pathSegment": "JA-PATH-479-BOND479",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-479-BOND479",
+      "order": 1
+    }
+  ]
+}

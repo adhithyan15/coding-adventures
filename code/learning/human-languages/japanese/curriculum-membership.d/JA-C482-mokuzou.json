@@ -1,0 +1,11 @@
+{
+  "id": "JA-C482-mokuzou",
+  "pathSegment": "JA-PATH-482-NAIL482",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-482-NAIL482",
+      "order": 3
+    }
+  ]
+}

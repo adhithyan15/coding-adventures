@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:e856c2f9441ed8fc",
+  "lessonIds": [
+    "JA-C511-hikiokosu",
+    "JA-C511-seika",
+    "JA-C511-shoujiru",
+    "JA-C511-kikime",
+    "JA-C511-moto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch511.txt",
+  "json": "japanese/narration/ch511.json",
+  "textHash": "fnv1a64:b57b2895e9612812",
+  "jsonHash": "fnv1a64:05afd38a81a6dab8",
+  "findings": []
+}

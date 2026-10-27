@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:1bc8efa8b1e5f80d",
+  "lessonIds": [
+    "JA-C515-juken-suru",
+    "JA-C515-ukaru",
+    "JA-C515-goukaku-suru",
+    "JA-C515-seiseki",
+    "JA-C515-yobikou",
+    "JA-R515-review-510-515"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch515.txt",
+  "json": "japanese/narration/ch515.json",
+  "textHash": "fnv1a64:f72cbb6023d348ff",
+  "jsonHash": "fnv1a64:1601890809f643d0",
+  "findings": []
+}

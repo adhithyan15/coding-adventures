@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:35bdc633ad0dd2af",
+  "lessonIds": [
+    "JA-C484-saihou",
+    "JA-C484-amu",
+    "JA-C484-keito",
+    "JA-C484-hokorobiru",
+    "JA-C484-shibaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch484.txt",
+  "json": "japanese/narration/ch484.json",
+  "textHash": "fnv1a64:2358626ae25c8670",
+  "jsonHash": "fnv1a64:45682cb47faf7d0a",
+  "findings": []
+}

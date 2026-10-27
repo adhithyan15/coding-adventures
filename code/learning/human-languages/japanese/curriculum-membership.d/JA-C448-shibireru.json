@@ -1,0 +1,11 @@
+{
+  "id": "JA-C448-shibireru",
+  "pathSegment": "JA-PATH-448-STIFF448",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-448-STIFF448",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C345-zurasu",
+    "language": "japanese",
+    "chapter": 345,
+    "sequence": 20470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:469eeb6144e5ec5a"
+  },
+  "findings": []
+}

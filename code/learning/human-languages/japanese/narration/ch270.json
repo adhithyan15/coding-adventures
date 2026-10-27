@@ -1,0 +1,810 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 270,
+  "title": "Who Did It?",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:fa5db39f7743d2da",
+  "lessons": [
+    {
+      "id": "JA-C270-hannin",
+      "sequence": 16410,
+      "title": "はんにん (hannin) — a culprit; the criminal",
+      "headword": "はんにん",
+      "romanization": "hannin",
+      "gloss": "a culprit; the criminal",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ada6fdecbd38a159",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to bark, then the Japanese for to make a noise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はんにん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はんにん — hannin — \"a culprit; the criminal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "はんにんが にげた とき、月が ひかっていました。 — hannin ga nigeta toki, tsuki ga hikatte imashita — \"When the culprit got away, the moon was shining.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はんにん (hannin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are han, \"crime\" (Middle Chinese bjomX) and nin, \"person\" (nyin) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hannin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hannin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hannin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hannin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hannin ga nigeta toki, tsuki ga hikatte imashita — When the culprit got away, the moon was shining.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hannin ga nigeta toki, tsuki ga hikatte imashita* — When the culprit got away, the moon was shining.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to bark, then the Japanese for to make a noise, then say hannin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to bark, then the Japanese for to make a noise, then say *hannin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はんにん (hannin) mean? (\"A culprit; the criminal\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C270-hannin-type",
+              "prompt": "Say the Japanese for 'a culprit'.",
+              "assesses": [
+                "JA-LEX-C270-HANNIN270-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はんにん",
+                "hannin"
+              ],
+              "feedback": {
+                "correct": "Right: はんにん (hannin) is 'a culprit; the criminal'.",
+                "incorrect": "'A culprit' is はんにん (hannin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C270-jiken",
+      "sequence": 16420,
+      "title": "じけん (jiken) — an incident; a case",
+      "headword": "じけん",
+      "romanization": "jiken",
+      "gloss": "an incident; a case",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00cb3ff6ed7ed699",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to make a noise, then the Japanese for a culprit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じけん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じけん — jiken — \"an incident; a case\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この まちで じけんが ありました。 — kono machi de jiken ga arimashita — \"There was an incident in this town.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じけん (jiken) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ji, \"matter\" (Middle Chinese dzriH) and ken, \"affair\" (gjenX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiken",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiken*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiken, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiken*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono machi de jiken ga arimashita — There was an incident in this town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono machi de jiken ga arimashita* — There was an incident in this town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to make a noise, then the Japanese for a culprit, then say jiken again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to make a noise, then the Japanese for a culprit, then say *jiken* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じけん (jiken) mean? (\"An incident; a case\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C270-jiken-type",
+              "prompt": "Say the Japanese for 'an incident'.",
+              "assesses": [
+                "JA-LEX-C270-HANNIN270-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じけん",
+                "jiken"
+              ],
+              "feedback": {
+                "correct": "Right: じけん (jiken) is 'an incident; a case'.",
+                "incorrect": "'An incident' is じけん (jiken)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C270-tsuuhou",
+      "sequence": 16430,
+      "title": "つうほう (tsūhō) — a report to the police; a tip-off",
+      "headword": "つうほう",
+      "romanization": "tsūhō",
+      "gloss": "a report to the police; a tip-off",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:002cae5dcde921d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a culprit, then the Japanese for an incident."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つうほう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つうほう — tsūhō — \"a report to the police; a tip-off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ははが けいさつに つうほうしました。 — haha ga keisatsu ni tsūhō shimashita — \"My mother called the police about it.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つうほう (tsūhō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tsū, \"pass through\" (Middle Chinese thuwng) and hō, \"report\" (pawH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsūhō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsūhō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsūhō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsūhō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haha ga keisatsu ni tsūhō shimashita — My mother called the police about it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haha ga keisatsu ni tsūhō shimashita* — My mother called the police about it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a culprit, then the Japanese for an incident, then say tsūhō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a culprit, then the Japanese for an incident, then say *tsūhō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つうほう (tsūhō) mean? (\"A report to the police; a tip-off\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C270-tsuuhou-type",
+              "prompt": "Say the Japanese for 'a report to the police'.",
+              "assesses": [
+                "JA-LEX-C270-HANNIN270-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つうほう",
+                "tsūhō",
+                "tsuuhou",
+                "tsuuhoo",
+                "tsuho"
+              ],
+              "feedback": {
+                "correct": "Right: つうほう (tsūhō) is 'a report to the police; a tip-off'.",
+                "incorrect": "'A report to the police' is つうほう (tsūhō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C270-sono",
+      "sequence": 16440,
+      "title": "その (sono) — that (one); the one mentioned",
+      "headword": "その",
+      "romanization": "sono",
+      "gloss": "that (one); the one mentioned",
+      "script": "japanese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:c8f3adc32ea7ad72",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an incident, then the Japanese for a report to the police."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: その",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "その — sono — \"that (one); the one mentioned\"."
+            },
+            {
+              "kind": "speech",
+              "text": "その おとこを みましたか。 — sono otoko o mimashita ka — \"Did you see the man?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "その (sono) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sono otoko o mimashita ka — Did you see the man?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sono otoko o mimashita ka* — Did you see the man?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an incident, then the Japanese for a report to the police, then say sono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an incident, then the Japanese for a report to the police, then say *sono* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does その (sono) mean? (\"That (one); the one mentioned\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C270-sono-type",
+              "prompt": "Say the Japanese for 'that (one)'.",
+              "assesses": [
+                "JA-LEX-C270-HANNIN270-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "その",
+                "sono"
+              ],
+              "feedback": {
+                "correct": "Right: その (sono) is 'that (one); the one mentioned'.",
+                "incorrect": "'That (one)' is その (sono)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C270-sawaru",
+      "sequence": 16450,
+      "title": "さわる (sawaru) — to touch",
+      "headword": "さわる",
+      "romanization": "sawaru",
+      "gloss": "to touch",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d6d1ba5573f2b65",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a report to the police, then the Japanese for that (one)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さわる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さわる — sawaru — \"to touch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "なにも さわらないで ください。 — nanimo sawaranaide kudasai — \"Please do not touch anything.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite さわります, sawarimasu; a godan verb. Past (polite): おとこが かばんに さわりました。, otoko ga kaban ni sawarimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さわる (sawaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sawaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sawaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sawaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sawaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanimo sawaranaide kudasai — Please do not touch anything.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanimo sawaranaide kudasai* — Please do not touch anything.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a report to the police, then the Japanese for that (one), then say sawaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a report to the police, then the Japanese for that (one), then say *sawaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さわる (sawaru) mean? (\"To touch\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C270-sawaru-type",
+              "prompt": "Say the Japanese for 'to touch'.",
+              "assesses": [
+                "JA-LEX-C270-HANNIN270-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さわる",
+                "sawaru"
+              ],
+              "feedback": {
+                "correct": "Right: さわる (sawaru) is 'to touch'.",
+                "incorrect": "'To touch' is さわる (sawaru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

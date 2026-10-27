@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:518288635b22da65",
+  "lessonIds": [
+    "JA-C465-enogu",
+    "JA-C465-fude",
+    "JA-C465-egaku",
+    "JA-C465-gaka",
+    "JA-C465-bijutsu"
+  ],
+  "tex": "japanese/book/chapters/ch465-paints-and-brushes.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:fb57890eb5105046",
+  "lessonIds": [
+    "JA-C330-chanto",
+    "JA-C330-shikkari",
+    "JA-C330-minarau",
+    "JA-C330-soroeru",
+    "JA-C330-aratameru"
+  ],
+  "tex": "japanese/book/chapters/ch330-doing-things-properly.tex"
+}

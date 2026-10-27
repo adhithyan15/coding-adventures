@@ -1,0 +1,11 @@
+{
+  "id": "JA-C439-yowamushi",
+  "pathSegment": "JA-PATH-439-BRAVE439",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-439-BRAVE439",
+      "order": 1
+    }
+  ]
+}

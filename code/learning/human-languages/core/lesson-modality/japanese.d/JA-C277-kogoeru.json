@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C277-kogoeru",
+    "language": "japanese",
+    "chapter": 277,
+    "sequence": 16810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3949664e4ce90842"
+  },
+  "findings": []
+}

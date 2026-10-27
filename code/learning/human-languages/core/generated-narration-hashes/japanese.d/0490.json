@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:a35066441a30b155",
+  "lessonIds": [
+    "JA-C490-ryoushi",
+    "JA-C490-gyogyou",
+    "JA-C490-gyosen",
+    "JA-C490-esa",
+    "JA-C490-haneru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch490.txt",
+  "json": "japanese/narration/ch490.json",
+  "textHash": "fnv1a64:9832a554bf7ba756",
+  "jsonHash": "fnv1a64:f0133439815936e8",
+  "findings": []
+}

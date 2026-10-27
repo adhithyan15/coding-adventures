@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C483-utsuwa",
+    "language": "japanese",
+    "chapter": 483,
+    "sequence": 28170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1bbed1622ac7a0d"
+  },
+  "findings": []
+}

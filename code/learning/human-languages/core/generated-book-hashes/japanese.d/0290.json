@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:7cc6c692b8058e11",
+  "lessonIds": [
+    "JA-C290-utsuru",
+    "JA-C290-shinkon",
+    "JA-C290-furusato",
+    "JA-C290-miokuru",
+    "JA-C290-atarashii"
+  ],
+  "tex": "japanese/book/chapters/ch290-a-new-home.tex"
+}

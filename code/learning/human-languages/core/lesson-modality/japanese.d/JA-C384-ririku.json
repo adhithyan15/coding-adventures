@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C384-ririku",
+    "language": "japanese",
+    "chapter": 384,
+    "sequence": 22640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce1a585c69842502"
+  },
+  "findings": []
+}

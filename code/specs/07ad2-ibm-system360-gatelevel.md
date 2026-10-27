@@ -41,6 +41,36 @@ Completion evidence exhausts every four-bit branch mask, both condition-code
 bits, every target-register field, zero/nonzero count boundaries, and both
 index-branch opcodes, with a structural guard over the production executor.
 
+### Opcode decode and dispatch authority
+
+The instruction's first byte must enter `decode_byte` once at the gate
+transition boundary. The resulting 256 one-hot wires are the sole authority
+for selecting RR, RX, RS, SI, SS, and hexadecimal-floating execution and for
+selecting the modeled operation within those families. Instruction length may
+select the transport shape, but raw opcode equality, ranges, `match`, or
+`matches!` must not reconstruct an architectural dispatch decision.
+
+Host control may visit a fixed candidate table and may sequence the one
+candidate whose settled select wire is asserted. An unselected candidate must
+not read storage, raise a fault, or mutate candidate state. Legal-opcode OR
+reductions and format membership are gate networks; zero or multiple asserted
+legal selects fail closed before any DFF clocks. The selected candidate alone
+may reach the existing oracle comparison and commit bridge. This cell changes
+dispatch authority only: the already documented arithmetic, branch, shift,
+floating-point, and storage semantics and their fault precedence remain
+unchanged, and later audits may replace host control inside an operation as
+separate bounded work.
+
+Completion evidence must exhaust all 256 first bytes at every applicable
+transport width, including supported orders, reserved neighbors, malformed
+widths, and the RR/RX/RS/SI four-byte overlap. It must independently prove that
+exactly one legal select authorizes evaluation and commit. Parsed-syntax
+structural tests must exact-lock the complete decode-to-family-to-operation
+chain and compile-check hostile replacements: raw-opcode `match`/range/equality
+dispatch, dead or duplicated decoders, secondary host decodes, oracle-backed
+dispatch, unselected storage access, helper shadowing, and post-selection state
+overwrites.
+
 Channel I/O, interruption controls, protection keys, interval timers, model-
 specific microcode, analog delay, package pins, and storage technology are
 outside this CPU cell. They belong to later SoC/interconnect and lower-level
@@ -93,17 +123,24 @@ Completion requires:
    affected-package BUILD checks, security review, and at least 80% package
    line coverage before publication.
 
-The accepted implementation passes eleven Rust differential suites and three
-gate-integrity suites, including every first-byte classification, every
+The accepted implementation passes twelve Rust differential suites, one
+exhaustive decoder unit suite, and four gate-integrity suites. An independent,
+literal 256-entry GA22-7000 classification table drives every opcode at each of
+the 2/4/6-byte loaded lengths; it does not derive expectations from production
+ranges or the candidate table. The evidence also includes every
 supported hexadecimal-floating order, exhaustive branch predicate truth
 tables, both architectural branch paths, overlap semantics, lifecycle, typed
-atomic faults, and token-normalized exact-body structural checks over the full
+atomic faults, and token-normalized parsed-token digests over the full
 branch-select, fixed-width-adder, signed-comparator, and top-level dispatch
-dependency chain, including the exact four-byte router, RR/RX/RS dispatcher
-shells, complete validation router, and branch-validator shell, with hostile
-helper-rewrite, dead-dispatch, expectation-shadowing, oracle-substitution, and
-post-dispatch-overwrite fixtures. The complete public `step`, `run`, and
-`execute` bridge is exact-locked so only the independently computed,
+dependency chain, including `DecodeAuthority::new`, `transport_width`, the
+complete candidate mapping, every RR/RX/RS/SI/SS execution router, the complete
+validation router, branch-validator shell, and branch/add/compare primitives.
+Anchored hostile mutations are injected into complete package source trees and
+must compile before the structural verifier rejects raw dispatch (including
+`trace.raw.first()` helper indirection), dead/duplicate/secondary decoders,
+oracle substitution, inactive storage access, binding shadows, and
+post-authorization or post-validation overwrites. The complete public `step`,
+`run`, `execute`, and DFF commit bridge is exact-locked so only the independently computed,
 validated, oracle-compared gate result reaches the DFF commit path.
 The crate root must bind `executor` directly to the reviewed file-backed
 module; attributed paths, aliases, duplicate routing modules, and inline
@@ -112,5 +149,19 @@ resolved from parsed Rust syntax and only exact top-level external declarations,
 so a literal declaration discarded inside macro input cannot authorize a
 macro-generated live `executor` or `gates` module, and delimiter-shaped
 character literals cannot counterfeit top-level scope.
+
+The decode-and-dispatch authority cell is complete locally. One transition-
+boundary decode now controls gate-derived transport width, legality, family,
+typed operation evaluation, validator routing, oracle comparison, and commit.
+Reserved holes retain their gate-derived width so truncated-instruction
+precedence is unchanged; one-, three-, and three-byte public images for known
+RR, RX, and four-byte reserved holes prove truncation precedes opcode rejection.
+A poison-address witness proves that inactive storage candidates are not
+evaluated. Every anchored hostile source mutation is compiled as a disposable
+crate before rejection, including raw equality/range/match dispatch,
+`trace.raw.first()` helper indirection, dead or duplicate decoders, secondary
+decoding, oracle dispatch, inactive storage access, gate binding shadows, and
+post-authorization/commit overwrites. Passing the behavioral oracle alone
+remains insufficient.
 Rustfmt, strict Clippy, rustdoc, lesson validation, and the
-package BUILD are green. Package line coverage is 93.01% (1,662/1,787).
+package BUILD are green. Package line coverage is 93.78% (1,916/2,043).

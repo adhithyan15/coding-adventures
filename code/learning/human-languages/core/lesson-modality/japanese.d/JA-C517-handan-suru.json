@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C517-handan-suru",
+    "language": "japanese",
+    "chapter": 517,
+    "sequence": 29940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fcea42a4a1061aaf"
+  },
+  "findings": []
+}

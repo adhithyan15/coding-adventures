@@ -1,0 +1,11 @@
+{
+  "id": "JA-C327-shitsurei",
+  "pathSegment": "JA-PATH-327-REIGI327",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-327-REIGI327",
+      "order": 2
+    }
+  ]
+}

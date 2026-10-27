@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-410-JIMOTO410",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "JA-EXT-410-JIMOTO410"
+  ],
+  "after": []
+}
