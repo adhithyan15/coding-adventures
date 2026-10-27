@@ -391,8 +391,12 @@ fn typed_arith_op_for(name: &str) -> Option<&'static str> {
 // parameter), so the type recorded at that write is true for the register's
 // whole life — including after its scope closes, when the register can still
 // be a pending operand.  Only the compiler's join temporaries (`if` / `and` /
-// `or` / `match` results) have several writers, and their sites compute a
-// consensus type themselves.  The previous design shared registers between
+// `or` / `match` results) have several writers.  `compile_if` computes a
+// consensus type for its result; `and`, `or` and `match` do not yet — their
+// result keeps whichever type the last write recorded, so a typed op can
+// read a join temporary that holds another kind (`(+ (or (< 1 2) 5) 1)`).
+// That is tracked as #18448 and is independent of the binding registers
+// here.  The previous design shared registers between
 // bindings and so had to snapshot, restore and drop types at every scope
 // boundary (with a per-register write counter); with one writer per register
 // all of that disappears.
