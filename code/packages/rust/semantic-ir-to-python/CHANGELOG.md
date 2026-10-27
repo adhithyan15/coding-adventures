@@ -20,6 +20,20 @@
   shared "arity mismatch" text.
 - `tests/twig_generated_names.rs` runs the cross-backend table.
 
+Security-review follow-up:
+
+- **A strict closure is count-checked only when its function has one exact
+  arity.**  The emitter now writes `_sir_as_lambda(c, n)` with
+  `n = Function::exact_arity()`, and plain `_sir_as_lambda(c)` otherwise.
+  The first version had the runtime count every positional parameter,
+  defaults included, so Ruby `->(a, b = 10) { a + b }.call(1)` raised
+  `ArityError` instead of returning 11 — a regression on this backend
+  alone (every other backend already keyed its check on `exact_arity`).
+- **Non-finite float literals** are `1e999`, `(-1e999)` and
+  `(1e999 - 1e999)`.  They were Rust's `{:?}` spelling (`inf`, `-inf`,
+  `NaN`), which Python reads as undefined names — or as a user's `inf`.
+- `sanitize_ident` also reserves `__debug__`, which Python refuses to bind.
+
 ## Unreleased — Value defines no longer raise `NameError` (issue #18461)
 
 **Bug fix.**  `_init` wrote each value define with `_globals["x"] = …`, but

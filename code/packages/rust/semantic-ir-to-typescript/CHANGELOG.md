@@ -19,6 +19,14 @@
 - `tests/twig_generated_names.rs` runs the cross-backend table, with an
   inline stub of `sir-runtime-exceptions` beside the existing ones.
 
+Security-review follow-up:
+
+- `await` and `implements` are reserved words.  Every emitted file is an
+  ES module in strict mode, where both are reserved.
+- **Non-finite float literals** are `1e999`, `(-1e999)` and `(0 / 0)`.
+  They were Rust's `{:?}` spelling — `inf` and `-inf` are not JavaScript,
+  and `NaN` is a global name a user declaration could shadow.
+
 ## Unreleased — Strict closures (issue #18461)
 
 The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`) used to

@@ -14,6 +14,15 @@
   argument array.
 - `tests/twig_generated_names.rs` runs the cross-backend table.
 
+Security-review follow-up: **`raise` is emitted as `::Kernel.raise`.**
+Ruby reads a bare `raise` as a local variable whenever one of that name is
+in scope, so a bare re-raise inside a `rescue` in a function with a
+parameter `raise` read the parameter and the error vanished.
+`BuiltinCall("raise")` is always the raise operation in SIR (a frontend
+lowers a source local named `raise` to a `VarRef`), so the method is
+emitted unconditionally; `Kernel.raise` with no arguments re-raises `$!`
+exactly as the bare form does.
+
 ## Unreleased — Strict closures (issue #18461)
 
 The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`) was

@@ -549,9 +549,9 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         //   func() {
         //     defer func() { <ensure> }()          // only if ensure present
         //     defer func() {
-        //       if r := recover(); r != nil {
-        //         if _sir_rescue_matches(r, []string{...}) { e := _sir_exc_value(r); <body> } else
-        //         if _sir_rescue_matches(r, []string{...}) { <body> } else { panic(r) }
+        //       if __sir_r := recover(); __sir_r != nil {
+        //         if _sir_rescue_matches(__sir_r, []string{...}) { e := _sir_exc_value(__sir_r); <body> } else
+        //         if _sir_rescue_matches(__sir_r, []string{...}) { <body> } else { panic(__sir_r) }
         //       }
         //     }()
         //     <try body>
@@ -720,7 +720,11 @@ fn emit_try_catch(
     if !rescues.is_empty() {
         let _ = writeln!(out, "{}defer func() {{", ipad);
         let rpad = indent_str(inner + 1);
-        let _ = writeln!(out, "{}if r := recover(); r != nil {{", rpad);
+        // `__sir_r`, inside the reserved `__sir` namespace: the rescue
+        // clauses run inside this `if`, so a plain `r` (as it was until the
+        // security review of #18466) shadowed a user variable `r` in every
+        // rescue body — reads saw the panic payload and writes were lost.
+        let _ = writeln!(out, "{}if __sir_r := recover(); __sir_r != nil {{", rpad);
         let cpad = indent_str(inner + 2);
         for (i, r) in rescues.iter().enumerate() {
             // `[]string{"Foo", "Bar"}` — the clause's exception class names.
@@ -733,11 +737,11 @@ fn emit_try_catch(
             }
             types.push('}');
             if i == 0 {
-                let _ = writeln!(out, "{}if _sir_rescue_matches(r, {}) {{", cpad, types);
+                let _ = writeln!(out, "{}if _sir_rescue_matches(__sir_r, {}) {{", cpad, types);
             } else {
                 let _ = writeln!(
                     out,
-                    "{}}} else if _sir_rescue_matches(r, {}) {{",
+                    "{}}} else if _sir_rescue_matches(__sir_r, {}) {{",
                     cpad, types
                 );
             }
@@ -747,7 +751,7 @@ fn emit_try_catch(
                 let safe = sanitize_ident(bind);
                 let _ = writeln!(
                     out,
-                    "{}{} := _sir_exc_value(r)",
+                    "{}{} := _sir_exc_value(__sir_r)",
                     indent_str(inner + 3),
                     safe
                 );
@@ -758,7 +762,7 @@ fn emit_try_catch(
         // No clause matched → re-raise so the exception propagates (and
         // still unwinds through the ensure defer registered above).
         let _ = writeln!(out, "{}}} else {{", cpad);
-        let _ = writeln!(out, "{}panic(r)", indent_str(inner + 3));
+        let _ = writeln!(out, "{}panic(__sir_r)", indent_str(inner + 3));
         let _ = writeln!(out, "{}}}", cpad);
         let _ = writeln!(out, "{}}}", rpad);
         let _ = writeln!(out, "{}}}()", ipad);
@@ -2364,6 +2368,14 @@ fn is_go_builtin(s: &str) -> bool {
             | "println"
             | "real"
             | "recover"
+            // Predeclared since Go 1.18 / 1.21.  The runtime declares
+            // `func _sir_exc_value(r any)`, so a user function named `any`
+            // broke the build (security review of #18466).
+            | "any"
+            | "comparable"
+            | "clear"
+            | "min"
+            | "max"
     )
 }
 
@@ -2526,7 +2538,10 @@ mod tests {
 
     #[test]
     fn generated_names_are_escaped_and_ordinary_names_are_not() {
-        for name in ["_sir_user_main", "_sir_plus", "SirError", "fmt", "Value", "init", "_", "__l"] {
+        for name in [
+            "_sir_user_main", "_sir_plus", "SirError", "fmt", "Value", "init", "_", "__l",
+            "__sir_r", "any", "comparable", "clear", "min", "max",
+        ] {
             assert_eq!(sanitize_ident(name), format!("sir_esc_v{name}"), "{name}");
         }
         for name in ["x", "fact", "values", "format", "initial", "siren_x"] {
@@ -3929,16 +3944,16 @@ mod tests {
             "must register a deferred recover"
         );
         assert!(
-            out.contains("if r := recover(); r != nil {"),
+            out.contains("if __sir_r := recover(); __sir_r != nil {"),
             "must recover the panic"
         );
         assert!(
-            out.contains(r#"if _sir_rescue_matches(r, []string{"StandardError"}) {"#),
+            out.contains(r#"if _sir_rescue_matches(__sir_r, []string{"StandardError"}) {"#),
             "must ask the ancestry matcher; got:\n{out}"
         );
-        assert!(out.contains("e := _sir_exc_value(r)"), "must bind `=> e`");
+        assert!(out.contains("e := _sir_exc_value(__sir_r)"), "must bind `=> e`");
         assert!(
-            out.contains("} else {\n") && out.contains("panic(r)"),
+            out.contains("} else {\n") && out.contains("panic(__sir_r)"),
             "must re-raise unmatched"
         );
         assert!(out.trim_end().ends_with("}()"), "must invoke the IIFE");
@@ -3961,7 +3976,7 @@ mod tests {
         let mut out = String::new();
         emit_stmt(&mut out, &tc, 0);
         assert!(
-            out.contains("_sir_rescue_matches(r, []string{})"),
+            out.contains("_sir_rescue_matches(__sir_r, []string{})"),
             "empty list = catch-all"
         );
         // No binding was named → no `_sir_exc_value` call.

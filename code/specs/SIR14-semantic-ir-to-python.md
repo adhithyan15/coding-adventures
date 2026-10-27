@@ -114,7 +114,10 @@ generated name *replaces* it.  `sanitize_ident` escapes into
 `sir_esc_v<name>` every `_sir…` name in any case (the runtime aliases,
 `_SIR_MISSING`, `_sir_user_main`, `_sir_block_N`), the temporaries `__l`
 and `__exc`, and the builtins the emitted code names bare: `Exception`,
-`len`, `list`, `range` (SIR10 "Generated names").
+`len`, `list`, `range`, and `__debug__`, which Python refuses to bind (SIR10
+"Generated names").  A non-finite float literal is literal arithmetic —
+`1e999`, `(-1e999)`, `(1e999 - 1e999)` — not Rust's `inf`/`NaN`
+spelling, which Python reads as a name.
 
 For trivial blocks (no statements), the value expression renders
 inline.

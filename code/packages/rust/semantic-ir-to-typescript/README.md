@@ -44,7 +44,8 @@ The TypeScript backend accepts these SIR features:
   the exception runtime, so `rescue ArgumentError` catches it).
   `sanitize_ident` escapes the names the emitter binds around user code
   (`__Sir*`, the wrapper's `_a`, `__l`, `__kw`, `__exc`, and `Map`/
-  `Object`/`Error`) — SIR10 "Generated names", issue #18466.
+  `Object`/`Error`), plus `await`/`implements`; non-finite floats are
+  `1e999`-style literal arithmetic — SIR10 "Generated names", issue #18466.
 - `Pairs` — lowered to `__Sir.Pair` in the inlined runtime.
 - `Symbols` — interned strings via `__Sir.intern`.
 - `Strings` — TypeScript `string`.

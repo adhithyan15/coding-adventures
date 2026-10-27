@@ -2628,3 +2628,12 @@ fn user_functions_and_the_closure_wrapper_live_in_the_reserved_namespace() {
     assert_eq!(sanitize_ident("sir_fn_f"), "sir_esc_vsir_fn_f");
     assert_eq!(sanitize_ident("__sir_args"), "__sir_args");
 }
+
+/// `raise` is always the method, never a bare word Ruby could read as a
+/// local named `raise` (security review of #18466).
+#[test]
+fn raise_is_emitted_as_the_kernel_method() {
+    let rb = ruby_to_ruby("begin\n  raise ArgumentError\nrescue ArgumentError => e\n  raise\nend\n");
+    assert!(rb.contains("::Kernel.raise(ArgumentError)"), "got:\n{rb}");
+    assert!(rb.contains("::Kernel.raise\n") || rb.contains("::Kernel.raise;") || rb.contains("::Kernel.raise "), "bare re-raise:\n{rb}");
+}

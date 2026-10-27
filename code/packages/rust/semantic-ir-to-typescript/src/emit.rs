@@ -1734,9 +1734,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             );
         }
         // ── SIR16 expression kinds — native TypeScript ─────────────
-        Expr::FloatLit { value, .. } => {
-            let _ = write!(out, "{:?}", value);
-        }
+        Expr::FloatLit { value, .. } => out.push_str(&ts_float_literal(*value)),
         Expr::SeqLit { items, .. } => {
             out.push('[');
             emit_args(out, items, indent);
@@ -2893,6 +2891,30 @@ fn is_generated_name(s: &str) -> bool {
         || matches!(s, "_a" | "__l" | "__kw" | "__exc" | "Map" | "Object" | "Error")
 }
 
+/// A TypeScript expression for the `f64` `v` that names nothing.
+///
+/// A finite value is its shortest round-tripping decimal (`{:?}` keeps the
+/// `.0` of an integral float).  `{:?}` spells the non-finite values `inf`,
+/// `-inf` and `NaN` — the first two are not JavaScript at all, and `NaN`
+/// (like `Infinity`) is a global *name* a user declaration could shadow.
+/// So they are written as arithmetic on literals, which no binding can
+/// reach (security review of #18466):
+///
+/// ```text
+/// f64::INFINITY      ->  1e999            (overflows to Infinity)
+/// f64::NEG_INFINITY  ->  (-1e999)
+/// f64::NAN           ->  (0 / 0)
+/// ```
+fn ts_float_literal(v: f64) -> String {
+    if v.is_nan() {
+        "(0 / 0)".to_string()
+    } else if v.is_infinite() {
+        if v > 0.0 { "1e999" } else { "(-1e999)" }.to_string()
+    } else {
+        format!("{v:?}")
+    }
+}
+
 fn is_valid_ts_ident(s: &str) -> bool {
     if s.is_empty() {
         return false;
@@ -2961,6 +2983,11 @@ fn is_ts_reserved(s: &str) -> bool {
             | "symbol"
             | "type"
             | "namespace"
+            // `await` is reserved in an ES module (which every emitted file
+            // is), `implements` in strict mode; both were missing until the
+            // security review of #18466.
+            | "await"
+            | "implements"
             | "interface"
             | "package"
             | "private"
@@ -3088,6 +3115,27 @@ mod tests {
         for name in ["a", "_b", "__lambda_0", "__sir_block__", "map", "Errors"] {
             assert_eq!(sanitize_ident(name), name, "{name}");
         }
+    }
+
+    /// Every emitted file is an ES module in strict mode, where `await` and
+    /// `implements` are reserved (security review of #18466).  The node
+    /// harness runs the stripped output as a plain script, where both are
+    /// legal, so only this check can see them.
+    #[test]
+    fn module_and_strict_mode_reserved_words_are_escaped() {
+        for name in ["await", "implements", "interface", "package", "let", "static", "yield"] {
+            assert!(sanitize_ident(name).starts_with("_$sir_esc_"), "{name}");
+        }
+    }
+
+    /// A non-finite float is literal arithmetic, never a name a user binding
+    /// could shadow, and never Rust's `inf` (security review of #18466).
+    #[test]
+    fn non_finite_floats_are_literal_arithmetic() {
+        assert_eq!(ts_float_literal(f64::INFINITY), "1e999");
+        assert_eq!(ts_float_literal(f64::NEG_INFINITY), "(-1e999)");
+        assert_eq!(ts_float_literal(f64::NAN), "(0 / 0)");
+        assert_eq!(ts_float_literal(2.0), "2.0");
     }
 
     #[test]

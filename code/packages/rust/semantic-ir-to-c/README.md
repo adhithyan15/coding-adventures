@@ -90,7 +90,8 @@ The emitter is **thin**; the semantics live in an inlined C runtime
   `sir_user_init`), so `(define (free x) x)` cannot clash with libc;
   `sanitize_ident` escapes the runtime's `sir…`/`_sir…` names, upper-case
   names (the headers' macros: `EOF`, `NAN`, …), implementation-reserved
-  `__x`/`_X` names and `errno`/`stdin`/`stdout`/`stderr`.
+  `__x`/`_X` names, header typedefs (`…_t`), `setjmp`/`jmp_buf`/`va_*`, and
+  `errno`/`stdin`/`stdout`/`stderr`.
 - **Display convention** — a single `__SIR_DISPLAY_RUBY__` placeholder is
   substituted with a boolean-selected literal (`1` = Ruby `true`/`false`,
   `0` = Lisp `#t`/`#f`) — never source-derived text.

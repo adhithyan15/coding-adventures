@@ -307,8 +307,10 @@ colliding with a C keyword (`is_c_keyword`: `int`, `for`, `return`, `struct`,
 `SIR_*` macros, the `sir_fn_`/`sir_user_*` names), `main`, or a name the C
 headers may define as a macro (no lower-case letter: `EOF`, `NAN`, …;
 implementation-reserved `__x`/`_X`; `errno`, `math_errhandling`, `stdin`,
-`stdout`, `stderr`, `L_tmpnam`) is escaped to `sir_esc_v<name>` (SIR10
-"Generated names", issue #18466).  String and comment escaping (`quote_c_string`, `sanitize_comment`)
+`stdout`, `stderr`, `L_tmpnam`), a header typedef (every `…_t` name — the
+emitted loops declare `int64_t` counters), or a `<setjmp.h>`/`<stdarg.h>`
+name (`setjmp`, `longjmp`, `jmp_buf`, `va_*`) is escaped to
+`sir_esc_v<name>` (SIR10 "Generated names", issue #18466).  String and comment escaping (`quote_c_string`, `sanitize_comment`)
 strips embedded terminators, mirroring the SIR12/SIR13 defence, so no source
 text can break out of a literal or a comment.
 

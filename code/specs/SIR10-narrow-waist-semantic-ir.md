@@ -448,7 +448,12 @@ whichever language the program is compiled to:
 | JavaScript | check inlined in the closure's arrow function          | `__Sir.raiseError("ArgumentError", …)`    |
 | TypeScript | same inline check (no runtime-package change)          | `__SirExc.raiseError("ArgumentError", …)` when the module imports the exception runtime; otherwise an `Error` named `ArgumentError`, which nothing could catch anyway |
 | Ruby       | `sir_check_arity` first thing in the lambda            | `ArgumentError`                           |
-| Python     | the runtime's `apply` checks a lambda's count          | `ArityError`, tagged `sir_class = "ArgumentError"` (a `TypeError` subclass, so native handlers still work) |
+| Python     | `_sir_as_lambda(c, N)` records the count; the runtime's `apply` checks it | `ArityError`, tagged `sir_class = "ArgumentError"` (a `TypeError` subclass, so native handlers still work) |
+
+The count is always `exact_arity()`, never the number of positional
+parameters: `->(a, b = 10) { a + b }` has no exact arity, so it is not
+checked, and `.call(1)` binds the default.  (The first version of the
+Python check for #18466 counted `b` and raised — caught in review.)
 
 > **Revision (issue #18466).** JavaScript, TypeScript and Python raised a
 > native `TypeError`, which their exception runtimes class as a plain
@@ -694,6 +699,14 @@ reserves every name it generates in its identifier sanitizer, which maps a
 reserved name into the same escaped form it already uses for a target
 keyword (the C backend's `sir_esc_v<name>`, and its equivalents).  The
 escape is one-to-one, so no two user names collide either.
+
+"Generated" covers every name the emitted code relies on reaching, not
+only names the backend invents: the target's predeclared or library names
+it uses (Go's `any`, C's `int64_t` and `setjmp`, Python's `len`, the
+JavaScript globals), and its wildcard or unbindable names (`_` in Go and
+Rust, Python's `__debug__`).  A literal the target spells as a name —
+`NaN`, `Infinity` — is emitted as arithmetic on numerals instead
+(`1e999`, `(0 / 0)`), which no binding can reach.
 
 A backend may instead put user names into a namespace of their own.  C and
 Ruby do this for functions: every user function is `sir_fn_<name>`, because

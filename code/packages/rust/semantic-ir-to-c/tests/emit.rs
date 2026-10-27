@@ -519,6 +519,9 @@ fn user_names_are_kept_apart_from_libc_and_the_runtime() {
     for name in [
         "_sir_apply", "SirValue", "SIR_INT", "sir_fn_free", "sir_user_main", "main", "EOF",
         "NAN", "N", "__lambda_0", "_Bool2", "errno", "stdout", "math_errhandling",
+        // Header typedefs and `<setjmp.h>`/`<stdarg.h>` names (security
+        // review of #18466).
+        "int64_t", "size_t", "uint8_t", "setjmp", "longjmp", "jmp_buf", "va_list",
     ] {
         assert_eq!(sanitize_ident(name), format!("sir_esc_v{name}"), "{name}");
     }

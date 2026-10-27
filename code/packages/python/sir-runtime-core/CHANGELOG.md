@@ -13,6 +13,14 @@ backend alone.  `ArityError` carries `sir_class = "ArgumentError"` (read by
 `SirError`) and still subclasses `TypeError`, so existing handlers keep
 working.
 
+Security-review follow-up: the count is checked only when the lambda has an
+exact arity.  `as_lambda(c, exact_arity=None)` records it in the new
+`Closure.exact_arity` slot, and the emitter passes it only when the
+lambda's function has one.  The first version compared against `arity`,
+which counts defaulted parameters too, so `->(a, b = 10) { a + b }.call(1)`
+raised instead of returning 11.  `as_lambda(c)` without a count keeps the
+pre-#18466 behaviour (arguments passed through; Python binds defaults).
+
 ## 0.6.0 — SIR21 T3b-2 Slice 2: `trunc_div`/`utrunc_div`/`true_div`
 
 Additive-only: adds the three genuinely-new division functions from the

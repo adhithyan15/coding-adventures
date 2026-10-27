@@ -3475,6 +3475,8 @@ fn is_valid_c_ident(s: &str) -> bool {
 /// | no lowercase letter (`EOF`, `NAN`, `N`)   | the headers' object-like macros are upper case: `EOF`, `NAN`, `INFINITY`, `INT64_MAX`, `EXIT_SUCCESS`, … — a local of that name expands into garbage |
 /// | `__…`, `_` + upper case                   | reserved to the C implementation, which defines macros there (`__STDC__`, glibc's `__THROW`) |
 /// | `errno`, `math_errhandling`, `stdin`, `stdout`, `stderr`, `L_tmpnam` | the lower-case object-like macros of the included headers (MSVC's `stdin` is `(__acrt_iob_func(0))`) |
+/// | `…_t`                                     | the headers' typedefs — the emitted code declares `int64_t` loop counters inside user functions, so a local `int64_t` broke them; POSIX reserves the whole `_t` suffix |
+/// | `setjmp`, `longjmp`, `jmp_buf`, `va_list`, `va_start`, `va_arg`, `va_end`, `va_copy` | `<setjmp.h>`/`<stdarg.h>` names; the emitted `rescue` calls `setjmp(…)` inline, and on MSVC `setjmp` is a macro |
 ///
 /// Function-like macros (`isnan`, `setjmp`) need no entry: they expand only
 /// before `(`, which a local never meets, and a user *function* is never
@@ -3489,9 +3491,23 @@ fn needs_marker(s: &str) -> bool {
         || !s.chars().any(|c| c.is_ascii_lowercase())
         || s.starts_with("__")
         || (s.starts_with('_') && s.chars().nth(1).is_some_and(|c| c.is_ascii_uppercase()))
+        || s.ends_with("_t")
         || matches!(
             s,
-            "errno" | "math_errhandling" | "stdin" | "stdout" | "stderr" | "L_tmpnam"
+            "errno"
+                | "math_errhandling"
+                | "stdin"
+                | "stdout"
+                | "stderr"
+                | "L_tmpnam"
+                | "setjmp"
+                | "longjmp"
+                | "jmp_buf"
+                | "va_list"
+                | "va_start"
+                | "va_arg"
+                | "va_end"
+                | "va_copy"
         )
 }
 

@@ -15,6 +15,9 @@
   invalid `__cap_r#fn`.
 - `tests/twig_generated_names.rs` runs the cross-backend table.
 
+Security-review follow-up: `sanitize_ident` also reserves `_`, Rust's
+wildcard, which binds nothing — `(define (f _) _)` did not compile.
+
 ## Unreleased — Strict closures; readable uncaught raises (issue #18461)
 
 - The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`)

@@ -631,7 +631,7 @@ def test_lambda_arity_error_is_tagged_argument_error() -> None:
     # The check runs before the call, so the message is the shared one and
     # the closure's own body never runs.
     ran = []
-    c = sir.as_lambda(sir.make_closure(lambda x, y: ran.append((x, y)), []))
+    c = sir.as_lambda(sir.make_closure(lambda x, y: ran.append((x, y)), []), 2)
     with pytest.raises(sir.ArityError) as info:
         sir.apply(c, [1])
     assert info.value.sir_class == "ArgumentError"
@@ -641,12 +641,26 @@ def test_lambda_arity_error_is_tagged_argument_error() -> None:
 
 
 def test_lambda_arity_counts_call_arguments_not_captures() -> None:
-    # The captured values are bound ahead of the call; the closure's arity is
-    # what is left, so one call argument satisfies `(cap, x)` with one capture.
-    c = sir.as_lambda(sir.make_closure(lambda cap, x: cap + x, [10]))
+    # The emitter passes the function's exact arity, which counts only the
+    # call's own parameters; the captured values are bound ahead of them.
+    c = sir.as_lambda(sir.make_closure(lambda cap, x: cap + x, [10]), 1)
     assert sir.apply(c, [5]) == 15
     with pytest.raises(sir.ArityError):
         sir.apply(c, [5, 6])
+
+
+def test_lambda_with_a_default_has_no_exact_arity_and_binds_it() -> None:
+    # Security review of #18466 (F1): `->(a, b = 10) { a + b }.call(1)` is 11
+    # in Ruby.  The emitter marks such a lambda without an exact arity, so
+    # `apply` must not count the defaulted parameter as required.
+    c = sir.as_lambda(sir.make_closure(lambda a, b=10: a + b, []))
+    assert c.exact_arity is None
+    assert sir.apply(c, [1]) == 11
+    assert sir.apply(c, [1, 2]) == 3
+    # Too many arguments is still Python's own error (no exact count to
+    # check), as before #18466.
+    with pytest.raises(TypeError):
+        sir.apply(c, [1, 2, 3])
 
 
 def test_as_lambda_returns_same_closure_and_sets_flag() -> None:

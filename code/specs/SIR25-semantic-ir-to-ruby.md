@@ -270,7 +270,12 @@ as `sir_user_init`; every other function renders as `sir_fn_<name>`.  A
 top-level `def` is a private method on `Object`, found ahead of `Kernel`, so
 an unprefixed user `def raise` overrode `Kernel#raise` for the runtime too
 (issue #18466).  The closure wrapper's argument list is `sir_args`, in the
-same reserved namespace (it was `__sir_args`, which a user could spell).  String/symbol escaping (`quote_ruby_string`) neutralises
+same reserved namespace (it was `__sir_args`, which a user could spell).
+`BuiltinCall("raise")` is emitted as `::Kernel.raise(…)`: a bare `raise`
+is a *local variable read* in Ruby whenever a local of that name is in
+scope.  SIR's builtin always means the raise operation — a frontend lowers
+a source local named `raise` to a `VarRef` — so the explicit method call
+keeps that meaning everywhere (a bare `::Kernel.raise` re-raises `$!`).  String/symbol escaping (`quote_ruby_string`) neutralises
 `"`, `\`, `#{` (interpolation), and control characters so no source text can
 break out of a literal or inject an interpolation.
 

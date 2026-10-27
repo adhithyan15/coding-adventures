@@ -115,7 +115,9 @@ The base every emitted program needs.
   builtin-as-value, and `Globals`.
 - `ArityError` (Python) — raised by `apply` for a strict closure called with
   the wrong argument count; SIR's `ArgumentError` (SIR10 "Strict closures").
-- `as_lambda(c) -> c` (Python) — marks a closure strict-arity (a Ruby lambda);
+- `as_lambda(c, exact_arity=None) -> c` (Python) — marks a closure strict-arity (a Ruby lambda);
+  `exact_arity`, given only when the lambda's function has one, is the count
+  `apply` enforces;
   see the proc-vs-lambda arity item under "Out of scope". `make_closure`
   records each block's arity so `apply` can apply proc/block leniency.
 - `doubleSplatMerge(...maps) -> Map` (TypeScript only) — merges call-position

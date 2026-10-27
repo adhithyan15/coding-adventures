@@ -176,6 +176,28 @@ const PRINTS: &[(&str, &str, &str)] = &[
         "6",
     ),
     ("go_init", "(define (init x) x) (print (init 8))", "8"),
+    // Security review of #18466: more names a user could spell.
+    (
+        "go_predeclared",
+        "(define (any x) x) (define (min a b) a) (print (any (min 4 5)))",
+        "4",
+    ),
+    (
+        "ts_module_reserved",
+        "(define (f await implements) (+ await implements)) (print (f 1 2))",
+        "3",
+    ),
+    ("rust_wildcard", "(define (f _) _) (print (f 5))", "5"),
+    (
+        "py_debug",
+        "(define (f __debug__) __debug__) (print (f 6))",
+        "6",
+    ),
+    (
+        "c_typedef_local",
+        "(define (f int64_t size_t) (+ int64_t size_t)) (print (f 3 4))",
+        "7",
+    ),
     // JS/TS: globals the runtime and the emitted code reach by name.  A
     // top-level `function Map` is hoisted over the whole script.
     (
@@ -305,4 +327,156 @@ fn a_closure_arity_error_is_an_argument_error() {
         }
     }
     assert!(failures.is_empty(), "{}", failures.join("\n\n"));
+}
+
+/// The body of function `name` in the lowered `src`, as a statement list —
+/// a handler to splice into a `rescue`.
+fn body_stmts(src: &str, name: &str) -> Vec<Stmt> {
+    let m = lower(src);
+    let f = m
+        .functions
+        .iter()
+        .find(|f| f.name == name)
+        .expect("function");
+    let mut stmts = f.body.stmts.clone();
+    stmts.push(Stmt::ExprStmt {
+        expr: f.body.value.clone(),
+        span: Span::synthetic(),
+    });
+    stmts
+}
+
+/// Wrap function `name`'s body in `begin … rescue ArgumentError` with the
+/// given handler.
+fn rescue_in(m: &mut Module, name: &str, handler: Vec<Stmt>) {
+    let f = m
+        .functions
+        .iter_mut()
+        .find(|f| f.name == name)
+        .expect("function");
+    let mut body = std::mem::take(&mut f.body.stmts);
+    body.push(Stmt::ExprStmt {
+        expr: f.body.value.clone(),
+        span: Span::synthetic(),
+    });
+    f.body.stmts = vec![Stmt::TryCatch {
+        body,
+        rescues: vec![RescueClause {
+            exception_types: vec!["ArgumentError".to_string()],
+            binding: None,
+            body: handler,
+            span: Span::synthetic(),
+        }],
+        ensure_body: None,
+        span: Span::synthetic(),
+    }];
+    f.body.value = Expr::NilLit {
+        span: Span::synthetic(),
+    };
+    m.manifest.add(Feature::Exceptions);
+}
+
+/// Security review of #18466 (F2): a `rescue` body reads the user's own
+/// variables.  Go bound the recovered panic to a plain `r` around every
+/// rescue clause, so the handler's `r` read the panic payload.  The other
+/// names are C's: the emitted `rescue` calls `setjmp(…)` and uses `jmp_buf`.
+#[test]
+fn a_rescue_body_reads_the_users_variables() {
+    let mut m = lower(
+        "(define g (begin (lambda (x y) (+ x y)))) \
+         (define (f r setjmp jmp_buf) (g 4)) (f 1 2 3)",
+    );
+    const HANDLER: &str = "(define (h r setjmp jmp_buf) (print (+ r setjmp jmp_buf)))";
+    rescue_in(&mut m, "f", body_stmts(HANDLER, "h"));
+    // The spliced handler brings the handler module's features with it.
+    for feature in lower(HANDLER).manifest.iter() {
+        m.manifest.add(feature);
+    }
+    let Some(out) = run_module(&m, "rescue reads r", "rescue_reads_r") else {
+        return;
+    };
+    let got = String::from_utf8_lossy(&out.stdout);
+    assert!(
+        out.status.success() && got.trim_end() == "6",
+        "want 6; exit {:?}, printed {got:?}, stderr:\n{}",
+        out.status.code(),
+        String::from_utf8_lossy(&out.stderr)
+    );
+}
+
+/// Security review of #18466: a bare re-raise inside a `rescue` must raise,
+/// even where the user has a variable named `raise`.  Ruby reads a bare
+/// `raise` as that local, so the error vanished and the program exited 0.
+#[test]
+fn a_bare_reraise_is_never_a_variable_read() {
+    let mut m = lower("(define g (begin (lambda (x y) (+ x y)))) (define (f raise) (g 4)) (f 7)");
+    let reraise = vec![Stmt::ExprStmt {
+        expr: Expr::BuiltinCall {
+            name: "raise".to_string(),
+            args: vec![],
+            effects: semantic_ir::EffectSet::PURE,
+            span: Span::synthetic(),
+        },
+        span: Span::synthetic(),
+    }];
+    rescue_in(&mut m, "f", reraise);
+    let Some(out) = run_module(&m, "bare re-raise", "bare_reraise") else {
+        return;
+    };
+    assert!(
+        !out.status.success() && out.stdout.is_empty(),
+        "the re-raise must escape; exit {:?}, printed {:?}, stderr:\n{}",
+        out.status.code(),
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr)
+    );
+}
+
+/// Security review of #18466: a non-finite float literal is an expression
+/// no user name can reach.  TypeScript and Python wrote Rust's `{:?}`
+/// spelling (`inf`, `-inf`, `NaN`), which is not a literal in either and
+/// which a user `nan`/`NaN` definition could capture.
+#[test]
+fn non_finite_float_literals_name_nothing() {
+    let mut m = lower(
+        "(define (inf) 0) (define (nan) 0) (define (NaN) 0) (define (Infinity) 0) \
+         (print 1) (print 2) (print 3)",
+    );
+    let values = [f64::INFINITY, f64::NEG_INFINITY, f64::NAN];
+    let main = m
+        .functions
+        .iter_mut()
+        .find(|f| f.name == "main")
+        .expect("main");
+    let mut prints: Vec<&mut Expr> = main
+        .body
+        .stmts
+        .iter_mut()
+        .filter_map(|s| match s {
+            Stmt::ExprStmt { expr, .. } => Some(expr),
+            _ => None,
+        })
+        .collect();
+    prints.push(&mut main.body.value);
+    assert_eq!(prints.len(), 3, "three prints");
+    for (print, v) in prints.into_iter().zip(values) {
+        let Expr::BuiltinCall { args, .. } = print else {
+            panic!("print: {print:?}");
+        };
+        *args.last_mut().expect("value") = Expr::FloatLit {
+            value: v,
+            span: Span::synthetic(),
+        };
+    }
+    m.manifest.add(Feature::Floats);
+    let Some(out) = run_module(&m, "non-finite floats", "non_finite") else {
+        return;
+    };
+    let got = String::from_utf8_lossy(&out.stdout).to_ascii_lowercase();
+    assert!(
+        out.status.success() && got.contains("inf") && got.contains("nan") && !got.contains('0'),
+        "want inf, -inf and nan; exit {:?}, printed {got:?}, stderr:\n{}",
+        out.status.code(),
+        String::from_utf8_lossy(&out.stderr)
+    );
 }

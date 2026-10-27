@@ -18,6 +18,15 @@ parameter named `_sir_plus` shadowed the runtime's `+`.  The unit test
 runtime type cannot be left spellable.  `tests/twig_generated_names.rs`
 runs the cross-backend table.
 
+Security-review follow-up:
+
+- **The recovered panic is `__sir_r`, not `r`.**  Every rescue clause runs
+  inside `if r := recover(); r != nil { … }`, so a user variable `r` read
+  the panic payload inside a rescue body, and writes to it were lost.
+- `sanitize_ident` also reserves the identifiers Go predeclared in 1.18 and
+  1.21 — `any` (the runtime declares `func _sir_exc_value(r any)`, so a
+  user function `any` broke the build), `comparable`, `clear`, `min`, `max`.
+
 ## Unreleased — Strict closures (issue #18461)
 
 The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`) lowers

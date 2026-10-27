@@ -32,8 +32,9 @@ a catchable `ArgumentError: arity mismatch: …` on any other argument count
 The runtime, its imports and the user's functions share one package scope,
 so `sanitize_ident` escapes every name the file declares — the runtime's
 `sir…`/`_sir…` functions and types, `Value`, `Map`, …, the imports `fmt`,
-`math`, …, `main`, `init` and `_` — into `sir_esc_v<name>` (SIR10
-"Generated names", issue #18466).
+`math`, …, `main`, `init`, `_` and the predeclared `any`/`min`/`max`/… —
+into `sir_esc_v<name>`, and a `rescue` binds the recovered panic as
+`__sir_r` (SIR10 "Generated names", issue #18466).
 
 ### SIR16 (v1) — complete
 

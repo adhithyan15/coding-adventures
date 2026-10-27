@@ -2005,11 +2005,21 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // (`raise "boom"`); with an exception object it re-raises that.  Each
         // argument is an already-emitted expression (a `StrLit` is quoted, so no
         // source can inject).  `retry` restarts the enclosing `begin` body.
+        // `::Kernel.raise`, never a bare `raise`: Ruby reads a bare `raise`
+        // as a *local variable* whenever one of that name is in scope, so a
+        // user local `raise` turned a re-raise into a read of that local
+        // (security review of #18466).  `BuiltinCall("raise")` is always the
+        // raise operation in SIR — a frontend lowers a Ruby source local
+        // named `raise` to a `VarRef`, never to this builtin — so emitting
+        // the method unconditionally keeps the SIR meaning; the explicit
+        // receiver also bypasses any `raise` method a user class defines.
+        // `Kernel.raise` with no arguments re-raises `$!`, exactly like the
+        // bare form inside a `rescue`.
         "raise" => {
             if a.is_empty() {
-                "raise".to_string()
+                "::Kernel.raise".to_string()
             } else {
-                format!("raise({})", a.join(", "))
+                format!("::Kernel.raise({})", a.join(", "))
             }
         }
         "retry" => "retry".to_string(),

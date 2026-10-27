@@ -22,6 +22,14 @@
   error is caught by `rescue ArgumentError` and not by `rescue TypeError`,
   and checks the `lambda`-arity refusal.
 
+Security-review follow-up: `sanitize_ident` also reserves every name ending
+in `_t` (the headers' typedefs, which POSIX reserves as a family) and the
+`<setjmp.h>`/`<stdarg.h>` names `setjmp`, `longjmp`, `jmp_buf`, `va_list`,
+`va_start`, `va_arg`, `va_end`, `va_copy`.  A counted loop declares
+`int64_t` counters inside the user's function, so a parameter named
+`int64_t` made the file fail to compile; the emitted `rescue` calls
+`setjmp(…)` inline, and on MSVC `setjmp` is a macro.
+
 ## Unreleased — Lambdas in callee position, strict closures (issue #18461)
 
 - **Every `MakeClosure` gets a thunk.**  `collect_closure_targets` walked

@@ -3036,6 +3036,7 @@ pub fn sanitize_ident(s: &str) -> String {
 /// | `__l`                     | the short-circuit `and`/`or` operand binding          |
 /// | `__r`, `__payload`, `__exc` | `catch_unwind` around a `TryCatch` and the entry point |
 /// | `Some`, `None`, `Ok`, `Err` | prelude variants the emitted `match` arms name — a user item or `let` of that name would shadow or refute them |
+/// | `_`                       | not generated, but Rust's wildcard: `let _ = …` binds nothing and `_` cannot be read back (security review of #18466) |
 ///
 /// The prefixes make the reservation open-ended: a new `__sir_*` temporary
 /// is reserved the moment it is written.  A new temporary outside these
@@ -3059,6 +3060,7 @@ fn is_generated_name(s: &str) -> bool {
                 | "None"
                 | "Ok"
                 | "Err"
+                | "_"
         )
 }
 
@@ -3315,7 +3317,7 @@ mod tests {
     fn generated_names_are_escaped_and_ordinary_names_are_not() {
         for name in [
             "__sir", "__sir_user_main", "__sir_i_0", "__cap_A", "__args", "__it", "__l", "__r",
-            "__payload", "__exc", "Some", "None", "Ok", "Err",
+            "__payload", "__exc", "Some", "None", "Ok", "Err", "_",
         ] {
             assert_eq!(sanitize_ident(name), format!("__sir_esc_v{name}"), "{name}");
         }

@@ -101,8 +101,11 @@ every name the file declares or binds: `sir…`/`_sir…`/`__sir…` in any case
 (runtime functions and types, `_sir_user_main`, loop temporaries), the
 runtime's other types (`Value`, `Symbol`, `Pair`, `Closure`, `Seq`, `Map`,
 `MapEntry`, `NDArray`, `_missingMarker`), the imports (`fmt`, `math`, `os`,
-`sort`, `strconv`, `strings`), `main`, `init`, `_`, and the temporaries
-`__l`, `__args`, `__lam` (SIR10 "Generated names", issue #18466).
+`sort`, `strconv`, `strings`), `main`, `init`, `_`, the identifiers Go
+predeclared in 1.18/1.21 (`any`, `comparable`, `clear`, `min`, `max`), and
+the temporaries `__l`, `__args`, `__lam` (SIR10 "Generated names", issue
+#18466).  A `rescue` binds the recovered panic as `__sir_r`; it was `r`,
+which shadowed a user variable `r` inside every rescue body.
 
 ## Output formatting
 

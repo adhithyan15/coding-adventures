@@ -81,9 +81,16 @@ class Closure:
       which enforces **strict** arity (Ruby raises ``ArgumentError`` on a
       mismatch); ``False`` for a block / proc, which **adjusts** arity (extra
       args dropped, missing args become ``nil``).  Set via :func:`as_lambda`.
+    - ``exact_arity`` — for a lambda whose function takes exactly one
+      argument count, that count, checked by :func:`apply`; ``None`` for a
+      lambda with defaulted / variadic / keyword parameters (Python's own
+      call then binds them) and for every block.  Set via :func:`as_lambda`.
+      It is the emitter's ``Function::exact_arity``, *not* ``arity``:
+      ``arity`` counts every positional parameter, defaulted ones included,
+      so ``->(a, b = 10) {…}`` would demand two arguments.
     """
 
-    __slots__ = ("fn", "arity", "is_lambda")
+    __slots__ = ("fn", "arity", "is_lambda", "exact_arity")
 
     def __init__(
         self,
@@ -94,6 +101,7 @@ class Closure:
         self.fn = fn
         self.arity = arity
         self.is_lambda = is_lambda
+        self.exact_arity: int | None = None
 
 
 def apply(c: Any, args: list[Any]) -> Any:
@@ -109,27 +117,30 @@ def apply(c: Any, args: list[Any]) -> Any:
     dropped and missing ones become ``nil`` (``None``) — so e.g. a one-param
     block yielded two values (``each_with_index``-style) binds the first and
     ignores the rest instead of raising.  A *lambda* (``is_lambda``) is left
-    **strict**: its arguments are never adjusted.  Their count is checked
-    up front, and a mismatch raises :class:`ArityError` — SIR's
-    ``ArgumentError`` — with the same message every other backend prints:
+    **strict**: its arguments are never adjusted.  When it has an
+    ``exact_arity`` the count is checked up front, and a mismatch raises
+    :class:`ArityError` — SIR's ``ArgumentError`` — with the same message
+    every other backend prints:
 
-    ===============================  ======================================
-    call                             result
-    ===============================  ======================================
-    lambda (x, y) called with 2      runs
-    lambda (x, y) called with 1      ArityError: arity mismatch: closure
-                                     expects 2 argument(s), got 1
-    proc (x, y) called with 1        runs with y = None
-    variadic (``arity is None``)     passed through unadjusted
-    ===============================  ======================================
+    ==================================  ===================================
+    call                                result
+    ==================================  ===================================
+    lambda (x, y) called with 2         runs
+    lambda (x, y) called with 1         ArityError: arity mismatch: closure
+                                        expects 2 argument(s), got 1
+    lambda (a, b = 10) called with 1    runs with b = 10 (no exact arity)
+    proc (x, y) called with 1           runs with y = None
+    variadic (``arity is None``)        passed through unadjusted
+    ==================================  ===================================
     """
     if c is None:
         raise LocalJumpError("no block given (yield)")
     if not isinstance(c, Closure):
         raise TypeError("apply on non-closure")
-    if c.is_lambda and c.arity is not None and len(args) != c.arity:
+    if c.is_lambda and c.exact_arity is not None and len(args) != c.exact_arity:
         raise ArityError(
-            f"arity mismatch: closure expects {c.arity} argument(s), got {len(args)}"
+            f"arity mismatch: closure expects {c.exact_arity} argument(s), "
+            f"got {len(args)}"
         )
     if c.is_lambda or c.arity is None:
         return c.fn(*args)
@@ -182,7 +193,7 @@ def make_closure(fn: Callable[..., Any], captures: list[Any]) -> Closure:
     return Closure(lambda *args: fn(*captures, *args), arity=arity)
 
 
-def as_lambda(c: Any) -> Any:
+def as_lambda(c: Any, exact_arity: int | None = None) -> Any:
     """Mark a closure as a Ruby **lambda** (strict arity); return it.
 
     The ``lambda`` / ``->(){}`` builtin lowers to a `MakeClosure`, which by
@@ -190,9 +201,16 @@ def as_lambda(c: Any) -> Any:
     to strict so :func:`apply` does not silently drop/pad its arguments — Ruby
     lambdas raise on an arity mismatch.  A non-closure passes through unchanged
     (defensive; the emitter only wraps a `MakeClosure`).
+
+    ``exact_arity`` is the one argument count the lambda accepts, which
+    :func:`apply` then enforces with :class:`ArityError`.  The emitter passes
+    it only when the lambda's function has one (SIR10 "Strict closures"); a
+    lambda with a defaulted parameter, such as ``->(a, b = 10) {…}``, is
+    marked without it and accepts one or two arguments.
     """
     if isinstance(c, Closure):
         c.is_lambda = True
+        c.exact_arity = exact_arity
     return c
 
 
