@@ -4,6 +4,21 @@ All notable changes to the `task-app-web` host are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed — a refused note Save is visible, and note drafts are capped (E5)
+
+`saveNote` with an *Attach to task* name that matched no task only called
+`console.error`, so the person saw Save do nothing. The controller now sets
+`noteError` (TaskApp's new `note-error` slot) to a one-line reason and keeps
+the draft as typed; any other event, or the next successful Save, clears it.
+This matches task-mosaic-app's native behaviour word for word.
+
+`noteTitleChange` and `noteBodyChange` now refuse an edit past 512
+characters (title) or 1 MiB of UTF-8 (body), task-mosaic-app's and Journal's
+limits; the draft keeps its last value rather than being truncated. A note
+stored over the caps still opens whole and may shrink but not grow. The body
+is only UTF-8-encoded when it is long enough that it could be over the cap.
+`__tests__/notes.test.ts` covers both, against the real task-wasm engine.
+
 ### Fixed — a rejected workspace is never written over
 
 When the engine rejected the saved workspace at startup, the host copied it to

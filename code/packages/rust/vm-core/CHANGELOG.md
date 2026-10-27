@@ -1,5 +1,50 @@
 # Changelog — vm-core
 
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `op_support` refuses the ten LANG83 PR7f dynamic-value primitives with `NO_TAGGED_WORD_RUNTIME`: the VM's dynamic values are structural heap cells (`alloc` / `field_*`), and it has no handler or default builtin for a `dyn_*` call. `every_standard_op_is_executed` pins that this is the only family the VM refuses.
+
+## Unreleased — LANG83 PR7e — no float writers
+
+- **Breaking:** the default builtins `write_f64_py` / `write_f64_js` are
+  removed, and with them `float_format::FloatLayout`, `format_f64`,
+  `python_repr` and `js_to_string` (the two languages' layouts). A VM builtin
+  may not carry one language's rules (LANG83 "PR7"); each compiler now prints
+  a float with its own helper. `shortest_digits`, `f64_class`, `f64_digits`
+  and `f64_exp10` (the PR7b ops' lowering, also the JIT's) are unchanged.
+- New `BuiltinRegistry::names()`: every registered builtin, sorted.
+- Tests: the float tests check the digits (`digits_match_host_python`, ties
+  to even, and a round-trip sweep that also checks no shorter digit string
+  reads back) instead of the layouts; `default_builtins_name_no_language`
+  checks every default builtin against
+  `op_registry::language_name_violation` and that the writers are gone.
+
+## Unreleased — LANG83 PR7d — `Trap.Unbound`
+
+- The `trap` handler validates its kind with
+  `interpreter_ir::exception_kind::is_trap_kind`, since LANG83 PR7d removed
+  `is_registered_trap_kind` with the (always empty) `LANGUAGE_TRAP_KINDS`
+  table. Same accepted set: the seven built-in `Trap.*` leaves.
+- Kind 7 is now `Trap.Unbound` (was `Trap.ReferenceError`), so a program
+  that stops on it returns `VMError::Trap { kind: "Trap.Unbound" }`.
+
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- **`float_format::shortest_digits(x) -> (u64, i32)`** now returns the
+  shortest round-trip digits as integers (`D`, `e10`); the string form it
+  returned before is the private `shortest_digit_string`, the one core both
+  it and `format_f64` use, so `python_repr` / `js_to_string` output is
+  unchanged (no caller outside this module used the old signature).
+- **`float_format::{f64_class, f64_digits, f64_exp10}`** — the PR7b
+  semantics on one `f64` (class 0/1/2/3 from `f64::classify`; `D` and `e10`,
+  or 0 for classes 0, 2, 3).
+- **Dispatch:** `f64_class` / `f64_digits` / `f64_exp10` handlers (a
+  `Value::Float` operand, a `Value::Int` result, never a trap), so
+  `op_support` derives `Lowered` for all three.
+- Tests: `neutral_primitives_match_the_layouts` (integer digits agree with
+  the laid-out strings and re-read as the same double) and
+  `neutral_float_primitives_dispatch`.
+
 ## Unreleased — a failed narrowing raises `Trap.ConvRange`
 
 - `real_to_i64_checked` now fails with LANG83's typed

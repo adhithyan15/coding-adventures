@@ -7,6 +7,22 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.13` accumulate here until the next version is
 cut.
 
+### Fixed
+
+- **A refused note Save says why (E5).** Saving a note whose *Attach to task*
+  field names no task in the project did nothing visible: the web host logged
+  to the console and the native hosts did nothing at all. TaskApp gains a
+  `note-error` slot, drawn as `Text [ note-error ]` above the Notes view in
+  the composer errors' style, as Journal draws `draft-error` above its
+  editor. The draft is kept as typed; any other action clears the message.
+  It is a TaskApp slot rather than a `Notes` one, so the package's contract
+  and its other consumers are unchanged.
+- **Note drafts are capped as typed (E5).** The title stops at 512
+  characters and the body at 1 MiB of UTF-8, Journal's limits; an edit past
+  them is refused, not truncated. A note stored before the caps loads whole
+  and can be edited down, but not grown. Spec: `task-app-notes-ui-v1.md`,
+  addendum v1.2.
+
 ## [0.5.13] - 2026-10-26
 
 ### Fixed

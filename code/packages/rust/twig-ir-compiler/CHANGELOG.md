@@ -1,5 +1,14 @@
 # Changelog — twig-ir-compiler
 
+## Unreleased — LANG83 PR7f-2 security review — reserved name prefixes
+
+- A program may no longer define, bind or reference a name beginning with `__lisp_` or `__dyn_` (ASCII case ignored, each `/`-separated segment checked): `Compiler::compile` refuses it with a `TwigCompileError` at the name's position, right after `check_cst`. Those prefixes name the functions the lowering passes add to the module (`__lisp_equal`, `__lisp_exit_code`, the inline-rule markers `__lisp_truthy` / `__lisp_not`, `__dyn_list_*`, `__dyn_call_closure`) and the C runtime's `__dyn_*` symbols, which the passes recognise by name: `(define (__lisp_equal a b) 42)` used to stand in for `equal?`, and `(define (__lisp_not x) 0) (__lisp_not 5)` was silently compiled as Lisp's `not`. Quoted symbols (`'__lisp_x`) are data and stay allowed.
+- New `src/reserved_names.rs`; `RESERVED_PREFIXES` and `reserved_prefix` are exported. New `tests/reserved_names.rs` covers both repros, the `__dyn_` prefix, every binding position, case, symbols and look-alike names.
+
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- Tests that pin that a quote literal emits no runtime symbol call and that an empty program emits no nil call check the LANG83 PR7f names (`dyn_symbol`, `dyn_nil`) as well as the old ones. The compiler is unchanged.
+
 ## Unreleased — LANG84 phase 4b — `IIRModule::release`
 
 - Every `IIRModule { .. }` struct literal (code, tests and doc examples)
