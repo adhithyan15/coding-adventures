@@ -1403,7 +1403,9 @@ PR6a `python_repr` and with host `python3` byte for byte.
   in a release build. Now it stops after 3 steps. A test measures the
   dearest print over the sweep and pins it between half the bound and
   the bound; another runs the largest program the default budgets accept,
-  and a trusted-budget one at vm-core's register limit; a third hands
+  and a trusted-budget one at vm-core's register limit (one float line
+  more is refused by the compiler since #18419, which sizes the trusted
+  budgets to vm-core's frame: see LANG84 C5); a third hands
   `run_module` looping modules and requires the step-limit error from a
   budget of their own size.
 - *Which rows BEAM runs did not change.* The five literal-only float rows
