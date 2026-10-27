@@ -1,14 +1,5 @@
 # Changelog
 
-## [Unreleased]
-
-- `toolchainForPackageLanguage("mosaic")` now returns `rust`. Every Mosaic
-  package and app BUILD runs `cargo test` on its smoke harness, but the
-  language mapped to the unknown toolchain `mosaic`, so a plan whose only
-  affected packages were Mosaic ones did not ask CI for Rust (`needs_rust`).
-  It already worked whenever `rust/mosaic-package-resolver` was selected
-  alongside them, which hid the gap for most `.mil`/`.mll`/`.msl` edits.
-
 ## 2026-10-26 — Mosaic manifest dependencies and repository-wide Mosaic guards
 
 - The resolver reads `mosaic-package.toml` for language-`mosaic` packages
@@ -117,6 +108,40 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- Cargo `[dev-dependencies]` now re-run the dependent's tests
+  (`internal/resolver/test_triggers.go`). Every Mosaic package and app is
+  tested by a Cargo smoke harness whose only in-repository dependencies are
+  dev-dependencies on the compilers and the artifact builder, so a change to
+  a `mosaic-emit-*` backend used to re-run none of those suites.
+  `mosaic-pkg-notes` and `engram-app` were not selected by a change to
+  `mosaic-emit-qt/src/pipeline.rs`; now they are.
+  - `ResolveWithTestTriggers` returns the build graph plus `TestTriggers`
+    (dependency → packages that dev-depend on it), read for `rust`, `wasm`
+    and `mosaic`. Entries resolve exactly like `[dependencies]` (path entries
+    only, key or `package =` rename, same name tables; Rust's table for a
+    Mosaic harness). `ResolveDependencies` wraps it.
+  - The triggers stay out of the graph and are applied one hop past the build
+    closure, before prerequisite expansion (`withDevDependents`). A
+    dev-dependent's own dependents are not selected, and prerequisites
+    trigger nothing. The repository has real dev-dependency cycles
+    (`closure-pass-dce` ⇄ `closure-pass-fold-control-flow`,
+    `wolfram-to-semantic-ir` ⇄ `semantic-ir-to-javascript`); as graph edges
+    they would have failed every package's build.
+  - Fails closed (`CargoManifestError`) on sub-table headers,
+    `[dev_dependencies]`, dotted or quoted keys, multi-line values,
+    `workspace = true`, other value shapes, and keys that spell the table from
+    elsewhere. Target-specific tables are not read, matching `[dependencies]`.
+  - Fan-out, accepted: a one-line change to `mosaic-emit-qt`,
+    `mosaic-emit-flutter` or `mosaic-package-artifact-builder` now selects 151
+    packages instead of 73 (`moslayout-compiler`: 153 instead of 74). That is
+    the 27–28 Mosaic suites, `rust/venture-browser-qt`, and about 51 of its
+    prerequisites.
+- `toolchainForPackageLanguage("mosaic")` now returns `rust`. Every Mosaic
+  package and app BUILD runs `cargo test` on its smoke harness, but the
+  language mapped to the unknown toolchain `mosaic`, so a plan whose only
+  affected packages were Mosaic ones did not ask CI for Rust (`needs_rust`).
+  It already worked whenever `rust/mosaic-package-resolver` was selected
+  alongside them, which hid the gap for most `.mil`/`.mll`/`.msl` edits.
 - The `global:luarocks-tree` lock now covers `luarocks install`, not only
   `make` and `remove`. LuaRocks takes an exclusive lock on the shared rocks
   tree for all three, so an unserialized install fails outright
