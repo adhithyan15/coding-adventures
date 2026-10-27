@@ -311,10 +311,11 @@ so a cached closure can never be one a cycle cut short; cycles through
 `[dev-dependencies]` (which the repository has) never arise, because
 dev-dependencies are read only at the dependent. Chains deeper than 16 crates
 are an error, not a truncation. Every repository manifest reached this way
-must pass the strict reader. When this was added, two did not:
-`paint-vm-direct2d` and `paint-vm-gdi` declared `windows` as a
-`[dependencies.windows]` sub-table. They were rewritten as the equivalent
-inline table (the parsed TOML is identical), and the reader was not loosened.
+must pass the strict reader. When this was added, `paint-vm-direct2d` (which is
+reached) and `paint-vm-gdi` (which is not yet reached) were the only tracked
+manifests it refused. Both declared `windows` as a `[dependencies.windows]`
+sub-table, and both were rewritten as the equivalent inline table (the parsed
+TOML is identical). The reader was not loosened.
 
 Path entries resolve against every discovered package even when `-language`
 filters the run, so a path into a filtered-out package is not mistaken for an

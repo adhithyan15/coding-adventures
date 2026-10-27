@@ -80,7 +80,9 @@ name = "smoke"
 
 	want := TestTriggers{
 		"rust/compiler": {"mosaic/pkg-a", "rust/subject"},
-		"rust/helper":   {"rust/subject"},
+		// compiler's own [dependencies] are linked into both suites too.
+		"rust/emit":   {"mosaic/pkg-a", "rust/subject"},
+		"rust/helper": {"rust/subject"},
 	}
 	if !reflect.DeepEqual(triggers, want) {
 		t.Fatalf("triggers = %v, want %v", triggers, want)
@@ -97,9 +99,6 @@ name = "smoke"
 		if graph.HasEdge(edge[0], edge[1]) {
 			t.Fatalf("dev-dependency %v leaked into the build graph", edge)
 		}
-	}
-	if got := triggers.Dependents("rust/emit"); got != nil {
-		t.Fatalf("emit has no direct dev-dependents, got %v", got)
 	}
 	if got := TestTriggers(nil).Dependents("rust/compiler"); got != nil {
 		t.Fatalf("nil triggers should have no dependents, got %v", got)

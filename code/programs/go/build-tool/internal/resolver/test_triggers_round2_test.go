@@ -67,7 +67,7 @@ const devDepOn = plainSubject + "\n[dev-dependencies]\n"
 func TestSecurityRound2HelperInsideTheDependentIsFollowed(t *testing.T) {
 	wantSubjectTriggersWith(t, devDepOn+`h = { path = "helper" }`+"\n", map[string]string{
 		"code/packages/rust/subject/helper/Cargo.toml": "[package]\nname = \"h\"\n\n[dependencies]\ncompiler = { path = \"../../compiler\" }\n",
-	}, "rust/compiler")
+	}, "rust/compiler", "rust/emit")
 }
 
 func TestSecurityRound2HelperInsideAnotherPackageIsFollowed(t *testing.T) {
@@ -84,7 +84,7 @@ func TestSecurityRound2ListedOrphanIsFollowed(t *testing.T) {
 			// An orphan's own dev-dependencies are not linked into the
 			// dependent's tests, so they are not followed.
 			"[dev-dependencies]\nhelper-crate = { path = \"../helper\" }\n",
-	}), "rust/compiler")
+	}), "rust/compiler", "rust/emit")
 }
 
 func TestSecurityRound2UnlistedOrphansAreRefused(t *testing.T) {
@@ -105,12 +105,14 @@ func TestSecurityRound2UnlistedOrphansAreRefused(t *testing.T) {
 	}
 }
 
-func TestSecurityRound2OrphanCyclesTerminateAndDepthIsCapped(t *testing.T) {
-	wantSubjectTriggersWith(t, devDepOn+`a = { path = "../orphan-a" }`+"\n", withFiles(gitMarker, map[string]string{
+func TestSecurityRound2OrphanCyclesAreRefusedAndDepthIsCapped(t *testing.T) {
+	// Round 3: a cycle among [dependencies] is refused (Cargo rejects it too),
+	// so that a cached closure can never be one the cycle cut short.
+	wantRefusedWith(t, devDepOn+`a = { path = "../orphan-a" }`+"\n", withFiles(gitMarker, map[string]string{
 		"code/BUILD-EXEMPTIONS":                  "PENDING code/packages/rust/orphan-a  # t\nPENDING code/packages/rust/orphan-b  # t\n",
 		"code/packages/rust/orphan-a/Cargo.toml": "[package]\nname = \"a\"\n[dependencies]\nb = { path = \"../orphan-b\" }\n",
 		"code/packages/rust/orphan-b/Cargo.toml": "[package]\nname = \"b\"\n[dependencies]\na = { path = \"../orphan-a\" }\ncompiler = { path = \"../compiler\" }\n",
-	}), "rust/compiler")
+	}))
 
 	// A chain longer than the cap is refused rather than truncated.
 	files := withFiles(gitMarker, nil)
@@ -150,7 +152,7 @@ func TestSecurityRound2CaseMismatchedPathIsRefused(t *testing.T) {
 func TestSecurityRound2PatchTablesAreTriggers(t *testing.T) {
 	for _, header := range []string{`[patch.crates-io]`, `["patch"."crates-io"]`, `[patch.'https://github.com/x/y']`} {
 		t.Run(header, func(t *testing.T) {
-			wantSubjectTriggers(t, devDepOn+"zz = \"1\"\n\n"+header+"\nzz = { path = \"../compiler\" }\n", "rust/compiler")
+			wantSubjectTriggers(t, devDepOn+"zz = \"1\"\n\n"+header+"\nzz = { path = \"../compiler\" }\n", "rust/compiler", "rust/emit")
 		})
 	}
 	for name, cargo := range map[string]string{
@@ -185,7 +187,7 @@ func TestSecurityRound2CargoConfigOverridesAreRefused(t *testing.T) {
 	wantSubjectTriggersWith(t, devDepOn+`compiler = { path = "../compiler" }`+"\n", withFiles(gitMarker, map[string]string{
 		".cargo/config.toml":                    "[target.x86_64-pc-windows-msvc]\nlinker = \"rust-lld\"\n",
 		"code/packages/rust/.cargo/config.toml": "# comment mentioning patch and paths\n[target.x86_64-pc-windows-msvc]\nlinker = \"rust-lld\"\n",
-	}), "rust/compiler")
+	}), "rust/compiler", "rust/emit")
 }
 
 // Finding D: continuation lines are joined once, and one entry is capped.

@@ -75,7 +75,7 @@ func sameSet(a, b []string) bool {
 func TestSecurityQuotedDevDependencyHeadersAreRead(t *testing.T) {
 	for _, header := range []string{`["dev-dependencies"]`, `['dev-dependencies']`, `[ "dev-dependencies" ]`, `[dev_dependencies]`} {
 		t.Run(header, func(t *testing.T) {
-			wantSubjectTriggers(t, plainSubject+"\n"+header+"\ncompiler = { path = \"../compiler\" }\n", "rust/compiler")
+			wantSubjectTriggers(t, plainSubject+"\n"+header+"\ncompiler = { path = \"../compiler\" }\n", "rust/compiler", "rust/emit")
 		})
 	}
 }
@@ -143,7 +143,7 @@ compiler = { path = "../compiler", default-features = false, features = [
     "b",
 ] }
 renamed = { package = "helper-crate", path = '../helper', optional = true }
-`, "rust/compiler", "rust/helper")
+`, "rust/compiler", "rust/emit", "rust/helper")
 }
 
 // Finding 4: target-specific dev-dependency tables are read with the same
@@ -160,7 +160,7 @@ helper-crate = { path = "../helper" }
 windows-sys = { version = "0.52", features = [
     "Win32_Foundation",
 ] }
-`, "rust/compiler", "rust/helper")
+`, "rust/compiler", "rust/emit", "rust/helper")
 
 	for name, cargo := range map[string]string{
 		"target sub-table":          "[target.'cfg(unix)'.dev-dependencies.compiler]\npath = \"../compiler\"\n",
@@ -270,7 +270,7 @@ func TestSecurityMosaicHarnessNormalAndBuildDependenciesAreTriggers(t *testing.T
 
 // Finding 7: a leading UTF-8 byte-order mark is stripped, as TOML allows.
 func TestSecurityLeadingByteOrderMarkIsStripped(t *testing.T) {
-	wantSubjectTriggers(t, "\xEF\xBB\xBF[dev-dependencies]\ncompiler = { path = \"../compiler\" }\n\n"+plainSubject, "rust/compiler")
+	wantSubjectTriggers(t, "\xEF\xBB\xBF[dev-dependencies]\ncompiler = { path = \"../compiler\" }\n\n"+plainSubject, "rust/compiler", "rust/emit")
 }
 
 // Finding 8: the read is bounded, and a manifest that is not a regular file

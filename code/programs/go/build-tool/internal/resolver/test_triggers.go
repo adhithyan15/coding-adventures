@@ -89,25 +89,34 @@ package resolver
 // `../Compiler` (another case on a case-insensitive disk) slip past. The
 // target is:
 //
-//   - a discovered package root → that package, and the chain ends: what
-//     that package links is the build graph's business;
-//   - any other crate → its own [dependencies] and [build-dependencies]
-//     (target forms included) are linked into the dependent's tests too, so
-//     they are followed recursively (visited set, depth cap). If the crate
-//     lies inside a discovered package — another package, or the dependent
-//     itself — that package is also a trigger, because prefix matching
-//     attributes a change there to it. If no package covers it, it must be
-//     listed exactly in code/BUILD-EXEMPTIONS (the orphan-crate ledger):
-//     engram-core-wasm, for one, is how engram-app's tests reach
-//     engram-core. Anything else — a crate under a skipped directory such as
-//     vendor/, outside code/, or a case variant — is refused.
+//   - a discovered package root → that package is a trigger;
+//   - any other crate → if it lies inside a discovered package — another
+//     package, or the dependent itself — that package is a trigger, because
+//     prefix matching attributes a change there to it. If no package covers
+//     it, it must be listed exactly in code/BUILD-EXEMPTIONS (the
+//     orphan-crate ledger): engram-core-wasm, for one, is how engram-app's
+//     tests reach engram-core. Anything else — a crate under a skipped
+//     directory such as vendor/, outside code/, or a case variant — is
+//     refused;
 //   - nothing (or an absolute or empty path, or a backslash) → refused.
+//
+// In the first two cases the chain continues: the target's own
+// [dependencies] and [build-dependencies] (target forms included) are linked
+// into the dependent's tests too, so they are followed transitively. A
+// package root is no exception, because the build graph records only a Rust
+// or WASM package's top-level [dependencies] — not its target-specific or
+// build dependencies, and not a Cargo.toml at the root of another language's
+// package (a native extension). Each crate's closure is cached
+// (crateClosure), and a cycle among these tables is refused, as Cargo
+// refuses it.
 //
 // `workspace = true` inherits the path from a workspace manifest this reader
 // does not follow, so it is refused; no repository harness uses it. So is
-// `[replace]`, the deprecated predecessor of `[patch]`. A `.cargo/config`
-// or `.cargo/config.toml` from the package directory up to the repository
-// root that sets `paths` or `[patch]` is refused too (checkCargoConfigs).
+// `[replace]`, the deprecated predecessor of `[patch]`, and a `git` source
+// that is not an https:// or ssh:// URL. A `.cargo/config` or
+// `.cargo/config.toml` from the package directory up to the repository root
+// that sets `paths`, `[patch]` or `[source]` is refused too
+// (checkCargoConfigs).
 //
 // # The strict reader
 //
@@ -639,6 +648,14 @@ func parseCargoTriggerEntry(line string) (cargoEntry, string) {
 		switch fieldKey {
 		case "workspace":
 			return entry, fmt.Sprintf("%s inherits from a workspace, whose path this reader does not follow", entry.key)
+		case "git":
+			// A local git URL (file://, a bare path) can name a predictable
+			// checkout directory and is linked with no trigger; only remote
+			// transports are accepted.
+			url, ok := oneLineTomlString(fieldValue)
+			if !ok || !(strings.HasPrefix(url, "https://") || strings.HasPrefix(url, "ssh://")) {
+				return entry, fmt.Sprintf("%s has a git source that is not an https:// or ssh:// URL", entry.key)
+			}
 		case "path":
 			path, ok := oneLineTomlString(fieldValue)
 			if !ok || path == "" {
@@ -677,6 +694,10 @@ type triggerWalk struct {
 	roots   map[string]string          // directory → repository root ("" if none)
 	ledgers map[string]map[string]bool // repository root → real exempt directories
 	configs map[string]error           // directory → result of checking it and its ancestors
+	// closures caches crateClosure per (repository root, real crate
+	// directory); expanding marks the crates currently being expanded.
+	closures  map[string]map[string]bool
+	expanding map[string]bool
 }
 
 // realDirectory resolves every symlink in path. A path that does not exist
@@ -692,10 +713,12 @@ func realDirectory(path string) (string, error) {
 
 func newTriggerWalk(known []discovery.Package) *triggerWalk {
 	walk := &triggerWalk{
-		index:   make(map[string]string, len(known)),
-		roots:   make(map[string]string),
-		ledgers: make(map[string]map[string]bool),
-		configs: make(map[string]error),
+		index:     make(map[string]string, len(known)),
+		roots:     make(map[string]string),
+		ledgers:   make(map[string]map[string]bool),
+		configs:   make(map[string]error),
+		closures:  make(map[string]map[string]bool),
+		expanding: make(map[string]bool),
 	}
 	for _, pkg := range known {
 		directory := filepath.Clean(pkg.Path)
@@ -765,14 +788,21 @@ func (walk *triggerWalk) containing(real string) string {
 }
 
 // follow resolves one path entry, written in the manifest at fromDir, into
-// out. A discovered package root is a trigger and ends the chain: what it
-// links is the graph's business. Any other crate — one nested inside a
-// package (the dependent included) or a listed orphan — is linked into the
-// dependent's tests together with its own dependencies, so its containing
-// package (if any) is a trigger and its [dependencies] and
-// [build-dependencies] (target forms included) are followed in turn. Its
-// [dev-dependencies] are not: they build only that crate's own tests.
-func (walk *triggerWalk) follow(fromDir, manifest, path, root string, depth int, visited, out map[string]bool) error {
+// out: the trigger for the target itself, then everything the target links.
+//
+//   - A discovered package root is a trigger. The chain does NOT end there:
+//     the build graph records only a Rust or WASM package's top-level
+//     [dependencies], so its target-specific and build dependencies, and any
+//     Cargo.toml at the root of a package in another language (a Python, Lua
+//     or TypeScript native extension), would otherwise be invisible.
+//   - Any other crate — nested inside a package (the dependent included) or
+//     a listed orphan — makes its containing package a trigger, if any.
+//
+// Either way the target's [dependencies] and [build-dependencies] (target
+// forms included) are linked into the dependent's tests, so they are
+// followed (crateClosure). Its [dev-dependencies] are not: they build only
+// that crate's own tests.
+func (walk *triggerWalk) follow(fromDir, manifest, path, root string, depth int, out map[string]bool) error {
 	refuse := func(format string, args ...any) error {
 		return &CargoManifestError{Path: manifest, Reason: fmt.Sprintf(format, args...)}
 	}
@@ -783,38 +813,69 @@ func (walk *triggerWalk) follow(fromDir, manifest, path, root string, depth int,
 	}
 	if name, ok := walk.index[real]; ok {
 		out[name] = true
-		return nil
-	}
-	if container := walk.containing(real); container != "" {
+	} else if container := walk.containing(real); container != "" {
 		out[container] = true
 	} else if !walk.exempt(root, real) {
 		return refuse("the path dependency %q is not a discovered package, not inside one, "+
 			"and not listed exactly in %s", path, buildExemptionsLedger)
 	}
-	if visited[real] {
-		return nil
+	closure, err := walk.crateClosure(target, real, manifest, path, root, depth)
+	if err != nil {
+		return err
 	}
-	visited[real] = true
+	for name := range closure {
+		out[name] = true
+	}
+	return nil
+}
+
+// crateClosure returns every package the crate at target (real directory
+// real) links through its [dependencies] and [build-dependencies], target
+// forms included, transitively. Results are cached per crate, so each
+// manifest is read once per resolution however many dependents reach it,
+// and the walk stays linear in the number of crates.
+//
+// Cargo rejects a cycle among these tables, so meeting a crate that is still
+// being expanded is refused rather than cut short — a cut would leave a
+// cached closure missing triggers. Cycles through [dev-dependencies] (which
+// the repository has) never reach here: dev-dependencies are read only at the
+// dependent itself.
+func (walk *triggerWalk) crateClosure(target, real, manifest, path, root string, depth int) (map[string]bool, error) {
+	key := root + "\x00" + real
+	if closure, ok := walk.closures[key]; ok {
+		return closure, nil
+	}
+	refuse := func(format string, args ...any) (map[string]bool, error) {
+		return nil, &CargoManifestError{Path: manifest, Reason: fmt.Sprintf(format, args...)}
+	}
+	if walk.expanding[key] {
+		return refuse("the path dependency %q is part of a dependency cycle, which Cargo rejects", path)
+	}
 	if depth >= maxCargoPathDepth {
 		return refuse("the path dependency %q is more than %d crates deep", path, maxCargoPathDepth)
 	}
+	walk.expanding[key] = true
+	defer delete(walk.expanding, key)
+
 	crateManifest := filepath.Join(target, "Cargo.toml")
 	entries, found, err := readCargoTriggerEntries(crateManifest, dependencyTableNames())
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if !found {
 		return refuse("the path dependency %q has no Cargo.toml", path)
 	}
+	closure := make(map[string]bool)
 	for _, entry := range entries {
 		if entry.path == "" {
 			continue
 		}
-		if err := walk.follow(target, crateManifest, entry.path, root, depth+1, visited, out); err != nil {
-			return err
+		if err := walk.follow(target, crateManifest, entry.path, root, depth+1, closure); err != nil {
+			return nil, err
 		}
 	}
-	return nil
+	walk.closures[key] = closure
+	return closure, nil
 }
 
 // cargoConfigNames are the configuration files Cargo reads from a
@@ -860,9 +921,11 @@ func (walk *triggerWalk) checkCargoConfigs(directory, root string) error {
 	return result
 }
 
-// scanCargoConfig refuses `paths` and `patch` in a Cargo configuration file,
-// in every spelling a header or key can give them, and anything it cannot
-// decode.
+// scanCargoConfig refuses `paths`, `patch` and `source` in a Cargo
+// configuration file, in every spelling a header or key can give them, and
+// anything it cannot decode. `source` is source replacement:
+// `[source.crates-io] replace-with = "v"` plus `[source.v] directory = ...`
+// builds a registry dependency from repository files.
 func scanCargoConfig(path string, data []byte) error {
 	refuse := func(format string, args ...any) error {
 		return &CargoManifestError{Path: path, Reason: fmt.Sprintf(format, args...)}
@@ -872,7 +935,7 @@ func scanCargoConfig(path string, data []byte) error {
 		return refuse("uses a multi-line string")
 	}
 	redirects := func(full []string) bool {
-		return len(full) > 0 && (full[0] == "paths" || full[0] == "patch")
+		return len(full) > 0 && (full[0] == "paths" || full[0] == "patch" || full[0] == "source")
 	}
 	var table []string
 	var stack []byte
@@ -943,12 +1006,11 @@ func (walk *triggerWalk) parseRustDevDeps(pkg discovery.Package) ([]string, erro
 		return nil, err
 	}
 	out := make(map[string]bool)
-	visited := map[string]bool{real: true}
 	for _, entry := range entries {
 		if entry.path == "" {
 			continue
 		}
-		if err := walk.follow(directory, manifest, entry.path, root, 0, visited, out); err != nil {
+		if err := walk.follow(directory, manifest, entry.path, root, 0, out); err != nil {
 			return nil, err
 		}
 	}
