@@ -287,29 +287,46 @@ and is matched against the discovered packages' real directories, so neither
 a crate declaring the same Cargo `name` nor a symlinked or differently-cased
 spelling of the path can move or drop the trigger. The target is:
 
-- a discovered package root: that package is the trigger, and the chain ends
-  (what it links is the build graph's business);
-- any other crate: its `[dependencies]` and `[build-dependencies]` (target
-  forms included, `[dev-dependencies]` not) are linked into the dependent's
-  tests as well, so they are followed recursively, with a visited set and a
-  depth cap of 16 (a deeper chain is an error, not a truncation). If the crate
-  lies inside a discovered package (another package, or the dependent
-  itself), that package is also a trigger, since prefix matching attributes
-  changes there to it. If no package covers it, it must be listed exactly in
-  `code/BUILD-EXEMPTIONS`. `engram-core-wasm` is such an orphan, and it is how
-  `engram-app`'s tests reach `engram-core`;
+- a discovered package root: that package is a trigger. The chain does not
+  end there, because the build graph records only a Rust or WASM package's
+  top-level `[dependencies]`: its target-specific and build dependencies, and
+  any `Cargo.toml` at the root of another language's package (a native
+  extension), would otherwise be invisible;
+- any other crate: if it lies inside a discovered package (another package,
+  or the dependent itself), that package is a trigger, since prefix matching
+  attributes changes there to it. If no package covers it, it must be listed
+  exactly in `code/BUILD-EXEMPTIONS`. `engram-core-wasm` is such an orphan,
+  and it is how `engram-app`'s tests reach `engram-core`;
 - anything else (nothing there; an absolute or empty path; an uncovered crate
   that the ledger does not list, such as one under `vendor/` or outside
   `code/`) is an error.
 
+In both of the first two cases the target's `[dependencies]` and
+`[build-dependencies]` (target forms included, `[dev-dependencies]` not) are
+linked into the dependent's tests too, so they are followed transitively with
+the same strict reader. Each crate's closure is computed once per resolution
+and cached, so the walk is linear in the number of crates (about 0.8 s for the
+whole repository). A cycle among those tables is an error, as it is in Cargo,
+so a cached closure can never be one a cycle cut short; cycles through
+`[dev-dependencies]` (which the repository has) never arise, because
+dev-dependencies are read only at the dependent. Chains deeper than 16 crates
+are an error, not a truncation. Every repository manifest reached this way
+must pass the strict reader. When this was added, two did not:
+`paint-vm-direct2d` and `paint-vm-gdi` declared `windows` as a
+`[dependencies.windows]` sub-table. They were rewritten as the equivalent
+inline table (the parsed TOML is identical), and the reader was not loosened.
+
 Path entries resolve against every discovered package even when `-language`
 filters the run, so a path into a filtered-out package is not mistaken for an
 unlisted crate. A `.cargo/config` or `.cargo/config.toml` in the package
-directory or any ancestor up to the repository root that sets `paths` or
-`[patch]` is an error. Refusing is preferred to treating the file as a
+directory or any ancestor up to the repository root that sets `paths`,
+`[patch]` or `[source]` (source replacement, which can serve a registry
+dependency from repository files) is an error. Refusing is preferred to treating the file as a
 rebuild-everything input, which would silently make every later change a
 full rebuild. The repository's four configs only pick a Windows linker.
-`[replace]` and `workspace = true` are refused.
+`[replace]` and `workspace = true` are refused, and so is a `git` source
+that is not an `https://` or `ssh://` URL (a `file://` URL or bare path can
+name a predictable checkout directory with no trigger).
 
 The cost is deliberate. Measured on the repository when this was added, a
 one-line change to `mosaic-emit-qt`, `mosaic-emit-flutter` or
@@ -321,9 +338,10 @@ last two through target tables), and their build prerequisites from the normal
 prerequisite expansion (about 51 for `venture-browser-qt` alone). Dev-dependents
 keep that expansion like every other selected package. The fan-out was
 reviewed and accepted at 151, before target tables were read; reading them
-added the remaining 7. Following non-package crates leaves those numbers
-unchanged and makes a change to `engram-core` select 27 packages instead of
-14 (`engram-app` and its Mosaic prerequisites).
+added the remaining 7. Following crates transitively (non-package crates,
+then package roots too) leaves those numbers unchanged and makes a change to
+`engram-core` select 27 packages instead of 14 (`engram-app` and its Mosaic
+prerequisites).
 
 The reader fails closed, because a dropped trigger silently skips a
 dependent's tests. It reads a plain TOML subset and stops the plan on anything
