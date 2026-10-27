@@ -1,5 +1,47 @@
 # Changelog
 
+## Unreleased — Pairs, function values, strict closures, reserved names (#18460, #18461)
+
+Four lowering fixes, each pinned by
+`tests/pairs_closures_and_entry_names.rs` and run end to end by every
+`semantic-ir-to-*` backend's `tests/twig_pairs_and_closures.rs`:
+
+```text
+program                                   before                         now
+(car (cons 1 2))                          no Feature::Pairs: every       Pairs declared
+                                          validating backend refused it
+(define (h x) …) (define g h) (g 4)       VarRef h Global — functions    a closure over h
+                                          are not globals: empty slot
+((lambda (x y) (+ x y)) 4)                backend-specific: 4 / NaN /    a strict closure:
+                                          index panic                    arity error everywhere
+(define main 5) (main)                    called the generated `main`,   positioned "reserved"
+                                          which recursed forever         error
+```
+
+- **#18460 — `Feature::Pairs`.**  A `cons` / `car` / `cdr` / `pair?`
+  builtin call (or the builtin used as a value) now declares the feature
+  SIR11's manifest rules tie to it.  A program with no pair builtin still
+  does not declare it.
+- **#18461 item 2 — a function used as a value** lowers to a
+  capture-less closure over it (`BuiltinCall("lambda", [MakeClosure h []])`)
+  instead of a `VarRef Global` that read a globals slot no one wrote.
+- **#18461 item 4 — strict closures.**  Every closure this frontend emits
+  sits inside SIR10's `lambda` marker, so every backend raises an arity
+  error when it is called with the wrong number of arguments.  (Twig has
+  no Ruby-style blocks; the bare, lenient `MakeClosure` is never right
+  here.)
+- **#18461 item 3 — reserved names.**  `main`, `_init` and
+  `__lambda_<digits>` are the compiler's: `define`-ing one is an error at
+  the `define`'s line and column, and a *reference* to `main` / `_init` is
+  an unresolved name (they are no longer in the function table user code
+  resolves against).  `main2`, `_init_count`, `__lambda_x` and a local
+  named `main` are ordinary.
+
+`tests/name_resolution.rs` no longer tolerates the missing-`pairs`
+validator error, its call collector skips the `lambda` marker (it builds a
+closure, it calls nothing), and its value-position test now expects the
+closure.
+
 ## 0.2.1 — Call position resolves names lexically (issue #18456)
 
 **Bug fix.** TW00 gives one name-resolution order, whether a name is

@@ -35,6 +35,31 @@
 //! function define, `BuiltinCall` for a builtin); see `lower_apply`.
 //! Before issue #18456 call position asked the builtin table first, so a
 //! user's `(define (car p) …)` never ran.
+//!
+//! ## Closures are strict
+//!
+//! Every closure this frontend builds — an inline `(lambda …)` and a
+//! top-level function used as a value — is emitted as
+//!
+//! ```text
+//! BuiltinCall("lambda", [MakeClosure { fn_name, captures }])
+//! ```
+//!
+//! not as a bare `MakeClosure`.  SIR10 ("Strict closures") reads the bare
+//! form as a proc-lenient Ruby block (extra arguments dropped, missing ones
+//! `nil`) and the wrapped form as a lambda that checks its argument count
+//! when called.  Twig has no blocks, so `((lambda (x y) …) 4)` is an arity
+//! error on every backend (issue #18461) instead of `4` on one, `NaN` on
+//! another and an index panic on a third.
+//!
+//! ## Names the compiler owns
+//!
+//! The synthesised entry points `main` and `_init`, and the gensym'd
+//! `__lambda_<n>` closure bodies, live in the same function namespace as
+//! the user's definitions.  So a user may not `define` any of them (a
+//! positioned error), and a user *reference* to `main` or `_init` is an
+//! unresolved name rather than a call into generated code: before #18461,
+//! `(define main 5) (main)` made the generated `main` call itself forever.
 
 use std::collections::HashSet;
 
@@ -91,8 +116,10 @@ const FILE: &str = "<twig>";
 
 struct Lowerer {
     module_name: String,
-    /// Top-level function names declared in this module (including
-    /// synthesised lambdas, `_init`, and `main`).
+    /// Top-level function names a Twig name can resolve to: the user's
+    /// function defines and the synthesised `__lambda_<n>` bodies.  The
+    /// generated `main` and `_init` are deliberately absent — user code
+    /// cannot call them (see "Names the compiler owns" above).
     function_names: HashSet<String>,
     /// Top-level value defines.
     global_names: HashSet<String>,
@@ -150,11 +177,24 @@ impl Lowerer {
             }
         }
 
-        // 2. First pass: collect names.  Function names include
-        //    user-declared functions plus the synthesised `_init` and
-        //    `main`.
+        // 2. First pass: collect names, refusing the ones the compiler
+        //    generates itself.  `main` and `_init` are NOT added to
+        //    `function_names`: they are emitted below, but no Twig name
+        //    resolves to them.
         for form in &p.forms {
             if let Form::Define(def) = form {
+                if is_reserved_name(&def.name) {
+                    return Err(TwigLowerError {
+                        message: format!(
+                            "`{}` is reserved: the compiler generates a function \
+                             with that name (the program entry `main`, the value \
+                             initialiser `_init`, or a `__lambda_<n>` closure body)",
+                            def.name
+                        ),
+                        line: def.line,
+                        column: def.column,
+                    });
+                }
                 if let TExpr::Lambda(_) = &def.expr {
                     self.function_names.insert(def.name.clone());
                 } else {
@@ -162,8 +202,6 @@ impl Lowerer {
                 }
             }
         }
-        self.function_names.insert("_init".to_string());
-        self.function_names.insert("main".to_string());
 
         // 3. Second pass: lower each form.
         let mut user_fns: Vec<Function> = Vec::new();
@@ -651,16 +689,14 @@ impl Lowerer {
         };
         self.synthesised.push(f);
 
-        // 4. Emit MakeClosure at the source position.
-        Ok(Expr::MakeClosure {
-            fn_name,
-            captures: captures
-                .into_iter()
-                .zip(capture_values)
-                .map(|(name, value)| CaptureValue { name, value })
-                .collect(),
-            span,
-        })
+        // 4. Emit the closure at the source position — strict, like every
+        //    Twig closure (see "Closures are strict" above).
+        let captures = captures
+            .into_iter()
+            .zip(capture_values)
+            .map(|(name, value)| CaptureValue { name, value })
+            .collect();
+        Ok(strict_closure(fn_name, captures, span))
     }
 
     fn lower_apply(
@@ -773,6 +809,7 @@ impl Lowerer {
                 });
             }
             if builtins::is_builtin(name) {
+                self.note_builtin_use(name);
                 return Ok(Expr::BuiltinCall {
                     name: name.clone(),
                     args: lowered_args,
@@ -831,16 +868,34 @@ impl Lowerer {
                 span: span.clone(),
             });
         }
-        // Global (value-define or top-level function name).
-        if ctx.global_names.contains(name) || ctx.function_names.contains(name) {
+        // Global — a top-level value define, held in the globals store.
+        if ctx.global_names.contains(name) {
             return Ok(Expr::VarRef {
                 name: name.to_string(),
                 scope: Scope::Global,
                 span: span.clone(),
             });
         }
+        // A top-level function used as a value: `g` in `(define g h)`, or
+        // `h` in `(app h 5)`.  Functions are not stored in the globals
+        // table — they are code, not data — so a `VarRef Global` here read
+        // an empty slot (issue #18461: "non-closure" on C and JS).  A
+        // reference to a function is instead a closure over it, with
+        // nothing to capture because a top-level function sees only
+        // globals, functions and builtins:
+        //
+        // ```text
+        // (define (h x) (* x 3))
+        // (define g h)      ;  g = BuiltinCall("lambda", [MakeClosure h []])
+        // (g 4)             ;  IndirectCall g [4]  →  h(4)  →  12
+        // ```
+        if ctx.function_names.contains(name) {
+            self.observed.add(Feature::Closures);
+            return Ok(strict_closure(name.to_string(), Vec::new(), span.clone()));
+        }
         // Builtin.
         if builtins::is_builtin(name) {
+            self.note_builtin_use(name);
             return Ok(Expr::VarRef {
                 name: name.to_string(),
                 scope: Scope::Builtin,
@@ -857,6 +912,47 @@ impl Lowerer {
     fn span_at(&self, line: usize, column: usize) -> Span {
         Span::point(FILE, line, column)
     }
+
+    /// Record the manifest feature a builtin's use implies.
+    ///
+    /// SIR11's manifest rules tie `Feature::Pairs` to the four pair
+    /// builtins.  Issue #18460: this frontend emitted them without ever
+    /// declaring the feature, so the validator — and with it every
+    /// validating backend — refused any Twig program that built a list.
+    /// A builtin used as a *value* (`(define first car)`) counts too: the
+    /// backend materialises it as a closure over the same runtime helper.
+    fn note_builtin_use(&mut self, name: &str) {
+        if matches!(name, "cons" | "car" | "cdr" | "pair?") {
+            self.observed.add(Feature::Pairs);
+        }
+    }
+}
+
+/// `BuiltinCall("lambda", [MakeClosure { fn_name, captures }])` — a closure
+/// that checks its argument count when called.  See "Closures are strict" in
+/// the module docs and SIR10's "Strict closures".
+fn strict_closure(fn_name: String, captures: Vec<CaptureValue>, span: Span) -> Expr {
+    Expr::BuiltinCall {
+        name: "lambda".into(),
+        args: vec![Expr::MakeClosure { fn_name, captures, span: span.clone() }],
+        effects: EffectSet::PURE.with(Effect::MayAllocate),
+        span,
+    }
+}
+
+/// `true` for a name only the compiler may define: the generated entry
+/// points and the `__lambda_<digits>` closure-body gensyms.
+///
+/// ```text
+/// main  _init  __lambda_0  __lambda_17      reserved
+/// main2  _init_count  __lambda_x  my-main    ordinary names
+/// ```
+fn is_reserved_name(name: &str) -> bool {
+    if name == "main" || name == "_init" {
+        return true;
+    }
+    name.strip_prefix("__lambda_")
+        .is_some_and(|n| !n.is_empty() && n.bytes().all(|b| b.is_ascii_digit()))
 }
 
 /// The error for a name that no scope, definition or builtin binds —

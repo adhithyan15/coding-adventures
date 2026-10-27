@@ -144,7 +144,11 @@ struct SirMap { struct SirMapEntry *entries; int64_t len; int64_t cap; };
 
 /* A closure's function takes its captured environment and the call args. */
 typedef SirValue (*SirFn)(SirValue *caps, SirValue *args, int argc);
-struct SirClosure { SirFn fn; int ncap; SirValue *caps; };
+/* `arity` is -1 for a lenient closure (a Ruby block: the thunk pads a missing
+ * argument with nil and ignores an extra one) or the exact argument count a
+ * STRICT closure demands (SIR10 "Strict closures": a Ruby lambda, every Twig
+ * closure).  `_sir_strict_arity` sets it; `_sir_apply` enforces it. */
+struct SirClosure { SirFn fn; int ncap; SirValue *caps; int arity; };
 
 /* ---- small allocation + string helpers ---------------------- */
 
@@ -855,7 +859,7 @@ SirValue _sir_make_closure(SirFn fn, int ncap, ...) {
     SirValue v;
     va_list ap;
     int i;
-    c->fn = fn; c->ncap = ncap;
+    c->fn = fn; c->ncap = ncap; c->arity = -1;
     c->caps = (ncap > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)ncap) : NULL;
     va_start(ap, ncap);
     for (i = 0; i < ncap; i++) c->caps[i] = va_arg(ap, SirValue);
@@ -863,6 +867,18 @@ SirValue _sir_make_closure(SirFn fn, int ncap, ...) {
     v.tag = SIR_CLOSURE; v.as.clo = c;
     return v;
 }
+
+/* Mark a fresh closure STRICT: it must be called with exactly `arity`
+ * arguments.  The emitter wraps the `MakeClosure` inside SIR's `lambda` marker
+ * as `_sir_strict_arity(_sir_make_closure(...), N)`. */
+SirValue _sir_strict_arity(SirValue c, int arity) {
+    if (c.tag == SIR_CLOSURE) c.as.clo->arity = arity;
+    return c;
+}
+
+/* Defined with the exception machinery further down. */
+SirValue _sir_error(const char *sir_class, SirValue msg);
+SirValue _sir_raise(SirValue exc);
 
 SirValue _sir_apply(SirValue target, int argc, ...) {
     va_list ap; SirValue *args; SirValue r;
@@ -872,6 +888,17 @@ SirValue _sir_apply(SirValue target, int argc, ...) {
     if (target.tag != SIR_CLOSURE) {
         fprintf(stderr, "sir: attempt to call a non-closure value\n");
         exit(1);
+    }
+    /* A strict closure called with the wrong number of arguments raises
+     * `ArgumentError` (uncaught: printed to stderr, exit 1) instead of reaching
+     * the thunk, which would quietly read a missing argument as nil — Twig's
+     * `((lambda (x y) (+ x y)) 4)` used to print 4. */
+    if (target.as.clo->arity >= 0 && argc != target.as.clo->arity) {
+        char *msg = (char *)_sir_alloc(96);
+        snprintf(msg, 96, "arity mismatch: closure expects %d argument(s), got %d",
+                 target.as.clo->arity, argc);
+        if (args) free(args);
+        return _sir_raise(_sir_error("ArgumentError", _sir_str(msg)));
     }
     r = target.as.clo->fn(target.as.clo->caps, args, argc);
     if (args) free(args);

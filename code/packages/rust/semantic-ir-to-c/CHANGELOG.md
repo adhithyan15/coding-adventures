@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased — Lambdas in callee position, strict closures (issue #18461)
+
+- **Every `MakeClosure` gets a thunk.**  `collect_closure_targets` walked
+  only some expression positions; it skipped an `IndirectCall`'s *target*,
+  so `((mk (lambda (a) 77)) 5)` referenced an undeclared
+  `_sir_thunk___lambda_1` and gcc rejected the file.  It now uses
+  `semantic_ir::Visitor`, which reaches every node (loops, conversions and
+  the SIR16+ nodes the hand-written walk also missed).
+- **Strict closures.**  The `lambda` marker (SIR10, `BuiltinCall("lambda",
+  [MakeClosure])`) is now lowered instead of refused:
+  `_sir_strict_arity(<closure>, N)` stamps the closure's exact arity, and
+  `_sir_apply` raises `ArgumentError: arity mismatch: closure expects N
+  argument(s), got M` for any other count.  A thunk pads a missing
+  argument with `nil`, so Twig's `((lambda (x y) (+ x y)) 4)` used to
+  print `4`.  `SirClosure` gains an `arity` field (`-1` = lenient, the
+  unchanged default for a bare `MakeClosure`).
+- `tests/twig_pairs_and_closures.rs` compiles and runs the #18460/#18461
+  Twig programs with the host C compiler.
+
 ## 0.42.1 — Security fix: `sanitize_ident` was not injective
 
 Task #65 (`/security-review`, discovered while auditing `java-to-

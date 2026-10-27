@@ -1864,7 +1864,46 @@ fn emit_oop_name_arg(out: &mut String, e: &Expr) {
     }
 }
 
+/// Emit the `lambda` marker — `BuiltinCall("lambda", [MakeClosure …])`,
+/// SIR10's *strict closure* (a Ruby lambda, every Twig closure):
+///
+/// ```text
+/// (lambda (x y) (+ x y))  →  __sir::strict_arity({ … Value::Closure(…) }, 2)
+/// ```
+///
+/// `strict_arity` wraps the closure so a call with any other argument count
+/// raises a catchable `ArgumentError` ("arity mismatch: …").  A plain
+/// closure's body drains its arguments with `unwrap_or(Nil)`, so a missing
+/// one became `nil` (Twig's `(g 4)` on a two-parameter lambda died later
+/// with "expected int, got nil") and an extra one was dropped (issue
+/// #18461).
+///
+/// When the marker wraps something else, or a function with no single
+/// arity ([`semantic_ir::Function::exact_arity`] is `None`: defaults,
+/// `*rest`, …), the inner expression is emitted unchanged.
+fn emit_strict_closure(out: &mut String, inner: &Expr, indent: usize) {
+    let arity = match inner {
+        Expr::MakeClosure { fn_name, .. } => {
+            STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied())
+        }
+        _ => None,
+    };
+    match arity {
+        Some(n) => {
+            out.push_str("__sir::strict_arity(");
+            emit_expr(out, inner, indent);
+            let _ = write!(out, ", {n})");
+        }
+        None => emit_expr(out, inner, indent),
+    }
+}
+
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
+    // SIR10 strict closure — see `emit_strict_closure`.
+    if name == "lambda" && args.len() == 1 {
+        emit_strict_closure(out, &args[0], indent);
+        return;
+    }
     // `raise` → panic with a class-tagged `SirError` payload (SIR17
     // Exceptions).  The first argument decides the shape, mirroring the
     // TS backend's `raiseError` emission:
@@ -2423,6 +2462,12 @@ thread_local! {
     /// the emitter falls back to plain positional emission.
     static FN_PARAMS: std::cell::RefCell<std::collections::HashMap<String, Vec<Param>>> =
         std::cell::RefCell::new(std::collections::HashMap::new());
+
+    /// Function name → [`semantic_ir::Function::exact_arity`], for the
+    /// strict-closure marker (see `emit_strict_closure`).  Populated and
+    /// cleared alongside `FN_ARITY`.
+    static STRICT_ARITY: std::cell::RefCell<std::collections::HashMap<String, usize>> =
+        std::cell::RefCell::new(std::collections::HashMap::new());
 }
 
 /// Wrap a call to `emit_module` so that `MakeClosure` can resolve
@@ -2444,9 +2489,15 @@ pub fn emit_module_with_arity_table(m: &Module) -> String {
             t.insert(f.name.clone(), f.params.clone());
         }
     });
+    STRICT_ARITY.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().filter_map(|f| Some((f.name.clone(), f.exact_arity()?))));
+    });
     let out = emit_module(m);
     FN_ARITY.with(|t| t.borrow_mut().clear());
     FN_PARAMS.with(|t| t.borrow_mut().clear());
+    STRICT_ARITY.with(|t| t.borrow_mut().clear());
     out
 }
 

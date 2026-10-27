@@ -2,6 +2,27 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## Unreleased — `Function::exact_arity` for strict closures (issue #18461)
+
+Additive.  `Function::exact_arity()` returns the one argument count a
+*strict* closure over the function accepts, or `None` when no single count
+describes it:
+
+```text
+(lambda (x y) …)          Some(2)    every param plain, no default
+def f(a, b = 1)           None       1 or 2 arguments both fine
+def f(*rest) / f(a, x:)   None       variadic / keyword
+def f(a, __sir_block__)   None       the block slot is not positional
+```
+
+SIR10 now documents the strict-closure marker the Ruby frontend already
+emitted for `lambda { … }` — `BuiltinCall("lambda", [MakeClosure …])` —
+and every backend checks a strict closure's call against this number when
+the call runs.  A bare `MakeClosure` keeps its proc-lenient behaviour.
+Before, each backend computed (or skipped) the count its own way, so one
+Twig program printed `4` on C, `NaN` on JavaScript and panicked with an
+index error on Go.
+
 ## 0.28.1 — Fix: re-export `SwitchCase` from the crate root (task #69)
 
 `0.28.0` added `pub struct SwitchCase` to `nodes.rs` but never added it to

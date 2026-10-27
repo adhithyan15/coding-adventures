@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased — Strict closures (issue #18461)
+
+The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`) was
+refused as an unsupported builtin, so no Twig closure — and no Ruby
+`lambda { … }` — reached this backend.  It now lowers to
+
+```ruby
+->(*__sir_args) { sir_check_arity(__sir_args, 2); __lambda_0(*__sir_args) }
+```
+
+`sir_check_arity` raises `ArgumentError` ("arity mismatch: closure expects
+N argument(s), got M") counting the closure's own parameters; without it
+the forwarding call's native error counted the captured values too.
+`tests/twig_pairs_and_closures.rs` runs the #18460/#18461 Twig programs
+with `ruby`.
+
 ## 0.27.2 — Security fix: `sanitize_ident` was not injective
 
 Task #65 (`/security-review`, discovered while auditing `java-to-

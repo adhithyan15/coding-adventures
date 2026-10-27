@@ -65,6 +65,10 @@ surface the emitter lowers today. JavaScript supports every SIR16 feature
 natively (arrays, `Map`, `while`/`for`, reassignable `let`), so each
 lowering is direct.
 
+A *strict* closure (SIR10's `lambda` marker — a Ruby lambda, every Twig
+closure) carries an inline check that throws `TypeError: arity mismatch: …`
+on a wrong argument count, where a plain JS function would bind `undefined`.
+
 | Accepted (v0 + SIR16 + E1 + O3 + MX4) | Rejected (deferred / unsupported)  |
 |---------------------------------|------------------------------------------|
 | `Closures`                      | `StringInterpolation` (`StrConcat`, SIR18) |

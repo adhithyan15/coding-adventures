@@ -383,6 +383,48 @@ the IR — its representation is the backend's choice (JS function
 object, Python lambda, etc.).  An `IndirectCall` whose target
 evaluates to a closure handle is the natural use site.
 
+#### Strict closures
+
+An `IndirectCall` cannot be arity-checked by the validator — its target
+is a run-time value (see "Default parameters and call arity").  What
+happens when the argument count is wrong is therefore part of the
+*closure's* meaning, and SIR has two:
+
+```text
+MakeClosure { … }                          lenient — a Ruby block / proc:
+                                           extra arguments are dropped,
+                                           missing ones are nil
+BuiltinCall("lambda", [MakeClosure { … }]) strict — a Ruby lambda, every
+                                           Twig closure: the count must be
+                                           exactly Function::exact_arity()
+                                           of the closure's function, or
+                                           the call raises an arity error
+```
+
+The `lambda` marker's single argument is the `MakeClosure` it marks; the
+marker evaluates to that closure.  When the function has no single arity
+(`exact_arity()` is `None`: a defaulted, `*rest`, keyword or synthetic
+block parameter), the marker changes nothing and the closure stays
+lenient.
+
+Every backend raises the error at the call, before the body runs:
+
+| Backend    | How                                                    | Error                                    |
+|------------|--------------------------------------------------------|------------------------------------------|
+| C          | `_sir_strict_arity` stamps the closure; `_sir_apply` checks | `ArgumentError: arity mismatch: …`, exit 1 |
+| Go         | `_sir_strict_arity` wraps the closure                  | catchable `ArgumentError` panic           |
+| Rust       | `__sir::strict_arity` wraps the closure                | catchable `ArgumentError`                 |
+| JavaScript | check inlined in the closure's arrow function          | `TypeError: arity mismatch: …`            |
+| TypeScript | same inline check (no runtime-package change)          | `TypeError: arity mismatch: …`            |
+| Ruby       | `sir_check_arity` first thing in the lambda            | `ArgumentError: arity mismatch: …`        |
+| Python     | `_sir_as_lambda` passes arguments through unadjusted   | Python's own `TypeError`                  |
+
+> **Revision (issue #18461).** Only the Python backend gave the marker
+> this meaning before; C and Ruby refused it as an unknown builtin,
+> JavaScript routed it to `callBuiltin`, TypeScript and the rest emitted
+> the bare closure.  A wrong-arity Twig call printed `4` on C, `NaN` on
+> JavaScript and died with an index panic on Go.
+
 ### Intrinsic — the escape hatch
 
 ```text

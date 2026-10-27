@@ -36,11 +36,17 @@ Implements the entire TW00 surface:
   `Global` / `Builtin`)
 - `if`, `let` (parallel), `let*` (sequential), `begin`
 - `lambda` — synthesised into a fresh top-level function with
-  computed captures + `MakeClosure` at the source position
+  computed captures + a **strict** closure at the source position
+  (see "Closure model")
 - `define` — value form → `Global` + ExprStmt in `_init`; function
-  form → top-level `Function`
+  form → top-level `Function`.  `main`, `_init` and `__lambda_<n>` are
+  the compiler's own names: defining one is a positioned error
+- A top-level function named outside call position (`(define g h)`)
+  becomes a capture-less closure over it
 - Apply-site dispatch picks `DirectCall` / `IndirectCall` /
   `BuiltinCall`
+- The feature manifest declares `Pairs` whenever `cons` / `car` /
+  `cdr` / `pair?` is used, so validating backends accept the module
 
 Deferred (errors at lowering time): `match`, records, unions, type
 aliases.
@@ -81,13 +87,27 @@ Each `(lambda (x) ...)` becomes:
 
 1. A fresh `__lambda_<N>` top-level `Function` with computed captures
    (free variables not bound at the lambda site).
-2. A `MakeClosure { fn_name = "__lambda_N", captures = [...] }` at
-   the original lambda position.
+2. `BuiltinCall("lambda", [MakeClosure { fn_name = "__lambda_N",
+   captures = [...] }])` at the original lambda position.
 
 Inside the synthesised function, captured names resolve as
 `VarRef { scope: Capture }`.  Names that aren't captured (globals,
 top-level function names, builtins) resolve directly without
 appearing in the capture list.
+
+The `lambda` marker makes the closure **strict** (SIR10 "Strict
+closures"): called with the wrong number of arguments, it raises an
+arity error on every backend.  A bare `MakeClosure` would mean a
+lenient Ruby block instead, so this frontend never emits one:
+
+```scheme
+(define g (begin (lambda (x y) (+ x y))))
+(print (g 4))         ; arity error — not 4 (C) or NaN (JavaScript)
+
+(define (h x) (* x 3))
+(define g2 h)         ; a closure over h, no captures
+(print (g2 4))        ; 12
+```
 
 ## Tests
 
@@ -100,6 +120,10 @@ pins the call node chosen for each resolution row, including every
 builtin shadowed by a function, a value, a parameter, a `let` binding,
 a lambda parameter and a capture.  `semantic-ir-to-javascript`'s
 `tests/twig_name_resolution.rs` runs those programs under `node`.
+`tests/pairs_closures_and_entry_names.rs` pins the `Pairs`
+declaration, function values, strict closures and reserved names;
+every `semantic-ir-to-*` backend's `tests/twig_pairs_and_closures.rs`
+runs the same programs on its own toolchain.
 
 ## Related crates
 
