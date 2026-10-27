@@ -1,0 +1,609 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 260,
+  "title": "If It Rains",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:1e45a59bf2c8e8c8",
+  "lessons": [
+    {
+      "id": "JA-C260-futtara",
+      "sequence": 15530,
+      "title": "ふったら (futtara) — if it rains",
+      "headword": "ふったら",
+      "romanization": "futtara",
+      "gloss": "if it rains — -tara, the plain past with ra",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62b0f843f46b0de7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say, plainly, \"it rained\". (ame ga futta.) Then \"I won't go\", politely. (ikimasen.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -たら, if",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あめが ふったら、いきません。 ame ga futtara, ikimasen. — \"If it rains, I won't go.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Take the plain past and add ら: ふった becomes ふったら (futtara), \"if it rains\". The condition comes first; what follows it comes second, and that last verb says when."
+            },
+            {
+              "kind": "speech",
+              "text": "じかんが あったら、えいがを みます。 jikan ga attara, eiga o mimasu. — \"If I have time, I will see a film.\""
+            },
+            {
+              "kind": "speech",
+              "text": "An i-adjective does the same from its -かった: さむかった gives さむかったら (samukattara)."
+            },
+            {
+              "kind": "speech",
+              "text": "さむかったら、うちに います。 samukattara, uchi ni imasu. — \"If it is cold, I will stay home.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: -たら, once",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "When the first thing is sure to happen, -たら is \"once\", \"when\":"
+            },
+            {
+              "kind": "speech",
+              "text": "えきに ついたら、きっぷを かいます。 eki ni tsuitara, kippu o kaimasu. — \"Once I get to the station, I will buy a ticket.\""
+            },
+            {
+              "kind": "speech",
+              "text": "うちに かえったら、ねます。 uchi ni kaettara, nemasu. — \"When I get home, I will go to bed.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If it rains, I won't go\" — ame ga futtara, ikimasen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If it rains, I won't go\" — *ame ga futtara, ikimasen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If it snows, I won't go\" — yuki ga futtara, ikimasen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If it snows, I won't go\" — *yuki ga futtara, ikimasen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If it is cold, I won't go\" — samukattara, ikimasen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If it is cold, I won't go\" — *samukattara, ikimasen*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C260-futtara-say",
+              "prompt": "Say that if it rains, you won't go.",
+              "assesses": [
+                "JA-GRAMMAR-C260-TARA-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "ame ga futtara, ikimasen",
+                "あめが ふったら、いきません。",
+                "ame ga futtara ikimasen"
+              ],
+              "feedback": {
+                "correct": "futtara: the plain past futta, then ra.",
+                "incorrect": "Futta with ra: ame ga futtara, then ikimasen."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"If it rains\"? (ふったら (futtara).) \"If I have time\"? (じかんが あったら.) \"Once I get home\"? (かえったら.) How is -たら made? (The plain past, then ら.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C260-moshi",
+      "sequence": 15540,
+      "title": "もし (moshi) — if; supposing",
+      "headword": "もし",
+      "romanization": "moshi",
+      "gloss": "if; supposing",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b69f1eafa2e968a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say \"if it rains, I won't go\". (ame ga futtara, ikimasen.) Then say \"hello\", on the telephone. (moshimoshi.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: もし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もし — moshi — \"if\", \"supposing\". It opens the sentence and warns the listener that a condition is coming; the -たら at the end of the clause still carries the \"if\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし あめが ふったら、いきません。 moshi ame ga futtara, ikimasen. — \"If it rains, I won't go.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It is not the もし (moshi) of もしもし, the telephone \"hello\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もし (moshi) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict marks it as usually written in kana and glosses it \"if; in case; supposing\" (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If it rains, I won't go\" — moshi ame ga futtara, ikimasen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If it rains, I won't go\" — *moshi ame ga futtara, ikimasen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If it snows, I won't go\" — moshi yuki ga futtara, ikimasen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If it snows, I won't go\" — *moshi yuki ga futtara, ikimasen*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C260-moshi-say",
+              "prompt": "Say the Japanese for 'if, supposing'.",
+              "assesses": [
+                "JA-LEX-C260-MOSHI-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "moshi",
+                "もし"
+              ],
+              "feedback": {
+                "correct": "Right: moshi warns that a condition is coming.",
+                "incorrect": "'If, supposing' is moshi."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"If\", at the start? (もし, moshi.) Which part still carries the \"if\"? (The -たら.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C260-moshi-tara",
+      "sequence": 15550,
+      "title": "もし … たら (moshi … tara) — if … then",
+      "headword": "もし … たら",
+      "romanization": "moshi … tara",
+      "gloss": "if … then — moshi at the start, -tara at the end, and what will you do if",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4af0e44c763bb424",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if it rains, I won't go\", with もし. (moshi ame ga futtara, ikimasen.) Then \"what do you think?\" (dō omoimasu ka.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: もし … -たら",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もし はれたら、やまに いきます。 moshi haretara, yama ni ikimasu. — \"If it clears up, I will go to the mountains.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The frame holds the whole condition: もし (moshi) opens it, -たら closes it, and 、 comes after it. Everything between is the condition:"
+            },
+            {
+              "kind": "speech",
+              "text": "もし あした はれたら、やまに いきます。 moshi ashita haretara, yama ni ikimasu. — \"If it is fine tomorrow, I will go to the mountains.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: もし … -たら、どう しますか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To ask what someone will do if, どう しますか (dō shimasu ka), \"what will you do\", follows the frame:"
+            },
+            {
+              "kind": "speech",
+              "text": "もし あめが ふったら、どう しますか。 moshi ame ga futtara, dō shimasu ka. — \"If it rains, what will you do?\""
+            },
+            {
+              "kind": "speech",
+              "text": "うちで えいがを みます。 uchi de eiga o mimasu. — \"I will see a film at home.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If it is fine tomorrow, I will go to the mountains\" — moshi ashita haretara, yama ni ikimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If it is fine tomorrow, I will go to the mountains\" — *moshi ashita haretara, yama ni ikimasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If it is fine tomorrow, I will go to the sea\" — moshi ashita haretara, umi ni ikimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If it is fine tomorrow, I will go to the sea\" — *moshi ashita haretara, umi ni ikimasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If it is fine tomorrow, I will go to the river\" — moshi ashita haretara, kawa ni ikimasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If it is fine tomorrow, I will go to the river\" — *moshi ashita haretara, kawa ni ikimasu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C260-moshi-tara-say",
+              "prompt": "Ask someone what they will do if it rains.",
+              "assesses": [
+                "JA-GRAMMAR-C260-IF-02"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "moshi ame ga futtara, dō shimasu ka",
+                "もし あめが ふったら、どう しますか。",
+                "moshi ame ga futtara dou shimasu ka"
+              ],
+              "feedback": {
+                "correct": "moshi … futtara holds the condition; dō shimasu ka asks.",
+                "incorrect": "Moshi ame ga futtara, then dō shimasu ka."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word opens the condition? (もし (moshi).) Which closes it? (-たら.) \"If it rains, what will you do?\" (もし (moshi) あめが ふったら (futtara)、どう しますか.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R260-if-it-rains",
+      "sequence": 15560,
+      "title": "Review — if it rains",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what you will do if it rains, and once you arrive",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3d4fc78d22e394b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if it rains, I won't go\", with もし. (moshi ame ga futtara, ikimasen.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If I have time, I will see a film.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If I have time, I will see a film.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If it is cold, I will stay home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If it is cold, I will stay home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Once I get to the station, I will buy a ticket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Once I get to the station, I will buy a ticket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If it snows, what will you do?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If it snows, what will you do?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If it is fine, I will go to the mountains.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If it is fine, I will go to the mountains.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It takes about two hours to the mountains.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It takes about two hours to the mountains.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If I lose my wallet, I will go to the police box.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If I lose my wallet, I will go to the police box.]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R260-if-it-rains-say",
+              "prompt": "Say that if it is fine tomorrow you will go to the sea, and that once you get home you will go to bed.",
+              "assesses": [
+                "JA-GRAMMAR-C260-TARA-02",
+                "JA-GRAMMAR-C260-IF-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "moshi ashita haretara, umi ni ikimasu; uchi ni kaettara, nemasu",
+                "もし あした はれたら、うみに いきます。うちに かえったら、ねます。",
+                "moshi ashita haretara umi ni ikimasu, uchi ni kaettara nemasu"
+              ],
+              "feedback": {
+                "correct": "haretara for 'if'; kaettara for 'once'.",
+                "incorrect": "Both are the plain past with ra: haretara, kaettara."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"If it rains\"? (ふったら (futtara).) \"If it is cold\"? (さむかったら.) \"Once I get home\"? (かえったら.) The word that opens a condition? (もし (moshi).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

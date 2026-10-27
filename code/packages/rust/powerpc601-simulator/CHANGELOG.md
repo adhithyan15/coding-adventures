@@ -12,3 +12,11 @@
 - Lifecycle/workload suites and a reproducible 239-vector Python full-state
   differential covering every decode family.
 - Distinct signed/unsigned division-by-zero faults and strict alignment faults.
+- Reject OE=1 and arithmetic Rc=1 encodings for every modeled XO arithmetic
+  opcode as typed, whole-state-atomic unknown instructions.
+- Correct `sraw` CA for the full six-bit register count while preserving every
+  non-CA XER bit, and add exhaustive modifier and lifecycle regressions.
+- Source-correct one legacy differential hash at the `0x80000000`, count-63
+  `sraw` edge; retain the other 238 frozen Python full-state hashes.
+- Pass all 13 functional-package test functions, strict
+  formatting/Clippy/rustdoc, and 90.25% package-source line coverage (639/708).

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C260-moshi-tara",
+  "pathSegment": "JA-PATH-260-CONDITION260",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-260-CONDITION260",
+      "order": 2
+    }
+  ]
+}
