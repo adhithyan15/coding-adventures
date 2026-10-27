@@ -36,6 +36,13 @@
   a function *name*, never a closure register — the rewrite matches by
   operand text, so a register there would be renamed too.
 
+### Changed
+
+- `verify_imports` / `verify_imports_against` run the same export-map
+  check, so they now also report `ConflictingExport` when two provider
+  modules export the same public name.  Nothing outside the linker calls
+  them today.
+
 ### Tests
 
 - Nine new integration tests in `tests/test_linker.rs`: cross-module
