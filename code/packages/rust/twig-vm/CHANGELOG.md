@@ -10,6 +10,9 @@
   builtins. The tests check the values. The example from the issue,
   `(define (f helper) (helper 1))`, returns 2, not 100. The fix itself is in
   `twig-ir-compiler`.
+- `inner_let_hides_outer_string_alias_binding`:
+  `(let ((s (string-append "a" "b"))) (let ((s 5)) s))` returns 5. It used to
+  read the outer string's alias register.
 
 ## Unreleased — host stdin seam: stdin tests no longer abort Miri
 

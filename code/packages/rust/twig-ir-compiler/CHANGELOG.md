@@ -43,6 +43,44 @@
   `(define s "HELLO") (let ((s 5)) (string-length s))` lowered to `str_len`
   on the integer. It now defers to the local.
 
+### Fixed (security review follow-up)
+
+- **Call-site string inference is now sound.** It used to look only at
+  direct calls in `main`. Lambda and `match` bodies, other function bodies,
+  and value-position uses were not seen. So each of these programs typed
+  `x : str`, lowered `strlen`'s body to `str_len`, and then passed it an
+  integer:
+  - `(strlen "abc") (let ((strlen strlen)) (strlen 5))`
+  - `(define (g) (strlen 5)) (strlen "abc") (g)`
+  - `(define h strlen) (h 5)`
+
+  Each one is type confusion on the AOT backends.
+  `collect_direct_string_call_evidence` (renamed from
+  `collect_main_direct_string_call_evidence`) now walks every function body,
+  lambda and `match` arm in a new `EvidenceMode::Elsewhere`, which can only
+  weaken evidence. It also marks a function `Conflict` when the function is
+  used as a value (an escape), and when the module exports it. Only direct
+  calls in `main` can establish `str`.
+- **Scoped type facts no longer leak.** `compile_let`, `compile_let_star` and
+  the two `match` binding paths restored `locals` and (for `let`) the E4
+  aliases, but never `var_types`. So in
+  `(define (f x) (begin (let ((x (string-append "a" "b"))) x) (string-length x)))`
+  the outer `(string-length x)` lowered to `str_len` on the integer
+  parameter. In the other direction, an inner binding inherited the outer
+  binding's type and alias. An inner `(car l)` kept an outer `i64`, so
+  `(+ x 1)` became a typed `add`. An inner `s` bound to 5 still read the outer
+  string's alias.
+
+  New `FnCtx::shadow` / `FnCtx::unshadow` helpers fix this. A binding now
+  starts with no type or alias. When the scope ends, the outer meaning comes
+  back. Same-name locals still share one register, which is tracked
+  separately, so `unshadow` keeps a type only when the register still holds
+  a value of that type. Otherwise it drops to `any`.
+- IIR is byte-identical to `origin/main` for all 49 Twig programs in
+  `lang-aot`'s `lang_matrix` and for about 430 other Twig programs taken from
+  the test sources of the twig and lang-aot crates. Only the new shadowing
+  test programs change.
+
 ### Docs
 
 - The README's apply-site table now lists the lexical row first. Its stale
@@ -59,6 +97,13 @@
   inherited, an extern, a builtin, the E4 string builtins, both evidence
   pre-pass cases and a shadowed typed value-global. All except the
   scope-exit control failed before the fix.
+- 12 more tests for the follow-up fixes (11 failed before them; the
+  `str` control passes either way). Seven cover string-parameter
+  inference: a `let`/`let*` alias, a call in another function body, a
+  `define` alias, calls in a lambda and a `match` arm, a function passed as
+  an argument, and an exported function. Five cover scope type leaks: after a
+  `let`/`let*` and after a `match` arm, a literal `let`, an inherited outer
+  `i64`, and an inner binding hiding an outer alias.
 - End-to-end runs of the same programs are in `twig-vm`'s dispatch tests
   (the example from the issue now returns 2). The imported-function case is
   in `twig-module-driver`.

@@ -1296,6 +1296,136 @@ mod tests {
         assert!(!main.iter().any(|i| i.op == "str_len"), "{main:?}");
     }
 
+    // ---- Call-site string-parameter inference must be sound -----------
+    //
+    // `(define (strlen x) (string-length x)) (strlen "abc")` seeds `x : str`
+    // so `strlen`'s body lowers to the typed `str_len`.  That is only sound
+    // if EVERY value that can reach `x` is a string.  Each program below
+    // also passes an integer to `strlen` by a route the old `main`-only
+    // pre-pass could not see.  `x` must then stay dynamic (`any`) and the
+    // body must keep the dynamic `string-length` builtin.
+
+    /// Assert `strlen`'s parameter stayed dynamic and its body has no `str_len`.
+    fn assert_strlen_param_dynamic(src: &str) {
+        let m = module(src);
+        let strlen = m.functions.iter().find(|f| f.name == "strlen").unwrap();
+        assert_eq!(
+            strlen.params,
+            vec![("x".to_string(), "any".to_string())],
+            "x must not be inferred `str` for: {src}"
+        );
+        assert!(
+            !strlen.instructions.iter().any(|i| i.op == "str_len"),
+            "strlen must not lower to str_len for: {src}\n{:?}",
+            strlen.instructions
+        );
+    }
+
+    const STRLEN: &str = "(define (strlen x) (string-length x)) (strlen \"abc\")";
+
+    #[test]
+    fn string_param_inference_control_still_infers_str() {
+        // Control: with only string actuals the fast path still fires.
+        let m = module(STRLEN);
+        let strlen = m.functions.iter().find(|f| f.name == "strlen").unwrap();
+        assert_eq!(strlen.params, vec![("x".to_string(), "str".to_string())]);
+    }
+
+    #[test]
+    fn string_param_inference_sees_let_alias_of_the_function() {
+        // `strlen` escapes into a `let` binding that is then called with 5.
+        assert_strlen_param_dynamic(&format!("{STRLEN} (let ((strlen strlen)) (strlen 5))"));
+        assert_strlen_param_dynamic(&format!("{STRLEN} (let* ((f strlen)) (f 5))"));
+    }
+
+    #[test]
+    fn string_param_inference_sees_calls_in_other_function_bodies() {
+        assert_strlen_param_dynamic(
+            "(define (strlen x) (string-length x)) (define (g) (strlen 5)) (strlen \"abc\") (g)",
+        );
+    }
+
+    #[test]
+    fn string_param_inference_sees_value_define_alias() {
+        assert_strlen_param_dynamic(&format!("{STRLEN} (define h strlen) (h 5)"));
+    }
+
+    #[test]
+    fn string_param_inference_sees_calls_inside_lambdas_and_match_arms() {
+        assert_strlen_param_dynamic(&format!("{STRLEN} ((lambda () (strlen 5)))"));
+        assert_strlen_param_dynamic(&format!("{STRLEN} (match 1 (n (strlen n)))"));
+    }
+
+    #[test]
+    fn string_param_inference_sees_function_passed_as_an_argument() {
+        assert_strlen_param_dynamic(&format!("{STRLEN} (map strlen (list 1 2))"));
+    }
+
+    #[test]
+    fn string_param_inference_sees_exported_functions() {
+        // Another module may import `strlen` and call it with anything.
+        assert_strlen_param_dynamic(&format!("(module m (export strlen)) {STRLEN}"));
+    }
+
+    // ---- Scoped locals must not leak type facts -------------------------
+    //
+    // A `let` / `let*` / `match` binding records what it knows about the
+    // name's type in `FnCtx::var_types`.  Those facts belong to the binding:
+    // they must not survive past the scope, nor be inherited from an outer
+    // binding of the same name.
+
+    #[test]
+    fn let_bound_string_type_does_not_leak_after_the_let() {
+        // The inner `x` is a string; after the `let` the name means the
+        // integer parameter again, so `(string-length x)` must stay dynamic.
+        let src = "(define (f x) (begin (let ((x (string-append \"a\" \"b\"))) x) \
+                   (string-length x))) (f 5)";
+        let f = fn_instrs(src, "f");
+        assert!(!f.iter().any(|i| i.op == "str_len"), "{f:?}");
+
+        let src = "(define (f x) (begin (let* ((x (string-append \"a\" \"b\"))) x) \
+                   (string-length x))) (f 5)";
+        let f = fn_instrs(src, "f");
+        assert!(!f.iter().any(|i| i.op == "str_len"), "{f:?}");
+    }
+
+    #[test]
+    fn literal_string_let_type_does_not_leak_after_the_let() {
+        let src = "(define (f x) (begin (let ((x \"ab\")) x) (string-length x))) (f 5)";
+        let f = fn_instrs(src, "f");
+        assert!(!f.iter().any(|i| i.op == "str_len"), "{f:?}");
+    }
+
+    #[test]
+    fn inner_binding_does_not_inherit_outer_type() {
+        // Outer `x` is a known `i64`; the inner `x` is whatever `(car l)`
+        // returns, so `(+ x 1)` must not be the typed `add`.
+        let src = "(define (f l) (let ((x 1)) (let ((x (car l))) (+ x 1)))) (f (list 2))";
+        let f = fn_instrs(src, "f");
+        assert!(!f.iter().any(|i| i.op == "add"), "{f:?}");
+    }
+
+    #[test]
+    fn inner_non_string_binding_hides_outer_string_alias() {
+        // The outer `s` is an E4 string held in an alias register; the
+        // inner `s` is 5.  A read of `s` inside the inner `let` must be the
+        // inner integer, not the outer alias (which `main` would then
+        // return as a `str`).
+        let main = main_instrs("(let ((s (string-append \"a\" \"b\"))) (let ((s 5)) s))");
+        let ret = main.iter().rfind(|i| i.op == "ret").unwrap();
+        assert_eq!(ret.srcs[0], Operand::Var("s".into()), "{main:?}");
+        assert_ne!(ret.type_hint, "str", "{main:?}");
+    }
+
+    #[test]
+    fn match_binding_type_does_not_leak_after_the_arm() {
+        // The arm binds `x` to a string; after the `match` the name is the
+        // integer parameter again, so `(string-length x)` must stay dynamic.
+        let src = "(define (f x) (begin (match \"ab\" (x x)) (string-length x))) (f 5)";
+        let f = fn_instrs(src, "f");
+        assert!(!f.iter().any(|i| i.op == "str_len"), "{f:?}");
+    }
+
     // ---- Realistic shapes --------------------------------------------
 
     #[test]

@@ -235,10 +235,10 @@ name is used as a value (`helper`) or called (`(helper 1)`):
 `and` and `or` are special forms and are not in this table. A local cannot
 shadow them.
 
-There is one known gap between rows 3 and 4. A top-level *value* `define`
-that reuses a builtin's name, such as `(define car 5)`, wins in value
-position. In call position the builtin still wins. This rule is about the
-lexical row (row 1), which always wins.
+There is one known gap between rows 3 and 4, tracked as issue #18438. A
+top-level *value* `define` that reuses a builtin's name, such as
+`(define car 5)`, wins in value position. In call position the builtin still
+wins. This rule is about the lexical row (row 1), which always wins.
 
 So a local hides a global, an extern or a builtin with the same name for
 the whole of the local's scope:

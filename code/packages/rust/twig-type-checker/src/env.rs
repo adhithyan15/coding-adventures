@@ -353,6 +353,11 @@ impl TypeEnv {
 pub struct ScopeStack {
     /// Stack of frames; the last element is the innermost (most recent) scope.
     frames: Vec<HashMap<String, TwigKind>>,
+    /// `narrowing[i]` is true when `frames[i]` was pushed by
+    /// [`ScopeStack::push_narrowing_frame`] — an `if` branch re-stating what a
+    /// guard proved about names that are *already* bound (locally or
+    /// globally), not a new binding.  Kept parallel to `frames`.
+    narrowing: Vec<bool>,
 }
 
 impl ScopeStack {
@@ -367,6 +372,19 @@ impl ScopeStack {
     /// `match` arm body.
     pub fn push_frame(&mut self) {
         self.frames.push(HashMap::new());
+        self.narrowing.push(false);
+    }
+
+    /// Push a frame that only *narrows* existing names (TW05-C `if` guards).
+    ///
+    /// Lookups see its entries exactly like a lexical frame's — that is the
+    /// point of narrowing — but [`ScopeStack::is_lexically_bound`] skips it.
+    /// A guard such as `(< ascii-info 1)` may narrow a top-level name, and
+    /// the narrowed entry must not make the global look like a local that
+    /// shadows it (#18435).
+    pub fn push_narrowing_frame(&mut self) {
+        self.frames.push(HashMap::new());
+        self.narrowing.push(true);
     }
 
     /// Pop the innermost frame off the stack.
@@ -378,6 +396,7 @@ impl ScopeStack {
         self.frames
             .pop()
             .expect("ScopeStack::pop_frame called on empty stack");
+        self.narrowing.pop();
     }
 
     /// Bind `name` to `kind` in the innermost frame.
@@ -405,5 +424,21 @@ impl ScopeStack {
             }
         }
         None
+    }
+
+    /// Is `name` bound by a parameter, `let`, lambda or `match` arm — a real
+    /// lexical binding, as opposed to an `if`-guard narrowing entry?
+    ///
+    /// ```scheme
+    /// (define (g h)                 ;; lexical frame {h}
+    ///   (if (< ascii-info 1)        ;; narrowing frame {ascii-info}
+    ///     (h 1)                     ;; is_lexically_bound("h")          → true
+    ///     (ascii-info 200)))        ;; is_lexically_bound("ascii-info") → false
+    /// ```
+    pub fn is_lexically_bound(&self, name: &str) -> bool {
+        self.frames
+            .iter()
+            .zip(&self.narrowing)
+            .any(|(frame, &narrowing)| !narrowing && frame.contains_key(name))
     }
 }

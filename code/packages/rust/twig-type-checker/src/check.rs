@@ -366,8 +366,10 @@ fn infer_apply(
     // `(define (g ascii-info) (ascii-info 200))` the callee is g's
     // parameter, and the global `ascii-info`'s `(Int 0 128)` contract says
     // nothing about it.  (`fn_kind` above already resolved scope-first, so
-    // the arity check needs no such guard.)
-    if let Some(callee_name) = fn_name.filter(|name| scope.lookup(name).is_none()) {
+    // the arity check needs no such guard.)  `is_lexically_bound`, not
+    // `lookup`: an `if` guard such as `(< ascii-info 1)` *narrows* the global
+    // into a scope frame, and that must not count as a shadowing binding.
+    if let Some(callee_name) = fn_name.filter(|name| !scope.is_lexically_bound(name)) {
         if let Some(param_refinements) = env.fn_param_refinements.get(callee_name) {
             // Map TypedMode → RefinementMode for the protocol.
             let ref_mode = match mode {
@@ -463,7 +465,9 @@ fn infer_if(
     );
 
     // ── True branch ──────────────────────────────────────────────────────────
-    scope.push_frame();
+    // Narrowing frames, not lexical ones: a narrowed global is still the
+    // global (see `ScopeStack::is_lexically_bound`).
+    scope.push_narrowing_frame();
     for (var, kind) in narrowed.true_branch {
         scope.bind(&var, kind);
     }
@@ -471,7 +475,7 @@ fn infer_if(
     scope.pop_frame();
 
     // ── False branch ─────────────────────────────────────────────────────────
-    scope.push_frame();
+    scope.push_narrowing_frame();
     for (var, kind) in narrowed.false_branch {
         scope.bind(&var, kind);
     }

@@ -84,6 +84,18 @@ synthesizing refinement annotations. Reassignable strings, captured strings,
 unobserved/conflicting or closure-derived string parameters, and broader dynamic
 string values remain follow-up work.
 
+Typing a parameter `str` promises that every value that reaches it is a
+string, so the evidence pass walks the whole program. Only a direct call in
+`main` can establish `str`. The parameter falls back to `any` if any of these
+is true:
+
+- A direct call anywhere else (another function body, a lambda, a `match`
+  arm) passes a non-string.
+- A call has the wrong number of arguments.
+- The function is used as a value, as in `(define h strlen)`,
+  `(let ((g strlen)) …)` or `(map strlen xs)`, so its callers cannot be known.
+- The module exports the function, so another module may call it.
+
 Twig remains dynamically typed, so functions keep `type_status = Untyped` and
 dynamic paths still carry `type_hint = "any"`. The LANG-FULL fast paths above
 stamp concrete hints only where source-local evidence makes the type
@@ -135,6 +147,12 @@ program returned 100. Every lookup now checks the lexical scope first:
 - **Call-site string inference in `main`.** A call to a shadowing `let`
   binding tells the compiler nothing about the parameters of the top-level
   function with the same name.
+- **Type facts belong to their binding.** `let`, `let*` and `match` bindings
+  start with no type and no E4 alias. When the scope ends, they restore what
+  the name meant outside it (`FnCtx::shadow` / `FnCtx::unshadow`). So an inner
+  string `x` does not make a later `(string-length x)` on an integer
+  parameter lower to `str_len`. An inner `s` bound to 5 also no longer reads
+  the outer string's alias register.
 
 `and` and `or` are special forms, not bindings, so a local cannot shadow
 them.

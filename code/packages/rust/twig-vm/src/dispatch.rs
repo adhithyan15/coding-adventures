@@ -4040,6 +4040,18 @@ mod tests {
     }
 
     #[test]
+    fn inner_let_hides_outer_string_alias_binding() {
+        // The outer `s` is an E4 string held in an alias register; the inner
+        // `s` is 5, and that is what the body must read.
+        assert_eq!(
+            run_source("(let ((s (string-append \"a\" \"b\"))) (let ((s 5)) s))")
+                .unwrap()
+                .as_int(),
+            Some(5),
+        );
+    }
+
+    #[test]
     fn parameter_shadowing_builtin_is_called() {
         assert_eq!(
             run_source("(define (f car) (car 1)) (f (lambda (x) (+ x 41)))")
