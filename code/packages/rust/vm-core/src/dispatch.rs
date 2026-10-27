@@ -2242,7 +2242,7 @@ fn handle_f64_query(ctx: &mut DispatchCtx, instr: &IIRInstr, query: fn(f64) -> i
     let x = f64_operand(ctx, instr, 0)?;
     let result = Value::Int(query(x));
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
