@@ -4,6 +4,11 @@
 // rest of TaskApp (--surface:#252019 --ink:#f1ebe1 --ink-soft:#b3a99c
 // --ink-faint:#867c70 --line:#352e25 --line-soft:#2c2620 --honey:#eaa63f
 // --red:#e26a52 --red-tint:#3a221c).
+//
+// Since 0.3.0 the list rows, the title and body fields and the Save/Delete/
+// Cancel buttons belong to the toolkit's RecordList and to DraftEditor, and
+// are styled by those packages' own themes (record-list-*, draft-editor-*).
+// This file styles only the parts Notes still owns.
 
 style Notes {
   part notes-root {
@@ -47,67 +52,16 @@ style Notes {
     }
   }
 
-  part notes-row-on {
-    width          : 100% ;
-    text-align     : "left" ;
-    padding-top    : 8 ;
-    padding-right  : 12 ;
-    padding-bottom : 8 ;
-    padding-left   : 12 ;
-    border-radius  : 8 ;
-    border-width   : 0 ;
-    background     : "#252019" ;
-    color          : "#f1ebe1" ;
-    font-size      : 13 ;
-    font-weight    : bold ;
-    box-shadow     : "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)" ;
-    elevation      : raised ;
-  }
-
-  part notes-row-off {
-    width          : 100% ;
-    text-align     : "left" ;
-    padding-top    : 8 ;
-    padding-right  : 12 ;
-    padding-bottom : 8 ;
-    padding-left   : 12 ;
-    border-radius  : 8 ;
-    border-width   : 0 ;
-    background     : "transparent" ;
-    color          : "#b3a99c" ;
-    font-size      : 13 ;
-    state hover {
-      background: "#2c2620" ;
-      color: "#f1ebe1" ;
-    }
-  }
-
   part notes-editor {
     flex-grow : 1 ;
     gap       : 10 ;
   }
 
-  part notes-title-input {
-    padding       : 10 ;
-    border-radius : 6 ;
-    background    : "#1a1714" ;
-    color         : "#f1ebe1" ;
-    border-width  : 1 ;
-    border-color  : "#352e25" ;
-    font-size     : 14 ;
-    font-weight   : bold ;
-  }
-
-  part notes-body-input {
-    width         : 100% ;
-    min-height    : 200 ;
-    padding       : 10 ;
-    border-radius : 6 ;
-    background    : "#1a1714" ;
-    color         : "#f1ebe1" ;
-    border-width  : 1 ;
-    border-color  : "#352e25" ;
-    font-size     : 13 ;
+  // The attach-to-task field's visible label (0.3.0), styled as
+  // DraftEditor styles its own field labels: small, quiet text.
+  part notes-task-label {
+    font-size : 12 ;
+    color     : "#b3a99c" ;
   }
 
   part notes-task-input {
@@ -118,57 +72,6 @@ style Notes {
     border-width  : 1 ;
     border-color  : "#352e25" ;
     font-size     : 13 ;
-  }
-
-  part notes-actions {
-    gap : 8 ;
-  }
-
-  part notes-save {
-    padding-top    : 8 ;
-    padding-right  : 16 ;
-    padding-bottom : 8 ;
-    padding-left   : 16 ;
-    border-radius  : 8 ;
-    border-width   : 0 ;
-    background     : "#eaa63f" ;
-    color          : "#1a1714" ;
-    font-size      : 13 ;
-    font-weight    : bold ;
-    state hover {
-      background: "#d4922f" ;
-    }
-  }
-
-  part notes-delete {
-    padding-top    : 8 ;
-    padding-right  : 16 ;
-    padding-bottom : 8 ;
-    padding-left   : 16 ;
-    border-radius  : 8 ;
-    border-width   : 0 ;
-    background     : "#3a221c" ;
-    color          : "#e26a52" ;
-    font-size      : 13 ;
-    font-weight    : bold ;
-    state hover {
-      background: "#472a22" ;
-    }
-  }
-
-  part notes-cancel {
-    padding-top    : 8 ;
-    padding-right  : 16 ;
-    padding-bottom : 8 ;
-    padding-left   : 16 ;
-    border-radius  : 8 ;
-    border-width   : 0 ;
-    background     : "transparent" ;
-    color          : "#b3a99c" ;
-    font-size      : 13 ;
-    state hover {
-      color: "#f1ebe1" ;
-    }
   }
 
   part notes-empty {
