@@ -238,6 +238,7 @@ members = [
     "mips-r2000-gatelevel",
     "sparc-v8-gatelevel",
     "sparc-v8-simulator",
+    "sparc-v9-simulator",
     "opensparc-t1-simulator",
     "opensparc-t1-gatelevel",
     "alpha-axp-simulator",
