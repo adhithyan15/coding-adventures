@@ -112,31 +112,65 @@ use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::function::IIRFunction;
 use interpreter_ir::IIRModule;
 
+use crate::helper_names::{claim_helper_name, HelperNameError};
+
 /// The synthesized recursive length helper's function name.
-const LENGTH_HELPER: &str = "__dyn_list_length";
+pub(crate) const LENGTH_HELPER: &str = "__dyn_list_length";
 /// The synthesized recursive list-ref helper's function name.
-const LISTREF_HELPER: &str = "__dyn_list_ref";
+pub(crate) const LISTREF_HELPER: &str = "__dyn_list_ref";
 /// The synthesized recursive append helper's function name.
-const APPEND_HELPER: &str = "__dyn_list_append";
+pub(crate) const APPEND_HELPER: &str = "__dyn_list_append";
 /// The synthesized tail-recursive reverse (accumulator) helper's function name.
-const REVERSE_HELPER: &str = "__dyn_list_reverse";
+pub(crate) const REVERSE_HELPER: &str = "__dyn_list_reverse";
 /// The synthesized recursive assoc (association-list search) helper's name.
-const ASSOC_HELPER: &str = "__dyn_list_assoc";
+pub(crate) const ASSOC_HELPER: &str = "__dyn_list_assoc";
 /// The nil-sentinel `const` type hint (`const 0 : ref<LispyPair>`) — the exact
 /// form `desugar_list_in_function`/`make_nil` emit for the empty list. `reverse`
 /// seeds its accumulator with one.
 const REF_PAIR: &str = "ref<LispyPair>";
 
+/// The pass name a [`HelperNameError`] reports.
+const PASS: &str = "lower_list_ops";
+
+/// Recognises one list operation's `call_builtin` (`is_length_call`, …).
+type IsCall = fn(&IIRInstr) -> bool;
+/// Builds that operation's helper function (`build_length_helper`, …).
+type BuildHelper = fn() -> IIRFunction;
+
 /// Module-level entry: rewrite every list-*operation* `call_builtin` to a call to
 /// its synthesized recursive helper, and inject each helper once if any call to
-/// that op was present. Currently handles `length` and `list-ref`; further ops
-/// (`append`, `reverse`, `assoc`) follow the same add-a-helper pattern.
-pub fn lower_list_ops(module: &mut IIRModule) {
+/// that op was present. Handles `length`, `list-ref`, `append`, `reverse` and
+/// `assoc`, each with the same add-a-helper pattern.
+///
+/// # Errors
+///
+/// [`HelperNameError`], before anything is rewritten, when the module uses one
+/// of these operations and already holds a *different* function under the
+/// name of its helper. Rewriting would point the operation at that function
+/// (`(length xs)` answering whatever a program's own `__dyn_list_length`
+/// returns), so the module is refused instead (see [`crate::helper_names`]).
+pub fn lower_list_ops(module: &mut IIRModule) -> Result<(), HelperNameError> {
+    // Claim every helper this module will need before rewriting a single call,
+    // so a refused module is refused unchanged.
+    let ops: [(IsCall, BuildHelper); 5] = [
+        (is_length_call, build_length_helper),
+        (is_listref_call, build_listref_helper),
+        (is_append_call, build_append_helper),
+        (is_reverse_call, build_reverse_helper),
+        (is_assoc_call, build_assoc_helper),
+    ];
+    for (is_call, build) in ops {
+        let used = module.functions.iter().any(|f| f.instructions.iter().any(is_call));
+        if used {
+            claim_helper_name(module, &build(), PASS)?;
+        }
+    }
     lower_length(module);
     lower_list_ref(module);
     lower_append(module);
     lower_reverse(module);
     lower_assoc(module);
+    Ok(())
 }
 
 /// Rewrite `length` calls + inject `__dyn_list_length` once.
@@ -152,6 +186,8 @@ fn lower_length(module: &mut IIRModule) {
     }
     // Inject the helper exactly once (idempotent: both heap entry points may
     // call this, but only one runs per pipeline, and this guards re-injection).
+    // `lower_list_ops` has already refused a module whose function of this
+    // name is anything but the helper, so "present" means "ours".
     if !module.functions.iter().any(|f| f.name == LENGTH_HELPER) {
         module.functions.push(build_length_helper());
     }
@@ -918,7 +954,7 @@ mod tests {
                 "any",
             ),
         ]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         let main = m.functions.iter().find(|f| f.name == "main").unwrap();
         // A `box idx -> …` must now precede the call, and the call must pass the
         // boxed name, not the raw `idx`.
@@ -947,7 +983,7 @@ mod tests {
                 "any",
             ),
         ]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         let main = m.functions.iter().find(|f| f.name == "main").unwrap();
         assert!(
             !main.instructions.iter().any(|i| i.op == "box"),
@@ -974,19 +1010,75 @@ mod tests {
         )
     }
 
+    /// Security review: a module that already defines `__dyn_list_length`
+    /// (here: one that returns 99) and uses `length` used to keep its own
+    /// function, so `(length xs)` answered 99. It is refused, unchanged.
+    #[test]
+    fn an_impostor_helper_is_refused_not_called() {
+        let impostor = IIRFunction::new(
+            LENGTH_HELPER,
+            vec![("l".into(), "ref<any>".into())],
+            "ref<any>",
+            vec![
+                IIRInstr::new("const", Some("k".into()), vec![Operand::Int(99)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("k".into())], "i64"),
+            ],
+        );
+        let mut m = module_with(vec![length_call("r", "lst")]);
+        m.functions.push(impostor);
+        let err = lower_list_ops(&mut m).unwrap_err();
+        assert_eq!(err, HelperNameError { name: LENGTH_HELPER.into(), pass: PASS });
+        // Refused before anything was rewritten.
+        assert!(is_length_call(&m.functions[0].instructions[0]), "main is untouched");
+        assert_eq!(m.functions.len(), 2, "no helper added");
+
+        // Every helper is defended, not only `length`'s.
+        for (call, helper) in [
+            ("list-ref", LISTREF_HELPER),
+            ("append", APPEND_HELPER),
+            ("reverse", REVERSE_HELPER),
+            ("assoc", ASSOC_HELPER),
+        ] {
+            let use_it = IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![Operand::Var(call.into()), Operand::Var("a".into()), Operand::Var("b".into())],
+                "any",
+            );
+            let mut m = module_with(vec![use_it]);
+            m.functions.push(IIRFunction::new(helper, vec![], "any", vec![]));
+            let err = lower_list_ops(&mut m).unwrap_err();
+            assert_eq!(err.name, helper, "{call}");
+        }
+    }
+
+    /// The pass's own helper under its own name is accepted (the pass ran
+    /// before), and a helper name nobody uses is not this pass's business.
+    #[test]
+    fn the_real_helper_and_an_unused_name_are_accepted() {
+        let mut m = module_with(vec![length_call("r", "lst")]);
+        m.functions.push(build_length_helper());
+        lower_list_ops(&mut m).expect("its own helper is accepted");
+        assert_eq!(m.functions.iter().filter(|f| f.name == LENGTH_HELPER).count(), 1);
+
+        let mut m = module_with(vec![]);
+        m.functions.push(IIRFunction::new(LENGTH_HELPER, vec![], "any", vec![]));
+        lower_list_ops(&mut m).expect("no `length` call, nothing is pointed at it");
+    }
+
     #[test]
     fn no_length_is_noop() {
         let mut m = module_with(vec![
             IIRInstr::new("const", Some("x".into()), vec![Operand::Int(1)], "i64"),
         ]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         assert_eq!(m.functions.len(), 1, "no helper injected when length is unused");
     }
 
     #[test]
     fn length_call_becomes_helper_call() {
         let mut m = module_with(vec![length_call("r", "lst")]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         let body = &m.functions[0].instructions;
         // call __dyn_list_length, lst -> r : ref<any>  (helper returns a boxed value)
         let call = &body[0];
@@ -1002,20 +1094,20 @@ mod tests {
     fn helper_is_injected_once() {
         // Two length calls (even across a helper re-scan) inject exactly one helper.
         let mut m = module_with(vec![length_call("a", "l1"), length_call("b", "l2")]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         assert_eq!(
             m.functions.iter().filter(|f| f.name == LENGTH_HELPER).count(), 1,
             "exactly one helper",
         );
         // Idempotent: a second pass does not add another.
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         assert_eq!(m.functions.iter().filter(|f| f.name == LENGTH_HELPER).count(), 1);
     }
 
     #[test]
     fn helper_shape_is_recursive_cons_walk() {
         let mut m = module_with(vec![length_call("r", "lst")]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         let helper = m.functions.iter().find(|f| f.name == LENGTH_HELPER).unwrap();
         assert_eq!(helper.return_type, "ref<any>", "helper is a proper lisp function");
         assert_eq!(helper.params, vec![("lst".to_string(), "ref<any>".to_string())]);
@@ -1052,14 +1144,14 @@ mod tests {
         let mut m = module_with(vec![
             IIRInstr::new("const", Some("x".into()), vec![Operand::Int(1)], "i64"),
         ]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         assert_eq!(m.functions.len(), 1, "no helper injected when list-ref is unused");
     }
 
     #[test]
     fn listref_call_becomes_helper_call() {
         let mut m = module_with(vec![listref_call("r", "lst", "idx")]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         let body = &m.functions[0].instructions;
         // call __dyn_list_ref, lst, idx -> r : ref<any>
         let call = &body[0];
@@ -1078,20 +1170,20 @@ mod tests {
             listref_call("a", "l1", "i1"),
             listref_call("b", "l2", "i2"),
         ]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         assert_eq!(
             m.functions.iter().filter(|f| f.name == LISTREF_HELPER).count(), 1,
             "exactly one list-ref helper",
         );
         // Idempotent: a second pass does not add another.
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         assert_eq!(m.functions.iter().filter(|f| f.name == LISTREF_HELPER).count(), 1);
     }
 
     #[test]
     fn listref_helper_shape_walks_index_with_typed_ops() {
         let mut m = module_with(vec![listref_call("r", "lst", "idx")]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         let helper = m.functions.iter().find(|f| f.name == LISTREF_HELPER).unwrap();
         assert_eq!(helper.return_type, "ref<any>", "helper returns a lisp value");
         assert_eq!(
@@ -1136,7 +1228,7 @@ mod tests {
             length_call("a", "l1"),
             listref_call("b", "l2", "i2"),
         ]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         assert_eq!(m.functions.iter().filter(|f| f.name == LENGTH_HELPER).count(), 1);
         assert_eq!(m.functions.iter().filter(|f| f.name == LISTREF_HELPER).count(), 1);
     }
@@ -1160,14 +1252,14 @@ mod tests {
         let mut m = module_with(vec![
             IIRInstr::new("const", Some("x".into()), vec![Operand::Int(1)], "i64"),
         ]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         assert_eq!(m.functions.len(), 1, "no helper injected when append is unused");
     }
 
     #[test]
     fn append_call_becomes_helper_call() {
         let mut m = module_with(vec![append_call("r", "xs", "ys")]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         let body = &m.functions[0].instructions;
         // call __dyn_list_append, xs, ys -> r : ref<any>
         let call = &body[0];
@@ -1186,19 +1278,19 @@ mod tests {
             append_call("a", "l1", "r1"),
             append_call("b", "l2", "r2"),
         ]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         assert_eq!(
             m.functions.iter().filter(|f| f.name == APPEND_HELPER).count(), 1,
             "exactly one append helper",
         );
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         assert_eq!(m.functions.iter().filter(|f| f.name == APPEND_HELPER).count(), 1);
     }
 
     #[test]
     fn append_helper_shape_rebuilds_via_cons() {
         let mut m = module_with(vec![append_call("r", "xs", "ys")]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         let helper = m.functions.iter().find(|f| f.name == APPEND_HELPER).unwrap();
         assert_eq!(helper.return_type, "ref<any>", "helper returns a lisp value");
         assert_eq!(
@@ -1238,7 +1330,7 @@ mod tests {
             listref_call("b", "l2", "i2"),
             append_call("c", "l3", "l4"),
         ]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         assert_eq!(m.functions.iter().filter(|f| f.name == LENGTH_HELPER).count(), 1);
         assert_eq!(m.functions.iter().filter(|f| f.name == LISTREF_HELPER).count(), 1);
         assert_eq!(m.functions.iter().filter(|f| f.name == APPEND_HELPER).count(), 1);
@@ -1259,14 +1351,14 @@ mod tests {
         let mut m = module_with(vec![
             IIRInstr::new("const", Some("x".into()), vec![Operand::Int(1)], "i64"),
         ]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         assert_eq!(m.functions.len(), 1, "no helper injected when reverse is unused");
     }
 
     #[test]
     fn reverse_call_seeds_nil_and_calls_acc_helper() {
         let mut m = module_with(vec![reverse_call("r", "xs")]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         let body = &m.functions[0].instructions;
         // const r.rev_nil = 0 : ref<LispyPair>   (the empty accumulator seed)
         let nil = &body[0];
@@ -1288,19 +1380,19 @@ mod tests {
     #[test]
     fn reverse_helper_is_injected_once() {
         let mut m = module_with(vec![reverse_call("a", "l1"), reverse_call("b", "l2")]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         assert_eq!(
             m.functions.iter().filter(|f| f.name == REVERSE_HELPER).count(), 1,
             "exactly one reverse helper",
         );
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         assert_eq!(m.functions.iter().filter(|f| f.name == REVERSE_HELPER).count(), 1);
     }
 
     #[test]
     fn reverse_helper_shape_is_tail_recursive_accumulator() {
         let mut m = module_with(vec![reverse_call("r", "xs")]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         let helper = m.functions.iter().find(|f| f.name == REVERSE_HELPER).unwrap();
         assert_eq!(helper.return_type, "ref<any>");
         assert_eq!(
@@ -1338,7 +1430,7 @@ mod tests {
             append_call("c", "l3", "l4"),
             reverse_call("d", "l5"),
         ]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         assert_eq!(m.functions.iter().filter(|f| f.name == LENGTH_HELPER).count(), 1);
         assert_eq!(m.functions.iter().filter(|f| f.name == LISTREF_HELPER).count(), 1);
         assert_eq!(m.functions.iter().filter(|f| f.name == APPEND_HELPER).count(), 1);
@@ -1364,14 +1456,14 @@ mod tests {
         let mut m = module_with(vec![
             IIRInstr::new("const", Some("x".into()), vec![Operand::Int(1)], "i64"),
         ]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         assert_eq!(m.functions.len(), 1, "no helper injected when assoc is unused");
     }
 
     #[test]
     fn assoc_call_becomes_helper_call() {
         let mut m = module_with(vec![assoc_call("r", "k", "al")]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         let body = &m.functions[0].instructions;
         let call = &body[0];
         assert_eq!(call.op, "call");
@@ -1386,19 +1478,19 @@ mod tests {
     #[test]
     fn assoc_helper_is_injected_once() {
         let mut m = module_with(vec![assoc_call("a", "k1", "al1"), assoc_call("b", "k2", "al2")]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         assert_eq!(
             m.functions.iter().filter(|f| f.name == ASSOC_HELPER).count(), 1,
             "exactly one assoc helper",
         );
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         assert_eq!(m.functions.iter().filter(|f| f.name == ASSOC_HELPER).count(), 1);
     }
 
     #[test]
     fn assoc_helper_shape_searches_pairs_by_key() {
         let mut m = module_with(vec![assoc_call("r", "k", "al")]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         let helper = m.functions.iter().find(|f| f.name == ASSOC_HELPER).unwrap();
         assert_eq!(helper.return_type, "ref<any>");
         assert_eq!(
@@ -1440,7 +1532,7 @@ mod tests {
             reverse_call("d", "l5"),
             assoc_call("e", "k", "al"),
         ]);
-        lower_list_ops(&mut m);
+        lower_list_ops(&mut m).unwrap();
         for helper in [LENGTH_HELPER, LISTREF_HELPER, APPEND_HELPER, REVERSE_HELPER, ASSOC_HELPER] {
             assert_eq!(
                 m.functions.iter().filter(|f| f.name == helper).count(), 1,
