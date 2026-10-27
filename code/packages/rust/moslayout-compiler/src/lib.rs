@@ -224,7 +224,9 @@ const PRIMITIVES: &[&str] = &[
     "HostNavigationSplit",
 ];
 
-#[allow(dead_code)] // retained as API surface / scaffolding
+/// Whether `tag` is a kernel primitive rather than a component reference
+/// (`pkg::P::C`, or a local component such as a package's sibling export).
+/// The bare-name check (`check_bare_names`) skips call sites by this test.
 fn is_primitive(tag: &str) -> bool {
     PRIMITIVES.contains(&tag)
 }
@@ -648,6 +650,11 @@ pub enum ErrorKind {
     UnknownSlot,
     /// An emit reference names an emit not declared in the interface descriptor.
     UnknownEmit,
+    /// A bare NAME prop value in a name-reference position (`Text ( content:
+    /// hello )`) that no enclosing `For` binds and that names no slot of the
+    /// component. Every backend lowers such a name to a variable read, so
+    /// left alone it fails late, differently on each one. UI29 §3.4.
+    UnboundName,
     /// Two parts share the same name.
     DuplicatePart,
     /// An unknown identifier appears in node position (not a primitive or component).
@@ -839,6 +846,13 @@ pub fn validate(
         &mut errors,
     );
 
+    // UI29 §3.4 — every bare name must be bound. Like `UnknownSlot`, this
+    // needs the interface: without one the slots are unknown, and any bare
+    // name might be one, so the check is skipped rather than guessed.
+    if has_interface {
+        check_bare_names(def, &known_slots, &mut errors);
+    }
+
     if errors.is_empty() {
         Ok(parts)
     } else {
@@ -992,16 +1006,16 @@ fn validate_node(
     // Validate slot/emit references in props.
     for prop in &node.props {
         match &prop.value {
-            LayoutPropValue::SlotRef(slot_name) => {
-                if has_interface && !known_slots.contains(slot_name) {
-                    errors.push(CompileError {
-                        kind: ErrorKind::UnknownSlot,
-                        message: format!(
-                            "Unknown slot '{}' referenced in layout — not declared in .mil",
-                            slot_name
-                        ),
-                    });
-                }
+            LayoutPropValue::SlotRef(slot_name)
+                if has_interface && !known_slots.contains(slot_name) =>
+            {
+                errors.push(CompileError {
+                    kind: ErrorKind::UnknownSlot,
+                    message: format!(
+                        "Unknown slot '{}' referenced in layout — not declared in .mil",
+                        slot_name
+                    ),
+                });
             }
             LayoutPropValue::EmitRef(emit_name)
                 if has_interface && !known_emits.contains(emit_name) =>
@@ -1238,6 +1252,184 @@ fn validate_for_node(
     }
     // `index:` is optional — no missing check.
     let _ = saw_index;
+}
+
+// ===========================================================================
+// UI29 §3.4 — a bare name must be bound (backlog 6f1p)
+// ===========================================================================
+//
+// A bare NAME prop value parses as `LayoutPropValue::Keyword`, and in most
+// positions it is UI29 §3.3's `name_ref`: every backend lowers it to a read
+// of a variable.
+//
+//   Text ( content: hello )   React {hello}   SwiftUI _mosaicText(hello)
+//                             Web Components  this.hello   Compose  hello
+//
+// So the name has to exist. Before this check the validator accepted any
+// bare name, and one that nothing bound failed late and differently on each
+// backend: `tsc`, `swiftc`, `kotlinc` and `dart analyze` errors, or, on Web
+// Components, a runtime `ReferenceError` that blanked the whole component.
+//
+// A bare name is bound when it is
+//
+//   1. the `as:` or `index:` of an enclosing `For`, matched exactly as
+//      written (the package resolver's `for_scope` matches the same way);
+//      a `For` binding wins over a slot of the same name (UI29 §3.4), which
+//      needs no code here because either way the name is bound; or
+//   2. a slot of this component, in its declared kebab-case spelling or its
+//      camelCase form (`display-name` or `displayName`), the lookup the
+//      resolver's `CalleeScope::slot_named` makes.
+//
+// Which positions are name references is the resolver's table, not a new
+// one, so the two can never disagree about a bare NAME:
+//
+//   position                                   checked?
+//   ─────────────────────────────────────────  ─────────────────────────────
+//   `true` / `false`, anywhere                 no — a literal
+//   a KEYWORD_LITERAL_PROPS position           no — an enum value
+//     (`axis: both`, `a11y-role: heading`)
+//   any prop of `For` / `If` / `Else`          no — `as:`/`index:` bind;
+//                                              `each:` and `when:` have
+//                                              their own rules above
+//   a component call site (`pkg::P::C`, or     no — see below
+//     any tag that is not a kernel primitive)
+//   any other prop of a kernel primitive       yes
+//
+// Call sites are skipped because a bare value there can be a value of the
+// mounted component's `one-of` slot (`Badge ( tone: loud )`), a literal,
+// and only the callee's interface says so; this validator sees only the
+// caller's. They are not unchecked, though. Inside a package layout the
+// resolver checks each call-site value against the mounted component's
+// slots (`check_callee_scope`). In a consumer, the artifact builder runs
+// this validator again on the inlined tree, where a value that was not one
+// of the callee's declared values sits in the callee's primitives as an
+// ordinary bare name of the consumer's scope.
+//
+// Expressions (`If ( when: ( hint > 0 ) )`) are opaque text here, as they
+// are to every other check in this validator; their free names are the
+// resolver's business for packages and are not yet checked for apps.
+
+/// Report every bare NAME in a name-reference position of `def` that no
+/// enclosing `For` binds and that names none of `known_slots`.
+fn check_bare_names(
+    def: &LayoutDef,
+    known_slots: &HashSet<String>,
+    errors: &mut Vec<CompileError>,
+) {
+    // Both spellings of every slot, built once, as the resolver does.
+    let mut slot_names = HashSet::with_capacity(known_slots.len() * 2);
+    for slot in known_slots {
+        slot_names.insert(slot.clone());
+        slot_names.insert(to_camel_case_first_lower(slot));
+    }
+    let mut walk = BareNameCheck {
+        component: &def.component_name,
+        slot_names,
+        path: Vec::new(),
+        errors,
+    };
+    walk.visit(&def.root, None, &HashSet::new());
+}
+
+struct BareNameCheck<'a> {
+    component: &'a str,
+    /// Every slot, kebab-case and camelCase.
+    slot_names: HashSet<String>,
+    /// `Tag[part]` / `Tag#n` segments from the root to the node visited,
+    /// the call-site path format of the resolver's `SlotBindingMissing`.
+    path: Vec<String>,
+    errors: &'a mut Vec<CompileError>,
+}
+
+impl BareNameCheck<'_> {
+    /// Whether `word` names a slot: as written, or in camelCase.
+    fn is_slot(&self, word: &str) -> bool {
+        self.slot_names.contains(word) || self.slot_names.contains(&to_camel_case_first_lower(word))
+    }
+
+    /// Visit `node`, the `position`-th child of its parent (`None` for the
+    /// root), with `loops` the `For` bindings in scope.
+    fn visit(&mut self, node: &LayoutNode, position: Option<usize>, loops: &HashSet<String>) {
+        self.path.push(match (&node.part_name, position) {
+            (Some(part), _) => format!("{}[{part}]", node.tag),
+            (None, Some(index)) => format!("{}#{}", node.tag, index + 1),
+            (None, None) => node.tag.clone(),
+        });
+
+        let control_flow = matches!(node.tag.as_str(), "For" | "If" | "Else");
+        let call_site = !is_primitive(&node.tag) || node.is_child_slot_mount();
+        if !control_flow && !call_site {
+            for prop in &node.props {
+                let LayoutPropValue::Keyword(word) = &prop.value else {
+                    continue;
+                };
+                if is_keyword_literal(&node.tag, &prop.name, word)
+                    || loops.contains(word)
+                    || self.is_slot(word)
+                {
+                    continue;
+                }
+                self.unbound(&node.tag, &prop.name, word);
+            }
+        }
+
+        // A `For`'s own props are evaluated outside it; only its children
+        // see its `as:` and `index:`.
+        let mut inner = loops.clone();
+        if node.tag == "For" {
+            for prop in &node.props {
+                if let ("as" | "index", LayoutPropValue::Keyword(name)) =
+                    (prop.name.as_str(), &prop.value)
+                {
+                    inner.insert(name.clone());
+                }
+            }
+        }
+        for (index, child) in node.children.iter().enumerate() {
+            self.visit(child, Some(index), &inner);
+        }
+        self.path.pop();
+    }
+
+    fn unbound(&mut self, tag: &str, prop: &str, word: &str) {
+        let component = self.component;
+        self.errors.push(CompileError {
+            kind: ErrorKind::UnboundName,
+            message: format!(
+                "`{component}` layout: bare name `{word}` in `{tag} ( {prop}: {word} )` at {path} \
+                 is not bound — no enclosing `For` binds it and {component}.mil declares no slot \
+                 `{word}`. Declare `slot {word} : …` in {component}.mil, bind it with \
+                 `For ( …, as: {word} )`, or quote it as a string literal \"{word}\"",
+                path = self.path.join(" > "),
+            ),
+        });
+    }
+}
+
+/// `display-name` → `displayName`: the camelCase form the emitters give a
+/// kebab-case name, and the second spelling the resolver accepts for a slot.
+/// A copy of `mosaic-package-resolver`'s helper of the same name, which this
+/// crate cannot depend on (the resolver depends on it).
+fn to_camel_case_first_lower(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    let mut cap_next = false;
+    let mut first = true;
+    for ch in s.chars() {
+        if ch == '-' {
+            cap_next = true;
+            continue;
+        }
+        if first {
+            out.push(ch.to_ascii_lowercase());
+            first = false;
+        } else if cap_next {
+            out.push(ch.to_ascii_uppercase());
+            cap_next = false;
+        } else {
+            out.push(ch);
+        }
+    }
+    out
 }
 
 // ===========================================================================
@@ -4290,4 +4482,267 @@ mod depth_guard_tests {
     depth_guard_triple!(not_shape, nested_not_source, 86, 87);
     depth_guard_triple!(paren_shape, nested_paren_source, 10, 11);
     depth_guard_triple!(bracket_shape, nested_bracket_source, 12, 13);
+}
+
+// ===========================================================================
+// UI29 §3.4 — a bare name must be bound (backlog 6f1p)
+// ===========================================================================
+
+#[cfg(test)]
+mod bare_name_tests {
+    use super::*;
+
+    /// A `Greeting` interface declaring `slots` (name only; type `text`).
+    fn interface(slots: &[&str]) -> String {
+        let slots: Vec<String> = slots
+            .iter()
+            .map(|s| format!(r#"{{ "name": "{s}", "type": "text" }}"#))
+            .collect();
+        format!(
+            r#"{{ "component": "Greeting", "slots": [{}], "emits": [] }}"#,
+            slots.join(", ")
+        )
+    }
+
+    /// `layout Greeting { <body> }`, compiled against `slots`.
+    fn check(body: &str, slots: &[&str]) -> Result<CompileOutput, Vec<CompileError>> {
+        compile(
+            &format!("layout Greeting {{\n{body}\n}}\n"),
+            Some(&interface(slots)),
+        )
+    }
+
+    fn unbound(errors: &[CompileError]) -> Vec<&CompileError> {
+        errors
+            .iter()
+            .filter(|e| e.kind == ErrorKind::UnboundName)
+            .collect()
+    }
+
+    /// The headline case, and the exact shape of the error: component, bare
+    /// name, prop, node path, and the three fixes.
+    #[test]
+    fn an_unbound_bare_name_is_rejected_with_location_and_fixes() {
+        let errors = check("Column [ root ] { Text ( content: hello ) }", &[])
+            .expect_err("hello is bound by nothing");
+        assert_eq!(errors.len(), 1, "{errors:?}");
+        assert_eq!(errors[0].kind, ErrorKind::UnboundName);
+        assert_eq!(
+            errors[0].to_string(),
+            "UnboundName: `Greeting` layout: bare name `hello` in `Text ( content: hello )` \
+             at Column[root] > Text#1 is not bound — no enclosing `For` binds it and \
+             Greeting.mil declares no slot `hello`. Declare `slot hello : …` in Greeting.mil, \
+             bind it with `For ( …, as: hello )`, or quote it as a string literal \"hello\""
+        );
+    }
+
+    /// Every occurrence is reported, each at its own path, and a named part
+    /// appears as `Tag[part]`.
+    #[test]
+    fn every_unbound_occurrence_is_reported_at_its_own_path() {
+        let errors = check(
+            "Column [ root ] {\n  Text [ title ] ( content: a )\n  Row { HostButton ( label: b ) }\n}",
+            &[],
+        )
+        .expect_err("a and b are free");
+        let messages: Vec<String> = unbound(&errors).iter().map(|e| e.message.clone()).collect();
+        assert_eq!(messages.len(), 2, "{messages:?}");
+        assert!(messages[0].contains("`Text ( content: a )` at Column[root] > Text[title]"));
+        assert!(messages[1]
+            .contains("`HostButton ( label: b )` at Column[root] > Row#2 > HostButton#1"));
+    }
+
+    #[test]
+    fn a_for_as_binding_binds_its_body() {
+        check(
+            "Column { For ( each: slot: rows , as: row ) { Text ( content: row ) } }",
+            &["rows"],
+        )
+        .expect("row is the loop variable");
+    }
+
+    #[test]
+    fn a_for_index_binding_binds_its_body() {
+        check(
+            "Column { For ( each: slot: rows , as: row , index: i ) { Text ( content: i ) } }",
+            &["rows"],
+        )
+        .expect("i is the loop index");
+    }
+
+    /// Nested loops see every enclosing binding, a kebab-case binder is
+    /// matched as written, and the outer binding feeds the inner `each:`.
+    #[test]
+    fn nested_and_kebab_case_for_bindings_bind() {
+        check(
+            "Column { For ( each: slot: rows , as: row-item , index: r ) {\n  For ( each: row-item , as: cell ) {\n    Text ( content: cell )\n    Text ( content: row-item )\n    Text ( content: r )\n  }\n} }",
+            &["rows"],
+        )
+        .expect("all three names are bound by enclosing loops");
+    }
+
+    /// A binding is visible only inside its own loop: not in a sibling, and
+    /// not after the loop.
+    #[test]
+    fn a_for_binding_does_not_leak_out_of_its_body() {
+        let errors = check(
+            "Column {\n  For ( each: slot: rows , as: row ) { Text ( content: row ) }\n  Text ( content: row )\n}",
+            &["rows"],
+        )
+        .expect_err("the second row is outside the loop");
+        let unbound = unbound(&errors);
+        assert_eq!(unbound.len(), 1, "{errors:?}");
+        assert!(unbound[0].message.contains("at Column > Text#2"));
+    }
+
+    /// A `For` binder is matched exactly as written, as the resolver's
+    /// `for_scope` matches it: `rowItem` does not name `as: row-item`.
+    #[test]
+    fn a_for_binding_is_matched_as_written() {
+        let errors = check(
+            "Column { For ( each: slot: rows , as: row-item ) { Text ( content: rowItem ) } }",
+            &["rows"],
+        )
+        .expect_err("rowItem is not the binder's spelling");
+        assert_eq!(unbound(&errors).len(), 1);
+    }
+
+    /// The component's own slot, in its declared kebab-case spelling or its
+    /// camelCase form, the two the resolver's `slot_named` accepts.
+    #[test]
+    fn an_own_slot_binds_in_either_spelling() {
+        check(
+            "Column {\n  Text ( content: display-name )\n  Text ( content: displayName )\n  Text ( content: title )\n}",
+            &["display-name", "title"],
+        )
+        .expect("both spellings name the slot");
+    }
+
+    /// For wins over a slot of the same name (UI29 §3.4); either way it is
+    /// bound.
+    #[test]
+    fn a_for_binding_shadowing_a_slot_is_bound() {
+        check(
+            "Column { For ( each: slot: rows , as: entry ) { Text ( content: entry ) } }",
+            &["rows", "entry"],
+        )
+        .expect("entry is bound twice over");
+    }
+
+    /// Every `KEYWORD_LITERAL_PROPS` position, and `true`/`false` anywhere,
+    /// is a literal: never checked, even with no slot or loop of that name.
+    #[test]
+    fn literal_keyword_positions_are_exempt() {
+        for &(tag, prop) in KEYWORD_LITERAL_PROPS {
+            let node = LayoutNode {
+                tag: tag.to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: prop.to_string(),
+                    value: LayoutPropValue::Keyword("anything".to_string()),
+                }],
+                children: vec![],
+            };
+            let def = LayoutDef {
+                component_name: "Greeting".to_string(),
+                root: LayoutNode {
+                    tag: "Column".to_string(),
+                    part_name: None,
+                    props: vec![],
+                    children: vec![node],
+                },
+            };
+            let mut errors = Vec::new();
+            check_bare_names(&def, &HashSet::new(), &mut errors);
+            assert!(errors.is_empty(), "{tag} {prop}: {errors:?}");
+        }
+        check(
+            "Column {\n  HostInput ( disabled: true )\n  HostCheckbox ( checked: false )\n  Text ( content: \"x\" , a11y-role: heading )\n  HostScroll ( axis: horizontal ) { Text ( content: \"s\" ) }\n}",
+            &[],
+        )
+        .expect("booleans and enum props are literals");
+    }
+
+    /// The table decides, not the word: the same word in a name-reference
+    /// position on the same tag is checked.
+    #[test]
+    fn the_same_word_outside_a_literal_position_is_checked() {
+        let errors = check(
+            "Column { Text ( content: heading , a11y-role: heading ) }",
+            &[],
+        )
+        .expect_err("content: heading reads a variable");
+        let unbound = unbound(&errors);
+        assert_eq!(unbound.len(), 1, "{errors:?}");
+        assert!(unbound[0].message.contains("`Text ( content: heading )`"));
+    }
+
+    /// A call site's values are skipped: a bare value there may be one of the
+    /// callee's `one-of` values, which only the callee's interface knows.
+    /// The artifact builder's post-inlining validate pass and the resolver
+    /// cover them.
+    #[test]
+    fn call_site_values_are_left_to_the_inlined_tree() {
+        check(
+            "Column {\n  pkg::mosaic-pkg-lib::Badge ( tone: loud , label: secret )\n  Badge ( tone: loud )\n}",
+            &[],
+        )
+        .expect("call-site values are not checked here");
+    }
+
+    /// Once a call site is inlined its value sits in a primitive, and an
+    /// unbound one is caught there, naming the inlined node.
+    #[test]
+    fn an_inlined_call_site_value_is_checked_as_a_primitive_prop() {
+        // What the resolver leaves for `Badge ( label: secret )` when Badge's
+        // layout is `Text [ badge ] ( content: slot: label )`.
+        let def = LayoutDef {
+            component_name: "Greeting".to_string(),
+            root: LayoutNode {
+                tag: "Text".to_string(),
+                part_name: Some("badge".to_string()),
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::Keyword("secret".to_string()),
+                }],
+                children: vec![],
+            },
+        };
+        let errors = validate(&def, Some(&interface(&[]))).expect_err("secret is free");
+        assert_eq!(unbound(&errors).len(), 1);
+        assert!(errors[0].message.contains("at Text[badge]"));
+    }
+
+    /// `For`, `If` and `Else` props are left to their own rules, so an
+    /// unbound `each:` is reported once (by the `For` rule), not twice.
+    #[test]
+    fn control_flow_props_are_left_to_their_own_rules() {
+        let errors = check(
+            "Column { For ( each: rows , as: row ) { Text ( content: row ) } }",
+            &[],
+        )
+        .expect_err("each: rows is unbound");
+        assert!(unbound(&errors).is_empty(), "{errors:?}");
+        assert!(errors
+            .iter()
+            .any(|e| e.kind == ErrorKind::InvalidPrimitiveUsage && e.message.contains("each:")));
+    }
+
+    /// Without an interface the slots are unknown, so the rule is skipped,
+    /// as `UnknownSlot` is.
+    #[test]
+    fn without_an_interface_the_rule_is_skipped() {
+        compile(
+            "layout Greeting { Column { Text ( content: hello ) } }",
+            None,
+        )
+        .expect("no interface, no slot knowledge, no check");
+    }
+
+    #[test]
+    fn camel_case_matches_the_resolver_s_spelling() {
+        assert_eq!(to_camel_case_first_lower("display-name"), "displayName");
+        assert_eq!(to_camel_case_first_lower("Row"), "row");
+        assert_eq!(to_camel_case_first_lower("a-b-c"), "aBC");
+    }
 }

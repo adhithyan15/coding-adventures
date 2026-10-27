@@ -1331,10 +1331,12 @@ impl LayoutPackageResolver {
                 },
             )?;
 
-        // The layout validator treats an expression as opaque text, never
-        // asks whether a bare NAME is an identifier, and allows a mount slot
-        // to be read anywhere, so all three are checked here, once per
-        // component, before the layout is ever inlined.
+        // The layout validator treats an expression as opaque text, skips the
+        // bare NAMEs at call sites (it cannot see the mounted component's
+        // `one-of` values; outside call sites it rejects an unbound one as
+        // `UnboundName`), and allows a mount slot to be read anywhere, so all
+        // three are checked here, once per component, before the layout is
+        // ever inlined.
         let child_mount = find_child_mount(&layout_out.def.root);
         let nested = self.nested_interfaces(pkg, &layout_out.def.root)?;
         let (scope_errors, omitted) = check_callee_scope(
@@ -4852,6 +4854,12 @@ version = "1"
 
     /// Deliberate read: `content: authToken` with no such slot would lower to
     /// React `{authToken}`, the consumer's variable. It is rejected.
+    ///
+    /// Outside a call site, the layout validator now rejects it first, as
+    /// `UnboundName` (UI29 §3.4, backlog 6f1p), so the component fails to
+    /// compile before `check_callee_scope` runs. The callee-scope check still
+    /// owns call-site values (see
+    /// `bare_names_at_a_nested_call_site_follow_the_mounted_slot_type`).
     #[test]
     fn a_bare_name_naming_nothing_is_rejected() {
         let (_tmp, resolver) = card_package(
@@ -4865,14 +4873,16 @@ version = "1"
                 .resolve(&mut layout)
                 .expect_err("authToken is free"),
         );
-        assert_eq!(
-            error,
-            LayoutResolveError::UndeclaredExpressionIdentifier {
-                package: "mosaic-pkg-lib".to_string(),
-                component: "Card".to_string(),
-                identifier: "authToken".to_string(),
-                expression: "content: authToken".to_string(),
-            }
+        assert!(
+            matches!(
+                &error,
+                LayoutResolveError::NestedCompileError { package, component, detail }
+                    if package == "mosaic-pkg-lib"
+                        && component == "Card"
+                        && detail.contains("UnboundName")
+                        && detail.contains("bare name `authToken` in `Text ( content: authToken )`")
+            ),
+            "{error:?}"
         );
     }
 
