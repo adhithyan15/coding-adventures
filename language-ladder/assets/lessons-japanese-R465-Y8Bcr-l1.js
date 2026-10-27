@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: JA-R467-review-462-467
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 27160
+chapter: 467
+type: review
+headword: (dialogue)
+gloss: a review of the words from Win, Lose or Tie to Sewing and Knitting
+concept_tag: REVIEW
+prerequisites: [JA-C462-shoubu, JA-C462-hikiwake, JA-C462-kyousou, JA-C462-jun-i, JA-C462-hansoku, JA-C463-kitaeru, JA-C463-tairyoku, JA-C463-nerau, JA-C463-hazumu, JA-C463-kisou, JA-C464-kankyaku, JA-C464-shinpan, JA-C464-tokuten, JA-C464-semeru, JA-C464-ubau, JA-C465-enogu, JA-C465-fude, JA-C465-egaku, JA-C465-gaka, JA-C465-bijutsu, JA-C466-shodou, JA-C466-ikebana, JA-C466-sadou, JA-C466-origami, JA-C466-geijutsu, JA-C467-nuu, JA-C467-amimono, JA-C467-someru, JA-C467-shishuu, JA-C467-kezuru]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [JA-LEX-C462-CONTEST462-01, JA-LEX-C462-CONTEST462-02, JA-LEX-C462-CONTEST462-03, JA-LEX-C462-CONTEST462-04, JA-LEX-C462-CONTEST462-05, JA-LEX-C463-TRAIN463-01, JA-LEX-C463-TRAIN463-02, JA-LEX-C463-TRAIN463-03, JA-LEX-C463-TRAIN463-04, JA-LEX-C463-TRAIN463-05, JA-LEX-C464-CROWD464-01, JA-LEX-C464-CROWD464-02, JA-LEX-C464-CROWD464-03, JA-LEX-C464-CROWD464-04, JA-LEX-C464-CROWD464-05, JA-LEX-C465-PAINT465-01, JA-LEX-C465-PAINT465-02, JA-LEX-C465-PAINT465-03, JA-LEX-C465-PAINT465-04, JA-LEX-C465-PAINT465-05, JA-LEX-C466-ARTS466-01, JA-LEX-C466-ARTS466-02, JA-LEX-C466-ARTS466-03, JA-LEX-C466-ARTS466-04, JA-LEX-C466-ARTS466-05, JA-LEX-C467-CRAFT467-01, JA-LEX-C467-CRAFT467-02, JA-LEX-C467-CRAFT467-03, JA-LEX-C467-CRAFT467-04, JA-LEX-C467-CRAFT467-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [JA-LEX-C462-CONTEST462-01, JA-LEX-C462-CONTEST462-02, JA-LEX-C462-CONTEST462-03, JA-LEX-C462-CONTEST462-04, JA-LEX-C462-CONTEST462-05, JA-LEX-C463-TRAIN463-01, JA-LEX-C463-TRAIN463-02, JA-LEX-C463-TRAIN463-03, JA-LEX-C463-TRAIN463-04, JA-LEX-C463-TRAIN463-05, JA-LEX-C464-CROWD464-01, JA-LEX-C464-CROWD464-02, JA-LEX-C464-CROWD464-03, JA-LEX-C464-CROWD464-04, JA-LEX-C464-CROWD464-05, JA-LEX-C465-PAINT465-01, JA-LEX-C465-PAINT465-02, JA-LEX-C465-PAINT465-03, JA-LEX-C465-PAINT465-04, JA-LEX-C465-PAINT465-05, JA-LEX-C466-ARTS466-01, JA-LEX-C466-ARTS466-02, JA-LEX-C466-ARTS466-03, JA-LEX-C466-ARTS466-04, JA-LEX-C466-ARTS466-05, JA-LEX-C467-CRAFT467-01, JA-LEX-C467-CRAFT467-02, JA-LEX-C467-CRAFT467-03, JA-LEX-C467-CRAFT467-04, JA-LEX-C467-CRAFT467-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-japanese-tokyo
+reviews_of: [JA-C462-shoubu, JA-C462-hikiwake, JA-C462-kyousou, JA-C462-jun-i, JA-C462-hansoku, JA-C463-kitaeru, JA-C463-tairyoku, JA-C463-nerau, JA-C463-hazumu, JA-C463-kisou, JA-C464-kankyaku, JA-C464-shinpan, JA-C464-tokuten, JA-C464-semeru, JA-C464-ubau, JA-C465-enogu, JA-C465-fude, JA-C465-egaku, JA-C465-gaka, JA-C465-bijutsu, JA-C466-shodou, JA-C466-ikebana, JA-C466-sadou, JA-C466-origami, JA-C466-geijutsu, JA-C467-nuu, JA-C467-amimono, JA-C467-someru, JA-C467-shishuu, JA-C467-kezuru]
+---
+
+# Looking back: from Win, Lose or Tie to Sewing and Knitting
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C462-CONTEST462-01, JA-LEX-C462-CONTEST462-02] -->
+
+[PAUSE 3s] Say the Japanese for a contest and a tie.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C462-CONTEST462-01, JA-LEX-C462-CONTEST462-02, JA-LEX-C462-CONTEST462-03, JA-LEX-C462-CONTEST462-04, JA-LEX-C462-CONTEST462-05, JA-LEX-C463-TRAIN463-01, JA-LEX-C463-TRAIN463-02, JA-LEX-C463-TRAIN463-03, JA-LEX-C463-TRAIN463-04, JA-LEX-C463-TRAIN463-05, JA-LEX-C464-CROWD464-01, JA-LEX-C464-CROWD464-02, JA-LEX-C464-CROWD464-03, JA-LEX-C464-CROWD464-04, JA-LEX-C464-CROWD464-05, JA-LEX-C465-PAINT465-01, JA-LEX-C465-PAINT465-02, JA-LEX-C465-PAINT465-03, JA-LEX-C465-PAINT465-04, JA-LEX-C465-PAINT465-05, JA-LEX-C466-ARTS466-01, JA-LEX-C466-ARTS466-02, JA-LEX-C466-ARTS466-03, JA-LEX-C466-ARTS466-04, JA-LEX-C466-ARTS466-05, JA-LEX-C467-CRAFT467-01, JA-LEX-C467-CRAFT467-02, JA-LEX-C467-CRAFT467-03, JA-LEX-C467-CRAFT467-04, JA-LEX-C467-CRAFT467-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a contest, a tie, competition, a ranking, a foul]
+- [YOU SAY: to toughen, stamina, to aim at, to bounce, to vie]
+- [YOU SAY: spectators, a referee, points scored, to attack, to snatch]
+- [YOU SAY: paints, a brush, to paint a picture, a painter, fine art]
+- [YOU SAY: calligraphy, flower arranging, the tea ceremony, paper folding, the arts]
+- [YOU SAY: to sew, knitting, to dye, embroidery, to whittle]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C462-CONTEST462-01, JA-LEX-C462-CONTEST462-02, JA-LEX-C462-CONTEST462-03, JA-LEX-C462-CONTEST462-04, JA-LEX-C462-CONTEST462-05, JA-LEX-C463-TRAIN463-01, JA-LEX-C463-TRAIN463-02, JA-LEX-C463-TRAIN463-03, JA-LEX-C463-TRAIN463-04, JA-LEX-C463-TRAIN463-05, JA-LEX-C464-CROWD464-01, JA-LEX-C464-CROWD464-02, JA-LEX-C464-CROWD464-03, JA-LEX-C464-CROWD464-04, JA-LEX-C464-CROWD464-05, JA-LEX-C465-PAINT465-01, JA-LEX-C465-PAINT465-02, JA-LEX-C465-PAINT465-03, JA-LEX-C465-PAINT465-04, JA-LEX-C465-PAINT465-05, JA-LEX-C466-ARTS466-01, JA-LEX-C466-ARTS466-02, JA-LEX-C466-ARTS466-03, JA-LEX-C466-ARTS466-04, JA-LEX-C466-ARTS466-05, JA-LEX-C467-CRAFT467-01, JA-LEX-C467-CRAFT467-02, JA-LEX-C467-CRAFT467-03, JA-LEX-C467-CRAFT467-04, JA-LEX-C467-CRAFT467-05] -->
+<!-- hl-activity: {"id":"JA-R467-review-462-467-type","kind":"text","assesses":["JA-LEX-C462-CONTEST462-01"],"prompt":"Type the Japanese for 'a contest'.","answer":"しょうぶ","accepted":["shōbu","shoubu","shoobu","shobu"],"feedback":{"correct":"Right: しょうぶ (shōbu) is 'a contest; a match'.","incorrect":"'A contest' is しょうぶ (shōbu)."},"response_seconds":10} -->
+
+[PAUSE 3s] A contest? (**しょうぶ**, *shōbu*.) A tie? (**ひきわけ**, *hikiwake*.) Competition? (**きょうそう**, *kyōsō*.) A ranking? (**じゅんい**, *jun'i*.) A foul? (**はんそく**, *hansoku*.) To toughen? (**きたえる**, *kitaeru*.) Stamina? (**たいりょく**, *tairyoku*.) To aim at? (**ねらう**, *nerau*.) To bounce? (**はずむ**, *hazumu*.) To vie? (**きそう**, *kisou*.) Spectators? (**かんきゃく**, *kankyaku*.) A referee? (**しんぱん**, *shinpan*.) Points scored? (**とくてん**, *tokuten*.) To attack? (**せめる**, *semeru*.) To snatch? (**うばう**, *ubau*.) Paints? (**えのぐ**, *enogu*.) A brush? (**ふで**, *fude*.) To paint a picture? (**えがく**, *egaku*.) A painter? (**がか**, *gaka*.) Fine art? (**びじゅつ**, *bijutsu*.) Calligraphy? (**しょどう**, *shodō*.) Flower arranging? (**いけばな**, *ikebana*.) The tea ceremony? (**さどう**, *sadō*.) Paper folding? (**おりがみ**, *origami*.) The arts? (**げいじゅつ**, *geijutsu*.) To sew? (**ぬう**, *nuu*.) Knitting? (**あみもの**, *amimono*.) To dye? (**そめる**, *someru*.) Embroidery? (**ししゅう**, *shishū*.) To whittle? (**けずる**, *kezuru*.)
+`;export{t};

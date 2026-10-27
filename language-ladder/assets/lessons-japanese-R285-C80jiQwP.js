@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: JA-R285-review-280-285
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 17230
+chapter: 285
+type: review
+headword: (dialogue)
+gloss: a review of the words from What the News Said to A Big Day in Town
+concept_tag: REVIEW
+prerequisites: [JA-C280-kiji, JA-C280-noseru, JA-C280-dekigoto, JA-C280-kisha, JA-C280-kubaru, JA-C281-uwasa, JA-C281-tsutawaru, JA-C281-hiromaru, JA-C281-wadai, JA-C281-ousawagi, JA-C282-sekai, JA-C282-sensou, JA-C282-heiwa, JA-C282-tatakau, JA-C282-seifu, JA-C283-happyou-suru, JA-C283-houkoku-suru, JA-C283-chousa-suru, JA-C283-jouhou, JA-C283-jijitsu, JA-C284-senkyo, JA-C284-kokumin, JA-C284-shushou, JA-C284-arasou, JA-C284-warui, JA-C285-okonau, JA-C285-hiraku, JA-C285-kuwawaru, JA-C285-kinen, JA-C285-shukujitsu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [JA-LEX-C280-KIJI280-01, JA-LEX-C280-KIJI280-02, JA-LEX-C280-KIJI280-03, JA-LEX-C280-KIJI280-04, JA-LEX-C280-KIJI280-05, JA-LEX-C281-UWASA281-01, JA-LEX-C281-UWASA281-02, JA-LEX-C281-UWASA281-03, JA-LEX-C281-UWASA281-04, JA-LEX-C281-UWASA281-05, JA-LEX-C282-SEKAI282-01, JA-LEX-C282-SEKAI282-02, JA-LEX-C282-SEKAI282-03, JA-LEX-C282-SEKAI282-04, JA-LEX-C282-SEKAI282-05, JA-LEX-C283-HAPPYOU283-01, JA-LEX-C283-HAPPYOU283-02, JA-LEX-C283-HAPPYOU283-03, JA-LEX-C283-HAPPYOU283-04, JA-LEX-C283-HAPPYOU283-05, JA-LEX-C284-SENKYO284-01, JA-LEX-C284-SENKYO284-02, JA-LEX-C284-SENKYO284-03, JA-LEX-C284-SENKYO284-04, JA-LEX-C284-SENKYO284-05, JA-LEX-C285-MOYOOSHI285-01, JA-LEX-C285-MOYOOSHI285-02, JA-LEX-C285-MOYOOSHI285-03, JA-LEX-C285-MOYOOSHI285-04, JA-LEX-C285-MOYOOSHI285-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [JA-LEX-C280-KIJI280-01, JA-LEX-C280-KIJI280-02, JA-LEX-C280-KIJI280-03, JA-LEX-C280-KIJI280-04, JA-LEX-C280-KIJI280-05, JA-LEX-C281-UWASA281-01, JA-LEX-C281-UWASA281-02, JA-LEX-C281-UWASA281-03, JA-LEX-C281-UWASA281-04, JA-LEX-C281-UWASA281-05, JA-LEX-C282-SEKAI282-01, JA-LEX-C282-SEKAI282-02, JA-LEX-C282-SEKAI282-03, JA-LEX-C282-SEKAI282-04, JA-LEX-C282-SEKAI282-05, JA-LEX-C283-HAPPYOU283-01, JA-LEX-C283-HAPPYOU283-02, JA-LEX-C283-HAPPYOU283-03, JA-LEX-C283-HAPPYOU283-04, JA-LEX-C283-HAPPYOU283-05, JA-LEX-C284-SENKYO284-01, JA-LEX-C284-SENKYO284-02, JA-LEX-C284-SENKYO284-03, JA-LEX-C284-SENKYO284-04, JA-LEX-C284-SENKYO284-05, JA-LEX-C285-MOYOOSHI285-01, JA-LEX-C285-MOYOOSHI285-02, JA-LEX-C285-MOYOOSHI285-03, JA-LEX-C285-MOYOOSHI285-04, JA-LEX-C285-MOYOOSHI285-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-japanese-tokyo
+reviews_of: [JA-C280-kiji, JA-C280-noseru, JA-C280-dekigoto, JA-C280-kisha, JA-C280-kubaru, JA-C281-uwasa, JA-C281-tsutawaru, JA-C281-hiromaru, JA-C281-wadai, JA-C281-ousawagi, JA-C282-sekai, JA-C282-sensou, JA-C282-heiwa, JA-C282-tatakau, JA-C282-seifu, JA-C283-happyou-suru, JA-C283-houkoku-suru, JA-C283-chousa-suru, JA-C283-jouhou, JA-C283-jijitsu, JA-C284-senkyo, JA-C284-kokumin, JA-C284-shushou, JA-C284-arasou, JA-C284-warui, JA-C285-okonau, JA-C285-hiraku, JA-C285-kuwawaru, JA-C285-kinen, JA-C285-shukujitsu]
+---
+
+# Looking back: from What the News Said to A Big Day in Town
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C280-KIJI280-01, JA-LEX-C280-KIJI280-02] -->
+
+[PAUSE 3s] Say the Japanese for a newspaper article and to print (in a paper).
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C280-KIJI280-01, JA-LEX-C280-KIJI280-02, JA-LEX-C280-KIJI280-03, JA-LEX-C280-KIJI280-04, JA-LEX-C280-KIJI280-05, JA-LEX-C281-UWASA281-01, JA-LEX-C281-UWASA281-02, JA-LEX-C281-UWASA281-03, JA-LEX-C281-UWASA281-04, JA-LEX-C281-UWASA281-05, JA-LEX-C282-SEKAI282-01, JA-LEX-C282-SEKAI282-02, JA-LEX-C282-SEKAI282-03, JA-LEX-C282-SEKAI282-04, JA-LEX-C282-SEKAI282-05, JA-LEX-C283-HAPPYOU283-01, JA-LEX-C283-HAPPYOU283-02, JA-LEX-C283-HAPPYOU283-03, JA-LEX-C283-HAPPYOU283-04, JA-LEX-C283-HAPPYOU283-05, JA-LEX-C284-SENKYO284-01, JA-LEX-C284-SENKYO284-02, JA-LEX-C284-SENKYO284-03, JA-LEX-C284-SENKYO284-04, JA-LEX-C284-SENKYO284-05, JA-LEX-C285-MOYOOSHI285-01, JA-LEX-C285-MOYOOSHI285-02, JA-LEX-C285-MOYOOSHI285-03, JA-LEX-C285-MOYOOSHI285-04, JA-LEX-C285-MOYOOSHI285-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a newspaper article, to print (in a paper), an event, a reporter, to hand out]
+- [YOU SAY: a rumour, to be passed on, to spread widely, a topic of conversation, an uproar]
+- [YOU SAY: the world, a war, peace, to fight, the government]
+- [YOU SAY: to announce, to report, to investigate, information, a fact]
+- [YOU SAY: an election, the people (of a country), the prime minister, to compete, bad]
+- [YOU SAY: to carry out, to hold (an event), to join (in), a commemoration, a public holiday]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C280-KIJI280-01, JA-LEX-C280-KIJI280-02, JA-LEX-C280-KIJI280-03, JA-LEX-C280-KIJI280-04, JA-LEX-C280-KIJI280-05, JA-LEX-C281-UWASA281-01, JA-LEX-C281-UWASA281-02, JA-LEX-C281-UWASA281-03, JA-LEX-C281-UWASA281-04, JA-LEX-C281-UWASA281-05, JA-LEX-C282-SEKAI282-01, JA-LEX-C282-SEKAI282-02, JA-LEX-C282-SEKAI282-03, JA-LEX-C282-SEKAI282-04, JA-LEX-C282-SEKAI282-05, JA-LEX-C283-HAPPYOU283-01, JA-LEX-C283-HAPPYOU283-02, JA-LEX-C283-HAPPYOU283-03, JA-LEX-C283-HAPPYOU283-04, JA-LEX-C283-HAPPYOU283-05, JA-LEX-C284-SENKYO284-01, JA-LEX-C284-SENKYO284-02, JA-LEX-C284-SENKYO284-03, JA-LEX-C284-SENKYO284-04, JA-LEX-C284-SENKYO284-05, JA-LEX-C285-MOYOOSHI285-01, JA-LEX-C285-MOYOOSHI285-02, JA-LEX-C285-MOYOOSHI285-03, JA-LEX-C285-MOYOOSHI285-04, JA-LEX-C285-MOYOOSHI285-05] -->
+<!-- hl-activity: {"id":"JA-R285-review-280-285-type","kind":"text","assesses":["JA-LEX-C280-KIJI280-01"],"prompt":"Type the Japanese for 'a newspaper article'.","answer":"きじ","accepted":["kiji"],"feedback":{"correct":"Right: きじ (kiji) is 'a newspaper article; a report'.","incorrect":"'A newspaper article' is きじ (kiji)."},"response_seconds":10} -->
+
+[PAUSE 3s] A newspaper article? (**きじ**, *kiji*.) To print (in a paper)? (**のせる**, *noseru*.) An event? (**できごと**, *dekigoto*.) A reporter? (**きしゃ**, *kisha*.) To hand out? (**くばる**, *kubaru*.) A rumour? (**うわさ**, *uwasa*.) To be passed on? (**つたわる**, *tsutawaru*.) To spread widely? (**ひろまる**, *hiromaru*.) A topic of conversation? (**わだい**, *wadai*.) An uproar? (**おおさわぎ**, *ōsawagi*.) The world? (**せかい**, *sekai*.) A war? (**せんそう**, *sensō*.) Peace? (**へいわ**, *heiwa*.) To fight? (**たたかう**, *tatakau*.) The government? (**せいふ**, *seifu*.) To announce? (**はっぴょうする**, *happyō suru*.) To report? (**ほうこくする**, *hōkoku suru*.) To investigate? (**ちょうさする**, *chōsa suru*.) Information? (**じょうほう**, *jōhō*.) A fact? (**じじつ**, *jijitsu*.) An election? (**せんきょ**, *senkyo*.) The people (of a country)? (**こくみん**, *kokumin*.) The prime minister? (**しゅしょう**, *shushō*.) To compete? (**あらそう**, *arasou*.) Bad? (**わるい**, *warui*.) To carry out? (**おこなう**, *okonau*.) To hold (an event)? (**ひらく**, *hiraku*.) To join (in)? (**くわわる**, *kuwawaru*.) A commemoration? (**きねん**, *kinen*.) A public holiday? (**しゅくじつ**, *shukujitsu*.)
+`;export{t};

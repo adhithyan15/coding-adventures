@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: JA-R473-review-468-473
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 27470
+chapter: 473
+type: review
+headword: (dialogue)
+gloss: a review of the words from Works of Art to Simmering and Melting
+concept_tag: REVIEW
+prerequisites: [JA-C468-sakuhin, JA-C468-tenrankai, JA-C468-choukoku, JA-C468-kessaku, JA-C468-kumitateru, JA-C469-gakki, JA-C469-suzu, JA-C469-tataku, JA-C469-kanaderu, JA-C469-neiro, JA-C470-kyoku, JA-C470-gakufu, JA-C470-min-you, JA-C470-enka, JA-C470-kuchibue, JA-C471-butai, JA-C471-engi, JA-C471-hakushu-suru, JA-C471-gasshou-suru, JA-C471-sakkyoku-suru, JA-C472-zairyou, JA-C472-choumiryou, JA-C472-negi, JA-C472-komugiko, JA-C472-daizu, JA-C473-nikomu, JA-C473-tokasu, JA-C473-kogasu, JA-C473-fukuramu, JA-C473-samasu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [JA-LEX-C468-WORKS468-01, JA-LEX-C468-WORKS468-02, JA-LEX-C468-WORKS468-03, JA-LEX-C468-WORKS468-04, JA-LEX-C468-WORKS468-05, JA-LEX-C469-INSTR469-01, JA-LEX-C469-INSTR469-02, JA-LEX-C469-INSTR469-03, JA-LEX-C469-INSTR469-04, JA-LEX-C469-INSTR469-05, JA-LEX-C470-SONG470-01, JA-LEX-C470-SONG470-02, JA-LEX-C470-SONG470-03, JA-LEX-C470-SONG470-04, JA-LEX-C470-SONG470-05, JA-LEX-C471-STAGE471-01, JA-LEX-C471-STAGE471-02, JA-LEX-C471-STAGE471-03, JA-LEX-C471-STAGE471-04, JA-LEX-C471-STAGE471-05, JA-LEX-C472-INGR472-01, JA-LEX-C472-INGR472-02, JA-LEX-C472-INGR472-03, JA-LEX-C472-INGR472-04, JA-LEX-C472-INGR472-05, JA-LEX-C473-SIMMER473-01, JA-LEX-C473-SIMMER473-02, JA-LEX-C473-SIMMER473-03, JA-LEX-C473-SIMMER473-04, JA-LEX-C473-SIMMER473-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [JA-LEX-C468-WORKS468-01, JA-LEX-C468-WORKS468-02, JA-LEX-C468-WORKS468-03, JA-LEX-C468-WORKS468-04, JA-LEX-C468-WORKS468-05, JA-LEX-C469-INSTR469-01, JA-LEX-C469-INSTR469-02, JA-LEX-C469-INSTR469-03, JA-LEX-C469-INSTR469-04, JA-LEX-C469-INSTR469-05, JA-LEX-C470-SONG470-01, JA-LEX-C470-SONG470-02, JA-LEX-C470-SONG470-03, JA-LEX-C470-SONG470-04, JA-LEX-C470-SONG470-05, JA-LEX-C471-STAGE471-01, JA-LEX-C471-STAGE471-02, JA-LEX-C471-STAGE471-03, JA-LEX-C471-STAGE471-04, JA-LEX-C471-STAGE471-05, JA-LEX-C472-INGR472-01, JA-LEX-C472-INGR472-02, JA-LEX-C472-INGR472-03, JA-LEX-C472-INGR472-04, JA-LEX-C472-INGR472-05, JA-LEX-C473-SIMMER473-01, JA-LEX-C473-SIMMER473-02, JA-LEX-C473-SIMMER473-03, JA-LEX-C473-SIMMER473-04, JA-LEX-C473-SIMMER473-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-japanese-tokyo
+reviews_of: [JA-C468-sakuhin, JA-C468-tenrankai, JA-C468-choukoku, JA-C468-kessaku, JA-C468-kumitateru, JA-C469-gakki, JA-C469-suzu, JA-C469-tataku, JA-C469-kanaderu, JA-C469-neiro, JA-C470-kyoku, JA-C470-gakufu, JA-C470-min-you, JA-C470-enka, JA-C470-kuchibue, JA-C471-butai, JA-C471-engi, JA-C471-hakushu-suru, JA-C471-gasshou-suru, JA-C471-sakkyoku-suru, JA-C472-zairyou, JA-C472-choumiryou, JA-C472-negi, JA-C472-komugiko, JA-C472-daizu, JA-C473-nikomu, JA-C473-tokasu, JA-C473-kogasu, JA-C473-fukuramu, JA-C473-samasu]
+---
+
+# Looking back: from Works of Art to Simmering and Melting
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C468-WORKS468-01, JA-LEX-C468-WORKS468-02] -->
+
+[PAUSE 3s] Say the Japanese for a work of art and an exhibition.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C468-WORKS468-01, JA-LEX-C468-WORKS468-02, JA-LEX-C468-WORKS468-03, JA-LEX-C468-WORKS468-04, JA-LEX-C468-WORKS468-05, JA-LEX-C469-INSTR469-01, JA-LEX-C469-INSTR469-02, JA-LEX-C469-INSTR469-03, JA-LEX-C469-INSTR469-04, JA-LEX-C469-INSTR469-05, JA-LEX-C470-SONG470-01, JA-LEX-C470-SONG470-02, JA-LEX-C470-SONG470-03, JA-LEX-C470-SONG470-04, JA-LEX-C470-SONG470-05, JA-LEX-C471-STAGE471-01, JA-LEX-C471-STAGE471-02, JA-LEX-C471-STAGE471-03, JA-LEX-C471-STAGE471-04, JA-LEX-C471-STAGE471-05, JA-LEX-C472-INGR472-01, JA-LEX-C472-INGR472-02, JA-LEX-C472-INGR472-03, JA-LEX-C472-INGR472-04, JA-LEX-C472-INGR472-05, JA-LEX-C473-SIMMER473-01, JA-LEX-C473-SIMMER473-02, JA-LEX-C473-SIMMER473-03, JA-LEX-C473-SIMMER473-04, JA-LEX-C473-SIMMER473-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a work of art, an exhibition, a sculpture, a masterpiece, to assemble]
+- [YOU SAY: a musical instrument, a small bell, to beat a drum, to play music, the tone of an instrument]
+- [YOU SAY: a piece of music, sheet music, a folk song, an enka ballad, whistling]
+- [YOU SAY: a stage, acting, to applaud, to sing in a choir, to compose music]
+- [YOU SAY: ingredients, a seasoning, a green onion, wheat flour, soybeans]
+- [YOU SAY: to stew, to melt something, to scorch, to swell, to let cool]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C468-WORKS468-01, JA-LEX-C468-WORKS468-02, JA-LEX-C468-WORKS468-03, JA-LEX-C468-WORKS468-04, JA-LEX-C468-WORKS468-05, JA-LEX-C469-INSTR469-01, JA-LEX-C469-INSTR469-02, JA-LEX-C469-INSTR469-03, JA-LEX-C469-INSTR469-04, JA-LEX-C469-INSTR469-05, JA-LEX-C470-SONG470-01, JA-LEX-C470-SONG470-02, JA-LEX-C470-SONG470-03, JA-LEX-C470-SONG470-04, JA-LEX-C470-SONG470-05, JA-LEX-C471-STAGE471-01, JA-LEX-C471-STAGE471-02, JA-LEX-C471-STAGE471-03, JA-LEX-C471-STAGE471-04, JA-LEX-C471-STAGE471-05, JA-LEX-C472-INGR472-01, JA-LEX-C472-INGR472-02, JA-LEX-C472-INGR472-03, JA-LEX-C472-INGR472-04, JA-LEX-C472-INGR472-05, JA-LEX-C473-SIMMER473-01, JA-LEX-C473-SIMMER473-02, JA-LEX-C473-SIMMER473-03, JA-LEX-C473-SIMMER473-04, JA-LEX-C473-SIMMER473-05] -->
+<!-- hl-activity: {"id":"JA-R473-review-468-473-type","kind":"text","assesses":["JA-LEX-C468-WORKS468-01"],"prompt":"Type the Japanese for 'a work of art'.","answer":"さくひん","accepted":["sakuhin"],"feedback":{"correct":"Right: さくひん (sakuhin) is 'a work of art; a piece'.","incorrect":"'A work of art' is さくひん (sakuhin)."},"response_seconds":10} -->
+
+[PAUSE 3s] A work of art? (**さくひん**, *sakuhin*.) An exhibition? (**てんらんかい**, *tenrankai*.) A sculpture? (**ちょうこく**, *chōkoku*.) A masterpiece? (**けっさく**, *kessaku*.) To assemble? (**くみたてる**, *kumitateru*.) A musical instrument? (**がっき**, *gakki*.) A small bell? (**すず**, *suzu*.) To beat a drum? (**たたく**, *tataku*.) To play music? (**かなでる**, *kanaderu*.) The tone of an instrument? (**ねいろ**, *neiro*.) A piece of music? (**きょく**, *kyoku*.) Sheet music? (**がくふ**, *gakufu*.) A folk song? (**みんよう**, *min'yō*.) An enka ballad? (**えんか**, *enka*.) Whistling? (**くちぶえ**, *kuchibue*.) A stage? (**ぶたい**, *butai*.) Acting? (**えんぎ**, *engi*.) To applaud? (**はくしゅする**, *hakushu suru*.) To sing in a choir? (**がっしょうする**, *gasshō suru*.) To compose music? (**さっきょくする**, *sakkyoku suru*.) Ingredients? (**ざいりょう**, *zairyō*.) A seasoning? (**ちょうみりょう**, *chōmiryō*.) A green onion? (**ねぎ**, *negi*.) Wheat flour? (**こむぎこ**, *komugiko*.) Soybeans? (**だいず**, *daizu*.) To stew? (**にこむ**, *nikomu*.) To melt something? (**とかす**, *tokasu*.) To scorch? (**こがす**, *kogasu*.) To swell? (**ふくらむ**, *fukuramu*.) To let cool? (**さます**, *samasu*.)
+`;export{t};

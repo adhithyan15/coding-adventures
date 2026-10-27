@@ -1,0 +1,105 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: JA-R316-review-312-316
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 18840
+chapter: 316
+type: review
+headword: (dialogue)
+gloss: a review of the words from History to A Story to Pass On
+concept_tag: REVIEW
+prerequisites: [JA-C312-rekishi, JA-C312-jidai, JA-C312-kako, JA-C312-izen, JA-C312-touji, JA-C313-kiroku, JA-C313-sakaeru, JA-C313-horobiru, JA-C313-senjitsu, JA-C313-iseki, JA-C314-sukkari, JA-C314-itsunomanika, JA-C314-yagate, JA-C314-heru, JA-C314-omoitsuku, JA-C315-suruto, JA-C315-tokoroga, JA-C315-shikashi, JA-C315-tokorodokoro, JA-C315-miharu, JA-C316-monogatari, JA-C316-dentou, JA-C316-hotondo, JA-C316-kanjiru, JA-C316-motto]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [JA-LEX-C312-REKISHI312-01, JA-LEX-C312-REKISHI312-02, JA-LEX-C312-REKISHI312-03, JA-LEX-C312-REKISHI312-04, JA-LEX-C312-REKISHI312-05, JA-LEX-C313-KIROKU313-01, JA-LEX-C313-KIROKU313-02, JA-LEX-C313-KIROKU313-03, JA-LEX-C313-KIROKU313-04, JA-LEX-C313-KIROKU313-05, JA-LEX-C314-SUKKARI314-01, JA-LEX-C314-SUKKARI314-02, JA-LEX-C314-SUKKARI314-03, JA-LEX-C314-SUKKARI314-04, JA-LEX-C314-SUKKARI314-05, JA-LEX-C315-SURUTO315-01, JA-LEX-C315-SURUTO315-02, JA-LEX-C315-SURUTO315-03, JA-LEX-C315-SURUTO315-04, JA-LEX-C315-SURUTO315-05, JA-LEX-C316-MONOGATARI316-01, JA-LEX-C316-MONOGATARI316-02, JA-LEX-C316-MONOGATARI316-03, JA-LEX-C316-MONOGATARI316-04, JA-LEX-C316-MONOGATARI316-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [JA-LEX-C312-REKISHI312-01, JA-LEX-C312-REKISHI312-02, JA-LEX-C312-REKISHI312-03, JA-LEX-C312-REKISHI312-04, JA-LEX-C312-REKISHI312-05, JA-LEX-C313-KIROKU313-01, JA-LEX-C313-KIROKU313-02, JA-LEX-C313-KIROKU313-03, JA-LEX-C313-KIROKU313-04, JA-LEX-C313-KIROKU313-05, JA-LEX-C314-SUKKARI314-01, JA-LEX-C314-SUKKARI314-02, JA-LEX-C314-SUKKARI314-03, JA-LEX-C314-SUKKARI314-04, JA-LEX-C314-SUKKARI314-05, JA-LEX-C315-SURUTO315-01, JA-LEX-C315-SURUTO315-02, JA-LEX-C315-SURUTO315-03, JA-LEX-C315-SURUTO315-04, JA-LEX-C315-SURUTO315-05, JA-LEX-C316-MONOGATARI316-01, JA-LEX-C316-MONOGATARI316-02, JA-LEX-C316-MONOGATARI316-03, JA-LEX-C316-MONOGATARI316-04, JA-LEX-C316-MONOGATARI316-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-japanese-tokyo
+reviews_of: [JA-C312-rekishi, JA-C312-jidai, JA-C312-kako, JA-C312-izen, JA-C312-touji, JA-C313-kiroku, JA-C313-sakaeru, JA-C313-horobiru, JA-C313-senjitsu, JA-C313-iseki, JA-C314-sukkari, JA-C314-itsunomanika, JA-C314-yagate, JA-C314-heru, JA-C314-omoitsuku, JA-C315-suruto, JA-C315-tokoroga, JA-C315-shikashi, JA-C315-tokorodokoro, JA-C315-miharu, JA-C316-monogatari, JA-C316-dentou, JA-C316-hotondo, JA-C316-kanjiru, JA-C316-motto]
+---
+
+# Looking back: from History to A Story to Pass On
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C312-REKISHI312-01, JA-LEX-C312-REKISHI312-02] -->
+
+[PAUSE 3s] Say the Japanese for history and an era.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C312-REKISHI312-01, JA-LEX-C312-REKISHI312-02, JA-LEX-C312-REKISHI312-03, JA-LEX-C312-REKISHI312-04, JA-LEX-C312-REKISHI312-05, JA-LEX-C313-KIROKU313-01, JA-LEX-C313-KIROKU313-02, JA-LEX-C313-KIROKU313-03, JA-LEX-C313-KIROKU313-04, JA-LEX-C313-KIROKU313-05, JA-LEX-C314-SUKKARI314-01, JA-LEX-C314-SUKKARI314-02, JA-LEX-C314-SUKKARI314-03, JA-LEX-C314-SUKKARI314-04, JA-LEX-C314-SUKKARI314-05, JA-LEX-C315-SURUTO315-01, JA-LEX-C315-SURUTO315-02, JA-LEX-C315-SURUTO315-03, JA-LEX-C315-SURUTO315-04, JA-LEX-C315-SURUTO315-05, JA-LEX-C316-MONOGATARI316-01, JA-LEX-C316-MONOGATARI316-02, JA-LEX-C316-MONOGATARI316-03, JA-LEX-C316-MONOGATARI316-04, JA-LEX-C316-MONOGATARI316-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: history, an era, the past, formerly, at that time]
+- [YOU SAY: a record, to prosper, to perish, the other day, ruins]
+- [YOU SAY: completely, before one knows it, before long, to decrease, to think of]
+- [YOU SAY: thereupon, however, but, here and there, to keep watch]
+- [YOU SAY: a story, a tradition, almost, to feel, more]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C312-REKISHI312-01, JA-LEX-C312-REKISHI312-02, JA-LEX-C312-REKISHI312-03, JA-LEX-C312-REKISHI312-04, JA-LEX-C312-REKISHI312-05, JA-LEX-C313-KIROKU313-01, JA-LEX-C313-KIROKU313-02, JA-LEX-C313-KIROKU313-03, JA-LEX-C313-KIROKU313-04, JA-LEX-C313-KIROKU313-05, JA-LEX-C314-SUKKARI314-01, JA-LEX-C314-SUKKARI314-02, JA-LEX-C314-SUKKARI314-03, JA-LEX-C314-SUKKARI314-04, JA-LEX-C314-SUKKARI314-05, JA-LEX-C315-SURUTO315-01, JA-LEX-C315-SURUTO315-02, JA-LEX-C315-SURUTO315-03, JA-LEX-C315-SURUTO315-04, JA-LEX-C315-SURUTO315-05, JA-LEX-C316-MONOGATARI316-01, JA-LEX-C316-MONOGATARI316-02, JA-LEX-C316-MONOGATARI316-03, JA-LEX-C316-MONOGATARI316-04, JA-LEX-C316-MONOGATARI316-05] -->
+<!-- hl-activity: {"id":"JA-R316-review-312-316-type","kind":"text","assesses":["JA-LEX-C312-REKISHI312-01"],"prompt":"Type the Japanese for 'history'.","answer":"れきし","accepted":["rekishi"],"feedback":{"correct":"Right: れきし (rekishi) is 'history'.","incorrect":"'History' is れきし (rekishi)."},"response_seconds":10} -->
+
+[PAUSE 3s] History? (**れきし**, *rekishi*.) An era? (**じだい**, *jidai*.) The past? (**かこ**, *kako*.) Formerly? (**いぜん**, *izen*.) At that time? (**とうじ**, *tōji*.) A record? (**きろく**, *kiroku*.) To prosper? (**さかえる**, *sakaeru*.) To perish? (**ほろびる**, *horobiru*.) The other day? (**せんじつ**, *senjitsu*.) Ruins? (**いせき**, *iseki*.) Completely? (**すっかり**, *sukkari*.) Before one knows it? (**いつのまにか**, *itsunomanika*.) Before long? (**やがて**, *yagate*.) To decrease? (**へる**, *heru*.) To think of? (**おもいつく**, *omoitsuku*.) Thereupon? (**すると**, *suruto*.) However? (**ところが**, *tokoroga*.) But? (**しかし**, *shikashi*.) Here and there? (**ところどころ**, *tokorodokoro*.) To keep watch? (**みはる**, *miharu*.) A story? (**ものがたり**, *monogatari*.) A tradition? (**でんとう**, *dentō*.) Almost? (**ほとんど**, *hotondo*.) To feel? (**かんじる**, *kanjiru*.) More? (**もっと**, *motto*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: JA-R316-review-final-316
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 18850
+chapter: 316
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [JA-C316-monogatari, JA-C316-dentou, JA-C316-hotondo, JA-C316-kanjiru, JA-C316-motto]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [JA-LEX-C316-MONOGATARI316-01, JA-LEX-C316-MONOGATARI316-02, JA-LEX-C316-MONOGATARI316-03, JA-LEX-C316-MONOGATARI316-04, JA-LEX-C316-MONOGATARI316-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [JA-LEX-C316-MONOGATARI316-01, JA-LEX-C316-MONOGATARI316-02, JA-LEX-C316-MONOGATARI316-03, JA-LEX-C316-MONOGATARI316-04, JA-LEX-C316-MONOGATARI316-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-japanese-tokyo
+reviews_of: [JA-C316-monogatari, JA-C316-dentou, JA-C316-hotondo, JA-C316-kanjiru, JA-C316-motto]
+---
+
+# A Story to Pass On — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C316-MONOGATARI316-01, JA-LEX-C316-MONOGATARI316-02] -->
+
+[PAUSE 3s] Say the Japanese for a story and a tradition.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C316-MONOGATARI316-01, JA-LEX-C316-MONOGATARI316-02, JA-LEX-C316-MONOGATARI316-03, JA-LEX-C316-MONOGATARI316-04, JA-LEX-C316-MONOGATARI316-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a story, a tradition, almost, to feel, more]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C316-MONOGATARI316-01, JA-LEX-C316-MONOGATARI316-02, JA-LEX-C316-MONOGATARI316-03, JA-LEX-C316-MONOGATARI316-04, JA-LEX-C316-MONOGATARI316-05] -->
+<!-- hl-activity: {"id":"JA-R316-review-final-316-type","kind":"text","assesses":["JA-LEX-C316-MONOGATARI316-01"],"prompt":"Type the Japanese for 'a story'.","answer":"ものがたり","accepted":["monogatari"],"feedback":{"correct":"Right: ものがたり (monogatari) is 'a story; a tale'.","incorrect":"'A story' is ものがたり (monogatari)."},"response_seconds":10} -->
+
+[PAUSE 3s] A story? (**ものがたり**, *monogatari*.) A tradition? (**でんとう**, *dentō*.) Almost? (**ほとんど**, *hotondo*.) To feel? (**かんじる**, *kanjiru*.) More? (**もっと**, *motto*.)
+`;export{t as n,r as t};

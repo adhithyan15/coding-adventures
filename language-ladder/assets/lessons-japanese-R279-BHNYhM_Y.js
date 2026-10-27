@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: JA-R279-review-274-279
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 16920
+chapter: 279
+type: review
+headword: (dialogue)
+gloss: a review of the words from When the Earth Shook to The Mountain Erupts
+concept_tag: REVIEW
+prerequisites: [JA-C274-jishin, JA-C274-kuzureru, JA-C274-korogaru, JA-C274-osoroshii, JA-C274-hinan, JA-C275-tsunami, JA-C275-nagareru, JA-C275-nagasu, JA-C275-uku, JA-C275-mata, JA-C276-ouame, JA-C276-oumizu, JA-C276-afureru, JA-C276-gake, JA-C276-taihen, JA-C277-ouyuki, JA-C277-tsumoru, JA-C277-fubuki, JA-C277-teiden, JA-C277-kogoeru, JA-C278-inazuma, JA-C278-ataru, JA-C278-hageshii, JA-C278-tatsumaki, JA-C278-katamuku, JA-C279-kazan, JA-C279-funka, JA-C279-saigai, JA-C279-fusegu, JA-C279-oukii]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [JA-LEX-C274-JISHIN274-01, JA-LEX-C274-JISHIN274-02, JA-LEX-C274-JISHIN274-03, JA-LEX-C274-JISHIN274-04, JA-LEX-C274-JISHIN274-05, JA-LEX-C275-TSUNAMI275-01, JA-LEX-C275-TSUNAMI275-02, JA-LEX-C275-TSUNAMI275-03, JA-LEX-C275-TSUNAMI275-04, JA-LEX-C275-TSUNAMI275-05, JA-LEX-C276-OOAME276-01, JA-LEX-C276-OOAME276-02, JA-LEX-C276-OOAME276-03, JA-LEX-C276-OOAME276-04, JA-LEX-C276-OOAME276-05, JA-LEX-C277-OOYUKI277-01, JA-LEX-C277-OOYUKI277-02, JA-LEX-C277-OOYUKI277-03, JA-LEX-C277-OOYUKI277-04, JA-LEX-C277-OOYUKI277-05, JA-LEX-C278-INAZUMA278-01, JA-LEX-C278-INAZUMA278-02, JA-LEX-C278-INAZUMA278-03, JA-LEX-C278-INAZUMA278-04, JA-LEX-C278-INAZUMA278-05, JA-LEX-C279-KAZAN279-01, JA-LEX-C279-KAZAN279-02, JA-LEX-C279-KAZAN279-03, JA-LEX-C279-KAZAN279-04, JA-LEX-C279-KAZAN279-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [JA-LEX-C274-JISHIN274-01, JA-LEX-C274-JISHIN274-02, JA-LEX-C274-JISHIN274-03, JA-LEX-C274-JISHIN274-04, JA-LEX-C274-JISHIN274-05, JA-LEX-C275-TSUNAMI275-01, JA-LEX-C275-TSUNAMI275-02, JA-LEX-C275-TSUNAMI275-03, JA-LEX-C275-TSUNAMI275-04, JA-LEX-C275-TSUNAMI275-05, JA-LEX-C276-OOAME276-01, JA-LEX-C276-OOAME276-02, JA-LEX-C276-OOAME276-03, JA-LEX-C276-OOAME276-04, JA-LEX-C276-OOAME276-05, JA-LEX-C277-OOYUKI277-01, JA-LEX-C277-OOYUKI277-02, JA-LEX-C277-OOYUKI277-03, JA-LEX-C277-OOYUKI277-04, JA-LEX-C277-OOYUKI277-05, JA-LEX-C278-INAZUMA278-01, JA-LEX-C278-INAZUMA278-02, JA-LEX-C278-INAZUMA278-03, JA-LEX-C278-INAZUMA278-04, JA-LEX-C278-INAZUMA278-05, JA-LEX-C279-KAZAN279-01, JA-LEX-C279-KAZAN279-02, JA-LEX-C279-KAZAN279-03, JA-LEX-C279-KAZAN279-04, JA-LEX-C279-KAZAN279-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-japanese-tokyo
+reviews_of: [JA-C274-jishin, JA-C274-kuzureru, JA-C274-korogaru, JA-C274-osoroshii, JA-C274-hinan, JA-C275-tsunami, JA-C275-nagareru, JA-C275-nagasu, JA-C275-uku, JA-C275-mata, JA-C276-ouame, JA-C276-oumizu, JA-C276-afureru, JA-C276-gake, JA-C276-taihen, JA-C277-ouyuki, JA-C277-tsumoru, JA-C277-fubuki, JA-C277-teiden, JA-C277-kogoeru, JA-C278-inazuma, JA-C278-ataru, JA-C278-hageshii, JA-C278-tatsumaki, JA-C278-katamuku, JA-C279-kazan, JA-C279-funka, JA-C279-saigai, JA-C279-fusegu, JA-C279-oukii]
+---
+
+# Looking back: from When the Earth Shook to The Mountain Erupts
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C274-JISHIN274-01, JA-LEX-C274-JISHIN274-02] -->
+
+[PAUSE 3s] Say the Japanese for an earthquake and to crumble.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C274-JISHIN274-01, JA-LEX-C274-JISHIN274-02, JA-LEX-C274-JISHIN274-03, JA-LEX-C274-JISHIN274-04, JA-LEX-C274-JISHIN274-05, JA-LEX-C275-TSUNAMI275-01, JA-LEX-C275-TSUNAMI275-02, JA-LEX-C275-TSUNAMI275-03, JA-LEX-C275-TSUNAMI275-04, JA-LEX-C275-TSUNAMI275-05, JA-LEX-C276-OOAME276-01, JA-LEX-C276-OOAME276-02, JA-LEX-C276-OOAME276-03, JA-LEX-C276-OOAME276-04, JA-LEX-C276-OOAME276-05, JA-LEX-C277-OOYUKI277-01, JA-LEX-C277-OOYUKI277-02, JA-LEX-C277-OOYUKI277-03, JA-LEX-C277-OOYUKI277-04, JA-LEX-C277-OOYUKI277-05, JA-LEX-C278-INAZUMA278-01, JA-LEX-C278-INAZUMA278-02, JA-LEX-C278-INAZUMA278-03, JA-LEX-C278-INAZUMA278-04, JA-LEX-C278-INAZUMA278-05, JA-LEX-C279-KAZAN279-01, JA-LEX-C279-KAZAN279-02, JA-LEX-C279-KAZAN279-03, JA-LEX-C279-KAZAN279-04, JA-LEX-C279-KAZAN279-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an earthquake, to crumble, to roll, frightening, evacuation]
+- [YOU SAY: a tsunami, to flow, to wash away, to float, once more]
+- [YOU SAY: heavy rain, a flood, to overflow, a cliff, awful]
+- [YOU SAY: heavy snow, to accumulate, a snowstorm, a power cut, to go numb with cold]
+- [YOU SAY: a flash of lightning, to strike, violent, a tornado, to lean]
+- [YOU SAY: a volcano, an eruption, a disaster, to prevent, big]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C274-JISHIN274-01, JA-LEX-C274-JISHIN274-02, JA-LEX-C274-JISHIN274-03, JA-LEX-C274-JISHIN274-04, JA-LEX-C274-JISHIN274-05, JA-LEX-C275-TSUNAMI275-01, JA-LEX-C275-TSUNAMI275-02, JA-LEX-C275-TSUNAMI275-03, JA-LEX-C275-TSUNAMI275-04, JA-LEX-C275-TSUNAMI275-05, JA-LEX-C276-OOAME276-01, JA-LEX-C276-OOAME276-02, JA-LEX-C276-OOAME276-03, JA-LEX-C276-OOAME276-04, JA-LEX-C276-OOAME276-05, JA-LEX-C277-OOYUKI277-01, JA-LEX-C277-OOYUKI277-02, JA-LEX-C277-OOYUKI277-03, JA-LEX-C277-OOYUKI277-04, JA-LEX-C277-OOYUKI277-05, JA-LEX-C278-INAZUMA278-01, JA-LEX-C278-INAZUMA278-02, JA-LEX-C278-INAZUMA278-03, JA-LEX-C278-INAZUMA278-04, JA-LEX-C278-INAZUMA278-05, JA-LEX-C279-KAZAN279-01, JA-LEX-C279-KAZAN279-02, JA-LEX-C279-KAZAN279-03, JA-LEX-C279-KAZAN279-04, JA-LEX-C279-KAZAN279-05] -->
+<!-- hl-activity: {"id":"JA-R279-review-274-279-type","kind":"text","assesses":["JA-LEX-C274-JISHIN274-01"],"prompt":"Type the Japanese for 'an earthquake'.","answer":"じしん","accepted":["jishin"],"feedback":{"correct":"Right: じしん (jishin) is 'an earthquake'.","incorrect":"'An earthquake' is じしん (jishin)."},"response_seconds":10} -->
+
+[PAUSE 3s] An earthquake? (**じしん**, *jishin*.) To crumble? (**くずれる**, *kuzureru*.) To roll? (**ころがる**, *korogaru*.) Frightening? (**おそろしい**, *osoroshii*.) Evacuation? (**ひなん**, *hinan*.) A tsunami? (**つなみ**, *tsunami*.) To flow? (**ながれる**, *nagareru*.) To wash away? (**ながす**, *nagasu*.) To float? (**うく**, *uku*.) Once more? (**また**, *mata*.) Heavy rain? (**おおあめ**, *ōame*.) A flood? (**おおみず**, *ōmizu*.) To overflow? (**あふれる**, *afureru*.) A cliff? (**がけ**, *gake*.) Awful? (**たいへん**, *taihen*.) Heavy snow? (**おおゆき**, *ōyuki*.) To accumulate? (**つもる**, *tsumoru*.) A snowstorm? (**ふぶき**, *fubuki*.) A power cut? (**ていでん**, *teiden*.) To go numb with cold? (**こごえる**, *kogoeru*.) A flash of lightning? (**いなずま**, *inazuma*.) To strike? (**あたる**, *ataru*.) Violent? (**はげしい**, *hageshii*.) A tornado? (**たつまき**, *tatsumaki*.) To lean? (**かたむく**, *katamuku*.) A volcano? (**かざん**, *kazan*.) An eruption? (**ふんか**, *funka*.) A disaster? (**さいがい**, *saigai*.) To prevent? (**ふせぐ**, *fusegu*.) Big? (**おおきい**, *ōkii*.)
+`;export{t};

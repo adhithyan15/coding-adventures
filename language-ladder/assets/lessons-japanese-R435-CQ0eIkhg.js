@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: JA-R437-review-432-437
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 25610
+chapter: 437
+type: review
+headword: (dialogue)
+gloss: a review of the words from Worry and Regret to Strict, Sincere or Mean
+concept_tag: REVIEW
+prerequisites: [JA-C432-nayamu, JA-C432-kuyokuyo-suru, JA-C432-koukai-suru, JA-C432-munashii, JA-C432-akirameru, JA-C433-akogareru, JA-C433-koishii, JA-C433-urayamashii, JA-C433-kyoumi, JA-C433-kanshin, JA-C434-kansha-suru, JA-C434-doujou-suru, JA-C434-kinodoku, JA-C434-mijime, JA-C434-hagemasu, JA-C435-manzoku, JA-C435-fuman, JA-C435-taikutsu, JA-C435-hohoemu, JA-C435-damaru, JA-C436-hogaraka, JA-C436-akarui, JA-C436-mukuchi, JA-C436-hitomishiri, JA-C436-furumau, JA-C437-kibishii, JA-C437-reisei, JA-C437-seijitsu, JA-C437-kenkyo, JA-C437-ijiwaru]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [JA-LEX-C432-WORRY432-01, JA-LEX-C432-WORRY432-02, JA-LEX-C432-WORRY432-03, JA-LEX-C432-WORRY432-04, JA-LEX-C432-WORRY432-05, JA-LEX-C433-LONG433-01, JA-LEX-C433-LONG433-02, JA-LEX-C433-LONG433-03, JA-LEX-C433-LONG433-04, JA-LEX-C433-LONG433-05, JA-LEX-C434-THANK434-01, JA-LEX-C434-THANK434-02, JA-LEX-C434-THANK434-03, JA-LEX-C434-THANK434-04, JA-LEX-C434-THANK434-05, JA-LEX-C435-CONTENT435-01, JA-LEX-C435-CONTENT435-02, JA-LEX-C435-CONTENT435-03, JA-LEX-C435-CONTENT435-04, JA-LEX-C435-CONTENT435-05, JA-LEX-C436-BRIGHT436-01, JA-LEX-C436-BRIGHT436-02, JA-LEX-C436-BRIGHT436-03, JA-LEX-C436-BRIGHT436-04, JA-LEX-C436-BRIGHT436-05, JA-LEX-C437-HONEST437-01, JA-LEX-C437-HONEST437-02, JA-LEX-C437-HONEST437-03, JA-LEX-C437-HONEST437-04, JA-LEX-C437-HONEST437-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [JA-LEX-C432-WORRY432-01, JA-LEX-C432-WORRY432-02, JA-LEX-C432-WORRY432-03, JA-LEX-C432-WORRY432-04, JA-LEX-C432-WORRY432-05, JA-LEX-C433-LONG433-01, JA-LEX-C433-LONG433-02, JA-LEX-C433-LONG433-03, JA-LEX-C433-LONG433-04, JA-LEX-C433-LONG433-05, JA-LEX-C434-THANK434-01, JA-LEX-C434-THANK434-02, JA-LEX-C434-THANK434-03, JA-LEX-C434-THANK434-04, JA-LEX-C434-THANK434-05, JA-LEX-C435-CONTENT435-01, JA-LEX-C435-CONTENT435-02, JA-LEX-C435-CONTENT435-03, JA-LEX-C435-CONTENT435-04, JA-LEX-C435-CONTENT435-05, JA-LEX-C436-BRIGHT436-01, JA-LEX-C436-BRIGHT436-02, JA-LEX-C436-BRIGHT436-03, JA-LEX-C436-BRIGHT436-04, JA-LEX-C436-BRIGHT436-05, JA-LEX-C437-HONEST437-01, JA-LEX-C437-HONEST437-02, JA-LEX-C437-HONEST437-03, JA-LEX-C437-HONEST437-04, JA-LEX-C437-HONEST437-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-japanese-tokyo
+reviews_of: [JA-C432-nayamu, JA-C432-kuyokuyo-suru, JA-C432-koukai-suru, JA-C432-munashii, JA-C432-akirameru, JA-C433-akogareru, JA-C433-koishii, JA-C433-urayamashii, JA-C433-kyoumi, JA-C433-kanshin, JA-C434-kansha-suru, JA-C434-doujou-suru, JA-C434-kinodoku, JA-C434-mijime, JA-C434-hagemasu, JA-C435-manzoku, JA-C435-fuman, JA-C435-taikutsu, JA-C435-hohoemu, JA-C435-damaru, JA-C436-hogaraka, JA-C436-akarui, JA-C436-mukuchi, JA-C436-hitomishiri, JA-C436-furumau, JA-C437-kibishii, JA-C437-reisei, JA-C437-seijitsu, JA-C437-kenkyo, JA-C437-ijiwaru]
+---
+
+# Looking back: from Worry and Regret to Strict, Sincere or Mean
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C432-WORRY432-01, JA-LEX-C432-WORRY432-02] -->
+
+[PAUSE 3s] Say the Japanese for to be troubled and to brood.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C432-WORRY432-01, JA-LEX-C432-WORRY432-02, JA-LEX-C432-WORRY432-03, JA-LEX-C432-WORRY432-04, JA-LEX-C432-WORRY432-05, JA-LEX-C433-LONG433-01, JA-LEX-C433-LONG433-02, JA-LEX-C433-LONG433-03, JA-LEX-C433-LONG433-04, JA-LEX-C433-LONG433-05, JA-LEX-C434-THANK434-01, JA-LEX-C434-THANK434-02, JA-LEX-C434-THANK434-03, JA-LEX-C434-THANK434-04, JA-LEX-C434-THANK434-05, JA-LEX-C435-CONTENT435-01, JA-LEX-C435-CONTENT435-02, JA-LEX-C435-CONTENT435-03, JA-LEX-C435-CONTENT435-04, JA-LEX-C435-CONTENT435-05, JA-LEX-C436-BRIGHT436-01, JA-LEX-C436-BRIGHT436-02, JA-LEX-C436-BRIGHT436-03, JA-LEX-C436-BRIGHT436-04, JA-LEX-C436-BRIGHT436-05, JA-LEX-C437-HONEST437-01, JA-LEX-C437-HONEST437-02, JA-LEX-C437-HONEST437-03, JA-LEX-C437-HONEST437-04, JA-LEX-C437-HONEST437-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to be troubled, to brood, to regret, futile, to give up]
+- [YOU SAY: to yearn after, missed dearly, envious, an interest, admiration]
+- [YOU SAY: to be grateful, to feel sympathy, pitiable, miserable, to encourage]
+- [YOU SAY: satisfied, discontented, bored, to smile gently, to fall silent]
+- [YOU SAY: cheerful, bright, taciturn, shy with strangers, to behave]
+- [YOU SAY: strict, composed, sincere, modest, spiteful]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C432-WORRY432-01, JA-LEX-C432-WORRY432-02, JA-LEX-C432-WORRY432-03, JA-LEX-C432-WORRY432-04, JA-LEX-C432-WORRY432-05, JA-LEX-C433-LONG433-01, JA-LEX-C433-LONG433-02, JA-LEX-C433-LONG433-03, JA-LEX-C433-LONG433-04, JA-LEX-C433-LONG433-05, JA-LEX-C434-THANK434-01, JA-LEX-C434-THANK434-02, JA-LEX-C434-THANK434-03, JA-LEX-C434-THANK434-04, JA-LEX-C434-THANK434-05, JA-LEX-C435-CONTENT435-01, JA-LEX-C435-CONTENT435-02, JA-LEX-C435-CONTENT435-03, JA-LEX-C435-CONTENT435-04, JA-LEX-C435-CONTENT435-05, JA-LEX-C436-BRIGHT436-01, JA-LEX-C436-BRIGHT436-02, JA-LEX-C436-BRIGHT436-03, JA-LEX-C436-BRIGHT436-04, JA-LEX-C436-BRIGHT436-05, JA-LEX-C437-HONEST437-01, JA-LEX-C437-HONEST437-02, JA-LEX-C437-HONEST437-03, JA-LEX-C437-HONEST437-04, JA-LEX-C437-HONEST437-05] -->
+<!-- hl-activity: {"id":"JA-R437-review-432-437-type","kind":"text","assesses":["JA-LEX-C432-WORRY432-01"],"prompt":"Type the Japanese for 'to be troubled'.","answer":"なやむ","accepted":["nayamu"],"feedback":{"correct":"Right: なやむ (nayamu) is 'to be troubled; to agonize'.","incorrect":"'To be troubled' is なやむ (nayamu)."},"response_seconds":10} -->
+
+[PAUSE 3s] To be troubled? (**なやむ**, *nayamu*.) To brood? (**くよくよする**, *kuyokuyo suru*.) To regret? (**こうかいする**, *kōkai suru*.) Futile? (**むなしい**, *munashii*.) To give up? (**あきらめる**, *akirameru*.) To yearn after? (**あこがれる**, *akogareru*.) Missed dearly? (**こいしい**, *koishii*.) Envious? (**うらやましい**, *urayamashii*.) An interest? (**きょうみ**, *kyōmi*.) Admiration? (**かんしん**, *kanshin*.) To be grateful? (**かんしゃする**, *kansha suru*.) To feel sympathy? (**どうじょうする**, *dōjō suru*.) Pitiable? (**きのどく**, *kinodoku*.) Miserable? (**みじめ**, *mijime*.) To encourage? (**はげます**, *hagemasu*.) Satisfied? (**まんぞく**, *manzoku*.) Discontented? (**ふまん**, *fuman*.) Bored? (**たいくつ**, *taikutsu*.) To smile gently? (**ほほえむ**, *hohoemu*.) To fall silent? (**だまる**, *damaru*.) Cheerful? (**ほがらか**, *hogaraka*.) Bright? (**あかるい**, *akarui*.) Taciturn? (**むくち**, *mukuchi*.) Shy with strangers? (**ひとみしり**, *hitomishiri*.) To behave? (**ふるまう**, *furumau*.) Strict? (**きびしい**, *kibishii*.) Composed? (**れいせい**, *reisei*.) Sincere? (**せいじつ**, *seijitsu*.) Modest? (**けんきょ**, *kenkyo*.) Spiteful? (**いじわる**, *ijiwaru*.)
+`;export{t};

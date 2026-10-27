@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: JA-R443-review-438-443
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 25920
+chapter: 443
+type: review
+headword: (dialogue)
+gloss: a review of the words from Stubborn and Hasty to Wrists, Ankles and Lips
+concept_tag: REVIEW
+prerequisites: [JA-C438-ganko, JA-C438-sekkachi, JA-C438-tanki, JA-C438-nonbiri, JA-C438-ibaru, JA-C439-okubyou, JA-C439-yowamushi, JA-C439-hikyou, JA-C439-ranbou, JA-C439-yuukan, JA-C440-shinchou, JA-C440-ukkari, JA-C440-darashinai, JA-C440-kichinto, JA-C440-tekitou, JA-C441-jiman-suru, JA-C441-namaiki, JA-C441-erai, JA-C441-namakemono, JA-C441-fuzakeru, JA-C442-kekkan, JA-C442-kinniku, JA-C442-ketsueki, JA-C442-sebone, JA-C442-kansetsu, JA-C443-tekubi, JA-C443-ashikubi, JA-C443-oyayubi, JA-C443-kuchibiru, JA-C443-mabuta]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [JA-LEX-C438-STUBBORN438-01, JA-LEX-C438-STUBBORN438-02, JA-LEX-C438-STUBBORN438-03, JA-LEX-C438-STUBBORN438-04, JA-LEX-C438-STUBBORN438-05, JA-LEX-C439-BRAVE439-01, JA-LEX-C439-BRAVE439-02, JA-LEX-C439-BRAVE439-03, JA-LEX-C439-BRAVE439-04, JA-LEX-C439-BRAVE439-05, JA-LEX-C440-CAREFUL440-01, JA-LEX-C440-CAREFUL440-02, JA-LEX-C440-CAREFUL440-03, JA-LEX-C440-CAREFUL440-04, JA-LEX-C440-CAREFUL440-05, JA-LEX-C441-PROUD441-01, JA-LEX-C441-PROUD441-02, JA-LEX-C441-PROUD441-03, JA-LEX-C441-PROUD441-04, JA-LEX-C441-PROUD441-05, JA-LEX-C442-INSIDE442-01, JA-LEX-C442-INSIDE442-02, JA-LEX-C442-INSIDE442-03, JA-LEX-C442-INSIDE442-04, JA-LEX-C442-INSIDE442-05, JA-LEX-C443-WRIST443-01, JA-LEX-C443-WRIST443-02, JA-LEX-C443-WRIST443-03, JA-LEX-C443-WRIST443-04, JA-LEX-C443-WRIST443-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [JA-LEX-C438-STUBBORN438-01, JA-LEX-C438-STUBBORN438-02, JA-LEX-C438-STUBBORN438-03, JA-LEX-C438-STUBBORN438-04, JA-LEX-C438-STUBBORN438-05, JA-LEX-C439-BRAVE439-01, JA-LEX-C439-BRAVE439-02, JA-LEX-C439-BRAVE439-03, JA-LEX-C439-BRAVE439-04, JA-LEX-C439-BRAVE439-05, JA-LEX-C440-CAREFUL440-01, JA-LEX-C440-CAREFUL440-02, JA-LEX-C440-CAREFUL440-03, JA-LEX-C440-CAREFUL440-04, JA-LEX-C440-CAREFUL440-05, JA-LEX-C441-PROUD441-01, JA-LEX-C441-PROUD441-02, JA-LEX-C441-PROUD441-03, JA-LEX-C441-PROUD441-04, JA-LEX-C441-PROUD441-05, JA-LEX-C442-INSIDE442-01, JA-LEX-C442-INSIDE442-02, JA-LEX-C442-INSIDE442-03, JA-LEX-C442-INSIDE442-04, JA-LEX-C442-INSIDE442-05, JA-LEX-C443-WRIST443-01, JA-LEX-C443-WRIST443-02, JA-LEX-C443-WRIST443-03, JA-LEX-C443-WRIST443-04, JA-LEX-C443-WRIST443-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-japanese-tokyo
+reviews_of: [JA-C438-ganko, JA-C438-sekkachi, JA-C438-tanki, JA-C438-nonbiri, JA-C438-ibaru, JA-C439-okubyou, JA-C439-yowamushi, JA-C439-hikyou, JA-C439-ranbou, JA-C439-yuukan, JA-C440-shinchou, JA-C440-ukkari, JA-C440-darashinai, JA-C440-kichinto, JA-C440-tekitou, JA-C441-jiman-suru, JA-C441-namaiki, JA-C441-erai, JA-C441-namakemono, JA-C441-fuzakeru, JA-C442-kekkan, JA-C442-kinniku, JA-C442-ketsueki, JA-C442-sebone, JA-C442-kansetsu, JA-C443-tekubi, JA-C443-ashikubi, JA-C443-oyayubi, JA-C443-kuchibiru, JA-C443-mabuta]
+---
+
+# Looking back: from Stubborn and Hasty to Wrists, Ankles and Lips
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C438-STUBBORN438-01, JA-LEX-C438-STUBBORN438-02] -->
+
+[PAUSE 3s] Say the Japanese for stubborn and impatient.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C438-STUBBORN438-01, JA-LEX-C438-STUBBORN438-02, JA-LEX-C438-STUBBORN438-03, JA-LEX-C438-STUBBORN438-04, JA-LEX-C438-STUBBORN438-05, JA-LEX-C439-BRAVE439-01, JA-LEX-C439-BRAVE439-02, JA-LEX-C439-BRAVE439-03, JA-LEX-C439-BRAVE439-04, JA-LEX-C439-BRAVE439-05, JA-LEX-C440-CAREFUL440-01, JA-LEX-C440-CAREFUL440-02, JA-LEX-C440-CAREFUL440-03, JA-LEX-C440-CAREFUL440-04, JA-LEX-C440-CAREFUL440-05, JA-LEX-C441-PROUD441-01, JA-LEX-C441-PROUD441-02, JA-LEX-C441-PROUD441-03, JA-LEX-C441-PROUD441-04, JA-LEX-C441-PROUD441-05, JA-LEX-C442-INSIDE442-01, JA-LEX-C442-INSIDE442-02, JA-LEX-C442-INSIDE442-03, JA-LEX-C442-INSIDE442-04, JA-LEX-C442-INSIDE442-05, JA-LEX-C443-WRIST443-01, JA-LEX-C443-WRIST443-02, JA-LEX-C443-WRIST443-03, JA-LEX-C443-WRIST443-04, JA-LEX-C443-WRIST443-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: stubborn, impatient, short-tempered, leisurely, to act big]
+- [YOU SAY: timid, a weakling, unfair, rough, courageous]
+- [YOU SAY: cautious, thoughtlessly, sloppy, neatly, suitable]
+- [YOU SAY: to boast, cheeky, admirable, a lazy person, to fool around]
+- [YOU SAY: a blood vessel, a muscle, blood, the spine, a joint]
+- [YOU SAY: a wrist, an ankle, a thumb, lips, an eyelid]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C438-STUBBORN438-01, JA-LEX-C438-STUBBORN438-02, JA-LEX-C438-STUBBORN438-03, JA-LEX-C438-STUBBORN438-04, JA-LEX-C438-STUBBORN438-05, JA-LEX-C439-BRAVE439-01, JA-LEX-C439-BRAVE439-02, JA-LEX-C439-BRAVE439-03, JA-LEX-C439-BRAVE439-04, JA-LEX-C439-BRAVE439-05, JA-LEX-C440-CAREFUL440-01, JA-LEX-C440-CAREFUL440-02, JA-LEX-C440-CAREFUL440-03, JA-LEX-C440-CAREFUL440-04, JA-LEX-C440-CAREFUL440-05, JA-LEX-C441-PROUD441-01, JA-LEX-C441-PROUD441-02, JA-LEX-C441-PROUD441-03, JA-LEX-C441-PROUD441-04, JA-LEX-C441-PROUD441-05, JA-LEX-C442-INSIDE442-01, JA-LEX-C442-INSIDE442-02, JA-LEX-C442-INSIDE442-03, JA-LEX-C442-INSIDE442-04, JA-LEX-C442-INSIDE442-05, JA-LEX-C443-WRIST443-01, JA-LEX-C443-WRIST443-02, JA-LEX-C443-WRIST443-03, JA-LEX-C443-WRIST443-04, JA-LEX-C443-WRIST443-05] -->
+<!-- hl-activity: {"id":"JA-R443-review-438-443-type","kind":"text","assesses":["JA-LEX-C438-STUBBORN438-01"],"prompt":"Type the Japanese for 'stubborn'.","answer":"がんこ","accepted":["ganko"],"feedback":{"correct":"Right: がんこ (ganko) is 'stubborn; obstinate'.","incorrect":"'Stubborn' is がんこ (ganko)."},"response_seconds":10} -->
+
+[PAUSE 3s] Stubborn? (**がんこ**, *ganko*.) Impatient? (**せっかち**, *sekkachi*.) Short-tempered? (**たんき**, *tanki*.) Leisurely? (**のんびり**, *nonbiri*.) To act big? (**いばる**, *ibaru*.) Timid? (**おくびょう**, *okubyō*.) A weakling? (**よわむし**, *yowamushi*.) Unfair? (**ひきょう**, *hikyō*.) Rough? (**らんぼう**, *ranbō*.) Courageous? (**ゆうかん**, *yūkan*.) Cautious? (**しんちょう**, *shinchō*.) Thoughtlessly? (**うっかり**, *ukkari*.) Sloppy? (**だらしない**, *darashinai*.) Neatly? (**きちんと**, *kichinto*.) Suitable? (**てきとう**, *tekitō*.) To boast? (**じまんする**, *jiman suru*.) Cheeky? (**なまいき**, *namaiki*.) Admirable? (**えらい**, *erai*.) A lazy person? (**なまけもの**, *namakemono*.) To fool around? (**ふざける**, *fuzakeru*.) A blood vessel? (**けっかん**, *kekkan*.) A muscle? (**きんにく**, *kinniku*.) Blood? (**けつえき**, *ketsueki*.) The spine? (**せぼね**, *sebone*.) A joint? (**かんせつ**, *kansetsu*.) A wrist? (**てくび**, *tekubi*.) An ankle? (**あしくび**, *ashikubi*.) A thumb? (**おやゆび**, *oyayubi*.) Lips? (**くちびる**, *kuchibiru*.) An eyelid? (**まぶた**, *mabuta*.)
+`;export{t};

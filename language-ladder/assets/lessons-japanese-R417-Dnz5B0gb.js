@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: JA-R419-review-414-419
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 24470
+chapter: 419
+type: review
+headword: (dialogue)
+gloss: a review of the words from Hot, Damp Days to Name, Age and Nationality
+concept_tag: REVIEW
+prerequisites: [JA-C414-shitsudo, JA-C414-jimejime, JA-C414-hizashi, JA-C414-hikage, JA-C414-mabushii, JA-C415-yuudachi, JA-C415-kosame, JA-C415-bisshori, JA-C415-nurasu, JA-C415-amayadori, JA-C416-yoake, JA-C416-hinode, JA-C416-yuuyake, JA-C416-hiekomu, JA-C416-terasu, JA-C417-tenimotsu, JA-C417-nifuda, JA-C417-seou, JA-C417-kakaeru, JA-C417-korogasu, JA-C418-shomei, JA-C418-youshi, JA-C418-kinyuu, JA-C418-ran, JA-C418-hinichi, JA-C419-kokuseki, JA-C419-nenrei, JA-C419-seibetsu, JA-C419-shimei, JA-C419-uketsukeru]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [JA-LEX-C414-SHITSUDO414-01, JA-LEX-C414-SHITSUDO414-02, JA-LEX-C414-SHITSUDO414-03, JA-LEX-C414-SHITSUDO414-04, JA-LEX-C414-SHITSUDO414-05, JA-LEX-C415-YUUDACHI415-01, JA-LEX-C415-YUUDACHI415-02, JA-LEX-C415-YUUDACHI415-03, JA-LEX-C415-YUUDACHI415-04, JA-LEX-C415-YUUDACHI415-05, JA-LEX-C416-YOAKE416-01, JA-LEX-C416-YOAKE416-02, JA-LEX-C416-YOAKE416-03, JA-LEX-C416-YOAKE416-04, JA-LEX-C416-YOAKE416-05, JA-LEX-C417-TENIMOTSU417-01, JA-LEX-C417-TENIMOTSU417-02, JA-LEX-C417-TENIMOTSU417-03, JA-LEX-C417-TENIMOTSU417-04, JA-LEX-C417-TENIMOTSU417-05, JA-LEX-C418-SHOMEI418-01, JA-LEX-C418-SHOMEI418-02, JA-LEX-C418-SHOMEI418-03, JA-LEX-C418-SHOMEI418-04, JA-LEX-C418-SHOMEI418-05, JA-LEX-C419-KOKUSEKI419-01, JA-LEX-C419-KOKUSEKI419-02, JA-LEX-C419-KOKUSEKI419-03, JA-LEX-C419-KOKUSEKI419-04, JA-LEX-C419-KOKUSEKI419-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [JA-LEX-C414-SHITSUDO414-01, JA-LEX-C414-SHITSUDO414-02, JA-LEX-C414-SHITSUDO414-03, JA-LEX-C414-SHITSUDO414-04, JA-LEX-C414-SHITSUDO414-05, JA-LEX-C415-YUUDACHI415-01, JA-LEX-C415-YUUDACHI415-02, JA-LEX-C415-YUUDACHI415-03, JA-LEX-C415-YUUDACHI415-04, JA-LEX-C415-YUUDACHI415-05, JA-LEX-C416-YOAKE416-01, JA-LEX-C416-YOAKE416-02, JA-LEX-C416-YOAKE416-03, JA-LEX-C416-YOAKE416-04, JA-LEX-C416-YOAKE416-05, JA-LEX-C417-TENIMOTSU417-01, JA-LEX-C417-TENIMOTSU417-02, JA-LEX-C417-TENIMOTSU417-03, JA-LEX-C417-TENIMOTSU417-04, JA-LEX-C417-TENIMOTSU417-05, JA-LEX-C418-SHOMEI418-01, JA-LEX-C418-SHOMEI418-02, JA-LEX-C418-SHOMEI418-03, JA-LEX-C418-SHOMEI418-04, JA-LEX-C418-SHOMEI418-05, JA-LEX-C419-KOKUSEKI419-01, JA-LEX-C419-KOKUSEKI419-02, JA-LEX-C419-KOKUSEKI419-03, JA-LEX-C419-KOKUSEKI419-04, JA-LEX-C419-KOKUSEKI419-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-japanese-tokyo
+reviews_of: [JA-C414-shitsudo, JA-C414-jimejime, JA-C414-hizashi, JA-C414-hikage, JA-C414-mabushii, JA-C415-yuudachi, JA-C415-kosame, JA-C415-bisshori, JA-C415-nurasu, JA-C415-amayadori, JA-C416-yoake, JA-C416-hinode, JA-C416-yuuyake, JA-C416-hiekomu, JA-C416-terasu, JA-C417-tenimotsu, JA-C417-nifuda, JA-C417-seou, JA-C417-kakaeru, JA-C417-korogasu, JA-C418-shomei, JA-C418-youshi, JA-C418-kinyuu, JA-C418-ran, JA-C418-hinichi, JA-C419-kokuseki, JA-C419-nenrei, JA-C419-seibetsu, JA-C419-shimei, JA-C419-uketsukeru]
+---
+
+# Looking back: from Hot, Damp Days to Name, Age and Nationality
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C414-SHITSUDO414-01, JA-LEX-C414-SHITSUDO414-02] -->
+
+[PAUSE 3s] Say the Japanese for humidity and damp and humid.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C414-SHITSUDO414-01, JA-LEX-C414-SHITSUDO414-02, JA-LEX-C414-SHITSUDO414-03, JA-LEX-C414-SHITSUDO414-04, JA-LEX-C414-SHITSUDO414-05, JA-LEX-C415-YUUDACHI415-01, JA-LEX-C415-YUUDACHI415-02, JA-LEX-C415-YUUDACHI415-03, JA-LEX-C415-YUUDACHI415-04, JA-LEX-C415-YUUDACHI415-05, JA-LEX-C416-YOAKE416-01, JA-LEX-C416-YOAKE416-02, JA-LEX-C416-YOAKE416-03, JA-LEX-C416-YOAKE416-04, JA-LEX-C416-YOAKE416-05, JA-LEX-C417-TENIMOTSU417-01, JA-LEX-C417-TENIMOTSU417-02, JA-LEX-C417-TENIMOTSU417-03, JA-LEX-C417-TENIMOTSU417-04, JA-LEX-C417-TENIMOTSU417-05, JA-LEX-C418-SHOMEI418-01, JA-LEX-C418-SHOMEI418-02, JA-LEX-C418-SHOMEI418-03, JA-LEX-C418-SHOMEI418-04, JA-LEX-C418-SHOMEI418-05, JA-LEX-C419-KOKUSEKI419-01, JA-LEX-C419-KOKUSEKI419-02, JA-LEX-C419-KOKUSEKI419-03, JA-LEX-C419-KOKUSEKI419-04, JA-LEX-C419-KOKUSEKI419-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: humidity, damp and humid, the sun's rays, shade, dazzling]
+- [YOU SAY: a sudden evening shower, light rain, soaking wet, to get something wet, sheltering from the rain]
+- [YOU SAY: dawn, sunrise, a sunset glow, to turn very cold, to shine on]
+- [YOU SAY: hand luggage, a luggage tag, to carry on one's back, to carry in one's arms, to wheel along]
+- [YOU SAY: a signature, a blank form, filling in a form, a box on a form, a date]
+- [YOU SAY: nationality, age (a formal word), sex (on a form), one's full name, to accept applications]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C414-SHITSUDO414-01, JA-LEX-C414-SHITSUDO414-02, JA-LEX-C414-SHITSUDO414-03, JA-LEX-C414-SHITSUDO414-04, JA-LEX-C414-SHITSUDO414-05, JA-LEX-C415-YUUDACHI415-01, JA-LEX-C415-YUUDACHI415-02, JA-LEX-C415-YUUDACHI415-03, JA-LEX-C415-YUUDACHI415-04, JA-LEX-C415-YUUDACHI415-05, JA-LEX-C416-YOAKE416-01, JA-LEX-C416-YOAKE416-02, JA-LEX-C416-YOAKE416-03, JA-LEX-C416-YOAKE416-04, JA-LEX-C416-YOAKE416-05, JA-LEX-C417-TENIMOTSU417-01, JA-LEX-C417-TENIMOTSU417-02, JA-LEX-C417-TENIMOTSU417-03, JA-LEX-C417-TENIMOTSU417-04, JA-LEX-C417-TENIMOTSU417-05, JA-LEX-C418-SHOMEI418-01, JA-LEX-C418-SHOMEI418-02, JA-LEX-C418-SHOMEI418-03, JA-LEX-C418-SHOMEI418-04, JA-LEX-C418-SHOMEI418-05, JA-LEX-C419-KOKUSEKI419-01, JA-LEX-C419-KOKUSEKI419-02, JA-LEX-C419-KOKUSEKI419-03, JA-LEX-C419-KOKUSEKI419-04, JA-LEX-C419-KOKUSEKI419-05] -->
+<!-- hl-activity: {"id":"JA-R419-review-414-419-type","kind":"text","assesses":["JA-LEX-C414-SHITSUDO414-01"],"prompt":"Type the Japanese for 'humidity'.","answer":"しつど","accepted":["shitsudo"],"feedback":{"correct":"Right: しつど (shitsudo) is 'humidity'.","incorrect":"'Humidity' is しつど (shitsudo)."},"response_seconds":10} -->
+
+[PAUSE 3s] Humidity? (**しつど**, *shitsudo*.) Damp and humid? (**じめじめ**, *jimejime*.) The sun's rays? (**ひざし**, *hizashi*.) Shade? (**ひかげ**, *hikage*.) Dazzling? (**まぶしい**, *mabushii*.) A sudden evening shower? (**ゆうだち**, *yūdachi*.) Light rain? (**こさめ**, *kosame*.) Soaking wet? (**びっしょり**, *bisshori*.) To get something wet? (**ぬらす**, *nurasu*.) Sheltering from the rain? (**あまやどり**, *amayadori*.) Dawn? (**よあけ**, *yoake*.) Sunrise? (**ひので**, *hinode*.) A sunset glow? (**ゆうやけ**, *yūyake*.) To turn very cold? (**ひえこむ**, *hiekomu*.) To shine on? (**てらす**, *terasu*.) Hand luggage? (**てにもつ**, *tenimotsu*.) A luggage tag? (**にふだ**, *nifuda*.) To carry on one's back? (**せおう**, *seou*.) To carry in one's arms? (**かかえる**, *kakaeru*.) To wheel along? (**ころがす**, *korogasu*.) A signature? (**しょめい**, *shomei*.) A blank form? (**ようし**, *yōshi*.) Filling in a form? (**きにゅう**, *kinyū*.) A box on a form? (**らん**, *ran*.) A date? (**ひにち**, *hinichi*.) Nationality? (**こくせき**, *kokuseki*.) Age (a formal word)? (**ねんれい**, *nenrei*.) Sex (on a form)? (**せいべつ**, *seibetsu*.) One's full name? (**しめい**, *shimei*.) To accept applications? (**うけつける**, *uketsukeru*.)
+`;export{t};

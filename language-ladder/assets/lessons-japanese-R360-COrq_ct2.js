@@ -1,0 +1,55 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: JA-R361-review-357-361
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 21320
+chapter: 361
+type: review
+headword: (dialogue)
+gloss: a review of the words from Contracts to Profit and Loss
+concept_tag: REVIEW
+prerequisites: [JA-C357-keiyaku-suru, JA-C357-hoshou, JA-C357-naiyou, JA-C357-yutori, JA-C357-kettei-suru, JA-C358-yachin, JA-C358-ouya, JA-C358-kouza, JA-C358-furikomu, JA-C358-zandaka, JA-C359-shakkin, JA-C359-rishi, JA-C359-tatekaeru, JA-C359-henkin, JA-C359-kingaku, JA-C360-shuunyuu, JA-C360-shishutsu, JA-C360-seikatsuhi, JA-C360-tamaru, JA-C360-osaeru, JA-C361-moukeru, JA-C361-moukaru, JA-C361-rieki, JA-C361-son, JA-C361-tsubureru]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [JA-LEX-C357-KEIYAKU357-01, JA-LEX-C357-KEIYAKU357-02, JA-LEX-C357-KEIYAKU357-03, JA-LEX-C357-KEIYAKU357-04, JA-LEX-C357-KEIYAKU357-05, JA-LEX-C358-YACHIN358-01, JA-LEX-C358-YACHIN358-02, JA-LEX-C358-YACHIN358-03, JA-LEX-C358-YACHIN358-04, JA-LEX-C358-YACHIN358-05, JA-LEX-C359-SHAKKIN359-01, JA-LEX-C359-SHAKKIN359-02, JA-LEX-C359-SHAKKIN359-03, JA-LEX-C359-SHAKKIN359-04, JA-LEX-C359-SHAKKIN359-05, JA-LEX-C360-SHUUNYUU360-01, JA-LEX-C360-SHUUNYUU360-02, JA-LEX-C360-SHUUNYUU360-03, JA-LEX-C360-SHUUNYUU360-04, JA-LEX-C360-SHUUNYUU360-05, JA-LEX-C361-MOUKERU361-01, JA-LEX-C361-MOUKERU361-02, JA-LEX-C361-MOUKERU361-03, JA-LEX-C361-MOUKERU361-04, JA-LEX-C361-MOUKERU361-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [JA-LEX-C357-KEIYAKU357-01, JA-LEX-C357-KEIYAKU357-02, JA-LEX-C357-KEIYAKU357-03, JA-LEX-C357-KEIYAKU357-04, JA-LEX-C357-KEIYAKU357-05, JA-LEX-C358-YACHIN358-01, JA-LEX-C358-YACHIN358-02, JA-LEX-C358-YACHIN358-03, JA-LEX-C358-YACHIN358-04, JA-LEX-C358-YACHIN358-05, JA-LEX-C359-SHAKKIN359-01, JA-LEX-C359-SHAKKIN359-02, JA-LEX-C359-SHAKKIN359-03, JA-LEX-C359-SHAKKIN359-04, JA-LEX-C359-SHAKKIN359-05, JA-LEX-C360-SHUUNYUU360-01, JA-LEX-C360-SHUUNYUU360-02, JA-LEX-C360-SHUUNYUU360-03, JA-LEX-C360-SHUUNYUU360-04, JA-LEX-C360-SHUUNYUU360-05, JA-LEX-C361-MOUKERU361-01, JA-LEX-C361-MOUKERU361-02, JA-LEX-C361-MOUKERU361-03, JA-LEX-C361-MOUKERU361-04, JA-LEX-C361-MOUKERU361-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-japanese-tokyo
+reviews_of: [JA-C357-keiyaku-suru, JA-C357-hoshou, JA-C357-naiyou, JA-C357-yutori, JA-C357-kettei-suru, JA-C358-yachin, JA-C358-ouya, JA-C358-kouza, JA-C358-furikomu, JA-C358-zandaka, JA-C359-shakkin, JA-C359-rishi, JA-C359-tatekaeru, JA-C359-henkin, JA-C359-kingaku, JA-C360-shuunyuu, JA-C360-shishutsu, JA-C360-seikatsuhi, JA-C360-tamaru, JA-C360-osaeru, JA-C361-moukeru, JA-C361-moukaru, JA-C361-rieki, JA-C361-son, JA-C361-tsubureru]
+---
+
+# Looking back: from Contracts to Profit and Loss
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C357-KEIYAKU357-01, JA-LEX-C357-KEIYAKU357-02] -->
+
+[PAUSE 3s] Say the Japanese for to sign a contract and a warranty.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C357-KEIYAKU357-01, JA-LEX-C357-KEIYAKU357-02, JA-LEX-C357-KEIYAKU357-03, JA-LEX-C357-KEIYAKU357-04, JA-LEX-C357-KEIYAKU357-05, JA-LEX-C358-YACHIN358-01, JA-LEX-C358-YACHIN358-02, JA-LEX-C358-YACHIN358-03, JA-LEX-C358-YACHIN358-04, JA-LEX-C358-YACHIN358-05, JA-LEX-C359-SHAKKIN359-01, JA-LEX-C359-SHAKKIN359-02, JA-LEX-C359-SHAKKIN359-03, JA-LEX-C359-SHAKKIN359-04, JA-LEX-C359-SHAKKIN359-05, JA-LEX-C360-SHUUNYUU360-01, JA-LEX-C360-SHUUNYUU360-02, JA-LEX-C360-SHUUNYUU360-03, JA-LEX-C360-SHUUNYUU360-04, JA-LEX-C360-SHUUNYUU360-05, JA-LEX-C361-MOUKERU361-01, JA-LEX-C361-MOUKERU361-02, JA-LEX-C361-MOUKERU361-03, JA-LEX-C361-MOUKERU361-04, JA-LEX-C361-MOUKERU361-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to sign a contract, a warranty, the contents, leeway, to decide officially]
+- [YOU SAY: rent, a landlord, a bank account, to pay into an account, a bank balance]
+- [YOU SAY: a debt, interest on money, to pay for someone, a refund, a sum of money]
+- [YOU SAY: income, expenditure, living costs, to be saved up, to keep down]
+- [YOU SAY: to make a profit, to be profitable, a profit, a loss, to go out of business]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C357-KEIYAKU357-01, JA-LEX-C357-KEIYAKU357-02, JA-LEX-C357-KEIYAKU357-03, JA-LEX-C357-KEIYAKU357-04, JA-LEX-C357-KEIYAKU357-05, JA-LEX-C358-YACHIN358-01, JA-LEX-C358-YACHIN358-02, JA-LEX-C358-YACHIN358-03, JA-LEX-C358-YACHIN358-04, JA-LEX-C358-YACHIN358-05, JA-LEX-C359-SHAKKIN359-01, JA-LEX-C359-SHAKKIN359-02, JA-LEX-C359-SHAKKIN359-03, JA-LEX-C359-SHAKKIN359-04, JA-LEX-C359-SHAKKIN359-05, JA-LEX-C360-SHUUNYUU360-01, JA-LEX-C360-SHUUNYUU360-02, JA-LEX-C360-SHUUNYUU360-03, JA-LEX-C360-SHUUNYUU360-04, JA-LEX-C360-SHUUNYUU360-05, JA-LEX-C361-MOUKERU361-01, JA-LEX-C361-MOUKERU361-02, JA-LEX-C361-MOUKERU361-03, JA-LEX-C361-MOUKERU361-04, JA-LEX-C361-MOUKERU361-05] -->
+<!-- hl-activity: {"id":"JA-R361-review-357-361-type","kind":"text","assesses":["JA-LEX-C357-KEIYAKU357-01"],"prompt":"Type the Japanese for 'to sign a contract'.","answer":"けいやくする","accepted":["keiyaku suru"],"feedback":{"correct":"Right: けいやくする (keiyaku suru) is 'to sign a contract'.","incorrect":"'To sign a contract' is けいやくする (keiyaku suru)."},"response_seconds":10} -->
+
+[PAUSE 3s] To sign a contract? (**けいやくする**, *keiyaku suru*.) A warranty? (**ほしょう**, *hoshō*.) The contents? (**ないよう**, *naiyō*.) Leeway? (**ゆとり**, *yutori*.) To decide officially? (**けっていする**, *kettei suru*.) Rent? (**やちん**, *yachin*.) A landlord? (**おおや**, *ōya*.) A bank account? (**こうざ**, *kōza*.) To pay into an account? (**ふりこむ**, *furikomu*.) A bank balance? (**ざんだか**, *zandaka*.) A debt? (**しゃっきん**, *shakkin*.) Interest on money? (**りし**, *rishi*.) To pay for someone? (**たてかえる**, *tatekaeru*.) A refund? (**へんきん**, *henkin*.) A sum of money? (**きんがく**, *kingaku*.) Income? (**しゅうにゅう**, *shūnyū*.) Expenditure? (**ししゅつ**, *shishutsu*.) Living costs? (**せいかつひ**, *seikatsuhi*.) To be saved up? (**たまる**, *tamaru*.) To keep down? (**おさえる**, *osaeru*.) To make a profit? (**もうける**, *mōkeru*.) To be profitable? (**もうかる**, *mōkaru*.) A profit? (**りえき**, *rieki*.) A loss? (**そん**, *son*.) To go out of business? (**つぶれる**, *tsubureru*.)
+`;export{t};
