@@ -262,7 +262,9 @@ and every `[target.<cfg>.dev-dependencies]` (the union over all targets, since
 CI runs on several hosts). For a `mosaic` package's harness (the `Cargo.toml`
 beside `mosaic-package.toml`) they also include `[dependencies]` and
 `[build-dependencies]` and their target forms, because a Mosaic package has no
-Cargo graph edges at all. The legacy `dev_dependencies`/`build_dependencies`
+Cargo graph edges at all. Every `[patch.<source>]` table is read for all three
+languages, because Cargo builds the tests against a patched path even for a
+registry dependency. The legacy `dev_dependencies`/`build_dependencies`
 spellings are the same tables. Self-references are dropped. Change detection
 applies the relation **one hop**:
 
@@ -280,16 +282,34 @@ depends on A (the repository has such pairs), and as a graph edge that cycle
 would fail every package's build.
 
 Entries resolve **by path, not by name**: only entries with a `path` field
-count, and `filepath.Join(manifest directory, path)`, cleaned, must be a
-discovered package's directory or lie inside one (the containing package is
-the trigger, as prefix matching attributes changes there to it). Resolving by
-Cargo name would let any crate declaring the same `name` capture the trigger.
-A path to an existing crate directory that no discovered package covers
-yields no trigger and no error: such a crate is invisible to the tool anyway
-(a change in it selects nothing), and it is governed by the orphan-crate gate
-and `code/BUILD-EXEMPTIONS` (four such entries exist today). The same applies
-to a package left out by `-language`. Any other unresolvable path (nothing
-there, absolute, empty) is an error.
+count. `filepath.Join(manifest directory, path)` has every symlink resolved
+and is matched against the discovered packages' real directories, so neither
+a crate declaring the same Cargo `name` nor a symlinked or differently-cased
+spelling of the path can move or drop the trigger. The target is:
+
+- a discovered package root: that package is the trigger, and the chain ends
+  (what it links is the build graph's business);
+- any other crate: its `[dependencies]` and `[build-dependencies]` (target
+  forms included, `[dev-dependencies]` not) are linked into the dependent's
+  tests as well, so they are followed recursively, with a visited set and a
+  depth cap of 16 (a deeper chain is an error, not a truncation). If the crate
+  lies inside a discovered package (another package, or the dependent
+  itself), that package is also a trigger, since prefix matching attributes
+  changes there to it. If no package covers it, it must be listed exactly in
+  `code/BUILD-EXEMPTIONS`. `engram-core-wasm` is such an orphan, and it is how
+  `engram-app`'s tests reach `engram-core`;
+- anything else (nothing there; an absolute or empty path; an uncovered crate
+  that the ledger does not list, such as one under `vendor/` or outside
+  `code/`) is an error.
+
+Path entries resolve against every discovered package even when `-language`
+filters the run, so a path into a filtered-out package is not mistaken for an
+unlisted crate. A `.cargo/config` or `.cargo/config.toml` in the package
+directory or any ancestor up to the repository root that sets `paths` or
+`[patch]` is an error. Refusing is preferred to treating the file as a
+rebuild-everything input, which would silently make every later change a
+full rebuild. The repository's four configs only pick a Windows linker.
+`[replace]` and `workspace = true` are refused.
 
 The cost is deliberate. Measured on the repository when this was added, a
 one-line change to `mosaic-emit-qt`, `mosaic-emit-flutter` or
@@ -301,7 +321,9 @@ last two through target tables), and their build prerequisites from the normal
 prerequisite expansion (about 51 for `venture-browser-qt` alone). Dev-dependents
 keep that expansion like every other selected package. The fan-out was
 reviewed and accepted at 151, before target tables were read; reading them
-added the remaining 7.
+added the remaining 7. Following non-package crates leaves those numbers
+unchanged and makes a change to `engram-core` select 27 packages instead of
+14 (`engram-app` and its Mosaic prerequisites).
 
 The reader fails closed, because a dropped trigger silently skips a
 dependent's tests. It reads a plain TOML subset and stops the plan on anything
@@ -322,7 +344,8 @@ outside it:
   unique (Cargo ignores `Package`, so it must not be read as a rename), with a
   one-line string, boolean or array-of-strings value; nested inline tables,
   trailing commas, escapes and `workspace = true` are refused;
-- a manifest that is not a regular file or exceeds 1 MiB.
+- a manifest that is not a regular file or exceeds 1 MiB, or one entry
+  continuing past 256 lines or 64 KiB.
 
 A leading UTF-8 byte-order mark is stripped, as TOML allows.
 
