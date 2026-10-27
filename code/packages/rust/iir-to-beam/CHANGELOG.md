@@ -25,6 +25,25 @@
   `erlang:error/1` reason atom is `'Trap.Unbound'` (was
   `'Trap.ReferenceError'`).
 
+## Unreleased — LANG83 PR7c-py — call arguments are a parallel move
+
+- **Fixed: a local `call` could hand its callee the wrong arguments.** The
+  arguments were moved into x0, x1, … one at a time in argument order. So an
+  argument already sitting in an earlier argument's slot was overwritten
+  before it was read. `__py_write_float` (python-iir-compiler, PR7c-py) keeps
+  `zero` in x1 and calls `__py_write_digits(d, n, zero, e1)`, so the callee got
+  `from = n`. On real OTP, `print(1.5)` printed `.5` and `print(1e16)` printed
+  `e+16` (the BEAM × Python cell on PR #18400). Moves are now ordered by
+  `sequence_parallel_moves`: it emits a move only once nothing still has to
+  read its destination, and it breaks a pure cycle (a swap, say) through one
+  scratch register at or above `max(next_reg, arity)`. A call whose old order
+  was already safe emits exactly the same instructions, so modules that
+  worked before lower byte-for-byte the same.
+- Tests: the opcode model runs `main → f(…)` for every way of passing four
+  arguments from five registers (625 calls, including the PR7c-py shape), and
+  checks that safe orders are unchanged. Both new tests fail before the fix.
+  The model gained `erlang:*/2`.
+
 ## Unreleased — LANG83 PR7b — the language-neutral float primitives
 
 - The PR6a `float_to_list(F, [short])` parse is its own function,
