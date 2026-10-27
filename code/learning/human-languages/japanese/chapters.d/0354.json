@@ -1,0 +1,19 @@
+{
+  "chapter": 354,
+  "title": "Weather Plans",
+  "label": "ch:ja-weather-plans",
+  "canDo": "I can say what we will do if the weather turns bad.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C354-arakajime",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can say what we will do if the weather turns bad.",
+    "assesses": [
+      "JA-LEX-C354-TENKI354-03",
+      "JA-LEX-C354-TENKI354-04",
+      "JA-LEX-C354-TENKI354-05"
+    ]
+  }
+}

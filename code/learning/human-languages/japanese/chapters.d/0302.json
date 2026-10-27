@@ -1,0 +1,19 @@
+{
+  "chapter": 302,
+  "title": "Ghost Stories",
+  "label": "ch:ja-ghost-stories",
+  "canDo": "I can tell what the ghost in the old story wanted.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C302-kamisama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 302: I can tell what the ghost in the old story wanted.",
+    "assesses": [
+      "JA-LEX-C302-YUUREI302-03",
+      "JA-LEX-C302-YUUREI302-04",
+      "JA-LEX-C302-YUUREI302-05"
+    ]
+  }
+}

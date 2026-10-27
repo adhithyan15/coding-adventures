@@ -1,0 +1,11 @@
+{
+  "id": "JA-C426-kibun",
+  "pathSegment": "JA-PATH-426-FEEL426",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-426-FEEL426",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C392-tachiyoru",
+  "pathSegment": "JA-PATH-392-YORIMICHI392",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-392-YORIMICHI392",
+      "order": 4
+    }
+  ]
+}

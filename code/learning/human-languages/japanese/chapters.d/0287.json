@@ -1,0 +1,19 @@
+{
+  "chapter": 287,
+  "title": "Growing Up",
+  "label": "ch:ja-growing-up",
+  "canDo": "I can say how a child grew and who came to see.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C287-seichou-suru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 287: I can say how a child grew and who came to see.",
+    "assesses": [
+      "JA-LEX-C287-SODATSU287-03",
+      "JA-LEX-C287-SODATSU287-04",
+      "JA-LEX-C287-SODATSU287-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:bc260da990e5755b",
+  "lessonIds": [
+    "JA-C263-kyuukyuusha",
+    "JA-C263-yobu",
+    "JA-C263-sakebu",
+    "JA-C263-awateru",
+    "JA-C263-sugu"
+  ],
+  "tex": "japanese/book/chapters/ch263-calling-for-help.tex"
+}

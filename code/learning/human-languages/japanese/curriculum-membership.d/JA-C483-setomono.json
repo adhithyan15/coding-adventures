@@ -1,0 +1,11 @@
+{
+  "id": "JA-C483-setomono",
+  "pathSegment": "JA-PATH-483-CLAY483",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-483-CLAY483",
+      "order": 1
+    }
+  ]
+}

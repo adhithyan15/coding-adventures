@@ -1,0 +1,11 @@
+{
+  "id": "JA-C345-torikesu",
+  "pathSegment": "JA-PATH-345-HENKOU345",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-345-HENKOU345",
+      "order": 2
+    }
+  ]
+}

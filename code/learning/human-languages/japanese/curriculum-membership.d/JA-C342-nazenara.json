@@ -1,0 +1,11 @@
+{
+  "id": "JA-C342-nazenara",
+  "pathSegment": "JA-PATH-342-GENIN342",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-342-GENIN342",
+      "order": 3
+    }
+  ]
+}

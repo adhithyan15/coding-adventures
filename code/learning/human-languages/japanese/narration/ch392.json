@@ -1,0 +1,804 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 392,
+  "title": "Stopping on the Way",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:df63797b2eff2d82",
+  "lessons": [
+    {
+      "id": "JA-C392-yorimichi",
+      "sequence": 23030,
+      "title": "よりみち (yorimichi) — a stop on the way; a side trip",
+      "headword": "よりみち",
+      "romanization": "yorimichi",
+      "gloss": "a stop on the way; a side trip",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a6c99544fc02dbb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to stop walking, then the Japanese for to block."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: よりみち",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よりみち — yorimichi — \"a stop on the way; a side trip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しごとの あとで、ほんやに よりみちしました。 — shigoto no ato de, hon'ya ni yorimichi shimashita — \"After work I stopped off at a bookshop.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よりみち (yorimichi) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from yori, \"dropping in\" (from yoru) and michi, \"road\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yorimichi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yorimichi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yorimichi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yorimichi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shigoto no ato de, hon'ya ni yorimichi shimashita — After work I stopped off at a bookshop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shigoto no ato de, hon'ya ni yorimichi shimashita* — After work I stopped off at a bookshop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to stop walking, then the Japanese for to block, then say yorimichi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to stop walking, then the Japanese for to block, then say *yorimichi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does よりみち (yorimichi) mean? (\"A stop on the way; a side trip\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C392-yorimichi-type",
+              "prompt": "Say the Japanese for 'a stop on the way'.",
+              "assesses": [
+                "JA-LEX-C392-YORIMICHI392-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "よりみち",
+                "yorimichi"
+              ],
+              "feedback": {
+                "correct": "Right: よりみち (yorimichi) is 'a stop on the way; a side trip'.",
+                "incorrect": "'A stop on the way' is よりみち (yorimichi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C392-mawarimichi",
+      "sequence": 23040,
+      "title": "まわりみち (mawarimichi) — a detour; a roundabout way",
+      "headword": "まわりみち",
+      "romanization": "mawarimichi",
+      "gloss": "a detour; a roundabout way",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7204ea1b4f24ba21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to block, then the Japanese for a stop on the way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: まわりみち",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まわりみち — mawarimichi — \"a detour; a roundabout way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じゅうたいで まわりみちを しました。 — jūtai de mawarimichi o shimashita — \"Because of the traffic jam we took a detour.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まわりみち (mawarimichi) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from mawari, \"going round\" (from mawaru) and michi, \"road\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mawarimichi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mawarimichi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mawarimichi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mawarimichi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jūtai de mawarimichi o shimashita — Because of the traffic jam we took a detour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jūtai de mawarimichi o shimashita* — Because of the traffic jam we took a detour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to block, then the Japanese for a stop on the way, then say mawarimichi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to block, then the Japanese for a stop on the way, then say *mawarimichi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does まわりみち (mawarimichi) mean? (\"A detour; a roundabout way\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C392-mawarimichi-type",
+              "prompt": "Say the Japanese for 'a detour'.",
+              "assesses": [
+                "JA-LEX-C392-YORIMICHI392-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "まわりみち",
+                "mawarimichi"
+              ],
+              "feedback": {
+                "correct": "Right: まわりみち (mawarimichi) is 'a detour; a roundabout way'.",
+                "incorrect": "'A detour' is まわりみち (mawarimichi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C392-ikidomari",
+      "sequence": 23050,
+      "title": "いきどまり (ikidomari) — a dead end",
+      "headword": "いきどまり",
+      "romanization": "ikidomari",
+      "gloss": "a dead end",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c2a7ce79adacc02",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a stop on the way, then the Japanese for a detour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いきどまり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いきどまり — ikidomari — \"a dead end\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この みちは いきどまりです。 — kono michi wa ikidomari desu — \"This road is a dead end.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いきどまり (ikidomari) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from iki, \"going\" (from iku) and domari, \"stopping\" (from tomaru); its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikidomari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikidomari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikidomari, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikidomari*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono michi wa ikidomari desu — This road is a dead end.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono michi wa ikidomari desu* — This road is a dead end.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a stop on the way, then the Japanese for a detour, then say ikidomari again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a stop on the way, then the Japanese for a detour, then say *ikidomari* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いきどまり (ikidomari) mean? (\"A dead end\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C392-ikidomari-type",
+              "prompt": "Say the Japanese for 'a dead end'.",
+              "assesses": [
+                "JA-LEX-C392-YORIMICHI392-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いきどまり",
+                "ikidomari"
+              ],
+              "feedback": {
+                "correct": "Right: いきどまり (ikidomari) is 'a dead end'.",
+                "incorrect": "'A dead end' is いきどまり (ikidomari)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C392-hikikaesu",
+      "sequence": 23060,
+      "title": "ひきかえす (hikikaesu) — to turn back",
+      "headword": "ひきかえす",
+      "romanization": "hikikaesu",
+      "gloss": "to turn back",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63622bce6a7d6956",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a detour, then the Japanese for a dead end."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひきかえす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひきかえす — hikikaesu — \"to turn back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "みちを まちがえたので、ひきかえしました。 — michi o machigaeta node, hikikaeshimashita — \"I took the wrong road, so I turned back.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ひきかえします, hikikaeshimasu; a godan verb. Past (polite): ちちが えきまで ひきかえしました。, chichi ga eki made hikikaeshimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひきかえす (hikikaesu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from hiki, \"pulling\" (from hiku) and kaesu, \"to send back\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikikaesu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikikaesu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikikaesu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikikaesu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "michi o machigaeta node, hikikaeshimashita — I took the wrong road, so I turned back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *michi o machigaeta node, hikikaeshimashita* — I took the wrong road, so I turned back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a detour, then the Japanese for a dead end, then say hikikaesu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a detour, then the Japanese for a dead end, then say *hikikaesu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひきかえす (hikikaesu) mean? (\"To turn back\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C392-hikikaesu-type",
+              "prompt": "Say the Japanese for 'to turn back'.",
+              "assesses": [
+                "JA-LEX-C392-YORIMICHI392-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひきかえす",
+                "hikikaesu"
+              ],
+              "feedback": {
+                "correct": "Right: ひきかえす (hikikaesu) is 'to turn back'.",
+                "incorrect": "'To turn back' is ひきかえす (hikikaesu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C392-tachiyoru",
+      "sequence": 23070,
+      "title": "たちよる (tachiyoru) — to stop by; to drop in on the way",
+      "headword": "たちよる",
+      "romanization": "tachiyoru",
+      "gloss": "to stop by; to drop in on the way",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c1e9f37bbd524c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a dead end, then the Japanese for to turn back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たちよる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たちよる — tachiyoru — \"to stop by; to drop in on the way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "えきの まえの きっさてんに たちよりました。 — eki no mae no kissaten ni tachiyorimashita — \"I stopped by a cafe in front of the station.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite たちよります, tachiyorimasu; a godan verb. Past (polite): あねが はなやに たちよりました。, ane ga hanaya ni tachiyorimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たちよる (tachiyoru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from tachi, \"standing\" (from tatsu) and yoru, \"to drop in\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tachiyoru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tachiyoru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tachiyoru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tachiyoru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eki no mae no kissaten ni tachiyorimashita — I stopped by a cafe in front of the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eki no mae no kissaten ni tachiyorimashita* — I stopped by a cafe in front of the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a dead end, then the Japanese for to turn back, then say tachiyoru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a dead end, then the Japanese for to turn back, then say *tachiyoru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たちよる (tachiyoru) mean? (\"To stop by; to drop in on the way\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C392-tachiyoru-type",
+              "prompt": "Say the Japanese for 'to stop by'.",
+              "assesses": [
+                "JA-LEX-C392-YORIMICHI392-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たちよる",
+                "tachiyoru"
+              ],
+              "feedback": {
+                "correct": "Right: たちよる (tachiyoru) is 'to stop by; to drop in on the way'.",
+                "incorrect": "'To stop by' is たちよる (tachiyoru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C324-kujou",
+  "pathSegment": "JA-PATH-324-MONKU324",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-324-MONKU324",
+      "order": 1
+    }
+  ]
+}

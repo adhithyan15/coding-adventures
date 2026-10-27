@@ -1,0 +1,11 @@
+{
+  "id": "JA-C446-samuke",
+  "pathSegment": "JA-PATH-446-CHILL446",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-446-CHILL446",
+      "order": 2
+    }
+  ]
+}

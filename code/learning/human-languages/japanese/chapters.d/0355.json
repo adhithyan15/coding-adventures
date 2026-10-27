@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "How Likely Is It?",
+  "label": "ch:ja-how-likely-is-it",
+  "canDo": "I can say how likely something is to happen.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C355-hazureru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can say how likely something is to happen.",
+    "assesses": [
+      "JA-LEX-C355-TABUN355-03",
+      "JA-LEX-C355-TABUN355-04",
+      "JA-LEX-C355-TABUN355-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "Imagining",
+  "label": "ch:ja-imagining",
+  "canDo": "I can talk about what might be.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C524-jitsugen-suru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can talk about what might be.",
+    "assesses": [
+      "JA-LEX-C524-IMAGINE524-03",
+      "JA-LEX-C524-IMAGINE524-04",
+      "JA-LEX-C524-IMAGINE524-05"
+    ]
+  }
+}

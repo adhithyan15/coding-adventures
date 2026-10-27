@@ -1,0 +1,11 @@
+{
+  "id": "JA-C513-kikaku-suru",
+  "pathSegment": "JA-PATH-513-PLAN513",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-513-PLAN513",
+      "order": 0
+    }
+  ]
+}

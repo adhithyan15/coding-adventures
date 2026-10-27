@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R503-review-498-503",
+    "language": "japanese",
+    "chapter": 503,
+    "sequence": 29230,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:122e712fa7a05ad1"
+  },
+  "findings": []
+}

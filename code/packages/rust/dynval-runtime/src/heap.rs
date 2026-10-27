@@ -306,10 +306,33 @@ impl LangString {
 /// only the body changes.
 pub fn alloc_cons(car: LispyValue, cdr: LispyValue) -> LispyValue {
     let cell = Box::new(ConsCell::new(car, cdr));
-    let ptr = Box::leak(cell) as *const ConsCell;
-    // SAFETY: Box::leak'd ConsCell is 8-aligned (compile-time
+    // Why `Box::into_raw` and not `Box::leak(cell) as *const ConsCell`?
+    //
+    // Cons cells are *mutable*: `set_field_unchecked` (the `field_store`
+    // runtime) writes `car`/`cdr` through a pointer rebuilt from the
+    // tagged integer.  That rebuilt pointer has "wildcard" provenance —
+    // it may use any permission that was *exposed* for this allocation —
+    // so the permission we expose here decides whether that write is
+    // legal:
+    //
+    //   pointer exposed                         | later write through it
+    //   ----------------------------------------+--------------------------
+    //   `Box::leak(cell) as *const ConsCell`    | UB: the `&mut -> *const`
+    //     (reborrows `&mut` as shared first)    |   cast goes via `&T`, so
+    //                                           |   only a read-only tag is
+    //                                           |   exposed
+    //   `Box::into_raw(cell)` (a `*mut`)        | allowed: the raw pointer
+    //                                           |   owns full write access
+    //
+    // Miri reported the first form as Undefined Behavior (Stacked
+    // Borrows) on the twig-vm record tests once those tests were
+    // reachable under Miri.  `into_raw` leaks exactly like `Box::leak`;
+    // coercing `*mut` to `*const` below is a plain raw-pointer cast that
+    // keeps the write-capable tag.
+    let ptr: *mut ConsCell = Box::into_raw(cell);
+    // SAFETY: the boxed ConsCell is 8-aligned (compile-time
     // const_assert) and lives forever (intentional PR 2 leak).
-    unsafe { LispyValue::from_heap(ptr) }
+    unsafe { LispyValue::from_heap(ptr as *const ConsCell) }
 }
 
 /// Mutate one field (`car` or `cdr`) of a live `ConsCell`.
@@ -376,8 +399,11 @@ pub unsafe fn set_field_unchecked(
 /// Same PR 2 vs. future-PR contract as [`alloc_cons`].
 pub fn alloc_closure(fn_name: SymbolId, captures: Vec<LispyValue>) -> LispyValue {
     let clos = Box::new(Closure::new(fn_name, captures));
-    let ptr = Box::leak(clos) as *const Closure;
-    // SAFETY: Box::leak'd Closure is 8-aligned (const_assert) and lives forever.
+    // `Box::into_raw`, not `Box::leak(..) as *const`, for the reason spelled
+    // out in `alloc_cons`: the exposed tag must stay write-capable in case a
+    // later pass (capture patching, a GC forwarding word) writes through it.
+    let ptr: *const Closure = Box::into_raw(clos);
+    // SAFETY: the leaked Closure is 8-aligned (const_assert) and lives forever.
     unsafe { LispyValue::from_heap(ptr) }
 }
 
@@ -390,8 +416,11 @@ pub fn alloc_closure(fn_name: SymbolId, captures: Vec<LispyValue>) -> LispyValue
 /// routes through `LispyBinding::resolve_builtin`.
 pub fn alloc_builtin_closure(fn_name: SymbolId) -> LispyValue {
     let clos = Box::new(Closure::new_builtin(fn_name));
-    let ptr = Box::leak(clos) as *const Closure;
-    // SAFETY: Box::leak'd Closure is 8-aligned (const_assert) and lives forever.
+    // `Box::into_raw`, not `Box::leak(..) as *const`, for the reason spelled
+    // out in `alloc_cons`: the exposed tag must stay write-capable in case a
+    // later pass (capture patching, a GC forwarding word) writes through it.
+    let ptr: *const Closure = Box::into_raw(clos);
+    // SAFETY: the leaked Closure is 8-aligned (const_assert) and lives forever.
     unsafe { LispyValue::from_heap(ptr) }
 }
 
@@ -418,8 +447,9 @@ pub fn alloc_builtin_closure(fn_name: SymbolId) -> LispyValue {
 /// ```
 pub fn alloc_string(bytes: &[u8]) -> LispyValue {
     let s = Box::new(LangString::new(bytes));
-    let ptr = Box::leak(s) as *const LangString;
-    // SAFETY: Box::leak'd LangString is 8-aligned (compile-time const_assert)
+    // `Box::into_raw` for the same write-capable tag as `alloc_cons`.
+    let ptr: *const LangString = Box::into_raw(s);
+    // SAFETY: the leaked LangString is 8-aligned (compile-time const_assert)
     // and lives forever (intentional PR 2 leak).
     unsafe { LispyValue::from_heap(ptr) }
 }
@@ -587,6 +617,37 @@ mod tests {
             assert!(is_cons(v));
             assert_eq!(car(v), Some(LispyValue::int(1)));
             assert_eq!(cdr(v), Some(LispyValue::int(2)));
+        }
+    }
+
+    #[test]
+    fn set_field_unchecked_mutates_an_alloc_cons_cell() {
+        // Regression for a Stacked Borrows violation Miri found: the
+        // `field_store` path writes through a pointer rebuilt from the
+        // tagged value, so `alloc_cons` must expose a *write-capable*
+        // tag (see the comment in `alloc_cons`).  This is the exact
+        // twig-vm `alloc` + 2×`field_store` shape, kept here so the
+        // blocking per-PR Miri run on this crate guards it.
+        let v = alloc_cons(LispyValue::NIL, LispyValue::NIL);
+        // SAFETY: v came from alloc_cons in this test — live, valid.
+        unsafe {
+            set_field_unchecked(v, 0, LispyValue::int(3)).unwrap();
+            set_field_unchecked(v, 1, LispyValue::int(4)).unwrap();
+            assert_eq!(car(v), Some(LispyValue::int(3)));
+            assert_eq!(cdr(v), Some(LispyValue::int(4)));
+            assert_eq!(
+                set_field_unchecked(v, 2, LispyValue::NIL),
+                Err("set_field_unchecked: index must be 0 (car) or 1 (cdr)"),
+            );
+            assert_eq!(
+                set_field_unchecked(LispyValue::int(1), 0, LispyValue::NIL),
+                Err("set_field_unchecked: pair is not a heap value"),
+            );
+            let s = alloc_string(b"not a cons");
+            assert_eq!(
+                set_field_unchecked(s, 0, LispyValue::NIL),
+                Err("set_field_unchecked: value is not a cons cell"),
+            );
         }
     }
 

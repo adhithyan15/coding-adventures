@@ -1,0 +1,21 @@
+{
+  "chapter": 361,
+  "title": "Profit and Loss",
+  "label": "ch:ja-profit-and-loss",
+  "canDo": "I can say whether a shop would make or lose money.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-R361-review-357-361",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can say whether a shop would make or lose money.",
+    "assesses": [
+      "JA-LEX-C361-MOUKERU361-01",
+      "JA-LEX-C361-MOUKERU361-02",
+      "JA-LEX-C361-MOUKERU361-03",
+      "JA-LEX-C361-MOUKERU361-04",
+      "JA-LEX-C361-MOUKERU361-05"
+    ]
+  }
+}

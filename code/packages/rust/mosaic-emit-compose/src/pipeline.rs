@@ -7695,6 +7695,46 @@ fn emit_text(
     let value_expr = match find_prop_value(node, "content") {
         Some(LayoutPropValue::String(s)) => format!("\"{}\"", escape_kotlin_string(s)),
         Some(LayoutPropValue::SlotRef(slot)) => to_camel_case_first_lower(slot),
+        // A bare NAME is a variable, not a string (UI29 §3.3
+        // `name_ref ::= NAME`). In
+        //
+        //     For ( each: slot: rows, as: row ) { Text ( content: row ) }
+        //
+        // each label must show that row's value, as React (`{row}`),
+        // HTML (`{{row}}`) and XAML (`{x:Bind Row}`) do. This arm used to
+        // fall through to `""`, so every row of the list was blank.
+        //
+        // Kotlin's own scoping gives UI29 §3.4's "For wins": the
+        // `forEach { row -> … }` lambda parameter shadows a composable
+        // parameter of the same name, and outside any loop the NAME reads
+        // the component's own slot parameter, as React's destructured prop
+        // does. A NAME bound by neither fails `kotlinc` with "Unresolved
+        // reference", as React fails `tsc`.
+        //
+        // `Text(text: String)` takes only a String, and a bound value need
+        // not be one: an `index:` binding is the `Double` shadow
+        // (`val i: Double = _kotlinIdxi.toDouble()`) and a
+        // `list<number>` element is a `Double`. A string template renders
+        // any of them. It is a template rather than `.toString()` because
+        // the emitter cannot see the value's type, and on the commonest
+        // case, a `list<text>` element, `kotlinc` warns that `.toString()`
+        // on a `String` is a "Redundant call of conversion method"; the
+        // template is silent for every type:
+        //
+        //   authored                 emitted
+        //   ------------------------ ------------------------------
+        //   content: row             Text(text = "$row")
+        //   content: row-item        Text(text = "$rowItem")
+        //   content: i   (index:)    Text(text = "$i")      shows "0.0"
+        //   content: display-name    Text(text = "$displayName")
+        //
+        // The binding is validated as a plain identifier first, so `$name`
+        // can only ever interpolate that one variable.
+        Some(LayoutPropValue::Keyword(name)) => {
+            let binding = to_camel_case_first_lower(name);
+            validate_safe_identifier(&binding).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!("\"${binding}\"")
+        }
         Some(LayoutPropValue::Expr(text)) => compose_collection_index_expr(text, for_payload),
         _ => "\"\"".to_string(),
     };
@@ -13586,6 +13626,97 @@ mod tests {
         assert!(
             out.contains("Text(text = \"line1\\nline2\")"),
             "expected escaped newline, got:\n{out}"
+        );
+    }
+
+    /// A bare NAME in `content:` reads the variable it names, never `""`.
+    ///
+    /// | authored                      | bound by          | emitted                     |
+    /// |-------------------------------|-------------------|-----------------------------|
+    /// | `For (…, as: row-item)` body  | lambda parameter  | `Text(text = "$rowItem")`     |
+    /// | `content: display-name`       | the slot param    | `Text(text = "$displayName")` |
+    ///
+    /// Before the fix both fell through to `Text(text = "")`, so every row
+    /// of a list was blank on Android.
+    #[test]
+    fn text_content_bare_name_reads_the_variable() {
+        let bare_text = |name: &str| {
+            node(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".into(),
+                    value: LayoutPropValue::Keyword(name.into()),
+                }],
+                vec![],
+            )
+        };
+        let m = component(
+            "Ledger",
+            vec![
+                slot("rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("display-name", SlotType::Text, true),
+            ],
+            vec![],
+        );
+        let l = layout(
+            "Ledger",
+            node(
+                "Column",
+                vec![],
+                vec![
+                    bare_text("display-name"),
+                    node(
+                        "For",
+                        vec![
+                            LayoutProp {
+                                name: "each".into(),
+                                value: LayoutPropValue::SlotRef("rows".into()),
+                            },
+                            LayoutProp {
+                                name: "as".into(),
+                                value: LayoutPropValue::Keyword("row-item".into()),
+                            },
+                        ],
+                        vec![bare_text("row-item")],
+                    ),
+                ],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Ledger"))
+            .unwrap()
+            .output;
+        assert!(out.contains("rows.forEach { rowItem ->"), "{out}");
+        assert!(out.contains("Text(text = \"$rowItem\")"), "{out}");
+        assert!(out.contains("Text(text = \"$displayName\")"), "{out}");
+        assert!(!out.contains("Text(text = \"\")"), "{out}");
+    }
+
+    /// A bare-NAME `content:` becomes a Kotlin identifier, so a spelling that
+    /// cannot be one is refused, the gate every other bare-NAME prop applies
+    /// (`text_prop_expr`). The moslayout lexer cannot produce such a NAME
+    /// today; this pins the defence if it ever loosens.
+    #[test]
+    fn text_bare_name_content_refuses_an_unsafe_identifier() {
+        let m = component("Hostile", vec![], vec![]);
+        let l = layout(
+            "Hostile",
+            node(
+                "Column",
+                vec![],
+                vec![node(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::Keyword("x\"); evil(\"".into()),
+                    }],
+                    vec![],
+                )],
+            ),
+        );
+        let err = from_pipeline(&m, &l, &empty_style("Hostile")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsafeSlotName(_)),
+            "unexpected error: {err:?}"
         );
     }
 

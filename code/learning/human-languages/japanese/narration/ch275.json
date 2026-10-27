@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 275,
+  "title": "The Great Wave",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:baa5b9b6bf258608",
+  "lessons": [
+    {
+      "id": "JA-C275-tsunami",
+      "sequence": 16670,
+      "title": "つなみ (tsunami) — a tsunami; a tidal wave",
+      "headword": "つなみ",
+      "romanization": "tsunami",
+      "gloss": "a tsunami; a tidal wave",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6649d6a8f2ff500",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for frightening, then the Japanese for evacuation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つなみ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つなみ — tsunami — \"a tsunami; a tidal wave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "つなみの ばあいは、やまに にげて ください。 — tsunami no baai wa, yama ni nigete kudasai — \"In case of a tsunami, please run to high ground.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つなみ (tsunami) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from tsu, \"harbour\", and nami, \"wave\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsunami",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsunami*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsunami, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsunami*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsunami no baai wa, yama ni nigete kudasai — In case of a tsunami, please run to high ground.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsunami no baai wa, yama ni nigete kudasai* — In case of a tsunami, please run to high ground.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for frightening, then the Japanese for evacuation, then say tsunami again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for frightening, then the Japanese for evacuation, then say *tsunami* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つなみ mean? (\"A tsunami; a tidal wave\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C275-tsunami-type",
+              "prompt": "Say the Japanese for 'a tsunami'.",
+              "assesses": [
+                "JA-LEX-C275-TSUNAMI275-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つなみ",
+                "tsunami"
+              ],
+              "feedback": {
+                "correct": "Right: つなみ (tsunami) is 'a tsunami; a tidal wave'.",
+                "incorrect": "'A tsunami' is つなみ (tsunami)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C275-nagareru",
+      "sequence": 16680,
+      "title": "ながれる (nagareru) — to flow; to be washed away",
+      "headword": "ながれる",
+      "romanization": "nagareru",
+      "gloss": "to flow; to be washed away",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1bc30d00105e2841",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for evacuation, then the Japanese for a tsunami."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ながれる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ながれる — nagareru — \"to flow; to be washed away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かわの みずが はやく ながれています。 — kawa no mizu ga hayaku nagarete imasu — \"The river is running fast.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ながれます, nagaremasu; an ichidan verb. Past (polite): くるまが ながれました。, kuruma ga nagaremashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ながれる (nagareru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagareru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagareru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagareru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagareru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kawa no mizu ga hayaku nagarete imasu — The river is running fast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kawa no mizu ga hayaku nagarete imasu* — The river is running fast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for evacuation, then the Japanese for a tsunami, then say nagareru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for evacuation, then the Japanese for a tsunami, then say *nagareru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ながれる (nagareru) mean? (\"To flow; to be washed away\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C275-nagareru-type",
+              "prompt": "Say the Japanese for 'to flow'.",
+              "assesses": [
+                "JA-LEX-C275-TSUNAMI275-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ながれる",
+                "nagareru"
+              ],
+              "feedback": {
+                "correct": "Right: ながれる (nagareru) is 'to flow; to be washed away'.",
+                "incorrect": "'To flow' is ながれる (nagareru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C275-nagasu",
+      "sequence": 16690,
+      "title": "ながす (nagasu) — to wash away; to let flow",
+      "headword": "ながす",
+      "romanization": "nagasu",
+      "gloss": "to wash away; to let flow",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d39fd0cf22d2637",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a tsunami, then the Japanese for to flow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ながす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ながす — nagasu — \"to wash away; to let flow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "つなみが うちを ながしました。 — tsunami ga uchi o nagashimashita — \"The tsunami swept our house away.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ながします, nagashimasu; a godan verb. Past (polite): つなみが くるまを ながしました。, tsunami ga kuruma o nagashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ながす (nagasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict). It is the transitive partner of nagareru, \"to flow\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsunami ga uchi o nagashimashita — The tsunami swept our house away.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsunami ga uchi o nagashimashita* — The tsunami swept our house away.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a tsunami, then the Japanese for to flow, then say nagasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a tsunami, then the Japanese for to flow, then say *nagasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ながす (nagasu) mean? (\"To wash away; to let flow\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C275-nagasu-type",
+              "prompt": "Say the Japanese for 'to wash away'.",
+              "assesses": [
+                "JA-LEX-C275-TSUNAMI275-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ながす",
+                "nagasu"
+              ],
+              "feedback": {
+                "correct": "Right: ながす (nagasu) is 'to wash away; to let flow'.",
+                "incorrect": "'To wash away' is ながす (nagasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C275-uku",
+      "sequence": 16700,
+      "title": "うく (uku) — to float",
+      "headword": "うく",
+      "romanization": "uku",
+      "gloss": "to float",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b7eb53fdbf23734",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to flow, then the Japanese for to wash away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うく — uku — \"to float\"."
+            },
+            {
+              "kind": "speech",
+              "text": "みずの うえに きが ういていました。 — mizu no ue ni ki ga uite imashita — \"Wood was floating on the water.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite うきます, ukimasu; a godan verb. Past (polite): きが うきました。, ki ga ukimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うく (uku) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mizu no ue ni ki ga uite imashita — Wood was floating on the water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mizu no ue ni ki ga uite imashita* — Wood was floating on the water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to flow, then the Japanese for to wash away, then say uku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to flow, then the Japanese for to wash away, then say *uku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うく (uku) mean? (\"To float\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C275-uku-type",
+              "prompt": "Say the Japanese for 'to float'.",
+              "assesses": [
+                "JA-LEX-C275-TSUNAMI275-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うく",
+                "uku"
+              ],
+              "feedback": {
+                "correct": "Right: うく (uku) is 'to float'.",
+                "incorrect": "'To float' is うく (uku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C275-mata",
+      "sequence": 16710,
+      "title": "また (mata) — once more; again",
+      "headword": "また",
+      "romanization": "mata",
+      "gloss": "once more; again",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:103bf366def3a4a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to wash away, then the Japanese for to float."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: また",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "また — mata — \"once more; again\"."
+            },
+            {
+              "kind": "speech",
+              "text": "また つなみが くるでしょう。 — mata tsunami ga kuru deshō — \"Another tsunami will probably come.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "また (mata) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mata, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mata*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mata tsunami ga kuru deshō — Another tsunami will probably come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mata tsunami ga kuru deshō* — Another tsunami will probably come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to wash away, then the Japanese for to float, then say mata again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to wash away, then the Japanese for to float, then say *mata* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does また (mata) mean? (\"Once more; again\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C275-mata-type",
+              "prompt": "Say the Japanese for 'once more'.",
+              "assesses": [
+                "JA-LEX-C275-TSUNAMI275-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "また",
+                "mata"
+              ],
+              "feedback": {
+                "correct": "Right: また (mata) is 'once more; again'.",
+                "incorrect": "'Once more' is また (mata)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

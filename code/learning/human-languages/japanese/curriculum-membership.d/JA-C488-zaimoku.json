@@ -1,0 +1,11 @@
+{
+  "id": "JA-C488-zaimoku",
+  "pathSegment": "JA-PATH-488-BUILD488",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-488-BUILD488",
+      "order": 1
+    }
+  ]
+}

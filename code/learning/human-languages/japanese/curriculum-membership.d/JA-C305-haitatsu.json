@@ -1,0 +1,11 @@
+{
+  "id": "JA-C305-haitatsu",
+  "pathSegment": "JA-PATH-305-YUUBIN305",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-305-YUUBIN305",
+      "order": 3
+    }
+  ]
+}

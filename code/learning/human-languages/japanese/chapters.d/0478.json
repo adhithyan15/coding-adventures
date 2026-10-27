@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "Growing Up Together",
+  "label": "ch:ja-growing-up-together",
+  "canDo": "I can talk about children growing up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C478-maneru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can talk about children growing up.",
+    "assesses": [
+      "JA-LEX-C478-GROW478-03",
+      "JA-LEX-C478-GROW478-04",
+      "JA-LEX-C478-GROW478-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C429-gakkari-suru",
+    "language": "japanese",
+    "chapter": 429,
+    "sequence": 25150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a7a597a47e72d1e"
+  },
+  "findings": []
+}

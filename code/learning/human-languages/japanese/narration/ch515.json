@@ -1,0 +1,954 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 515,
+  "title": "If I Pass",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:1bc8efa8b1e5f80d",
+  "lessons": [
+    {
+      "id": "JA-C515-juken-suru",
+      "sequence": 29800,
+      "title": "じゅけんする (juken suru) — to sit an entrance exam",
+      "headword": "じゅけんする",
+      "romanization": "juken suru",
+      "gloss": "to sit an entrance exam",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86b4c7d99bc85dcb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a forecast, then the Japanese for an outlook."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じゅけんする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅけんする — juken suru — \"to sit an entrance exam\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし らいねん じゅけんしたら、まいにち べんきょうします。 — moshi rainen jukenshitara, mainichi benkyō shimasu — \"If I sit the entrance exam next year, I will study every day.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite じゅけんします, jukenshimasu; a する verb. Past (polite): むすこが ふたつの がっこうを じゅけんしました。, musuko ga futatsu no gakkō o jukenshimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅけんする (juken suru) is the Sino-Japanese (kango) noun juken with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ju, \"accept\" (Middle Chinese dzyuwX) and ken, \"verification\" (ngjemH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "juken suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *juken suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "juken suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *juken suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi rainen jukenshitara, mainichi benkyō shimasu — If I sit the entrance exam next year, I will study every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi rainen jukenshitara, mainichi benkyō shimasu* — If I sit the entrance exam next year, I will study every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a forecast, then the Japanese for an outlook, then say juken suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a forecast, then the Japanese for an outlook, then say *juken suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じゅけんする (juken suru) mean? (\"To sit an entrance exam\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C515-juken-suru-type",
+              "prompt": "Say the Japanese for 'to sit an entrance exam'.",
+              "assesses": [
+                "JA-LEX-C515-EXAM515-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じゅけんする",
+                "juken suru"
+              ],
+              "feedback": {
+                "correct": "Right: じゅけんする (juken suru) is 'to sit an entrance exam'.",
+                "incorrect": "'To sit an entrance exam' is じゅけんする (juken suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C515-ukaru",
+      "sequence": 29810,
+      "title": "うかる (ukaru) — to pass (an exam)",
+      "headword": "うかる",
+      "romanization": "ukaru",
+      "gloss": "to pass (an exam)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7edbf5c641a51411",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an outlook, then the Japanese for to sit an entrance exam."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うかる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うかる — ukaru — \"to pass (an exam)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし しけんに うかったら、みんなで いわいます。 — moshi shiken ni ukattara, minna de iwaimasu — \"If I pass the exam, we will all celebrate.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite うかります, ukarimasu; a godan verb. Past (polite): あねが しけんに うかりました。, ane ga shiken ni ukarimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うかる (ukaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi shiken ni ukattara, minna de iwaimasu — If I pass the exam, we will all celebrate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi shiken ni ukattara, minna de iwaimasu* — If I pass the exam, we will all celebrate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an outlook, then the Japanese for to sit an entrance exam, then say ukaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an outlook, then the Japanese for to sit an entrance exam, then say *ukaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うかる (ukaru) mean? (\"To pass (an exam)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C515-ukaru-type",
+              "prompt": "Say the Japanese for 'to pass (an exam)'.",
+              "assesses": [
+                "JA-LEX-C515-EXAM515-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うかる",
+                "ukaru"
+              ],
+              "feedback": {
+                "correct": "Right: うかる (ukaru) is 'to pass (an exam)'.",
+                "incorrect": "'To pass (an exam)' is うかる (ukaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C515-goukaku-suru",
+      "sequence": 29820,
+      "title": "ごうかくする (gōkaku suru) — to pass (a test); to be accepted",
+      "headword": "ごうかくする",
+      "romanization": "gōkaku suru",
+      "gloss": "to pass (a test); to be accepted",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3c3adba16823802",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to sit an entrance exam, then the Japanese for to pass (an exam)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ごうかくする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ごうかくする — gōkaku suru — \"to pass (a test); to be accepted\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし ごうかくしたら、りょうしんは よろこぶでしょう。 — moshi gōkakushitara, ryōshin wa yorokobu deshō — \"If I pass, my parents will surely be glad.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ごうかくします, gōkakushimasu; a する verb. Past (polite): むすめが ごうかくしました。, musume ga gōkakushimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ごうかくする (gōkaku suru) is the Sino-Japanese (kango) noun gōkaku with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gō, \"fit\" (Middle Chinese hop) and kaku, \"status\" (kaek) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gōkaku suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gōkaku suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gōkaku suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gōkaku suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi gōkakushitara, ryōshin wa yorokobu deshō — If I pass, my parents will surely be glad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi gōkakushitara, ryōshin wa yorokobu deshō* — If I pass, my parents will surely be glad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to sit an entrance exam, then the Japanese for to pass (an exam), then say gōkaku suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to sit an entrance exam, then the Japanese for to pass (an exam), then say *gōkaku suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ごうかくする (gōkaku suru) mean? (\"To pass (a test); to be accepted\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C515-goukaku-suru-type",
+              "prompt": "Say the Japanese for 'to pass (a test)'.",
+              "assesses": [
+                "JA-LEX-C515-EXAM515-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ごうかくする",
+                "gōkaku suru",
+                "goukaku suru",
+                "gookaku suru",
+                "gokaku suru"
+              ],
+              "feedback": {
+                "correct": "Right: ごうかくする (gōkaku suru) is 'to pass (a test); to be accepted'.",
+                "incorrect": "'To pass (a test)' is ごうかくする (gōkaku suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C515-seiseki",
+      "sequence": 29830,
+      "title": "せいせき (seiseki) — grades; results",
+      "headword": "せいせき",
+      "romanization": "seiseki",
+      "gloss": "grades; results",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2acefd73cbca4c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to pass (an exam), then the Japanese for to pass (a test)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せいせき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せいせき — seiseki — \"grades; results\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ごうかくは せいせきに よります。 — gōkaku wa seiseki ni yorimasu — \"Passing depends on your grades.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せいせき (seiseki) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sei, \"turn into\" (Middle Chinese dzyeng) and seki, \"exploits\" (tsek) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seiseki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seiseki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seiseki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seiseki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gōkaku wa seiseki ni yorimasu — Passing depends on your grades.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gōkaku wa seiseki ni yorimasu* — Passing depends on your grades.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to pass (an exam), then the Japanese for to pass (a test), then say seiseki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to pass (an exam), then the Japanese for to pass (a test), then say *seiseki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does せいせき (seiseki) mean? (\"Grades; results\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C515-seiseki-type",
+              "prompt": "Say the Japanese for 'grades'.",
+              "assesses": [
+                "JA-LEX-C515-EXAM515-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せいせき",
+                "seiseki"
+              ],
+              "feedback": {
+                "correct": "Right: せいせき (seiseki) is 'grades; results'.",
+                "incorrect": "'Grades' is せいせき (seiseki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C515-yobikou",
+      "sequence": 29840,
+      "title": "よびこう (yobikō) — a cram school (for entrance exams)",
+      "headword": "よびこう",
+      "romanization": "yobikō",
+      "gloss": "a cram school (for entrance exams)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02952b618e05fb4d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to pass (a test), then the Japanese for grades."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: よびこう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よびこう — yobikō — \"a cram school (for entrance exams)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし しけんに おちたら、よびこうに かよいます。 — moshi shiken ni ochitara, yobikō ni kayoimasu — \"If I fail the exam, I will go to a cram school.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よびこう (yobikō) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yo, \"beforehand\" (Middle Chinese yoH), bi, \"equip\" (bijH) and kō, \"school\" (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yobikō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yobikō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yobikō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yobikō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi shiken ni ochitara, yobikō ni kayoimasu — If I fail the exam, I will go to a cram school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi shiken ni ochitara, yobikō ni kayoimasu* — If I fail the exam, I will go to a cram school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to pass (a test), then the Japanese for grades, then say yobikō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to pass (a test), then the Japanese for grades, then say *yobikō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does よびこう (yobikō) mean? (\"A cram school (for entrance exams)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C515-yobikou-type",
+              "prompt": "Say the Japanese for 'a cram school (for entrance exams)'.",
+              "assesses": [
+                "JA-LEX-C515-EXAM515-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "よびこう",
+                "yobikō",
+                "yobikou",
+                "yobikoo",
+                "yobiko"
+              ],
+              "feedback": {
+                "correct": "Right: よびこう (yobikō) is 'a cram school (for entrance exams)'.",
+                "incorrect": "'A cram school (for entrance exams)' is よびこう (yobikō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R515-review-510-515",
+      "sequence": 29850,
+      "title": "Looking back: from By Chance to If I Pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from By Chance to If I Pass",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cafaa2d1aec6134c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for by chance and a chance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "by chance, a chance, out of the blue, to make good use of, to be blessed (with)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: by chance, a chance, out of the blue, to make good use of, to be blessed (with)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cause, an achievement, to arise, how well something works, the origin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cause, an achievement, to arise, how well something works, the origin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to change, to switch (over), to be brought forward, to clash (of plans), changing every day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to change, to switch (over), to be brought forward, to clash (of plans), changing every day]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to plan (an event), to look over again, to bring forward (a date), to adjust, arrangements",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to plan (an event), to look over again, to bring forward (a date), to adjust, arrangements]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to guess, to predict, a prospect, a forecast, an outlook",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to guess, to predict, a prospect, a forecast, an outlook]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sit an entrance exam, to pass (an exam), to pass (a test), grades, a cram school (for entrance exams)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sit an entrance exam, to pass (an exam), to pass (a test), grades, a cram school (for entrance exams)]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "By chance? (ぐうぜん, gūzen.) A chance? (きっかけ, kikkake.) Out of the blue? (ふと, futo.) To make good use of? (いかす, ikasu.) To be blessed (with)? (めぐまれる, megumareru.) To cause? (ひきおこす, hikiokosu.) An achievement? (せいか, seika.) To arise? (しょうじる, shōjiru.) How well something works? (ききめ, kikime.) The origin? (もと, moto.) To change? (へんかする, henka suru.) To switch (over)? (きりかえる, kirikaeru.) To be brought forward? (はやまる, hayamaru.) To clash (of plans)? (かさなる, kasanaru.) Changing every day? (ひがわり, higawari.) To plan (an event)? (きかくする, kikaku suru.) To look over again? (みなおす, minaosu.) To bring forward (a date)? (くりあげる, kuriageru.) To adjust? (ちょうせいする, chōsei suru.) Arrangements? (だんどり, dandori.) To guess? (すいそくする, suisoku suru.) To predict? (よそくする, yosoku suru.) A prospect? (みこみ, mikomi.) A forecast? (よほう, yohō.) An outlook? (みとおし, mitōshi.) To sit an entrance exam? (じゅけんする, juken suru.) To pass (an exam)? (うかる, ukaru.) To pass (a test)? (ごうかくする, gōkaku suru.) Grades? (せいせき, seiseki.) A cram school (for entrance exams)? (よびこう, yobikō.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R515-review-510-515-type",
+              "prompt": "Say the Japanese for 'by chance'.",
+              "assesses": [
+                "JA-LEX-C510-CHANCE510-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぐうぜん",
+                "gūzen",
+                "guuzen",
+                "guzen"
+              ],
+              "feedback": {
+                "correct": "Right: ぐうぜん (gūzen) is 'by chance; a coincidence'.",
+                "incorrect": "'By chance' is ぐうぜん (gūzen)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

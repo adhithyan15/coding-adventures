@@ -1,0 +1,11 @@
+{
+  "id": "JA-C296-shuukan",
+  "pathSegment": "JA-PATH-296-SAKAN296",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-296-SAKAN296",
+      "order": 3
+    }
+  ]
+}

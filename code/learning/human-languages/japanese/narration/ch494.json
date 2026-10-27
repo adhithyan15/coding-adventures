@@ -1,0 +1,798 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 494,
+  "title": "Onions and Mushrooms",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:65eadf0df04059e9",
+  "lessons": [
+    {
+      "id": "JA-C494-tamanegi",
+      "sequence": 28720,
+      "title": "たまねぎ (tamanegi) — an onion",
+      "headword": "たまねぎ",
+      "romanization": "tamanegi",
+      "gloss": "an onion",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dac2b1813438ec24",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the washing-up, then the Japanese for to freeze (food)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たまねぎ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たまねぎ — tamanegi — \"an onion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "たまねぎを きざんだ とき、なきました。 — tamanegi o kizanda toki, nakimashita — \"When I chopped the onion, I cried.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たまねぎ (tamanegi) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: built from tama, \"ball\" and negi, \"leek\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tamanegi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tamanegi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tamanegi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tamanegi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tamanegi o kizanda toki, nakimashita — When I chopped the onion, I cried.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tamanegi o kizanda toki, nakimashita* — When I chopped the onion, I cried.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the washing-up, then the Japanese for to freeze (food), then say tamanegi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the washing-up, then the Japanese for to freeze (food), then say *tamanegi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たまねぎ (tamanegi) mean? (\"An onion\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C494-tamanegi-type",
+              "prompt": "Say the Japanese for 'an onion'.",
+              "assesses": [
+                "JA-LEX-C494-VEG494-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たまねぎ",
+                "tamanegi"
+              ],
+              "feedback": {
+                "correct": "Right: たまねぎ (tamanegi) is 'an onion'.",
+                "incorrect": "'An onion' is たまねぎ (tamanegi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C494-kyuuri",
+      "sequence": 28730,
+      "title": "きゅうり (kyūri) — a cucumber",
+      "headword": "きゅうり",
+      "romanization": "kyūri",
+      "gloss": "a cucumber",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d7ab48425c4248b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to freeze (food), then the Japanese for an onion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きゅうり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きゅうり — kyūri — \"a cucumber\"."
+            },
+            {
+              "kind": "speech",
+              "text": "なつは きゅうりが やすいです。 — natsu wa kyūri ga yasui desu — \"Cucumbers are cheap in summer.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きゅうり (kyūri) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyūri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyūri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyūri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyūri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natsu wa kyūri ga yasui desu — Cucumbers are cheap in summer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natsu wa kyūri ga yasui desu* — Cucumbers are cheap in summer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to freeze (food), then the Japanese for an onion, then say kyūri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to freeze (food), then the Japanese for an onion, then say *kyūri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きゅうり (kyūri) mean? (\"A cucumber\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C494-kyuuri-type",
+              "prompt": "Say the Japanese for 'a cucumber'.",
+              "assesses": [
+                "JA-LEX-C494-VEG494-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きゅうり",
+                "kyūri",
+                "kyuuri",
+                "kyuri"
+              ],
+              "feedback": {
+                "correct": "Right: きゅうり (kyūri) is 'a cucumber'.",
+                "incorrect": "'A cucumber' is きゅうり (kyūri)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C494-kinoko",
+      "sequence": 28740,
+      "title": "きのこ (kinoko) — a mushroom",
+      "headword": "きのこ",
+      "romanization": "kinoko",
+      "gloss": "a mushroom",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0c696960ccb86bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an onion, then the Japanese for a cucumber."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きのこ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きのこ — kinoko — \"a mushroom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あきの やまで きのこを みつけました。 — aki no yama de kinoko o mitsukemashita — \"I found mushrooms on the mountain in autumn.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きのこ (kinoko) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinoko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinoko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinoko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinoko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aki no yama de kinoko o mitsukemashita — I found mushrooms on the mountain in autumn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aki no yama de kinoko o mitsukemashita* — I found mushrooms on the mountain in autumn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an onion, then the Japanese for a cucumber, then say kinoko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an onion, then the Japanese for a cucumber, then say *kinoko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きのこ (kinoko) mean? (\"A mushroom\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C494-kinoko-type",
+              "prompt": "Say the Japanese for 'a mushroom'.",
+              "assesses": [
+                "JA-LEX-C494-VEG494-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きのこ",
+                "kinoko"
+              ],
+              "feedback": {
+                "correct": "Right: きのこ (kinoko) is 'a mushroom'.",
+                "incorrect": "'A mushroom' is きのこ (kinoko)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C494-takenoko",
+      "sequence": 28750,
+      "title": "たけのこ (takenoko) — a bamboo shoot",
+      "headword": "たけのこ",
+      "romanization": "takenoko",
+      "gloss": "a bamboo shoot",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eaf1502c2567fef2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a cucumber, then the Japanese for a mushroom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たけのこ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たけのこ — takenoko — \"a bamboo shoot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "はるに たけのこを たべます。 — haru ni takenoko o tabemasu — \"We eat bamboo shoots in spring.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たけのこ (takenoko) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takenoko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takenoko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takenoko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takenoko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haru ni takenoko o tabemasu — We eat bamboo shoots in spring.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haru ni takenoko o tabemasu* — We eat bamboo shoots in spring.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a cucumber, then the Japanese for a mushroom, then say takenoko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a cucumber, then the Japanese for a mushroom, then say *takenoko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たけのこ (takenoko) mean? (\"A bamboo shoot\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C494-takenoko-type",
+              "prompt": "Say the Japanese for 'a bamboo shoot'.",
+              "assesses": [
+                "JA-LEX-C494-VEG494-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たけのこ",
+                "takenoko"
+              ],
+              "feedback": {
+                "correct": "Right: たけのこ (takenoko) is 'a bamboo shoot'.",
+                "incorrect": "'A bamboo shoot' is たけのこ (takenoko)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C494-shiitake",
+      "sequence": 28760,
+      "title": "しいたけ (shiitake) — a shiitake mushroom",
+      "headword": "しいたけ",
+      "romanization": "shiitake",
+      "gloss": "a shiitake mushroom",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f8e4e5878ccb2c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a mushroom, then the Japanese for a bamboo shoot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しいたけ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しいたけ — shiitake — \"a shiitake mushroom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しいたけを みそしるに いれます。 — shiitake o misoshiru ni iremasu — \"I put shiitake in the miso soup.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しいたけ (shiitake) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiitake",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiitake*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiitake, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiitake*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiitake o misoshiru ni iremasu — I put shiitake in the miso soup.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiitake o misoshiru ni iremasu* — I put shiitake in the miso soup.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a mushroom, then the Japanese for a bamboo shoot, then say shiitake again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a mushroom, then the Japanese for a bamboo shoot, then say *shiitake* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しいたけ mean? (\"A shiitake mushroom\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C494-shiitake-type",
+              "prompt": "Say the Japanese for 'a shiitake mushroom'.",
+              "assesses": [
+                "JA-LEX-C494-VEG494-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しいたけ",
+                "shiitake"
+              ],
+              "feedback": {
+                "correct": "Right: しいたけ (shiitake) is 'a shiitake mushroom'.",
+                "incorrect": "'A shiitake mushroom' is しいたけ (shiitake)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

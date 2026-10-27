@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C433-kanshin",
+    "language": "japanese",
+    "chapter": 433,
+    "sequence": 25400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4043fcc9f1433f77"
+  },
+  "findings": []
+}

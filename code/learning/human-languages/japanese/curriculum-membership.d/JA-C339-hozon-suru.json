@@ -1,0 +1,11 @@
+{
+  "id": "JA-C339-hozon-suru",
+  "pathSegment": "JA-PATH-339-BUNBETSU339",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-339-BUNBETSU339",
+      "order": 1
+    }
+  ]
+}

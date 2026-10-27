@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-335-DANTAI335",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "JA-EXT-335-DANTAI335"
+  ],
+  "after": []
+}

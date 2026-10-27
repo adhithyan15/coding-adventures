@@ -1,0 +1,803 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 390,
+  "title": "On the Expressway",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f6aacf5d83e42fff",
+  "lessons": [
+    {
+      "id": "JA-C390-kousokudouro",
+      "sequence": 22930,
+      "title": "こうそくどうろ (kōsokudōro) — an expressway",
+      "headword": "こうそくどうろ",
+      "romanization": "kōsokudōro",
+      "gloss": "an expressway",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a04ce8ad894b260b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a footbridge (over a road), then the Japanese for to get through."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こうそくどうろ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こうそくどうろ — kōsokudōro — \"an expressway\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こうそくどうろで まちに いきました。 — kōsokudōro de machi ni ikimashita — \"We went into town on the expressway.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こうそくどうろ (kōsokudōro) is Sino-Japanese (kango): four Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kō, \"high\" (Middle Chinese kaw), soku, \"fast\" (suwk), dō, \"street\" (dawX) and ro, \"road\" (luH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōsokudōro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōsokudōro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōsokudōro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōsokudōro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōsokudōro de machi ni ikimashita — We went into town on the expressway.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōsokudōro de machi ni ikimashita* — We went into town on the expressway.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a footbridge (over a road), then the Japanese for to get through, then say kōsokudōro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a footbridge (over a road), then the Japanese for to get through, then say *kōsokudōro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こうそくどうろ (kōsokudōro) mean? (\"An expressway\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C390-kousokudouro-type",
+              "prompt": "Say the Japanese for 'an expressway'.",
+              "assesses": [
+                "JA-LEX-C390-KOUSOKU390-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こうそくどうろ",
+                "kōsokudōro",
+                "kousokudouro",
+                "koosokudooro",
+                "kosokudoro"
+              ],
+              "feedback": {
+                "correct": "Right: こうそくどうろ (kōsokudōro) is 'an expressway'.",
+                "incorrect": "'An expressway' is こうそくどうろ (kōsokudōro)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C390-shasen",
+      "sequence": 22940,
+      "title": "しゃせん (shasen) — a traffic lane",
+      "headword": "しゃせん",
+      "romanization": "shasen",
+      "gloss": "a traffic lane",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90fe9bfb78c3323a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to get through, then the Japanese for an expressway."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゃせん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゃせん — shasen — \"a traffic lane\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この どうろは しゃせんが みっつ あります。 — kono dōro wa shasen ga mittsu arimasu — \"This road has three lanes.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゃせん (shasen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sha, \"car\" (Middle Chinese tsyhae) and sen, \"line\" (sjenH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shasen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shasen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shasen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shasen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono dōro wa shasen ga mittsu arimasu — This road has three lanes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono dōro wa shasen ga mittsu arimasu* — This road has three lanes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to get through, then the Japanese for an expressway, then say shasen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to get through, then the Japanese for an expressway, then say *shasen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゃせん (shasen) mean? (\"A traffic lane\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C390-shasen-type",
+              "prompt": "Say the Japanese for 'a traffic lane'.",
+              "assesses": [
+                "JA-LEX-C390-KOUSOKU390-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゃせん",
+                "shasen"
+              ],
+              "feedback": {
+                "correct": "Right: しゃせん (shasen) is 'a traffic lane'.",
+                "incorrect": "'A traffic lane' is しゃせん (shasen)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C390-sokudo",
+      "sequence": 22950,
+      "title": "そくど (sokudo) — speed",
+      "headword": "そくど",
+      "romanization": "sokudo",
+      "gloss": "speed",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccd8f81ac5c77295",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an expressway, then the Japanese for a traffic lane."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: そくど",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "そくど — sokudo — \"speed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あめの ときは、そくどを おとして ください。 — ame no toki wa, sokudo o otoshite kudasai — \"Please slow down when it rains.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "そくど (sokudo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are soku, \"fast\" (Middle Chinese suwk) and do, \"degrees\" (duH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sokudo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sokudo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sokudo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sokudo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ame no toki wa, sokudo o otoshite kudasai — Please slow down when it rains.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ame no toki wa, sokudo o otoshite kudasai* — Please slow down when it rains.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an expressway, then the Japanese for a traffic lane, then say sokudo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an expressway, then the Japanese for a traffic lane, then say *sokudo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does そくど (sokudo) mean? (\"Speed\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C390-sokudo-type",
+              "prompt": "Say the Japanese for 'speed'.",
+              "assesses": [
+                "JA-LEX-C390-KOUSOKU390-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "そくど",
+                "sokudo"
+              ],
+              "feedback": {
+                "correct": "Right: そくど (sokudo) is 'speed'.",
+                "incorrect": "'Speed' is そくど (sokudo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C390-menkyo",
+      "sequence": 22960,
+      "title": "めんきょ (menkyo) — a licence; a driving licence",
+      "headword": "めんきょ",
+      "romanization": "menkyo",
+      "gloss": "a licence; a driving licence",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec841ab12d1c6743",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a traffic lane, then the Japanese for speed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: めんきょ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めんきょ — menkyo — \"a licence; a driving licence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あには くるまの めんきょを もっています。 — ani wa kuruma no menkyo o motte imasu — \"My brother has a driving licence.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めんきょ (menkyo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are men, \"excuse\" (Middle Chinese mjenX) and kyo, \"permit\" (xjoX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "menkyo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *menkyo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "menkyo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *menkyo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ani wa kuruma no menkyo o motte imasu — My brother has a driving licence.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ani wa kuruma no menkyo o motte imasu* — My brother has a driving licence.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a traffic lane, then the Japanese for speed, then say menkyo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a traffic lane, then the Japanese for speed, then say *menkyo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does めんきょ (menkyo) mean? (\"A licence; a driving licence\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C390-menkyo-type",
+              "prompt": "Say the Japanese for 'a licence'.",
+              "assesses": [
+                "JA-LEX-C390-KOUSOKU390-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "めんきょ",
+                "menkyo"
+              ],
+              "feedback": {
+                "correct": "Right: めんきょ (menkyo) is 'a licence; a driving licence'.",
+                "incorrect": "'A licence' is めんきょ (menkyo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C390-oikosu",
+      "sequence": 22970,
+      "title": "おいこす (oikosu) — to overtake; to pass",
+      "headword": "おいこす",
+      "romanization": "oikosu",
+      "gloss": "to overtake; to pass",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ff913a6bf397abf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for speed, then the Japanese for a licence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おいこす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おいこす — oikosu — \"to overtake; to pass\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こうそくどうろで くるまを おいこしました。 — kōsokudōro de kuruma o oikoshimashita — \"I overtook a car on the expressway.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite おいこします, oikoshimasu; a godan verb. Past (polite): くるまが じてんしゃを おいこしました。, kuruma ga jitensha o oikoshimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おいこす (oikosu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from oi, \"chasing\" (from ou) and kosu, \"to cross over\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oikosu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oikosu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oikosu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oikosu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōsokudōro de kuruma o oikoshimashita — I overtook a car on the expressway.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōsokudōro de kuruma o oikoshimashita* — I overtook a car on the expressway.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for speed, then the Japanese for a licence, then say oikosu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for speed, then the Japanese for a licence, then say *oikosu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おいこす (oikosu) mean? (\"To overtake; to pass\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C390-oikosu-type",
+              "prompt": "Say the Japanese for 'to overtake'.",
+              "assesses": [
+                "JA-LEX-C390-KOUSOKU390-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おいこす",
+                "oikosu"
+              ],
+              "feedback": {
+                "correct": "Right: おいこす (oikosu) is 'to overtake; to pass'.",
+                "incorrect": "'To overtake' is おいこす (oikosu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

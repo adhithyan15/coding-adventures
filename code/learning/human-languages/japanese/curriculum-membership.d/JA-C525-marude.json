@@ -1,0 +1,11 @@
+{
+  "id": "JA-C525-marude",
+  "pathSegment": "JA-PATH-525-REAL525",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-525-REAL525",
+      "order": 2
+    }
+  ]
+}

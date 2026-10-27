@@ -1,0 +1,11 @@
+{
+  "id": "JA-C443-kuchibiru",
+  "pathSegment": "JA-PATH-443-WRIST443",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-443-WRIST443",
+      "order": 3
+    }
+  ]
+}

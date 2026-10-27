@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C376-shitetsu",
+    "language": "japanese",
+    "chapter": 376,
+    "sequence": 22220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:56824b722b500574"
+  },
+  "findings": []
+}

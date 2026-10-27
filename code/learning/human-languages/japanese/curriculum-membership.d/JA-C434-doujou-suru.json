@@ -1,0 +1,11 @@
+{
+  "id": "JA-C434-doujou-suru",
+  "pathSegment": "JA-PATH-434-THANK434",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-434-THANK434",
+      "order": 1
+    }
+  ]
+}

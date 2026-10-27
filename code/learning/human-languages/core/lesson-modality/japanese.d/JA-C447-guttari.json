@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C447-guttari",
+    "language": "japanese",
+    "chapter": 447,
+    "sequence": 26110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b57a97dca6522fb5"
+  },
+  "findings": []
+}

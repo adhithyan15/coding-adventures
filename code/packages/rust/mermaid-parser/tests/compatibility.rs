@@ -21,6 +21,14 @@ const C4_ACCESSIBILITY_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-accessibility-11.16.1-visual-corpus.json"
 ));
+const C4_RELATIONSHIP_ARROWS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-relationship-arrows-11.16.1-corpus.json"
+));
+const C4_RELATIONSHIP_ARROWS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-relationship-arrows-11.16.1-visual-corpus.json"
+));
 const SWIMLANE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/swimlane-11.16.1-corpus.json"
@@ -2450,6 +2458,30 @@ fn pinned_c4_accessibility_metadata_reaches_semantic_ir() {
         multiline.accessibility_description.as_deref(),
         Some("Native C4 structure\nthrough shared paint metadata")
     );
+}
+
+#[test]
+fn pinned_c4_relationship_arrows_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_RELATIONSHIP_ARROWS_CORPUS)
+        .expect("C4 relationship arrow corpus must be JSON");
+    let visual: Value = serde_json::from_str(C4_RELATIONSHIP_ARROWS_VISUAL_CORPUS)
+        .expect("C4 relationship arrow visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().expect("C4 relationship arrow fixtures");
+
+    let bidirectional = parse_c4_diagram(
+        fixtures[0]["source"].as_str().expect("bidirectional relationship source"),
+    )
+    .expect("C4 BiRel fixture must parse");
+    assert!(bidirectional.relationships[0].start_arrow);
+    assert!(bidirectional.relationships[0].end_arrow);
+
+    let backward = parse_c4_diagram(
+        fixtures[1]["source"].as_str().expect("backward relationship source"),
+    )
+    .expect("C4 Rel_Back fixture must parse");
+    assert!(backward.relationships[0].start_arrow);
+    assert!(!backward.relationships[0].end_arrow);
 }
 
 #[test]

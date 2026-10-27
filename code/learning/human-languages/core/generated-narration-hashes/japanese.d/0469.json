@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:d9ba04f63c1c3d96",
+  "lessonIds": [
+    "JA-C469-gakki",
+    "JA-C469-suzu",
+    "JA-C469-tataku",
+    "JA-C469-kanaderu",
+    "JA-C469-neiro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch469.txt",
+  "json": "japanese/narration/ch469.json",
+  "textHash": "fnv1a64:3119c6ddd7f3965b",
+  "jsonHash": "fnv1a64:8f37a2869f8c0cd5",
+  "findings": []
+}

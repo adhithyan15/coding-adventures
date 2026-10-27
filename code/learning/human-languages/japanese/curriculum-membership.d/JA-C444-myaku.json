@@ -1,0 +1,11 @@
+{
+  "id": "JA-C444-myaku",
+  "pathSegment": "JA-PATH-444-PULSE444",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-444-PULSE444",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 279,
+  "title": "The Mountain Erupts",
+  "label": "ch:ja-the-mountain-erupts",
+  "canDo": "I can say what a volcano did and how we kept safe.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-R279-review-274-279",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 279: I can say what a volcano did and how we kept safe.",
+    "assesses": [
+      "JA-LEX-C279-KAZAN279-01",
+      "JA-LEX-C279-KAZAN279-02",
+      "JA-LEX-C279-KAZAN279-03",
+      "JA-LEX-C279-KAZAN279-04",
+      "JA-LEX-C279-KAZAN279-05"
+    ]
+  }
+}

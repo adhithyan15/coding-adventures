@@ -1,0 +1,11 @@
+{
+  "id": "JA-C267-housou",
+  "pathSegment": "JA-PATH-267-MAIGO267",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-267-MAIGO267",
+      "order": 2
+    }
+  ]
+}

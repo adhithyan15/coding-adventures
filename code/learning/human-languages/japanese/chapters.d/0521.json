@@ -1,0 +1,21 @@
+{
+  "chapter": 521,
+  "title": "Little by Little",
+  "label": "ch:ja-little-by-little",
+  "canDo": "I can say how things will change over time.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-R521-review-516-521",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 521: I can say how things will change over time.",
+    "assesses": [
+      "JA-LEX-C521-GRADUAL521-01",
+      "JA-LEX-C521-GRADUAL521-02",
+      "JA-LEX-C521-GRADUAL521-03",
+      "JA-LEX-C521-GRADUAL521-04",
+      "JA-LEX-C521-GRADUAL521-05"
+    ]
+  }
+}

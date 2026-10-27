@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-361-MOUKERU361",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "JA-EXT-361-MOUKERU361"
+  ],
+  "after": []
+}

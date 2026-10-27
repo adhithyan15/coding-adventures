@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "Needle and Thread",
+  "label": "ch:ja-needle-and-thread",
+  "canDo": "I can talk about sewing, knitting and tying.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C484-shibaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can talk about sewing, knitting and tying.",
+    "assesses": [
+      "JA-LEX-C484-THREAD484-03",
+      "JA-LEX-C484-THREAD484-04",
+      "JA-LEX-C484-THREAD484-05"
+    ]
+  }
+}

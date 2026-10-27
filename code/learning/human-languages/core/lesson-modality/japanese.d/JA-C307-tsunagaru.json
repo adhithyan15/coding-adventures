@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C307-tsunagaru",
+    "language": "japanese",
+    "chapter": 307,
+    "sequence": 18330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:431cf5c887cd46bc"
+  },
+  "findings": []
+}

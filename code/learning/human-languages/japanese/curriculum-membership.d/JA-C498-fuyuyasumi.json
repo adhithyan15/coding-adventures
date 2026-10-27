@@ -1,0 +1,11 @@
+{
+  "id": "JA-C498-fuyuyasumi",
+  "pathSegment": "JA-PATH-498-REST498",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-498-REST498",
+      "order": 1
+    }
+  ]
+}
