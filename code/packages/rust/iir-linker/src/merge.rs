@@ -37,6 +37,13 @@
 //! Exports always win: if module A exports `"sqrt"`, any private `"sqrt"` in
 //! module B becomes `"B::sqrt"`.
 //!
+//! Exports are never renamed, so this strategy only works if no two modules
+//! export the same public name.  `link` guarantees that before calling
+//! `merge_modules` (`LinkError::ConflictingExport`, issue #18429), together
+//! with unique module names (`DuplicateModuleName`) and an entry point that
+//! resolves inside its own module (`UnresolvedEntryPoint`).  See the
+//! *Preconditions* on [`merge_modules`].
+//!
 //! # Why renaming must reach *every* function-name operand (issue #18421)
 //!
 //! Renaming a function is only half the job: every place in the program that
@@ -77,8 +84,18 @@ use crate::resolve::ResolvedExport;
 ///
 /// # Preconditions
 ///
-/// All imports must already be resolved (no `Unresolved` errors).  The caller
-/// (`linker.rs`) is responsible for ensuring this.
+/// The caller (`linker.rs`) must have run every check in `resolve.rs` and
+/// found no errors.  In particular:
+///
+/// | Precondition | Checked by | What goes wrong without it |
+/// |--------------|------------|----------------------------|
+/// | every import resolves | `resolve_imports` | the import's calls keep a dangling name |
+/// | module names are unique | `check_module_names` | two modules share one set of import rewrites |
+/// | each public name has one owner | `build_export_map` | two functions keep the same bare name; references bind to the first |
+/// | the entry point resolves in its module | `check_entry_point` | the entry binds to another module's function |
+///
+/// The one-owner rule is re-asserted in debug builds below, because breaking
+/// it does not crash — it silently runs the wrong function.
 pub fn merge_modules<'a>(
     modules: &'a [IIRModule],
     export_map: &HashMap<(String, String), ResolvedExport<'a>>,
@@ -95,9 +112,24 @@ pub fn merge_modules<'a>(
     let mut global_names: std::collections::HashSet<String> = std::collections::HashSet::new();
 
     // Pass 1a: Claim all exported public names.
+    //
+    // Debug-only guard for the one-owner precondition: remember which
+    // module claimed each public name and complain if another one does.
+    #[cfg(debug_assertions)]
+    let mut public_owner: HashMap<String, &str> = HashMap::new();
     for module in modules {
         for export in &module.exports {
             let public_name = export.public_name().to_string();
+            #[cfg(debug_assertions)]
+            {
+                let owner = *public_owner.entry(public_name.clone()).or_insert(&module.name);
+                debug_assert!(
+                    owner == module.name,
+                    "merge_modules precondition violated: {owner:?} and {:?} both export \
+                     {public_name:?} (link() reports this as LinkError::ConflictingExport)",
+                    module.name,
+                );
+            }
             global_names.insert(public_name.clone());
             // Associate this export's underlying function with the public name.
             if let Some(fn_) = module.get_function(&export.function_name) {
@@ -194,6 +226,12 @@ pub fn merge_modules<'a>(
     // like any other: if the entry module's `main` was renamed (because an
     // earlier module already claimed `main`), the merged module must start
     // at the renamed function, not at the other module's `main`.
+    //
+    // The `unwrap_or_else` keeps a name the rename map does not mention.
+    // That is only correct because `check_entry_point` has already proven
+    // the name is one of the module's own functions (kept its bare name) or
+    // one of its imports (kept its bare public name) — never a name that
+    // could fall through to some other module's private function (#18429).
     let entry_point = modules.iter().zip(&module_rename_maps).find_map(|(m, renames)| {
         m.entry_point
             .as_ref()
@@ -261,6 +299,12 @@ fn build_import_rewrite<'a>(
 /// and imports the same bare name the import wins.  That is exactly what
 /// the linker did before #18421 (it only knew about imports), so the fix
 /// does not change behaviour for that already-ambiguous case.
+///
+/// Import rewrites are looked up by `module.name`.  That is sound only
+/// because `link` rejects two input modules with the same name
+/// (`DuplicateModuleName`, #18429); otherwise each would pick up the
+/// other's imports, and an import could override the other module's own
+/// function of the same name.
 ///
 /// Identity entries (`helper → helper`) are kept out of the map: they are
 /// harmless, but omitting them keeps `rewrite_instr`'s fast path ("nothing
@@ -355,8 +399,19 @@ fn rewrite_function(
 /// |----|------|----------------------------------------|
 /// | `call` | `srcs[0]` | `call(Var(fn_name), args…)` |
 /// | `alloc_closure` | `srcs[0]` | `alloc_closure(Str(fn_name), captures…)` (LANG34) |
-/// | `task_spawn` | `srcs[0]` | `task_spawn(callee, args…)` (LANG28) |
-/// | `group_spawn` | `srcs[1]` | `group_spawn(group, fn, args…)` (LANG28) |
+/// | `task_spawn` | `srcs[0]` | `task_spawn(fn_name, args…)` (LANG28) |
+/// | `group_spawn` | `srcs[1]` | `group_spawn(group, fn_name, args…)` (LANG28) |
+///
+/// **Contract (LANG28, pinned by issue #18429).**  The `fn` operand of
+/// `task_spawn` and `group_spawn` is the *name* of a function in the module
+/// — the same kind of operand as `call`'s callee — and never a register
+/// holding a closure.  The rewrite below matches on the operand's text
+/// alone, so it relies on this: a closure *register* that happened to be
+/// spelled like a renamed function would be "renamed" too, and would then
+/// name a register that does not exist.  A producer that wants to spawn a
+/// closure must spawn a named trampoline function and pass the closure as
+/// an ordinary argument.  No IIR producer emits either op today; the
+/// contract is fixed now so the first one is written against it.
 ///
 /// Ops that take a closure *handle* (`call_closure`) need no entry: the
 /// handle was produced by an `alloc_closure` that is rewritten here.
@@ -706,6 +761,25 @@ mod tests {
         assert_eq!(merged.get_function("main").unwrap().return_type, "user");
         let caller = merged.get_function("caller").unwrap();
         assert_eq!(caller.instructions[0].srcs[0], Operand::Var("main".into()));
+    }
+
+    /// Calling `merge_modules` directly on input that `link` would reject
+    /// with `ConflictingExport` trips the debug-build precondition guard
+    /// instead of silently producing two functions with one name (#18429).
+    #[test]
+    #[cfg(debug_assertions)]
+    #[should_panic(expected = "precondition violated")]
+    fn merge_guards_the_one_owner_precondition_in_debug_builds() {
+        let mk = |name: &str| {
+            let mut m = IIRModule::new(name, "twig");
+            m.entry_point = None;
+            m.add_or_replace(make_fn("foo"));
+            m.exports.push(IIRExport::new("foo"));
+            m
+        };
+        let modules = vec![mk("left"), mk("right")];
+        let (map, _) = crate::resolve::build_export_map(&modules);
+        let _ = merge_modules(&modules, &map);
     }
 
     #[test]
