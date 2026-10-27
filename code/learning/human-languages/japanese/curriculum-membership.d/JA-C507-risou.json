@@ -1,0 +1,11 @@
+{
+  "id": "JA-C507-risou",
+  "pathSegment": "JA-PATH-507-HOPE507",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-507-HOPE507",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,807 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 264,
+  "title": "A Bad Fall",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5968bb656523b603",
+  "lessons": [
+    {
+      "id": "JA-C264-ochiru",
+      "sequence": 16100,
+      "title": "おちる (ochiru) — to fall; to drop",
+      "headword": "おちる",
+      "romanization": "ochiru",
+      "gloss": "to fall; to drop",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a20019879f79c11a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to panic, then the Japanese for at once."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おちる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おちる — ochiru — \"to fall; to drop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こどもが かいだんから おちました。 — kodomo ga kaidan kara ochimashita — \"A child fell down the stairs.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite おちます, ochimasu; an ichidan verb. Past (polite): こどもが おちました。, kodomo ga ochimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おちる (ochiru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ochiru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ochiru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ochiru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ochiru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kodomo ga kaidan kara ochimashita — A child fell down the stairs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kodomo ga kaidan kara ochimashita* — A child fell down the stairs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to panic, then the Japanese for at once, then say ochiru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to panic, then the Japanese for at once, then say *ochiru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おちる (ochiru) mean? (\"To fall; to drop\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C264-ochiru-type",
+              "prompt": "Say the Japanese for 'to fall'.",
+              "assesses": [
+                "JA-LEX-C264-KOROBU264-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おちる",
+                "ochiru"
+              ],
+              "feedback": {
+                "correct": "Right: おちる (ochiru) is 'to fall; to drop'.",
+                "incorrect": "'To fall' is おちる (ochiru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C264-butsukeru",
+      "sequence": 16110,
+      "title": "ぶつける (butsukeru) — to bump (something against); to hit",
+      "headword": "ぶつける",
+      "romanization": "butsukeru",
+      "gloss": "to bump (something against); to hit",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:faf0722f9102bf60",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for at once, then the Japanese for to fall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぶつける",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぶつける — butsukeru — \"to bump (something against); to hit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こどもが つくえに あたまを ぶつけました。 — kodomo ga tsukue ni atama o butsukemashita — \"A child banged his head on a desk.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ぶつけます, butsukemasu; an ichidan verb. Past (polite): あにが あたまを ぶつけました。, ani ga atama o butsukemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぶつける (butsukeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and it is usually written in kana (JMdict). It is the transitive partner of butsukaru, \"to bump into\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "butsukeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *butsukeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "butsukeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *butsukeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kodomo ga tsukue ni atama o butsukemashita — A child banged his head on a desk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kodomo ga tsukue ni atama o butsukemashita* — A child banged his head on a desk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for at once, then the Japanese for to fall, then say butsukeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for at once, then the Japanese for to fall, then say *butsukeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぶつける (butsukeru) mean? (\"To bump (something against); to hit\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C264-butsukeru-type",
+              "prompt": "Say the Japanese for 'to bump (something against)'.",
+              "assesses": [
+                "JA-LEX-C264-KOROBU264-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぶつける",
+                "butsukeru"
+              ],
+              "feedback": {
+                "correct": "Right: ぶつける (butsukeru) is 'to bump (something against); to hit'.",
+                "incorrect": "'To bump (something against)' is ぶつける (butsukeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C264-houtai",
+      "sequence": 16120,
+      "title": "ほうたい (hōtai) — a bandage",
+      "headword": "ほうたい",
+      "romanization": "hōtai",
+      "gloss": "a bandage",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7076f0e9a2ff0d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to fall, then the Japanese for to bump (something against)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほうたい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほうたい — hōtai — \"a bandage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ほうたいは けがの ばしょに よります。 — hōtai wa kega no basho ni yorimasu — \"The kind of bandage depends on where the wound is.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほうたい (hōtai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hō, \"wrap\" (Middle Chinese paew) and tai, \"belt\" (tajH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōtai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōtai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōtai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōtai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōtai wa kega no basho ni yorimasu — The kind of bandage depends on where the wound is.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōtai wa kega no basho ni yorimasu* — The kind of bandage depends on where the wound is.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to fall, then the Japanese for to bump (something against), then say hōtai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to fall, then the Japanese for to bump (something against), then say *hōtai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほうたい (hōtai) mean? (\"A bandage\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C264-houtai-type",
+              "prompt": "Say the Japanese for 'a bandage'.",
+              "assesses": [
+                "JA-LEX-C264-KOROBU264-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほうたい",
+                "hōtai",
+                "houtai",
+                "hootai",
+                "hotai"
+              ],
+              "feedback": {
+                "correct": "Right: ほうたい (hōtai) is 'a bandage'.",
+                "incorrect": "'A bandage' is ほうたい (hōtai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C264-totemo",
+      "sequence": 16130,
+      "title": "とても (totemo) — very; really",
+      "headword": "とても",
+      "romanization": "totemo",
+      "gloss": "very; really",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4eab5bbece5caed6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to bump (something against), then the Japanese for a bandage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とても",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とても — totemo — \"very; really\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あしが とても いたいです。 — ashi ga totemo itai desu — \"My leg really hurts.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とても (totemo) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "totemo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *totemo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "totemo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *totemo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ashi ga totemo itai desu — My leg really hurts.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ashi ga totemo itai desu* — My leg really hurts.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to bump (something against), then the Japanese for a bandage, then say totemo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to bump (something against), then the Japanese for a bandage, then say *totemo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とても (totemo) mean? (\"Very; really\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C264-totemo-type",
+              "prompt": "Say the Japanese for 'very'.",
+              "assesses": [
+                "JA-LEX-C264-KOROBU264-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とても",
+                "totemo"
+              ],
+              "feedback": {
+                "correct": "Right: とても (totemo) is 'very; really'.",
+                "incorrect": "'Very' is とても (totemo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C264-shibaraku",
+      "sequence": 16140,
+      "title": "しばらく (shibaraku) — for a while; for some time",
+      "headword": "しばらく",
+      "romanization": "shibaraku",
+      "gloss": "for a while; for some time",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5ea09f225e686d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a bandage, then the Japanese for very."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しばらく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しばらく — shibaraku — \"for a while; for some time\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しばらく びょういんに いました。 — shibaraku byōin ni imashita — \"I was in hospital for some time.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しばらく (shibaraku) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shibaraku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shibaraku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shibaraku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shibaraku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shibaraku byōin ni imashita — I was in hospital for some time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shibaraku byōin ni imashita* — I was in hospital for some time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a bandage, then the Japanese for very, then say shibaraku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a bandage, then the Japanese for very, then say *shibaraku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しばらく (shibaraku) mean? (\"For a while; for some time\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C264-shibaraku-type",
+              "prompt": "Say the Japanese for 'for a while'.",
+              "assesses": [
+                "JA-LEX-C264-KOROBU264-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しばらく",
+                "shibaraku"
+              ],
+              "feedback": {
+                "correct": "Right: しばらく (shibaraku) is 'for a while; for some time'.",
+                "incorrect": "'For a while' is しばらく (shibaraku)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

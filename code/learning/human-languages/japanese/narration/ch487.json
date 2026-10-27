@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 487,
+  "title": "Running a Business",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6f438131b62ea8d5",
+  "lessons": [
+    {
+      "id": "JA-C487-shoubai",
+      "sequence": 28360,
+      "title": "しょうばい (shōbai) — business; trade",
+      "headword": "しょうばい",
+      "romanization": "shōbai",
+      "gloss": "business; trade",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d0120ad0d14d1d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to fit in, then the Japanese for to peel off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しょうばい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょうばい — shōbai — \"business; trade\"."
+            },
+            {
+              "kind": "speech",
+              "text": "そふは しょうばいを しています。 — sofu wa shōbai o shiteimasu — \"My grandfather runs a business.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょうばい (shōbai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shō, \"selling\" (Middle Chinese syang) and bai, \"sell\" (meaH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōbai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōbai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōbai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōbai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sofu wa shōbai o shiteimasu — My grandfather runs a business.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sofu wa shōbai o shiteimasu* — My grandfather runs a business.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to fit in, then the Japanese for to peel off, then say shōbai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to fit in, then the Japanese for to peel off, then say *shōbai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しょうばい (shōbai) mean? (\"Business; trade\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C487-shoubai-type",
+              "prompt": "Say the Japanese for 'business'.",
+              "assesses": [
+                "JA-LEX-C487-SHOP487-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しょうばい",
+                "shōbai",
+                "shoubai",
+                "shoobai",
+                "shobai"
+              ],
+              "feedback": {
+                "correct": "Right: しょうばい (shōbai) is 'business; trade'.",
+                "incorrect": "'Business' is しょうばい (shōbai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C487-shounin",
+      "sequence": 28370,
+      "title": "しょうにん (shōnin) — a merchant; a trader",
+      "headword": "しょうにん",
+      "romanization": "shōnin",
+      "gloss": "a merchant; a trader",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fbca7c73c72a913e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to peel off, then the Japanese for business."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しょうにん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょうにん — shōnin — \"a merchant; a trader\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しょうにんが いちばで やさいを うります。 — shōnin ga ichiba de yasai o urimasu — \"Traders sell vegetables at the market.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょうにん (shōnin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shō, \"merchant\" (Middle Chinese syang) and nin, \"person\" (nyin) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōnin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōnin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōnin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōnin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōnin ga ichiba de yasai o urimasu — Traders sell vegetables at the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōnin ga ichiba de yasai o urimasu* — Traders sell vegetables at the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to peel off, then the Japanese for business, then say shōnin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to peel off, then the Japanese for business, then say *shōnin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しょうにん (shōnin) mean? (\"A merchant; a trader\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C487-shounin-type",
+              "prompt": "Say the Japanese for 'a merchant'.",
+              "assesses": [
+                "JA-LEX-C487-SHOP487-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しょうにん",
+                "shōnin",
+                "shounin",
+                "shoonin",
+                "shonin"
+              ],
+              "feedback": {
+                "correct": "Right: しょうにん (shōnin) is 'a merchant; a trader'.",
+                "incorrect": "'A merchant' is しょうにん (shōnin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C487-tenchou",
+      "sequence": 28380,
+      "title": "てんちょう (tenchō) — a shop manager",
+      "headword": "てんちょう",
+      "romanization": "tenchō",
+      "gloss": "a shop manager",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9f7dc84d1b4f1a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for business, then the Japanese for a merchant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: てんちょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てんちょう — tenchō — \"a shop manager\"."
+            },
+            {
+              "kind": "speech",
+              "text": "てんちょうは まいあさ みせを あけます。 — tenchō wa maiasa mise o akemasu — \"The manager opens the shop every morning.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てんちょう (tenchō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ten, \"store\" (Middle Chinese temH) and chō, \"leader\" (trjangX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tenchō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tenchō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tenchō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tenchō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tenchō wa maiasa mise o akemasu — The manager opens the shop every morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tenchō wa maiasa mise o akemasu* — The manager opens the shop every morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for business, then the Japanese for a merchant, then say tenchō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for business, then the Japanese for a merchant, then say *tenchō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does てんちょう (tenchō) mean? (\"A shop manager\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C487-tenchou-type",
+              "prompt": "Say the Japanese for 'a shop manager'.",
+              "assesses": [
+                "JA-LEX-C487-SHOP487-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "てんちょう",
+                "tenchō",
+                "tenchou",
+                "tenchoo",
+                "tencho"
+              ],
+              "feedback": {
+                "correct": "Right: てんちょう (tenchō) is 'a shop manager'.",
+                "incorrect": "'A shop manager' is てんちょう (tenchō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C487-uriage",
+      "sequence": 28390,
+      "title": "うりあげ (uriage) — sales; takings",
+      "headword": "うりあげ",
+      "romanization": "uriage",
+      "gloss": "sales; takings",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3389408accf9aa5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a merchant, then the Japanese for a shop manager."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うりあげ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うりあげ — uriage — \"sales; takings\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんしゅうの うりあげは よかったです。 — senshū no uriage wa yokatta desu — \"Last week's sales were good.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うりあげ (uriage) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: built from uri, \"selling\" and age, \"raising\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uriage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uriage*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uriage, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uriage*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senshū no uriage wa yokatta desu — Last week's sales were good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senshū no uriage wa yokatta desu* — Last week's sales were good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a merchant, then the Japanese for a shop manager, then say uriage again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a merchant, then the Japanese for a shop manager, then say *uriage* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うりあげ (uriage) mean? (\"Sales; takings\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C487-uriage-type",
+              "prompt": "Say the Japanese for 'sales'.",
+              "assesses": [
+                "JA-LEX-C487-SHOP487-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うりあげ",
+                "uriage"
+              ],
+              "feedback": {
+                "correct": "Right: うりあげ (uriage) is 'sales; takings'.",
+                "incorrect": "'Sales' is うりあげ (uriage)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C487-juugyouin",
+      "sequence": 28400,
+      "title": "じゅうぎょういん (jūgyōin) — an employee; a worker",
+      "headword": "じゅうぎょういん",
+      "romanization": "jūgyōin",
+      "gloss": "an employee; a worker",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b7da030129edf1a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a shop manager, then the Japanese for sales."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じゅうぎょういん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅうぎょういん — jūgyōin — \"an employee; a worker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この みせには じゅうぎょういんが ごにん います。 — kono mise ni wa jūgyōin ga gonin imasu — \"This shop has five employees.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅうぎょういん (jūgyōin) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jū, \"accompany\" (Middle Chinese dzjowng), gyō, \"business\" (ngjaep) and in, \"employee\" (hjwen) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jūgyōin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jūgyōin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jūgyōin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jūgyōin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono mise ni wa jūgyōin ga gonin imasu — This shop has five employees.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono mise ni wa jūgyōin ga gonin imasu* — This shop has five employees.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a shop manager, then the Japanese for sales, then say jūgyōin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a shop manager, then the Japanese for sales, then say *jūgyōin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じゅうぎょういん (jūgyōin) mean? (\"An employee; a worker\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C487-juugyouin-type",
+              "prompt": "Say the Japanese for 'an employee'.",
+              "assesses": [
+                "JA-LEX-C487-SHOP487-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じゅうぎょういん",
+                "jūgyōin",
+                "juugyouin",
+                "juugyooin",
+                "jugyoin"
+              ],
+              "feedback": {
+                "correct": "Right: じゅうぎょういん (jūgyōin) is 'an employee; a worker'.",
+                "incorrect": "'An employee' is じゅうぎょういん (jūgyōin)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

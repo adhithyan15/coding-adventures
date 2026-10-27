@@ -1,0 +1,19 @@
+{
+  "chapter": 272,
+  "title": "A Trick over the Phone",
+  "label": "ch:ja-a-trick-over-the-phone",
+  "canDo": "I can say how someone was tricked and threatened.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C272-hontou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 272: I can say how someone was tricked and threatened.",
+    "assesses": [
+      "JA-LEX-C272-SAGI272-03",
+      "JA-LEX-C272-SAGI272-04",
+      "JA-LEX-C272-SAGI272-05"
+    ]
+  }
+}

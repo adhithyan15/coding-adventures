@@ -1,0 +1,806 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 348,
+  "title": "If You Cannot Come",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f8bd64a91118a3e2",
+  "lessons": [
+    {
+      "id": "JA-C348-kesseki-suru",
+      "sequence": 20600,
+      "title": "けっせきする (kesseki suru) — to be absent; to stay away",
+      "headword": "けっせきする",
+      "romanization": "kesseki suru",
+      "gloss": "to be absent; to stay away",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b02314b8ddbc0bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for while you are at it, then the Japanese for a caller."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けっせきする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けっせきする — kesseki suru — \"to be absent; to stay away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ねつが あったら、がっこうを けっせきして ください。 — netsu ga attara, gakkō o kesseki shite kudasai — \"If you have a fever, stay away from school.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite けっせきします, kessekishimasu; a する verb. Past (polite): むすこが がっこうを けっせきしました。, musuko ga gakkō o kesseki shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けっせきする (kesseki suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, kesseki, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: ketsu, \"lack\" and seki, \"seat\" (Middle Chinese zjek) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription). The two join as kes-seki."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kesseki suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kesseki suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kesseki suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kesseki suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "netsu ga attara, gakkō o kesseki shite kudasai — If you have a fever, stay away from school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *netsu ga attara, gakkō o kesseki shite kudasai* — If you have a fever, stay away from school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for while you are at it, then the Japanese for a caller, then say kesseki suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for while you are at it, then the Japanese for a caller, then say *kesseki suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けっせきする (kesseki suru) mean? (\"To be absent; to stay away\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C348-kesseki-suru-type",
+              "prompt": "Say the Japanese for 'to be absent'.",
+              "assesses": [
+                "JA-LEX-C348-KESSEKI348-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けっせきする",
+                "kesseki suru"
+              ],
+              "feedback": {
+                "correct": "Right: けっせきする (kesseki suru) is 'to be absent; to stay away'.",
+                "incorrect": "'To be absent' is けっせきする (kesseki suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C348-osoi",
+      "sequence": 20610,
+      "title": "おそい (osoi) — slow; late",
+      "headword": "おそい",
+      "romanization": "osoi",
+      "gloss": "slow; late",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:67ae5eb395f48dbd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a caller, then the Japanese for to be absent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おそい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おそい — osoi — \"slow; late\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おそく なったら、でんわして ください。 — osoku nattara, denwa shite kudasai — \"If it gets late, please phone.\""
+            },
+            {
+              "kind": "speech",
+              "text": "An i-adjective."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おそい (osoi) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "osoi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *osoi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "osoi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *osoi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "osoku nattara, denwa shite kudasai — If it gets late, please phone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *osoku nattara, denwa shite kudasai* — If it gets late, please phone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a caller, then the Japanese for to be absent, then say osoi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a caller, then the Japanese for to be absent, then say *osoi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おそい (osoi) mean? (\"Slow; late\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C348-osoi-type",
+              "prompt": "Say the Japanese for 'slow'.",
+              "assesses": [
+                "JA-LEX-C348-KESSEKI348-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おそい",
+                "osoi"
+              ],
+              "feedback": {
+                "correct": "Right: おそい (osoi) is 'slow; late'.",
+                "incorrect": "'Slow' is おそい (osoi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C348-girigiri",
+      "sequence": 20620,
+      "title": "ぎりぎり (girigiri) — at the last minute; barely",
+      "headword": "ぎりぎり",
+      "romanization": "girigiri",
+      "gloss": "at the last minute; barely",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82ab739208667213",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be absent, then the Japanese for slow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぎりぎり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぎりぎり — girigiri — \"at the last minute; barely\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いま でたら、ぎりぎり まにあうでしょう。 — ima detara, girigiri maniau deshō — \"If you leave now, you will barely make it.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぎりぎり (girigiri) is a native mimetic word, one of the Japanese words that picture a manner or a feeling in sound; JMdict marks it as mimetic. It is inherited, not borrowed, and its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "girigiri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *girigiri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "girigiri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *girigiri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ima detara, girigiri maniau deshō — If you leave now, you will barely make it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ima detara, girigiri maniau deshō* — If you leave now, you will barely make it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be absent, then the Japanese for slow, then say girigiri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be absent, then the Japanese for slow, then say *girigiri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぎりぎり (girigiri) mean? (\"At the last minute; barely\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C348-girigiri-type",
+              "prompt": "Say the Japanese for 'at the last minute'.",
+              "assesses": [
+                "JA-LEX-C348-KESSEKI348-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぎりぎり",
+                "girigiri"
+              ],
+              "feedback": {
+                "correct": "Right: ぎりぎり (girigiri) is 'at the last minute; barely'.",
+                "incorrect": "'At the last minute' is ぎりぎり (girigiri)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C348-jikoku",
+      "sequence": 20630,
+      "title": "じこく (jikoku) — the hour; the time of day",
+      "headword": "じこく",
+      "romanization": "jikoku",
+      "gloss": "the hour; the time of day",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69f05ddad9745e53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for slow, then the Japanese for at the last minute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じこく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じこく — jikoku — \"the hour; the time of day\"."
+            },
+            {
+              "kind": "speech",
+              "text": "でんしゃの じこくが かわったら、おしえて ください。 — densha no jikoku ga kawattara, oshiete kudasai — \"If the train times change, please tell me.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じこく (jikoku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ji, \"time\" (Middle Chinese dzyi) and koku, \"time\" (khok) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jikoku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jikoku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jikoku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jikoku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "densha no jikoku ga kawattara, oshiete kudasai — If the train times change, please tell me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *densha no jikoku ga kawattara, oshiete kudasai* — If the train times change, please tell me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for slow, then the Japanese for at the last minute, then say jikoku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for slow, then the Japanese for at the last minute, then say *jikoku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じこく (jikoku) mean? (\"The hour; the time of day\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C348-jikoku-type",
+              "prompt": "Say the Japanese for 'the hour'.",
+              "assesses": [
+                "JA-LEX-C348-KESSEKI348-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じこく",
+                "jikoku"
+              ],
+              "feedback": {
+                "correct": "Right: じこく (jikoku) is 'the hour; the time of day'.",
+                "incorrect": "'The hour' is じこく (jikoku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C348-renkyuu",
+      "sequence": 20640,
+      "title": "れんきゅう (renkyū) — consecutive holidays",
+      "headword": "れんきゅう",
+      "romanization": "renkyū",
+      "gloss": "consecutive holidays",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43ef71d5c61432aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for at the last minute, then the Japanese for the hour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: れんきゅう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "れんきゅう — renkyū — \"consecutive holidays\"."
+            },
+            {
+              "kind": "speech",
+              "text": "れんきゅうに なったら、いなかに かえります。 — renkyū ni nattara, inaka ni kaerimasu — \"When the long weekend comes, I will go home to the country.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "れんきゅう (renkyū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ren, \"connect\" (Middle Chinese ljen) and kyū, \"rest\" (xjuw) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "renkyū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *renkyū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "renkyū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *renkyū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "renkyū ni nattara, inaka ni kaerimasu — When the long weekend comes, I will go home to the country.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *renkyū ni nattara, inaka ni kaerimasu* — When the long weekend comes, I will go home to the country.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for at the last minute, then the Japanese for the hour, then say renkyū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for at the last minute, then the Japanese for the hour, then say *renkyū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does れんきゅう (renkyū) mean? (\"Consecutive holidays\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C348-renkyuu-type",
+              "prompt": "Say the Japanese for 'consecutive holidays'.",
+              "assesses": [
+                "JA-LEX-C348-KESSEKI348-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "れんきゅう",
+                "renkyū",
+                "renkyuu",
+                "renkyu"
+              ],
+              "feedback": {
+                "correct": "Right: れんきゅう (renkyū) is 'consecutive holidays'.",
+                "incorrect": "'Consecutive holidays' is れんきゅう (renkyū)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

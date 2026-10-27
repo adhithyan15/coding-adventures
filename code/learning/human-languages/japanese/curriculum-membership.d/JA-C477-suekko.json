@@ -1,0 +1,11 @@
+{
+  "id": "JA-C477-suekko",
+  "pathSegment": "JA-PATH-477-PARENT477",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-477-PARENT477",
+      "order": 2
+    }
+  ]
+}

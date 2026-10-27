@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 454,
+  "title": "Getting the Job Done",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f11d0678d5dd67a5",
+  "lessons": [
+    {
+      "id": "JA-C454-torikumu",
+      "sequence": 26440,
+      "title": "とりくむ (torikumu) — to tackle; to work hard on",
+      "headword": "とりくむ",
+      "romanization": "torikumu",
+      "gloss": "to tackle; to work hard on",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba8de675fe592362",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to hand in, then the Japanese for to stay up all night."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とりくむ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とりくむ — torikumu — \"to tackle; to work hard on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "みんなで もんだいに とりくみました。 — minna de mondai ni torikumimashita — \"We all tackled the problem together.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite とりくみます, torikumimasu; a godan verb. Past (polite): せんせいが もんだいに とりくみました。, sensei ga mondai ni torikumimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とりくむ (torikumu) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: tori, \"taking (toru)\" and kumu, \"putting together\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "torikumu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *torikumu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "torikumu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *torikumu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "minna de mondai ni torikumimashita — We all tackled the problem together.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *minna de mondai ni torikumimashita* — We all tackled the problem together.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to hand in, then the Japanese for to stay up all night, then say torikumu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to hand in, then the Japanese for to stay up all night, then say *torikumu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とりくむ (torikumu) mean? (\"To tackle; to work hard on\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C454-torikumu-type",
+              "prompt": "Say the Japanese for 'to tackle'.",
+              "assesses": [
+                "JA-LEX-C454-TASK454-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とりくむ",
+                "torikumu"
+              ],
+              "feedback": {
+                "correct": "Right: とりくむ (torikumu) is 'to tackle; to work hard on'.",
+                "incorrect": "'To tackle' is とりくむ (torikumu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C454-hakadoru",
+      "sequence": 26450,
+      "title": "はかどる (hakadoru) — to make good progress",
+      "headword": "はかどる",
+      "romanization": "hakadoru",
+      "gloss": "to make good progress",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e000fbe46bde9a92",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to stay up all night, then the Japanese for to tackle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はかどる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はかどる — hakadoru — \"to make good progress\"."
+            },
+            {
+              "kind": "speech",
+              "text": "けさは しごとが はかどりました。 — kesa wa shigoto ga hakadorimashita — \"My work went well this morning.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite はかどります, hakadorimasu; a godan verb. Past (polite): べんきょうが はかどりました。, benkyō ga hakadorimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はかどる (hakadoru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hakadoru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hakadoru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hakadoru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hakadoru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kesa wa shigoto ga hakadorimashita — My work went well this morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kesa wa shigoto ga hakadorimashita* — My work went well this morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to stay up all night, then the Japanese for to tackle, then say hakadoru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to stay up all night, then the Japanese for to tackle, then say *hakadoru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はかどる (hakadoru) mean? (\"To make good progress\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C454-hakadoru-type",
+              "prompt": "Say the Japanese for 'to make good progress'.",
+              "assesses": [
+                "JA-LEX-C454-TASK454-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はかどる",
+                "hakadoru"
+              ],
+              "feedback": {
+                "correct": "Right: はかどる (hakadoru) is 'to make good progress'.",
+                "incorrect": "'To make good progress' is はかどる (hakadoru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C454-hikiukeru",
+      "sequence": 26460,
+      "title": "ひきうける (hikiukeru) — to take on (a task)",
+      "headword": "ひきうける",
+      "romanization": "hikiukeru",
+      "gloss": "to take on (a task)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4b2db14a3bea7b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to tackle, then the Japanese for to make good progress."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひきうける",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひきうける — hikiukeru — \"to take on (a task)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かれは ぶちょうの しごとを ひきうけました。 — kare wa buchō no shigoto o hikiukemashita — \"He took on the department head's work.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ひきうけます, hikiukemasu; an ichidan verb. Past (polite): どうりょうが しごとを ひきうけました。, dōryō ga shigoto o hikiukemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひきうける (hikiukeru) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: hiki, \"pulling (hiku)\" and ukeru, \"to receive\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikiukeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikiukeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikiukeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikiukeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare wa buchō no shigoto o hikiukemashita — He took on the department head's work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare wa buchō no shigoto o hikiukemashita* — He took on the department head's work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to tackle, then the Japanese for to make good progress, then say hikiukeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to tackle, then the Japanese for to make good progress, then say *hikiukeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひきうける (hikiukeru) mean? (\"To take on (a task)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C454-hikiukeru-type",
+              "prompt": "Say the Japanese for 'to take on'.",
+              "assesses": [
+                "JA-LEX-C454-TASK454-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひきうける",
+                "hikiukeru"
+              ],
+              "feedback": {
+                "correct": "Right: ひきうける (hikiukeru) is 'to take on (a task)'.",
+                "incorrect": "'To take on' is ひきうける (hikiukeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C454-yarinaosu",
+      "sequence": 26470,
+      "title": "やりなおす (yarinaosu) — to do over; to redo",
+      "headword": "やりなおす",
+      "romanization": "yarinaosu",
+      "gloss": "to do over; to redo",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66adec2e0914f0ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to make good progress, then the Japanese for to take on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: やりなおす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やりなおす — yarinaosu — \"to do over; to redo\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まちがえたので、さいしょから やりなおしました。 — machigaeta node, saisho kara yarinaoshimashita — \"I made a mistake, so I did it over from the start.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite やりなおします, yarinaoshimasu; a godan verb. Past (polite): がくせいが しゅくだいを やりなおしました。, gakusei ga shukudai o yarinaoshimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やりなおす (yarinaosu) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: yari, \"doing (yaru)\" and naosu, \"to fix\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yarinaosu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yarinaosu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yarinaosu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yarinaosu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "machigaeta node, saisho kara yarinaoshimashita — I made a mistake, so I did it over from the start.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *machigaeta node, saisho kara yarinaoshimashita* — I made a mistake, so I did it over from the start.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to make good progress, then the Japanese for to take on, then say yarinaosu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to make good progress, then the Japanese for to take on, then say *yarinaosu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does やりなおす (yarinaosu) mean? (\"To do over; to redo\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C454-yarinaosu-type",
+              "prompt": "Say the Japanese for 'to do over'.",
+              "assesses": [
+                "JA-LEX-C454-TASK454-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "やりなおす",
+                "yarinaosu"
+              ],
+              "feedback": {
+                "correct": "Right: やりなおす (yarinaosu) is 'to do over; to redo'.",
+                "incorrect": "'To do over' is やりなおす (yarinaosu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C454-shippai-suru",
+      "sequence": 26480,
+      "title": "しっぱいする (shippai suru) — to fail",
+      "headword": "しっぱいする",
+      "romanization": "shippai suru",
+      "gloss": "to fail",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ae6b7435f76c39f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to take on, then the Japanese for to do over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しっぱいする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しっぱいする — shippai suru — \"to fail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かれは しけんに しっぱいしました。 — kare wa shiken ni shippai shimashita — \"He failed the exam.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite しっぱいします, shippaishimasu; a する verb. Past (polite): せんしゅが しっぱいしました。, senshu ga shippai shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しっぱいする (shippai suru) is Sino-Japanese (kango) shippai with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shi, \"lose\" (Middle Chinese syit) and pai, \"failure\" (baejH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shippai suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shippai suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shippai suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shippai suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare wa shiken ni shippai shimashita — He failed the exam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare wa shiken ni shippai shimashita* — He failed the exam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to take on, then the Japanese for to do over, then say shippai suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to take on, then the Japanese for to do over, then say *shippai suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しっぱいする (shippai suru) mean? (\"To fail\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C454-shippai-suru-type",
+              "prompt": "Say the Japanese for 'to fail'.",
+              "assesses": [
+                "JA-LEX-C454-TASK454-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しっぱいする",
+                "shippai suru"
+              ],
+              "feedback": {
+                "correct": "Right: しっぱいする (shippai suru) is 'to fail'.",
+                "incorrect": "'To fail' is しっぱいする (shippai suru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

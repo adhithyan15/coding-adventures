@@ -1,0 +1,937 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 521,
+  "title": "Little by Little",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:69a28a5e94ed59b7",
+  "lessons": [
+    {
+      "id": "JA-C521-shidaini",
+      "sequence": 30110,
+      "title": "しだいに (shidaini) — gradually",
+      "headword": "しだいに",
+      "romanization": "shidaini",
+      "gloss": "gradually",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:67d73069d72929c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for beyond expectation, then the Japanese for sure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しだいに",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しだいに — shidaini — \"gradually\"."
+            },
+            {
+              "kind": "speech",
+              "text": "はるに なったら、しだいに あたたかく なるでしょう。 — haru ni nattara, shidaini atatakaku naru deshō — \"When spring comes, it will gradually get warmer.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しだいに (shidaini) is Sino-Japanese (kango), with the particle ni: two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shi, \"next\" (Middle Chinese tshijH) and dai, \"No.\" (dejH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shidaini",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shidaini*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shidaini, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shidaini*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haru ni nattara, shidaini atatakaku naru deshō — When spring comes, it will gradually get warmer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haru ni nattara, shidaini atatakaku naru deshō* — When spring comes, it will gradually get warmer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for beyond expectation, then the Japanese for sure, then say shidaini again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for beyond expectation, then the Japanese for sure, then say *shidaini* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しだいに (shidaini) mean? (\"Gradually\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C521-shidaini-type",
+              "prompt": "Say the Japanese for 'gradually'.",
+              "assesses": [
+                "JA-LEX-C521-GRADUAL521-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しだいに",
+                "shidaini"
+              ],
+              "feedback": {
+                "correct": "Right: しだいに (shidaini) is 'gradually'.",
+                "incorrect": "'Gradually' is しだいに (shidaini)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C521-dandan",
+      "sequence": 30120,
+      "title": "だんだん (dandan) — little by little; gradually",
+      "headword": "だんだん",
+      "romanization": "dandan",
+      "gloss": "little by little; gradually",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07b457dc104089f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for sure, then the Japanese for gradually."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: だんだん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だんだん — dandan — \"little by little; gradually\"."
+            },
+            {
+              "kind": "speech",
+              "text": "くすりを のんだら、ちちは だんだん よく なるでしょう。 — kusuri o nondara, chichi wa dandan yoku naru deshō — \"If he takes the medicine, my father will gradually get better.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だんだん (dandan) is Sino-Japanese (kango): one Chinese character read with its on'yomi, reading borrowed from Chinese. It is dan, \"grade\" (Middle Chinese dwanH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dandan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dandan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dandan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dandan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kusuri o nondara, chichi wa dandan yoku naru deshō — If he takes the medicine, my father will gradually get better.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kusuri o nondara, chichi wa dandan yoku naru deshō* — If he takes the medicine, my father will gradually get better.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for sure, then the Japanese for gradually, then say dandan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for sure, then the Japanese for gradually, then say *dandan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does だんだん (dandan) mean? (\"Little by little; gradually\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C521-dandan-type",
+              "prompt": "Say the Japanese for 'little by little'.",
+              "assesses": [
+                "JA-LEX-C521-GRADUAL521-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "だんだん",
+                "dandan"
+              ],
+              "feedback": {
+                "correct": "Right: だんだん (dandan) is 'little by little; gradually'.",
+                "incorrect": "'Little by little' is だんだん (dandan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C521-jojoni",
+      "sequence": 30130,
+      "title": "じょじょに (jojoni) — step by step; gradually",
+      "headword": "じょじょに",
+      "romanization": "jojoni",
+      "gloss": "step by step; gradually",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b80c0dc345f26c55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for gradually, then the Japanese for little by little."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じょじょに",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じょじょに — jojoni — \"step by step; gradually\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おとうとは れんしゅうしたら、じょじょに はやく なるでしょう。 — otōto wa renshū shitara, jojoni hayaku naru deshō — \"If my younger brother practises, he will slowly get faster.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じょじょに (jojoni) is Sino-Japanese (kango), with the particle ni: one Chinese character read with its on'yomi, reading borrowed from Chinese. It is jo, \"gradually\" (Middle Chinese zjo) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jojoni",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jojoni*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jojoni, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jojoni*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otōto wa renshū shitara, jojoni hayaku naru deshō — If my younger brother practises, he will slowly get faster.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otōto wa renshū shitara, jojoni hayaku naru deshō* — If my younger brother practises, he will slowly get faster.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for gradually, then the Japanese for little by little, then say jojoni again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for gradually, then the Japanese for little by little, then say *jojoni* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じょじょに (jojoni) mean? (\"Step by step; gradually\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C521-jojoni-type",
+              "prompt": "Say the Japanese for 'step by step'.",
+              "assesses": [
+                "JA-LEX-C521-GRADUAL521-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じょじょに",
+                "jojoni"
+              ],
+              "feedback": {
+                "correct": "Right: じょじょに (jojoni) is 'step by step; gradually'.",
+                "incorrect": "'Step by step' is じょじょに (jojoni)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C521-youyaku",
+      "sequence": 30140,
+      "title": "ようやく (yōyaku) — finally (after a long wait); at last",
+      "headword": "ようやく",
+      "romanization": "yōyaku",
+      "gloss": "finally (after a long wait); at last",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2f4a98704a600c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for little by little, then the Japanese for step by step."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ようやく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ようやく — yōyaku — \"finally (after a long wait); at last\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あと いちにち まったら、ようやく やすみに なるでしょう。 — ato ichinichi mattara, yōyaku yasumi ni naru deshō — \"If I wait one more day, I will finally have a holiday.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ようやく (yōyaku) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōyaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōyaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōyaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōyaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ato ichinichi mattara, yōyaku yasumi ni naru deshō — If I wait one more day, I will finally have a holiday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ato ichinichi mattara, yōyaku yasumi ni naru deshō* — If I wait one more day, I will finally have a holiday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for little by little, then the Japanese for step by step, then say yōyaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for little by little, then the Japanese for step by step, then say *yōyaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ようやく (yōyaku) mean? (\"Finally (after a long wait); at last\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C521-youyaku-type",
+              "prompt": "Say the Japanese for 'finally (after a long wait)'.",
+              "assesses": [
+                "JA-LEX-C521-GRADUAL521-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ようやく",
+                "yōyaku",
+                "youyaku",
+                "yooyaku",
+                "yoyaku"
+              ],
+              "feedback": {
+                "correct": "Right: ようやく (yōyaku) is 'finally (after a long wait); at last'.",
+                "incorrect": "'Finally (after a long wait)' is ようやく (yōyaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C521-zuibun",
+      "sequence": 30150,
+      "title": "ずいぶん (zuibun) — very; a good deal",
+      "headword": "ずいぶん",
+      "romanization": "zuibun",
+      "gloss": "very; a good deal",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2fc96743406ffcb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for step by step, then the Japanese for finally (after a long wait)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ずいぶん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ずいぶん — zuibun — \"very; a good deal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし まいにち あるいたら、そふは ずいぶん つよく なるでしょう。 — moshi mainichi aruitara, sofu wa zuibun tsuyoku naru deshō — \"If my grandfather walks every day, he will get a good deal stronger.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ずいぶん (zuibun) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese, though JMdict marks it as usually written in kana. They are zui, \"follow\" (Middle Chinese zjwe) and bun, \"part\" (bjunH); how the two came to mean \"very\" no dictionary we use records (KANJIDIC2, JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuibun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuibun*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuibun, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuibun*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi mainichi aruitara, sofu wa zuibun tsuyoku naru deshō — If my grandfather walks every day, he will get a good deal stronger.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi mainichi aruitara, sofu wa zuibun tsuyoku naru deshō* — If my grandfather walks every day, he will get a good deal stronger.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for step by step, then the Japanese for finally (after a long wait), then say zuibun again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for step by step, then the Japanese for finally (after a long wait), then say *zuibun* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ずいぶん (zuibun) mean? (\"Very; a good deal\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C521-zuibun-type",
+              "prompt": "Say the Japanese for 'a good deal'.",
+              "assesses": [
+                "JA-LEX-C521-GRADUAL521-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ずいぶん",
+                "zuibun"
+              ],
+              "feedback": {
+                "correct": "Right: ずいぶん (zuibun) is 'very; a good deal'.",
+                "incorrect": "'A good deal' is ずいぶん (zuibun)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R521-review-516-521",
+      "sequence": 30160,
+      "title": "Looking back: from Getting Ahead to Little by Little",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Getting Ahead to Little by Little",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da8289dda3b46327",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for to get ahead (in life) and to get over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get ahead (in life), to get over, all one's strength, the will to do something, to tackle (a challenge)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get ahead (in life), to get over, all one's strength, the will to do something, to tackle (a challenge)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to make a firm decision, to resolve (to do), to give up all thought of, to judge, an option",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to make a firm decision, to resolve (to do), to give up all thought of, to judge, an option]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get back, to learn one's lesson, so close, to slip up, a fault",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get back, to learn one's lesson, so close, to slip up, a fault]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to think again, to think better of (doing), to give up on (someone), to betray, safe (as a choice)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to think again, to think better of (doing), to give up on (someone), to betray, safe (as a choice)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a worry, helpless, unexpected, beyond expectation, sure",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a worry, helpless, unexpected, beyond expectation, sure]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gradually, little by little, step by step, finally (after a long wait), a good deal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: gradually, little by little, step by step, finally (after a long wait), a good deal]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To get ahead (in life)? (しゅっせする, shusse suru.) To get over? (のりこえる, norikoeru.) All one's strength? (ぜんりょく, zenryoku.) The will to do something? (やるき, yaruki.) To tackle (a challenge)? (いどむ, idomu.) To make a firm decision? (けつだんする, ketsudan suru.) To resolve (to do)? (けついする, ketsui suru.) To give up all thought of? (おもいきる, omoikiru.) To judge? (はんだんする, handan suru.) An option? (せんたくし, sentakushi.) To get back? (とりもどす, torimodosu.) To learn one's lesson? (こりる, koriru.) So close? (おしい, oshii.) To slip up? (しくじる, shikujiru.) A fault? (おちど, ochido.) To think again? (おもいなおす, omoinaosu.) To think better of (doing)? (おもいとどまる, omoitodomaru.) To give up on (someone)? (みかぎる, mikagiru.) To betray? (うらぎる, uragiru.) Safe (as a choice)? (ぶなん, bunan.) A worry? (きがかり, kigakari.) Helpless? (こころぼそい, kokorobosoi.) Unexpected? (おもいがけない, omoigakenai.) Beyond expectation? (よそうがい, yosōgai.) Sure? (かくじつ, kakujitsu.) Gradually? (しだいに, shidaini.) Little by little? (だんだん, dandan.) Step by step? (じょじょに, jojoni.) Finally (after a long wait)? (ようやく, yōyaku.) A good deal? (ずいぶん, zuibun.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R521-review-516-521-type",
+              "prompt": "Say the Japanese for 'to get ahead (in life)'.",
+              "assesses": [
+                "JA-LEX-C516-AHEAD516-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゅっせする",
+                "shusse suru"
+              ],
+              "feedback": {
+                "correct": "Right: しゅっせする (shusse suru) is 'to get ahead (in life)'.",
+                "incorrect": "'To get ahead (in life)' is しゅっせする (shusse suru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

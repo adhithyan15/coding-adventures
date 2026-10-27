@@ -48,6 +48,7 @@ mod v_1987 {
                     is_regex: true,
                     line_number: 66,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"BIT_STRING"#.to_string(),
@@ -55,6 +56,7 @@ mod v_1987 {
                     is_regex: true,
                     line_number: 85,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"CHAR_LITERAL"#.to_string(),
@@ -62,6 +64,7 @@ mod v_1987 {
                     is_regex: true,
                     line_number: 103,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"BASED_LITERAL"#.to_string(),
@@ -69,6 +72,7 @@ mod v_1987 {
                     is_regex: true,
                     line_number: 119,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"REAL_NUMBER"#.to_string(),
@@ -76,6 +80,7 @@ mod v_1987 {
                     is_regex: true,
                     line_number: 123,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NUMBER"#.to_string(),
@@ -83,6 +88,7 @@ mod v_1987 {
                     is_regex: true,
                     line_number: 127,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"EXTENDED_IDENT"#.to_string(),
@@ -90,6 +96,7 @@ mod v_1987 {
                     is_regex: true,
                     line_number: 146,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NAME"#.to_string(),
@@ -97,6 +104,7 @@ mod v_1987 {
                     is_regex: true,
                     line_number: 147,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"VAR_ASSIGN"#.to_string(),
@@ -104,6 +112,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 168,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LESS_EQUALS"#.to_string(),
@@ -111,6 +120,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 169,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"GREATER_EQUALS"#.to_string(),
@@ -118,6 +128,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 170,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"ARROW"#.to_string(),
@@ -125,6 +136,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 171,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NOT_EQUALS"#.to_string(),
@@ -132,6 +144,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 172,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"POWER"#.to_string(),
@@ -139,6 +152,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 173,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"BOX"#.to_string(),
@@ -146,6 +160,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 174,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PLUS"#.to_string(),
@@ -153,6 +168,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 187,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"MINUS"#.to_string(),
@@ -160,6 +176,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 188,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"STAR"#.to_string(),
@@ -167,6 +184,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 189,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SLASH"#.to_string(),
@@ -174,6 +192,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 190,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"AMPERSAND"#.to_string(),
@@ -181,6 +200,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 191,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LESS_THAN"#.to_string(),
@@ -188,6 +208,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 192,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"GREATER_THAN"#.to_string(),
@@ -195,6 +216,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 193,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"EQUALS"#.to_string(),
@@ -202,6 +224,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 194,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"TICK"#.to_string(),
@@ -209,6 +232,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 195,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PIPE"#.to_string(),
@@ -216,6 +240,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 196,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LPAREN"#.to_string(),
@@ -223,6 +248,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 202,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RPAREN"#.to_string(),
@@ -230,6 +256,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 203,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LBRACKET"#.to_string(),
@@ -237,6 +264,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 204,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RBRACKET"#.to_string(),
@@ -244,6 +272,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 205,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SEMICOLON"#.to_string(),
@@ -251,6 +280,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 206,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"COMMA"#.to_string(),
@@ -258,6 +288,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 207,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"DOT"#.to_string(),
@@ -265,6 +296,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 208,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"COLON"#.to_string(),
@@ -272,6 +304,7 @@ mod v_1987 {
                     is_regex: false,
                     line_number: 209,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             keywords: vec![r#"abs"#.to_string(), r#"access"#.to_string(), r#"after"#.to_string(), r#"alias"#.to_string(), r#"all"#.to_string(), r#"and"#.to_string(), r#"architecture"#.to_string(), r#"array"#.to_string(), r#"assert"#.to_string(), r#"attribute"#.to_string(), r#"begin"#.to_string(), r#"block"#.to_string(), r#"body"#.to_string(), r#"buffer"#.to_string(), r#"bus"#.to_string(), r#"case"#.to_string(), r#"component"#.to_string(), r#"configuration"#.to_string(), r#"constant"#.to_string(), r#"disconnect"#.to_string(), r#"downto"#.to_string(), r#"else"#.to_string(), r#"elsif"#.to_string(), r#"end"#.to_string(), r#"entity"#.to_string(), r#"exit"#.to_string(), r#"file"#.to_string(), r#"for"#.to_string(), r#"function"#.to_string(), r#"generate"#.to_string(), r#"generic"#.to_string(), r#"group"#.to_string(), r#"guarded"#.to_string(), r#"if"#.to_string(), r#"impure"#.to_string(), r#"in"#.to_string(), r#"inout"#.to_string(), r#"is"#.to_string(), r#"label"#.to_string(), r#"library"#.to_string(), r#"linkage"#.to_string(), r#"literal"#.to_string(), r#"loop"#.to_string(), r#"map"#.to_string(), r#"mod"#.to_string(), r#"nand"#.to_string(), r#"new"#.to_string(), r#"next"#.to_string(), r#"nor"#.to_string(), r#"not"#.to_string(), r#"null"#.to_string(), r#"of"#.to_string(), r#"on"#.to_string(), r#"open"#.to_string(), r#"or"#.to_string(), r#"others"#.to_string(), r#"out"#.to_string(), r#"package"#.to_string(), r#"port"#.to_string(), r#"postponed"#.to_string(), r#"procedure"#.to_string(), r#"process"#.to_string(), r#"pure"#.to_string(), r#"range"#.to_string(), r#"record"#.to_string(), r#"register"#.to_string(), r#"reject"#.to_string(), r#"rem"#.to_string(), r#"report"#.to_string(), r#"return"#.to_string(), r#"rol"#.to_string(), r#"ror"#.to_string(), r#"select"#.to_string(), r#"severity"#.to_string(), r#"signal"#.to_string(), r#"shared"#.to_string(), r#"sla"#.to_string(), r#"sll"#.to_string(), r#"sra"#.to_string(), r#"srl"#.to_string(), r#"subtype"#.to_string(), r#"then"#.to_string(), r#"to"#.to_string(), r#"transport"#.to_string(), r#"type"#.to_string(), r#"unaffected"#.to_string(), r#"units"#.to_string(), r#"until"#.to_string(), r#"use"#.to_string(), r#"variable"#.to_string(), r#"wait"#.to_string(), r#"when"#.to_string(), r#"while"#.to_string(), r#"with"#.to_string(), r#"xnor"#.to_string(), r#"xor"#.to_string()],
@@ -283,6 +316,7 @@ mod v_1987 {
                     is_regex: true,
                     line_number: 53,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
@@ -290,6 +324,7 @@ mod v_1987 {
                     is_regex: true,
                     line_number: 54,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             reserved_keywords: vec![],
@@ -330,6 +365,7 @@ mod v_1993 {
                     is_regex: true,
                     line_number: 66,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"BIT_STRING"#.to_string(),
@@ -337,6 +373,7 @@ mod v_1993 {
                     is_regex: true,
                     line_number: 85,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"CHAR_LITERAL"#.to_string(),
@@ -344,6 +381,7 @@ mod v_1993 {
                     is_regex: true,
                     line_number: 103,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"BASED_LITERAL"#.to_string(),
@@ -351,6 +389,7 @@ mod v_1993 {
                     is_regex: true,
                     line_number: 119,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"REAL_NUMBER"#.to_string(),
@@ -358,6 +397,7 @@ mod v_1993 {
                     is_regex: true,
                     line_number: 123,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NUMBER"#.to_string(),
@@ -365,6 +405,7 @@ mod v_1993 {
                     is_regex: true,
                     line_number: 127,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"EXTENDED_IDENT"#.to_string(),
@@ -372,6 +413,7 @@ mod v_1993 {
                     is_regex: true,
                     line_number: 146,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NAME"#.to_string(),
@@ -379,6 +421,7 @@ mod v_1993 {
                     is_regex: true,
                     line_number: 147,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"VAR_ASSIGN"#.to_string(),
@@ -386,6 +429,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 168,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LESS_EQUALS"#.to_string(),
@@ -393,6 +437,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 169,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"GREATER_EQUALS"#.to_string(),
@@ -400,6 +445,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 170,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"ARROW"#.to_string(),
@@ -407,6 +453,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 171,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NOT_EQUALS"#.to_string(),
@@ -414,6 +461,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 172,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"POWER"#.to_string(),
@@ -421,6 +469,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 173,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"BOX"#.to_string(),
@@ -428,6 +477,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 174,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PLUS"#.to_string(),
@@ -435,6 +485,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 187,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"MINUS"#.to_string(),
@@ -442,6 +493,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 188,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"STAR"#.to_string(),
@@ -449,6 +501,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 189,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SLASH"#.to_string(),
@@ -456,6 +509,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 190,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"AMPERSAND"#.to_string(),
@@ -463,6 +517,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 191,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LESS_THAN"#.to_string(),
@@ -470,6 +525,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 192,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"GREATER_THAN"#.to_string(),
@@ -477,6 +533,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 193,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"EQUALS"#.to_string(),
@@ -484,6 +541,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 194,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"TICK"#.to_string(),
@@ -491,6 +549,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 195,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PIPE"#.to_string(),
@@ -498,6 +557,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 196,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LPAREN"#.to_string(),
@@ -505,6 +565,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 202,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RPAREN"#.to_string(),
@@ -512,6 +573,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 203,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LBRACKET"#.to_string(),
@@ -519,6 +581,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 204,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RBRACKET"#.to_string(),
@@ -526,6 +589,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 205,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SEMICOLON"#.to_string(),
@@ -533,6 +597,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 206,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"COMMA"#.to_string(),
@@ -540,6 +605,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 207,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"DOT"#.to_string(),
@@ -547,6 +613,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 208,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"COLON"#.to_string(),
@@ -554,6 +621,7 @@ mod v_1993 {
                     is_regex: false,
                     line_number: 209,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             keywords: vec![r#"abs"#.to_string(), r#"access"#.to_string(), r#"after"#.to_string(), r#"alias"#.to_string(), r#"all"#.to_string(), r#"and"#.to_string(), r#"architecture"#.to_string(), r#"array"#.to_string(), r#"assert"#.to_string(), r#"attribute"#.to_string(), r#"begin"#.to_string(), r#"block"#.to_string(), r#"body"#.to_string(), r#"buffer"#.to_string(), r#"bus"#.to_string(), r#"case"#.to_string(), r#"component"#.to_string(), r#"configuration"#.to_string(), r#"constant"#.to_string(), r#"disconnect"#.to_string(), r#"downto"#.to_string(), r#"else"#.to_string(), r#"elsif"#.to_string(), r#"end"#.to_string(), r#"entity"#.to_string(), r#"exit"#.to_string(), r#"file"#.to_string(), r#"for"#.to_string(), r#"function"#.to_string(), r#"generate"#.to_string(), r#"generic"#.to_string(), r#"group"#.to_string(), r#"guarded"#.to_string(), r#"if"#.to_string(), r#"impure"#.to_string(), r#"in"#.to_string(), r#"inout"#.to_string(), r#"is"#.to_string(), r#"label"#.to_string(), r#"library"#.to_string(), r#"linkage"#.to_string(), r#"literal"#.to_string(), r#"loop"#.to_string(), r#"map"#.to_string(), r#"mod"#.to_string(), r#"nand"#.to_string(), r#"new"#.to_string(), r#"next"#.to_string(), r#"nor"#.to_string(), r#"not"#.to_string(), r#"null"#.to_string(), r#"of"#.to_string(), r#"on"#.to_string(), r#"open"#.to_string(), r#"or"#.to_string(), r#"others"#.to_string(), r#"out"#.to_string(), r#"package"#.to_string(), r#"port"#.to_string(), r#"postponed"#.to_string(), r#"procedure"#.to_string(), r#"process"#.to_string(), r#"pure"#.to_string(), r#"range"#.to_string(), r#"record"#.to_string(), r#"register"#.to_string(), r#"reject"#.to_string(), r#"rem"#.to_string(), r#"report"#.to_string(), r#"return"#.to_string(), r#"rol"#.to_string(), r#"ror"#.to_string(), r#"select"#.to_string(), r#"severity"#.to_string(), r#"signal"#.to_string(), r#"shared"#.to_string(), r#"sla"#.to_string(), r#"sll"#.to_string(), r#"sra"#.to_string(), r#"srl"#.to_string(), r#"subtype"#.to_string(), r#"then"#.to_string(), r#"to"#.to_string(), r#"transport"#.to_string(), r#"type"#.to_string(), r#"unaffected"#.to_string(), r#"units"#.to_string(), r#"until"#.to_string(), r#"use"#.to_string(), r#"variable"#.to_string(), r#"wait"#.to_string(), r#"when"#.to_string(), r#"while"#.to_string(), r#"with"#.to_string(), r#"xnor"#.to_string(), r#"xor"#.to_string()],
@@ -565,6 +633,7 @@ mod v_1993 {
                     is_regex: true,
                     line_number: 53,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
@@ -572,6 +641,7 @@ mod v_1993 {
                     is_regex: true,
                     line_number: 54,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             reserved_keywords: vec![],
@@ -612,6 +682,7 @@ mod v_2002 {
                     is_regex: true,
                     line_number: 66,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"BIT_STRING"#.to_string(),
@@ -619,6 +690,7 @@ mod v_2002 {
                     is_regex: true,
                     line_number: 85,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"CHAR_LITERAL"#.to_string(),
@@ -626,6 +698,7 @@ mod v_2002 {
                     is_regex: true,
                     line_number: 103,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"BASED_LITERAL"#.to_string(),
@@ -633,6 +706,7 @@ mod v_2002 {
                     is_regex: true,
                     line_number: 119,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"REAL_NUMBER"#.to_string(),
@@ -640,6 +714,7 @@ mod v_2002 {
                     is_regex: true,
                     line_number: 123,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NUMBER"#.to_string(),
@@ -647,6 +722,7 @@ mod v_2002 {
                     is_regex: true,
                     line_number: 127,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"EXTENDED_IDENT"#.to_string(),
@@ -654,6 +730,7 @@ mod v_2002 {
                     is_regex: true,
                     line_number: 146,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NAME"#.to_string(),
@@ -661,6 +738,7 @@ mod v_2002 {
                     is_regex: true,
                     line_number: 147,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"VAR_ASSIGN"#.to_string(),
@@ -668,6 +746,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 168,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LESS_EQUALS"#.to_string(),
@@ -675,6 +754,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 169,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"GREATER_EQUALS"#.to_string(),
@@ -682,6 +762,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 170,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"ARROW"#.to_string(),
@@ -689,6 +770,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 171,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NOT_EQUALS"#.to_string(),
@@ -696,6 +778,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 172,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"POWER"#.to_string(),
@@ -703,6 +786,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 173,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"BOX"#.to_string(),
@@ -710,6 +794,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 174,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PLUS"#.to_string(),
@@ -717,6 +802,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 187,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"MINUS"#.to_string(),
@@ -724,6 +810,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 188,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"STAR"#.to_string(),
@@ -731,6 +818,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 189,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SLASH"#.to_string(),
@@ -738,6 +826,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 190,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"AMPERSAND"#.to_string(),
@@ -745,6 +834,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 191,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LESS_THAN"#.to_string(),
@@ -752,6 +842,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 192,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"GREATER_THAN"#.to_string(),
@@ -759,6 +850,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 193,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"EQUALS"#.to_string(),
@@ -766,6 +858,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 194,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"TICK"#.to_string(),
@@ -773,6 +866,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 195,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PIPE"#.to_string(),
@@ -780,6 +874,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 196,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LPAREN"#.to_string(),
@@ -787,6 +882,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 202,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RPAREN"#.to_string(),
@@ -794,6 +890,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 203,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LBRACKET"#.to_string(),
@@ -801,6 +898,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 204,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RBRACKET"#.to_string(),
@@ -808,6 +906,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 205,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SEMICOLON"#.to_string(),
@@ -815,6 +914,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 206,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"COMMA"#.to_string(),
@@ -822,6 +922,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 207,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"DOT"#.to_string(),
@@ -829,6 +930,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 208,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"COLON"#.to_string(),
@@ -836,6 +938,7 @@ mod v_2002 {
                     is_regex: false,
                     line_number: 209,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             keywords: vec![r#"abs"#.to_string(), r#"access"#.to_string(), r#"after"#.to_string(), r#"alias"#.to_string(), r#"all"#.to_string(), r#"and"#.to_string(), r#"architecture"#.to_string(), r#"array"#.to_string(), r#"assert"#.to_string(), r#"attribute"#.to_string(), r#"begin"#.to_string(), r#"block"#.to_string(), r#"body"#.to_string(), r#"buffer"#.to_string(), r#"bus"#.to_string(), r#"case"#.to_string(), r#"component"#.to_string(), r#"configuration"#.to_string(), r#"constant"#.to_string(), r#"disconnect"#.to_string(), r#"downto"#.to_string(), r#"else"#.to_string(), r#"elsif"#.to_string(), r#"end"#.to_string(), r#"entity"#.to_string(), r#"exit"#.to_string(), r#"file"#.to_string(), r#"for"#.to_string(), r#"function"#.to_string(), r#"generate"#.to_string(), r#"generic"#.to_string(), r#"group"#.to_string(), r#"guarded"#.to_string(), r#"if"#.to_string(), r#"impure"#.to_string(), r#"in"#.to_string(), r#"inout"#.to_string(), r#"is"#.to_string(), r#"label"#.to_string(), r#"library"#.to_string(), r#"linkage"#.to_string(), r#"literal"#.to_string(), r#"loop"#.to_string(), r#"map"#.to_string(), r#"mod"#.to_string(), r#"nand"#.to_string(), r#"new"#.to_string(), r#"next"#.to_string(), r#"nor"#.to_string(), r#"not"#.to_string(), r#"null"#.to_string(), r#"of"#.to_string(), r#"on"#.to_string(), r#"open"#.to_string(), r#"or"#.to_string(), r#"others"#.to_string(), r#"out"#.to_string(), r#"package"#.to_string(), r#"port"#.to_string(), r#"postponed"#.to_string(), r#"procedure"#.to_string(), r#"process"#.to_string(), r#"pure"#.to_string(), r#"range"#.to_string(), r#"record"#.to_string(), r#"register"#.to_string(), r#"reject"#.to_string(), r#"rem"#.to_string(), r#"report"#.to_string(), r#"return"#.to_string(), r#"rol"#.to_string(), r#"ror"#.to_string(), r#"select"#.to_string(), r#"severity"#.to_string(), r#"signal"#.to_string(), r#"shared"#.to_string(), r#"sla"#.to_string(), r#"sll"#.to_string(), r#"sra"#.to_string(), r#"srl"#.to_string(), r#"subtype"#.to_string(), r#"then"#.to_string(), r#"to"#.to_string(), r#"transport"#.to_string(), r#"type"#.to_string(), r#"unaffected"#.to_string(), r#"units"#.to_string(), r#"until"#.to_string(), r#"use"#.to_string(), r#"variable"#.to_string(), r#"wait"#.to_string(), r#"when"#.to_string(), r#"while"#.to_string(), r#"with"#.to_string(), r#"xnor"#.to_string(), r#"xor"#.to_string()],
@@ -847,6 +950,7 @@ mod v_2002 {
                     is_regex: true,
                     line_number: 53,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
@@ -854,6 +958,7 @@ mod v_2002 {
                     is_regex: true,
                     line_number: 54,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             reserved_keywords: vec![],
@@ -894,6 +999,7 @@ mod v_2008 {
                     is_regex: true,
                     line_number: 66,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"BIT_STRING"#.to_string(),
@@ -901,6 +1007,7 @@ mod v_2008 {
                     is_regex: true,
                     line_number: 85,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"CHAR_LITERAL"#.to_string(),
@@ -908,6 +1015,7 @@ mod v_2008 {
                     is_regex: true,
                     line_number: 103,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"BASED_LITERAL"#.to_string(),
@@ -915,6 +1023,7 @@ mod v_2008 {
                     is_regex: true,
                     line_number: 119,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"REAL_NUMBER"#.to_string(),
@@ -922,6 +1031,7 @@ mod v_2008 {
                     is_regex: true,
                     line_number: 123,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NUMBER"#.to_string(),
@@ -929,6 +1039,7 @@ mod v_2008 {
                     is_regex: true,
                     line_number: 127,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"EXTENDED_IDENT"#.to_string(),
@@ -936,6 +1047,7 @@ mod v_2008 {
                     is_regex: true,
                     line_number: 146,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NAME"#.to_string(),
@@ -943,6 +1055,7 @@ mod v_2008 {
                     is_regex: true,
                     line_number: 147,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"VAR_ASSIGN"#.to_string(),
@@ -950,6 +1063,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 168,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LESS_EQUALS"#.to_string(),
@@ -957,6 +1071,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 169,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"GREATER_EQUALS"#.to_string(),
@@ -964,6 +1079,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 170,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"ARROW"#.to_string(),
@@ -971,6 +1087,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 171,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NOT_EQUALS"#.to_string(),
@@ -978,6 +1095,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 172,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"POWER"#.to_string(),
@@ -985,6 +1103,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 173,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"BOX"#.to_string(),
@@ -992,6 +1111,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 174,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PLUS"#.to_string(),
@@ -999,6 +1119,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 187,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"MINUS"#.to_string(),
@@ -1006,6 +1127,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 188,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"STAR"#.to_string(),
@@ -1013,6 +1135,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 189,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SLASH"#.to_string(),
@@ -1020,6 +1143,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 190,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"AMPERSAND"#.to_string(),
@@ -1027,6 +1151,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 191,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LESS_THAN"#.to_string(),
@@ -1034,6 +1159,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 192,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"GREATER_THAN"#.to_string(),
@@ -1041,6 +1167,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 193,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"EQUALS"#.to_string(),
@@ -1048,6 +1175,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 194,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"TICK"#.to_string(),
@@ -1055,6 +1183,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 195,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PIPE"#.to_string(),
@@ -1062,6 +1191,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 196,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LPAREN"#.to_string(),
@@ -1069,6 +1199,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 202,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RPAREN"#.to_string(),
@@ -1076,6 +1207,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 203,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LBRACKET"#.to_string(),
@@ -1083,6 +1215,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 204,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RBRACKET"#.to_string(),
@@ -1090,6 +1223,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 205,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SEMICOLON"#.to_string(),
@@ -1097,6 +1231,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 206,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"COMMA"#.to_string(),
@@ -1104,6 +1239,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 207,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"DOT"#.to_string(),
@@ -1111,6 +1247,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 208,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"COLON"#.to_string(),
@@ -1118,6 +1255,7 @@ mod v_2008 {
                     is_regex: false,
                     line_number: 209,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             keywords: vec![r#"abs"#.to_string(), r#"access"#.to_string(), r#"after"#.to_string(), r#"alias"#.to_string(), r#"all"#.to_string(), r#"and"#.to_string(), r#"architecture"#.to_string(), r#"array"#.to_string(), r#"assert"#.to_string(), r#"attribute"#.to_string(), r#"begin"#.to_string(), r#"block"#.to_string(), r#"body"#.to_string(), r#"buffer"#.to_string(), r#"bus"#.to_string(), r#"case"#.to_string(), r#"component"#.to_string(), r#"configuration"#.to_string(), r#"constant"#.to_string(), r#"disconnect"#.to_string(), r#"downto"#.to_string(), r#"else"#.to_string(), r#"elsif"#.to_string(), r#"end"#.to_string(), r#"entity"#.to_string(), r#"exit"#.to_string(), r#"file"#.to_string(), r#"for"#.to_string(), r#"function"#.to_string(), r#"generate"#.to_string(), r#"generic"#.to_string(), r#"group"#.to_string(), r#"guarded"#.to_string(), r#"if"#.to_string(), r#"impure"#.to_string(), r#"in"#.to_string(), r#"inout"#.to_string(), r#"is"#.to_string(), r#"label"#.to_string(), r#"library"#.to_string(), r#"linkage"#.to_string(), r#"literal"#.to_string(), r#"loop"#.to_string(), r#"map"#.to_string(), r#"mod"#.to_string(), r#"nand"#.to_string(), r#"new"#.to_string(), r#"next"#.to_string(), r#"nor"#.to_string(), r#"not"#.to_string(), r#"null"#.to_string(), r#"of"#.to_string(), r#"on"#.to_string(), r#"open"#.to_string(), r#"or"#.to_string(), r#"others"#.to_string(), r#"out"#.to_string(), r#"package"#.to_string(), r#"port"#.to_string(), r#"postponed"#.to_string(), r#"procedure"#.to_string(), r#"process"#.to_string(), r#"pure"#.to_string(), r#"range"#.to_string(), r#"record"#.to_string(), r#"register"#.to_string(), r#"reject"#.to_string(), r#"rem"#.to_string(), r#"report"#.to_string(), r#"return"#.to_string(), r#"rol"#.to_string(), r#"ror"#.to_string(), r#"select"#.to_string(), r#"severity"#.to_string(), r#"signal"#.to_string(), r#"shared"#.to_string(), r#"sla"#.to_string(), r#"sll"#.to_string(), r#"sra"#.to_string(), r#"srl"#.to_string(), r#"subtype"#.to_string(), r#"then"#.to_string(), r#"to"#.to_string(), r#"transport"#.to_string(), r#"type"#.to_string(), r#"unaffected"#.to_string(), r#"units"#.to_string(), r#"until"#.to_string(), r#"use"#.to_string(), r#"variable"#.to_string(), r#"wait"#.to_string(), r#"when"#.to_string(), r#"while"#.to_string(), r#"with"#.to_string(), r#"xnor"#.to_string(), r#"xor"#.to_string()],
@@ -1129,6 +1267,7 @@ mod v_2008 {
                     is_regex: true,
                     line_number: 53,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
@@ -1136,6 +1275,7 @@ mod v_2008 {
                     is_regex: true,
                     line_number: 54,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             reserved_keywords: vec![],
@@ -1176,6 +1316,7 @@ mod v_2019 {
                     is_regex: true,
                     line_number: 66,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"BIT_STRING"#.to_string(),
@@ -1183,6 +1324,7 @@ mod v_2019 {
                     is_regex: true,
                     line_number: 85,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"CHAR_LITERAL"#.to_string(),
@@ -1190,6 +1332,7 @@ mod v_2019 {
                     is_regex: true,
                     line_number: 103,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"BASED_LITERAL"#.to_string(),
@@ -1197,6 +1340,7 @@ mod v_2019 {
                     is_regex: true,
                     line_number: 119,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"REAL_NUMBER"#.to_string(),
@@ -1204,6 +1348,7 @@ mod v_2019 {
                     is_regex: true,
                     line_number: 123,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NUMBER"#.to_string(),
@@ -1211,6 +1356,7 @@ mod v_2019 {
                     is_regex: true,
                     line_number: 127,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"EXTENDED_IDENT"#.to_string(),
@@ -1218,6 +1364,7 @@ mod v_2019 {
                     is_regex: true,
                     line_number: 146,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NAME"#.to_string(),
@@ -1225,6 +1372,7 @@ mod v_2019 {
                     is_regex: true,
                     line_number: 147,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"VAR_ASSIGN"#.to_string(),
@@ -1232,6 +1380,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 168,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LESS_EQUALS"#.to_string(),
@@ -1239,6 +1388,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 169,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"GREATER_EQUALS"#.to_string(),
@@ -1246,6 +1396,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 170,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"ARROW"#.to_string(),
@@ -1253,6 +1404,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 171,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NOT_EQUALS"#.to_string(),
@@ -1260,6 +1412,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 172,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"POWER"#.to_string(),
@@ -1267,6 +1420,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 173,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"BOX"#.to_string(),
@@ -1274,6 +1428,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 174,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PLUS"#.to_string(),
@@ -1281,6 +1436,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 187,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"MINUS"#.to_string(),
@@ -1288,6 +1444,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 188,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"STAR"#.to_string(),
@@ -1295,6 +1452,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 189,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SLASH"#.to_string(),
@@ -1302,6 +1460,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 190,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"AMPERSAND"#.to_string(),
@@ -1309,6 +1468,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 191,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LESS_THAN"#.to_string(),
@@ -1316,6 +1476,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 192,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"GREATER_THAN"#.to_string(),
@@ -1323,6 +1484,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 193,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"EQUALS"#.to_string(),
@@ -1330,6 +1492,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 194,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"TICK"#.to_string(),
@@ -1337,6 +1500,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 195,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PIPE"#.to_string(),
@@ -1344,6 +1508,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 196,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LPAREN"#.to_string(),
@@ -1351,6 +1516,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 202,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RPAREN"#.to_string(),
@@ -1358,6 +1524,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 203,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LBRACKET"#.to_string(),
@@ -1365,6 +1532,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 204,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RBRACKET"#.to_string(),
@@ -1372,6 +1540,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 205,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SEMICOLON"#.to_string(),
@@ -1379,6 +1548,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 206,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"COMMA"#.to_string(),
@@ -1386,6 +1556,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 207,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"DOT"#.to_string(),
@@ -1393,6 +1564,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 208,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"COLON"#.to_string(),
@@ -1400,6 +1572,7 @@ mod v_2019 {
                     is_regex: false,
                     line_number: 209,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             keywords: vec![r#"abs"#.to_string(), r#"access"#.to_string(), r#"after"#.to_string(), r#"alias"#.to_string(), r#"all"#.to_string(), r#"and"#.to_string(), r#"architecture"#.to_string(), r#"array"#.to_string(), r#"assert"#.to_string(), r#"attribute"#.to_string(), r#"begin"#.to_string(), r#"block"#.to_string(), r#"body"#.to_string(), r#"buffer"#.to_string(), r#"bus"#.to_string(), r#"case"#.to_string(), r#"component"#.to_string(), r#"configuration"#.to_string(), r#"constant"#.to_string(), r#"disconnect"#.to_string(), r#"downto"#.to_string(), r#"else"#.to_string(), r#"elsif"#.to_string(), r#"end"#.to_string(), r#"entity"#.to_string(), r#"exit"#.to_string(), r#"file"#.to_string(), r#"for"#.to_string(), r#"function"#.to_string(), r#"generate"#.to_string(), r#"generic"#.to_string(), r#"group"#.to_string(), r#"guarded"#.to_string(), r#"if"#.to_string(), r#"impure"#.to_string(), r#"in"#.to_string(), r#"inout"#.to_string(), r#"is"#.to_string(), r#"label"#.to_string(), r#"library"#.to_string(), r#"linkage"#.to_string(), r#"literal"#.to_string(), r#"loop"#.to_string(), r#"map"#.to_string(), r#"mod"#.to_string(), r#"nand"#.to_string(), r#"new"#.to_string(), r#"next"#.to_string(), r#"nor"#.to_string(), r#"not"#.to_string(), r#"null"#.to_string(), r#"of"#.to_string(), r#"on"#.to_string(), r#"open"#.to_string(), r#"or"#.to_string(), r#"others"#.to_string(), r#"out"#.to_string(), r#"package"#.to_string(), r#"port"#.to_string(), r#"postponed"#.to_string(), r#"procedure"#.to_string(), r#"process"#.to_string(), r#"pure"#.to_string(), r#"range"#.to_string(), r#"record"#.to_string(), r#"register"#.to_string(), r#"reject"#.to_string(), r#"rem"#.to_string(), r#"report"#.to_string(), r#"return"#.to_string(), r#"rol"#.to_string(), r#"ror"#.to_string(), r#"select"#.to_string(), r#"severity"#.to_string(), r#"signal"#.to_string(), r#"shared"#.to_string(), r#"sla"#.to_string(), r#"sll"#.to_string(), r#"sra"#.to_string(), r#"srl"#.to_string(), r#"subtype"#.to_string(), r#"then"#.to_string(), r#"to"#.to_string(), r#"transport"#.to_string(), r#"type"#.to_string(), r#"unaffected"#.to_string(), r#"units"#.to_string(), r#"until"#.to_string(), r#"use"#.to_string(), r#"variable"#.to_string(), r#"wait"#.to_string(), r#"when"#.to_string(), r#"while"#.to_string(), r#"with"#.to_string(), r#"xnor"#.to_string(), r#"xor"#.to_string()],
@@ -1411,6 +1584,7 @@ mod v_2019 {
                     is_regex: true,
                     line_number: 53,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
@@ -1418,6 +1592,7 @@ mod v_2019 {
                     is_regex: true,
                     line_number: 54,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             reserved_keywords: vec![],

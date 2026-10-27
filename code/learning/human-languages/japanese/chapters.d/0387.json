@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "Meeting the Plane",
+  "label": "ch:ja-meeting-the-plane",
+  "canDo": "I can meet someone arriving at the airport.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C387-shutchou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can meet someone arriving at the airport.",
+    "assesses": [
+      "JA-LEX-C387-DEMUKAERU387-03",
+      "JA-LEX-C387-DEMUKAERU387-04",
+      "JA-LEX-C387-DEMUKAERU387-05"
+    ]
+  }
+}

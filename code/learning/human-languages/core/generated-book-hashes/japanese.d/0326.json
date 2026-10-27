@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:ea92368f4f3f4211",
+  "lessonIds": [
+    "JA-C326-kisoku",
+    "JA-C326-yaburu",
+    "JA-C326-kinshi",
+    "JA-C326-ihan",
+    "JA-C326-batsu"
+  ],
+  "tex": "japanese/book/chapters/ch326-rules.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C459-kenkyuu-suru",
+    "language": "japanese",
+    "chapter": 459,
+    "sequence": 26720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:059266139196e3b1"
+  },
+  "findings": []
+}

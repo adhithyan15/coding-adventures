@@ -404,6 +404,28 @@ A grammar with no `start_mode:` and no `transitions:`:
 Every existing `TokenGrammar { .. }` literal across all language ports must add the two
 empty defaults; until each grammar adopts a table, behavior is exactly as today.
 
+### Amendment 2026-10-24: refusal actions and transition conditions
+
+LANG84 E8 adds one action and an optional condition list to the rule syntax:
+
+```
+on TOKENS [in MODE] [if COND [&& COND ...]] -> ACTION [, ACTION ...]
+```
+
+- `refuse` is a new action: the lexer returns a `LexerError` at the token
+  instead of applying a mode change. It must be a rule's only action.
+- `COND` is `space_before`, `space_after` or `line_start`, each optionally
+  negated with `!`. `space_before` reads F11's `TOKEN_PRECEDED_BY_SPACE`;
+  `space_after` peeks one character past the token (whitespace or end of
+  input); `line_start` is LANG84 E1's line start, read at the token's first
+  character.
+- A rule whose conditions do not all hold is skipped like a rule whose
+  `in MODE` guard fails, and matching continues with the next rule.
+
+`ModeTransition` gains `conditions: Vec<TransitionCondition>` and
+`TransitionAction` gains `Refuse`. Rules without `if` and without `refuse`
+behave exactly as before. LANG84 E8 has the motivation and the full table.
+
 ### Interaction with token-adjacency flags (F11)
 
 [F11](F11-grammar-token-adjacency-predicates.md) has the lexer record, on each

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C476-hitorikko",
+  "pathSegment": "JA-PATH-476-KIN476",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-476-KIN476",
+      "order": 2
+    }
+  ]
+}

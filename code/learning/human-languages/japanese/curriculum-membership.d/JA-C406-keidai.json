@@ -1,0 +1,11 @@
+{
+  "id": "JA-C406-keidai",
+  "pathSegment": "JA-PATH-406-TORII406",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-406-TORII406",
+      "order": 2
+    }
+  ]
+}

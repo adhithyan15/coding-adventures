@@ -105,3 +105,21 @@ Not yet:
 
 - launching the desktop SwiftUI build, and the Flutter and XAML lanes;
 - packaging and release (J5).
+
+## Releases
+
+`.github/workflows/release-journal.yml` publishes this package as
+`journal-v<semver>` (J5e). See
+[`journal-mosaic-app.md`](../../../specs/journal-mosaic-app.md#release-j5e)
+for the full contract. In short:
+
+- A maintainer dispatches it from `main` with a version and a matching tag.
+  A pull request that touches the lane builds and launches everything, and
+  publishes nothing.
+- It ships the web bundle and the Qt and Compose Desktop apps for Linux. These
+  are the hosts CI launches, and each one is launched again from its
+  extracted archive before it ships.
+- To cut a release, set `[package] version` in `mosaic-package.toml` to the
+  new version, and date the section heading in `CHANGELOG.d/_meta.md`
+  (`## 0.1.0 — 2026-11-02`). Both land in the same pull request, before the
+  dispatch.

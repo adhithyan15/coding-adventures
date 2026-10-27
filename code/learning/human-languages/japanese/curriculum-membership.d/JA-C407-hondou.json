@@ -1,0 +1,11 @@
+{
+  "id": "JA-C407-hondou",
+  "pathSegment": "JA-PATH-407-SANPAI407",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-407-SANPAI407",
+      "order": 3
+    }
+  ]
+}

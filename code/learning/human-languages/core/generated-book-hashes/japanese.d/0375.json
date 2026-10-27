@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:18fad2204cdaba72",
+  "lessonIds": [
+    "JA-C375-shihatsu",
+    "JA-C375-shuuden",
+    "JA-C375-shuuten",
+    "JA-C375-norikosu",
+    "JA-C375-norikomu"
+  ],
+  "tex": "japanese/book/chapters/ch375-the-first-train-and-the-last.tex"
+}

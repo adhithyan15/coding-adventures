@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:ebc1f959e3c98668",
+  "lessonIds": [
+    "JA-C520-kigakari",
+    "JA-C520-kokorobosoi",
+    "JA-C520-omoigakenai",
+    "JA-C520-yosougai",
+    "JA-C520-kakujitsu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch520.txt",
+  "json": "japanese/narration/ch520.json",
+  "textHash": "fnv1a64:0866432b0fb40bdc",
+  "jsonHash": "fnv1a64:28a81ce1d2f2f904",
+  "findings": []
+}

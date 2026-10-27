@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:ef52265348cfc432",
+  "lessonIds": [
+    "JA-C499-yuuenchi",
+    "JA-C499-doubutsuen",
+    "JA-C499-suizokukan",
+    "JA-C499-ensoku",
+    "JA-C499-kouraku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch499.txt",
+  "json": "japanese/narration/ch499.json",
+  "textHash": "fnv1a64:5867c155228386e5",
+  "jsonHash": "fnv1a64:9ea79423d91a97ad",
+  "findings": []
+}

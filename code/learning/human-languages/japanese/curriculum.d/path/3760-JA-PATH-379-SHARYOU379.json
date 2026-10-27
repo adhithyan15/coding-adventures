@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-379-SHARYOU379",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "JA-EXT-379-SHARYOU379"
+  ],
+  "after": []
+}

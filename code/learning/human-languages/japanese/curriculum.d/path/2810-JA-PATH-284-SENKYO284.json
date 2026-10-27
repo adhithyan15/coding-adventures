@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-284-SENKYO284",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-284-SENKYO284"
+  ],
+  "after": []
+}

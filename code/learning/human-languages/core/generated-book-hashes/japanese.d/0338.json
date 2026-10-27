@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:62da4ca095f07354",
+  "lessonIds": [
+    "JA-C338-muda",
+    "JA-C338-herasu",
+    "JA-C338-fuyasu",
+    "JA-C338-moyasu",
+    "JA-C338-shigen"
+  ],
+  "tex": "japanese/book/chapters/ch338-less-and-more.tex"
+}

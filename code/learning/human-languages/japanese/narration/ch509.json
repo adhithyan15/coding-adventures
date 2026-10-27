@@ -1,0 +1,944 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 509,
+  "title": "Lotteries and Odds",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:b7788b2b29124f08",
+  "lessons": [
+    {
+      "id": "JA-C509-takarakuji",
+      "sequence": 29490,
+      "title": "たからくじ (takarakuji) — a lottery; a lottery ticket",
+      "headword": "たからくじ",
+      "romanization": "takarakuji",
+      "gloss": "a lottery; a lottery ticket",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82ec13307d2a876e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for luckily, then the Japanese for fate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たからくじ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たからくじ — takarakuji — \"a lottery; a lottery ticket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし たからくじが あたったら、うちを かいます。 — moshi takarakuji ga atattara, uchi o kaimasu — \"If I win the lottery, I will buy a house.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たからくじ (takarakuji) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: built from takara, \"treasure\" and kuji, \"lot\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takarakuji",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takarakuji*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takarakuji, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takarakuji*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi takarakuji ga atattara, uchi o kaimasu — If I win the lottery, I will buy a house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi takarakuji ga atattara, uchi o kaimasu* — If I win the lottery, I will buy a house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for luckily, then the Japanese for fate, then say takarakuji again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for luckily, then the Japanese for fate, then say *takarakuji* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たからくじ (takarakuji) mean? (\"A lottery; a lottery ticket\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C509-takarakuji-type",
+              "prompt": "Say the Japanese for 'a lottery'.",
+              "assesses": [
+                "JA-LEX-C509-LOTTERY509-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たからくじ",
+                "takarakuji"
+              ],
+              "feedback": {
+                "correct": "Right: たからくじ (takarakuji) is 'a lottery; a lottery ticket'.",
+                "incorrect": "'A lottery' is たからくじ (takarakuji)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C509-kujibiki",
+      "sequence": 29500,
+      "title": "くじびき (kujibiki) — drawing lots",
+      "headword": "くじびき",
+      "romanization": "kujibiki",
+      "gloss": "drawing lots",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3cc3377c532809d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for fate, then the Japanese for a lottery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: くじびき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くじびき — kujibiki — \"drawing lots\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ばしょは くじびきに よります。 — basho wa kujibiki ni yorimasu — \"The places depend on drawing lots.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くじびき (kujibiki) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: built from kuji, \"lot\" and biki, \"pulling\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kujibiki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kujibiki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kujibiki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kujibiki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "basho wa kujibiki ni yorimasu — The places depend on drawing lots.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *basho wa kujibiki ni yorimasu* — The places depend on drawing lots.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for fate, then the Japanese for a lottery, then say kujibiki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for fate, then the Japanese for a lottery, then say *kujibiki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does くじびき (kujibiki) mean? (\"Drawing lots\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C509-kujibiki-type",
+              "prompt": "Say the Japanese for 'drawing lots'.",
+              "assesses": [
+                "JA-LEX-C509-LOTTERY509-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "くじびき",
+                "kujibiki"
+              ],
+              "feedback": {
+                "correct": "Right: くじびき (kujibiki) is 'drawing lots'.",
+                "incorrect": "'Drawing lots' is くじびき (kujibiki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C509-chuusen-suru",
+      "sequence": 29510,
+      "title": "ちゅうせんする (chūsen suru) — to hold a draw; to draw lots",
+      "headword": "ちゅうせんする",
+      "romanization": "chūsen suru",
+      "gloss": "to hold a draw; to draw lots",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b849d465bf93b6b5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a lottery, then the Japanese for drawing lots."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちゅうせんする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちゅうせんする — chūsen suru — \"to hold a draw; to draw lots\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし せんにん きたら、ちゅうせんします。 — moshi sennin kitara, chūsenshimasu — \"If a thousand people come, we will hold a draw.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ちゅうせんします, chūsenshimasu; a する verb. Past (polite): みせが ちゅうせんしました。, mise ga chūsenshimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちゅうせんする (chūsen suru) is the Sino-Japanese (kango) noun chūsen with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chū, \"pluck\" (Middle Chinese trhjuw) and sen, \"elect\" (sjwenX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūsen suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūsen suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūsen suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūsen suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi sennin kitara, chūsenshimasu — If a thousand people come, we will hold a draw.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi sennin kitara, chūsenshimasu* — If a thousand people come, we will hold a draw.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a lottery, then the Japanese for drawing lots, then say chūsen suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a lottery, then the Japanese for drawing lots, then say *chūsen suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちゅうせんする (chūsen suru) mean? (\"To hold a draw; to draw lots\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C509-chuusen-suru-type",
+              "prompt": "Say the Japanese for 'to hold a draw'.",
+              "assesses": [
+                "JA-LEX-C509-LOTTERY509-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちゅうせんする",
+                "chūsen suru",
+                "chuusen suru",
+                "chusen suru"
+              ],
+              "feedback": {
+                "correct": "Right: ちゅうせんする (chūsen suru) is 'to hold a draw; to draw lots'.",
+                "incorrect": "'To hold a draw' is ちゅうせんする (chūsen suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C509-kakuritsu",
+      "sequence": 29520,
+      "title": "かくりつ (kakuritsu) — probability; the odds",
+      "headword": "かくりつ",
+      "romanization": "kakuritsu",
+      "gloss": "probability; the odds",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8edcc4e72339d9d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for drawing lots, then the Japanese for to hold a draw."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かくりつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かくりつ — kakuritsu — \"probability; the odds\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しあいは あめの かくりつに よります。 — shiai wa ame no kakuritsu ni yorimasu — \"The match depends on the chance of rain.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かくりつ (kakuritsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kaku, \"assurance\" (Middle Chinese khaewk) and ritsu, \"ratio\" (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kakuritsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kakuritsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kakuritsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kakuritsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiai wa ame no kakuritsu ni yorimasu — The match depends on the chance of rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiai wa ame no kakuritsu ni yorimasu* — The match depends on the chance of rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for drawing lots, then the Japanese for to hold a draw, then say kakuritsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for drawing lots, then the Japanese for to hold a draw, then say *kakuritsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かくりつ (kakuritsu) mean? (\"Probability; the odds\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C509-kakuritsu-type",
+              "prompt": "Say the Japanese for 'probability'.",
+              "assesses": [
+                "JA-LEX-C509-LOTTERY509-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かくりつ",
+                "kakuritsu"
+              ],
+              "feedback": {
+                "correct": "Right: かくりつ (kakuritsu) is 'probability; the odds'.",
+                "incorrect": "'Probability' is かくりつ (kakuritsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C509-ateru",
+      "sequence": 29530,
+      "title": "あてる (ateru) — to hit (the mark); to guess right",
+      "headword": "あてる",
+      "romanization": "ateru",
+      "gloss": "to hit (the mark); to guess right",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1650e963df047aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to hold a draw, then the Japanese for probability."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あてる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あてる — ateru — \"to hit (the mark); to guess right\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし こたえを あてたら、おかしを かいます。 — moshi kotae o atetara, okashi o kaimasu — \"If you guess the answer, I will buy you some sweets.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite あてます, atemasu; an ichidan verb. Past (polite): おとうとが こたえを あてました。, otōto ga kotae o atemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あてる (ateru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ateru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ateru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ateru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ateru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi kotae o atetara, okashi o kaimasu — If you guess the answer, I will buy you some sweets.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi kotae o atetara, okashi o kaimasu* — If you guess the answer, I will buy you some sweets.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to hold a draw, then the Japanese for probability, then say ateru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to hold a draw, then the Japanese for probability, then say *ateru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あてる (ateru) mean? (\"To hit (the mark); to guess right\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C509-ateru-type",
+              "prompt": "Say the Japanese for 'to hit (the mark)'.",
+              "assesses": [
+                "JA-LEX-C509-LOTTERY509-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あてる",
+                "ateru"
+              ],
+              "feedback": {
+                "correct": "Right: あてる (ateru) is 'to hit (the mark); to guess right'.",
+                "incorrect": "'To hit (the mark)' is あてる (ateru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R509-review-504-509",
+      "sequence": 29540,
+      "title": "Looking back: from Books and Art to Lotteries and Odds",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Books and Art to Lotteries and Odds",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f472336f2cf6d5c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for literature and a poet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "literature, a poet, an art gallery, an artist, a picture book",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: literature, a poet, an art gallery, an artist, a picture book]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sumo wrestler, a sumo ring, a sumo referee, a bow (for arrows), to dodge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sumo wrestler, a sumo ring, a sumo referee, a bow (for arrows), to dodge]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sport, a championship, a victory, a defeat, to defeat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sport, a championship, a victory, a defeat, to defeat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hope, to hope for, to aspire to, an ideal, to want (said of someone else)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hope, to hope for, to aspire to, an ideal, to want (said of someone else)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luck, good fortune, a misfortune, luckily, fate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: luck, good fortune, a misfortune, luckily, fate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lottery, drawing lots, to hold a draw, probability, to hit (the mark)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lottery, drawing lots, to hold a draw, probability, to hit (the mark)]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Literature? (ぶんがく, bungaku.) A poet? (しじん, shijin.) An art gallery? (がろう, garō.) An artist? (げいじゅつか, geijutsuka.) A picture book? (えほん, ehon.) A sumo wrestler? (りきし, rikishi.) A sumo ring? (どひょう, dohyō.) A sumo referee? (ぎょうじ, gyōji.) A bow (for arrows)? (ゆみ, yumi.) To dodge? (よける, yokeru.) A sport? (きょうぎ, kyōgi.) A championship? (せんしゅけん, senshuken.) A victory? (しょうり, shōri.) A defeat? (はいぼく, haiboku.) To defeat? (まかす, makasu.) A hope? (きぼう, kibō.) To hope for? (のぞむ, nozomu.) To aspire to? (しぼうする, shibō suru.) An ideal? (りそう, risō.) To want (said of someone else)? (ほしがる, hoshigaru.) Luck? (うん, un.) Good fortune? (こううん, kōun.) A misfortune? (さいなん, sainan.) Luckily? (うんよく, un'yoku.) Fate? (うんめい, unmei.) A lottery? (たからくじ, takarakuji.) Drawing lots? (くじびき, kujibiki.) To hold a draw? (ちゅうせんする, chūsen suru.) Probability? (かくりつ, kakuritsu.) To hit (the mark)? (あてる, ateru.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R509-review-504-509-type",
+              "prompt": "Say the Japanese for 'literature'.",
+              "assesses": [
+                "JA-LEX-C504-ART504-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぶんがく",
+                "bungaku"
+              ],
+              "feedback": {
+                "correct": "Right: ぶんがく (bungaku) is 'literature'.",
+                "incorrect": "'Literature' is ぶんがく (bungaku)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

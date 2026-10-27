@@ -1,0 +1,11 @@
+{
+  "id": "JA-C377-jikokuhyou",
+  "pathSegment": "JA-PATH-377-CHIEN377",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-377-CHIEN377",
+      "order": 2
+    }
+  ]
+}

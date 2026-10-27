@@ -1,0 +1,11 @@
+{
+  "id": "JA-C475-kozara",
+  "pathSegment": "JA-PATH-475-TABLE475",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-475-TABLE475",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:a6bdb0ee31e3d049",
+  "lessonIds": [
+    "JA-C516-shusse-suru",
+    "JA-C516-norikoeru",
+    "JA-C516-zenryoku",
+    "JA-C516-yaruki",
+    "JA-C516-idomu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch516.txt",
+  "json": "japanese/narration/ch516.json",
+  "textHash": "fnv1a64:8ec395034fe480f3",
+  "jsonHash": "fnv1a64:765dbb25167dd839",
+  "findings": []
+}

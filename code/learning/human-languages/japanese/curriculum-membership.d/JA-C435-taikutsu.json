@@ -1,0 +1,11 @@
+{
+  "id": "JA-C435-taikutsu",
+  "pathSegment": "JA-PATH-435-CONTENT435",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-435-CONTENT435",
+      "order": 2
+    }
+  ]
+}

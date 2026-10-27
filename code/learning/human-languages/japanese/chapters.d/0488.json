@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "Building Work",
+  "label": "ch:ja-building-work",
+  "canDo": "I can talk about building work and what buildings are made of.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C488-kouji",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can talk about building work and what buildings are made of.",
+    "assesses": [
+      "JA-LEX-C488-BUILD488-03",
+      "JA-LEX-C488-BUILD488-04",
+      "JA-LEX-C488-BUILD488-05"
+    ]
+  }
+}

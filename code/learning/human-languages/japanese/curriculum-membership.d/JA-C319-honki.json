@@ -1,0 +1,11 @@
+{
+  "id": "JA-C319-honki",
+  "pathSegment": "JA-PATH-319-HONNE319",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-319-HONNE319",
+      "order": 4
+    }
+  ]
+}

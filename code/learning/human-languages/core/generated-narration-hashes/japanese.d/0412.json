@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:d71c1265aea3227f",
+  "lessonIds": [
+    "JA-C412-touge",
+    "JA-C412-choujou",
+    "JA-C412-sanmyaku",
+    "JA-C412-kougen",
+    "JA-C412-tozan"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "japanese/narration/ch412.txt",
+  "json": "japanese/narration/ch412.json",
+  "textHash": "fnv1a64:333fa124956c6efd",
+  "jsonHash": "fnv1a64:6f0c71024e554dbb",
+  "findings": []
+}

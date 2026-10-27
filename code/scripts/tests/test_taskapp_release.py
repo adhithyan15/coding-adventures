@@ -625,6 +625,11 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert workflow.count("release-upgrade-v0.1.0.json") >= 10
     assert "windows-corrupt-probe" in workflow
     assert "macos-corrupt-probe" in workflow
+    # Every backend's corrupt-recovery probe goes through the shared gate,
+    # which also catches a host that copied the bad file instead of moving it.
+    assert workflow.count("mosaic_release_state_gate.py verify-quarantine") == 5
+    assert 'cmp "$probe" "$state_file.corrupt"' not in workflow
+    assert "Get-FileHash $corruptProbe" not in workflow
     assert "code/packages/rust/task-wasm/pkg/task_engine.wasm" in workflow
     assert "host/web/public/task_engine.wasm" in workflow
     assert "':(exclude)code/packages/rust/task-wasm/pkg/task_engine.wasm'" in workflow

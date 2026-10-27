@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "Making Plans",
+  "label": "ch:ja-making-plans",
+  "canDo": "I can make a plan and say what happens if it changes.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C344-junchou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can make a plan and say what happens if it changes.",
+    "assesses": [
+      "JA-LEX-C344-KEIKAKU344-03",
+      "JA-LEX-C344-KEIKAKU344-04",
+      "JA-LEX-C344-KEIKAKU344-05"
+    ]
+  }
+}

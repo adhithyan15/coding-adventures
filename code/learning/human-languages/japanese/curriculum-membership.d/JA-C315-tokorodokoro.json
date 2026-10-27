@@ -1,0 +1,11 @@
+{
+  "id": "JA-C315-tokorodokoro",
+  "pathSegment": "JA-PATH-315-SURUTO315",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-315-SURUTO315",
+      "order": 3
+    }
+  ]
+}

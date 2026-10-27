@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:53d5efc2981956fb",
+  "lessonIds": [
+    "JA-C494-tamanegi",
+    "JA-C494-kyuuri",
+    "JA-C494-kinoko",
+    "JA-C494-takenoko",
+    "JA-C494-shiitake"
+  ],
+  "tex": "japanese/book/chapters/ch494-onions-and-mushrooms.tex"
+}

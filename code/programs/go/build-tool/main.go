@@ -625,6 +625,30 @@ func changedPackageRootsForPlatformAndLanguage(
 		}
 		changed["typescript/gfm-parser"] = true
 	}
+	// G2D02's bounded flattening corpus is consumed directly by both .NET
+	// implementations. Seed the exact readers before the external-fixture early
+	// return; deletion and rename-old paths must still exercise their tests.
+	if containsPath(changedFiles, "code/specs/fixtures/bezier2d-flattening-v1/cases.json") {
+		for _, consumer := range []struct{ name, language string }{
+			{name: "csharp/bezier2d", language: "csharp"},
+			{name: "fsharp/bezier2d", language: "fsharp"},
+		} {
+			if language != "all" && language != consumer.language {
+				continue
+			}
+			found := false
+			for _, pkg := range packages {
+				if pkg.Name == consumer.name && pkg.Language == consumer.language {
+					found = true
+					break
+				}
+			}
+			if !found {
+				return nil, fmt.Errorf("G2D02 fixture consumer %q is missing from discovered packages", consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
 	discoveryFixtureChanged := containsPath(changedFiles, sharedDiscoveryFixturePath)
 	ciGateFixtureChanged := hasCIGateFixturePath(changedFiles)
 	toolchainFixtureChanged := hasToolchainDetectionFixturePath(changedFiles)
