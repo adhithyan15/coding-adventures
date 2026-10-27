@@ -121,12 +121,20 @@ All notable changes to the Go build tool will be documented in this file.
     `[target.<cfg>.dev-dependencies]` (union over targets); for a `mosaic`
     harness also from `[dependencies]` and `[build-dependencies]` and their
     target forms, since a Mosaic package has no Cargo graph edges.
-  - Path entries resolve by directory, not by Cargo name: the discovered
-    package at, or containing, the entry's path. A crate claiming another's
-    `name` cannot capture its triggers. An existing crate directory that no
-    discovered package covers (the four `BUILD-EXEMPTIONS` orphans referenced
-    today) yields no trigger; any other unresolvable, absolute or empty path is
-    an error.
+  - Path entries resolve by real directory (symlinks evaluated), not by
+    Cargo name or text: the discovered package at that path is the trigger.
+    A crate that is not a package root (an orphan, or one nested in another
+    package or in the dependent) has its own `[dependencies]` and
+    `[build-dependencies]` followed recursively (visited set, depth cap 16),
+    and a containing package is a trigger too. An uncovered crate must be
+    listed exactly in `code/BUILD-EXEMPTIONS`. This is how `engram-app`
+    reaches `engram-core` through `engram-core-wasm`. Anything else
+    unresolvable (a case variant, a crate under `vendor/` or outside
+    `code/`, a missing, absolute or empty path) is an error. `-language` runs
+    resolve against every discovered package (`ResolveWithTestTriggersAgainst`).
+  - `[patch.<source>]` tables are triggers. `[replace]` is refused, as is a
+    `.cargo/config(.toml)` from the package up to the repository root that
+    sets `paths` or `[patch]`.
   - The triggers stay out of the graph and are applied one hop past the build
     closure, before prerequisite expansion (`withDevDependents`). A
     dev-dependent's own dependents are not selected, and prerequisites
@@ -143,13 +151,16 @@ All notable changes to the Go build tool will be documented in this file.
     table whose fields are bare, exactly-lowercase, unique keys with string,
     boolean or string-array values (only an array may span lines; nested
     tables, trailing commas, escapes and `workspace = true` are refused); a
-    non-regular or over-1 MiB manifest. A leading BOM is stripped.
+    non-regular or over-1 MiB manifest, or one entry continuing past 256
+    lines or 64 KiB (continuation lines are joined once, so a 1 MiB manifest
+    no longer takes half a minute). A leading BOM is stripped.
   - Fan-out, accepted: a one-line change to `mosaic-emit-qt`,
     `mosaic-emit-flutter` or `mosaic-package-artifact-builder` now selects 158
     packages instead of 73 (`moslayout-compiler`: 160 instead of 74). That is
     the 27–28 Mosaic suites, `rust/venture-browser-qt`, `-macos` and
     `-windows`, and their prerequisites (about 51 for `-qt` alone). 151 was
-    accepted before target tables were read; they add the last 7.
+    accepted before target tables were read; they add the last 7. A change
+    to `engram-core` now selects 27 packages instead of 14.
 - `toolchainForPackageLanguage("mosaic")` now returns `rust`. Every Mosaic
   package and app BUILD runs `cargo test` on its smoke harness, but the
   language mapped to the unknown toolchain `mosaic`, so a plan whose only
