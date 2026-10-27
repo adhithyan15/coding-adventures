@@ -46,8 +46,8 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | OpenSPARC T1 | merged | merged | Complete; gate PR #18295 landed. |
 | P0 | Arm Cortex-M0 | merged | merged | Complete; gate PR #18296 landed. |
 | P0 | Arm Cortex-M3 | merged | merged | Complete; gate PR #18297 landed. |
-| P0 | Arm Cortex-M4 | PR #18313 | blocked on functional | Conflict resolved locally; exact-head review precedes the update. |
-| P0 | Arm Cortex-M7 | PR #18307 | blocked on functional | Functional cell is published with squash auto-merge armed. |
+| P0 | Arm Cortex-M4 | functional merged (PR #18313) | gate in PR #18387 | Functional cell merged; the educational gate partner is in review. |
+| P0 | Arm Cortex-M7 | functional merged (PR #18307) | gate in PR #18351 | Functional cell merged; the gate partner, including the APSR MSR mask repair, is in review. |
 | P0 | Arm Cortex-M23, Security Extension disabled | merged | local complete | Spec 07ao2 is implemented with exactly 524,898 authoritative stable-Q DFFs and independent gate-derived decode/data/flags/control. All 35 release tests pass, including exhaustive decode, every condition and shift-boundary outcome, arithmetic/multiply edges, memory-addressing overlaps, full-state differential, typed allocation/lifecycle rollback, exact locks over every stable-Q mutation route, compile-valid direct-Q hostile fixtures, and out-of-range decoder boundaries; measured line coverage is 93.64% (1,827/1,951). TrustZone/SAU, NVIC, MPU/IDAU, buses, timing, and proprietary silicon topology remain separate cells. |
 | P0 | Arm Cortex-M33 | PR #18326 | blocked on functional | Functional cell is published with squash auto-merge armed. |
 | P0 | DEC PDP-10 KA10 | in progress | blocked on functional | Spec 07aq and the checked bounded functional cell are under local completion review. |
